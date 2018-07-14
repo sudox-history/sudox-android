@@ -13,7 +13,7 @@ class ProtocolClient {
         TODO("Implement this")
     }
 
-    fun sendMessage() {
+    fun sendMessage(event: String, message: Any) {
         TODO("Implement this")
     }
 
