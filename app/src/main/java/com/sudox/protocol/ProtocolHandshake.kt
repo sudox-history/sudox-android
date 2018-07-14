@@ -1,10 +1,12 @@
 package com.sudox.protocol
 
+import com.sudox.protocol.helper.decodeHex
 import com.sudox.protocol.helper.randomHexString
 import com.sudox.protocol.model.SymmetricKey
 import com.sudox.protocol.model.dto.VerifyRandomDTO
 import com.sudox.protocol.model.dto.VerifySignatureDTO
 import io.reactivex.Single
+import io.reactivex.functions.Consumer
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.Signature
@@ -45,7 +47,7 @@ class ProtocolHandshake(private val client: ProtocolClient) {
         return keyFactory.generatePublic(x509EncodedKeySpec)
     }
 
-    fun verifySignature(publicKeySignature: String) {
+    private fun verifySignature(publicKeySignature: String): Boolean {
         val signature = Signature.getInstance("SHA256withRSA")
 
         // Configure signature instance
@@ -57,21 +59,14 @@ class ProtocolHandshake(private val client: ProtocolClient) {
             update(PUBLIC_KEY.toByteArray())
         }
 
-        //return signature.verify()
+        // Decoded signature
+        val decodedSignature = decodeHex(publicKeySignature.toByteArray())
+
+        // Verify signature
+        return signature.verify(decodedSignature)
     }
 
     fun execute() = Single.create<SymmetricKey> {
-        client.listenMessageOnce("verify", VerifySignatureDTO::class)
-                .subscribe { verifySignature ->
 
-                }
-
-        // Build message with salt
-        val verifyRandom = VerifyRandomDTO(
-                random = randomHexString(64)
-        )
-
-        // Send message with salt
-        client.sendMessage("verify", verifyRandom)
     }
 }
