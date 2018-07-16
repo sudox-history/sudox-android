@@ -1,3 +1,3 @@
 package com.sudox.protocol.model.dto
 
-class HandshakeSignatureDTO(val signature: String)
+data class HandshakeSignatureDTO(val signature: String)

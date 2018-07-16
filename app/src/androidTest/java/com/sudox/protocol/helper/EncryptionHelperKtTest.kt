@@ -1,11 +1,13 @@
 package com.sudox.protocol.helper
 
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import androidx.test.runner.AndroidJUnit4
+import org.junit.Assert.*
 import org.junit.Test
+import org.junit.runner.RunWith
 import java.security.KeyPairGenerator
 import java.security.Signature
 
+@RunWith(AndroidJUnit4::class)
 class EncryptionHelperKtTest {
 
     @Test
@@ -67,7 +69,7 @@ class EncryptionHelperKtTest {
         // Signature for testing
         val signature = Signature.getInstance("SHA256withRSA")
 
-        // Configure singature instance for the create private key
+        // Configure signature instance for the create private key
         with(signature) {
             signature.initSign(keyPair.private)
             signature.update(testDataServer)
@@ -81,5 +83,22 @@ class EncryptionHelperKtTest {
 
         // Assert
         assertFalse(result)
+    }
+
+    @Test
+    fun testReadPublicKey() {
+        val testInput = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvR9FiI9iaw9oiTFCCGwQ" +
+                "Xej4Rmkg8w1pG2M+GdrtQC2pRxTFlEnO5iAHT7mqnQb29zAJbp0Jx8Z+UmypyCI9" +
+                "hn0EimQLvcBTynqI1aMPMJmzemdF5vnm3GCyuWvOKqE66Z9hj+ilVqOn0KKgVq2e" +
+                "j5DN1Iv9xv28+QRm70BFTowZ15ISazoGX3j7lUPFpDuiz4vfX/CbN4D8wnboqugm" +
+                "I2UEuF5uRs9IGDIWZZDmpSmlEZuqAHQQA+Mvzl3P0eqMfnhV0NlA1xPcVLNdwCbP" +
+                "lAI1W5zrwAG5Q5zzN+NlQeGxi92Q+NrQCTeZpL5fkRMfT0d21gNh6Qg4PjgBirSS" +
+                "TQIDAQAB"
+
+        // Read key body
+        val publicKey = readPublicKey(testInput)
+
+        // Assert
+        assertNotNull(publicKey)
     }
 }

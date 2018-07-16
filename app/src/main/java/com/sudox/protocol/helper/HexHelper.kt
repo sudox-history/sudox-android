@@ -1,5 +1,6 @@
 package com.sudox.protocol.helper
 
+import java.nio.ByteBuffer
 import java.util.*
 
 // Hex chars
