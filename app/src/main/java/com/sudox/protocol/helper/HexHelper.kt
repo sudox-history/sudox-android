@@ -31,7 +31,7 @@ fun decodeHex(input: ByteArray): ByteArray {
     val length = input.size
     val output = ByteArray(length shr 1)
 
-    // Two characters from the hex value.
+    // Algorithm data
     var loopIndex = 0
     var cursorIndex = 0
 
@@ -48,4 +48,46 @@ fun decodeHex(input: ByteArray): ByteArray {
     }
 
     return output
+}
+
+fun decodeHexString(input: String): String {
+    val inputBytes = input.toByteArray()
+
+    // Decode the input bytes
+    val resultBytes = decodeHex(inputBytes)
+
+    // Convert bytes to the string and return result
+    return String(resultBytes)
+}
+
+fun encodeHex(input: ByteArray): ByteArray {
+    val length = input.size
+    val output = ByteArray(length shl 1)
+
+    // Algorithm data
+    var loopIndex = 0
+    var cursorIndex = 0
+
+    while (loopIndex < length) {
+        output[cursorIndex++] = HEX_CHARS[(0xF0 and input[loopIndex].toInt()) ushr 4]
+                .toByte()
+
+        output[cursorIndex++] = HEX_CHARS[0x0F and input[loopIndex].toInt()]
+                .toByte()
+
+        // Increment loop index
+        loopIndex++
+    }
+
+    return output
+}
+
+fun encodeHexString(input: String): String {
+    val inputBytes = input.toByteArray()
+
+    // Encode the input bytes
+    val resultBytes = encodeHex(inputBytes)
+
+    // Convert bytes to the string and return result
+    return String(resultBytes)
 }

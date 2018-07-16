@@ -13,15 +13,15 @@ class ProtocolClient {
         TODO("Implement this")
     }
 
-    fun sendMessage(event: String, message: Any) {
+    fun sendMessage(event: String, message: Any, encrypt: Boolean = true) {
         TODO("Implement this")
     }
 
-    fun <T : Any> listenMessage(event: String, clazz: KClass<T>): Observable<T> {
+    fun <T : Any> listenMessage(event: String, clazz: KClass<T>, decrypt: Boolean = true): Observable<T> {
         TODO("Implement this")
     }
 
-    fun <T : Any> listenMessageOnce(event: String, clazz: KClass<T>): Single<T> {
+    fun <T : Any> listenMessageOnce(event: String, clazz: KClass<T>, decrypt: Boolean = true): Single<T> {
         TODO("Implement this")
     }
 }
