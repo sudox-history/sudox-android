@@ -1,6 +1,5 @@
 package com.sudox.protocol.helper
 
-import java.nio.ByteBuffer
 import java.util.*
 
 // Hex chars
@@ -28,8 +27,8 @@ fun randomHexString(length: Int): String {
     return builder.toString()
 }
 
-fun decodeHex(input: ByteArray): ByteArray {
-    val length = input.size
+fun decodeHex(input: String): ByteArray {
+    val length = input.length
     val output = ByteArray(length shr 1)
 
     // Algorithm data
@@ -38,8 +37,8 @@ fun decodeHex(input: ByteArray): ByteArray {
 
     while (cursorIndex < length) {
         // Convert original char to hex
-        val hexChar = (Character.digit(input[cursorIndex++].toChar(), 16) shl 4) or
-                Character.digit(input[cursorIndex++].toChar(), 16)
+        val hexChar = (Character.digit(input[cursorIndex++], 16) shl 4) or
+                Character.digit(input[cursorIndex++], 16)
 
         // Save hex char
         output[loopIndex] = (hexChar and 0xFF).toByte()
@@ -51,18 +50,12 @@ fun decodeHex(input: ByteArray): ByteArray {
     return output
 }
 
-fun decodeHexString(input: String): String {
-    val inputBytes = input.toByteArray()
-
-    // Decode the input bytes
-    val resultBytes = decodeHex(inputBytes)
-
-    // Convert bytes to the string and return result
-    return String(resultBytes)
+fun encodeHex(input: String): ByteArray {
+    return encodeHexBytes(input.toByteArray())
 }
 
-fun encodeHex(input: ByteArray): ByteArray {
-    val length = input.size
+fun encodeHexBytes(bytes: ByteArray): ByteArray {
+    val length = bytes.size
     val output = ByteArray(length shl 1)
 
     // Algorithm data
@@ -70,10 +63,10 @@ fun encodeHex(input: ByteArray): ByteArray {
     var cursorIndex = 0
 
     while (loopIndex < length) {
-        output[cursorIndex++] = HEX_CHARS[(0xF0 and input[loopIndex].toInt()) ushr 4]
+        output[cursorIndex++] = HEX_CHARS[(0xF0 and bytes[loopIndex].toInt()) ushr 4]
                 .toByte()
 
-        output[cursorIndex++] = HEX_CHARS[0x0F and input[loopIndex].toInt()]
+        output[cursorIndex++] = HEX_CHARS[0x0F and bytes[loopIndex].toInt()]
                 .toByte()
 
         // Increment loop index
@@ -81,14 +74,4 @@ fun encodeHex(input: ByteArray): ByteArray {
     }
 
     return output
-}
-
-fun encodeHexString(input: String): String {
-    val inputBytes = input.toByteArray()
-
-    // Encode the input bytes
-    val resultBytes = encodeHex(inputBytes)
-
-    // Convert bytes to the string and return result
-    return String(resultBytes)
 }

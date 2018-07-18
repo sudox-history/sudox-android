@@ -2,8 +2,6 @@ package com.sudox.protocol
 
 import androidx.annotation.Nullable
 import com.sudox.protocol.helper.*
-import java.nio.ByteBuffer
-import java.nio.charset.StandardCharsets
 import java.util.ArrayList
 
 class ProtocolKeystore {
@@ -36,16 +34,19 @@ class ProtocolKeystore {
     }
 
     @Nullable
-    fun findKey(random: String, signature: ByteArray): String? {
+    fun findKey(random: String, signature: String): String? {
         for (publicKeyBody in publicKeysBodies) {
             val keyHash = getHashString(publicKeyBody)
 
             // Key hash salt
-            val keyHashSalt = random + keyHash
-            val keyHashSaltBytes = decodeHex(keyHashSalt.toByteArray())
+            val signData = random + keyHash
+            val decodedSignData = signData.toByteArray()
+
+            // Decoded signature
+            val decodedSignature = decodeHex(signature)
 
             // Try verify the key
-            if (verifyData(signaturePublicKey, signature, keyHashSaltBytes)) {
+            if (verifyData(signaturePublicKey, decodedSignature, decodedSignData)) {
                 return publicKeyBody
             }
         }

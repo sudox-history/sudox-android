@@ -1,13 +1,10 @@
 package com.sudox.protocol.helper
 
-import androidx.test.runner.AndroidJUnit4
 import org.junit.Assert.*
 import org.junit.Test
-import org.junit.runner.RunWith
 import java.security.KeyPairGenerator
 import java.security.Signature
 
-@RunWith(AndroidJUnit4::class)
 class EncryptionHelperKtTest {
 
     @Test

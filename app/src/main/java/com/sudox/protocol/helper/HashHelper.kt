@@ -2,6 +2,7 @@ package com.sudox.protocol.helper
 
 import java.security.MessageDigest
 
+// Get SHA-256 hash of the bytes
 fun getHash(input: ByteArray): ByteArray {
     val digest = MessageDigest.getInstance("SHA-256")
 
@@ -9,9 +10,10 @@ fun getHash(input: ByteArray): ByteArray {
     val hashBytes = digest.digest(input)
 
     // Convert to the hex and return result
-    return encodeHex(hashBytes)
+    return encodeHexBytes(hashBytes)
 }
 
+// Get SHA-256 hash of the string
 fun getHashString(input: String): String {
     val inputBytes = input.toByteArray()
 
