@@ -56,4 +56,5 @@
     <string name="wrong_code">Wrong confirmation code</string>
     <string name="have_not_got_contacts">You havent\'t got contacts! Add them right now!</string>
     <string name="enter_your_email">For the beginning enter your email</string>
+    <string name="we_glad_to_see_you">We glad to see you!</string>
 </resources>

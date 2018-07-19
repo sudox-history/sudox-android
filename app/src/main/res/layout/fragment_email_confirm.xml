@@ -5,41 +5,42 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/sign_in_text"
+        android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
         android:fontFamily="sans-serif-light"
-        android:text="@string/sign_in"
+        android:text="@string/tag"
         android:textSize="25sp"/>
 
     <TextView
-        android:id="@+id/enter_your_email_text"
+        android:id="@+id/we_glad_to_see_you_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sign_in_text"
+        android:layout_below="@id/welcome_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-light"
-        android:text="@string/enter_your_email"
+        android:text="@string/we_glad_to_see_you"
         android:textSize="16sp"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email_edit_text_container"
+        android:id="@+id/code_edit_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/enter_your_email_text"
+        android:layout_below="@id/we_glad_to_see_you_text"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp">
 
         <EditText
-            android:id="@+id/email_edit_text"
+            android:id="@+id/code_edit_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/email"
+            android:hint="@string/code"
+            android:inputType="number"
             android:textSize="13sp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -47,12 +48,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/email_edit_text_container"
+        android:layout_below="@id/code_edit_text_container"
         android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="@string/hint_of_create_account"
+        android:text="@string/enter_code_from_mail"
         android:textColor="@color/colorHint"/>
 
 </RelativeLayout>

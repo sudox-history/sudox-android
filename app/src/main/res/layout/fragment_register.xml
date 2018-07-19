@@ -5,41 +5,62 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/sign_in_text"
+        android:id="@+id/what_is_your_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
         android:fontFamily="sans-serif-light"
-        android:text="@string/sign_in"
+        android:text="@string/what_is_your_name"
         android:textSize="25sp"/>
 
     <TextView
-        android:id="@+id/enter_your_email_text"
+        android:id="@+id/what_is_your_name_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/sign_in_text"
+        android:layout_below="@id/what_is_your_name_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-light"
-        android:text="@string/enter_your_email"
+        android:text="@string/enter_your_name_and_surname"
         android:textSize="16sp"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email_edit_text_container"
+        android:id="@+id/name_edit_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/enter_your_email_text"
+        android:layout_below="@id/what_is_your_name_hint"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp">
 
         <EditText
-            android:id="@+id/email_edit_text"
+            android:id="@+id/name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/email"
+            android:hint="@string/name"
+            android:inputType="number"
+            android:textSize="13sp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/surname_edit_text_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name_edit_text_container"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:id="@+id/surname_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/surname"
+            android:inputType="number"
             android:textSize="13sp"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -47,12 +68,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/email_edit_text_container"
+        android:layout_below="@id/surname_edit_text_container"
         android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="@string/hint_of_create_account"
+        android:text="@string/about_name"
         android:textColor="@color/colorHint"/>
+
 
 </RelativeLayout>
