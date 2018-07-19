@@ -4,8 +4,6 @@ import org.hamcrest.core.Is
 import org.hamcrest.core.IsEqual
 import org.junit.Assert.*
 import org.junit.Test
-import org.junit.internal.runners.JUnit38ClassRunner
-import org.junit.runner.RunWith
 import java.util.*
 
 class HexHelperKtTest {
@@ -40,6 +38,25 @@ class HexHelperKtTest {
 
         // Decode the hex
         val result = decodeHex(testInput)
+
+        // Print results
+        println("Valid: ${String(validResult)}")
+        println("Current: ${String(result)}")
+
+        // Assert
+        assertEquals(result.size, validResult.size)
+        assertThat(result, Is.`is`(IsEqual.equalTo(validResult)))
+    }
+
+    @Test
+    fun testDecodeHexBytes() {
+        val testInput = "4c6f6e646f6e20697320746865206361706974616c206f66204772656174204272697461696e"
+                .toByteArray()
+        val validResult = "London is the capital of Great Britain"
+                .toByteArray()
+
+        // Decode the hex
+        val result = decodeHexBytes(testInput)
 
         // Print results
         println("Valid: ${String(validResult)}")

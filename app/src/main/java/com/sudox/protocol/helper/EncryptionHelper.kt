@@ -5,6 +5,7 @@ import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.Signature
 import java.security.spec.X509EncodedKeySpec
+import javax.crypto.Cipher
 
 // Read public key
 fun readPublicKey(body: String): PublicKey {
@@ -31,4 +32,22 @@ fun verifyData(publicKey: PublicKey, signature: ByteArray, data: ByteArray): Boo
     }
 
     return verifier.verify(signature)
+}
+
+// Encrypt RSA
+fun encryptRSA(publicKey: PublicKey, data: String): String {
+    val cipher = Cipher.getInstance("RSA/NONE/OAEPPadding")
+
+    // Encode
+    val bytes = with(cipher) {
+        init(Cipher.ENCRYPT_MODE, publicKey)
+
+        // Encode with RSA
+        val bytes = doFinal(data.toByteArray())
+
+        // Encode to the HEX
+        encodeHexBytes(bytes)
+    }
+
+    return String(bytes)
 }

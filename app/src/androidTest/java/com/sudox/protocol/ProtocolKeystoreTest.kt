@@ -16,7 +16,7 @@ class ProtocolKeystoreTest {
         // Testing
         val publicKey = protocolKeystore.findKey(testRandom, testSignature)
 
-        // Verifying./gradlew test connectedAndroidTest
+        // Verifying ./gradlew test connectedAndroidTest
         assertNotNull(publicKey)
     }
 }

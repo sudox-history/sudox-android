@@ -1,8 +1,11 @@
 package com.sudox.protocol
 
-import androidx.annotation.Nullable
-import com.sudox.protocol.helper.*
-import java.util.ArrayList
+import com.sudox.protocol.helper.decodeHex
+import com.sudox.protocol.helper.getHashString
+import com.sudox.protocol.helper.readPublicKey
+import com.sudox.protocol.helper.verifyData
+import java.security.PublicKey
+import java.util.*
 
 class ProtocolKeystore {
 
@@ -18,11 +21,11 @@ class ProtocolKeystore {
     // Signature public key instance
     private var signaturePublicKey = readPublicKey(signaturePublicKeyBody)
 
-    // Public keys bodies
-    private var publicKeysBodies: ArrayList<String> = ArrayList()
+    // Public keys
+    private var publicKeys: ArrayList<String> = ArrayList()
 
     init {
-        publicKeysBodies.plusAssign("-----BEGIN PUBLIC KEY-----\n" +
+        publicKeys.plusAssign("-----BEGIN PUBLIC KEY-----\n" +
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxdLbOnUVON1LdUOLNOZs\n" +
                 "qe5zH2w37xstEz4YQsLnNeV27kly89JI0V7vsWqv7b/+VqSCra5TcoJ7X+NkGM5+\n" +
                 "0qcN8y+98pru5DvyUBb7LGJA1qrBBuZfXQHk13JgooTR1n4EV84JZ/AqYkVZU0Xp\n" +
@@ -33,10 +36,10 @@ class ProtocolKeystore {
                 "-----END PUBLIC KEY-----\n")
     }
 
-    @Nullable
-    fun findKey(random: String, signature: String): String? {
-        for (publicKeyBody in publicKeysBodies) {
-            val keyHash = getHashString(publicKeyBody)
+    // Searches the key that matches the specified signature and random
+    fun findKey(random: String, signature: String): PublicKey? {
+        for (publicKey in publicKeys) {
+            val keyHash = getHashString(publicKey)
 
             // Key hash salt
             val signData = random + keyHash
@@ -47,7 +50,11 @@ class ProtocolKeystore {
 
             // Try verify the key
             if (verifyData(signaturePublicKey, decodedSignature, decodedSignData)) {
-                return publicKeyBody
+                val keyBody = publicKey.replace("-----BEGIN PUBLIC KEY-----", "")
+                        .replace("-----END PUBLIC KEY-----", "")
+                        .replace("\n", "")
+
+                return readPublicKey(keyBody)
             }
         }
 

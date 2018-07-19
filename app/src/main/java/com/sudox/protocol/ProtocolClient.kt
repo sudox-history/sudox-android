@@ -13,6 +13,10 @@ class ProtocolClient {
         TODO("Implement this")
     }
 
+    fun sendStringMessage(event: String, message: Any, encrypt: Boolean = true) {
+        TODO("Implement this")
+    }
+
     fun sendMessage(event: String, message: Any, encrypt: Boolean = true) {
         TODO("Implement this")
     }

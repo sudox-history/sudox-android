@@ -1,15 +1,19 @@
 package com.sudox.protocol.model
 
+import com.sudox.protocol.helper.randomHexString
+
 class SymmetricKey {
 
     lateinit var key: String
-    lateinit var vector: String
+    lateinit var iv: String
+    lateinit var random: String
 
-    fun generateKey() {
-        TODO("Generate only key")
+    fun generate() {
+        key = randomHexString(64)
     }
 
-    fun generateVector() {
-        TODO("Generate only vector")
+    fun update() {
+        iv = randomHexString(32)
+        random = randomHexString(32)
     }
 }

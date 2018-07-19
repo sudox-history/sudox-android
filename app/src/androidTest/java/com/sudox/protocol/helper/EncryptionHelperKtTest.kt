@@ -4,6 +4,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import java.security.KeyPairGenerator
 import java.security.Signature
+import javax.crypto.Cipher
 
 class EncryptionHelperKtTest {
 
@@ -97,5 +98,42 @@ class EncryptionHelperKtTest {
 
         // Assert
         assertNotNull(publicKey)
+    }
+
+    @Test
+    fun testEncryptRSA() {
+        // Generate private key
+        val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
+
+        // Initialize generator
+        with(keyPairGenerator) {
+            initialize(2048)
+        }
+
+        val testInput = "Тест"
+
+        // Key pair
+        val keyPair = keyPairGenerator.genKeyPair()
+
+        // Encode
+        val encryptResult = decodeHexBytes(encryptRSA(keyPair.public, testInput)
+                .toByteArray())
+
+        // Cipher for decrypt
+        val cipher = Cipher.getInstance("RSA/NONE/OAEPPadding")
+
+        // Decrypt for the testing
+        val decryptResult = with(cipher) {
+            init(Cipher.DECRYPT_MODE, keyPair.private)
+
+            // Decrypt with RSA
+            val bytes = doFinal(encryptResult)
+
+            // To string
+            String(bytes)
+        }
+
+        // Validate
+        assertEquals(decryptResult, testInput)
     }
 }

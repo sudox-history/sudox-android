@@ -3,10 +3,9 @@ package com.sudox.protocol.helper
 import java.util.*
 
 // Hex chars
-private val HEX_CHARS = arrayOf(
-        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
-)
+private val HEX_CHARS = arrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f')
 
+// Generate random string with the hex chars
 fun randomHexString(length: Int): String {
     val random = Random(15)
 
@@ -27,8 +26,14 @@ fun randomHexString(length: Int): String {
     return builder.toString()
 }
 
+// Decode hex string to the bytes
 fun decodeHex(input: String): ByteArray {
-    val length = input.length
+    return decodeHexBytes(input.toByteArray())
+}
+
+// Decode hex bytes to the bytes
+fun decodeHexBytes(input: ByteArray): ByteArray {
+    val length = input.size
     val output = ByteArray(length shr 1)
 
     // Algorithm data
@@ -37,8 +42,8 @@ fun decodeHex(input: String): ByteArray {
 
     while (cursorIndex < length) {
         // Convert original char to hex
-        val hexChar = (Character.digit(input[cursorIndex++], 16) shl 4) or
-                Character.digit(input[cursorIndex++], 16)
+        val hexChar = (Character.digit(input[cursorIndex++].toChar(), 16) shl 4) or
+                Character.digit(input[cursorIndex++].toChar(), 16)
 
         // Save hex char
         output[loopIndex] = (hexChar and 0xFF).toByte()
@@ -50,10 +55,12 @@ fun decodeHex(input: String): ByteArray {
     return output
 }
 
+// Encode string to the hex bytes
 fun encodeHex(input: String): ByteArray {
     return encodeHexBytes(input.toByteArray())
 }
 
+// Encode UTF-8 bytes to the hex bytes
 fun encodeHexBytes(bytes: ByteArray): ByteArray {
     val length = bytes.size
     val output = ByteArray(length shl 1)
@@ -62,6 +69,7 @@ fun encodeHexBytes(bytes: ByteArray): ByteArray {
     var loopIndex = 0
     var cursorIndex = 0
 
+    // Algorithm (1 UTF-8 char = 2 HEX bytes)
     while (loopIndex < length) {
         output[cursorIndex++] = HEX_CHARS[(0xF0 and bytes[loopIndex].toInt()) ushr 4]
                 .toByte()
