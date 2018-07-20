@@ -14,6 +14,6 @@ class SymmetricKey {
 
     fun update() {
         iv = randomHexString(32)
-        random = randomHexString(32)
+        random = randomHexString(64)
     }
 }

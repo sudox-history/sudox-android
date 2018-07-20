@@ -6,6 +6,8 @@ import java.security.PublicKey
 import java.security.Signature
 import java.security.spec.X509EncodedKeySpec
 import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
 // Read public key
 fun readPublicKey(body: String): PublicKey {
@@ -46,6 +48,30 @@ fun encryptRSA(publicKey: PublicKey, data: String): String {
         val bytes = doFinal(data.toByteArray())
 
         // Encode to the HEX
+        encodeHexBytes(bytes)
+    }
+
+    return String(bytes)
+}
+
+// Encrypt AES
+fun encryptAES(key: String, iv: String, data: String): String {
+    val keySpec = SecretKeySpec(decodeHex(key), "AES")
+
+    // Get the cipher instance
+    val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+
+    // IV parameters
+    val parameterSpec = IvParameterSpec(decodeHex(iv))
+
+    // Encrypt data
+    val bytes = with(cipher) {
+        init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec)
+
+        // Encrypt data
+        val bytes = cipher.doFinal(data.toByteArray())
+
+        // Encode the hex
         encodeHexBytes(bytes)
     }
 

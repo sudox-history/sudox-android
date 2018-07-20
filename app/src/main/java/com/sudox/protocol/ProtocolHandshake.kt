@@ -18,9 +18,12 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
                         private var protocolKeystore: ProtocolKeystore) {
 
     // Disposables
-    private val disposables: CompositeDisposable = CompositeDisposable()
+    private lateinit var disposables: CompositeDisposable
 
     fun execute() = Single.create<SymmetricKey> {
+        disposables = CompositeDisposable()
+
+        // Get random hex string
         val random = randomHexString(64)
 
         // Set listener
@@ -35,6 +38,12 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
 
         // Send message to the server and start handshake
         protocolClient.sendMessage("verify", handshakeRandomDTO, false)
+    }
+
+    fun recycle() {
+        if (!disposables.isDisposed) {
+            disposables.dispose()
+        }
     }
 
     class ProtocolHandshakeObserver(private var protocolClient: ProtocolClient,
