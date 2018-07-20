@@ -1,5 +1,6 @@
 package com.sudox.protocol.helper
 
+import com.sudox.protocol.model.PerformedDataForClient
 import com.sudox.protocol.model.PerformedDataForEncrypt
 import com.sudox.protocol.model.SymmetricKey
 import org.json.JSONObject
@@ -17,4 +18,31 @@ fun performDataForEncrypt(symmetricKey: SymmetricKey, event: String, message: St
 
     // Create result object
     return PerformedDataForEncrypt(hash, payloadObject)
+}
+
+fun checkHashes(serverHash: String, payload: String): Boolean {
+    // JSON object for payload
+    val payloadObject = JSONObject(payload)
+
+    // Parse payload
+    val event = payloadObject.optString("event")
+    val random = payloadObject.optString("random")
+    val message = payloadObject.optString("msg")
+
+    // Get hash
+    val clientHash = getHashString(random + getHashString(event) + getHashString(message))
+
+    // Check, that hashes are equals
+    return clientHash == serverHash
+}
+
+fun performDataForClient(payload: String): PerformedDataForClient {
+    // JSON object for payload
+    val payloadObject = JSONObject(payload)
+
+    // Parse payload
+    val event = payloadObject.optString("event")
+    val message = payloadObject.optString("msg")
+
+    return PerformedDataForClient(event, message)
 }

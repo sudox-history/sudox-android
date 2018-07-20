@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 
 class ProtocolClient {
 
-    // TODO: ProtocolEncryptorHelper, ProtocolDecryptor, ProtocolHandshake, ConnectionStatusSubject inject
+    // TODO: ProtocolHandshake, ConnectionStatusSubject inject
 
     lateinit var symmetricKey: SymmetricKey
 

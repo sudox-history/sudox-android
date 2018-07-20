@@ -153,4 +153,21 @@ class EncryptionHelperKtTest {
         // Validate the data
         assertEquals(encryptedData, validResult)
     }
+
+    @Test
+    fun testDecryptAES() {
+        // Testable data
+        val validResult = "{\"anton\":\"Гандон\"}"
+        val inputTest = "3b1d03e6403841c5379f45dd94ceb8c30025b280f27b9f58"
+
+        // Insert into symmetric key the testable data
+        val key = "261ea9378f03b93186408f2646a54fe291a06e3a5c0c10862332f693062fc108"
+        val iv = "054c8d1a0c9af703b644c7ca83b9243b"
+
+        // Encrypt to the RSA
+        val encryptedData = decryptAES(key, iv, inputTest)
+
+        // Validate the data
+        assertEquals(encryptedData, validResult)
+    }
 }

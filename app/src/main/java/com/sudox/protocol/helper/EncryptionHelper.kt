@@ -77,3 +77,24 @@ fun encryptAES(key: String, iv: String, data: String): String {
 
     return String(bytes)
 }
+
+// Decrypt AES
+fun decryptAES(key: String, iv: String, data: String): String {
+    val keySpec = SecretKeySpec(decodeHex(key), "AES")
+
+    // Get the cipher instance
+    val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+
+    // IV parameters
+    val parameterSpec = IvParameterSpec(decodeHex(iv))
+
+    // Encrypt data
+    val bytes = with(cipher) {
+        init(Cipher.DECRYPT_MODE, keySpec, parameterSpec)
+
+        // Encrypt data
+        cipher.doFinal(decodeHexBytes(data.toByteArray()))
+    }
+
+    return String(bytes)
+}
