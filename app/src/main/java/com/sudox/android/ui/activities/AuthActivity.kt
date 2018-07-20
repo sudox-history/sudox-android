@@ -14,9 +14,8 @@ class AuthActivity : AppCompatActivity(){
 
         with(supportFragmentManager.beginTransaction()) {
             setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            add( R.id.fragment_auth_container, AuthFragment())
+            add(R.id.fragment_auth_container, AuthFragment())
             commitAllowingStateLoss()
         }
     }
-
 }
