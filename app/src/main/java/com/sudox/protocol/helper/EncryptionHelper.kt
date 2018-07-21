@@ -65,17 +65,15 @@ fun encryptAES(key: String, iv: String, data: String): String {
     val parameterSpec = IvParameterSpec(decodeHex(iv))
 
     // Encrypt data
-    val bytes = with(cipher) {
+    return with(cipher) {
         init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec)
 
         // Encrypt data
         val bytes = cipher.doFinal(data.toByteArray())
 
         // Encode the hex
-        encodeHexBytes(bytes)
+        Base64.encodeToString(bytes, Base64.DEFAULT)
     }
-
-    return String(bytes)
 }
 
 // Decrypt AES
@@ -89,12 +87,13 @@ fun decryptAES(key: String, iv: String, data: String): String {
     val parameterSpec = IvParameterSpec(decodeHex(iv))
 
     // Encrypt data
-    val bytes = with(cipher) {
+    return with(cipher) {
         init(Cipher.DECRYPT_MODE, keySpec, parameterSpec)
 
         // Encrypt data
-        cipher.doFinal(decodeHexBytes(data.toByteArray()))
-    }
+        val bytes = cipher.doFinal(Base64.decode(data.toByteArray(), Base64.DEFAULT))
 
-    return String(bytes)
+        // To string
+        String(bytes)
+    }
 }
