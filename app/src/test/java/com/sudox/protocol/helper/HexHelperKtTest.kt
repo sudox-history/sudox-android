@@ -15,7 +15,7 @@ class HexHelperKtTest {
         // Generate the string
         val hexString = randomHexString(testLength)
 
-        // Print result string
+        // Print code string
         println("Result: $hexString")
 
         // Check the length

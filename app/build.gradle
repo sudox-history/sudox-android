@@ -21,6 +21,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
+    //androidTestImplementation group: 'org.mockito', name: 'mockito-core', version: '2.19.1'
+    androidTestImplementation 'org.mockito:mockito-android:2.19.1'
 }
 
 android {

@@ -16,7 +16,7 @@ fun prepareDataForEncrypt(symmetricKey: SymmetricKey, event: String, message: St
         put("msg", message)
     }
 
-    // Create result object
+    // Create code object
     return PerformedDataForEncrypt(hash, payloadObject)
 }
 

@@ -9,7 +9,7 @@ fun getHash(input: ByteArray): ByteArray {
     // Get hash bytes
     val hashBytes = digest.digest(input)
 
-    // Convert to the hex and return result
+    // Convert to the hex and return code
     return encodeHexBytes(hashBytes)
 }
 
@@ -20,6 +20,6 @@ fun getHashString(input: String): String {
     // Get the hash
     val hashBytes = getHash(inputBytes)
 
-    // Convert bytes to the string and return result
+    // Convert bytes to the string and return code
     return String(hashBytes)
 }

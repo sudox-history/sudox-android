@@ -1,3 +1,18 @@
 package com.sudox.protocol.model.dto
 
-data class HandshakeSignatureDTO(val signature: String)
+import com.sudox.protocol.model.JsonModel
+import org.json.JSONObject
+
+class HandshakeSignatureDTO : JsonModel {
+
+    // Data
+    lateinit var signature: String
+
+    override fun toJSON(): JSONObject {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun fromJSON(jsonObject: JSONObject) {
+        signature = jsonObject.getString("signature")
+    }
+}

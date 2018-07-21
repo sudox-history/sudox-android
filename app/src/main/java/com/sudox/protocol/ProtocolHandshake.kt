@@ -20,21 +20,23 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
     // Disposables
     private lateinit var disposables: CompositeDisposable
 
-    fun execute() = Single.create<SymmetricKey> {
+    fun execute(): Single<SymmetricKey> = Single.create<SymmetricKey> {
         disposables = CompositeDisposable()
 
         // Get random hex string
         val random = randomHexString(64)
 
         // Set listener
-        val disposable = protocolClient.listenMessageOnce("verify", HandshakeSignatureDTO::class)
+        val disposable = protocolClient.listenMessageHandshake("verify", HandshakeSignatureDTO::class)
                 .subscribe(ProtocolHandshakeObserver(protocolClient, it, protocolKeystore, random, disposables))
 
         // Add disposable to composite disposable
         disposables.add(disposable)
 
         // Create message with random hex-string
-        val handshakeRandomDTO = HandshakeRandomDTO(random)
+        val handshakeRandomDTO = HandshakeRandomDTO().apply {
+            this.random = random
+        }
 
         // Send message to the server and start handshake
         protocolClient.sendHandshakeMessage("verify", handshakeRandomDTO)
@@ -77,10 +79,13 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
                 val hash = getHashString(symmetricKey.key + random)
 
                 // Build the handshake upgrade message
-                val handshakeUpgradeDTO = HandshakeUpgradeToServerDTO(encryptedPayload, hash)
+                val handshakeUpgradeDTO = HandshakeUpgradeToServerDTO().apply {
+                    this.payload = encryptedPayload
+                    this.hash = hash
+                }
 
                 // Set the listener for upgrade event
-                val disposable = protocolClient.listenMessageOnce("upgrade", HandshakeUpgradeFromServerDTO::class)
+                val disposable = protocolClient.listenMessageHandshake("upgrade", HandshakeUpgradeFromServerDTO::class)
                         .subscribe(ProtocolUpgradeObserver(symmetricKey, handshakeEmitter, disposables))
 
                 // Add disposable to the list
@@ -102,7 +107,7 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
                                   private val disposables: CompositeDisposable) : (HandshakeUpgradeFromServerDTO) -> (Unit) {
 
         override fun invoke(handshakeUpgradeFromServerDTO: HandshakeUpgradeFromServerDTO) {
-            if (handshakeUpgradeFromServerDTO.result == 1) {
+            if (handshakeUpgradeFromServerDTO.code == 1) {
                 handshakeEmitter.onSuccess(symmetricKey)
             } else {
                 handshakeEmitter.onError(HandshakeException())
