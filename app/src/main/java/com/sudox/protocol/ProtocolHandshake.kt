@@ -37,7 +37,7 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
         val handshakeRandomDTO = HandshakeRandomDTO(random)
 
         // Send message to the server and start handshake
-        protocolClient.sendMessage("verify", handshakeRandomDTO, false)
+        protocolClient.sendHandshakeMessage("verify", handshakeRandomDTO)
     }
 
     fun recycle() {
@@ -87,7 +87,7 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
                 disposables.add(disposable)
 
                 // Send upgrade message
-                protocolClient.sendMessage("upgrade", handshakeUpgradeDTO)
+                protocolClient.sendHandshakeMessage("upgrade", handshakeUpgradeDTO)
             } else {
                 handshakeEmitter.onError(HandshakeException())
 

@@ -8,6 +8,8 @@ import com.sudox.protocol.model.SymmetricKey
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.socket.client.IO
+import io.socket.client.Socket
 import kotlin.reflect.KClass
 
 class ProtocolClient {
@@ -16,8 +18,31 @@ class ProtocolClient {
 
     lateinit var symmetricKey: SymmetricKey
 
+    private lateinit var socket: Socket
+
     fun connect() = Completable.create {
-        TODO("Implement this")
+        val options = IO.Options()
+        with(options) {
+            forceNew = true
+            reconnection = true
+            multiplex = true
+            upgrade = true
+            secure = true
+            timeout = 10000
+            path = "/"
+        }
+
+        // Create instance of socket
+        socket = IO.socket("http://api.sudox.ru", options)
+
+        // Connect to the server
+        socket.connect()
+
+        // Get instance of protocolHandshake
+        val protocolHandshake = ProtocolHandshake(this, ProtocolKeystore())
+
+        // Start handshake
+        protocolHandshake.execute()
     }
 
     fun sendMessage(event: String, message: JsonModel) {
@@ -31,25 +56,31 @@ class ProtocolClient {
         // Prepare data for encrypt
         val json = prepareDataForEncrypt(symmetricKey, event, messageJsonObject.toString())
 
+        // Encrypt payload
         val encryptedPayload = encryptAES(symmetricKey.key, symmetricKey.iv, json.payloadObject.toString())
 
         // Make payloadJson
         val payloadJson = Payload(encryptedPayload, symmetricKey.iv, json.hash).toJSON()
 
         // Send payload to the server
-        TODO("socket.emit(\"packet\", payloadJson)")
+        socket.emit("packet", payloadJson)
 
-        /**
+        /*
          * symmetricKey.update()
          * json = SerializationHelper.prepareDataForEncrypt(symmetricKey, "huila", "test")
          * encryptedPayload = EncryptionHelper.encryptAES(symmetricKey.key, symmetricKey.iv, json.getPayload())
          *
          * Create json object (encrypted payload, iv, json.getHash)
-         * **/
+         * */
     }
 
-    fun sendHandshakeMessage(event: String, message: Any, encrypt: Boolean = true) {
+    fun sendHandshakeMessage(event: String, message: JsonModel) {
 
+        // Prepare message JSON Object
+        val messageJsonObject = message.toJSON()
+
+        // Send handshake data to the server
+        socket.emit(event, messageJsonObject)
     }
 
     fun <T : Any> listenMessage(event: String, clazz: KClass<T>, decrypt: Boolean = true): Observable<T> {

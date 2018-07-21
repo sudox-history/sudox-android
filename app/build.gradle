@@ -8,6 +8,9 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.0.0-beta01"
     implementation 'com.android.support:design:27.1.1'
 
+    // Socket.io
+    implementation 'io.socket:socket.io-client:1.0.0'
+
     // ReactiveX
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
