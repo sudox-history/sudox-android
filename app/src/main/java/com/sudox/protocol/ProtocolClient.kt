@@ -1,7 +1,6 @@
 package com.sudox.protocol
 
-import com.sudox.protocol.helper.encryptAES
-import com.sudox.protocol.helper.prepareDataForEncrypt
+import com.sudox.protocol.helper.*
 import com.sudox.protocol.model.JsonModel
 import com.sudox.protocol.model.Payload
 import com.sudox.protocol.model.SymmetricKey
@@ -42,11 +41,33 @@ class ProtocolClient {
                 .subscribe({
                     symmetricKey = it
 
+                    // Start listen messages
+                    startListeningInboundMessages()
+
                     // Notify subscribers, that socket was being connected
                     emitter.onComplete()
                 }, {
                     emitter.onError(it)
                 })
+    }
+
+    private fun startListeningInboundMessages() = socket.on("packet") {
+        val message = it[0] as JSONObject
+
+        // Packet data
+        val iv = message.getString("iv")
+        val payload = message.getString("payload")
+        val hash = message.getString("hash")
+
+        // Decrypt payload
+        val decryptedPayload = decryptAES(symmetricKey.key, iv, payload)
+
+        // Check hashes
+        if (checkHashes(hash, decryptedPayload)) {
+            val prepareDataForClient = prepareDataForClient(decryptedPayload)
+
+            // TODO: Допилить кэкбэки
+        }
     }
 
     fun sendMessage(event: String, message: JsonModel) {

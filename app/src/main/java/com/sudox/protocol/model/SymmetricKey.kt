@@ -1,6 +1,6 @@
 package com.sudox.protocol.model
 
-import com.sudox.protocol.helper.randomHexString
+import com.sudox.protocol.helper.randomBase64String
 
 class SymmetricKey {
 
@@ -9,11 +9,11 @@ class SymmetricKey {
     lateinit var random: String
 
     fun generate() {
-        key = randomHexString(64)
+        key = randomBase64String(32)
     }
 
     fun update() {
-        iv = randomHexString(32)
-        random = randomHexString(64)
+        iv = randomBase64String(16)
+        random = randomBase64String(32)
     }
 }

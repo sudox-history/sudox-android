@@ -10,7 +10,7 @@ fun getHash(input: ByteArray): ByteArray {
     val hashBytes = digest.digest(input)
 
     // Convert to the hex and return code
-    return encodeHexBytes(hashBytes)
+    return encodeBase64(hashBytes)
 }
 
 // Get SHA-256 hash of the string

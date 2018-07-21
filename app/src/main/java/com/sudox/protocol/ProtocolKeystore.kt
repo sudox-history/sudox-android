@@ -1,6 +1,6 @@
 package com.sudox.protocol
 
-import com.sudox.protocol.helper.decodeHex
+import com.sudox.protocol.helper.decodeBase64String
 import com.sudox.protocol.helper.getHashString
 import com.sudox.protocol.helper.readPublicKey
 import com.sudox.protocol.helper.verifyData
@@ -46,7 +46,7 @@ class ProtocolKeystore {
             val decodedSignData = signData.toByteArray()
 
             // Decoded signature
-            val decodedSignature = decodeHex(signature)
+            val decodedSignature = decodeBase64String(signature)
 
             // Try verify the key
             if (verifyData(signaturePublicKey, decodedSignature, decodedSignData)) {

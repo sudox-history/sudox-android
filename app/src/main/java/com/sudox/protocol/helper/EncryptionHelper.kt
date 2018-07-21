@@ -48,7 +48,7 @@ fun encryptRSA(publicKey: PublicKey, data: String): String {
         val bytes = doFinal(data.toByteArray())
 
         // Encode to the HEX
-        encodeHexBytes(bytes)
+        encodeBase64(bytes)
     }
 
     return String(bytes)
@@ -56,13 +56,13 @@ fun encryptRSA(publicKey: PublicKey, data: String): String {
 
 // Encrypt AES
 fun encryptAES(key: String, iv: String, data: String): String {
-    val keySpec = SecretKeySpec(decodeHex(key), "AES")
+    val keySpec = SecretKeySpec(decodeBase64String(key), "AES")
 
     // Get the cipher instance
     val cipher = Cipher.getInstance("AES/CTR/NoPadding")
 
     // IV parameters
-    val parameterSpec = IvParameterSpec(decodeHex(iv))
+    val parameterSpec = IvParameterSpec(decodeBase64String(iv))
 
     // Encrypt data
     return with(cipher) {
@@ -72,19 +72,19 @@ fun encryptAES(key: String, iv: String, data: String): String {
         val bytes = cipher.doFinal(data.toByteArray())
 
         // Encode the hex
-        Base64.encodeToString(bytes, Base64.DEFAULT)
+        Base64.encodeToString(bytes, Base64.NO_PADDING)
     }
 }
 
 // Decrypt AES
 fun decryptAES(key: String, iv: String, data: String): String {
-    val keySpec = SecretKeySpec(decodeHex(key), "AES")
+    val keySpec = SecretKeySpec(decodeBase64String(key), "AES")
 
     // Get the cipher instance
     val cipher = Cipher.getInstance("AES/CTR/NoPadding")
 
     // IV parameters
-    val parameterSpec = IvParameterSpec(decodeHex(iv))
+    val parameterSpec = IvParameterSpec(decodeBase64String(iv))
 
     // Encrypt data
     return with(cipher) {

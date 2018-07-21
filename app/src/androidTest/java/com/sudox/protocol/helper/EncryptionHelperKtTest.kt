@@ -116,7 +116,7 @@ class EncryptionHelperKtTest {
         val keyPair = keyPairGenerator.genKeyPair()
 
         // Encode
-        val encryptResult = decodeHexBytes(encryptRSA(keyPair.public, testInput)
+        val encryptResult = decodeBase64(encryptRSA(keyPair.public, testInput)
                 .toByteArray())
 
         // Cipher for decrypt

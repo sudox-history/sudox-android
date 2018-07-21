@@ -3,7 +3,7 @@ package com.sudox.protocol
 import com.sudox.protocol.exception.HandshakeException
 import com.sudox.protocol.helper.encryptRSA
 import com.sudox.protocol.helper.getHashString
-import com.sudox.protocol.helper.randomHexString
+import com.sudox.protocol.helper.randomBase64String
 import com.sudox.protocol.model.SymmetricKey
 import com.sudox.protocol.model.dto.HandshakeRandomDTO
 import com.sudox.protocol.model.dto.HandshakeSignatureDTO
@@ -24,7 +24,7 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
         disposables = CompositeDisposable()
 
         // Get random hex string
-        val random = randomHexString(64)
+        val random = randomBase64String(32)
 
         // Set listener
         val disposable = protocolClient.listenMessageHandshake("verify", HandshakeSignatureDTO::class)
