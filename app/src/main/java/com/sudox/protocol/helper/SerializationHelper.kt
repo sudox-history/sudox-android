@@ -5,7 +5,7 @@ import com.sudox.protocol.model.PerformedDataForEncrypt
 import com.sudox.protocol.model.SymmetricKey
 import org.json.JSONObject
 
-fun performDataForEncrypt(symmetricKey: SymmetricKey, event: String, message: String): PerformedDataForEncrypt {
+fun prepareDataForEncrypt(symmetricKey: SymmetricKey, event: String, message: String): PerformedDataForEncrypt {
     // Get the hash
     val hash = getHashString(symmetricKey.random + getHashString(event) + getHashString(message))
 
@@ -36,7 +36,7 @@ fun checkHashes(serverHash: String, payload: String): Boolean {
     return clientHash == serverHash
 }
 
-fun performDataForClient(payload: String): PerformedDataForClient {
+fun prepareDataForClient(payload: String): PerformedDataForClient {
     // JSON object for payload
     val payloadObject = JSONObject(payload)
 

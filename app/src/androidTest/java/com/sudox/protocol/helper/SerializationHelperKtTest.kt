@@ -19,7 +19,7 @@ class SerializationHelperKtTest : Assert() {
         val testMessage = "Hello!"
 
         // Verified
-        val payloadObject = performDataForEncrypt(symmetricKey, testEvent, testMessage)
+        val payloadObject = prepareDataForEncrypt(symmetricKey, testEvent, testMessage)
 
         // Testing data
         val hash = getHashString(symmetricKey.random + getHashString(testEvent) + getHashString(testMessage))
@@ -90,7 +90,7 @@ class SerializationHelperKtTest : Assert() {
         }
 
         // Testing
-        val performDataForClient = performDataForClient(payloadObject.toString())
+        val performDataForClient = prepareDataForClient(payloadObject.toString())
 
         // Validate
         assertEquals(performDataForClient.event, testEvent)
