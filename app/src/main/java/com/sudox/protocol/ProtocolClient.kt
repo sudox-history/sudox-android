@@ -1,11 +1,12 @@
 package com.sudox.protocol
 
+import androidx.annotation.VisibleForTesting
 import com.sudox.protocol.helper.*
 import com.sudox.protocol.model.JsonModel
+import com.sudox.protocol.model.MessageCallback
 import com.sudox.protocol.model.Payload
 import com.sudox.protocol.model.SymmetricKey
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -16,8 +17,10 @@ class ProtocolClient {
 
     // TODO: ConnectionStatusSubject inject
 
-    private lateinit var symmetricKey: SymmetricKey
+    @VisibleForTesting
     private lateinit var socket: Socket
+    private lateinit var symmetricKey: SymmetricKey
+    private var messagesCallbacks: LinkedHashMap<String, Pair<KClass<out JsonModel>, Any>> = LinkedHashMap()
 
     fun connect(): Completable = Completable.create { emitter ->
         val options = IO.Options()
@@ -55,18 +58,41 @@ class ProtocolClient {
         val message = it[0] as JSONObject
 
         // Packet data
-        val iv = message.getString("iv")
-        val payload = message.getString("payload")
-        val hash = message.getString("hash")
+        val iv: String? = message.optString("iv")
+        val payload: String? = message.optString("payload")
+        val hash: String? = message.optString("hash")
+
+        // Защита от MITM-атак
+        if (iv == null || payload == null || hash == null) {
+            return@on
+        }
 
         // Decrypt payload
-        val decryptedPayload = decryptAES(symmetricKey.key, iv, payload)
+        val decryptedPayload = decryptAES(symmetricKey.key, iv, payload) ?: return@on
 
         // Check hashes
         if (checkHashes(hash, decryptedPayload)) {
             val prepareDataForClient = prepareDataForClient(decryptedPayload)
+            val pair = messagesCallbacks[prepareDataForClient.event]
 
-            // TODO: Допилить кэкбэки
+            // Check, that event was being linked with callback
+            if (pair != null) {
+                // Get json object
+                val messageObject = JSONObject(prepareDataForClient.message)
+
+                // Convert message
+                val jsonModel = (pair.first.java.newInstance()) as JsonModel
+                val callback = pair.second as MessageCallback
+
+                // Read message
+                jsonModel.fromJSON(messageObject)
+
+                // Call callback
+                callback.onMessage(jsonModel)
+
+                // Clean-up callback from list
+                messagesCallbacks.remove(prepareDataForClient.event)
+            }
         }
     }
 
@@ -78,13 +104,18 @@ class ProtocolClient {
         val messageJsonObject = message.toJSON()
 
         // Prepare data for encrypt
-        val json = prepareDataForEncrypt(symmetricKey, event, messageJsonObject.toString())
+        val json = prepareDataForEncrypt(symmetricKey, event, messageJsonObject)
 
         // Encrypt payload
         val encryptedPayload = encryptAES(symmetricKey.key, symmetricKey.iv, json.payloadObject.toString())
+                ?: return
 
         // Make payloadJson
-        val payloadJson = Payload(encryptedPayload, symmetricKey.iv, json.hash).toJSON()
+        val payloadJson = Payload().apply {
+            payload = encryptedPayload
+            iv = symmetricKey.iv
+            hash = json.hash
+        }.toJSON()
 
         // Send payload to the server
         socket.emit("packet", payloadJson)
@@ -98,12 +129,8 @@ class ProtocolClient {
         socket.emit(event, messageJsonObject)
     }
 
-    fun <T : JsonModel> listenMessage(event: String, clazz: KClass<T>): Observable<T> {
-        TODO("Implement this")
-    }
-
-    fun <T : JsonModel> listenMessageOnce(event: String, clazz: KClass<T>): Observable<T> {
-        TODO("Implement this")
+    fun listenMessage(event: String, clazz: KClass<out JsonModel>, callback: MessageCallback) {
+        messagesCallbacks[event] = Pair(clazz, callback)
     }
 
     fun <T : JsonModel> listenMessageHandshake(event: String, clazz: KClass<T>): Single<T> = Single.create { emitter ->

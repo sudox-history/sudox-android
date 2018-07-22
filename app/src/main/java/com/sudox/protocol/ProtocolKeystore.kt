@@ -33,7 +33,7 @@ class ProtocolKeystore {
                 "R5Q2IaQ0soE0yZ7D9nNPlLaRUnsJwCQBd/howUCdZlBXII7Zjf+vNLzJKi52Tz2k\n" +
                 "qmP/9OexFNDoQPVcRK5ClrHSD7i8JVn4LfYdGO6/s4ZlkASyWm4PGbT6V4EGO0Px\n" +
                 "NQIDAQAB\n" +
-                "-----END PUBLIC KEY-----\n")
+                "-----END PUBLIC KEY-----")
     }
 
     // Searches the key that matches the specified signature and random
@@ -46,7 +46,7 @@ class ProtocolKeystore {
             val decodedSignData = signData.toByteArray()
 
             // Decoded signature
-            val decodedSignature = decodeBase64String(signature)
+            val decodedSignature = decodeBase64String(signature) ?: return null
 
             // Try verify the key
             if (verifyData(signaturePublicKey, decodedSignature, decodedSignData)) {

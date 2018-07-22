@@ -16,13 +16,14 @@ class SerializationHelperKtTest : Assert() {
         symmetricKey.update()
 
         val testEvent = "message"
-        val testMessage = "Hello!"
+        val testMessage = JSONObject()
+                .put("int", 1)
 
         // Verified
         val payloadObject = prepareDataForEncrypt(symmetricKey, testEvent, testMessage)
 
         // Testing data
-        val hash = getHashString(symmetricKey.random + getHashString(testEvent) + getHashString(testMessage))
+        val hash = getHashString(symmetricKey.random + getHashString(testEvent) + getHashString(testMessage.toString()))
         val random = payloadObject.payloadObject.get("random")
         val event = payloadObject.payloadObject.get("event")
         val msg = payloadObject.payloadObject.get("msg")

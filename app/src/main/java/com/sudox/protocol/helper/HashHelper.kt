@@ -9,7 +9,7 @@ fun getHash(input: ByteArray): ByteArray {
     // Get hash bytes
     val hashBytes = digest.digest(input)
 
-    // Convert to the hex and return code
+    // Convert to the hex
     return encodeBase64(hashBytes)
 }
 

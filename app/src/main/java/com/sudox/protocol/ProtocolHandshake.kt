@@ -55,7 +55,11 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
                                     private var disposables: CompositeDisposable) : (HandshakeSignatureDTO) -> (Unit) {
 
         override fun invoke(handshakeSignatureDTO: HandshakeSignatureDTO) {
-            val publicKey = protocolKeystore.findKey(random, handshakeSignatureDTO.signature)
+            if (handshakeSignatureDTO.signature == null) {
+                return
+            }
+
+            val publicKey = protocolKeystore.findKey(random, handshakeSignatureDTO.signature!!)
 
             // If signature valid, then key wasn't equals the null
             if (publicKey != null) {

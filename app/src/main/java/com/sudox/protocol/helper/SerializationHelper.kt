@@ -5,9 +5,9 @@ import com.sudox.protocol.model.PerformedDataForEncrypt
 import com.sudox.protocol.model.SymmetricKey
 import org.json.JSONObject
 
-fun prepareDataForEncrypt(symmetricKey: SymmetricKey, event: String, message: String): PerformedDataForEncrypt {
+fun prepareDataForEncrypt(symmetricKey: SymmetricKey, event: String, message: JSONObject): PerformedDataForEncrypt {
     // Get the hash
-    val hash = getHashString(symmetricKey.random + getHashString(event) + getHashString(message))
+    val hash = getHashString(symmetricKey.random + getHashString(event) + getHashString(message.toString()))
 
     // Create the payload object
     val payloadObject = with(JSONObject()) {

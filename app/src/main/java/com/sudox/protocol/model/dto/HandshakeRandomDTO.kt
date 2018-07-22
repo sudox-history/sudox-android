@@ -6,11 +6,11 @@ import org.json.JSONObject
 class HandshakeRandomDTO : JsonModel {
 
     // Data
-    lateinit var random: String
+    var random: String? = null
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()) {
-            put("random", random)
+            putOpt("random", random)
         }
     }
 

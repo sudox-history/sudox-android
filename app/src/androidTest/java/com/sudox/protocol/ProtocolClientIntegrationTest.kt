@@ -9,7 +9,7 @@ class ProtocolClientIntegrationTest {
         val protocolClient = ProtocolClient()
 
         // Testing
-        val result = protocolClient.connect()
-
+        protocolClient.connect()
+                .blockingAwait()
     }
 }

@@ -1,4 +1,4 @@
-package com.sudox.android.viewmodel
+package com.sudox.android.vm
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,15 +9,17 @@ class SplashViewModel : ViewModel() {
 
     private var data: MutableLiveData<Boolean>? = null
 
-    fun getData() : MutableLiveData<Boolean>? {
-        if(data == null)
+    fun getData(): MutableLiveData<Boolean>? {
+        if (data == null) {
             data = MutableLiveData()
+        }
+
         return data
     }
 
-    fun connect() : Completable {
+    fun connect(): Completable {
         val protocolClient = ProtocolClient()
-        return protocolClient.connect().doFinally{
+        return protocolClient.connect().doFinally {
             data!!.postValue(true)
         }
     }

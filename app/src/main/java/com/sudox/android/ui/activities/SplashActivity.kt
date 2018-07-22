@@ -1,13 +1,12 @@
 package com.sudox.android.ui.activities
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.sudox.android.R
-import com.sudox.android.viewmodel.SplashViewModel
+import com.sudox.android.vm.SplashViewModel
 
 class SplashActivity : AppCompatActivity() {
 

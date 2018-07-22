@@ -2,9 +2,9 @@ package com.sudox.protocol.helper
 
 import org.hamcrest.core.Is
 import org.hamcrest.core.IsEqual
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThat
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class HashHelperKtTest {
 

@@ -1,6 +1,5 @@
 package com.sudox.protocol.helper
 
-import android.util.Base64
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.Signature
@@ -25,15 +24,19 @@ fun readPublicKey(body: String): PublicKey {
 
 // Verify data
 fun verifyData(publicKey: PublicKey, signature: ByteArray, data: ByteArray): Boolean {
-    val verifier = Signature.getInstance("SHA256withRSA")
+    return try {
+        val verifier = Signature.getInstance("SHA256withRSA")
 
-    // Init verifier
-    with(verifier) {
-        initVerify(publicKey)
-        update(data)
+        // Init verifier
+        with(verifier) {
+            initVerify(publicKey)
+            update(data)
+        }
+
+        verifier.verify(signature)
+    } catch (ex: Exception) {
+        false
     }
-
-    return verifier.verify(signature)
 }
 
 // Encrypt RSA
@@ -55,45 +58,56 @@ fun encryptRSA(publicKey: PublicKey, data: String): String {
 }
 
 // Encrypt AES
-fun encryptAES(key: String, iv: String, data: String): String {
-    val keySpec = SecretKeySpec(decodeBase64String(key), "AES")
+fun encryptAES(key: String, iv: String, data: String): String? {
+    try {
+        val decodedKey = decodeBase64String(key) ?: return null
+        val keySpec = SecretKeySpec(decodedKey, "AES")
 
-    // Get the cipher instance
-    val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+        // IV parameters
+        val decodedIv = decodeBase64String(iv) ?: return null
+        val parameterSpec = IvParameterSpec(decodedIv)
 
-    // IV parameters
-    val parameterSpec = IvParameterSpec(decodeBase64String(iv))
-
-    // Encrypt data
-    return with(cipher) {
-        init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec)
+        // Get the cipher instance
+        val cipher = Cipher.getInstance("AES/CTR/NoPadding")
 
         // Encrypt data
-        val bytes = cipher.doFinal(data.toByteArray())
+        return with(cipher) {
+            init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec)
 
-        // Encode the hex
-        String(encodeBase64(bytes))
+            // Encrypt data
+            val bytes = cipher.doFinal(data.toByteArray())
+            val encodedBytes = encodeBase64(bytes)
+
+            // Encode the hex
+            String(encodedBytes)
+        }
+    } catch (ex: Exception) {
+        return null
     }
 }
 
 // Decrypt AES
-fun decryptAES(key: String, iv: String, data: String): String {
-    val keySpec = SecretKeySpec(decodeBase64String(key), "AES")
+fun decryptAES(key: String, iv: String, data: String): String? {
+    try {
+        val keySpec = SecretKeySpec(decodeBase64String(key), "AES")
 
-    // Get the cipher instance
-    val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+        // Get the cipher instance
+        val cipher = Cipher.getInstance("AES/CTR/NoPadding")
 
-    // IV parameters
-    val parameterSpec = IvParameterSpec(decodeBase64String(iv))
-
-    // Encrypt data
-    return with(cipher) {
-        init(Cipher.DECRYPT_MODE, keySpec, parameterSpec)
+        // IV parameters
+        val parameterSpec = IvParameterSpec(decodeBase64String(iv))
 
         // Encrypt data
-        val bytes = cipher.doFinal(decodeBase64(data.toByteArray()))
+        return with(cipher) {
+            init(Cipher.DECRYPT_MODE, keySpec, parameterSpec)
 
-        // To string
-        String(bytes)
+            // Encrypt data
+            val bytes = cipher.doFinal(decodeBase64(data.toByteArray()))
+
+            // To string
+            String(bytes)
+        }
+    } catch (e: Exception) {
+        return null
     }
 }

@@ -6,13 +6,13 @@ import org.json.JSONObject
 class HandshakeUpgradeToServerDTO : JsonModel {
 
     // Data
-    lateinit var payload: String
-    lateinit var hash: String
+    var payload: String? = null
+    var hash: String? = null
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()) {
-            put("payload", payload)
-            put("hash", hash)
+            putOpt("payload", payload)
+            putOpt("hash", hash)
         }
     }
 
@@ -31,6 +31,6 @@ class HandshakeUpgradeFromServerDTO : JsonModel {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        code = jsonObject.getInt("code")
+        code = jsonObject.optInt("code")
     }
 }

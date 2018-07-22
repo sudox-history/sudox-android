@@ -2,17 +2,21 @@ package com.sudox.protocol.model
 
 import org.json.JSONObject
 
-data class Payload(val payload: String, val iv: String, val hash: String) : JsonModel {
+class Payload : JsonModel {
+
+    var payload: String? = null
+    var iv: String? = null
+    var hash: String? = null
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()) {
-            put("payload", payload)
-            put("iv", iv)
-            put("hash", hash)
+            putOpt("payload", payload)
+            putOpt("iv", iv)
+            putOpt("hash", hash)
         }
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
