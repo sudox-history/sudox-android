@@ -26,7 +26,7 @@ fun decodeBase64String(input: String): ByteArray {
 
 // Зашифровывает байты в Base-64
 fun encodeBase64(input: ByteArray): ByteArray {
-    return Base64.encode(input, Base64.NO_PADDING)
+    return Base64.encode(input, Base64.NO_WRAP)
 }
 
 // Зашифровывает строку в Base-64

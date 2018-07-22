@@ -14,7 +14,7 @@ fun readPublicKey(body: String): PublicKey {
     val keyFactory = KeyFactory.getInstance("RSA")
 
     // Decode key body
-    val decoded = Base64.decode(body, Base64.DEFAULT)
+    val decoded = decodeBase64String(body)
 
     // Create key spec
     val x509EncodedKeySpec = X509EncodedKeySpec(decoded)
@@ -72,7 +72,7 @@ fun encryptAES(key: String, iv: String, data: String): String {
         val bytes = cipher.doFinal(data.toByteArray())
 
         // Encode the hex
-        Base64.encodeToString(bytes, Base64.NO_PADDING)
+        String(encodeBase64(bytes))
     }
 }
 
@@ -91,7 +91,7 @@ fun decryptAES(key: String, iv: String, data: String): String {
         init(Cipher.DECRYPT_MODE, keySpec, parameterSpec)
 
         // Encrypt data
-        val bytes = cipher.doFinal(Base64.decode(data.toByteArray(), Base64.DEFAULT))
+        val bytes = cipher.doFinal(decodeBase64(data.toByteArray()))
 
         // To string
         String(bytes)

@@ -36,10 +36,11 @@ class SerializationHelperKtTest : Assert() {
 
     @Test
     fun testCheckHashes_success() {
-        val testRandom = "261ea9378f03b93186408f2646a54fe291a06e3a5c0c10862332f693062fc108"
+
+        val testRandom = "V9grz8cXs+9NfwqmTxIZ1HyuetY4Fvs44GDx1DkRwkM="
         val testEvent = "auth.sendCode"
         val testMessage = "{\"anton\":\"Гандон\"}"
-        val validHash = "3455856a6b239a5f11a9048e1215447c6d08e2148728d109d70057bca5177392"
+        val validHash = "70IJM72PraKOCLMgmMnk71p/ePtqRyspAz1rRUuHguQ="
 
         // Generate payload
         val payloadObject = with(JSONObject()) {
@@ -60,7 +61,7 @@ class SerializationHelperKtTest : Assert() {
         val testRandom = "261ea9378f03b93186408f2646a54fe291a06e3a5c0c10862332f693062fc108"
         val testEvent = "auth.sendCode"
         val testMessage = "{\"anton\":\"Гандон\"}"
-        val validHash = "3455856a6b239a5f11a9048e1215447c6d08e2148728d109d70057bca5177392"
+        val validHash = "70IJM72PraKOCLMgmMnk71p/ePtqRyspAz1rRUuHguQ="
 
         // Generate payload
         val payloadObject = with(JSONObject()) {

@@ -140,12 +140,12 @@ class EncryptionHelperKtTest {
     @Test
     fun testEncryptAES() {
         // Testable data
-        val inputTest = "{\"anton\":\"Гандон\"}"
-        val validResult = "Ox0D5kA4QcU3n0XdlM64wwAlsoDye59Y\n"
+        val inputTest = "{\"хуй\":\"Соси\"}"
+        val validResult = "p9NC+fS7cbi59SnxmNNn4cnDj1gX"
 
         // Insert into symmetric key the testable data
-        val key = "261ea9378f03b93186408f2646a54fe291a06e3a5c0c10862332f693062fc108"
-        val iv = "054c8d1a0c9af703b644c7ca83b9243b"
+        val key = "V9grz8cXs+9NfwqmTxIZ1HyuetY4Fvs44GDx1DkRwkM="
+        val iv = "rmjPHhtBol4aKG1LNRaW8w=="
 
         // Encrypt to the RSA
         val encryptedData = encryptAES(key, iv, inputTest)
@@ -157,12 +157,12 @@ class EncryptionHelperKtTest {
     @Test
     fun testDecryptAES() {
         // Testable data
-        val validResult = "{\"anton\":\"Гандон\"}"
-        val inputTest = "Ox0D5kA4QcU3n0XdlM64wwAlsoDye59Y"
+        val validResult = "{\"хуй\":\"Соси\"}"
+        val inputTest = "p9NC+fS7cbi59SnxmNNn4cnDj1gX"
 
         // Insert into symmetric key the testable data
-        val key = "261ea9378f03b93186408f2646a54fe291a06e3a5c0c10862332f693062fc108"
-        val iv = "054c8d1a0c9af703b644c7ca83b9243b"
+        val key = "V9grz8cXs+9NfwqmTxIZ1HyuetY4Fvs44GDx1DkRwkM="
+        val iv = "rmjPHhtBol4aKG1LNRaW8w=="
 
         // Encrypt to the RSA
         val decryptedData = decryptAES(key, iv, inputTest)

@@ -10,10 +10,10 @@ class HashHelperKtTest {
 
     @Test
     fun testGetHash() {
-        val testInput = "Hello World!"
+        val testInput = "Hello world"
                 .toByteArray()
 
-        val validResult = "7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069"
+        val validResult = "ZOyIygCyaOW6GjVnihtTFtIS9PNmskdyMlNKiuyjfzw="
                 .toByteArray()
 
         // Get the hash
@@ -30,8 +30,8 @@ class HashHelperKtTest {
 
     @Test
     fun testHashString() {
-        val testInput = "Hello World!"
-        val validResult = "7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069"
+        val testInput = "Hello world"
+        val validResult = "ZOyIygCyaOW6GjVnihtTFtIS9PNmskdyMlNKiuyjfzw="
 
         // Get the hash
         val result = getHashString(testInput)
