@@ -56,6 +56,9 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
 
         override fun invoke(handshakeSignatureDTO: HandshakeSignatureDTO) {
             if (handshakeSignatureDTO.signature == null) {
+                handshakeEmitter.onError(HandshakeException())
+                disposables.dispose()
+
                 return
             }
 
