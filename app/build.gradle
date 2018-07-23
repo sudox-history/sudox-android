@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-platform-android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-
+apply plugin: 'kotlin-kapt'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -48,7 +48,6 @@ dependencies {
     androidTestImplementation 'org.mockito:mockito-android:2.19.1'
 }
 
-
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.1"
@@ -70,3 +69,6 @@ android {
     }
 }
 
+kapt {
+    generateStubs true
+}
