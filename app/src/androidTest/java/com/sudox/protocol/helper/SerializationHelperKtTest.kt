@@ -59,7 +59,7 @@ class SerializationHelperKtTest : Assert() {
 
     @Test
     fun testCheckHashes_fail() {
-        val testRandom = "261ea9378f03b93186408f2646a54fe291a06e3a5c0c10862332f693062fc108"
+        val testRandom = "V9grz8cXs+9NfwqmTxIZ1HyuetY4Fvs44GDx1DkRwkM="
         val testEvent = "auth.sendCode"
         val testMessage = "{\"anton\":\"Гандон\"}"
         val validHash = "70IJM72PraKOCLMgmMnk71p/ePtqRyspAz1rRUuHguQ="
@@ -80,7 +80,7 @@ class SerializationHelperKtTest : Assert() {
 
     @Test
     fun testPerformDataForClient() {
-        val testRandom = "261ea9378f03b93186408f2646a54fe291a06e3a5c0c10862332f693062fc108"
+        val testRandom = "V9grz8cXs+9NfwqmTxIZ1HyuetY4Fvs44GDx1DkRwkM="
         val testEvent = "auth.sendCode"
         val testMessage = "{\"anton\":\"Гандон\"}"
 
