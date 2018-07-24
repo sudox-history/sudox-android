@@ -15,24 +15,13 @@ class ProtocolModule {
 
     @Provides
     @Singleton
-    fun provideProtocolClient(
-            socket: Socket) = ProtocolClient(socket)
-
-    @Provides
-    fun provideProtocolHandshake(protocolClient: ProtocolClient,
-                                 keystore: ProtocolKeystore) : ProtocolHandshake {
-        return ProtocolHandshake(protocolClient, keystore)
-    }
-
-    @Provides
-    fun provideProtocolKeystore() : ProtocolKeystore = ProtocolKeystore()
+    fun provideProtocolClient(socket: Socket, handshake: ProtocolHandshake, stabilizer: ProtocolConnectionStabilizer)
+            = ProtocolClient(socket, handshake, stabilizer)
 
     @Provides
     @Singleton
-    fun provideProtocolConnectionStabilizer(handshake: ProtocolHandshake,
-                                            socket: Socket) : ProtocolConnectionStabilizer {
-        return ProtocolConnectionStabilizer(handshake, socket)
-    }
+    fun provideProtocolHandshake(keystore: ProtocolKeystore)
+            = ProtocolHandshake(keystore)
 
     @Provides
     @Singleton

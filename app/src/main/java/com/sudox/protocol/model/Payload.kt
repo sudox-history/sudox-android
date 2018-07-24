@@ -1,5 +1,6 @@
 package com.sudox.protocol.model
 
+import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONObject
 
 class Payload : JsonModel {

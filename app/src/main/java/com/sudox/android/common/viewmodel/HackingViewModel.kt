@@ -1,8 +1,7 @@
-package com.sudox.android.viewmodel
+package com.sudox.android.common.viewmodel
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*
-
 
 inline fun <reified T : ViewModel> FragmentActivity.getViewModel(viewModelFactory: ViewModelProvider.Factory): T {
     return ViewModelProviders.of(this, viewModelFactory)[T::class.java]

@@ -1,16 +1,13 @@
-package com.sudox.android.ui.activity
+package com.sudox.android.ui
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.sudox.android.R
-import dagger.android.AndroidInjection
+import dagger.android.support.DaggerAppCompatActivity
 
-class AuthActivity : AppCompatActivity(){
+class AuthActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
-
     }
 }

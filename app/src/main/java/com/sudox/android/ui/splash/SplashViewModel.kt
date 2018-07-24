@@ -1,4 +1,4 @@
-package com.sudox.android.ui.activity.splashscreen
+package com.sudox.android.ui.splash
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,21 +18,21 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
     fun connect() {
         protocolClient.connect().subscribe({
             connectData.postValue(Data(ConnectState.SUCCESS))
-        },{
+        }, {
             connectData.postValue(Data(ConnectState.ERROR))
         })
     }
 
-    fun startHandshake(){
+    fun startHandshake() {
         protocolClient.startHandshake().subscribe({
             handshakeData.postValue(Data(HandshakeState.SUCCESS))
-        },{
+        }, {
             handshakeData.postValue(Data(HandshakeState.ERROR))
         })
     }
 
-    fun sendToken(token: String?){
-        if(token == null){
+    fun sendToken(token: String?) {
+        if (token == null) {
             tokenData.postValue(Data(TokenState.MISSING))
         }
     }

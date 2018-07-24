@@ -1,4 +1,4 @@
-package com.sudox.protocol.model
+package com.sudox.protocol.model.dto
 
 import org.json.JSONObject
 

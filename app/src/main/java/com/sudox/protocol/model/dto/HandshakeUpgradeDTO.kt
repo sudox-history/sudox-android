@@ -1,6 +1,5 @@
 package com.sudox.protocol.model.dto
 
-import com.sudox.protocol.model.JsonModel
 import org.json.JSONObject
 
 class HandshakeUpgradeToServerDTO : JsonModel {

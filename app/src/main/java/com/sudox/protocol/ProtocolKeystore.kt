@@ -6,8 +6,9 @@ import com.sudox.protocol.helper.readPublicKey
 import com.sudox.protocol.helper.verifyData
 import java.security.PublicKey
 import java.util.*
+import javax.inject.Inject
 
-class ProtocolKeystore {
+class ProtocolKeystore @Inject constructor() {
 
     // Signature public key body
     private var signaturePublicKeyBody = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvR9FiI9iaw9oiTFCCGwQ" +

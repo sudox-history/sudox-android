@@ -17,10 +17,11 @@ fun randomBase64String(length: Int): String {
 
 // Расшифровывает Base64 в байты
 fun decodeBase64(input: ByteArray): ByteArray? {
-    val bytes = Base64.decode(input, Base64.NO_PADDING)
-
-    // Check
-    return if (bytes.isNotEmpty()) bytes else null
+    return try {
+        Base64.decode(input, Base64.NO_PADDING)
+    } catch (e: Exception) {
+        null
+    }
 }
 
 // Расшифровывает Base-64 строку

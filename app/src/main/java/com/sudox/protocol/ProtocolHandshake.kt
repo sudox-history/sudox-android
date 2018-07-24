@@ -1,6 +1,5 @@
 package com.sudox.protocol
 
-import com.sudox.android.ApplicationLoader
 import com.sudox.protocol.exception.HandshakeException
 import com.sudox.protocol.helper.encryptRSA
 import com.sudox.protocol.helper.getHashString
@@ -18,17 +17,10 @@ import javax.inject.Inject
 
 class ProtocolHandshake @Inject constructor(private var protocolKeystore: ProtocolKeystore) {
 
-    @Inject
-    lateinit var protocolClient: ProtocolClient
-
-    init {
-        ApplicationLoader.component.inject(this)
-    }
-
     // Disposables
     private lateinit var disposables: CompositeDisposable
 
-    fun execute(): Single<SymmetricKey> = Single.create<SymmetricKey> {
+    fun execute(protocolClient: ProtocolClient): Single<SymmetricKey> = Single.create<SymmetricKey> {
         disposables = CompositeDisposable()
 
         // Get random hex string
@@ -50,12 +42,6 @@ class ProtocolHandshake @Inject constructor(private var protocolKeystore: Protoc
         protocolClient.sendHandshakeMessage("verify", handshakeRandomDTO)
     }
 
-    fun recycle() {
-        if (!disposables.isDisposed) {
-            disposables.dispose()
-        }
-    }
-
     class ProtocolHandshakeObserver(private var protocolClient: ProtocolClient,
                                     private var handshakeEmitter: SingleEmitter<SymmetricKey>,
                                     private var protocolKeystore: ProtocolKeystore,
@@ -66,7 +52,6 @@ class ProtocolHandshake @Inject constructor(private var protocolKeystore: Protoc
             if (handshakeSignatureDTO.signature == null) {
                 handshakeEmitter.onError(HandshakeException())
                 disposables.dispose()
-
                 return
             }
 

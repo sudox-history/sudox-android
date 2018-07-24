@@ -1,38 +1,30 @@
 package com.sudox.android
 
-import android.app.Activity
-import android.app.Application
 import com.sudox.android.di.AppComponent
 import com.sudox.android.di.DaggerAppComponent
 import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
+import dagger.android.DaggerApplication
 import timber.log.Timber
-import javax.inject.Inject
 
-class ApplicationLoader : Application(), HasActivityInjector {
+class ApplicationLoader : DaggerApplication() {
 
-    @Inject
-    lateinit var activityInjector : DispatchingAndroidInjector<Activity>
+    lateinit var component: AppComponent
 
-    companion object {
-        val component: AppComponent by lazy {
-            DaggerAppComponent
-                    .builder()
-                    .application(this)
-                    .build()
-        }
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        component = DaggerAppComponent
+                .builder()
+                .application(this)
+                .build()
+
+        return component
     }
 
     override fun onCreate() {
         super.onCreate()
 
+        // Enable Timber
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-
-        component.inject(this)
     }
-
-    override fun activityInjector(): AndroidInjector<Activity> = activityInjector
 }

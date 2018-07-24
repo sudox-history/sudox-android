@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:background="?attr/colorPrimary"
+    android:gravity="center_vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
+
+    <!-- Navigation buttons start -->
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/buttonToolbarBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:drawableStart="@drawable/ic_arrow_left"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:text="@string/toolbar_back"
+        android:textSize="14sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/buttonToolbarNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:drawableEnd="@drawable/ic_arrow_right"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:text="@string/toolbar_next"
+        android:textSize="14sp" />
+
+    <!-- Navigation buttons end -->
+
+</RelativeLayout>

@@ -11,5 +11,5 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideApplication(app : ApplicationLoader):Context = app
+    fun provideApplication(app: ApplicationLoader): Context = app
 }

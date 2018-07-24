@@ -1,8 +1,7 @@
 package com.sudox.protocol
 
-import com.sudox.android.ApplicationLoader
 import com.sudox.protocol.helper.*
-import com.sudox.protocol.model.JsonModel
+import com.sudox.protocol.model.dto.JsonModel
 import com.sudox.protocol.model.MessageCallback
 import com.sudox.protocol.model.Payload
 import com.sudox.protocol.model.SymmetricKey
@@ -13,26 +12,21 @@ import org.json.JSONObject
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
-class ProtocolClient @Inject constructor(val socket: Socket) {
+class ProtocolClient @Inject constructor(private val socket: Socket,
+                                         private val handshake: ProtocolHandshake,
+                                         private val stabilizer: ProtocolConnectionStabilizer) {
 
     // TODO: ConnectionStatusSubject inject
 
-    @Inject
-    lateinit var stabilizer: ProtocolConnectionStabilizer
-
-    @Inject
-    lateinit var handshake: ProtocolHandshake
-
+    // Symmetric key for encryption
     private lateinit var symmetricKey: SymmetricKey
-    private var messagesCallbacks: LinkedHashMap<String, Pair<KClass<out JsonModel>, Any>> = LinkedHashMap()
 
-    init {
-        ApplicationLoader.component.inject(this)
-    }
+    // Callbacks list
+    private var messagesCallbacks: LinkedHashMap<String, Pair<KClass<out JsonModel>, Any>> = LinkedHashMap()
 
     fun connect(): Completable = Completable.create { emitter ->
         // Init connect state in stabilizer
-        stabilizer.connectionState()
+        stabilizer.connectionState(socket)
                 .subscribe({
                     emitter.onComplete()
                 }, {
@@ -44,7 +38,7 @@ class ProtocolClient @Inject constructor(val socket: Socket) {
     }
 
     fun startHandshake(): Completable = Completable.create { emitter ->
-        handshake.execute()
+        handshake.execute(this)
                 .subscribe({
                     symmetricKey = it
 
