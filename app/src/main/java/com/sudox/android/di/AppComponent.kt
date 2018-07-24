@@ -1,6 +1,11 @@
 package com.sudox.android.di
 
 import com.sudox.android.ApplicationLoader
+import com.sudox.android.di.module.AndroidInjectorActivityBindingModule
+import com.sudox.android.di.module.AppModule
+import com.sudox.android.di.module.ViewModelModule
+import com.sudox.protocol.ProtocolClient
+import com.sudox.protocol.ProtocolHandshake
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -8,7 +13,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [
     (AndroidInjectorActivityBindingModule::class),
-    (AppModule::class)])
+    (AppModule::class),
+    (ViewModelModule::class)])
 interface AppComponent {
 
 
@@ -21,4 +27,8 @@ interface AppComponent {
     }
 
     fun inject(app: ApplicationLoader)
+
+    fun inject(protocolClient: ProtocolClient)
+
+    fun inject(handshake: ProtocolHandshake)
 }

@@ -21,10 +21,6 @@ dependencies {
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
 
-    // Conductor
-    implementation 'com.bluelinelabs:conductor:2.1.4'
-    implementation 'com.bluelinelabs:conductor-archlifecycle:0.1.1'
-
     // Socket.io
     implementation 'io.socket:socket.io-client:1.0.0'
 
@@ -67,6 +63,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+kapt {
+    mapDiagnosticLocations = true
 }
 
 kapt {

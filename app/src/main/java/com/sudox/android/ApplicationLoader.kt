@@ -15,11 +15,13 @@ class ApplicationLoader : Application(), HasActivityInjector {
     @Inject
     lateinit var activityInjector : DispatchingAndroidInjector<Activity>
 
-    val component: AppComponent by lazy {
-        DaggerAppComponent
-                .builder()
-                .application(this)
-                .build()
+    companion object {
+        val component: AppComponent by lazy {
+            DaggerAppComponent
+                    .builder()
+                    .application(this)
+                    .build()
+        }
     }
 
     override fun onCreate() {

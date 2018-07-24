@@ -1,7 +1,7 @@
-package com.sudox.android.di
+package com.sudox.android.di.module
 
-import com.sudox.android.ui.activities.AuthActivity
-import com.sudox.android.ui.activities.SplashActivity
+import com.sudox.android.ui.activity.AuthActivity
+import com.sudox.android.ui.activity.splashscreen.SplashActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

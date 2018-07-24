@@ -1,5 +1,6 @@
 package com.sudox.protocol
 
+import com.sudox.android.ApplicationLoader
 import com.sudox.protocol.exception.HandshakeException
 import com.sudox.protocol.helper.encryptRSA
 import com.sudox.protocol.helper.getHashString
@@ -13,9 +14,16 @@ import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import io.reactivex.disposables.CompositeDisposable
 import org.json.JSONObject
+import javax.inject.Inject
 
-class ProtocolHandshake(private var protocolClient: ProtocolClient,
-                        private var protocolKeystore: ProtocolKeystore) {
+class ProtocolHandshake @Inject constructor(private var protocolKeystore: ProtocolKeystore) {
+
+    @Inject
+    lateinit var protocolClient: ProtocolClient
+
+    init {
+        ApplicationLoader.component.inject(this)
+    }
 
     // Disposables
     private lateinit var disposables: CompositeDisposable
@@ -125,3 +133,4 @@ class ProtocolHandshake(private var protocolClient: ProtocolClient,
         }
     }
 }
+

@@ -1,4 +1,4 @@
-package com.sudox.android.ui.activities
+package com.sudox.android.ui.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -11,8 +11,6 @@ class AuthActivity : AppCompatActivity(){
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
-
-
 
     }
 }

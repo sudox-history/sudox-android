@@ -1,6 +1,6 @@
 package com.sudox.protocol
 
-import androidx.annotation.VisibleForTesting
+import com.sudox.android.ApplicationLoader
 import com.sudox.protocol.helper.*
 import com.sudox.protocol.model.JsonModel
 import com.sudox.protocol.model.MessageCallback
@@ -8,39 +8,43 @@ import com.sudox.protocol.model.Payload
 import com.sudox.protocol.model.SymmetricKey
 import io.reactivex.Completable
 import io.reactivex.Single
-import io.socket.client.IO
 import io.socket.client.Socket
 import org.json.JSONObject
+import javax.inject.Inject
 import kotlin.reflect.KClass
 
-class ProtocolClient {
+class ProtocolClient @Inject constructor(val socket: Socket) {
 
     // TODO: ConnectionStatusSubject inject
 
-    @VisibleForTesting
-    private lateinit var socket: Socket
+    @Inject
+    lateinit var stabilizer: ProtocolConnectionStabilizer
+
+    @Inject
+    lateinit var handshake: ProtocolHandshake
+
     private lateinit var symmetricKey: SymmetricKey
     private var messagesCallbacks: LinkedHashMap<String, Pair<KClass<out JsonModel>, Any>> = LinkedHashMap()
 
-    fun connect(): Completable = Completable.create { emitter ->
-        val options = IO.Options()
-                .apply {
-                    reconnection = true
-                    secure = true
-                    path = "/"
-                }
+    init {
+        ApplicationLoader.component.inject(this)
+    }
 
-        // Create instance of socket
-        socket = IO.socket("http://api.sudox.ru", options)
+    fun connect(): Completable = Completable.create { emitter ->
+        // Init connect state in stabilizer
+        stabilizer.connectionState()
+                .subscribe({
+                    emitter.onComplete()
+                }, {
+                    emitter.onError(it)
+                })
 
         // Connect to the server
         socket.connect()
+    }
 
-        // Get instance of protocolHandshake
-        val protocolHandshake = ProtocolHandshake(this, ProtocolKeystore())
-
-        // Start handshake
-        protocolHandshake.execute()
+    fun startHandshake(): Completable = Completable.create { emitter ->
+        handshake.execute()
                 .subscribe({
                     symmetricKey = it
 
