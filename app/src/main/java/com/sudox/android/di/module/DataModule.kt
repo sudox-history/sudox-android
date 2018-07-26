@@ -1,6 +1,7 @@
 package com.sudox.android.di.module
 
-import com.sudox.android.repository.AccountRepository
+import android.accounts.AccountManager
+import com.sudox.android.common.repository.AccountRepository
 import com.sudox.protocol.ProtocolClient
 import dagger.Module
 import dagger.Provides
@@ -11,5 +12,6 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideAccountRepository(protocolClient: ProtocolClient) = AccountRepository(protocolClient)
+    fun provideAccountRepository(protocolClient: ProtocolClient,
+                                 accountManager: AccountManager) = AccountRepository(protocolClient, accountManager)
 }

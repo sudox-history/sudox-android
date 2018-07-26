@@ -1,4 +1,4 @@
-package com.sudox.android.common.viewmodel
+package com.sudox.android.common.viewmodels
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.*

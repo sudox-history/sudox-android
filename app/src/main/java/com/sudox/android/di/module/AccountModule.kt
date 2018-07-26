@@ -1,15 +1,17 @@
 package com.sudox.android.di.module
 
-import com.sudox.android.common.SudoxAuthenticator
-import com.sudox.android.common.service.SudoxAuthenticatorService
+import android.accounts.AccountManager
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
 class AccountModule {
+
     @Provides
     @Singleton
-    fun provideSudoxAuthenticator(sudoxAuthenticatorService: SudoxAuthenticatorService)
-            = SudoxAuthenticator(sudoxAuthenticatorService)
+    fun provideAccountManager(context: Context): AccountManager {
+        return AccountManager.get(context)
+    }
 }

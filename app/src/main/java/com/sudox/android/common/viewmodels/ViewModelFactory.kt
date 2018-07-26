@@ -1,4 +1,4 @@
-package com.sudox.android.common.viewmodel
+package com.sudox.android.common.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
