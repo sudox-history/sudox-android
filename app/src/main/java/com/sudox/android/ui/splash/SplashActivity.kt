@@ -1,5 +1,7 @@
 package com.sudox.android.ui.splash
 
+import android.accounts.Account
+import android.accounts.AccountManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import androidx.lifecycle.ViewModelProvider
@@ -23,9 +25,18 @@ class SplashActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
+
+
+        val manager = AccountManager.get(this)
+
+        val account = Account("username","com.sudox.accounts")
+        manager.addAccountExplicitly(account, null, null)
+
+        val accounts = manager.accounts
+
         // Special easy way by Antonio Leiva with my corrections for project!
         splashViewModel = withViewModel(viewModelFactory) {
-            connect()
+            //connect()
 
             // Observe data
             observe(connectData, ::getConnectState)

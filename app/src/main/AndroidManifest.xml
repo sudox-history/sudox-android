@@ -1,7 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
           package="com.sudox.android">
 
+    <uses-permission
+        android:name="android.permission.AUTHENTICATE_ACCOUNTS"
+        android:maxSdkVersion="22"/>
+    <uses-permission
+        android:name="android.permission.GET_ACCOUNTS"
+        android:maxSdkVersion="22"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
@@ -21,6 +26,7 @@
         </activity>
 
         <activity android:name=".ui.AuthActivity">
+
 
         </activity>
 
