@@ -4,7 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.sudox.android.R
+import com.sudox.android.common.enums.NavigationAction
 import kotlinx.android.synthetic.main.include_navbar.view.*
 
 class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -18,6 +21,9 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     // Next button
     var nextButtonIsVisible: Boolean = false
     var nextButtonText: String? = null
+
+    // Live data
+    val navigationLiveData: MutableLiveData<NavigationAction> = MutableLiveData()
 
     init {
         readAttrs(attrs)
@@ -48,6 +54,11 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
             // Show this button
             buttonToolbarBack.visibility = View.VISIBLE
+
+            // Create click listener
+            buttonToolbarBack.setOnClickListener {
+                navigationLiveData.postValue(NavigationAction.BACK)
+            }
         }
 
         if (nextButtonIsVisible && nextButtonText != null) {
@@ -55,6 +66,11 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
             // Show this button
             buttonToolbarNext.visibility = View.VISIBLE
+
+            // Create click listener
+            buttonToolbarNext.setOnClickListener {
+                navigationLiveData.postValue(NavigationAction.NEXT)
+            }
         }
     }
 }
