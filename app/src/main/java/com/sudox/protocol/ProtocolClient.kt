@@ -1,6 +1,7 @@
 package com.sudox.protocol
 
 import com.sudox.protocol.helper.*
+import com.sudox.protocol.model.Callback
 import com.sudox.protocol.model.dto.JsonModel
 import com.sudox.protocol.model.MessageCallback
 import com.sudox.protocol.model.Payload
@@ -22,7 +23,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
     private lateinit var symmetricKey: SymmetricKey
 
     // Callbacks list
-    private var messagesCallbacks: LinkedHashMap<String, Pair<KClass<out JsonModel>, Any>> = LinkedHashMap()
+    private var messagesCallbacks: LinkedHashMap<String, Callback> = LinkedHashMap()
 
     fun connect(): Completable = Completable.create { emitter ->
         // Init connect state in stabilizer
@@ -79,8 +80,8 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
                 val messageObject = JSONObject(prepareDataForClient.message)
 
                 // Convert message
-                val jsonModel = (pair.first.java.newInstance()) as JsonModel
-                val callback = pair.second as MessageCallback
+                val jsonModel = (pair.modelClass.java.newInstance()) as JsonModel
+                val callback = pair.callback as MessageCallback
 
                 // Read message
                 jsonModel.fromJSON(messageObject)
@@ -89,7 +90,9 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
                 callback.onMessage(jsonModel)
 
                 // Clean-up callback from list
-                messagesCallbacks.remove(prepareDataForClient.event)
+                if (pair.once) {
+                    messagesCallbacks.remove(prepareDataForClient.event)
+                }
             }
         }
     }
@@ -127,8 +130,16 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
         socket.emit(event, messageJsonObject)
     }
 
+    fun listenMessageOnce(event: String, clazz: KClass<out JsonModel>, callback: MessageCallback) {
+        messagesCallbacks[event] = Callback(clazz, callback, true)
+    }
+
     fun listenMessage(event: String, clazz: KClass<out JsonModel>, callback: MessageCallback) {
-        messagesCallbacks[event] = Pair(clazz, callback)
+        messagesCallbacks[event] = Callback(clazz, callback, false)
+    }
+
+    fun removeCallback(event: String) {
+        messagesCallbacks.remove(event)
     }
 
     fun <T : JsonModel> listenMessageHandshake(event: String, clazz: KClass<T>): Single<T> = Single.create { emitter ->
