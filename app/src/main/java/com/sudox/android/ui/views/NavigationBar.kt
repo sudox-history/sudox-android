@@ -4,15 +4,14 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
-import androidx.lifecycle.LiveData
+import androidx.annotation.VisibleForTesting
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
 import kotlinx.android.synthetic.main.include_navbar.view.*
 
-class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
-
-    // TODO: Сделать отработку событий нажатия на кнопки и анимацию
+open class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
     // Back button
     var backButtonIsVisible: Boolean = false
@@ -23,16 +22,20 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     var nextButtonText: String? = null
 
     // Live data
-    val navigationLiveData: MutableLiveData<NavigationAction> = MutableLiveData()
+    var navigationLiveData: MutableLiveData<NavigationAction> = MutableLiveData()
 
     init {
         readAttrs(attrs)
 
         // Inflate view
-        val view = inflate(context, R.layout.include_navbar, this)
+        inflate(context, R.layout.include_navbar, this)
+    }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
 
         // Configure components
-        configureComponents(view)
+        configureComponents()
     }
 
     private fun readAttrs(attrs: AttributeSet) {
@@ -48,29 +51,22 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         array.recycle()
     }
 
-    private fun configureComponents(view: View) {
-        if (backButtonIsVisible && backButtonText != null) {
-            val buttonToolbarBack = view.buttonToolbarBack
+    @VisibleForTesting
+    internal fun configureComponents() {
+        configureButton(buttonNavbarBack, backButtonIsVisible, backButtonText, NavigationAction.BACK)
+        configureButton(buttonNavbarNext, nextButtonIsVisible, nextButtonText, NavigationAction.NEXT)
+    }
 
-            // Show this button
-            buttonToolbarBack.visibility = View.VISIBLE
-
-            // Create click listener
-            buttonToolbarBack.setOnClickListener {
-                navigationLiveData.postValue(NavigationAction.BACK)
-            }
-        }
-
-        if (nextButtonIsVisible && nextButtonText != null) {
-            val buttonToolbarNext = view.buttonToolbarNext
-
-            // Show this button
-            buttonToolbarNext.visibility = View.VISIBLE
+    private fun configureButton(view: AppCompatTextView, visibility: Boolean, text: String?, action: NavigationAction) {
+        if (visibility) {
+            view.visibility = View.VISIBLE
+            view.isClickable = true
+            view.text = text
 
             // Create click listener
-            buttonToolbarNext.setOnClickListener {
-                navigationLiveData.postValue(NavigationAction.NEXT)
-            }
+            view.setOnClickListener { navigationLiveData.postValue(action) }
+        } else {
+            view.visibility = View.GONE
         }
     }
 }

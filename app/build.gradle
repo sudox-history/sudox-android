@@ -34,7 +34,7 @@ ext {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    
+
     // Google support libraries
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "com.android.support:support-v4:$v4SupportVersion"
@@ -63,14 +63,24 @@ dependencies {
 
     // Testing libraries
     testImplementation "junit:junit:$junitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
     androidTestImplementation "androidx.test:runner:$runnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
 }
 
 android {
     compileSdkVersion compileSdkProjectVersion
     buildToolsVersion buildToolsProjectVersion
+
+    testOptions {
+        androidExtensions {
+            experimental = true
+            defaultCacheImplementation = "NONE"
+        }
+    }
 
     defaultConfig {
         applicationId "com.sudox.android"
