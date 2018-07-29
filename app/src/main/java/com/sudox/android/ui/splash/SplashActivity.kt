@@ -1,5 +1,6 @@
 package com.sudox.android.ui.splash
 
+import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import androidx.lifecycle.ViewModelProvider
@@ -10,6 +11,7 @@ import com.sudox.android.common.enums.HandshakeState
 import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.viewmodels.observe
 import com.sudox.android.common.viewmodels.withViewModel
+import com.sudox.android.ui.AuthActivity
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -23,7 +25,7 @@ class SplashActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        // Special easy way by Antonio Leiva with my corrections for project!
+        // Special easy way by Antonio with my corrections for project!
         splashViewModel = withViewModel(viewModelFactory) {
             connect()
 
@@ -46,8 +48,8 @@ class SplashActivity : DaggerAppCompatActivity() {
     private fun getHandshakeState(data: Data<HandshakeState>) {
         data.let {
             when (it.data) {
-                HandshakeState.SUCCESS -> splashViewModel.sendToken(splashViewModel.getToken())
-                HandshakeState.ERROR -> splashViewModel.connect() //retry connect
+                HandshakeState.SUCCESS -> splashViewModel.sendToken()
+                HandshakeState.ERROR -> splashViewModel.connect()
             }
         }
     }
@@ -56,9 +58,19 @@ class SplashActivity : DaggerAppCompatActivity() {
         data.let {
             when (it.data) {
                 TokenState.CORRECT -> TODO("go to main activity")
-                TokenState.WRONG -> TODO("go to auth activity")
-                TokenState.MISSING -> TODO("go to auth activity")
+                TokenState.WRONG -> showAuthActivity()
+                TokenState.MISSING -> showAuthActivity()
             }
         }
+    }
+
+    private fun showAuthActivity() {
+        val intent = Intent(this, AuthActivity::class.java)
+
+        // Start activity
+        startActivity(intent)
+
+        // Close old activity
+        finish()
     }
 }

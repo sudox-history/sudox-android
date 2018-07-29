@@ -43,14 +43,15 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
         disposables.add(disposable)
     }
 
-    fun getToken(): String? {
-        return accountRepository.getAccount()?.token
-    }
+    fun sendToken() {
+        val account = accountRepository.getAccount()
 
-    fun sendToken(token: String?) {
-        if (token == null) {
+        // account == null -> token == null
+        if (account == null) {
             tokenData.postValue(Data(TokenState.MISSING))
-        } 
+        } else {
+            TODO("Check token")
+        }
     }
 
     // Prevent memory leaks with protocol disposables
