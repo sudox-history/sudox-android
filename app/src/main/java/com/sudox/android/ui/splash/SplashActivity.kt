@@ -2,7 +2,6 @@ package com.sudox.android.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
 import com.sudox.android.common.Data
@@ -11,7 +10,7 @@ import com.sudox.android.common.enums.HandshakeState
 import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.viewmodels.observe
 import com.sudox.android.common.viewmodels.withViewModel
-import com.sudox.android.ui.AuthActivity
+import com.sudox.android.ui.auth.AuthActivity
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 

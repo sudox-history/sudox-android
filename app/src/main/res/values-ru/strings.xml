@@ -58,5 +58,5 @@
     <string name="enter_your_email">Для начала введите вашу почту</string>
     <string name="we_glad_to_see_you">Мы очень рады вас видеть!</string>
     <string name="toolbar_back">Назад</string>
-    <string name="toolbar_next" />
+    <string name="toolbar_next">Далее</string>
 </resources>

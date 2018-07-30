@@ -30,13 +30,16 @@
                 android:resource="@xml/authenticator" />
         </service>
 
-        <activity android:name="com.sudox.android.ui.splash.SplashActivity">
+        <activity
+            android:name="com.sudox.android.ui.splash.SplashActivity"
+            android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.AuthActivity" />
+        <activity android:name=".ui.auth.AuthActivity" />
     </application>
 </manifest>

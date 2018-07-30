@@ -61,7 +61,11 @@ open class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout
         if (visibility) {
             view.visibility = View.VISIBLE
             view.isClickable = true
-            view.text = text
+
+            // Set text
+            if (text != null) {
+                view.text = text
+            }
 
             // Create click listener
             view.setOnClickListener { navigationLiveData.postValue(action) }

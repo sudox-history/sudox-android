@@ -2,6 +2,8 @@ package com.sudox.android.di
 
 import com.sudox.android.ApplicationLoader
 import com.sudox.android.di.module.*
+import com.sudox.android.di.module.ActivityModule
+import com.sudox.android.ui.auth.AuthEmailFragment
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -18,6 +20,9 @@ import javax.inject.Singleton
     (DataModule::class),
     (ViewModelModule::class)])
 interface AppComponent : AndroidInjector<ApplicationLoader> {
+
+    // TODO: Выпилить
+    fun inject(authEmailFragment: AuthEmailFragment)
 
     @Component.Builder
     interface Builder {

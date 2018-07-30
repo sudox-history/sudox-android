@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.di.annotation.ViewModelKey
 import com.sudox.android.ui.splash.SplashViewModel
 import com.sudox.android.common.viewmodels.ViewModelFactory
+import com.sudox.android.ui.auth.AuthEmailViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -19,4 +20,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SplashViewModel::class)
     internal abstract fun splashViewModel(viewModel: SplashViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AuthEmailViewModel::class)
+    internal abstract fun authEmailViewModel(viewModel: AuthEmailViewModel): ViewModel
 }

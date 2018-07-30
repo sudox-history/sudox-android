@@ -59,7 +59,6 @@
     <string name="we_glad_to_see_you">We glad to see you!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="toolbar_back">Back</string>
     <string name="toolbar_next">Next</string>
 </resources>

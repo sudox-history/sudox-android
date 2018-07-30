@@ -1,6 +1,6 @@
 package com.sudox.android.di.module
 
-import com.sudox.android.ui.AuthActivity
+import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.splash.SplashActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -8,9 +8,9 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ActivityModule {
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector()
     abstract fun bindSplashActivity() : SplashActivity
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = [(AuthActivityModule::class)])
     abstract fun bindAuthActivity() : AuthActivity
 }
