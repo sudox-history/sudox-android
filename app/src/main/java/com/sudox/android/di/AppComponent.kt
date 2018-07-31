@@ -3,7 +3,7 @@ package com.sudox.android.di
 import com.sudox.android.ApplicationLoader
 import com.sudox.android.di.module.*
 import com.sudox.android.di.module.ActivityModule
-import com.sudox.android.ui.auth.AuthEmailFragment
+import com.sudox.android.ui.auth.email.AuthEmailFragment
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector

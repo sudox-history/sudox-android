@@ -1,4 +1,4 @@
-package com.sudox.android.ui.auth
+package com.sudox.android.ui.auth.email
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,6 +12,7 @@ import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.models.dto.AuthSessionDTO
 import com.sudox.android.common.viewmodels.getViewModel
+import com.sudox.android.ui.auth.AuthActivity
 import kotlinx.android.synthetic.main.fragment_auth_email.*
 import javax.inject.Inject
 

@@ -6,8 +6,11 @@ import com.sudox.android.common.Data
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.HandshakeState
 import com.sudox.android.common.enums.TokenState
+import com.sudox.android.common.models.TokenData
+import com.sudox.android.common.models.dto.TokenDTO
 import com.sudox.android.common.repository.AccountRepository
 import com.sudox.protocol.ProtocolClient
+import com.sudox.protocol.model.ResponseCallback
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -16,7 +19,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
 
     var connectData = MutableLiveData<Data<ConnectState>>()
     var handshakeData = MutableLiveData<Data<HandshakeState>>()
-    var tokenData = MutableLiveData<Data<TokenState>>()
+    var tokenData = MutableLiveData<Data<TokenData>>()
 
     // Disposables list
     var disposables: CompositeDisposable = CompositeDisposable()
@@ -48,9 +51,19 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
 
         // account == null -> token == null
         if (account == null) {
-            tokenData.postValue(Data(TokenState.MISSING))
+            tokenData.postValue(Data(TokenData(TokenState.MISSING)))
         } else {
-            TODO("Check token")
+            protocolClient.listenMessageOnce("auth.importToken", object : ResponseCallback<TokenDTO>{
+                override fun onMessage(response: TokenDTO) {
+                    if (response.code == 0)
+                        tokenData.postValue(Data(TokenData(TokenState.WRONG)))
+                    else tokenData.postValue(Data(TokenData(TokenState.CORRECT, response.id)))
+                }
+            })
+
+            val token = TokenDTO()
+            token.token = account.token
+            protocolClient.sendMessage("auth.importToken", token)
         }
     }
 

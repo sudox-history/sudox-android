@@ -1,4 +1,4 @@
-package com.sudox.android.ui.auth
+package com.sudox.android.ui.auth.email
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

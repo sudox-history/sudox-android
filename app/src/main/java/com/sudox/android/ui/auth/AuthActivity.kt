@@ -2,6 +2,9 @@ package com.sudox.android.ui.auth
 
 import android.os.Bundle
 import com.sudox.android.R
+import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
+import com.sudox.android.ui.auth.confirm.EMAIL_BUNDLE_KEY
+import com.sudox.android.ui.auth.email.AuthEmailFragment
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 

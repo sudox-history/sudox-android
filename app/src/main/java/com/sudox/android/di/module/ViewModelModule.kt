@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.di.annotation.ViewModelKey
 import com.sudox.android.ui.splash.SplashViewModel
 import com.sudox.android.common.viewmodels.ViewModelFactory
-import com.sudox.android.ui.auth.AuthEmailViewModel
+import com.sudox.android.ui.auth.email.AuthEmailViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

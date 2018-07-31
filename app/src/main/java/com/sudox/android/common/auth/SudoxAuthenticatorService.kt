@@ -7,7 +7,7 @@ import android.os.IBinder
 class SudoxAuthenticatorService : Service() {
 
     // Authenticator instance
-    val authenticator = SudoxAuthenticator(this)
+    private val authenticator = SudoxAuthenticator(this)
 
     // Binder
     override fun onBind(intent: Intent?): IBinder = authenticator.iBinder

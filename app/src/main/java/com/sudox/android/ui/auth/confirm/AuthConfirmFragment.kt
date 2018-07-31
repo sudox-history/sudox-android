@@ -1,4 +1,4 @@
-package com.sudox.android.ui.auth
+package com.sudox.android.ui.auth.confirm
 
 import android.os.Bundle
 import android.view.LayoutInflater
