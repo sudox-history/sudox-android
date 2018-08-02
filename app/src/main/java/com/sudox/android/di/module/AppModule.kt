@@ -1,15 +1,16 @@
 package com.sudox.android.di.module
 
+import android.app.Application
 import android.content.Context
 import com.sudox.android.ApplicationLoader
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class AppModule {
+abstract class AppModule {
 
-    @Provides
-    @Singleton
-    fun provideApplication(app: ApplicationLoader): Context = app
+    @Binds
+    abstract fun provideApplication(app: Application): Context
 }

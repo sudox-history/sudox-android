@@ -163,4 +163,8 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
     fun removeCallback(event: String) {
         messagesCallbacks.remove(event)
     }
+
+    fun disconnect() {
+        socket.disconnect()
+    }
 }

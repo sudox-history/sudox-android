@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import com.sudox.android.R
 
 // Email bundle key
-internal val EMAIL_BUNDLE_KEY: String = "email"
+internal const val EMAIL_BUNDLE_KEY: String = "email"
 
 class AuthConfirmFragment : Fragment() {
 

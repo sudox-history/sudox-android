@@ -3,6 +3,7 @@ package com.sudox.android.ui.splash
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sudox.android.common.Data
+import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.HandshakeState
 import com.sudox.android.common.enums.TokenState
@@ -19,7 +20,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
 
     var connectData = MutableLiveData<Data<ConnectState>>()
     var handshakeData = MutableLiveData<Data<HandshakeState>>()
-    var tokenData = MutableLiveData<Data<TokenData>>()
+    var tokenData = MutableLiveData<TokenData>()
 
     // Disposables list
     var disposables: CompositeDisposable = CompositeDisposable()
@@ -46,18 +47,19 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
         disposables.add(disposable)
     }
 
-    fun sendToken() {
-        val account = accountRepository.getAccount()
+    fun getAccount() = accountRepository.getAccount()
 
+    fun sendToken() {
+        val account = getAccount()
         // account == null -> token == null
         if (account == null) {
-            tokenData.postValue(Data(TokenData(TokenState.MISSING)))
+            tokenData.postValue(TokenData(TokenState.MISSING))
         } else {
             protocolClient.listenMessageOnce("auth.importToken", object : ResponseCallback<TokenDTO>{
                 override fun onMessage(response: TokenDTO) {
                     if (response.code == 0)
-                        tokenData.postValue(Data(TokenData(TokenState.WRONG)))
-                    else tokenData.postValue(Data(TokenData(TokenState.CORRECT, response.id)))
+                        tokenData.postValue(TokenData(TokenState.WRONG))
+                    else tokenData.postValue(TokenData(TokenState.CORRECT, response.id))
                 }
             })
 
@@ -65,6 +67,10 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
             token.token = account.token
             protocolClient.sendMessage("auth.importToken", token)
         }
+    }
+
+    fun disconnect(){
+        protocolClient.disconnect()
     }
 
     // Prevent memory leaks with protocol disposables

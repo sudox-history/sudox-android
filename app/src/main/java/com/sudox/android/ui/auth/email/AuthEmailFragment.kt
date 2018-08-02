@@ -13,19 +13,17 @@ import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.models.dto.AuthSessionDTO
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_auth_email.*
 import javax.inject.Inject
 
-class AuthEmailFragment : Fragment() {
+class AuthEmailFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var authEmailViewModel: AuthEmailViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        // TODO: Выпилить в пользу AndroidInjector
-        (activity?.application as ApplicationLoader).component.inject(this)
-
         authEmailViewModel = getViewModel(viewModelFactory)
 
         // Inflate layout

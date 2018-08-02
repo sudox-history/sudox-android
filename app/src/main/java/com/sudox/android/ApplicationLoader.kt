@@ -7,17 +7,14 @@ import dagger.android.DaggerApplication
 import dagger.android.HasServiceInjector
 import timber.log.Timber
 
-class ApplicationLoader : DaggerApplication(), HasServiceInjector {
-
-    // Component for DI
-    lateinit var component: AppComponent
+class ApplicationLoader : DaggerApplication() {
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        component = DaggerAppComponent
+        val component: AppComponent = DaggerAppComponent
                 .builder()
                 .application(this)
                 .build()
-
+        component.inject(this)
         return component
     }
 

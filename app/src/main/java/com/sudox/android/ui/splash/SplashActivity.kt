@@ -8,10 +8,12 @@ import com.sudox.android.common.Data
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.HandshakeState
 import com.sudox.android.common.enums.TokenState
+import com.sudox.android.common.models.TokenData
 import com.sudox.android.common.viewmodels.observe
 import com.sudox.android.common.viewmodels.withViewModel
 import com.sudox.android.ui.auth.AuthActivity
 import dagger.android.support.DaggerAppCompatActivity
+import timber.log.Timber
 import javax.inject.Inject
 
 class SplashActivity : DaggerAppCompatActivity() {
@@ -35,32 +37,64 @@ class SplashActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun getConnectState(data: Data<ConnectState>) {
-        data.let {
-            when (it.data) {
-                ConnectState.SUCCESS -> splashViewModel.startHandshake()
-                ConnectState.ERROR -> TODO("go to auth or main activity (depends on token)")
+    private fun getConnectState(connectData: Data<ConnectState>) {
+        when (connectData.data) {
+            ConnectState.SUCCESS -> {
+                splashViewModel.startHandshake()
+                Timber.log(1, "start handshake")
+            }
+            ConnectState.ERROR -> {
+                chooseActivity(splashViewModel.getAccount()?.token)
+                Timber.log(0, "choosing activity")
             }
         }
     }
 
-    private fun getHandshakeState(data: Data<HandshakeState>) {
-        data.let {
-            when (it.data) {
-                HandshakeState.SUCCESS -> splashViewModel.sendToken()
-                HandshakeState.ERROR -> splashViewModel.connect()
+    private fun getHandshakeState(handshakeData: Data<HandshakeState>) {
+        when (handshakeData.data) {
+            HandshakeState.SUCCESS -> {
+                splashViewModel.sendToken()
+                Timber.log(1, "send token action")
+            }
+            HandshakeState.ERROR -> {
+                splashViewModel.connect()
+                Timber.log(2, "connect action")
             }
         }
     }
 
-    private fun getTokenState(data: Data<TokenState>) {
-        data.let {
-            when (it.data) {
-                TokenState.CORRECT -> TODO("go to main activity")
-                TokenState.WRONG -> showAuthActivity()
-                TokenState.MISSING -> showAuthActivity()
+    private fun getTokenState(data: TokenData) {
+        when (data.tokenState) {
+            TokenState.CORRECT -> {
+                showMainActivity()
+                Timber.log(0, "show main activity")
+            }
+            TokenState.WRONG -> {
+                showAuthActivity()
+                Timber.log(0, "show auth activity")
+            }
+            TokenState.MISSING -> {
+                showAuthActivity()
+                Timber.log(0, "show auth activity")
             }
         }
+    }
+
+    private fun chooseActivity(token: String?){
+        when(token){
+            null -> {
+                showAuthActivity()
+                Timber.log(0, "show auth activity")
+            }
+            else -> {
+                showMainActivity()
+                Timber.log(0, "show main activity")
+            }
+        }
+    }
+
+    private fun showMainActivity() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun showAuthActivity() {
@@ -71,5 +105,10 @@ class SplashActivity : DaggerAppCompatActivity() {
 
         // Close old activity
         finish()
+    }
+
+    override fun onBackPressed() {
+        splashViewModel.disconnect()
+        super.onBackPressed()
     }
 }
