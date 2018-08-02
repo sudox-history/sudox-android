@@ -2,15 +2,14 @@ package com.sudox.android.ui.splash
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
 import com.sudox.android.common.Data
 import com.sudox.android.common.enums.ConnectState
-import com.sudox.android.common.enums.HandshakeState
 import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.models.TokenData
-import com.sudox.android.common.viewmodels.observe
-import com.sudox.android.common.viewmodels.withViewModel
+import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
 import dagger.android.support.DaggerAppCompatActivity
 import timber.log.Timber
@@ -20,27 +19,21 @@ class SplashActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var splashViewModel: SplashViewModel
+    private lateinit var splashViewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
         // Special easy way by Antonio with my corrections for project!
-        splashViewModel = withViewModel(viewModelFactory) {
-            connect()
-
-            // Observe data
-            observe(connectData, ::getConnectState)
-            observe(handshakeData, ::getHandshakeState)
-            observe(tokenData, ::getTokenState)
-        }
+        splashViewModel = getViewModel(viewModelFactory)
+        splashViewModel.connect().observe(this, Observer(::getConnectState))
     }
 
     private fun getConnectState(connectData: Data<ConnectState>) {
         when (connectData.data) {
-            ConnectState.SUCCESS -> {
-                splashViewModel.startHandshake()
+            ConnectState.CONNECT -> {
+                splashViewModel.startHandshake().observe(this, Observer(::getHandshakeState))
                 Timber.log(1, "start handshake")
             }
             ConnectState.ERROR -> {
@@ -50,13 +43,13 @@ class SplashActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun getHandshakeState(handshakeData: Data<HandshakeState>) {
+    private fun getHandshakeState(handshakeData: Data<ConnectState>) {
         when (handshakeData.data) {
-            HandshakeState.SUCCESS -> {
-                splashViewModel.sendToken()
+            ConnectState.SUCCESS_HANDSHAKE -> {
+                splashViewModel.sendToken().observe(this, Observer(::getTokenState))
                 Timber.log(1, "send token action")
             }
-            HandshakeState.ERROR -> {
+            ConnectState.FAILED_HANDSHAKE -> {
                 splashViewModel.connect()
                 Timber.log(2, "connect action")
             }

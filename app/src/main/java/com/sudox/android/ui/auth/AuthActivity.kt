@@ -1,27 +1,30 @@
 package com.sudox.android.ui.auth
 
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import com.sudox.android.R
-import com.sudox.android.common.viewmodels.withViewModel
-import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
-import com.sudox.android.ui.auth.confirm.EMAIL_BUNDLE_KEY
+import com.sudox.android.common.Data
+import com.sudox.android.common.enums.ConnectState
+import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.email.AuthEmailFragment
-import com.sudox.android.ui.splash.SplashViewModel
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
 
 class AuthActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var authViewModel: AuthViewModel
+    private lateinit var authViewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
-        authViewModel = withViewModel(viewModelFactory){}
+        authViewModel = getViewModel(viewModelFactory)
+        authViewModel.connectData.observe(this, Observer(::getConnectState))
 
         // Start fragment
         supportFragmentManager.apply {
@@ -31,18 +34,15 @@ class AuthActivity : DaggerAppCompatActivity() {
         }
     }
 
-    fun showAuthCodeFragment(email: String) {
-        val bundle = Bundle()
-
-        // Put email to the bundle
-        bundle.putString(EMAIL_BUNDLE_KEY, email)
-
-        // Change fragment
-        supportFragmentManager.apply {
-            beginTransaction()
-                    .add(R.id.fragment_auth_container, AuthConfirmFragment())
-                    .commit()
+    private fun getConnectState(connectData: Data<ConnectState>) {
+        when(connectData.data){
+            ConnectState.RECONNECT -> showMessage(getString(R.string.connection_restored))
+            ConnectState.DISCONNECT -> showMessage(getString(R.string.lost_internet_connection))
         }
+    }
+
+    private fun showMessage(message: String){
+        Snackbar.make(fragment_auth_container, message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun onBackPressed() {

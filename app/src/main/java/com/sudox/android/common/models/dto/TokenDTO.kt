@@ -3,9 +3,8 @@ package com.sudox.android.common.models.dto
 import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONObject
 
-class TokenDTO : JsonModel {
+class TokenDTO(val token: String) : CanErrorDTO() {
 
-    var token: String? = null
     var id: Int = 0
     var code: Int = 0
 
