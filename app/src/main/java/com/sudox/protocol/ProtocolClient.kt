@@ -2,10 +2,10 @@ package com.sudox.protocol
 
 import com.sudox.protocol.helper.*
 import com.sudox.protocol.model.Callback
-import com.sudox.protocol.model.dto.JsonModel
-import com.sudox.protocol.model.ResponseCallback
 import com.sudox.protocol.model.Payload
+import com.sudox.protocol.model.ResponseCallback
 import com.sudox.protocol.model.SymmetricKey
+import com.sudox.protocol.model.dto.JsonModel
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.socket.client.Socket
@@ -14,8 +14,7 @@ import javax.inject.Inject
 import kotlin.reflect.KClass
 
 class ProtocolClient @Inject constructor(private val socket: Socket,
-                                         private val handshake: ProtocolHandshake,
-                                         private val stabilizer: ProtocolConnectionStabilizer) {
+                                         private val handshake: ProtocolHandshake) {
 
     // TODO: ConnectionStatusSubject inject
 
@@ -25,15 +24,8 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
     // Callbacks list
     var messagesCallbacks: LinkedHashMap<String, Callback<*>> = LinkedHashMap()
 
-    fun connect(): Completable = Completable.create { emitter ->
+    fun connect(): Completable = Completable.create {
         // Init connect state in stabilizer
-        stabilizer.connectionState(socket)
-                .subscribe({
-                    emitter.onComplete()
-                }, {
-                    emitter.onError(it)
-                })
-
         // Connect to the server
         socket.connect()
     }

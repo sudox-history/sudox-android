@@ -1,7 +1,6 @@
 package com.sudox.android.di.module
 
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.ProtocolConnectionStabilizer
 import com.sudox.protocol.ProtocolHandshake
 import com.sudox.protocol.ProtocolKeystore
 import dagger.Module
@@ -15,8 +14,8 @@ class ProtocolModule {
 
     @Provides
     @Singleton
-    fun provideProtocolClient(socket: Socket, handshake: ProtocolHandshake, stabilizer: ProtocolConnectionStabilizer)
-            = ProtocolClient(socket, handshake, stabilizer)
+    fun provideProtocolClient(socket: Socket, handshake: ProtocolHandshake)
+            = ProtocolClient(socket, handshake)
 
     @Provides
     @Singleton

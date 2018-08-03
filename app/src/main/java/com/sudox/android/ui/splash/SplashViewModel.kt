@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(private val protocolClient: ProtocolClient,
                                           private val accountRepository: AccountRepository,
-                                          stabilizer: ProtocolConnectionStabilizer,
+                                          private val stabilizer: ProtocolConnectionStabilizer,
                                           private val authRepository: AuthRepository) : ViewModel() {
 
     val connectLiveData = MutableLiveData<Data<ConnectState>>()
@@ -23,7 +23,9 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
     }
 
     fun connect(){
-        protocolClient.connect()
+        stabilizer.connectionState().subscribe{
+            protocolClient.connect()
+        }
     }
 
     fun sendToken() = authRepository.sendToken(getAccount()?.token)

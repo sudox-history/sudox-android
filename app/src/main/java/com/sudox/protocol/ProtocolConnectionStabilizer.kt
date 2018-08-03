@@ -6,14 +6,15 @@ import io.reactivex.subjects.PublishSubject
 import io.socket.client.Socket
 import javax.inject.Inject
 
-class ProtocolConnectionStabilizer @Inject constructor(private val protocolClient: ProtocolClient) {
+class ProtocolConnectionStabilizer @Inject constructor(private val protocolClient: ProtocolClient,
+                                                       private val socket: Socket) {
 
     // Connection state live data
     var connectionRXData: PublishSubject<ConnectState> = PublishSubject.create()
 
-    fun connectionState(socket: Socket): Completable = Completable.create { emitter ->
+    fun connectionState(): Completable = Completable.create { emitter ->
         socket.once(Socket.EVENT_CONNECT) {
-            emitter.onComplete()
+
             socket.off(Socket.EVENT_CONNECT_ERROR)
 
             // Notify observers
@@ -33,6 +34,7 @@ class ProtocolConnectionStabilizer @Inject constructor(private val protocolClien
         socket.on(Socket.EVENT_DISCONNECT) {
             connectionRXData.onNext(ConnectState.DISCONNECT)
         }
+        emitter.onComplete()
     }
 
 
