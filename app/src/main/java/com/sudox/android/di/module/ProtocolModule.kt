@@ -25,10 +25,6 @@ class ProtocolModule {
 
     @Provides
     @Singleton
-    fun provideConnectionStabilizer() = ProtocolConnectionStabilizer()
-
-    @Provides
-    @Singleton
     fun provideSocket() : Socket {
         val options = IO.Options()
                 .apply {

@@ -27,31 +27,19 @@ class SplashActivity : DaggerAppCompatActivity() {
 
         // Special easy way by Antonio with my corrections for project!
         splashViewModel = getViewModel(viewModelFactory)
-        splashViewModel.connect().observe(this, Observer(::getConnectState))
+        splashViewModel.connectLiveData.observe(this, Observer(::getConnectState))
+        splashViewModel.connect()
     }
 
     private fun getConnectState(connectData: Data<ConnectState>) {
         when (connectData.data) {
             ConnectState.CONNECT -> {
-                splashViewModel.startHandshake().observe(this, Observer(::getHandshakeState))
+                splashViewModel.sendToken().observe(this, Observer(::getTokenState))
                 Timber.log(1, "start handshake")
             }
             ConnectState.ERROR -> {
                 chooseActivity(splashViewModel.getAccount()?.token)
                 Timber.log(0, "choosing activity")
-            }
-        }
-    }
-
-    private fun getHandshakeState(handshakeData: Data<ConnectState>) {
-        when (handshakeData.data) {
-            ConnectState.SUCCESS_HANDSHAKE -> {
-                splashViewModel.sendToken().observe(this, Observer(::getTokenState))
-                Timber.log(1, "send token action")
-            }
-            ConnectState.FAILED_HANDSHAKE -> {
-                splashViewModel.connect()
-                Timber.log(2, "connect action")
             }
         }
     }
