@@ -19,37 +19,6 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     // Disposables list
     private var disposables: CompositeDisposable = CompositeDisposable()
 
-    fun connect(): LiveData<Data<ConnectState>> {
-        val connectData = MutableLiveData<Data<ConnectState>>()
-
-        // Try connect to the server
-        val disposable = protocolClient.connect().subscribe({
-            connectData.postValue(Data(ConnectState.CONNECT))
-        }, {
-            connectData.postValue(Data(ConnectState.ERROR))
-        })
-
-        // Add to the list
-        disposables.add(disposable)
-
-        return connectData
-    }
-
-    fun startHandshake(): LiveData<Data<ConnectState>> {
-        val handshakeData = MutableLiveData<Data<ConnectState>>()
-
-        val disposable = protocolClient.startHandshake().subscribe({
-            handshakeData.postValue(Data(ConnectState.SUCCESS_HANDSHAKE))
-        }, {
-            handshakeData.postValue(Data(ConnectState.FAILED_HANDSHAKE))
-        })
-
-        // Add to the list
-        disposables.add(disposable)
-
-        return handshakeData
-    }
-
     fun sendToken(token: String?): LiveData<TokenData> {
         val tokenData = MutableLiveData<TokenData>()
 

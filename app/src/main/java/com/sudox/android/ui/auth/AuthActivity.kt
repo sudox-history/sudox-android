@@ -36,8 +36,8 @@ class AuthActivity : DaggerAppCompatActivity() {
 
     private fun getConnectState(connectData: Data<ConnectState>) {
         when (connectData.data) {
-            ConnectState.RECONNECT -> showMessage(getString(R.string.connection_restored))
-            ConnectState.DISCONNECT -> showMessage(getString(R.string.lost_internet_connection))
+            ConnectState.RECONNECTED -> showMessage(getString(R.string.connection_restored))
+            ConnectState.DISCONNECTED -> showMessage(getString(R.string.lost_internet_connection))
         }
     }
 
