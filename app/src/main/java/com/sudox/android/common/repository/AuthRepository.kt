@@ -22,6 +22,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     fun connect(): LiveData<Data<ConnectState>> {
         val connectData = MutableLiveData<Data<ConnectState>>()
 
+        // Try connect to the server
         val disposable = protocolClient.connect().subscribe({
             connectData.postValue(Data(ConnectState.CONNECT))
         }, {
@@ -49,10 +50,10 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return handshakeData
     }
 
-    fun sendToken(token: String?) : LiveData<TokenData> {
+    fun sendToken(token: String?): LiveData<TokenData> {
         val tokenData = MutableLiveData<TokenData>()
 
-        if(token == null){
+        if (token == null) {
             tokenData.postValue(TokenData(TokenState.MISSING))
         } else {
             protocolClient.makeRequest("auth.importToken", TokenDTO(token), object : ResponseCallback<TokenDTO> {
@@ -78,7 +79,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return mutableLiveData
     }
 
-    fun cleanDisposables(){
+    fun cleanDisposables() {
         if (!disposables.isDisposed) {
             disposables.dispose()
         }

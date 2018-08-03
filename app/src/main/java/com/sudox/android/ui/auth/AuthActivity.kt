@@ -24,7 +24,7 @@ class AuthActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_auth)
 
         authViewModel = getViewModel(viewModelFactory)
-        authViewModel.connectData.observe(this, Observer(::getConnectState))
+        authViewModel.connectLiveData.observe(this, Observer(::getConnectState))
 
         // Start fragment
         supportFragmentManager.apply {
@@ -35,13 +35,13 @@ class AuthActivity : DaggerAppCompatActivity() {
     }
 
     private fun getConnectState(connectData: Data<ConnectState>) {
-        when(connectData.data){
+        when (connectData.data) {
             ConnectState.RECONNECT -> showMessage(getString(R.string.connection_restored))
             ConnectState.DISCONNECT -> showMessage(getString(R.string.lost_internet_connection))
         }
     }
 
-    private fun showMessage(message: String){
+    private fun showMessage(message: String) {
         Snackbar.make(fragment_auth_container, message, Snackbar.LENGTH_LONG).show()
     }
 

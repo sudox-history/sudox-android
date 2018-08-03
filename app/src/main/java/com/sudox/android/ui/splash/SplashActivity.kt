@@ -73,8 +73,8 @@ class SplashActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun chooseActivity(token: String?){
-        when(token){
+    private fun chooseActivity(token: String?) {
+        when (token) {
             null -> {
                 showAuthActivity()
                 Timber.log(0, "show auth activity")
@@ -87,7 +87,7 @@ class SplashActivity : DaggerAppCompatActivity() {
     }
 
     private fun showMainActivity() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     private fun showAuthActivity() {
@@ -102,6 +102,8 @@ class SplashActivity : DaggerAppCompatActivity() {
 
     override fun onBackPressed() {
         splashViewModel.disconnect()
+
+        // Back pressed
         super.onBackPressed()
     }
 }
