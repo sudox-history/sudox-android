@@ -3,6 +3,7 @@
     <declare-styleable name="NavigationBar">
         <attr name="backButtonIsVisible" format="boolean" />
         <attr name="nextButtonIsVisible" format="boolean" />
+        <attr name="sudoxTagIsVisible" format="boolean" />
         <attr name="backButtonText" format="string" />
         <attr name="nextButtonText" format="string" />
     </declare-styleable>

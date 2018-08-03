@@ -5,16 +5,17 @@
     android:layout_height="match_parent">
 
     <com.sudox.android.ui.views.NavigationBar
-        android:id="@+id/authFragmentNavbar"
+        android:id="@+id/auth_fragment_navbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:nextButtonIsVisible="true" />
+        app:nextButtonIsVisible="true"
+        app:sudoxTagIsVisible="true"/>
 
     <TextView
         android:id="@+id/sign_in_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/authFragmentNavbar"
+        android:layout_below="@id/auth_fragment_navbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
         android:fontFamily="sans-serif-light"

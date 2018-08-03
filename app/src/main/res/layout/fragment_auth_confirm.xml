@@ -2,14 +2,21 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Navigation bar -->
+    <com.sudox.android.ui.views.NavigationBar
+        android:id="@+id/auth_fragment_navbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:nextButtonIsVisible="true"
+        app:backButtonIsVisible="true"/>
 
     <TextView
         android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/auth_fragment_navbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
         android:fontFamily="sans-serif-light"

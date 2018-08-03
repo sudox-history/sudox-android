@@ -24,11 +24,11 @@ class NavigationBarTest {
     fun setUp() {
         doReturn(buttonBackMock)
                 .`when`(navigationBarMock)
-                .findViewById<AppCompatTextView>(R.id.buttonNavbarBack)
+                .findViewById<AppCompatTextView>(R.id.button_navbar_back)
 
         doReturn(buttonNextMock)
                 .`when`(navigationBarMock)
-                .findViewById<AppCompatTextView>(R.id.buttonNavbarNext)
+                .findViewById<AppCompatTextView>(R.id.button_navbar_next)
     }
 
     @Test

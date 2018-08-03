@@ -36,7 +36,7 @@ class AuthEmailFragment : DaggerFragment() {
         super.onStart()
 
         // Configure navigation bar
-        authFragmentNavbar
+        auth_fragment_navbar
                 .navigationLiveData
                 .observe(this, Observer<NavigationAction> {
                     if (it == NavigationAction.NEXT) {
