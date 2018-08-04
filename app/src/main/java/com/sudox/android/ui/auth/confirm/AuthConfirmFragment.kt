@@ -1,5 +1,6 @@
 package com.sudox.android.ui.auth.confirm
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.enums.State
@@ -18,9 +18,10 @@ import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.email.AuthEmailFragment
 import com.sudox.android.ui.auth.register.AuthRegisterFragment
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_confirm.*
 import kotlinx.android.synthetic.main.include_navbar.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 
@@ -42,8 +43,8 @@ class AuthConfirmFragment : DaggerFragment() {
         return inflater.inflate(R.layout.fragment_auth_confirm, container, false)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val data: Bundle = arguments!!
 
@@ -66,7 +67,7 @@ class AuthConfirmFragment : DaggerFragment() {
                         NavigationAction.BACK -> goToAuthEmailFragment()
                         NavigationAction.SEND_AGAIN -> {
                             authConfirmViewModel.sendCodeAgain().observe(this, Observer(::getResendData))
-                            setupTimer()
+
                         }
                     }
                 })
@@ -90,7 +91,7 @@ class AuthConfirmFragment : DaggerFragment() {
     }
 
     private fun setupTimer() {
-        authConfirmViewModel.setTimer(90)
+        authConfirmViewModel.setTimer(95)
         auth_confirm_fragment_navbar.setClickable(button_navbar_send_again, false)
     }
 
@@ -99,16 +100,20 @@ class AuthConfirmFragment : DaggerFragment() {
         auth_confirm_fragment_navbar.setClickable(button_navbar_send_again, true)
     }
 
-    private fun setTimerText(text: Long) {
-        when (text) {
+    private fun setTimerText(seconds: Long) {
+        when (seconds) {
             0L -> finishTimer()
-            else -> auth_confirm_fragment_navbar.setText(button_navbar_send_again, text.toString())
+            else -> auth_confirm_fragment_navbar.setText(button_navbar_send_again,
+                    "${getString(R.string.retry_send_in)} ${formatTimeToEnd(seconds)}")
         }
     }
 
     private fun getResendData(data: State) {
         when (data) {
-            State.SUCCESS -> (activity as AuthActivity).showMessage(getString(R.string.code_has_sent_successfully))
+            State.SUCCESS -> {
+                (activity as AuthActivity).showMessage(getString(R.string.code_has_sent_successfully))
+                setupTimer()
+            }
             State.FAILED -> (activity as AuthActivity).showMessage(getString(R.string.unknown_error))
         }
     }
@@ -146,8 +151,11 @@ class AuthConfirmFragment : DaggerFragment() {
         }
     }
 
-    private fun showMessage(message: String) {
-        Snackbar.make(fragment_auth_container, message, Snackbar.LENGTH_LONG).show()
+    @SuppressLint("SimpleDateFormat")
+    fun formatTimeToEnd(second: Long): String {
+        val format = SimpleDateFormat("mm:ss")
+        format.timeZone = TimeZone.getTimeZone("UTC")
+        return format.format(Date(second * 1000))
     }
 
 }

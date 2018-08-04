@@ -17,9 +17,10 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
 
     var timerData = MutableLiveData<Long>()
     var timerObservable = Observable.interval(1, TimeUnit.SECONDS)
+            .startWith(0)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .takeUntil { it == 90L }
+            .takeUntil { it == 95L }
 
     fun sendCode(code: String) = authRepository.sendCode(code)
 

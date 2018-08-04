@@ -25,7 +25,7 @@
     <string name="email_kerjen">kerjen01@gmail.com</string>
     <string name="kerjen">KerJen</string>
     <string name="nickname">Никнейм</string>
-    <string name="retry_send">Отправить повторно</string>
+    <string name="retry_send">Не пришел код?</string>
     <string name="hi_from_cloud">Привет из облака</string>
     <string name="hi_from_contacts">Привет из контактов</string>
     <string name="tag">Надпись</string>
@@ -49,7 +49,7 @@
     <string name="channels">Каналы</string>
     <string name="hello_world">Привет мир!</string>
     <string name="exit">Выйти</string>
-    <string name="retry_send_in">Отравить повторно через</string>
+    <string name="retry_send_in">Попытка через</string>
     <string name="account_is_already_exist">Аккаунт уже существует!</string>
     <string name="session_died">Сессия устарела, пройдите регистрацию заново</string>
     <string name="share_with_contact">Поделиться контактом</string>
