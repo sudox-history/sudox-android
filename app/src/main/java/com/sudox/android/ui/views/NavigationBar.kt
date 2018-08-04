@@ -69,15 +69,15 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
 
 
-    fun setText(view: AppCompatTextView, text: String){
+    fun setText(view: AppCompatTextView, text: String) {
         view.text = text
     }
 
-    fun setClickable(view: AppCompatTextView, clickable: Boolean){
+    fun setClickable(view: AppCompatTextView, clickable: Boolean) {
         view.isClickable = clickable
     }
 
-    private fun configureText(view: AppCompatTextView, visibility: Boolean){
+    private fun configureText(view: AppCompatTextView, visibility: Boolean) {
         if (visibility) {
             view.visibility = View.VISIBLE
         } else {

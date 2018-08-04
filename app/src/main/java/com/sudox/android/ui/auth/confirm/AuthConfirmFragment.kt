@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.include_navbar.*
 import javax.inject.Inject
 
 
-
 // Email bundle key
 internal const val EMAIL_BUNDLE_KEY: String = "email"
 internal const val AUTH_STATUS: String = "auth_status"
@@ -50,7 +49,7 @@ class AuthConfirmFragment : DaggerFragment() {
         val data: Bundle = arguments!!
         email = data.getString(EMAIL_BUNDLE_KEY)
         enter_your_code_text.text = "${getString(R.string.enter_code_from_mail)} $email"
-        if(data.getInt(AUTH_STATUS) == 0){
+        if (data.getInt(AUTH_STATUS) == 0) {
             welcome_text.text = getString(R.string.welcome)
         } else {
             welcome_text.text = getString(R.string.return_back)
@@ -62,7 +61,7 @@ class AuthConfirmFragment : DaggerFragment() {
         auth_confirm_fragment_navbar
                 .navigationLiveData
                 .observe(this, Observer {
-                    when(it){
+                    when (it) {
                         NavigationAction.BACK -> goToAuthEmailFragment()
                         NavigationAction.SEND_AGAIN -> {
                             authConfirmViewModel.sendCodeAgain().observe(this, Observer(::getResendData))
@@ -81,7 +80,7 @@ class AuthConfirmFragment : DaggerFragment() {
             override fun onTextChanged(s: CharSequence, start: Int,
                                        before: Int, count: Int) {
 
-                if(s.toString().length == 5){
+                if (s.toString().length == 5) {
                     code_edit_text.isEnabled = false
                     authConfirmViewModel.sendCode(s.toString()).observe(this@AuthConfirmFragment, Observer(::getConfirmData))
                 }
@@ -89,32 +88,32 @@ class AuthConfirmFragment : DaggerFragment() {
         })
     }
 
-    private fun setupTimer(){
+    private fun setupTimer() {
         authConfirmViewModel.setTimer(90)
         auth_confirm_fragment_navbar.setClickable(button_navbar_send_again, false)
     }
 
-    private fun finishTimer(){
+    private fun finishTimer() {
         auth_confirm_fragment_navbar.setText(button_navbar_send_again, getString(R.string.retry_send))
         auth_confirm_fragment_navbar.setClickable(button_navbar_send_again, true)
     }
 
-    private fun setTimerText(text: String){
-        when(text){
+    private fun setTimerText(text: String) {
+        when (text) {
             "0" -> finishTimer()
             else -> auth_confirm_fragment_navbar.setText(button_navbar_send_again, text)
         }
     }
 
-    private fun getResendData(data: State){
-        when (data){
+    private fun getResendData(data: State) {
+        when (data) {
             State.SUCCESS -> (activity as AuthActivity).showMessage(getString(R.string.code_has_sent_successfully))
             State.FAILED -> (activity as AuthActivity).showMessage(getString(R.string.unknown_error))
         }
     }
 
-    fun getConfirmData(data: ConfirmCodeDTO){
-        when(data.codeStatus){
+    fun getConfirmData(data: ConfirmCodeDTO) {
+        when (data.codeStatus) {
             0 -> {
                 code_edit_text.isEnabled = true
                 code_edit_text.error = getString(R.string.wrong_code)
@@ -145,7 +144,7 @@ class AuthConfirmFragment : DaggerFragment() {
         }
     }
 
-    private fun showMessage(message: String){
+    private fun showMessage(message: String) {
         Snackbar.make(fragment_auth_container, message, Snackbar.LENGTH_LONG).show()
     }
 
