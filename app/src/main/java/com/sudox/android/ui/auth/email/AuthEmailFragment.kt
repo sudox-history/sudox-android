@@ -6,17 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.models.dto.AuthSessionDTO
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
-import com.sudox.android.ui.auth.confirm.AUTH_STATUS
-import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.confirm.EMAIL_BUNDLE_KEY
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_email.*
 import javax.inject.Inject
 
@@ -64,9 +60,5 @@ class AuthEmailFragment : DaggerFragment() {
 
     private fun showAuthCodeFragment(email: String, status: Int) {
         (activity as AuthActivity).showAuthCodeFragment(email, status)
-    }
-
-    private fun showMessage(message: String){
-        Snackbar.make(fragment_auth_container, message, Snackbar.LENGTH_LONG).show()
     }
 }

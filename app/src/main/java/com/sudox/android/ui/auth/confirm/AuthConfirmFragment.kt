@@ -1,6 +1,7 @@
 package com.sudox.android.ui.auth.confirm
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,7 +14,9 @@ import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.enums.State
 import com.sudox.android.common.models.dto.ConfirmCodeDTO
+import com.sudox.android.common.models.dto.SignInDTO
 import com.sudox.android.common.viewmodels.getViewModel
+import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.email.AuthEmailFragment
 import com.sudox.android.ui.auth.register.AuthRegisterFragment
@@ -36,6 +39,7 @@ class AuthConfirmFragment : DaggerFragment() {
     private lateinit var authConfirmViewModel: AuthConfirmViewModel
 
     lateinit var email: String
+    var authStatus: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         authConfirmViewModel = getViewModel(viewModelFactory)
@@ -51,7 +55,9 @@ class AuthConfirmFragment : DaggerFragment() {
         email = data.getString(EMAIL_BUNDLE_KEY)
         enter_your_code_text.text = "${getString(R.string.enter_code_from_mail)} $email"
 
-        if (data.getInt(AUTH_STATUS) == 0) {
+        authStatus = data.getInt(AUTH_STATUS)
+
+        if (authStatus == 0) {
             welcome_text.text = getString(R.string.welcome)
         } else {
             welcome_text.text = getString(R.string.return_back)
@@ -84,7 +90,14 @@ class AuthConfirmFragment : DaggerFragment() {
 
                 if (s.toString().length == 5) {
                     code_edit_text.isEnabled = false
-                    authConfirmViewModel.sendCode(s.toString()).observe(this@AuthConfirmFragment, Observer(::getConfirmData))
+                    if(authStatus == 0) {
+                        authConfirmViewModel.sendCode(s.toString())
+                                .observe(this@AuthConfirmFragment, Observer(::getConfirmData))
+                    }
+                    else{
+                        authConfirmViewModel.signIn(s.toString())
+                                .observe(this@AuthConfirmFragment, Observer(::getSignInData))
+                    }
                 }
             }
         })
@@ -126,6 +139,23 @@ class AuthConfirmFragment : DaggerFragment() {
             }
             1 -> goToAuthRegisterFragment()
         }
+    }
+
+    private fun getSignInData(signInDTO: SignInDTO) {
+        when{
+            signInDTO.status == 0 -> code_edit_text.error = getString(R.string.wrong_code)
+            else -> {
+                authConfirmViewModel.saveAccount(signInDTO.id, signInDTO.token)
+                goToMainActivity()
+            }
+
+        }
+
+    }
+
+    private fun goToMainActivity() {
+        startActivity(Intent(activity, MainActivity::class.java))
+        activity!!.finish()
     }
 
     private fun goToAuthRegisterFragment() {

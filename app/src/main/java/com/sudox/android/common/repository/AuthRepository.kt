@@ -75,16 +75,39 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return mutableLiveData
     }
 
-    fun sendUserData(name: String, surname: String): Any {
-        TODO()
+    fun signUp(name: String, surname: String): MutableLiveData<SignUpDTO>{
+        val mutableLiveData = MutableLiveData<SignUpDTO>()
+
+        val signUpDTO = SignUpDTO()
+        signUpDTO.name = name
+        signUpDTO.surname = surname
+
+        protocolClient.makeRequest("auth.signUp", signUpDTO, object : ResponseCallback<SignUpDTO>{
+            override fun onMessage(response: SignUpDTO) {
+                mutableLiveData.postValue(response)
+            }
+        })
+
+        return mutableLiveData
     }
 
+    fun signIn(code: String): MutableLiveData<SignInDTO> {
+        val mutableLiveData = MutableLiveData<SignInDTO>()
+
+        val signInDTO = SignInDTO()
+        signInDTO.code = code.toInt()
+
+        protocolClient.makeRequest("auth.signIn", signInDTO, object : ResponseCallback<SignInDTO>{
+            override fun onMessage(response: SignInDTO) {
+               mutableLiveData.postValue(response)
+            }
+        })
+        return mutableLiveData
+    }
 
     fun cleanDisposables() {
         if (!disposables.isDisposed) {
             disposables.dispose()
         }
     }
-
-
 }

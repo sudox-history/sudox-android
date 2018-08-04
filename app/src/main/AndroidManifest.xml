@@ -44,5 +44,7 @@
             android:name=".ui.auth.AuthActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
 
+        <activity android:name=".ui.MainActivity"/>
+
     </application>
 </manifest>
