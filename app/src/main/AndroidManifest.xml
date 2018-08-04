@@ -40,6 +40,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.auth.AuthActivity" />
+        <activity
+            android:name=".ui.auth.AuthActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
+
     </application>
 </manifest>

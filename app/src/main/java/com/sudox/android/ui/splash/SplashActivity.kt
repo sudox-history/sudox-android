@@ -37,6 +37,7 @@ class SplashActivity : DaggerAppCompatActivity() {
                 splashViewModel.sendToken().observe(this, Observer(::getTokenState))
                 Timber.log(1, "start handshake")
             }
+
             ConnectState.CONNECT_ERROR -> {
                 chooseActivity(splashViewModel.getAccount()?.token)
                 Timber.log(0, "choosing activity")

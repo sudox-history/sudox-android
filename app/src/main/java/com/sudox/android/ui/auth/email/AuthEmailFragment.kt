@@ -11,6 +11,7 @@ import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.models.dto.AuthSessionDTO
 import com.sudox.android.common.viewmodels.getViewModel
+import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.confirm.AUTH_STATUS
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.confirm.EMAIL_BUNDLE_KEY
@@ -62,20 +63,7 @@ class AuthEmailFragment : DaggerFragment() {
     }
 
     private fun showAuthCodeFragment(email: String, status: Int) {
-        val bundle = Bundle()
-
-        // Put email to the bundle
-        bundle.putString(EMAIL_BUNDLE_KEY, email)
-        bundle.putInt(AUTH_STATUS, status)
-
-        // Change fragment
-        fragmentManager!!.apply {
-            beginTransaction()
-                    .replace(R.id.fragment_auth_container, AuthConfirmFragment().apply {
-                        arguments = bundle
-                    })
-                    .commit()
-        }
+        (activity as AuthActivity).showAuthCodeFragment(email, status)
     }
 
     private fun showMessage(message: String){

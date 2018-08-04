@@ -1,6 +1,5 @@
 package com.sudox.android.ui.auth.confirm
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -43,12 +42,14 @@ class AuthConfirmFragment : DaggerFragment() {
         return inflater.inflate(R.layout.fragment_auth_confirm, container, false)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onStart() {
         super.onStart()
+
         val data: Bundle = arguments!!
+
         email = data.getString(EMAIL_BUNDLE_KEY)
         enter_your_code_text.text = "${getString(R.string.enter_code_from_mail)} $email"
+
         if (data.getInt(AUTH_STATUS) == 0) {
             welcome_text.text = getString(R.string.welcome)
         } else {
@@ -98,10 +99,10 @@ class AuthConfirmFragment : DaggerFragment() {
         auth_confirm_fragment_navbar.setClickable(button_navbar_send_again, true)
     }
 
-    private fun setTimerText(text: String) {
+    private fun setTimerText(text: Long) {
         when (text) {
-            "0" -> finishTimer()
-            else -> auth_confirm_fragment_navbar.setText(button_navbar_send_again, text)
+            0L -> finishTimer()
+            else -> auth_confirm_fragment_navbar.setText(button_navbar_send_again, text.toString())
         }
     }
 
@@ -123,6 +124,7 @@ class AuthConfirmFragment : DaggerFragment() {
     }
 
     private fun goToAuthRegisterFragment() {
+        TODO("To fragment")
         fragmentManager!!.apply {
             beginTransaction()
                     .replace(R.id.fragment_auth_container, AuthRegisterFragment())
