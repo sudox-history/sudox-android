@@ -57,6 +57,8 @@
     <string name="have_not_got_contacts">You havent\'t got contacts! Add them right now!</string>
     <string name="enter_your_email">For the beginning enter your email</string>
     <string name="we_glad_to_see_you">We glad to see you!</string>
+    <string name="unknown_error">Unknown error!</string>
+    <string name="code_has_sent_successfully">Code has sent successfully!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="toolbar_back">Back</string>

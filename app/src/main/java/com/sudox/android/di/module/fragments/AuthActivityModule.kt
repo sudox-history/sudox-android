@@ -2,6 +2,7 @@ package com.sudox.android.di.module.fragments
 
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.email.AuthEmailFragment
+import com.sudox.android.ui.auth.register.AuthRegisterFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -14,5 +15,6 @@ abstract class AuthActivityModule {
     @ContributesAndroidInjector
     abstract fun provideAuthConfirmFragment(): AuthConfirmFragment
 
-    //TODO: Add two fragments
+    @ContributesAndroidInjector
+    abstract fun provideAuthRegisterFragment(): AuthRegisterFragment
 }

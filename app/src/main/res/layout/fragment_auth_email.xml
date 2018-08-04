@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <com.sudox.android.ui.views.NavigationBar
-        android:id="@+id/auth_fragment_navbar"
+        android:id="@+id/auth_email_fragment_navbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:nextButtonIsVisible="true"
@@ -15,7 +15,7 @@
         android:id="@+id/sign_in_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/auth_fragment_navbar"
+        android:layout_below="@id/auth_email_fragment_navbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
         android:fontFamily="sans-serif-light"
@@ -44,7 +44,7 @@
         android:layout_marginEnd="30dp">
 
         <EditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/email_edit_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/email"

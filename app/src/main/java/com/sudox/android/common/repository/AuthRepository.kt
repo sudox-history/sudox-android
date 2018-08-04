@@ -2,13 +2,10 @@ package com.sudox.android.common.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.sudox.android.common.Data
-import com.sudox.android.common.enums.ConnectState
+import com.sudox.android.common.enums.State
 import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.models.TokenData
-import com.sudox.android.common.models.dto.AuthSessionDTO
-import com.sudox.android.common.models.dto.SendCodeDTO
-import com.sudox.android.common.models.dto.TokenDTO
+import com.sudox.android.common.models.dto.*
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.model.ResponseCallback
 import io.reactivex.disposables.CompositeDisposable
@@ -48,9 +45,46 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return mutableLiveData
     }
 
+
+    fun sendCode(code: String): MutableLiveData<ConfirmCodeDTO> {
+        val mutableLiveData = MutableLiveData<ConfirmCodeDTO>()
+
+        val confirmCodeDTO = ConfirmCodeDTO()
+        confirmCodeDTO.code = code.toInt()
+
+        protocolClient.makeRequest("auth.confirmCode", confirmCodeDTO, object : ResponseCallback<ConfirmCodeDTO>{
+            override fun onMessage(response: ConfirmCodeDTO) {
+                mutableLiveData.postValue(response)
+            }
+        })
+
+        return mutableLiveData
+    }
+
+    fun sendCodeAgain(): MutableLiveData<State> {
+        val mutableLiveData = MutableLiveData<State>()
+
+        protocolClient.makeRequest("auth.resendCode", ResendDTO(), object : ResponseCallback<ResendDTO>{
+            override fun onMessage(response: ResendDTO) {
+                if(response.code == 0)
+                    mutableLiveData.postValue(State.FAILED)
+                else
+                    mutableLiveData.postValue(State.SUCCESS)
+            }
+        })
+        return mutableLiveData
+    }
+
+    fun sendUserData(name: String, surname: String): Any {
+        TODO()
+    }
+
+
     fun cleanDisposables() {
         if (!disposables.isDisposed) {
             disposables.dispose()
         }
     }
+
+
 }

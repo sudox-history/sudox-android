@@ -7,6 +7,7 @@ import com.sudox.android.di.annotation.ViewModelKey
 import com.sudox.android.ui.auth.AuthViewModel
 import com.sudox.android.ui.auth.confirm.AuthConfirmViewModel
 import com.sudox.android.ui.auth.email.AuthEmailViewModel
+import com.sudox.android.ui.auth.register.AuthRegisterViewModel
 import com.sudox.android.ui.splash.SplashViewModel
 import dagger.Binds
 import dagger.Module
@@ -37,6 +38,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AuthConfirmViewModel::class)
     internal abstract fun authConfirmViewModel(viewModel: AuthConfirmViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AuthRegisterViewModel::class)
+    internal abstract fun authRegisterViewModel(viewModel: AuthRegisterViewModel): ViewModel
 
 
 }

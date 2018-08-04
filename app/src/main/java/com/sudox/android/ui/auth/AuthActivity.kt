@@ -41,7 +41,7 @@ class AuthActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun showMessage(message: String) {
+    fun showMessage(message: String) {
         Snackbar.make(fragment_auth_container, message, Snackbar.LENGTH_LONG).show()
     }
 

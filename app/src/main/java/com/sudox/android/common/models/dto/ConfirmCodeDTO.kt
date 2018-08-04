@@ -2,23 +2,19 @@ package com.sudox.android.common.models.dto
 
 import org.json.JSONObject
 
-class TokenDTO(private val token: String) : CanErrorDTO() {
+class ConfirmCodeDTO : CanErrorDTO() {
 
-    var id: Int = 0
     var code: Int = 0
+    var codeStatus: Int = 0
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()){
-            putOpt("token", token)
+            putOpt("code", code)
         }
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
         super.fromJSON(jsonObject)
-        with(jsonObject) {
-            id = optInt("id")
-            code = optInt("code")
-        }
+        codeStatus = jsonObject.getInt("code")
     }
-
 }

@@ -2,5 +2,6 @@ package com.sudox.android.common.enums
 
 enum class NavigationAction {
     BACK,
-    NEXT
+    NEXT,
+    SEND_AGAIN
 }

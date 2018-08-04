@@ -45,6 +45,17 @@
         android:text="@string/toolbar_next"
         android:textSize="14sp"/>
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/button_navbar_send_again"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:text="@string/retry_send"
+        android:textSize="14sp"/>
+
     <!-- Navigation buttons end -->
 
 </RelativeLayout>

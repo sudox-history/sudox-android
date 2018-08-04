@@ -24,6 +24,10 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     // Sudox tag
     var sudoxTagIsVisible: Boolean = false
 
+    // Send again
+    var sendAgainIsVisible: Boolean = false
+    var sendAgainText: String? = null
+
     // Live data
     var navigationLiveData: MutableLiveData<NavigationAction> = MutableLiveData()
 
@@ -48,6 +52,7 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         backButtonIsVisible = array.getBoolean(R.styleable.NavigationBar_backButtonIsVisible, false)
         nextButtonIsVisible = array.getBoolean(R.styleable.NavigationBar_nextButtonIsVisible, false)
         sudoxTagIsVisible = array.getBoolean(R.styleable.NavigationBar_sudoxTagIsVisible, false)
+        sendAgainIsVisible = array.getBoolean(R.styleable.NavigationBar_sendAgainIsVisible, false)
         backButtonText = array.getString(R.styleable.NavigationBar_backButtonText)
         nextButtonText = array.getString(R.styleable.NavigationBar_nextButtonText)
 
@@ -59,9 +64,18 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     internal fun configureComponents() {
         configureButton(button_navbar_back, backButtonIsVisible, backButtonText, NavigationAction.BACK)
         configureButton(button_navbar_next, nextButtonIsVisible, nextButtonText, NavigationAction.NEXT)
+        configureButton(button_navbar_send_again, sendAgainIsVisible, sendAgainText, NavigationAction.SEND_AGAIN)
         configureText(sudox_tag, sudoxTagIsVisible)
     }
 
+
+    fun setText(view: AppCompatTextView, text: String){
+        view.text = text
+    }
+
+    fun setClickable(view: AppCompatTextView, clickable: Boolean){
+        view.isClickable = clickable
+    }
 
     private fun configureText(view: AppCompatTextView, visibility: Boolean){
         if (visibility) {

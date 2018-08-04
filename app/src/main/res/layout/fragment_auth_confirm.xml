@@ -6,17 +6,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.sudox.android.ui.views.NavigationBar
-        android:id="@+id/auth_fragment_navbar"
+        android:id="@+id/auth_confirm_fragment_navbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:nextButtonIsVisible="true"
+        app:sendAgainIsVisible="true"
         app:backButtonIsVisible="true"/>
 
     <TextView
         android:id="@+id/welcome_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/auth_fragment_navbar"
+        android:layout_below="@id/auth_confirm_fragment_navbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
         android:fontFamily="sans-serif-light"
@@ -39,6 +39,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/we_glad_to_see_you_text"
+        app:counterEnabled="true"
+        app:counterMaxLength="5"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
@@ -55,6 +57,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
+        android:id="@+id/enter_your_code_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/code_edit_text_container"
