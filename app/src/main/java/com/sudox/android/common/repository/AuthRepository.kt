@@ -22,7 +22,11 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         if (token == null) {
             tokenData.postValue(TokenData(TokenState.MISSING))
         } else {
-            protocolClient.makeRequest("auth.importToken", TokenDTO(token), object : ResponseCallback<TokenDTO> {
+
+            val tokenDTO = TokenDTO()
+            tokenDTO.token = token
+
+            protocolClient.makeRequest("auth.importToken", tokenDTO, object : ResponseCallback<TokenDTO> {
                 override fun onMessage(response: TokenDTO) {
                     if (response.code == 0)
                         tokenData.postValue(TokenData(TokenState.WRONG))

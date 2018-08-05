@@ -159,7 +159,6 @@ class AuthConfirmFragment : DaggerFragment() {
     }
 
     private fun goToAuthRegisterFragment() {
-        TODO("To fragment")
         fragmentManager!!.apply {
             beginTransaction()
                     .replace(R.id.fragment_auth_container, AuthRegisterFragment())
