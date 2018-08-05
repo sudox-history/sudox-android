@@ -13,9 +13,7 @@ import com.sudox.android.common.viewmodels.ViewModelFactory
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.MainActivity
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_auth_email.*
 import kotlinx.android.synthetic.main.fragment_register.*
-
 import javax.inject.Inject
 
 class AuthRegisterFragment : DaggerFragment() {
@@ -46,7 +44,7 @@ class AuthRegisterFragment : DaggerFragment() {
 
     private fun getSignUpData(signUpDTO: SignUpDTO) {
         when {
-            signUpDTO.errorCode == 3 -> email_edit_text.error = getString(R.string.wrong_name_format)
+            signUpDTO.errorCode == 3 -> name_edit_text.error = getString(R.string.wrong_name_format)
             else -> {
                 authRegisterViewModel.saveAccount(signUpDTO.id, signUpDTO.token)
                 goToMainActivity()

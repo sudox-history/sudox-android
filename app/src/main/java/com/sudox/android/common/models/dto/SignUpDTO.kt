@@ -12,14 +12,14 @@ class SignUpDTO : CanErrorDTO() {
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()){
-            putOpt("name", name)
-            putOpt("surname", surname)
+            putOpt("firstName", name)
+            putOpt("lastName", surname)
         }
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
         super.fromJSON(jsonObject)
-        token = jsonObject.getString("token")
-        id = jsonObject.getLong("id")
+        token = jsonObject.optString("token")
+        id = jsonObject.optLong("id")
     }
 }

@@ -19,7 +19,7 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
     private lateinit var disposable: Disposable
 
     var timerData = MutableLiveData<Long>()
-    var timerObservable = Observable.interval(1, TimeUnit.SECONDS)
+    private var timerObservable = Observable.interval(1, TimeUnit.SECONDS)
             .startWith(0)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

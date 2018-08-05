@@ -19,6 +19,8 @@ class AuthViewModel @Inject constructor(private val protocolClient: ProtocolClie
         connectLiveData.postValue(Data(it))
     }
 
+    fun importAuthHash(hash: String) = authRepository.importAuthHash(hash)
+
     fun disconnect() {
         protocolClient.disconnect()
     }

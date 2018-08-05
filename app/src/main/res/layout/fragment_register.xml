@@ -39,6 +39,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/what_is_your_name_hint"
         android:layout_centerHorizontal="true"
+        app:counterMaxLength="30"
+        app:counterEnabled="true"
         android:layout_marginStart="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp">
@@ -48,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/name"
-            android:inputType="number"
+            android:inputType="text"
             android:textSize="13sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -59,8 +61,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/name_edit_text_container"
         android:layout_centerHorizontal="true"
+        app:counterMaxLength="30"
+        app:counterEnabled="true"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="30dp">
 
         <EditText
@@ -68,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/surname"
-            android:inputType="number"
+            android:inputType="text"
             android:textSize="13sp" />
 
     </com.google.android.material.textfield.TextInputLayout>

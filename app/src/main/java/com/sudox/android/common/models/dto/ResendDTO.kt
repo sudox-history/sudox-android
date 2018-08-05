@@ -12,6 +12,6 @@ class ResendDTO : CanErrorDTO(){
 
     override fun fromJSON(jsonObject: JSONObject) {
         super.fromJSON(jsonObject)
-        code = jsonObject.getInt("code")
+        code = jsonObject.optInt("code")
     }
 }

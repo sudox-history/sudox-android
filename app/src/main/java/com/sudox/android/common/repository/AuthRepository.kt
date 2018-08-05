@@ -109,6 +109,21 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return mutableLiveData
     }
 
+    fun importAuthHash(hash: String): MutableLiveData<AuthHashDTO> {
+        val mutableLiveData = MutableLiveData<AuthHashDTO>()
+
+        val authHashDTO = AuthHashDTO()
+        authHashDTO.hash = hash
+
+        protocolClient.makeRequest("auth.import", authHashDTO, object : ResponseCallback<AuthHashDTO>{
+            override fun onMessage(response: AuthHashDTO) {
+                mutableLiveData.postValue(response)
+            }
+        })
+
+        return mutableLiveData
+    }
+
     fun cleanDisposables() {
         if (!disposables.isDisposed) {
             disposables.dispose()

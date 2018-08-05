@@ -53,8 +53,11 @@ class AuthEmailFragment : DaggerFragment() {
     private fun getCodeData(it: AuthSessionDTO) {
         when {
             it.errorCode == 3 -> email_edit_text.error = getString(R.string.wrong_email_format)
-            it.isError() -> TODO("Other error.")
-            else -> showAuthCodeFragment(email, it.status)
+            it.isError() -> email_edit_text.error = getString(R.string.unknown_error)
+            else -> {
+                (activity as AuthActivity).hash = it.hash
+                showAuthCodeFragment(email, it.status)
+            }
         }
     }
 

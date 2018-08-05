@@ -7,6 +7,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sudox.android.R
 import com.sudox.android.common.Data
 import com.sudox.android.common.enums.ConnectState
+import com.sudox.android.common.models.dto.AuthHashDTO
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.confirm.AUTH_STATUS
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
@@ -23,6 +24,8 @@ class AuthActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var authViewModel: AuthViewModel
+
+    lateinit var hash: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +59,30 @@ class AuthActivity : DaggerAppCompatActivity() {
 
     private fun getConnectState(connectData: Data<ConnectState>) {
         when (connectData.data) {
-            ConnectState.RECONNECTED -> showMessage(getString(R.string.connection_restored))
+            ConnectState.RECONNECTED -> {
+                showMessage(getString(R.string.connection_restored))
+                importAuthHash(hash)
+            }
             ConnectState.DISCONNECTED -> showMessage(getString(R.string.lost_internet_connection))
+        }
+    }
+
+    fun importAuthHash(hash: String) {
+        authViewModel.importAuthHash(hash)
+                .observe(this, Observer(::getHashData))
+    }
+
+    private fun getHashData(authHashDTO: AuthHashDTO) {
+        if(authHashDTO.code == 0){
+            showAuthEmailFragment()
+        }
+    }
+
+    private fun showAuthEmailFragment() {
+        supportFragmentManager.apply {
+            beginTransaction()
+                    .replace(R.id.fragment_auth_container, AuthEmailFragment())
+                    .commit()
         }
     }
 
