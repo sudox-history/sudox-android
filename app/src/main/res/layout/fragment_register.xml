@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <com.sudox.android.ui.views.NavigationBar
         android:id="@+id/auth_register_fragment_navbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:nextButtonIsVisible="true"
-        app:sudoxTagIsVisible="true"/>
+        app:sudoxTagIsVisible="true" />
 
     <TextView
         android:id="@+id/what_is_your_name_text"
@@ -21,7 +20,7 @@
         android:layout_marginTop="35dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/what_is_your_name"
-        android:textSize="25sp"/>
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/what_is_your_name_hint"
@@ -32,7 +31,7 @@
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/enter_your_name_and_surname"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name_edit_text_container"
@@ -40,9 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/what_is_your_name_hint"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp">
 
         <EditText
             android:id="@+id/name_edit_text"
@@ -50,7 +49,7 @@
             android:layout_height="match_parent"
             android:hint="@string/name"
             android:inputType="number"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,9 +59,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/name_edit_text_container"
         android:layout_centerHorizontal="true"
-        android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp">
 
         <EditText
             android:id="@+id/surname_edit_text"
@@ -70,7 +69,7 @@
             android:layout_height="match_parent"
             android:hint="@string/surname"
             android:inputType="number"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,12 +77,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/surname_edit_text_container"
-        android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
         android:gravity="center"
         android:text="@string/about_name"
-        android:textColor="@color/colorHint"/>
+        android:textColor="@color/colorHint" />
 
 
 </RelativeLayout>

@@ -105,18 +105,18 @@ class AuthConfirmFragment : DaggerFragment() {
 
     private fun setupTimer() {
         authConfirmViewModel.setTimer(95)
-        auth_confirm_fragment_navbar.setClickable(button_navbar_send_again, false)
+        auth_confirm_fragment_navbar.setClickable(buttonSomeFeature, false)
     }
 
     private fun finishTimer() {
-        auth_confirm_fragment_navbar.setText(button_navbar_send_again, getString(R.string.retry_send))
-        auth_confirm_fragment_navbar.setClickable(button_navbar_send_again, true)
+        auth_confirm_fragment_navbar.setText(buttonSomeFeature, getString(R.string.retry_send))
+        auth_confirm_fragment_navbar.setClickable(buttonSomeFeature, true)
     }
 
     private fun setTimerText(seconds: Long) {
         when (seconds) {
             0L -> finishTimer()
-            else -> auth_confirm_fragment_navbar.setText(button_navbar_send_again,
+            else -> auth_confirm_fragment_navbar.setText(buttonSomeFeature,
                     "${getString(R.string.retry_send_in)} ${formatTimeToEnd(seconds)}")
         }
     }

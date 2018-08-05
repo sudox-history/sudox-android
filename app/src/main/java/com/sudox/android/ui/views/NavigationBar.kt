@@ -62,10 +62,10 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
     @VisibleForTesting
     internal fun configureComponents() {
-        configureButton(button_navbar_back, backButtonIsVisible, backButtonText, NavigationAction.BACK)
-        configureButton(button_navbar_next, nextButtonIsVisible, nextButtonText, NavigationAction.NEXT)
-        configureButton(button_navbar_send_again, sendAgainIsVisible, sendAgainText, NavigationAction.SEND_AGAIN)
-        configureText(sudox_tag, sudoxTagIsVisible)
+        configureButton(buttonNavbarBack, backButtonIsVisible, backButtonText, NavigationAction.BACK)
+        configureButton(buttonNavbarNext, nextButtonIsVisible, nextButtonText, NavigationAction.NEXT)
+        configureButton(buttonSomeFeature, sendAgainIsVisible, sendAgainText, NavigationAction.SEND_AGAIN)
+        configureText(textSudoxTag, sudoxTagIsVisible)
     }
 
 
