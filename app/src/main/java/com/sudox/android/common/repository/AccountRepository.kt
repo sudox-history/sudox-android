@@ -20,46 +20,44 @@ class AccountRepository @Inject constructor(private val protocolClient: Protocol
     fun saveAccount(account: SudoxAccount) {
         val accountInstance = Account(account.name, accountType)
 
-        // User data
-        val userDataBundle = Bundle()
-
-        // Save data to the bundle
-        with(userDataBundle) {
-            putLong(KEY_ACCOUNT_ID, account.id)
-            putString(KEY_ACCOUNT_NAME, account.name)
-            putString(KEY_AUTHTOKEN, account.token)
-        }
-
         // Remove all accounts
         removeAccounts()
 
         // Add account
-        accountManager.addAccountExplicitly(accountInstance, null, userDataBundle)
+        accountManager.addAccountExplicitly(accountInstance, null, null)
+
+        // Write account data
+        accountManager.setUserData(accountInstance, KEY_ACCOUNT_ID, account.id.toString())
+        accountManager.setUserData(accountInstance, KEY_ACCOUNT_NAME, account.name)
+        accountManager.setPassword(accountInstance, account.token)
     }
 
-    fun removeAccounts() {
-        accountManager
-                .accounts
-                .forEach {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        accountManager.removeAccount(it, null, null, null)
-                    } else {
-                        accountManager.removeAccount(it, null, null)
-                    }
-                }
+    @Suppress("DEPRECATION")
+    private fun removeAccounts() {
+        val accounts = accountManager.accounts
+
+        for (account in accounts) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                accountManager.removeAccountExplicitly(account)
+            } else {
+                accountManager.removeAccount(account, null, null)
+            }
+        }
     }
 
     fun getAccount(): SudoxAccount? {
         val accounts = accountManager.accounts
 
-        // Check, that accounts existing
         return if (accounts.isNotEmpty()) {
             val account = accounts[0]
+            val accountId = accountManager.getUserData(account, KEY_ACCOUNT_ID).toLong()
+            val accountName = accountManager.getUserData(account, KEY_ACCOUNT_NAME)
+            val accountToken = accountManager.getPassword(account)
 
-            SudoxAccount(
-                    id = accountManager.getUserData(account, KEY_ACCOUNT_ID).toLong(),
-                    name = accountManager.getUserData(account, KEY_ACCOUNT_NAME),
-                    token = accountManager.getUserData(account, KEY_AUTHTOKEN))
-        } else { null }
+            // Account instance
+            SudoxAccount(accountId, accountName, accountToken)
+        } else {
+            null
+        }
     }
 }

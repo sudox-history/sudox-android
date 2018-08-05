@@ -37,8 +37,8 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
         }
     }
 
-    fun saveAccount(id: Long, token: String){
-        accountRepository.saveAccount(SudoxAccount(id, "Sudox", token ))
+    fun saveAccount(id: Long, token: String) {
+        accountRepository.saveAccount(SudoxAccount(id, "Sudox", token))
     }
 
     override fun onCleared() {
