@@ -10,6 +10,7 @@ import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.models.TokenData
 import com.sudox.android.common.viewmodels.getViewModel
+import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.auth.AuthActivity
 import dagger.android.support.DaggerAppCompatActivity
 import timber.log.Timber
@@ -76,7 +77,8 @@ class SplashActivity : DaggerAppCompatActivity() {
     }
 
     private fun showMainActivity() {
-
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     private fun showAuthActivity() {
