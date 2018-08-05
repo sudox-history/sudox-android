@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.IBinder
 
 class SudoxAuthenticatorService : Service() {
-
     // Authenticator instance
     private val authenticator = SudoxAuthenticator(this)
 
