@@ -3,4 +3,5 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:src="@mipmap/sudox_logo_round" />
+    android:layout_margin="120dp"
+    android:src="@drawable/splash_logo" />

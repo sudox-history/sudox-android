@@ -3,9 +3,7 @@ package com.sudox.android.common.repository
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AccountManager.KEY_ACCOUNT_NAME
-import android.accounts.AccountManager.KEY_AUTHTOKEN
 import android.os.Build
-import android.os.Bundle
 import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.protocol.ProtocolClient
@@ -20,7 +18,6 @@ class AccountRepository @Inject constructor(private val protocolClient: Protocol
     fun saveAccount(account: SudoxAccount) {
         val accountInstance = Account(account.name, accountType)
 
-        // Remove all accounts
         removeAccounts()
 
         // Add account
@@ -49,7 +46,7 @@ class AccountRepository @Inject constructor(private val protocolClient: Protocol
         val accounts = accountManager.accounts
 
         return if (accounts.isNotEmpty()) {
-            val account = accounts[0]
+            val account = accounts[accounts.size - 1]
             val accountId = accountManager.getUserData(account, KEY_ACCOUNT_ID).toLong()
             val accountName = accountManager.getUserData(account, KEY_ACCOUNT_NAME)
             val accountToken = accountManager.getPassword(account)

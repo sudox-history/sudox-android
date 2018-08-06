@@ -2,6 +2,7 @@ package com.sudox.android.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -37,7 +38,7 @@ class AuthActivity : DaggerAppCompatActivity() {
         authViewModel = getViewModel(viewModelFactory)
         authViewModel.connectLiveData.observe(this, Observer(::getConnectState))
 
-        showStartFragment()
+        showStartFragment(false)
     }
 
     private fun getConnectState(connectData: Data<ConnectState>) {
@@ -58,7 +59,7 @@ class AuthActivity : DaggerAppCompatActivity() {
 
     private fun getHashData(authHashDTO: AuthHashDTO) {
         if (authHashDTO.code == 0) {
-            showStartFragment()
+            showStartFragment(true)
         }
     }
 
@@ -110,13 +111,22 @@ class AuthActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun showStartFragment() {
-        supportFragmentManager.apply {
-            beginTransaction()
-                    .setCustomAnimations(R.animator.fragment_slide_right_exit_anim,
-                            R.animator.fragment_slide_left_exit_anim)
-                    .replace(R.id.fragment_auth_container, AuthEmailFragment())
-                    .commit()
+    private fun showStartFragment(animate: Boolean) {
+        if (animate) {
+            supportFragmentManager.apply {
+                beginTransaction()
+                        .setCustomAnimations(R.animator.fragment_slide_right_exit_anim,
+                                R.animator.fragment_slide_left_exit_anim)
+                        .replace(R.id.fragment_auth_container, AuthEmailFragment())
+                        .commit()
+            }
+        } else {
+            supportFragmentManager.apply {
+                beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .replace(R.id.fragment_auth_container, AuthEmailFragment())
+                        .commit()
+            }
         }
     }
 
