@@ -39,15 +39,18 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
     fun sendEmail(email: String): LiveData<AuthSessionDTO?> {
         val mutableLiveData = MutableLiveData<AuthSessionDTO?>()
-        if(protocolClient.isConnected()) {
-            protocolClient.makeRequest("auth.sendCode", SendCodeDTO(email), object : ResponseCallback<AuthSessionDTO> {
-                override fun onMessage(response: AuthSessionDTO) {
-                    mutableLiveData.postValue(response)
-                }
-            })
-            return mutableLiveData
+
+        if (protocolClient.isConnected()) {
+            protocolClient.makeRequest("auth.sendCode", SendCodeDTO(email),
+                    object : ResponseCallback<AuthSessionDTO> {
+                        override fun onMessage(response: AuthSessionDTO) {
+                            mutableLiveData.postValue(response)
+                        }
+                    })
+        } else {
+            mutableLiveData.postValue(null)
         }
-        mutableLiveData.postValue(null)
+
         return mutableLiveData
     }
 
@@ -55,7 +58,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     fun sendCode(code: String): MutableLiveData<ConfirmCodeDTO?> {
         val mutableLiveData = MutableLiveData<ConfirmCodeDTO?>()
 
-        if(protocolClient.isConnected()) {
+        if (protocolClient.isConnected()) {
             val confirmCodeDTO = ConfirmCodeDTO()
             confirmCodeDTO.code = code.toInt()
 
@@ -74,7 +77,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     fun sendCodeAgain(): MutableLiveData<State?> {
         val mutableLiveData = MutableLiveData<State?>()
 
-        if(protocolClient.isConnected()) {
+        if (protocolClient.isConnected()) {
             protocolClient.makeRequest("auth.resendCode", ResendDTO(), object : ResponseCallback<ResendDTO> {
                 override fun onMessage(response: ResendDTO) {
                     if (response.code == 0)
@@ -89,10 +92,10 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return mutableLiveData
     }
 
-    fun signUp(name: String, surname: String): MutableLiveData<SignUpDTO?>{
+    fun signUp(name: String, surname: String): MutableLiveData<SignUpDTO?> {
         val mutableLiveData = MutableLiveData<SignUpDTO?>()
 
-        if(protocolClient.isConnected()) {
+        if (protocolClient.isConnected()) {
             val signUpDTO = SignUpDTO()
             signUpDTO.name = name
             signUpDTO.surname = surname
@@ -112,7 +115,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     fun signIn(code: String): MutableLiveData<SignInDTO?> {
         val mutableLiveData = MutableLiveData<SignInDTO?>()
 
-        if(protocolClient.isConnected()) {
+        if (protocolClient.isConnected()) {
             val signInDTO = SignInDTO()
             signInDTO.code = code.toInt()
 
@@ -133,7 +136,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         val authHashDTO = AuthHashDTO()
         authHashDTO.hash = hash
 
-        protocolClient.makeRequest("auth.import", authHashDTO, object : ResponseCallback<AuthHashDTO>{
+        protocolClient.makeRequest("auth.import", authHashDTO, object : ResponseCallback<AuthHashDTO> {
             override fun onMessage(response: AuthHashDTO) {
                 mutableLiveData.postValue(response)
             }

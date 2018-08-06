@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="font_size_tiny">14sp</dimen>
+    <dimen name="font_size_tiny">13sp</dimen>
+    <dimen name="font_size_medium">16sp</dimen>
+    <dimen name="font_size_large">25sp</dimen>
     <!-- Navigation bar -->
     <dimen name="navbar_height">55dp</dimen>
     <dimen name="navbar_button_drawable_padding">8dp</dimen>

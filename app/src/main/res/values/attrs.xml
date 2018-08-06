@@ -8,6 +8,5 @@
         <attr name="backButtonText" format="string" />
         <attr name="nextButtonText" format="string" />
         <attr name="sendAgainButtonText" format="string" />
-
     </declare-styleable>
 </resources>

@@ -20,15 +20,12 @@ class AuthEmailFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var authEmailViewModel: AuthEmailViewModel
-
+    lateinit var authEmailViewModel: AuthEmailViewModel
     lateinit var authActivity: AuthActivity
-
     lateinit var email: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         authEmailViewModel = getViewModel(viewModelFactory)
-
         authActivity = activity as AuthActivity
 
         return inflater.inflate(R.layout.fragment_auth_email, container, false)
@@ -36,33 +33,44 @@ class AuthEmailFragment : DaggerFragment() {
 
     override fun onStart() {
         super.onStart()
+        recoveryEmailIfNeeded()
+        configureNavigationBar()
+    }
 
-        val data: Bundle? = arguments
-
-        if(data != null) {
-            email_edit_text.setText(data.getString(EMAIL_BUNDLE_KEY))
-        }
-
-        // Configure navigation bar
-        auth_email_fragment_navbar
+    private fun configureNavigationBar() {
+        authEmailFragmentNavbar
                 .navigationLiveData
                 .observe(this, Observer<NavigationAction> {
                     if (it == NavigationAction.NEXT) {
-                        email = email_edit_text.text.toString()
-                        authEmailViewModel.sendEmail(email).observe(this, Observer(::getCodeData))
+                        email = emailEditText.text
+                                .toString()
+                                .trim()
+
+                        authEmailViewModel
+                                .sendEmail(email)
+                                .observe(this, Observer(::getCodeData))
                     }
                 })
     }
 
+    private fun recoveryEmailIfNeeded() {
+        val data: Bundle? = arguments
+
+        if (data != null) {
+            emailEditText.setText(data.getString(EMAIL_BUNDLE_KEY))
+        }
+    }
+
     private fun getCodeData(it: AuthSessionDTO?) {
-        when {
-            it == null -> authActivity.showMessage(getString(R.string.no_internet_connection))
-            it.errorCode == 3 -> email_edit_text.error = getString(R.string.wrong_email_format)
-            it.isError() -> email_edit_text.error = getString(R.string.unknown_error)
-            else -> {
-                authActivity.hash = it.hash
-                authActivity.showAuthCodeFragment(email, it.status)
-            }
+        if (it == null) {
+            authActivity.showMessage(getString(R.string.no_internet_connection))
+        } else if (it.errorCode == 3) {
+            emailEditText.error = getString(R.string.wrong_email_format)
+        } else if (it.isError()) {
+            emailEditText.error = getString(R.string.unknown_error)
+        } else {
+            authActivity.hash = it.hash
+            authActivity.showAuthCodeFragment(email, it.status)
         }
     }
 }
