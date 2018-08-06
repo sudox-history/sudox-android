@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
+import com.sudox.android.common.helpers.EMAIL_REGEX
 import com.sudox.android.common.models.dto.AuthSessionDTO
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
@@ -46,9 +47,13 @@ class AuthEmailFragment : DaggerFragment() {
                                 .toString()
                                 .trim()
 
-                        authEmailViewModel
-                                .sendEmail(email)
-                                .observe(this, Observer(::getCodeData))
+                        if (EMAIL_REGEX.matches(email)) {
+                            authEmailViewModel
+                                    .sendEmail(email)
+                                    .observe(this, Observer(::getCodeData))
+                        } else {
+                            emailEditTextLayout.error = getString(R.string.wrong_email_format)
+                        }
                     }
                 })
     }
@@ -65,9 +70,9 @@ class AuthEmailFragment : DaggerFragment() {
         if (it == null) {
             authActivity.showMessage(getString(R.string.no_internet_connection))
         } else if (it.errorCode == 3) {
-            emailEditText.error = getString(R.string.wrong_email_format)
+            emailEditTextLayout.error = getString(R.string.wrong_email_format)
         } else if (it.isError()) {
-            emailEditText.error = getString(R.string.unknown_error)
+            emailEditTextLayout.error = getString(R.string.unknown_error)
         } else {
             authActivity.hash = it.hash
             authActivity.showAuthCodeFragment(email, it.status)
