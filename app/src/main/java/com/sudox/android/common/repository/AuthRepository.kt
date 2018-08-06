@@ -37,75 +37,93 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return tokenData
     }
 
-    fun sendEmail(email: String): LiveData<AuthSessionDTO> {
-        val mutableLiveData = MutableLiveData<AuthSessionDTO>()
-
-        protocolClient.makeRequest("auth.sendCode", SendCodeDTO(email), object : ResponseCallback<AuthSessionDTO> {
-            override fun onMessage(response: AuthSessionDTO) {
-                mutableLiveData.postValue(response)
-            }
-        })
-
+    fun sendEmail(email: String): LiveData<AuthSessionDTO?> {
+        val mutableLiveData = MutableLiveData<AuthSessionDTO?>()
+        if(protocolClient.isConnected()) {
+            protocolClient.makeRequest("auth.sendCode", SendCodeDTO(email), object : ResponseCallback<AuthSessionDTO> {
+                override fun onMessage(response: AuthSessionDTO) {
+                    mutableLiveData.postValue(response)
+                }
+            })
+            return mutableLiveData
+        }
+        mutableLiveData.postValue(null)
         return mutableLiveData
     }
 
 
-    fun sendCode(code: String): MutableLiveData<ConfirmCodeDTO> {
-        val mutableLiveData = MutableLiveData<ConfirmCodeDTO>()
+    fun sendCode(code: String): MutableLiveData<ConfirmCodeDTO?> {
+        val mutableLiveData = MutableLiveData<ConfirmCodeDTO?>()
 
-        val confirmCodeDTO = ConfirmCodeDTO()
-        confirmCodeDTO.code = code.toInt()
+        if(protocolClient.isConnected()) {
+            val confirmCodeDTO = ConfirmCodeDTO()
+            confirmCodeDTO.code = code.toInt()
 
-        protocolClient.makeRequest("auth.confirmCode", confirmCodeDTO, object : ResponseCallback<ConfirmCodeDTO>{
-            override fun onMessage(response: ConfirmCodeDTO) {
-                mutableLiveData.postValue(response)
-            }
-        })
+            protocolClient.makeRequest("auth.confirmCode", confirmCodeDTO, object : ResponseCallback<ConfirmCodeDTO> {
+                override fun onMessage(response: ConfirmCodeDTO) {
+                    mutableLiveData.postValue(response)
+                }
+            })
 
+            return mutableLiveData
+        }
+        mutableLiveData.postValue(null)
         return mutableLiveData
     }
 
-    fun sendCodeAgain(): MutableLiveData<State> {
-        val mutableLiveData = MutableLiveData<State>()
+    fun sendCodeAgain(): MutableLiveData<State?> {
+        val mutableLiveData = MutableLiveData<State?>()
 
-        protocolClient.makeRequest("auth.resendCode", ResendDTO(), object : ResponseCallback<ResendDTO>{
-            override fun onMessage(response: ResendDTO) {
-                if(response.code == 0)
-                    mutableLiveData.postValue(State.FAILED)
-                else
-                    mutableLiveData.postValue(State.SUCCESS)
-            }
-        })
+        if(protocolClient.isConnected()) {
+            protocolClient.makeRequest("auth.resendCode", ResendDTO(), object : ResponseCallback<ResendDTO> {
+                override fun onMessage(response: ResendDTO) {
+                    if (response.code == 0)
+                        mutableLiveData.postValue(State.FAILED)
+                    else
+                        mutableLiveData.postValue(State.SUCCESS)
+                }
+            })
+            return mutableLiveData
+        }
+        mutableLiveData.postValue(null)
         return mutableLiveData
     }
 
-    fun signUp(name: String, surname: String): MutableLiveData<SignUpDTO>{
-        val mutableLiveData = MutableLiveData<SignUpDTO>()
+    fun signUp(name: String, surname: String): MutableLiveData<SignUpDTO?>{
+        val mutableLiveData = MutableLiveData<SignUpDTO?>()
 
-        val signUpDTO = SignUpDTO()
-        signUpDTO.name = name
-        signUpDTO.surname = surname
+        if(protocolClient.isConnected()) {
+            val signUpDTO = SignUpDTO()
+            signUpDTO.name = name
+            signUpDTO.surname = surname
 
-        protocolClient.makeRequest("auth.signUp", signUpDTO, object : ResponseCallback<SignUpDTO>{
-            override fun onMessage(response: SignUpDTO) {
-                mutableLiveData.postValue(response)
-            }
-        })
+            protocolClient.makeRequest("auth.signUp", signUpDTO, object : ResponseCallback<SignUpDTO> {
+                override fun onMessage(response: SignUpDTO) {
+                    mutableLiveData.postValue(response)
+                }
+            })
+            return mutableLiveData
+        }
 
+        mutableLiveData.postValue(null)
         return mutableLiveData
     }
 
-    fun signIn(code: String): MutableLiveData<SignInDTO> {
-        val mutableLiveData = MutableLiveData<SignInDTO>()
+    fun signIn(code: String): MutableLiveData<SignInDTO?> {
+        val mutableLiveData = MutableLiveData<SignInDTO?>()
 
-        val signInDTO = SignInDTO()
-        signInDTO.code = code.toInt()
+        if(protocolClient.isConnected()) {
+            val signInDTO = SignInDTO()
+            signInDTO.code = code.toInt()
 
-        protocolClient.makeRequest("auth.signIn", signInDTO, object : ResponseCallback<SignInDTO>{
-            override fun onMessage(response: SignInDTO) {
-               mutableLiveData.postValue(response)
-            }
-        })
+            protocolClient.makeRequest("auth.signIn", signInDTO, object : ResponseCallback<SignInDTO> {
+                override fun onMessage(response: SignInDTO) {
+                    mutableLiveData.postValue(response)
+                }
+            })
+            return mutableLiveData
+        }
+        mutableLiveData.postValue(null)
         return mutableLiveData
     }
 

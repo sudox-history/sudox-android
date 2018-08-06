@@ -35,7 +35,6 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
     private fun registerListeners() {
         socket.once(Socket.EVENT_CONNECT) {
-            socket.off(Socket.EVENT_CONNECT_ERROR)
 
             startHandshake().retryWhen {
                 it.delay(5, TimeUnit.SECONDS).take(10)
@@ -47,6 +46,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
         }
 
         socket.once(Socket.EVENT_CONNECT_ERROR) {
+            socket.off(Socket.EVENT_CONNECT)
             connectionSubject.onNext(ConnectState.CONNECT_ERROR)
         }
 
@@ -78,6 +78,8 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
             emitter.onError(it)
         })
     }
+
+    fun isConnected() = socket.connected()
 
     private fun startListeningInboundMessages() = socket.on("packet") {
         val message = it[0] as JSONObject

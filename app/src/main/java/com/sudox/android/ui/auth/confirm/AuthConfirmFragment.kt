@@ -1,7 +1,6 @@
 package com.sudox.android.ui.auth.confirm
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,10 +15,7 @@ import com.sudox.android.common.enums.State
 import com.sudox.android.common.models.dto.ConfirmCodeDTO
 import com.sudox.android.common.models.dto.SignInDTO
 import com.sudox.android.common.viewmodels.getViewModel
-import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.auth.AuthActivity
-import com.sudox.android.ui.auth.email.AuthEmailFragment
-import com.sudox.android.ui.auth.register.AuthRegisterFragment
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_auth_confirm.*
 import kotlinx.android.synthetic.main.include_navbar.*
@@ -38,18 +34,22 @@ class AuthConfirmFragment : DaggerFragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var authConfirmViewModel: AuthConfirmViewModel
 
+    lateinit var authActivity: AuthActivity
+
     lateinit var email: String
     var authStatus: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         authConfirmViewModel = getViewModel(viewModelFactory)
 
+        authActivity = activity as AuthActivity
+
         return inflater.inflate(R.layout.fragment_auth_confirm, container, false)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val data: Bundle = arguments!!
 
         email = data.getString(EMAIL_BUNDLE_KEY)
@@ -70,7 +70,7 @@ class AuthConfirmFragment : DaggerFragment() {
                 .navigationLiveData
                 .observe(this, Observer {
                     when (it) {
-                        NavigationAction.BACK -> goToAuthEmailFragment()
+                        NavigationAction.BACK -> authActivity.showAuthEmailFragment(email)
                         NavigationAction.SEND_AGAIN -> {
                             authConfirmViewModel.sendCodeAgain().observe(this, Observer(::getResendData))
 
@@ -121,67 +121,50 @@ class AuthConfirmFragment : DaggerFragment() {
         }
     }
 
-    private fun getResendData(data: State) {
+    private fun getResendData(data: State?) {
         when (data) {
+            null -> authActivity.showMessage(getString(R.string.no_internet_connection))
             State.SUCCESS -> {
-                (activity as AuthActivity).showMessage(getString(R.string.code_has_sent_successfully))
+                authActivity.showMessage(getString(R.string.code_has_sent_successfully))
                 setupTimer()
             }
-            State.FAILED -> (activity as AuthActivity).showMessage(getString(R.string.unknown_error))
+            State.FAILED -> authActivity.showMessage(getString(R.string.unknown_error))
         }
     }
 
-    fun getConfirmData(data: ConfirmCodeDTO) {
-        when (data.codeStatus) {
-            0 -> {
+    fun getConfirmData(data: ConfirmCodeDTO?) {
+        when  {
+            data == null -> {
+                authActivity.showMessage(getString(R.string.no_internet_connection))
+                code_edit_text.isEnabled = true
+            }
+            data.codeStatus == 0 -> {
                 code_edit_text.isEnabled = true
                 code_edit_text.error = getString(R.string.wrong_code)
             }
-            1 -> goToAuthRegisterFragment()
+            data.codeStatus == 1 -> authActivity.showAuthRegisterFragment(email)
         }
     }
 
-    private fun getSignInData(signInDTO: SignInDTO) {
+    private fun getSignInData(signInDTO: SignInDTO?) {
         when{
-            signInDTO.status == 0 -> code_edit_text.error = getString(R.string.wrong_code)
-            else -> {
-                authConfirmViewModel.saveAccount(signInDTO.id, signInDTO.token)
-                goToMainActivity()
+            signInDTO == null -> {
+                authActivity.showMessage(getString(R.string.no_internet_connection))
+                code_edit_text.isEnabled = true
             }
-
-        }
-
-    }
-
-    private fun goToMainActivity() {
-        startActivity(Intent(activity, MainActivity::class.java))
-        activity!!.finish()
-    }
-
-    private fun goToAuthRegisterFragment() {
-        fragmentManager!!.apply {
-            beginTransaction()
-                    .replace(R.id.fragment_auth_container, AuthRegisterFragment())
-                    .commit()
-        }
-    }
-
-    private fun goToAuthEmailFragment() {
-        val bundle = Bundle()
-
-        bundle.putString(EMAIL_BUNDLE_KEY, email)
-
-        fragmentManager!!.apply {
-            beginTransaction()
-                    .replace(R.id.fragment_auth_container, AuthEmailFragment().apply {
-                        arguments = bundle
-                    })
-                    .commit()
+            signInDTO.status == 0 -> {
+                code_edit_text.error = getString(R.string.wrong_code)
+                code_edit_text.isEnabled = true
+            }
+            else -> {
+                authConfirmViewModel.saveAccount(signInDTO.id, email, signInDTO.token)
+                authActivity.goToMainActivity()
+            }
         }
     }
 
     @SuppressLint("SimpleDateFormat")
-    fun formatTimeToEnd(second: Long): String {
+    private fun formatTimeToEnd(second: Long): String {
         val format = SimpleDateFormat("mm:ss")
         format.timeZone = TimeZone.getTimeZone("UTC")
         return format.format(Date(second * 1000))

@@ -22,10 +22,14 @@ class AuthEmailFragment : DaggerFragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var authEmailViewModel: AuthEmailViewModel
 
+    lateinit var authActivity: AuthActivity
+
     lateinit var email: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         authEmailViewModel = getViewModel(viewModelFactory)
+
+        authActivity = activity as AuthActivity
 
         return inflater.inflate(R.layout.fragment_auth_email, container, false)
     }
@@ -50,18 +54,15 @@ class AuthEmailFragment : DaggerFragment() {
                 })
     }
 
-    private fun getCodeData(it: AuthSessionDTO) {
+    private fun getCodeData(it: AuthSessionDTO?) {
         when {
+            it == null -> authActivity.showMessage(getString(R.string.no_internet_connection))
             it.errorCode == 3 -> email_edit_text.error = getString(R.string.wrong_email_format)
             it.isError() -> email_edit_text.error = getString(R.string.unknown_error)
             else -> {
-                (activity as AuthActivity).hash = it.hash
-                showAuthCodeFragment(email, it.status)
+                authActivity.hash = it.hash
+                authActivity.showAuthCodeFragment(email, it.status)
             }
         }
-    }
-
-    private fun showAuthCodeFragment(email: String, status: Int) {
-        (activity as AuthActivity).showAuthCodeFragment(email, status)
     }
 }
