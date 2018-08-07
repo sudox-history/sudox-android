@@ -1,71 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <com.sudox.android.ui.views.NavigationBar
-        android:id="@+id/auth_confirm_fragment_navbar"
+        android:id="@+id/authConfirmFragmentNavbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:sendAgainIsVisible="true"
-        app:backButtonIsVisible="true"/>
+        app:backButtonIsVisible="true"
+        app:sendAgainIsVisible="true" />
 
     <TextView
-        android:id="@+id/welcome_text"
+        android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/auth_confirm_fragment_navbar"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/tag"
-        android:textSize="25sp"/>
+        android:textSize="@dimen/font_size_large" />
 
     <TextView
-        android:id="@+id/we_glad_to_see_you_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/welcome_text"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/we_glad_to_see_you"
-        android:textSize="16sp"/>
+        android:textSize="@dimen/font_size_medium" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/code_edit_text_container"
+        android:id="@+id/codeEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/we_glad_to_see_you_text"
-        app:counterEnabled="true"
-        app:counterMaxLength="5"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="30dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        app:counterEnabled="true"
+        app:counterMaxLength="5">
 
         <EditText
-            android:id="@+id/code_edit_text"
+            android:id="@+id/codeEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/code"
             android:inputType="number"
-            android:textSize="13sp"/>
+            android:textSize="@dimen/font_size_tiny" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/enter_your_code_text"
+        android:id="@+id/enterYourCodeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/code_edit_text_container"
-        android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
         android:gravity="center"
         android:text="@string/enter_code_from_mail"
-        android:textColor="@color/colorHint"/>
+        android:textColor="@color/colorHint" />
 
-</RelativeLayout>
+</LinearLayout>

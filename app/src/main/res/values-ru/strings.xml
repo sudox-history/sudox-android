@@ -4,8 +4,8 @@
     <string name="hint_of_create_account">Если у вас нет аккаунта, вам будет предложено его создать</string>
     <string name="we_have_send_code">Проверьте почту, мы выслали вам 5-значный код</string>
     <string name="change_email">Изменить почту</string>
-    <string name="enter_code_from_mail">Введите код, отправленный на </string>
-    <string name="about_name">Мы не знаем вашего имени, но уверены, оно прекрасно! :)</string>
+    <string name="enter_code_from_mail">Введите код, отправленный на %email</string>
+    <string name="about_name">Не вольнуйтесь, это последний шаг</string>
     <string name="next">Далее</string>
     <string name="what_is_your_name">Как вас зовут?</string>
     <string name="enter_your_name_and_surname">Введите ваше имя и фамилию ниже</string>
@@ -47,7 +47,7 @@
     <string name="channels">Каналы</string>
     <string name="hello_world">Привет мир!</string>
     <string name="exit">Выйти</string>
-    <string name="retry_send_in">Попытка через</string>
+    <string name="retry_send_in">Попытка через %time</string>
     <string name="account_is_already_exist">Аккаунт уже существует!</string>
     <string name="session_died">Сессия устарела, пройдите регистрацию заново</string>
     <string name="share_with_contact">Поделиться контактом</string>

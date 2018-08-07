@@ -20,13 +20,12 @@ class AuthViewModel @Inject constructor(private val protocolClient: ProtocolClie
     }
 
     fun importAuthHash(hash: String) = authRepository.importAuthHash(hash)
-
-    fun disconnect() {
-        protocolClient.disconnect()
-    }
+    fun disconnect() = protocolClient.disconnect()
 
     override fun onCleared() {
         connectionDisposable.dispose()
+
+        // Super!
         super.onCleared()
     }
 }

@@ -16,9 +16,8 @@ import javax.inject.Inject
 class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthRepository,
                                                private val accountRepository: AccountRepository) : ViewModel() {
 
-    private lateinit var disposable: Disposable
-
     var timerData = MutableLiveData<Long>()
+    private lateinit var disposable: Disposable
     private var timerObservable = Observable.interval(1, TimeUnit.SECONDS)
             .startWith(0)
             .subscribeOn(Schedulers.io())
@@ -26,9 +25,7 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
             .takeUntil { it == 95L }
 
     fun sendCode(code: String) = authRepository.sendCode(code)
-
     fun signIn(code: String) = authRepository.signIn(code)
-
     fun sendCodeAgain() = authRepository.sendCodeAgain()
 
     fun setTimer(seconds: Long) {
@@ -44,6 +41,7 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
     override fun onCleared() {
         disposable.dispose()
 
+        // Super!
         super.onCleared()
     }
 }

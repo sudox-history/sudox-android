@@ -22,6 +22,7 @@ class SudoxAuthenticator(private val serviceContext: SudoxAuthenticatorService) 
     override fun addAccount(p0: AccountAuthenticatorResponse?, p1: String?, p2: String?, p3: Array<out String>?, p4: Bundle?): Bundle? {
         val intent = Intent(serviceContext, SplashActivity::class.java)
         intent.putExtra(AUTH_KEY, AUTH_CODE)
+
         val bundle = Bundle()
         bundle.putParcelable(AccountManager.KEY_INTENT, intent)
         return bundle

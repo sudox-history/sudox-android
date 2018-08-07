@@ -9,10 +9,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.sudox.android.R
 import com.sudox.android.common.Data
 import com.sudox.android.common.enums.ConnectState
+import com.sudox.android.common.helpers.showSnackbar
 import com.sudox.android.common.models.dto.AuthHashDTO
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.MainActivity
-import com.sudox.android.ui.auth.confirm.AUTH_STATUS
+import com.sudox.android.ui.auth.confirm.AUTH_STATUS_BUNDLE_KEY
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.confirm.EMAIL_BUNDLE_KEY
 import com.sudox.android.ui.auth.email.AuthEmailFragment
@@ -63,20 +64,21 @@ class AuthActivity : DaggerAppCompatActivity() {
         }
     }
 
-    fun showAuthEmailFragment(email: String) {
+    fun showAuthEmailFragment(email: String? = null) {
         val bundle = Bundle()
 
-        bundle.putString(EMAIL_BUNDLE_KEY, email)
-
-        supportFragmentManager.apply {
-            beginTransaction()
-                    .setCustomAnimations(R.animator.fragment_slide_right_exit_anim,
-                            R.animator.fragment_slide_left_exit_anim)
-                    .replace(R.id.fragment_auth_container, AuthEmailFragment().apply {
-                        arguments = bundle
-                    })
-                    .commit()
+        if (email != null) {
+            bundle.putString(EMAIL_BUNDLE_KEY, email)
         }
+
+        val fragment = AuthEmailFragment().apply {
+            arguments = bundle
+        }
+
+        supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.animator.fragment_slide_right_exit_anim, R.animator.fragment_slide_left_exit_anim)
+                .replace(R.id.fragment_auth_container, fragment)
+                .commit()
     }
 
     fun showAuthCodeFragment(email: String, status: Int) {
@@ -84,7 +86,7 @@ class AuthActivity : DaggerAppCompatActivity() {
 
         // Put email to the bundle
         bundle.putString(EMAIL_BUNDLE_KEY, email)
-        bundle.putInt(AUTH_STATUS, status)
+        bundle.putInt(AUTH_STATUS_BUNDLE_KEY, status)
 
         // Change fragment
         supportFragmentManager.apply {
@@ -130,17 +132,19 @@ class AuthActivity : DaggerAppCompatActivity() {
         }
     }
 
-    fun goToMainActivity() {
+    fun showMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 
     fun showMessage(message: String) {
-        Snackbar.make(fragment_auth_container, message, Snackbar.LENGTH_LONG).show()
+        showSnackbar(this, fragment_auth_container, message, Snackbar.LENGTH_LONG)
     }
 
     override fun onBackPressed() {
         authViewModel.disconnect()
+
+        // Super!
         super.onBackPressed()
     }
 }

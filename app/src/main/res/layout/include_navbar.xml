@@ -12,42 +12,46 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textSudoxTag"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
+        android:gravity="center"
         android:text="@string/app_name" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/buttonNavbarBack"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:background="?attr/selectableItemBackground"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:drawableStart="@drawable/ic_arrow_left"
         android:drawablePadding="@dimen/navbar_button_drawable_padding"
         android:focusable="true"
+        android:gravity="center"
         android:text="@string/toolbar_back" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/buttonNavbarNext"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:drawableEnd="@drawable/ic_arrow_right"
         android:drawablePadding="@dimen/navbar_button_drawable_padding"
         android:focusable="true"
+        android:gravity="center"
         android:text="@string/toolbar_next" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/buttonSomeFeature"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:focusable="true"
+        android:gravity="center"
         android:text="@string/retry_send" />
 
     <!-- Navigation buttons end -->

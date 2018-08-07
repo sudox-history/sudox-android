@@ -1,8 +1,8 @@
 package com.sudox.android.ui.splash
 
-import android.accounts.Account
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
@@ -17,14 +17,13 @@ import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.auth.AuthActivity
 import dagger.android.support.DaggerAppCompatActivity
-import timber.log.Timber
 import javax.inject.Inject
 
 class SplashActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var splashViewModel: SplashViewModel
+    lateinit var splashViewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,10 +34,16 @@ class SplashActivity : DaggerAppCompatActivity() {
             showAuthActivity()
         }
 
-        // Special easy way by Antonio with my corrections for project!
         splashViewModel = getViewModel(viewModelFactory)
-        splashViewModel.connectLiveData.observe(this, Observer(::getConnectState))
-        splashViewModel.connect()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        Handler().postDelayed({
+            splashViewModel.connectLiveData.observe(this, Observer(::getConnectState))
+            splashViewModel.connect()
+        }, 300)
     }
 
     private fun getConnectState(connectData: Data<ConnectState>) {
@@ -76,6 +81,8 @@ class SplashActivity : DaggerAppCompatActivity() {
 
     override fun onBackPressed() {
         splashViewModel.disconnect()
+
+        // Super!
         super.onBackPressed()
     }
 }
