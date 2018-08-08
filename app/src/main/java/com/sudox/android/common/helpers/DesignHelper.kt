@@ -2,6 +2,7 @@ package com.sudox.android.common.helpers
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
@@ -11,7 +12,9 @@ fun showInputError(inputLayout: TextInputLayout) {
     inputLayout.error = " "
 
     if (inputLayout.childCount == 2) {
-        inputLayout.getChildAt(1).visibility = View.GONE
+        (inputLayout.getChildAt(1) as ViewGroup)
+                .getChildAt(0)
+                .visibility = View.GONE
     }
 }
 
