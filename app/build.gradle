@@ -31,6 +31,7 @@ ext {
     espressoVersion = "3.1.0-alpha4"
     mockitoVersion = "2.19.1"
     lottieVersion = "2.5.5"
+    leakcanaryVersion = "1.6.1"
 }
 
 dependencies {
@@ -64,6 +65,10 @@ dependencies {
 
     // Lottie
     implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"
+    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakcanaryVersion"
 
     // Testing libraries
     testImplementation "junit:junit:$junitVersion"

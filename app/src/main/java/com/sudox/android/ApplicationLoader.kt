@@ -1,5 +1,6 @@
 package com.sudox.android
 
+import com.squareup.leakcanary.LeakCanary
 import com.sudox.android.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -16,6 +17,14 @@ class ApplicationLoader : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
+
+        // This process is dedicated to LeakCanary for heap analysis.
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return
+        }
+
+        // Install leak canary
+        LeakCanary.install(this)
 
         // Enable Timber
         if (BuildConfig.DEBUG) {
