@@ -9,4 +9,9 @@
         <item name="android:colorBackground">@color/colorBackground</item>
     </style>
 
+    <!-- Application launcher. -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/screen_splash</item>
+    </style>
+
 </resources>

@@ -27,7 +27,6 @@ class SplashActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
 
         // For add account (MAY BE ONLY ONE ACCOUNT)
         if (intent.getIntExtra(AUTH_KEY, 1) == AUTH_CODE) {
@@ -40,17 +39,17 @@ class SplashActivity : DaggerAppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        Handler().postDelayed({
-            splashViewModel.connectLiveData.observe(this, Observer(::getConnectState))
-            splashViewModel.connect()
-        }, 300)
+        splashViewModel.connectLiveData.observe(this, Observer(::getConnectState))
+        splashViewModel.connect()
     }
 
     private fun getConnectState(connectData: Data<ConnectState>) {
         when (connectData.data) {
             ConnectState.CONNECTED -> splashViewModel.sendToken()
                     .observe(this, Observer(::getTokenState))
-            ConnectState.CONNECT_ERROR -> chooseActivity(splashViewModel.getAccount())
+            ConnectState.CONNECT_ERROR -> {
+                chooseActivity(splashViewModel.getAccount())
+            }
         }
     }
 
@@ -64,7 +63,11 @@ class SplashActivity : DaggerAppCompatActivity() {
 
     private fun chooseActivity(account: SudoxAccount?) {
         when (account) {
-            null -> showAuthActivity()
+            null -> {
+                Handler().postDelayed({
+                    showAuthActivity()
+                }, 500)
+            }
             else -> showMainActivity()
         }
     }

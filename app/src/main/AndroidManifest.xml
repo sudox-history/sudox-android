@@ -32,7 +32,8 @@
 
         <activity
             android:name="com.sudox.android.ui.splash.SplashActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Launcher">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +45,6 @@
             android:name=".ui.auth.AuthActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
 
-        <activity android:name=".ui.MainActivity"/>
-
+        <activity android:name=".ui.MainActivity" />
     </application>
 </manifest>
