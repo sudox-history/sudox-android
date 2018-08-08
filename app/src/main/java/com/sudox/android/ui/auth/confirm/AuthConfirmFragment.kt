@@ -102,6 +102,10 @@ class AuthConfirmFragment : DaggerFragment() {
             override fun onTextChanged(chars: CharSequence, start: Int, before: Int, count: Int) {
                 val text = chars.toString()
 
+                if (codeEditTextContainer.isErrorEnabled) {
+                    hideInputError(codeEditTextContainer)
+                }
+
                 if (text.length == 5) {
                     codeEditText.isEnabled = false
 

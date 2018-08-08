@@ -1,6 +1,8 @@
 package com.sudox.android.ui.auth.register
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +18,6 @@ import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.confirm.EMAIL_BUNDLE_KEY
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_auth_email.*
 import kotlinx.android.synthetic.main.fragment_auth_register.*
 import javax.inject.Inject
 
@@ -48,7 +49,8 @@ class AuthRegisterFragment : DaggerFragment() {
                 this.email = email
 
                 // Configure components
-                configureNavigationBar()
+                initEditTexts()
+                initNavigationBar()
             } else {
                 authActivity.showAuthEmailFragment()
             }
@@ -57,7 +59,27 @@ class AuthRegisterFragment : DaggerFragment() {
         }
     }
 
-    private fun configureNavigationBar() {
+    private fun initEditTexts() {
+        val textWatcher = object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (nameEditTextContainer.isErrorEnabled) {
+                    hideInputError(nameEditTextContainer)
+                }
+
+                if (surnameEditTextContainer.isErrorEnabled) {
+                    hideInputError(surnameEditTextContainer)
+                }
+            }
+        }
+
+        nameEditText.addTextChangedListener(textWatcher)
+        surnameEditText.addTextChangedListener(textWatcher)
+    }
+
+    private fun initNavigationBar() {
         authRegisterFragmentNavbar
                 .navigationLiveData
                 .observe(this, Observer {
@@ -80,7 +102,6 @@ class AuthRegisterFragment : DaggerFragment() {
                         } else {
                             showInputError(nameEditTextContainer)
                             showInputError(surnameEditTextContainer)
-//                            nameEditTextContainer.error = getString(R.string.wrong_name_format)
                         }
                     }
                 })
@@ -98,7 +119,6 @@ class AuthRegisterFragment : DaggerFragment() {
             surnameEditText.isEnabled = true
             showInputError(nameEditTextContainer)
             showInputError(surnameEditTextContainer)
-//            nameEditTextContainer.error = getString(R.string.wrong_name_format)
         } else {
             authRegisterViewModel.saveAccount(signUpDTO.id, email, signUpDTO.token)
             authActivity.showMainActivity()

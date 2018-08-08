@@ -1,6 +1,8 @@
 package com.sudox.android.ui.auth.email
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +18,6 @@ import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.confirm.EMAIL_BUNDLE_KEY
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_auth_confirm.*
 import kotlinx.android.synthetic.main.fragment_auth_email.*
 import javax.inject.Inject
 
@@ -35,13 +36,28 @@ class AuthEmailFragment : DaggerFragment() {
         return inflater.inflate(R.layout.fragment_auth_email, container, false)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         recoveryEmailIfNeeded()
-        configureNavigationBar()
+        initEmailEditText()
+        initNavigationBar()
     }
 
-    private fun configureNavigationBar() {
+    private fun initEmailEditText() {
+        emailEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (emailEditTextContainer.isErrorEnabled) {
+                    hideInputError(emailEditTextContainer)
+                }
+            }
+        })
+    }
+
+    private fun initNavigationBar() {
         authEmailFragmentNavbar
                 .navigationLiveData
                 .observe(this, Observer<NavigationAction> {
@@ -57,7 +73,6 @@ class AuthEmailFragment : DaggerFragment() {
                                     .sendEmail(email)
                                     .observe(this, Observer(::getCodeData))
                         } else {
-//                            emailEditTextContainer.error = getString(R.string.wrong_email_format)
                             showInputError(emailEditTextContainer)
                         }
                     }
@@ -83,11 +98,9 @@ class AuthEmailFragment : DaggerFragment() {
             authActivity.showMessage(getString(R.string.no_internet_connection))
         } else if (it.errorCode == 3) {
             emailEditText.isEnabled = true
-//            emailEditTextContainer.error = getString(R.string.wrong_email_format)
             showInputError(emailEditTextContainer)
         } else if (it.isError()) {
             emailEditText.isEnabled = true
-//            emailEditTextContainer.error = getString(R.string.unknown_error)
             showInputError(emailEditTextContainer)
         } else {
             authActivity.hash = it.hash
