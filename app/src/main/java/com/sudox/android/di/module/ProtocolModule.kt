@@ -28,7 +28,6 @@ class ProtocolModule {
         val options = IO.Options()
                 .apply {
                     reconnection = true
-                    secure = true
                     path = "/"
                 }
 
