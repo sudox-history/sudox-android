@@ -5,7 +5,7 @@
     <string name="we_have_send_code">Проверьте почту, мы выслали вам 5-значный код</string>
     <string name="change_email">Изменить почту</string>
     <string name="enter_code_from_mail">Введите код, отправленный на %email</string>
-    <string name="about_name">Не вольнуйтесь, это последний шаг</string>
+    <string name="about_name">Не волнуйтесь, это последний шаг</string>
     <string name="next">Далее</string>
     <string name="what_is_your_name">Как вас зовут?</string>
     <string name="enter_your_name_and_surname">Введите ваше имя и фамилию ниже</string>
