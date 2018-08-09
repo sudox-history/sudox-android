@@ -50,12 +50,12 @@ class SplashActivity : DaggerAppCompatActivity() {
     }
 
     private fun getConnectState(connectData: Data<ConnectState>) {
-        when (connectData.data) {
-            ConnectState.CONNECTED -> splashViewModel.sendToken()
+        if (connectData.data == ConnectState.CONNECTED) {
+            splashViewModel
+                    .sendToken()
                     .observe(this, Observer(::getTokenState))
-            ConnectState.CONNECT_ERROR -> {
-                chooseActivity(splashViewModel.getAccount())
-            }
+        } else {
+            chooseActivity(splashViewModel.getAccount())
         }
     }
 
@@ -68,13 +68,10 @@ class SplashActivity : DaggerAppCompatActivity() {
     }
 
     private fun chooseActivity(account: SudoxAccount?) {
-        when (account) {
-            null -> {
-                Handler().postDelayed({
-                    showAuthActivity()
-                }, 500)
-            }
-            else -> showMainActivity()
+        if (account == null) {
+            Handler().postDelayed(::showAuthActivity, 500)
+        } else {
+            showMainActivity()
         }
     }
 
