@@ -1,8 +1,10 @@
 package com.sudox.android.ui.splash
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
@@ -27,20 +29,24 @@ class SplashActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // For add account (MAY BE ONLY ONE ACCOUNT)
-        if (intent.getIntExtra(AUTH_KEY, 1) == AUTH_CODE) {
-            showAuthActivity()
-        }
-
         splashViewModel = getViewModel(viewModelFactory)
-    }
 
-    override fun onStart() {
-        super.onStart()
+        // Get account from database
+        val account = splashViewModel.getAccount()
 
-        splashViewModel.connectLiveData.observe(this, Observer(::getConnectState))
-        splashViewModel.connect()
+        // Add account from AccountManager context
+        if (intent.getIntExtra(AUTH_KEY, 1) == AUTH_CODE && account != null) {
+            AlertDialog.Builder(this)
+                    .setTitle(R.string.account_is_already_exist)
+                    .setMessage(R.string.account_is_already_created)
+                    .setOnCancelListener { finish() }
+                    .setPositiveButton(R.string.ok) { dialogInterface: DialogInterface, _: Int ->
+                        dialogInterface.cancel()
+                    }.create().show()
+        } else {
+            splashViewModel.connectLiveData.observe(this, Observer(::getConnectState))
+            splashViewModel.connect()
+        }
     }
 
     private fun getConnectState(connectData: Data<ConnectState>) {

@@ -49,6 +49,7 @@
     <string name="exit">Выйти</string>
     <string name="retry_send_in">Попытка через %time</string>
     <string name="account_is_already_exist">Аккаунт уже существует!</string>
+    <string name="account_is_already_created">Мы обнаружили, что аккаунт уже существует</string>
     <string name="session_died">Сессия устарела, пройдите регистрацию заново</string>
     <string name="share_with_contact">Поделиться контактом</string>
     <string name="find_new_friends">Найдите себе новых друзей</string>
@@ -60,4 +61,5 @@
 
     <string name="toolbar_back">Назад</string>
     <string name="toolbar_next">Далее</string>
+    <string name="ok">ОК</string>
 </resources>
