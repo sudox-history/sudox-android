@@ -17,6 +17,7 @@ import com.sudox.android.ui.auth.AuthActivity
 import dagger.android.support.DaggerFragment
 import androidx.lifecycle.Observer
 import com.sudox.android.common.enums.NavigationAction
+import com.sudox.android.common.helpers.formatHtml
 import com.sudox.android.common.helpers.hideInputError
 import com.sudox.android.common.helpers.showInputError
 import kotlinx.android.synthetic.main.fragment_auth_confirm.*
@@ -82,9 +83,9 @@ class AuthConfirmFragment : DaggerFragment() {
     }
 
     private fun initFooterText() {
-        enterYourCodeText.text = enterYourCodeText.text
-                .toString()
-                .replace("%email", email)
+        enterYourCodeText.text = formatHtml(
+                getString(R.string.enter_code_from_mail, email)
+        )
     }
 
     private fun initWelcomeText() {

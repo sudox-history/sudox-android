@@ -4,7 +4,7 @@
     <string name="hint_of_create_account">Если у вас нет аккаунта, вам будет предложено его создать</string>
     <string name="we_have_send_code">Проверьте почту, мы выслали вам 5-значный код</string>
     <string name="change_email">Изменить почту</string>
-    <string name="enter_code_from_mail">Введите код, отправленный на %email</string>
+    <string name="enter_code_from_mail">Введите код, отправленный на &lt;br> &lt;font color="#FFFFFF">%1$s&lt;/font></string>
     <string name="about_name">Не волнуйтесь, это последний шаг</string>
     <string name="next">Далее</string>
     <string name="what_is_your_name">Как вас зовут?</string>

@@ -1,6 +1,9 @@
 package com.sudox.android.common.helpers
 
 import android.content.Context
+import android.os.Build
+import android.text.Html
+import android.text.Spanned
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
@@ -30,4 +33,13 @@ fun showSnackbar(context: Context, container: View, message: String, length: Int
     snackbar.show()
 
     return snackbar
+}
+
+@Suppress("DEPRECATION")
+fun formatHtml(string: String): Spanned {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        Html.fromHtml(string, Html.FROM_HTML_MODE_LEGACY)
+    } else {
+        Html.fromHtml(string)
+    }
 }
