@@ -54,7 +54,7 @@ class SplashActivity : DaggerAppCompatActivity() {
             splashViewModel
                     .sendToken()
                     .observe(this, Observer(::getTokenState))
-        } else {
+        } else if (connectData == ConnectState.CONNECT_ERROR) {
             chooseActivity(splashViewModel.getAccount())
         }
     }
