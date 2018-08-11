@@ -14,7 +14,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
 
     val mutableLiveData = MutableLiveData<State>()
 
-    fun initContactsListeners() : MutableLiveData<State>{
+    fun initContactsListeners() {
         val mutableLiveData = MutableLiveData<State>()
 
         protocolClient.listenMessage("contacts.add", object : ResponseCallback<ContactsDTO> {
@@ -38,7 +38,6 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                 mutableLiveData.postValue(State.SUCCESS)
             }
         })
-        return mutableLiveData
     }
 
     fun getAllContacts(): LiveData<List<Contact>> {
