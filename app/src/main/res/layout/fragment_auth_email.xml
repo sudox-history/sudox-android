@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/sign_in"
         android:textSize="@dimen/font_size_large" />
@@ -24,7 +24,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/enter_your_email"
         android:textSize="@dimen/font_size_medium" />
@@ -33,9 +33,9 @@
         android:id="@+id/emailEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp">
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp">
 
         <EditText
             android:id="@+id/emailEditText"
@@ -55,6 +55,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="40dp"
         android:gravity="center"
+        android:textSize="@dimen/font_size_extra_tiny"
         android:text="@string/hint_of_create_account"
         android:textColor="@color/colorHint" />
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Sudox</string>
-    <string name="hint_of_create_account">If you haven\'t got an account we will suggest you to create it</string>
+    <string name="hint_of_create_account">If you haven\'t got an account we will\nsuggest you to create it</string>
     <string name="we_have_send_code">Check your mail we have sent the code</string>
     <string name="change_email">Change email</string>
     <string name="enter_code_from_mail">Enter code from email we have sent to &lt;br> &lt;font color="#FFFFFF">%1$s&lt;/font></string>

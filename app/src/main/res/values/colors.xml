@@ -5,4 +5,6 @@
     <color name="colorAccent">#FFFFFF</color>
     <color name="colorBackground">#20242E</color>
     <color name="colorHint">#BDBDBD</color>
+    <color name="colorBottomNavbarItem">#BDBDBD</color>
+    <color name="colorBottomNavbarItemSelected">#FFFFFF</color>
 </resources>
