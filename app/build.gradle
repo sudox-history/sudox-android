@@ -17,11 +17,12 @@ def minSdkProjectVersion = 21
 
 // Versions of libraries
 ext {
-    appCompatVersion = "1.0.0-beta01"
+    appCompatVersion = "1.0.0-rc01"
     v4SupportVersion = "28.0.0-alpha3"
     designVersion = "27.1.1"
     architectureComponentsVersion = "1.1.1"
     daggerVersion = "2.16"
+    firebaseVersion = "16.0.1"
     socketVersion = "1.0.0"
     timberVersion = "4.7.1"
     rxKotlinVersion = "2.2.0"
@@ -33,6 +34,7 @@ ext {
     mockitoVersion = "2.19.1"
     lottieVersion = "2.5.5"
     leakcanaryVersion = "1.6.1"
+    circleImageViewVersion = "2.2.0"
 }
 
 dependencies {
@@ -44,15 +46,23 @@ dependencies {
     implementation "com.android.support:design:$designVersion"
 
     // Architecture components
-    implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
+
+        // ViewModel, LiveData
+        implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
+
+        // Room
+        implementation "android.arch.persistence.room:runtime:$architectureComponentsVersion"
+        kapt "android.arch.persistence.room:compiler:$architectureComponentsVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    implementation 'com.google.firebase:firebase-crash:16.0.1'
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    // Firebase
+    implementation "com.google.firebase:firebase-crash:$firebaseVersion"
 
     // Socket.io
     implementation "io.socket:socket.io-client:$socketVersion"
@@ -67,6 +77,9 @@ dependencies {
 
     // Lottie
     implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    // Design libraries
+    implementation "de.hdodenhof:circleimageview:$circleImageViewVersion"
 
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"

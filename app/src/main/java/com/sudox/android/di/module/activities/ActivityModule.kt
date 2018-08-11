@@ -1,6 +1,7 @@
 package com.sudox.android.di.module.activities
 
 import com.sudox.android.di.module.fragments.AuthActivityModule
+import com.sudox.android.di.module.fragments.MainActivityModule
 import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.splash.SplashActivity
@@ -16,6 +17,6 @@ abstract class ActivityModule {
     @ContributesAndroidInjector(modules = [(AuthActivityModule::class)])
     abstract fun bindAuthActivity() : AuthActivity
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = [(MainActivityModule::class)])
     abstract fun bindMainActivity() : MainActivity
 }

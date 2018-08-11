@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.common.viewmodels.ViewModelFactory
 import com.sudox.android.di.annotation.ViewModelKey
+import com.sudox.android.ui.MainViewModel
 import com.sudox.android.ui.auth.AuthViewModel
 import com.sudox.android.ui.auth.confirm.AuthConfirmViewModel
 import com.sudox.android.ui.auth.email.AuthEmailViewModel
 import com.sudox.android.ui.auth.register.AuthRegisterViewModel
+import com.sudox.android.ui.main.ContactsViewModel
 import com.sudox.android.ui.splash.SplashViewModel
 import dagger.Binds
 import dagger.Module
@@ -31,6 +33,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(MainViewModel::class)
+    internal abstract fun mainViewModel(viewModel: AuthViewModel): ViewModel
+
+    @Binds
+    @IntoMap
     @ViewModelKey(AuthEmailViewModel::class)
     internal abstract fun authEmailViewModel(viewModel: AuthEmailViewModel): ViewModel
 
@@ -38,6 +45,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AuthConfirmViewModel::class)
     internal abstract fun authConfirmViewModel(viewModel: AuthConfirmViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ContactsViewModel::class)
+    internal abstract fun contactsViewModel(viewModel: ContactsViewModel): ViewModel
 
     @Binds
     @IntoMap
