@@ -32,14 +32,14 @@ class ContactsFragment : DaggerFragment() {
     }
 
     private fun initRecyclerView() {
-
         val arrayList = ArrayList<Contact>()
+
         arrayList.add(Contact(1, null, null, "Антон Янкин", "@kerjen01"))
-        arrayList.add(Contact(2, null, null, "Максим Митюшкин", "@the_max7887"))
+        arrayList.add(Contact(2, null, null, "Максим Митюшкин", "@themax128"))
         arrayList.add(Contact(3, null, null, "Стефания Крымская", "@stef.kryim"))
 
         val contactsAdapter = ContactsAdapter(arrayList, activity as MainActivity)
-        recycler_contacts.layoutManager = LinearLayoutManager(activity)
-        recycler_contacts.adapter = contactsAdapter
+        contactsList.layoutManager = LinearLayoutManager(activity)
+        contactsList.adapter = contactsAdapter
     }
 }

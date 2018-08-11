@@ -1,5 +1,6 @@
 package com.sudox.android.common.models.dto
 
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -10,7 +11,7 @@ class ContactsDTO : CanErrorDTO() {
     var count: Int = 0
 
     var id: Long = 0
-    lateinit var avatarJson: JSONObject
+    lateinit var avatarJson: JSONArray
     lateinit var avatarUrl: String
     lateinit var name: String
     lateinit var nickname: String
@@ -26,15 +27,17 @@ class ContactsDTO : CanErrorDTO() {
     }
 
     override fun fromJSON(jsonObject: JSONObject){
-        try {
-            avatarJson  = jsonObject.getJSONObject("photo")
+        val photoObject = jsonObject.get("photo")
+
+        if (photoObject is JSONArray) {
+            avatarJson  = photoObject
             checkAvatar = true
-        } catch (e: JSONException){
+        } else {
             avatarUrl = jsonObject.getString("photo")
         }
+
         id = jsonObject.optLong("id")
         name = jsonObject.optString("name")
         nickname = jsonObject.optString("nickname")
     }
-
 }

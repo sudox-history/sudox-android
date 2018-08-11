@@ -22,7 +22,6 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         if (token == null) {
             tokenData.postValue(TokenData(TokenState.MISSING))
         } else {
-
             val tokenDTO = TokenDTO()
             tokenDTO.token = token
 
@@ -55,7 +54,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     }
 
 
-    fun sendCode(code: String): MutableLiveData<ConfirmCodeDTO?> {
+    fun sendCode(code: String): LiveData<ConfirmCodeDTO?> {
         val mutableLiveData = MutableLiveData<ConfirmCodeDTO?>()
 
         if (protocolClient.isConnected()) {
@@ -74,7 +73,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return mutableLiveData
     }
 
-    fun sendCodeAgain(): MutableLiveData<State?> {
+    fun sendCodeAgain(): LiveData<State?> {
         val mutableLiveData = MutableLiveData<State?>()
 
         if (protocolClient.isConnected()) {
@@ -92,7 +91,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return mutableLiveData
     }
 
-    fun signUp(name: String, surname: String): MutableLiveData<SignUpDTO?> {
+    fun signUp(name: String, surname: String): LiveData<SignUpDTO?> {
         val mutableLiveData = MutableLiveData<SignUpDTO?>()
 
         if (protocolClient.isConnected()) {
@@ -112,7 +111,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return mutableLiveData
     }
 
-    fun signIn(code: String): MutableLiveData<SignInDTO?> {
+    fun signIn(code: String): LiveData<SignInDTO?> {
         val mutableLiveData = MutableLiveData<SignInDTO?>()
 
         if (protocolClient.isConnected()) {
@@ -130,7 +129,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return mutableLiveData
     }
 
-    fun importAuthHash(hash: String): MutableLiveData<AuthHashDTO> {
+    fun importAuthHash(hash: String): LiveData<AuthHashDTO> {
         val mutableLiveData = MutableLiveData<AuthHashDTO>()
 
         val authHashDTO = AuthHashDTO()

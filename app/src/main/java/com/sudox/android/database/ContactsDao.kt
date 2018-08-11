@@ -1,5 +1,6 @@
 package com.sudox.android.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
@@ -15,5 +16,5 @@ interface ContactsDao {
     fun deleteContactById(id: Long)
 
     @Query("select * from contacts_table")
-    fun getAllContacts() : List<Contact>
+    fun getAllContacts() : LiveData<List<Contact>>
 }
