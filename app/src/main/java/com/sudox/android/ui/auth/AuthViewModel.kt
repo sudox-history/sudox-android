@@ -15,7 +15,7 @@ class AuthViewModel @Inject constructor(private val protocolClient: ProtocolClie
     var connectLiveData = MutableLiveData<Data<ConnectState>>()
 
     // Connection controller
-    var connectionDisposable: Disposable = protocolClient.connectionSubject.subscribe {
+    private var connectionDisposable: Disposable = protocolClient.connectionSubject.subscribe {
         connectLiveData.postValue(Data(it))
     }
 
@@ -24,8 +24,6 @@ class AuthViewModel @Inject constructor(private val protocolClient: ProtocolClie
 
     override fun onCleared() {
         connectionDisposable.dispose()
-
-        // Super!
         super.onCleared()
     }
 }

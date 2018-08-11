@@ -11,9 +11,9 @@ import com.sudox.protocol.model.ResponseCallback
 class ContactsRepository(private val protocolClient: ProtocolClient,
                          private val contactsDao : ContactsDao) {
 
-    fun initContactsListeners() : MutableLiveData<State>{
-        val mutableLiveData = MutableLiveData<State>()
+    val mutableLiveData = MutableLiveData<State>()
 
+    fun initContactsListeners() {
         protocolClient.listenMessage("contacts.add", object : ResponseCallback<ContactsDTO> {
             override fun onMessage(response: ContactsDTO)  {
                 if(response.checkAvatar)
@@ -29,7 +29,6 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                 mutableLiveData.postValue(State.SUCCESS)
             }
         })
-        return mutableLiveData
     }
 
     fun getAllContacts(): MutableLiveData<List<Contact>> {

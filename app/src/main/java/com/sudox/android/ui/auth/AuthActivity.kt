@@ -22,8 +22,6 @@ import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
 
-internal val CURRENT_FRAGMENT_KEY = "current_fragment"
-
 class AuthActivity : DaggerAppCompatActivity() {
 
     @Inject
