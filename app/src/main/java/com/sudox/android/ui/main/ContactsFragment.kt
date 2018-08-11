@@ -26,7 +26,6 @@ class ContactsFragment : DaggerFragment() {
         return inflater.inflate(R.layout.fragment_contacts, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()

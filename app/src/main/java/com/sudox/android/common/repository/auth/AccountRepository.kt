@@ -1,4 +1,4 @@
-package com.sudox.android.common.repository
+package com.sudox.android.common.repository.auth
 
 import android.accounts.Account
 import android.accounts.AccountManager

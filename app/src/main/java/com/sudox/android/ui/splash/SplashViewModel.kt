@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sudox.android.common.Data
 import com.sudox.android.common.enums.ConnectState
-import com.sudox.android.common.repository.AccountRepository
-import com.sudox.android.common.repository.AuthRepository
+import com.sudox.android.common.repository.auth.AccountRepository
+import com.sudox.android.common.repository.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject

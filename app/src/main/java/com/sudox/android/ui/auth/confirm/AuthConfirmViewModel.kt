@@ -3,8 +3,8 @@ package com.sudox.android.ui.auth.confirm
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.sudox.android.common.auth.SudoxAccount
-import com.sudox.android.common.repository.AccountRepository
-import com.sudox.android.common.repository.AuthRepository
+import com.sudox.android.common.repository.auth.AccountRepository
+import com.sudox.android.common.repository.auth.AuthRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
