@@ -16,7 +16,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
 
     val connectLiveData = MutableLiveData<Data<ConnectState>>()
 
-    var connectionDisposable: Disposable = protocolClient.connectionSubject.subscribe {
+    private var connectionDisposable: Disposable = protocolClient.connectionSubject.subscribe {
         connectLiveData.postValue(Data(it))
     }
 
