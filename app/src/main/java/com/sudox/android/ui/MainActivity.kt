@@ -11,10 +11,8 @@ class MainActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportFragmentManager.apply {
-            beginTransaction()
+        supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_main_container, ContactsFragment())
                     .commit()
-        }
     }
 }

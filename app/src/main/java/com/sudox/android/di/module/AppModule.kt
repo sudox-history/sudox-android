@@ -13,12 +13,4 @@ abstract class AppModule {
 
     @Binds
     abstract fun providesApplication(app: Application): Context
-
-    @Provides
-    fun providesSudoxDatabase(context: Context) : SudoxDatabase =
-            Room.databaseBuilder(context, SudoxDatabase::class.java, "sudox-database")
-                    .allowMainThreadQueries().build()
-
-    @Provides
-    fun providesContactsDao(database: SudoxDatabase) = database.contactsDao()
 }

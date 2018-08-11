@@ -7,6 +7,5 @@ import javax.inject.Inject
 class ContactsViewModel @Inject constructor(private val contactsRepository: ContactsRepository) : ViewModel() {
 
     fun contactCallback() = contactsRepository.initContactsListeners()
-
     fun getAllContacts() = contactsRepository.getAllContacts()
 }
