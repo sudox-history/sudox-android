@@ -25,6 +25,10 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
 
     fun disconnect() = protocolClient.disconnect()
 
+    fun loadContacts() {
+        contactsRepository.requestAllContacts()
+    }
+
     override fun onCleared() {
         connectionDisposable.dispose()
         super.onCleared()

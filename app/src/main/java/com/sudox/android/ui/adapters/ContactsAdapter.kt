@@ -9,7 +9,8 @@ import com.sudox.android.R
 import com.sudox.android.database.Contact
 import kotlinx.android.synthetic.main.card_contact.view.*
 
-class ContactsAdapter(private val items: ArrayList<Contact>, private val context: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
+class ContactsAdapter(var items: List<Contact>,
+                      private val context: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.card_contact, parent, false))

@@ -2,17 +2,21 @@ package com.sudox.android.common.repository.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.sudox.android.common.enums.State
 import com.sudox.android.common.models.dto.ContactsDTO
 import com.sudox.android.database.Contact
 import com.sudox.android.database.ContactsDao
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.model.ResponseCallback
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class ContactsRepository(private val protocolClient: ProtocolClient,
-                         private val contactsDao : ContactsDao) {
+                         private val contactsDao: ContactsDao) {
 
-    val mutableLiveData = MutableLiveData<State>()
+    val contactsLoadLiveData = MutableLiveData<List<Contact>>()
+    val contactsUpdateLiveData = MutableLiveData<State>()
 
     fun initContactsListeners() {
         val mutableLiveData = MutableLiveData<State>()
@@ -40,7 +44,9 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         })
     }
 
-    fun getAllContacts(): LiveData<List<Contact>> {
-        return contactsDao.getAllContacts()
+    fun requestAllContacts() {
+        Schedulers.io().scheduleDirect {
+            contactsLoadLiveData.postValue(contactsDao.getAllContacts())
+        }
     }
 }

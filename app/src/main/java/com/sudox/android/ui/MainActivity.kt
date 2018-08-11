@@ -22,6 +22,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         // init listeners
         mainViewModel.initContactsListeners()
+        mainViewModel.loadContacts()
 
         supportFragmentManager.
             beginTransaction()
