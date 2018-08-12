@@ -91,13 +91,13 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         return mutableLiveData
     }
 
-    fun signUp(name: String, surname: String): LiveData<SignUpDTO?> {
+    fun signUp(name: String, nickname: String): LiveData<SignUpDTO?> {
         val mutableLiveData = MutableLiveData<SignUpDTO?>()
 
         if (protocolClient.isConnected()) {
             val signUpDTO = SignUpDTO()
             signUpDTO.name = name
-            signUpDTO.surname = surname
+            signUpDTO.nickname = nickname
 
             protocolClient.makeRequest("auth.signUp", signUpDTO, object : ResponseCallback<SignUpDTO> {
                 override fun onMessage(response: SignUpDTO) {

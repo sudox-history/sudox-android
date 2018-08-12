@@ -8,7 +8,7 @@
     <string name="about_name">Не волнуйтесь, это последний шаг</string>
     <string name="next">Далее</string>
     <string name="what_is_your_name">Как вас зовут?</string>
-    <string name="enter_your_name_and_surname">Введите ваше имя и фамилию ниже</string>
+    <string name="enter_your_name_and_nickname">Введите ваше имя и никнейм ниже</string>
     <string name="surname">Фамилия</string>
     <string name="name">Имя</string>
     <string name="enter_your_name">Для начала введите вашу почту</string>

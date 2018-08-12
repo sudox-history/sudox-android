@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.helpers.NAME_REGEX
+import com.sudox.android.common.helpers.NICKNAME_REGEX
 import com.sudox.android.common.helpers.hideInputError
 import com.sudox.android.common.helpers.showInputError
 import com.sudox.android.common.models.dto.SignUpDTO
@@ -92,7 +93,7 @@ class AuthRegisterFragment : DaggerFragment() {
                                 .toString()
                                 .trim()
 
-                        if (NAME_REGEX.matches(name) && NAME_REGEX.matches(surname)) {
+                        if (NAME_REGEX.matches(name) && NICKNAME_REGEX.matches(surname)) {
                             nameEditText.isEnabled = false
                             surnameEditText.isEnabled = false
 
@@ -108,20 +109,24 @@ class AuthRegisterFragment : DaggerFragment() {
     }
 
     private fun getSignUpData(signUpDTO: SignUpDTO?) {
-        if (signUpDTO == null) {
-            nameEditText.isEnabled = true
-            surnameEditText.isEnabled = true
-            hideInputError(nameEditTextContainer)
-            hideInputError(surnameEditTextContainer)
-            authActivity.showMessage(getString(R.string.no_internet_connection))
-        } else if (signUpDTO.errorCode == 3) {
-            nameEditText.isEnabled = true
-            surnameEditText.isEnabled = true
-            showInputError(nameEditTextContainer)
-            showInputError(surnameEditTextContainer)
-        } else {
-            authRegisterViewModel.saveAccount(signUpDTO.id, email, signUpDTO.token)
-            authActivity.showMainActivity()
+        when {
+            signUpDTO == null -> {
+                nameEditText.isEnabled = true
+                surnameEditText.isEnabled = true
+                hideInputError(nameEditTextContainer)
+                hideInputError(surnameEditTextContainer)
+                authActivity.showMessage(getString(R.string.no_internet_connection))
+            }
+            signUpDTO.errorCode == 3 -> {
+                nameEditText.isEnabled = true
+                surnameEditText.isEnabled = true
+                showInputError(nameEditTextContainer)
+                showInputError(surnameEditTextContainer)
+            }
+            else -> {
+                authRegisterViewModel.saveAccount(signUpDTO.id, email, signUpDTO.token)
+                authActivity.showMainActivity()
+            }
         }
     }
 }

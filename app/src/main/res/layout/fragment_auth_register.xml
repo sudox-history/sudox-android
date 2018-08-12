@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:fontFamily="sans-serif-light"
-        android:text="@string/enter_your_name_and_surname"
+        android:text="@string/enter_your_name_and_nickname"
         android:textSize="@dimen/font_size_medium" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -64,7 +64,7 @@
             android:id="@+id/surnameEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/surname"
+            android:hint="@string/nickname"
             android:inputType="textPersonName"
             android:maxLines="1"
             android:textSize="@dimen/font_size_tiny" />

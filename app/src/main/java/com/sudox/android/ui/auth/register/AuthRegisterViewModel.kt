@@ -9,7 +9,7 @@ import javax.inject.Inject
 class AuthRegisterViewModel @Inject constructor(private val authRepository: AuthRepository,
                                                 private val accountRepository: AccountRepository) : ViewModel() {
 
-    fun sendUserData(name: String, surname: String) = authRepository.signUp(name, surname)
+    fun sendUserData(name: String, nickname: String) = authRepository.signUp(name, nickname)
 
     fun saveAccount(id: Long, email: String, token: String) {
         accountRepository.saveAccount(SudoxAccount(id, email, token))

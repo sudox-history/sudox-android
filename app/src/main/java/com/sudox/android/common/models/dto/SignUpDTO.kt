@@ -5,15 +5,15 @@ import org.json.JSONObject
 class SignUpDTO : CanErrorDTO() {
 
     lateinit var name: String
-    lateinit var surname: String
+    lateinit var nickname: String
 
     lateinit var token: String
     var id: Long = 0
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()){
-            putOpt("firstName", name)
-            putOpt("lastName", surname)
+            putOpt("name", name)
+            putOpt("nickname", nickname)
         }
     }
 
