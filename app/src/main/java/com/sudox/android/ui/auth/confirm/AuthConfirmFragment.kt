@@ -21,7 +21,7 @@ import com.sudox.android.common.helpers.formatHtml
 import com.sudox.android.common.helpers.hideInputError
 import com.sudox.android.common.helpers.showInputError
 import kotlinx.android.synthetic.main.fragment_auth_confirm.*
-import kotlinx.android.synthetic.main.include_navbar.*
+import kotlinx.android.synthetic.main.include_auth_navbar.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject

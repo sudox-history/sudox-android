@@ -9,9 +9,9 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
-import kotlinx.android.synthetic.main.include_navbar.view.*
+import kotlinx.android.synthetic.main.include_auth_navbar.view.*
 
-class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class AuthNavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
     // Back button
     var backButtonIsVisible: Boolean = false
@@ -35,7 +35,7 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         readAttrs(attrs)
 
         // Inflate view
-        inflate(context, R.layout.include_navbar, this)
+        inflate(context, R.layout.include_auth_navbar, this)
     }
 
     override fun onFinishInflate() {
@@ -46,15 +46,15 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
 
     private fun readAttrs(attrs: AttributeSet) {
-        val array = context.obtainStyledAttributes(attrs, R.styleable.NavigationBar)
+        val array = context.obtainStyledAttributes(attrs, R.styleable.AuthNavigationBar)
 
         // Read parameters
-        backButtonIsVisible = array.getBoolean(R.styleable.NavigationBar_backButtonIsVisible, false)
-        nextButtonIsVisible = array.getBoolean(R.styleable.NavigationBar_nextButtonIsVisible, false)
-        sudoxTagIsVisible = array.getBoolean(R.styleable.NavigationBar_sudoxTagIsVisible, false)
-        sendAgainIsVisible = array.getBoolean(R.styleable.NavigationBar_sendAgainIsVisible, false)
-        backButtonText = array.getString(R.styleable.NavigationBar_backButtonText)
-        nextButtonText = array.getString(R.styleable.NavigationBar_nextButtonText)
+        backButtonIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_backButtonIsVisible, false)
+        nextButtonIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_nextButtonIsVisible, false)
+        sudoxTagIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_sudoxTagIsVisible, false)
+        sendAgainIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_sendAgainIsVisible, false)
+        backButtonText = array.getString(R.styleable.AuthNavigationBar_backButtonText)
+        nextButtonText = array.getString(R.styleable.AuthNavigationBar_nextButtonText)
 
         // Recycle typed array
         array.recycle()

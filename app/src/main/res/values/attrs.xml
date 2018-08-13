@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="NavigationBar">
+    <declare-styleable name="AuthNavigationBar">
         <attr name="backButtonIsVisible" format="boolean" />
         <attr name="nextButtonIsVisible" format="boolean" />
         <attr name="sudoxTagIsVisible" format="boolean" />
@@ -8,5 +8,9 @@
         <attr name="backButtonText" format="string" />
         <attr name="nextButtonText" format="string" />
         <attr name="sendAgainButtonText" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="MainNavigationBar">
+        <attr name="tagText" format="string" />
     </declare-styleable>
 </resources>
