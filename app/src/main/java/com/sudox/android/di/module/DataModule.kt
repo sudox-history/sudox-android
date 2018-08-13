@@ -15,7 +15,7 @@ class DataModule {
     @Provides
     @Singleton
     fun provideAccountRepository(protocolClient: ProtocolClient,
-                                 accountManager: AccountManager) = AccountRepository(protocolClient, accountManager)
+                                 accountManager: AccountManager) = AccountRepository(accountManager)
 
     @Provides
     @Singleton

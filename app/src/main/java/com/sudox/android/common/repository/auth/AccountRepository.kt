@@ -6,11 +6,9 @@ import android.accounts.AccountManager.KEY_ACCOUNT_NAME
 import android.os.Build
 import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
-import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject
 
-class AccountRepository @Inject constructor(private val protocolClient: ProtocolClient,
-                                            private val accountManager: AccountManager) {
+class AccountRepository @Inject constructor(private val accountManager: AccountManager) {
 
     // Account type
     private val accountType = "com.sudox.account"
@@ -24,7 +22,7 @@ class AccountRepository @Inject constructor(private val protocolClient: Protocol
         accountManager.addAccountExplicitly(accountInstance, null, null)
 
         // Write account data
-        accountManager.setUserData(accountInstance, KEY_ACCOUNT_ID, account.id.toString())
+        accountManager.setUserData(accountInstance, KEY_ACCOUNT_ID, account.id)
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_NAME, account.name)
         accountManager.setPassword(accountInstance, account.token)
     }
@@ -47,7 +45,7 @@ class AccountRepository @Inject constructor(private val protocolClient: Protocol
 
         return if (accounts.isNotEmpty()) {
             val account = accounts[accounts.size - 1]
-            val accountId = accountManager.getUserData(account, KEY_ACCOUNT_ID).toLong()
+            val accountId = accountManager.getUserData(account, KEY_ACCOUNT_ID)
             val accountName = accountManager.getUserData(account, KEY_ACCOUNT_NAME)
             val accountToken = accountManager.getPassword(account)
 

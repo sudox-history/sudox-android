@@ -6,7 +6,7 @@ class TokenDTO : CanErrorDTO() {
 
     lateinit var token: String
 
-    var id: String = 0
+    lateinit var id: String
     var code: Int = 0
 
     override fun toJSON(): JSONObject {
