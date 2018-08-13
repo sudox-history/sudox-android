@@ -9,7 +9,7 @@ class ContactsDTO : CanErrorDTO() {
     var offset: Int = 0
     var count: Int = 0
 
-    var id: Long = 0
+    lateinit var id: String
     lateinit var firstColor: String
     lateinit var secondColor: String
     lateinit var avatarUrl: String
@@ -34,7 +34,7 @@ class ContactsDTO : CanErrorDTO() {
             avatarUrl = jsonObject.getString("photo")
         }
 
-        id = jsonObject.optLong("id")
+        id = jsonObject.optString("id")
         name = jsonObject.optString("name")
         nickname = jsonObject.optString("nickname")
     }

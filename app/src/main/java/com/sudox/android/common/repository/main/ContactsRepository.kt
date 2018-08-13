@@ -3,14 +3,18 @@ package com.sudox.android.common.repository.main
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.State
 import com.sudox.android.common.models.dto.ContactsDTO
+import com.sudox.android.common.models.dto.ContactsGetDTO
+import com.sudox.android.common.repository.auth.AccountRepository
 import com.sudox.android.database.Contact
 import com.sudox.android.database.ContactsDao
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.model.ResponseCallback
-import io.reactivex.schedulers.Schedulers
 
 class ContactsRepository(private val protocolClient: ProtocolClient,
-                         private val contactsDao: ContactsDao) {
+                         private val contactsDao: ContactsDao,
+                         accountRepository: AccountRepository) {
+
+    private val account = accountRepository.getAccount()
 
     val contactsLoadLiveData = MutableLiveData<List<Contact>>()
     val contactsUpdateLiveData = MutableLiveData<State>()
@@ -42,8 +46,14 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
     }
 
     fun requestAllContacts() {
-        Schedulers.io().scheduleDirect {
-            contactsLoadLiveData.postValue(contactsDao.getAllContacts())
-        }
+        val contactsGetDTO = ContactsGetDTO()
+        contactsGetDTO.id = account!!.id
+
+        protocolClient.makeRequest("contacts.get", contactsGetDTO, object : ResponseCallback<ContactsGetDTO>{
+            override fun onMessage(response: ContactsGetDTO) {
+                contactsLoadLiveData.postValue(contactsDao.getAllContacts())
+                //TODO: implement ContactsGetDTO (fromJson)
+            }
+        })
     }
 }

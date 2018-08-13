@@ -29,4 +29,10 @@ class MainActivity : DaggerAppCompatActivity() {
                     .replace(R.id.fragment_main_container, ContactsFragment())
                     .commit()
     }
+
+
+    override fun onBackPressed() {
+        mainViewModel.disconnect()
+        super.onBackPressed()
+    }
 }

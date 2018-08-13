@@ -20,5 +20,6 @@ class DataModule {
     @Provides
     @Singleton
     fun provideContactsRepository(protocolClient: ProtocolClient,
-                                  contactsDao: ContactsDao) = ContactsRepository(protocolClient, contactsDao)
+                                  contactsDao: ContactsDao,
+                                  accountRepository: AccountRepository) = ContactsRepository(protocolClient, contactsDao, accountRepository)
 }

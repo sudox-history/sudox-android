@@ -2,24 +2,19 @@ package com.sudox.android.common.models.dto
 
 import org.json.JSONObject
 
-class SignUpDTO : CanErrorDTO() {
+class ContactsGetDTO : CanErrorDTO() {
 
-    lateinit var name: String
-    lateinit var nickname: String
 
-    lateinit var token: String
     lateinit var id: String
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()){
-            putOpt("name", name)
-            putOpt("nickname", nickname)
+            putOpt("id", id)
         }
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
         super.fromJSON(jsonObject)
-        token = jsonObject.optString("token")
-        id = jsonObject.optString("id")
+
     }
 }

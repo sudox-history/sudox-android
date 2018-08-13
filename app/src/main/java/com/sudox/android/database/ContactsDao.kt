@@ -12,7 +12,7 @@ interface ContactsDao {
     fun insertContact(contact: Contact)
 
     @Query("delete from contacts_table where cid=:id")
-    fun deleteContactById(id: Long)
+    fun deleteContactById(id: String)
 
     @Query("select * from contacts_table")
     fun getAllContacts() : List<Contact>

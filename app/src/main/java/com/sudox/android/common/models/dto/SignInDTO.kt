@@ -7,7 +7,7 @@ class SignInDTO : CanErrorDTO() {
     var code: Int = 0
 
     lateinit var token: String
-    var id: Long = 0
+    lateinit var id: String
     var status: Int = 0
 
     override fun toJSON(): JSONObject {
@@ -19,7 +19,7 @@ class SignInDTO : CanErrorDTO() {
     override fun fromJSON(jsonObject: JSONObject) {
         super.fromJSON(jsonObject)
         token = jsonObject.optString("token")
-        id = jsonObject.optLong("id")
+        id = jsonObject.optString("id")
         status = jsonObject.optInt("code")
     }
 

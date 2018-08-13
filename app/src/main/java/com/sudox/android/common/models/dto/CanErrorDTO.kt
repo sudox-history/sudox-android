@@ -12,6 +12,8 @@ abstract class CanErrorDTO : JsonModel {
         return errorCode != 0
     }
 
+    abstract override fun toJSON(): JSONObject
+
     override fun fromJSON(jsonObject: JSONObject) {
         errorCode = jsonObject.optInt("errorCode")
         errorMessage = jsonObject.optString("errorMsg")
