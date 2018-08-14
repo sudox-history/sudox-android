@@ -48,15 +48,24 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="40dp"
-        android:gravity="center"
-        android:textSize="@dimen/font_size_extra_tiny"
-        android:text="@string/hint_of_create_account"
-        android:textColor="@color/colorHint" />
+        android:gravity="center_horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
+            android:layout_weight="0.80"
+            android:gravity="center"
+            android:text="@string/hint_of_create_account"
+            android:textColor="@color/colorHint"
+            android:textSize="@dimen/font_size_extra_tiny" />
+
+    </LinearLayout>
 
 </LinearLayout>

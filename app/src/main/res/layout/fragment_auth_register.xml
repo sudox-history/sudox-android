@@ -16,7 +16,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/what_is_your_name"
         android:textSize="@dimen/font_size_large" />
@@ -24,7 +24,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="12dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/enter_your_name_and_nickname"
         android:textSize="@dimen/font_size_medium" />
@@ -33,9 +33,9 @@
         android:id="@+id/nameEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
         app:counterEnabled="true"
         app:counterMaxLength="20">
 
@@ -54,9 +54,8 @@
         android:id="@+id/surnameEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         app:counterEnabled="true"
         app:counterMaxLength="20">
 
@@ -71,14 +70,24 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="40dp"
-        android:gravity="center"
-        android:text="@string/about_name"
-        android:textColor="@color/colorHint" />
+        android:gravity="center_horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
+            android:layout_weight="0.80"
+            android:gravity="center"
+            android:text="@string/about_name"
+            android:textColor="@color/colorHint"
+            android:textSize="@dimen/font_size_extra_tiny" />
+
+    </LinearLayout>
 
 </LinearLayout>
