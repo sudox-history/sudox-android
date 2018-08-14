@@ -2,6 +2,7 @@ package com.sudox.android.ui
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.androidadvance.topsnackbar.TSnackbar
@@ -13,7 +14,8 @@ import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.helpers.showTopSnackbar
 import com.sudox.android.common.models.TokenData
 import com.sudox.android.common.viewmodels.getViewModel
-import com.sudox.android.ui.main.ContactsFragment
+import com.sudox.android.ui.main.contacts.ContactsFragment
+import com.sudox.android.ui.main.settings.SettingsFragment
 import com.sudox.android.ui.splash.SplashActivity
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -45,7 +47,35 @@ class MainActivity : DaggerAppCompatActivity() {
             beginTransaction()
                     .replace(R.id.fragment_main_container, ContactsFragment())
                     .commit()
+
+
+        bottom_navigation.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.contacts_item -> goToContactsFragment()
+                R.id.settings_item -> goToSettingsFragment()
+            }
+            return@setOnNavigationItemSelectedListener true
+        }
+
     }
+
+    private fun goToSettingsFragment() {
+        supportFragmentManager.
+                beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_main_container, SettingsFragment())
+                .commit()
+    }
+
+    private fun goToContactsFragment(){
+        supportFragmentManager.
+                beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_main_container, ContactsFragment())
+                .commit()
+    }
+
+
 
     private fun getConnectState(account: SudoxAccount?, connectData: Data<ConnectState>) {
         when (connectData.data) {
@@ -59,7 +89,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun getTokenState(tokenData: TokenData) {
         if(tokenData.tokenState == TokenState.WRONG){
-            mainViewModel.removeAllContacts()
+            mainViewModel.removeAllAccounts()
             mainViewModel.disconnect()
             showSplashActivity()
         } else if (tokenData.tokenState == TokenState.CORRECT){

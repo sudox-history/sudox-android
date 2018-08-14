@@ -43,7 +43,7 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
         contactsRepository.initContactsListeners()
     }
 
-    fun removeAllContacts() = accountRepository.removeAccounts()
+    fun removeAllAccounts() = accountRepository.removeAccounts()
 
     fun sendToken(sudoxAccount: SudoxAccount?) = authRepository.sendToken(sudoxAccount?.token)
 

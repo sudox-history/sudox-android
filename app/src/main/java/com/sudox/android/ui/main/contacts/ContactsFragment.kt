@@ -1,4 +1,4 @@
-package com.sudox.android.ui.main
+package com.sudox.android.ui.main.contacts
 
 import android.os.Bundle
 import android.view.LayoutInflater

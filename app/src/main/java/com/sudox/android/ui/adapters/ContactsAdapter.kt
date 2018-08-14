@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.sudox.android.R
 import com.sudox.android.database.Contact
 import kotlinx.android.synthetic.main.card_contact.view.*
-import org.json.JSONException
 
 
 class ContactsAdapter(var items: List<Contact>,
@@ -26,15 +25,17 @@ class ContactsAdapter(var items: List<Contact>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (items[position].firstColor != null) {
-            val text = "${items[position].name.split(" ")[0][0]}${items[position].name.split(" ")[1][0]}"
+            val text: String = try {
+                "${items[position].name.split(" ")[0][0]}${items[position].name.split(" ")[1][0]}"
+            } catch (e: IndexOutOfBoundsException){
+                "${items[position].name.split(" ")[0][0]}"
+            }
 
             Glide.with(context)
                     .load(setGradientColor(items[position].firstColor!!,
                             items[position].secondColor!!, text)).into(holder.avatar)
-
-            //TODO:refactor this code
         } else {
-
+            TODO("if photo is not gradient")
         }
 
         holder.name.text = items[position].name

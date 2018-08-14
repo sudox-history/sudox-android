@@ -1,4 +1,4 @@
-package com.sudox.android.ui.main
+package com.sudox.android.ui.main.contacts
 
 import androidx.lifecycle.ViewModel
 import com.sudox.android.common.repository.main.ContactsRepository

@@ -9,7 +9,8 @@ import com.sudox.android.ui.auth.AuthViewModel
 import com.sudox.android.ui.auth.confirm.AuthConfirmViewModel
 import com.sudox.android.ui.auth.email.AuthEmailViewModel
 import com.sudox.android.ui.auth.register.AuthRegisterViewModel
-import com.sudox.android.ui.main.ContactsViewModel
+import com.sudox.android.ui.main.contacts.ContactsViewModel
+import com.sudox.android.ui.main.settings.SettingsViewModel
 import com.sudox.android.ui.splash.SplashViewModel
 import dagger.Binds
 import dagger.Module
@@ -50,6 +51,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ContactsViewModel::class)
     internal abstract fun contactsViewModel(viewModel: ContactsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    internal abstract fun settingsViewModel(viewModel: SettingsViewModel): ViewModel
 
     @Binds
     @IntoMap
