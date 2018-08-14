@@ -65,6 +65,8 @@ dependencies {
     // Firebase
     implementation "com.google.firebase:firebase-crash:$firebaseVersion"
 
+    implementation 'com.androidadvance:topsnackbar:1.1.1'
+
     // Socket.io
     implementation "io.socket:socket.io-client:$socketVersion"
 
@@ -109,6 +111,13 @@ android {
             experimental = true
             defaultCacheImplementation = "NONE"
         }
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
 
     defaultConfig {
