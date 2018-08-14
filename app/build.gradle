@@ -35,7 +35,7 @@ ext {
     lottieVersion = "2.5.5"
     leakcanaryVersion = "1.6.1"
     circleImageViewVersion = "2.2.0"
-    frescoVersion = "1.10.0"
+    glideVersion = "4.7.1"
 }
 
 dependencies {
@@ -76,9 +76,9 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
 
-
     // Fresco
-    implementation "com.facebook.fresco:fresco:$frescoVersion"
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
     // Lottie
     implementation "com.airbnb.android:lottie:$lottieVersion"
