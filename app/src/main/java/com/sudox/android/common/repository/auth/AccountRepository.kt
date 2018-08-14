@@ -8,7 +8,6 @@ import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.database.ContactsDao
 import io.reactivex.Completable
-import io.reactivex.Flowable
 import io.reactivex.Single
 
 class AccountRepository(private val accountManager: AccountManager,
@@ -36,7 +35,7 @@ class AccountRepository(private val accountManager: AccountManager,
     }
 
     @Suppress("DEPRECATION")
-    private fun removeAccounts() {
+    fun removeAccounts() {
         val accounts = accountManager.accounts
 
         for (account in accounts) {
@@ -46,6 +45,11 @@ class AccountRepository(private val accountManager: AccountManager,
                 accountManager.removeAccount(account, null, null)
             }
         }
+    }
+
+
+    fun deleteData(){
+        contactsDao.deleteAllContacts()
     }
 
     fun getAccount(): Single<SudoxAccount?> = Single.unsafeCreate {

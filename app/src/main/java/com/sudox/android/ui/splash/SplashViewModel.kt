@@ -29,7 +29,10 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
     private var accountDisposable: Disposable = accountRepository.getAccount()
             .subscribeOn(Schedulers.io())
             .subscribe(Consumer {
+                if (it == null)
+                    accountRepository.deleteData()
                 accountLiveData.postValue(it)
+
             })
 
     fun connect() = protocolClient.connect()
