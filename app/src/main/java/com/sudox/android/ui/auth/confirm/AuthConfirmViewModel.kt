@@ -34,7 +34,7 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
         }
     }
 
-    fun saveAccount(id: Long, email: String, token: String) {
+    fun saveAccount(id: String, email: String, token: String) {
         accountRepository.saveAccount(SudoxAccount(id, email, token))
     }
 

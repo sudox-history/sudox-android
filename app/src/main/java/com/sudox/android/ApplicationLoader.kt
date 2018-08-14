@@ -1,5 +1,6 @@
 package com.sudox.android
 
+import com.facebook.drawee.backends.pipeline.Fresco
 import com.squareup.leakcanary.LeakCanary
 import com.sudox.android.di.DaggerAppComponent
 import dagger.android.AndroidInjector
@@ -25,6 +26,9 @@ class ApplicationLoader : DaggerApplication() {
 
         // Install leak canary
         LeakCanary.install(this)
+
+        // Install Fresco
+        Fresco.initialize(this)
 
         // Enable Timber
         if (BuildConfig.DEBUG) {

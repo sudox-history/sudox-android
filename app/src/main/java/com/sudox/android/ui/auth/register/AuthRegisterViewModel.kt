@@ -11,7 +11,7 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
 
     fun sendUserData(name: String, nickname: String) = authRepository.signUp(name, nickname)
 
-    fun saveAccount(id: Long, email: String, token: String) {
+    fun saveAccount(id: String, email: String, token: String) {
         accountRepository.saveAccount(SudoxAccount(id, email, token))
     }
 }

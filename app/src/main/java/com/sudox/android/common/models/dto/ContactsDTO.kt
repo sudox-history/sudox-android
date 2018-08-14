@@ -10,9 +10,9 @@ class ContactsDTO : CanErrorDTO() {
     var count: Int = 0
 
     lateinit var id: String
-    lateinit var firstColor: String
-    lateinit var secondColor: String
-    lateinit var avatarUrl: String
+    var firstColor: String? = null
+    var secondColor: String? = null
+    var avatarUrl: String? = null
     lateinit var name: String
     lateinit var nickname: String
 

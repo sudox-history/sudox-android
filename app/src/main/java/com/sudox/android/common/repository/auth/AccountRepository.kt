@@ -6,9 +6,10 @@ import android.accounts.AccountManager.KEY_ACCOUNT_NAME
 import android.os.Build
 import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
-import javax.inject.Inject
+import com.sudox.android.database.ContactsDao
 
-class AccountRepository @Inject constructor(private val accountManager: AccountManager) {
+class AccountRepository(private val accountManager: AccountManager,
+                        private val contactsDao: ContactsDao) {
 
     // Account type
     private val accountType = "com.sudox.account"
@@ -52,6 +53,7 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
             // Account instance
             SudoxAccount(accountId, accountName, accountToken)
         } else {
+            contactsDao.deleteAllContacts()
             null
         }
     }

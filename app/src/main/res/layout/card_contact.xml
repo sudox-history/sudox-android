@@ -48,6 +48,7 @@
                     android:layout_marginTop="3dp"
                     android:text="kerjen01"
                     android:textColor="@color/colorHint"
+                    android:fontFamily="sans-serif-light"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>

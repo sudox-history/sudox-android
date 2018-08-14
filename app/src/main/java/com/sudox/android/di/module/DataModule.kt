@@ -14,12 +14,11 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideAccountRepository(protocolClient: ProtocolClient,
-                                 accountManager: AccountManager) = AccountRepository(accountManager)
+    fun provideAccountRepository(accountManager: AccountManager,
+                                 contactsDao: ContactsDao) = AccountRepository(accountManager, contactsDao)
 
     @Provides
     @Singleton
     fun provideContactsRepository(protocolClient: ProtocolClient,
-                                  contactsDao: ContactsDao,
-                                  accountRepository: AccountRepository) = ContactsRepository(protocolClient, contactsDao, accountRepository)
+                                  contactsDao: ContactsDao) = ContactsRepository(protocolClient, contactsDao)
 }

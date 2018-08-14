@@ -7,19 +7,19 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
+import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.enums.State
+import com.sudox.android.common.helpers.formatHtml
+import com.sudox.android.common.helpers.hideInputError
+import com.sudox.android.common.helpers.showInputError
 import com.sudox.android.common.models.dto.ConfirmCodeDTO
 import com.sudox.android.common.models.dto.SignInDTO
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
 import dagger.android.support.DaggerFragment
-import androidx.lifecycle.Observer
-import com.sudox.android.common.enums.NavigationAction
-import com.sudox.android.common.helpers.formatHtml
-import com.sudox.android.common.helpers.hideInputError
-import com.sudox.android.common.helpers.showInputError
 import kotlinx.android.synthetic.main.fragment_auth_confirm.*
 import kotlinx.android.synthetic.main.include_auth_navbar.*
 import java.text.SimpleDateFormat
@@ -160,27 +160,29 @@ class AuthConfirmFragment : DaggerFragment() {
     }
 
     private fun getResendData(data: State?) {
-        if (data == null) {
-            authActivity.showMessage(getString(R.string.no_internet_connection))
-        } else if (data == State.SUCCESS) {
-            authActivity.showMessage(getString(R.string.code_has_sent_successfully))
-            setupTimer()
-        } else if (data == State.FAILED) {
-            authActivity.showMessage(getString(R.string.unknown_error))
+        when (data) {
+            null -> authActivity.showMessage(getString(R.string.no_internet_connection))
+            State.SUCCESS -> {
+                authActivity.showMessage(getString(R.string.code_has_sent_successfully))
+                setupTimer()
+            }
+            State.FAILED -> authActivity.showMessage(getString(R.string.unknown_error))
         }
     }
 
     fun getConfirmData(data: ConfirmCodeDTO?) {
-        if (data == null) {
-            authActivity.showMessage(getString(R.string.no_internet_connection))
-            hideInputError(codeEditTextContainer)
-            codeEditText.isEnabled = true
-        } else if (data.codeStatus == 0) {
+        when {
+            data == null -> {
+                authActivity.showMessage(getString(R.string.no_internet_connection))
+                hideInputError(codeEditTextContainer)
+                codeEditText.isEnabled = true
+            }
+            data.codeStatus == 0 -> {
 //            codeEditTextContainer.error = getString(R.string.wrong_code)
-            showInputError(codeEditTextContainer)
-            codeEditText.isEnabled = true
-        } else if (data.codeStatus == 1) {
-            authActivity.showAuthRegisterFragment(email)
+                showInputError(codeEditTextContainer)
+                codeEditText.isEnabled = true
+            }
+            data.codeStatus == 1 -> authActivity.showAuthRegisterFragment(email)
         }
     }
 

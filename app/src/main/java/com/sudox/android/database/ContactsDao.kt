@@ -16,4 +16,7 @@ interface ContactsDao {
 
     @Query("select * from contacts_table")
     fun getAllContacts() : List<Contact>
+
+    @Query("delete from contacts_table")
+    fun deleteAllContacts()
 }
