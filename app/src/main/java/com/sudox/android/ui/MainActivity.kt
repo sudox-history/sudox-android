@@ -30,7 +30,6 @@ class MainActivity : DaggerAppCompatActivity() {
                     .commit()
     }
 
-
     override fun onBackPressed() {
         mainViewModel.disconnect()
         super.onBackPressed()

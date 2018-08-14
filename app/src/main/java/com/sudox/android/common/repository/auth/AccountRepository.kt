@@ -7,6 +7,9 @@ import android.os.Build
 import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.database.ContactsDao
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Single
 
 class AccountRepository(private val accountManager: AccountManager,
                         private val contactsDao: ContactsDao) {
@@ -14,9 +17,10 @@ class AccountRepository(private val accountManager: AccountManager,
     // Account type
     private val accountType = "com.sudox.account"
 
-    fun saveAccount(account: SudoxAccount) {
+    fun saveAccount(account: SudoxAccount): Completable = Completable.create {
         val accountInstance = Account(account.name, accountType)
 
+        // Remove accounts
         removeAccounts()
 
         // Add account
@@ -26,6 +30,9 @@ class AccountRepository(private val accountManager: AccountManager,
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_ID, account.id)
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_NAME, account.name)
         accountManager.setPassword(accountInstance, account.token)
+
+        // Notify, that operation was completed
+        it.onComplete()
     }
 
     @Suppress("DEPRECATION")
@@ -41,20 +48,22 @@ class AccountRepository(private val accountManager: AccountManager,
         }
     }
 
-    fun getAccount(): SudoxAccount? {
+    fun getAccount(): Single<SudoxAccount?> = Single.unsafeCreate {
         val accounts = accountManager.accounts
 
-        return if (accounts.isNotEmpty()) {
+        if (accounts.isNotEmpty()) {
             val account = accounts[accounts.size - 1]
             val accountId = accountManager.getUserData(account, KEY_ACCOUNT_ID)
             val accountName = accountManager.getUserData(account, KEY_ACCOUNT_NAME)
             val accountToken = accountManager.getPassword(account)
 
             // Account instance
-            SudoxAccount(accountId, accountName, accountToken)
+            val sudoxAccount = SudoxAccount(accountId, accountName, accountToken)
+
+            // Send account to the single
+            it.onSuccess(sudoxAccount)
         } else {
-            contactsDao.deleteAllContacts()
-            null
+            it.onSuccess(null)
         }
     }
 }

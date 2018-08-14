@@ -15,9 +15,11 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
     var connectLiveData = MutableLiveData<Data<ConnectState>>()
 
     // Connection controller
-    private var connectionDisposable: Disposable = protocolClient.connectionSubject.subscribe {
-        connectLiveData.postValue(Data(it))
-    }
+    private var connectionDisposable: Disposable = protocolClient
+            .connectionSubject
+            .subscribe {
+                connectLiveData.postValue(Data(it))
+            }
 
     fun initContactsListeners() {
         contactsRepository.initContactsListeners()

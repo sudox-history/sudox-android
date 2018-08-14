@@ -32,30 +32,33 @@ class SplashActivity : DaggerAppCompatActivity() {
         splashViewModel = getViewModel(viewModelFactory)
 
         // Get account from database
-        val account = splashViewModel.getAccount()
+        splashViewModel.accountLiveData.observe(this, Observer { sudoxAccount ->
+            // Add account from AccountManager context
+            if (intent.getIntExtra(AUTH_KEY, 1) == AUTH_CODE && sudoxAccount != null) {
+                AlertDialog.Builder(this)
+                        .setTitle(R.string.account_is_already_exist)
+                        .setMessage(R.string.account_is_already_created)
+                        .setOnCancelListener { finish() }
+                        .setPositiveButton(R.string.ok) { dialogInterface: DialogInterface, _: Int ->
+                            dialogInterface.cancel()
+                        }.create().show()
+            } else {
+                splashViewModel.connectLiveData.observe(this, Observer {
+                    getConnectState(sudoxAccount, it)
+                })
 
-        // Add account from AccountManager context
-        if (intent.getIntExtra(AUTH_KEY, 1) == AUTH_CODE && account != null) {
-            AlertDialog.Builder(this)
-                    .setTitle(R.string.account_is_already_exist)
-                    .setMessage(R.string.account_is_already_created)
-                    .setOnCancelListener { finish() }
-                    .setPositiveButton(R.string.ok) { dialogInterface: DialogInterface, _: Int ->
-                        dialogInterface.cancel()
-                    }.create().show()
-        } else {
-            splashViewModel.connectLiveData.observe(this, Observer(::getConnectState))
-            splashViewModel.connect()
-        }
+                splashViewModel.connect()
+            }
+        })
     }
 
-    private fun getConnectState(connectData: Data<ConnectState>) {
+    private fun getConnectState(sudoxAccount: SudoxAccount?, connectData: Data<ConnectState>) {
         if (connectData.data == ConnectState.CONNECTED) {
             splashViewModel
-                    .sendToken()
+                    .sendToken(sudoxAccount)
                     .observe(this, Observer(::getTokenState))
-        } else if (connectData == ConnectState.CONNECT_ERROR) {
-            chooseActivity(splashViewModel.getAccount())
+        } else if (connectData.data == ConnectState.CONNECT_ERROR) {
+            chooseActivity(sudoxAccount, connectData)
         }
     }
 
@@ -67,9 +70,13 @@ class SplashActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun chooseActivity(account: SudoxAccount?) {
+    private fun chooseActivity(account: SudoxAccount?, connectData: Data<ConnectState>) {
         if (account == null) {
-            Handler().postDelayed(::showAuthActivity, 500)
+            if (connectData.data == ConnectState.CONNECT_ERROR) {
+                Handler().postDelayed(::showAuthActivity, 500)
+            } else {
+                showAuthActivity()
+            }
         } else {
             showMainActivity()
         }
