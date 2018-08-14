@@ -24,25 +24,37 @@ class ContactsAdapter(var items: List<Contact>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (items[position].firstColor != null) {
-            val text: String = try {
-                "${items[position].name.split(" ")[0][0]}${items[position].name.split(" ")[1][0]}"
-            } catch (e: IndexOutOfBoundsException){
-                "${items[position].name.split(" ")[0][0]}"
+        var contact = items[position]
+
+        if (contact.firstColor != null && contact.secondColor != null) {
+            var builder = StringBuilder()
+            var names = contact.name.split(" ")
+
+            if (items.size == 1) {
+                builder.append(names[0][0])
             }
 
-            Glide.with(context)
-                    .load(setGradientColor(items[position].firstColor!!,
-                            items[position].secondColor!!, text)).into(holder.avatar)
+            if (items.size >= 1) {
+                builder.append(names[1][0])
+            }
+
+            // Build text
+            val text = builder.toString()
+
+            // Get bitmap
+            val gradientBitmap = drawGradientBitmap(contact.firstColor!!, contact.secondColor!!, text)
+
+            // Load image
+            Glide.with(context).load(gradientBitmap).into(holder.avatar)
         } else {
             TODO("if photo is not gradient")
         }
 
-        holder.name.text = items[position].name
-        holder.nickname.text = items[position].nickname
+        holder.name.text = contact.name
+        holder.nickname.text = contact.nickname
     }
 
-    private fun setGradientColor(firstColor: String, secondColor: String, text: String): Bitmap {
+    private fun drawGradientBitmap(firstColor: String, secondColor: String, text: String): Bitmap {
         val bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         val paint = Paint()
