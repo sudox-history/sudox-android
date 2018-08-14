@@ -34,7 +34,7 @@ class ContactsAdapter(var items: List<Contact>,
                 builder.append(names[0][0])
             }
 
-            if (names.size >= 1) {
+            if (names.size >= 2) {
                 builder.append(names[1][0])
             }
 
