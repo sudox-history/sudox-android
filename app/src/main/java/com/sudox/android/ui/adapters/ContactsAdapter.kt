@@ -25,9 +25,7 @@ class ContactsAdapter(var items: List<Contact>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         if (items[position].firstColor != null) {
-
             val text = "${items[position].name.split(" ")[0][0]}${items[position].name.split(" ")[1][0]}"
 
             Glide.with(context)
@@ -44,35 +42,31 @@ class ContactsAdapter(var items: List<Contact>,
     }
 
     private fun setGradientColor(firstColor: String, secondColor: String, text: String): Bitmap {
-        val imageBitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
-        val imageCanvas = Canvas(imageBitmap)
-        val paint = getGradientPaint(firstColor, secondColor)
-        imageCanvas.drawCircle((imageBitmap.width / 2).toFloat(), (imageBitmap.height / 2).toFloat(), 180f, paint)
-        paint.shader = null
-        paint.color = Color.parseColor("#ffffff")
-        drawTextCentred(imageCanvas, paint, text, 60, (imageBitmap.width / 2).toFloat(), (imageBitmap.height / 2).toFloat())
-
-        return imageBitmap
-    }
-
-    private fun getGradientPaint(firstColor: String, secondColor: String): Paint {
+        val bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
         val paint = Paint()
-        try {
-            paint.shader = LinearGradient(0f, 0f, 300f, 300f, Color.parseColor(firstColor),
-                    Color.parseColor(secondColor), Shader.TileMode.REPEAT)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
 
-        return paint
-    }
+        // Enable antialiasing
+        paint.isAntiAlias = true
 
-    private val textBounds: Rect = Rect()
+        // Draw gradient
+        paint.shader = LinearGradient(100F, 0F, 100F, 200F,
+                Color.parseColor(firstColor), Color.parseColor(secondColor), Shader.TileMode.REPEAT)
 
-    private fun drawTextCentred(canvas: Canvas, paint: Paint, text: String, textSize: Int, cx: Float, cy: Float) {
-        paint.textSize = textSize.toFloat()
-        paint.getTextBounds(text, 0, text.length, textBounds)
-        canvas.drawText(text, cx - textBounds.exactCenterX(), cy - textBounds.exactCenterY(), paint)
+        // Draw circle
+        canvas.drawCircle((bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat(), 180F, paint)
+
+        // Text bounds
+        val textRect = Rect()
+
+        // Draw text
+        paint.shader = null
+        paint.color = Color.WHITE
+        paint.textSize = 60F
+        paint.getTextBounds(text, 0, text.length, textRect)
+        canvas.drawText(text, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
+
+        return bitmap;
     }
 
 
