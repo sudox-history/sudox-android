@@ -4,13 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
+import com.androidadvance.topsnackbar.TSnackbar
 import com.sudox.android.R
 import com.sudox.android.common.Data
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.TokenState
-import com.sudox.android.common.helpers.showSnackbar
+import com.sudox.android.common.helpers.showTopSnackbar
 import com.sudox.android.common.models.TokenData
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.main.ContactsFragment
@@ -37,7 +37,6 @@ class MainActivity : DaggerAppCompatActivity() {
             })
         })
 
-
         // init listeners
         mainViewModel.initContactsListeners()
         mainViewModel.loadContacts()
@@ -51,7 +50,7 @@ class MainActivity : DaggerAppCompatActivity() {
     private fun getConnectState(account: SudoxAccount?, connectData: Data<ConnectState>) {
         when (connectData.data) {
             ConnectState.RECONNECTED -> {
-                showMessage(getString(R.string.lost_internet_connection))
+                showMessage(getString(R.string.connection_restored))
                 mainViewModel.sendToken(account).observe(this, Observer(::getTokenState))
             }
             ConnectState.DISCONNECTED -> showMessage(getString(R.string.lost_internet_connection))
@@ -63,6 +62,8 @@ class MainActivity : DaggerAppCompatActivity() {
             mainViewModel.removeAllContacts()
             mainViewModel.disconnect()
             showSplashActivity()
+        } else if (tokenData.tokenState == TokenState.CORRECT){
+            mainViewModel.loadContacts()
         }
     }
 
@@ -72,7 +73,7 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     fun showMessage(message: String) {
-        showSnackbar(this, fragment_main_container, message, Snackbar.LENGTH_LONG)
+        showTopSnackbar(this, fragment_main_container, message, TSnackbar.LENGTH_LONG)
     }
 
     override fun onBackPressed() {

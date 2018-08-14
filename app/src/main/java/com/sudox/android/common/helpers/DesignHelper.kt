@@ -7,6 +7,7 @@ import android.text.Spanned
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
+import com.androidadvance.topsnackbar.TSnackbar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.sudox.android.R
@@ -34,6 +35,17 @@ fun showSnackbar(context: Context, container: View, message: String, length: Int
 
     return snackbar
 }
+
+fun showTopSnackbar(context: Context, container: View, message: String, length: Int): TSnackbar {
+    val snackbar = TSnackbar.make(container, message, length)
+
+    // Change background color & show
+    snackbar.view.setBackgroundColor(getColor(context, R.color.colorPrimary))
+    snackbar.show()
+
+    return snackbar
+}
+
 
 @Suppress("DEPRECATION")
 fun formatHtml(string: String): Spanned {
