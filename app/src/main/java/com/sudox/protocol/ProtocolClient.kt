@@ -35,13 +35,12 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
     private fun registerListeners() {
         socket.once(Socket.EVENT_CONNECT) {
-
             startHandshake().retryWhen {
                 it.delay(5, TimeUnit.SECONDS).take(10)
             }.subscribe({
                 connectionSubject.onNext(ConnectState.CONNECTED)
             }, {
-                connectionSubject.onNext(ConnectState.FAILED_HANDSHAKE)
+                notifyConnectionAttacked()
             })
         }
 
@@ -56,7 +55,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
             }.subscribe({
                 connectionSubject.onNext(ConnectState.RECONNECTED)
             }, {
-                connectionSubject.onNext(ConnectState.FAILED_HANDSHAKE)
+                notifyConnectionAttacked()
             })
         }
 
@@ -81,6 +80,16 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
     fun isConnected() = socket.connected()
 
+    fun notifyConnectionAttacked() {
+        connectionSubject.onNext(ConnectState.ATTACKED)
+
+        // Remove protocol connection listener of disconnection
+        socket.off(Socket.EVENT_DISCONNECT)
+
+        // Close connection
+        socket.disconnect()
+    }
+
     private fun startListeningInboundMessages() = socket.on("packet") {
         val message = it[0] as JSONObject
 
@@ -90,36 +99,33 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
         val hash: String? = message.optString("hash")
 
         // Защита от MITM-атак
-        if (iv == null || payload == null || hash == null) {
-            return@on
-        }
+        if (iv != null && payload != null && hash != null) {
+            val decryptedPayload = decryptAES(symmetricKey.key, iv, payload)
 
-        // Decrypt payload
-        val decryptedPayload = decryptAES(symmetricKey.key, iv, payload) ?: return@on
+            // Защита от MITM-атаки
+            if (decryptedPayload != null && checkHashes(hash, decryptedPayload)) {
+                val prepareDataForClient = prepareDataForClient(decryptedPayload)
+                val pair = messagesCallbacks[prepareDataForClient.event]
 
-        // Check hashes
-        if (checkHashes(hash, decryptedPayload)) {
-            val prepareDataForClient = prepareDataForClient(decryptedPayload)
-            val pair = messagesCallbacks[prepareDataForClient.event]
+                // Check, that event was being linked with callback
+                if (pair != null) {
+                    // Get json object
+                    val messageObject = JSONObject(prepareDataForClient.message)
 
-            // Check, that event was being linked with callback
-            if (pair != null) {
-                // Get json object
-                val messageObject = JSONObject(prepareDataForClient.message)
+                    // Convert message
+                    val jsonModel = (pair.modelClass.java.newInstance()) as JsonModel
+                    val callback = pair.callback as ResponseCallback<JsonModel>
 
-                // Convert message
-                val jsonModel = (pair.modelClass.java.newInstance()) as JsonModel
-                val callback = pair.callback as ResponseCallback<JsonModel>
+                    // Read message
+                    jsonModel.fromJSON(messageObject)
 
-                // Read message
-                jsonModel.fromJSON(messageObject)
+                    // Call callback
+                    callback.onMessage(jsonModel)
 
-                // Call callback
-                callback.onMessage(jsonModel)
-
-                // Clean-up callback from list
-                if (pair.once) {
-                    messagesCallbacks.remove(prepareDataForClient.event)
+                    // Clean-up callback from list
+                    if (pair.once) {
+                        messagesCallbacks.remove(prepareDataForClient.event)
+                    }
                 }
             }
         }
