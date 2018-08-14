@@ -30,7 +30,7 @@ class ContactsAdapter(var items: List<Contact>,
             var builder = StringBuilder()
             var names = contact.name.split(" ")
 
-            if (names.size == 1) {
+            if (names.size >= 1) {
                 builder.append(names[0][0])
             }
 
