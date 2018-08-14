@@ -7,6 +7,7 @@ import com.sudox.android.common.repository.auth.AccountRepository
 import com.sudox.android.common.repository.auth.AuthRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
@@ -17,7 +18,11 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
                                                private val accountRepository: AccountRepository) : ViewModel() {
 
     var timerData = MutableLiveData<Long>()
-    private lateinit var disposable: Disposable
+    var accountLiveData = MutableLiveData<Boolean>()
+
+    private var disposables: CompositeDisposable = CompositeDisposable()
+
+    // Counter observable for the timer
     private var timerObservable = Observable.interval(1, TimeUnit.SECONDS)
             .startWith(0)
             .subscribeOn(Schedulers.io())
@@ -29,17 +34,19 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
     fun sendCodeAgain() = authRepository.sendCodeAgain()
 
     fun setTimer(seconds: Long) {
-        disposable = timerObservable.subscribe {
+        disposables.add(timerObservable.subscribe {
             timerData.postValue(seconds - it)
-        }
+        })
     }
 
     fun saveAccount(id: String, email: String, token: String) {
-        accountRepository.saveAccount(SudoxAccount(id, email, token))
+        disposables.add(accountRepository.saveAccount(SudoxAccount(id, email, token))
+                .observeOn(Schedulers.io())
+                .subscribe { accountLiveData.postValue(true) })
     }
 
     override fun onCleared() {
-        disposable.dispose()
+        disposables.dispose()
 
         // Super!
         super.onCleared()

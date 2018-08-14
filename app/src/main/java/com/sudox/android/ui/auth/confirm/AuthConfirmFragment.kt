@@ -178,7 +178,6 @@ class AuthConfirmFragment : DaggerFragment() {
                 codeEditText.isEnabled = true
             }
             data.codeStatus == 0 -> {
-//            codeEditTextContainer.error = getString(R.string.wrong_code)
                 showInputError(codeEditTextContainer)
                 codeEditText.isEnabled = true
             }
@@ -192,12 +191,14 @@ class AuthConfirmFragment : DaggerFragment() {
             hideInputError(codeEditTextContainer)
             codeEditText.isEnabled = true
         } else if (signInDTO.status == 0) {
-//            codeEditTextContainer.error = getString(R.string.wrong_code)
             showInputError(codeEditTextContainer)
             codeEditText.isEnabled = true
         } else {
+            authConfirmViewModel.accountLiveData.observe(this, Observer<Boolean> {
+                authActivity.showMainActivity()
+            })
+
             authConfirmViewModel.saveAccount(signInDTO.id, email, signInDTO.token)
-            authActivity.showMainActivity()
         }
     }
 

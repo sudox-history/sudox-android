@@ -124,8 +124,11 @@ class AuthRegisterFragment : DaggerFragment() {
                 showInputError(surnameEditTextContainer)
             }
             else -> {
+                authRegisterViewModel.accountLiveData.observe(this, Observer {
+                    authActivity.showMainActivity()
+                })
+
                 authRegisterViewModel.saveAccount(signUpDTO.id, email, signUpDTO.token)
-                authActivity.showMainActivity()
             }
         }
     }
