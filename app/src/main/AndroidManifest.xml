@@ -46,6 +46,7 @@
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
 
         <activity android:name=".ui.MainActivity"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 </manifest>

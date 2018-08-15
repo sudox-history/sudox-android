@@ -60,6 +60,8 @@
     <string name="code_has_sent_successfully">Код отправлен успешно!</string>
     <string name="toolbar_back">Назад</string>
     <string name="toolbar_next">Далее</string>
+    <string name="add_new_contact">Добавление новых контактов</string>
+    <string name="enter_nickname">Введите никнейм</string>
     <string name="ok">ОК</string>
     <string name="add_contact">Добавить контакт</string>
     <string name="search">Поиск</string>

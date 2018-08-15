@@ -59,6 +59,8 @@
     <string name="unknown_error">Unknown error!</string>
     <string name="code_has_sent_successfully">Code has sent successfully!</string>
     <string name="add_contact">Add contact</string>
+    <string name="add_new_contact">Add new contacts</string>
+    <string name="enter_nickname">Enter nickname</string>
     <string name="toolbar_back">Back</string>
     <string name="toolbar_next">Next</string>
     <string name="ok">OK</string>
