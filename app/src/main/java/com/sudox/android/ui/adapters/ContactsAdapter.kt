@@ -24,11 +24,11 @@ class ContactsAdapter(var items: List<Contact>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var contact = items[position]
+        val contact = items[position]
 
         if (contact.firstColor != null && contact.secondColor != null) {
-            var builder = StringBuilder()
-            var names = contact.name.split(" ")
+            val builder = StringBuilder()
+            val names = contact.name.split(" ")
 
             if (names.isNotEmpty()) {
                 builder.append(names[0][0])
@@ -79,7 +79,7 @@ class ContactsAdapter(var items: List<Contact>,
         paint.getTextBounds(text, 0, text.length, textRect)
         canvas.drawText(text, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
 
-        return bitmap;
+        return bitmap
     }
 
 

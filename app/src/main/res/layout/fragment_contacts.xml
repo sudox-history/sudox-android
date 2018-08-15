@@ -5,10 +5,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.sudox.android.ui.views.MainNavigationBar
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/contactsToolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tagText="@string/contacts" />
+        app:title="@string/contacts"
+        app:titleTextAppearance="@style/ToolbarTheme.Title"
+        style="@style/ToolbarTheme" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contactsList"

@@ -5,7 +5,8 @@
     <dimen name="font_size_increased_tiny">14sp</dimen>
     <dimen name="font_size_medium">16sp</dimen>
     <dimen name="font_size_large">25sp</dimen>
+    <dimen name="font_size_increased_medium">19sp</dimen>
     <!-- Navigation bar -->
-    <dimen name="navbar_height">55dp</dimen>
+    <dimen name="navbar_height">56dp</dimen>
     <dimen name="navbar_button_drawable_padding">8dp</dimen>
 </resources>
