@@ -13,6 +13,8 @@
         app:titleTextAppearance="@style/ToolbarTheme.Title"
         style="@style/ToolbarTheme" />
 
+    <include layout="@layout/include_search_navbar_addition" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contactsList"
         android:layout_width="match_parent"
