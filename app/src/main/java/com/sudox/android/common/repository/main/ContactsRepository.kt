@@ -50,7 +50,6 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
 
         protocolClient.makeRequest("contacts.get", contactsGetDTO, object : ResponseCallback<ContactsGetDTO>{
             override fun onMessage(response: ContactsGetDTO) {
-
                 if(response.code != 0) {
                     for (i in 0..(response.items!!.length() - 1)) {
                         val item = response.items!!.getJSONObject(i)
@@ -61,12 +60,11 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                         contactsDao.insertContact(Contact(contactsDTO.id, contactsDTO.firstColor,
                                 contactsDTO.secondColor, contactsDTO.avatarUrl, contactsDTO.name, contactsDTO.nickname))
                     }
-                    it.onSuccess(State.SUCCESS)
                 }
+                it.onSuccess(State.SUCCESS)
             }
         })
     }
-
 
     fun requestAllContactsFromDB(){
         //TODO: try to find the best way

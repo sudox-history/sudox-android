@@ -4,6 +4,7 @@ import android.accounts.AccountManager
 import com.sudox.android.common.repository.auth.AccountRepository
 import com.sudox.android.common.repository.main.ContactsRepository
 import com.sudox.android.database.ContactsDao
+import com.sudox.android.database.SudoxDatabase
 import com.sudox.protocol.ProtocolClient
 import dagger.Module
 import dagger.Provides
@@ -15,7 +16,7 @@ class DataModule {
     @Provides
     @Singleton
     fun provideAccountRepository(accountManager: AccountManager,
-                                 contactsDao: ContactsDao) = AccountRepository(accountManager, contactsDao)
+                                 sudoxDatabase: SudoxDatabase) = AccountRepository(accountManager, sudoxDatabase)
 
     @Provides
     @Singleton
