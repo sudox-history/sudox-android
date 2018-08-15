@@ -8,6 +8,8 @@ import com.sudox.android.database.Contact
 import com.sudox.android.database.ContactsDao
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.model.ResponseCallback
+import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 class ContactsRepository(private val protocolClient: ProtocolClient,
                          private val contactsDao: ContactsDao) {
@@ -42,7 +44,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         })
     }
 
-    fun requestAllContacts() {
+    fun getAllContactsFromServer(): Single<State> = Single.unsafeCreate {
         val contactsGetDTO = ContactsGetDTO()
         contactsGetDTO.count = 10
 
@@ -59,10 +61,17 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                         contactsDao.insertContact(Contact(contactsDTO.id, contactsDTO.firstColor,
                                 contactsDTO.secondColor, contactsDTO.avatarUrl, contactsDTO.name, contactsDTO.nickname))
                     }
+                    it.onSuccess(State.SUCCESS)
                 }
-                contactsLoadLiveData.postValue(contactsDao.getAllContacts())
-
             }
         })
+    }
+
+
+    fun requestAllContactsFromDB(){
+        //TODO: try to find the best way
+        Schedulers.io().scheduleDirect {
+            contactsLoadLiveData.postValue(contactsDao.getAllContacts())
+        }
     }
 }
