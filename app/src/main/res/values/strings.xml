@@ -58,11 +58,10 @@
     <string name="we_glad_to_see_you">We glad to see you!</string>
     <string name="unknown_error">Unknown error!</string>
     <string name="code_has_sent_successfully">Code has sent successfully!</string>
-    <string name="add_new_contacts">Add new contacts</string>
-    <string name="enter_nickname">Enter nickname</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="add_contact">Add contact</string>
     <string name="toolbar_back">Back</string>
     <string name="toolbar_next">Next</string>
     <string name="ok">OK</string>
+    <string name="search">Search</string>
+
 </resources>
