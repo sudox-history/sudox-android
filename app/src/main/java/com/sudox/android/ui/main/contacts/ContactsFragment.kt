@@ -35,12 +35,15 @@ class ContactsFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         mainActivity.setSupportActionBar(contactsToolbar)
         initContactsList()
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater!!.inflate(R.menu.menu_contacts, menu)
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 

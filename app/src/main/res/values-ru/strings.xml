@@ -58,8 +58,9 @@
     <string name="we_glad_to_see_you">Мы очень рады вас видеть!</string>
     <string name="unknown_error">Неизвестная ошибка!</string>
     <string name="code_has_sent_successfully">Код отправлен успешно!</string>
-
     <string name="toolbar_back">Назад</string>
     <string name="toolbar_next">Далее</string>
     <string name="ok">ОК</string>
+    <string name="add_contact">Добавить контакт</string>
+    <string name="search">Поиск</string>
 </resources>
