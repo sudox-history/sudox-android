@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
@@ -57,12 +58,21 @@ class ContactsFragment : DaggerFragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item!!.itemId){
             R.id.add_contact -> {
-                val scene = Scene.getSceneForLayout(scene_contacts_root as ViewGroup, R.id.searchAdditionalView, mainActivity)
                 val transitionSet = TransitionSet()
                 transitionSet.addTransition(ChangeBounds())
                 transitionSet.interpolator = AccelerateInterpolator()
                 transitionSet.duration = 500
-                TransitionManager.go(scene, transitionSet)
+                TransitionManager.beginDelayedTransition(scene_contacts_root, transitionSet)
+
+                // Show menu
+                searchAdditionalView.visibility = View.VISIBLE
+
+//                val scene = Scene.getSceneForLayout(scene_contacts_root, R.id.searchAdditionalView, view!!.context)
+//                val transitionSet = TransitionSet()
+//                transitionSet.addTransition(ChangeBounds())
+//                transitionSet.interpolator = AccelerateInterpolator()
+//                transitionSet.duration = 500
+//                TransitionManager.go(scene, transitionSet)
             }
         }
         return true
