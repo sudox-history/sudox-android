@@ -3,14 +3,12 @@ package com.sudox.android.ui.main.contacts
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.transition.ChangeBounds
-import androidx.transition.Scene
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.sudox.android.R
@@ -58,21 +56,17 @@ class ContactsFragment : DaggerFragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item!!.itemId){
             R.id.add_contact -> {
-                val transitionSet = TransitionSet()
-                transitionSet.addTransition(ChangeBounds())
-                transitionSet.interpolator = AccelerateInterpolator()
-                transitionSet.duration = 500
-                TransitionManager.beginDelayedTransition(scene_contacts_root, transitionSet)
-
-                // Show menu
+                // Show searchView
                 searchAdditionalView.visibility = View.VISIBLE
 
-//                val scene = Scene.getSceneForLayout(scene_contacts_root, R.id.searchAdditionalView, view!!.context)
-//                val transitionSet = TransitionSet()
-//                transitionSet.addTransition(ChangeBounds())
-//                transitionSet.interpolator = AccelerateInterpolator()
-//                transitionSet.duration = 500
-//                TransitionManager.go(scene, transitionSet)
+                // Start animation
+                val transitionSet = TransitionSet()
+                transitionSet.addTransition(ChangeBounds())
+                transitionSet.interpolator = DecelerateInterpolator()
+                transitionSet.duration = 200
+                TransitionManager.beginDelayedTransition(scene_contacts_root, transitionSet)
+
+
             }
         }
         return true
