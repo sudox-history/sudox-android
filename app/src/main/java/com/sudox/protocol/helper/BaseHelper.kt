@@ -1,14 +1,14 @@
 package com.sudox.protocol.helper
 
 import android.util.Base64
-import java.util.*
+import java.security.SecureRandom
 
 // Генерирует рандомный Base-64
 fun randomBase64String(length: Int): String {
     val bytes = ByteArray(length)
 
     // Генерируем рандомные байты
-    Random().nextBytes(bytes)
+    SecureRandom().nextBytes(bytes)
 
     // Переводим в Base-64
     return Base64.encodeToString(bytes, Base64.DEFAULT)
