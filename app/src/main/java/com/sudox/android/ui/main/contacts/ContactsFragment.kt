@@ -56,9 +56,6 @@ class ContactsFragment : DaggerFragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item!!.itemId){
             R.id.add_contact -> {
-                // Show searchView
-                searchAdditionalView.visibility = View.VISIBLE
-
                 // Start animation
                 val transitionSet = TransitionSet()
                 transitionSet.addTransition(ChangeBounds())
@@ -66,6 +63,8 @@ class ContactsFragment : DaggerFragment() {
                 transitionSet.duration = 200
                 TransitionManager.beginDelayedTransition(scene_contacts_root, transitionSet)
 
+                // Show searchView
+                searchAdditionalView.visibility = View.VISIBLE
 
             }
         }
