@@ -13,7 +13,9 @@
         app:titleTextAppearance="@style/ToolbarTheme.Title"
         style="@style/ToolbarTheme" />
 
-    <include layout="@layout/include_search_navbar_addition" />
+    <com.sudox.android.ui.views.SearchAdditionalView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contactsList"

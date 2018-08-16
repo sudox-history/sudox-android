@@ -49,15 +49,18 @@ class AuthNavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(
         val array = context.obtainStyledAttributes(attrs, R.styleable.AuthNavigationBar)
 
         // Read parameters
-        backButtonIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_backButtonIsVisible, false)
-        nextButtonIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_nextButtonIsVisible, false)
-        sudoxTagIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_sudoxTagIsVisible, false)
-        sendAgainIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_sendAgainIsVisible, false)
-        backButtonText = array.getString(R.styleable.AuthNavigationBar_backButtonText)
-        nextButtonText = array.getString(R.styleable.AuthNavigationBar_nextButtonText)
 
-        // Recycle typed array
-        array.recycle()
+        try {
+            backButtonIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_backButtonIsVisible, false)
+            nextButtonIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_nextButtonIsVisible, false)
+            sudoxTagIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_sudoxTagIsVisible, false)
+            sendAgainIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_sendAgainIsVisible, false)
+            backButtonText = array.getString(R.styleable.AuthNavigationBar_backButtonText)
+            nextButtonText = array.getString(R.styleable.AuthNavigationBar_nextButtonText)
+        } finally {
+            // Recycle typed array
+            array.recycle()
+        }
     }
 
     @VisibleForTesting

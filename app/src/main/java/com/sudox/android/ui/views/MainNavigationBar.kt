@@ -33,11 +33,13 @@ class MainNavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(
     private fun readAttrs(attrs: AttributeSet) {
         val array = context.obtainStyledAttributes(attrs, R.styleable.MainNavigationBar)
 
-        // Read parameters
-        textTagString = array.getString(R.styleable.MainNavigationBar_tagText)
-
-        // Recycle typed array
-        array.recycle()
+        try {
+            // Read parameters
+            textTagString = array.getString(R.styleable.MainNavigationBar_tagText)
+        } finally {
+            // Recycle typed array
+            array.recycle()
+        }
     }
 
     @VisibleForTesting
