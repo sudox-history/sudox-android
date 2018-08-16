@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.include_main_navbar.view.*
 class MainNavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
     var textTagString: String? = null
-
     var navigationLiveData: MutableLiveData<NavigationAction> = MutableLiveData()
 
     init {
