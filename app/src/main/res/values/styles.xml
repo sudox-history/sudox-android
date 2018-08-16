@@ -9,8 +9,9 @@
         <item name="android:colorBackground">@color/colorBackground</item>
     </style>
 
-    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark">
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="contentInsetStart">25dp</item>
+        <item name="android:paddingRight">13dp</item>
         <item name="android:elevation">0dp</item>
         <item name="android:layout_height">@dimen/navbar_height</item>
         <item name="android:background">?attr/colorPrimary</item>
@@ -31,7 +32,7 @@
         <item name="android:background">@drawable/edit_text_navbar_addition</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
-        <item name="android:textSize">@dimen/font_size_increased_tiny</item>
+        <item name="android:textSize">@dimen/font_size_extra_tiny</item>
         <item name="android:textColorHint">@color/colorHint</item>
         <item name="android:fontFamily">sans-serif-light</item>
     </style>

@@ -16,9 +16,9 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@color/bottomBackground"
+        app:itemIconSize="22dp"
         app:itemIconTint="@drawable/selector_bottom_navigation_item"
         app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/menu_main"
-        app:itemIconSize="22dp" />
+        app:menu="@menu/menu_main" />
 
 </RelativeLayout>
