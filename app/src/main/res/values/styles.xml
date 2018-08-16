@@ -11,6 +11,8 @@
 
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="contentInsetStart">25dp</item>
+        <!-- Calculation of toolbar right padding:
+             right padding of the design in the design - padding of the menu item = 29dp - 16dp = 13dp -->
         <item name="android:paddingRight">13dp</item>
         <item name="android:elevation">0dp</item>
         <item name="android:layout_height">@dimen/navbar_height</item>
