@@ -9,6 +9,7 @@ import android.widget.RelativeLayout
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
+import androidx.transition.Visibility
 import com.sudox.android.R
 
 class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -27,15 +28,21 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
 
     init {
         inflate(context, R.layout.include_search_navbar_addition, this)
+        visibility = View.GONE
     }
 
     fun toggle() {
         TransitionManager.beginDelayedTransition(parent as ViewGroup, transitionSet)
 
-        if (visibility == View.GONE) {
+        if (layoutParams.height == 0 || visibility == View.GONE) {
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             visibility = View.VISIBLE
-        } else if (visibility == View.VISIBLE) {
-            visibility = View.GONE
+        } else {
+            layoutParams.height = 0
+            visibility = View.INVISIBLE
         }
+
+        // Update view sizes
+        layoutParams = layoutParams
     }
 }
