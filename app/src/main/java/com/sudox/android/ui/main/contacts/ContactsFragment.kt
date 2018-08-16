@@ -1,11 +1,17 @@
 package com.sudox.android.ui.main.contacts
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
+import android.view.animation.AccelerateInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.ChangeBounds
+import androidx.transition.Scene
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import com.sudox.android.R
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.MainActivity
@@ -45,6 +51,21 @@ class ContactsFragment : DaggerFragment() {
         inflater!!.inflate(R.menu.menu_contacts, menu)
 
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    @SuppressLint("ResourceType")
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId){
+            R.id.add_contact -> {
+                val scene = Scene.getSceneForLayout(scene_contacts_root as ViewGroup, R.id.searchAdditionalView, mainActivity)
+                val transitionSet = TransitionSet()
+                transitionSet.addTransition(ChangeBounds())
+                transitionSet.interpolator = AccelerateInterpolator()
+                transitionSet.duration = 500
+                TransitionManager.go(scene, transitionSet)
+            }
+        }
+        return true
     }
 
     private fun initContactsList() {
