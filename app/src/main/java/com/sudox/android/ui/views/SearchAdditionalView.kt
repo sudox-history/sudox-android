@@ -3,8 +3,6 @@ package com.sudox.android.ui.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import com.sudox.android.R
 
@@ -14,7 +12,6 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
     var animator = animate()
             .setStartDelay(0)
             .setDuration(300)
-            .setInterpolator(AccelerateDecelerateInterpolator())
 
     init {
         inflate(context, R.layout.include_search_navbar_addition, this)
@@ -31,9 +28,11 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
 
     fun toggle() {
         visible = if (!visible) {
+            animator.interpolator = DecelerateInterpolator()
             animator.translationY(0F)
             true
         } else {
+            animator.interpolator = AccelerateInterpolator()
             animator.translationY(-height.toFloat())
             false
         }
