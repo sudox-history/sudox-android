@@ -70,6 +70,9 @@ dependencies {
     // Socket.io
     implementation "io.socket:socket.io-client:$socketVersion"
 
+    //Firebase
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+
     // Timber
     implementation "com.jakewharton.timber:timber:$timberVersion"
 

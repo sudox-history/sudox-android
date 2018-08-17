@@ -3,15 +3,10 @@ package com.sudox.android.ui.main.contacts
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import android.view.animation.DecelerateInterpolator
-import android.view.animation.LinearInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.ChangeBounds
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
 import com.sudox.android.R
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.MainActivity
@@ -53,10 +48,22 @@ class ContactsFragment : DaggerFragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    private var state: Boolean = false
+
     @SuppressLint("ResourceType")
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
-            R.id.add_contact -> searchAdditionalView.toggle()
+            R.id.add_contact -> {
+                state = if (!state) {
+                    contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_close)
+                    true
+                } else {
+                    contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_add_contact)
+                    false
+                }
+
+                searchAdditionalView.toggle()
+            }
         }
 
         return true
