@@ -1,15 +1,11 @@
 package com.sudox.android.ui.views
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
-import android.view.View
-import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import androidx.transition.ChangeBounds
-import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.sudox.android.R
 
@@ -17,18 +13,9 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
 
     var measureHeight: Int = 0
     var visible: Boolean = false
-
-    private val transitionSet: TransitionSet by lazy {
-        val transitionSet = TransitionSet()
-
-        with(transitionSet) {
-            addTransition(ChangeBounds())
-            interpolator = DecelerateInterpolator()
-            duration = 200
-        }
-
-        transitionSet
-    }
+    var animator = animate()
+            .setStartDelay(0)
+            .setDuration(200)
 
     init {
         inflate(context, R.layout.include_search_navbar_addition, this)
@@ -41,18 +28,18 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
 
         // Hide this view if bottom padding is negative
         if (!visible) {
-            setPadding(0, 0, 0, -measureHeight)
+            y = -measureHeight.toFloat()
         }
     }
 
     fun toggle() {
-        TransitionManager.beginDelayedTransition(parent as ViewGroup, transitionSet)
-
         visible = if (!visible) {
-            setPadding(0, 0, 0, 0)
+            animator.interpolator = DecelerateInterpolator()
+            animator.translationY(0F)
             true
         } else {
-            setPadding(0, 0,0, -measureHeight)
+            animator.interpolator = AccelerateInterpolator()
+            animator.translationY(-measureHeight.toFloat())
             false
         }
     }
