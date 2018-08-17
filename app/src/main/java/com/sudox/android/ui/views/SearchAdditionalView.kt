@@ -2,14 +2,12 @@ package com.sudox.android.ui.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
-import androidx.transition.Visibility
 import com.sudox.android.R
 
 class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
