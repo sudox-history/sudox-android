@@ -11,6 +11,7 @@
         android:drawableStart="@drawable/ic_search_16dp"
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
+        android:textSize="@dimen/font_size_increased_tiny"
         android:text="@string/add_new_contact" />
 
     <EditText
@@ -18,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
+        android:textSize="@dimen/font_size_extra_tiny"
         android:hint="@string/enter_nickname"
         android:inputType="textPersonName"
         android:imeOptions="actionDone" />

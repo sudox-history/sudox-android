@@ -32,6 +32,7 @@
     </style>
 
     <style name="ToolbarTheme.Addition.EditText">
+        <item name="android:layout_height">28dp</item>
         <item name="android:background">@drawable/edit_text_navbar_addition</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>

@@ -10,7 +10,6 @@ import com.sudox.android.R
 
 class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
-    var measureHeight: Int = 0
     var visible: Boolean = false
     var animator = animate()
             .setStartDelay(0)
