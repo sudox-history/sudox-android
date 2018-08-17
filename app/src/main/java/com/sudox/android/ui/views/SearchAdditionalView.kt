@@ -8,12 +8,10 @@ import com.sudox.android.R
 
 class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
-    var measureHeight: Int = 0
     var visible: Boolean = false
     var animator = animate()
             .setStartDelay(0)
             .setDuration(300)
-            .setInterpolator(AccelerateDecelerateInterpolator())
 
     init {
         inflate(context, R.layout.include_search_navbar_addition, this)
@@ -30,9 +28,11 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
 
     fun toggle() {
         visible = if (!visible) {
+            animator.interpolator = DecelerateInterpolator()
             animator.translationY(0F)
             true
         } else {
+            animator.interpolator = AccelerateInterpolator()
             animator.translationY(-height.toFloat())
             false
         }

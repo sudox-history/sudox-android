@@ -13,7 +13,7 @@
         <item name="contentInsetStart">25dp</item>
         <!-- Calculation of toolbar right padding:
              right padding of the design in the design - padding of the menu item = 29dp - 16dp = 13dp -->
-        <item name="android:paddingRight">13dp</item>
+        <item name="android:paddingRight">12dp</item>
         <item name="android:elevation">0dp</item>
         <item name="android:layout_height">@dimen/navbar_height</item>
         <item name="android:background">?attr/colorPrimary</item>
@@ -27,11 +27,12 @@
 
     <style name="ToolbarTheme.Addition">
         <item name="android:paddingLeft">25dp</item>
-        <item name="android:paddingRight">29dp</item>
+        <item name="android:paddingRight">28dp</item>
         <item name="android:paddingBottom">15dp</item>
     </style>
 
     <style name="ToolbarTheme.Addition.EditText">
+        <item name="android:layout_height">28dp</item>
         <item name="android:background">@drawable/edit_text_navbar_addition</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
