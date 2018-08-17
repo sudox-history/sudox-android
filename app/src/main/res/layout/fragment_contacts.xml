@@ -6,18 +6,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/contactsToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/contacts"
-        app:titleTextAppearance="@style/ToolbarTheme.Title"
-        style="@style/ToolbarTheme" />
-
-    <com.sudox.android.ui.views.SearchAdditionalView
-        android:id="@+id/searchAdditionalView"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/contactsToolbar"
+            style="@style/ToolbarTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/contacts" />
+
+        <com.sudox.android.ui.views.SearchAdditionalView
+            android:id="@+id/searchAdditionalView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contactsToolbar" />
+
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contactsList"
