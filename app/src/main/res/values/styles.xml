@@ -36,6 +36,10 @@
         <item name="android:background">@drawable/edit_text_navbar_addition</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">15dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
         <item name="android:textSize">@dimen/font_size_extra_tiny</item>
         <item name="android:textColorHint">@color/colorHint</item>
         <item name="android:fontFamily">sans-serif-light</item>

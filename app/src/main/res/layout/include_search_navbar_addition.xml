@@ -22,6 +22,7 @@
         android:textSize="@dimen/font_size_extra_tiny"
         android:hint="@string/enter_nickname"
         android:inputType="textPersonName"
-        android:imeOptions="actionDone" />
+        android:imeOptions="actionDone"
+        android:gravity="center_vertical"/>
 
 </LinearLayout>
