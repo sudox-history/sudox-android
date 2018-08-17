@@ -3,8 +3,6 @@ package com.sudox.android.ui.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import com.sudox.android.R
 
