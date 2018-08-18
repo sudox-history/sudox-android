@@ -11,6 +11,12 @@ import com.androidadvance.topsnackbar.TSnackbar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.sudox.android.R
+import android.app.Activity
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import androidx.core.content.ContextCompat.getSystemService
+
+
 
 fun showInputError(inputLayout: TextInputLayout) {
     inputLayout.error = " "
@@ -54,4 +60,11 @@ fun formatHtml(string: String): Spanned {
     } else {
         Html.fromHtml(string)
     }
+}
+
+fun hideKeyboard(context: Context, view: View) {
+    val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+
+    // Hide keyboard & remove focus
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }

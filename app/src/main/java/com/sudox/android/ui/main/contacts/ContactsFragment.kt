@@ -60,24 +60,17 @@ class ContactsFragment : DaggerFragment() {
     }
 
     private fun initSearchAdditionalView() {
-        searchAdditionalView.animator.setListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {}
-            override fun onAnimationEnd(animation: Animator?) {}
-            override fun onAnimationCancel(animation: Animator?) {}
+        searchAdditionalView.startListener = {
+            val item = contactsToolbar.menu.findItem(R.id.add_contact)
 
-            override fun onAnimationStart(animation: Animator) {
-                val visible = searchAdditionalView.visible
-                val item = contactsToolbar.menu.findItem(R.id.add_contact)
-
-                if (visible) {
-                    item.setIcon(R.drawable.ic_close)
-                } else {
-                    item.setIcon(R.drawable.ic_add_contact)
-                }
-
-                blackOverlayView.toggle(!visible)
+            if (it) {
+                item.setIcon(R.drawable.ic_close)
+            } else {
+                item.setIcon(R.drawable.ic_add_contact)
             }
-        })
+
+            blackOverlayView.toggle(!it)
+        }
     }
 
     @SuppressLint("ResourceType")

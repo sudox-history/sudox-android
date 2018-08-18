@@ -1,25 +1,35 @@
 package com.sudox.android.ui.views
 
+import android.animation.Animator
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
-import android.view.View
-import android.view.ViewOverlay
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import com.sudox.android.R
+import com.sudox.android.common.helpers.hideKeyboard
 
 class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
-    var visible: Boolean = false
-    var animator = animate()
+    var startListener: ((Boolean) -> Unit)? = null
+    private var visible: Boolean = false
+    private var animator = animate()
             .setStartDelay(0)
             .setDuration(300)
 
     init {
         inflate(context, R.layout.include_search_navbar_addition, this)
+        animator.setListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {}
+            override fun onAnimationCancel(animation: Animator?) {}
+            override fun onAnimationEnd(animation: Animator?) {}
+            override fun onAnimationStart(animation: Animator?) {
+                startListener?.invoke(visible)
+
+                focusedChild?.clearFocus()
+                hideKeyboard(context, this@SearchAdditionalView)
+            }
+        })
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
