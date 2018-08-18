@@ -70,6 +70,10 @@ class ContactsFragment : DaggerFragment() {
 
             blackOverlayView.toggle(!it)
         }
+
+        blackOverlayView.setOnClickListener {
+            searchAdditionalView.toggle(false)
+        }
     }
 
     @SuppressLint("ResourceType")
@@ -79,6 +83,7 @@ class ContactsFragment : DaggerFragment() {
                 searchAdditionalView.toggle()
             }
         }
+
         return true
     }
 
@@ -99,7 +104,6 @@ class ContactsFragment : DaggerFragment() {
     }
 
     private fun initListeners() {
-
         val nicknameRegex = ".+#.*".toRegex()
 
         nicknameEditText.addTextChangedListener(object : TextWatcher {
@@ -120,16 +124,16 @@ class ContactsFragment : DaggerFragment() {
 
         })
 
-        blackOverlayView.setOnClickListener {
-            contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_add_contact)
-            blackOverlayView.animate().setDuration(300).alpha(0f).withEndAction {
-                blackOverlayView.visibility = View.GONE
-            }.withStartAction {
-                blackOverlayView.isClickable = false
-            }
-            searchAdditionalView.toggle()
-            state = false
-        }
-        blackOverlayView.isClickable = false
+//        blackOverlayView.setOnClickListener {
+//            contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_add_contact)
+//            blackOverlayView.animate().setDuration(300).alpha(0f).withEndAction {
+//                blackOverlayView.visibility = View.GONE
+//            }.withStartAction {
+//                blackOverlayView.isClickable = false
+//            }
+//            searchAdditionalView.toggle()
+//            state = false
+//        }
+//        blackOverlayView.isClickable = false
     }
 }

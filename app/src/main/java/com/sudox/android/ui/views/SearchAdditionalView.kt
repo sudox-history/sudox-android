@@ -52,7 +52,11 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
     }
 
     fun toggle() {
-        visible = if (!visible) {
+        return toggle(!visible)
+    }
+
+    fun toggle(toggle: Boolean) {
+        visible = if (toggle) {
             animator.interpolator = DecelerateInterpolator()
             animator.translationY(0F)
             true

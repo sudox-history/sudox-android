@@ -23,15 +23,16 @@ class BlackOverlayView : View {
 
     init {
         setBackgroundColor(Color.BLACK)
-        isClickable = true
+        isClickable = false
         visibility = View.GONE
         alpha = 0F
 
         showAnimator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {}
-            override fun onAnimationEnd(animation: Animator?) {}
+            override fun onAnimationEnd(animation: Animator?) { isClickable = true }
             override fun onAnimationCancel(animation: Animator?) {}
             override fun onAnimationStart(animation: Animator?) {
+                isClickable = false
                 visibility = View.VISIBLE
             }
         })
@@ -39,7 +40,7 @@ class BlackOverlayView : View {
         hideAnimator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {}
             override fun onAnimationCancel(animation: Animator?) {}
-            override fun onAnimationStart(animation: Animator?) {}
+            override fun onAnimationStart(animation: Animator?) { isClickable = false }
             override fun onAnimationEnd(animation: Animator?) {
                 visibility = View.GONE
             }
