@@ -68,6 +68,10 @@ class ContactsFragment : DaggerFragment() {
 
             blackOverlayView.toggle(!it)
         }
+
+        blackOverlayView.setOnClickListener {
+            searchAdditionalView.toggle(false)
+        }
     }
 
     @SuppressLint("ResourceType")
