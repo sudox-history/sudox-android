@@ -42,7 +42,7 @@ class MainNavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(
     }
 
     @VisibleForTesting
-    internal fun configureComponents() {
+    private fun configureComponents() {
         configureText(textTag, textTagString)
     }
 

@@ -49,7 +49,6 @@ class AuthNavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(
         val array = context.obtainStyledAttributes(attrs, R.styleable.AuthNavigationBar)
 
         // Read parameters
-
         try {
             backButtonIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_backButtonIsVisible, false)
             nextButtonIsVisible = array.getBoolean(R.styleable.AuthNavigationBar_nextButtonIsVisible, false)
