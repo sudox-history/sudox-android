@@ -1,5 +1,6 @@
 package com.sudox.android.ui.main.contacts
 
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -22,17 +23,14 @@ import kotlinx.android.synthetic.main.fragment_contacts.*
 import kotlinx.android.synthetic.main.include_search_navbar_addition.*
 import javax.inject.Inject
 
-
 class ContactsFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var contactsViewModel: ContactsViewModel
-    lateinit var mainActivity: MainActivity
+    private lateinit var contactsViewModel: ContactsViewModel
+    private lateinit var mainActivity: MainActivity
 
     private lateinit var adapter: ContactsAdapter
-
-    private var state: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactsViewModel = getViewModel(viewModelFactory)
@@ -70,10 +68,6 @@ class ContactsFragment : DaggerFragment() {
 
             blackOverlayView.toggle(!it)
         }
-
-        blackOverlayView.setOnClickListener {
-            searchAdditionalView.toggle(false)
-        }
     }
 
     @SuppressLint("ResourceType")
@@ -83,7 +77,6 @@ class ContactsFragment : DaggerFragment() {
                 searchAdditionalView.toggle()
             }
         }
-
         return true
     }
 
@@ -107,13 +100,8 @@ class ContactsFragment : DaggerFragment() {
         val nicknameRegex = ".+#.*".toRegex()
 
         nicknameEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s!!.matches(nicknameRegex)) {
                     nicknameEditText.inputType = InputType.TYPE_CLASS_NUMBER
@@ -121,19 +109,6 @@ class ContactsFragment : DaggerFragment() {
                     nicknameEditText.inputType = InputType.TYPE_CLASS_TEXT
                 }
             }
-
         })
-
-//        blackOverlayView.setOnClickListener {
-//            contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_add_contact)
-//            blackOverlayView.animate().setDuration(300).alpha(0f).withEndAction {
-//                blackOverlayView.visibility = View.GONE
-//            }.withStartAction {
-//                blackOverlayView.isClickable = false
-//            }
-//            searchAdditionalView.toggle()
-//            state = false
-//        }
-//        blackOverlayView.isClickable = false
     }
 }
