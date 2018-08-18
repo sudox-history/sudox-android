@@ -65,7 +65,7 @@ class ContactsFragment : DaggerFragment() {
             R.id.add_contact -> {
                 state = if (!state) {
                     contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_close)
-                    black_bg.animate().setDuration(300).alpha(0.3f).withStartAction {
+                    black_bg.animate().setDuration(300).alpha(0.4f).withStartAction {
                         black_bg.visibility = View.VISIBLE
                     }.withEndAction {
                         black_bg.isClickable = true
