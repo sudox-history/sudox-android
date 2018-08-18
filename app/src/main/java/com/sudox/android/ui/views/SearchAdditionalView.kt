@@ -8,6 +8,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import com.sudox.android.R
 import com.sudox.android.common.helpers.hideKeyboard
+import kotlinx.android.synthetic.main.include_search_navbar_addition.view.*
 
 class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -19,17 +20,26 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
 
     init {
         inflate(context, R.layout.include_search_navbar_addition, this)
+
         animator.setListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {}
             override fun onAnimationCancel(animation: Animator?) {}
-            override fun onAnimationEnd(animation: Animator?) {}
+            override fun onAnimationEnd(animation: Animator?) {
+                clearState()
+            }
+
             override fun onAnimationStart(animation: Animator?) {
                 startListener?.invoke(visible)
-
-                focusedChild?.clearFocus()
-                hideKeyboard(context, this@SearchAdditionalView)
             }
         })
+    }
+
+    private fun clearState() {
+        nicknameEditText.setText("")
+
+        // Remove focus & hide keyboard
+        focusedChild?.clearFocus()
+        hideKeyboard(context, this@SearchAdditionalView)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

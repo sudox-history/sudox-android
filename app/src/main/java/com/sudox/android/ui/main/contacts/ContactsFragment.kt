@@ -1,6 +1,5 @@
 package com.sudox.android.ui.main.contacts
 
-import android.animation.Animator
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -103,7 +102,7 @@ class ContactsFragment : DaggerFragment() {
 
         val nicknameRegex = ".+#.*".toRegex()
 
-        nickname_edit_text.addTextChangedListener(object : TextWatcher {
+        nicknameEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
             }
@@ -113,9 +112,9 @@ class ContactsFragment : DaggerFragment() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s!!.matches(nicknameRegex)) {
-                    nickname_edit_text.inputType = InputType.TYPE_CLASS_NUMBER
+                    nicknameEditText.inputType = InputType.TYPE_CLASS_NUMBER
                 } else {
-                    nickname_edit_text.inputType = InputType.TYPE_CLASS_TEXT
+                    nicknameEditText.inputType = InputType.TYPE_CLASS_TEXT
                 }
             }
 
