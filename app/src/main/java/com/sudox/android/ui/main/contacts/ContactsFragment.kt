@@ -38,6 +38,22 @@ class ContactsFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         mainActivity.setSupportActionBar(contactsToolbar)
+
+
+
+        black_bg.setOnClickListener {
+            contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_add_contact)
+            black_bg.animate().setDuration(300).alpha(0f).withEndAction {
+                black_bg.visibility = View.GONE
+                contactsList.isNestedScrollingEnabled = true
+            }.withStartAction {
+                black_bg.isClickable = false
+            }
+            searchAdditionalView.toggle()
+            state = false
+        }
+        black_bg.isClickable = false
+
         initContactsList()
     }
 
@@ -52,24 +68,33 @@ class ContactsFragment : DaggerFragment() {
 
     @SuppressLint("ResourceType")
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId){
+        when (item?.itemId) {
             R.id.add_contact -> {
                 state = if (!state) {
                     contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_close)
-                    black_bg.animate().setDuration(300).alpha(0.3f)
+                    black_bg.animate().setDuration(300).alpha(0.3f).withStartAction {
+                        black_bg.visibility = View.VISIBLE
+                        contactsList.isNestedScrollingEnabled = false
+                    }.withEndAction {
+                        black_bg.isClickable = true
+                    }
                     true
                 } else {
                     contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_add_contact)
-                    black_bg.animate().setDuration(300).alpha(0f)
+                    black_bg.animate().setDuration(300).alpha(0f).withEndAction {
+                        black_bg.visibility = View.GONE
+                        contactsList.isNestedScrollingEnabled = true
+                    }.withStartAction {
+                        black_bg.isClickable = false
+                    }
                     false
                 }
-
                 searchAdditionalView.toggle()
             }
         }
-
         return true
     }
+
 
     private fun initContactsList() {
 
