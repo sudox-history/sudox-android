@@ -1,6 +1,5 @@
 package com.sudox.android.ui.main.contacts
 
-import android.animation.Animator
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -32,8 +31,6 @@ class ContactsFragment : DaggerFragment() {
     lateinit var mainActivity: MainActivity
 
     private lateinit var adapter: ContactsAdapter
-
-    private var state: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactsViewModel = getViewModel(viewModelFactory)
@@ -100,16 +97,11 @@ class ContactsFragment : DaggerFragment() {
     }
 
     private fun initListeners() {
-
         val nicknameRegex = ".+#.*".toRegex()
 
         nickname_edit_text.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s!!.matches(nicknameRegex)) {
@@ -118,19 +110,6 @@ class ContactsFragment : DaggerFragment() {
                     nickname_edit_text.inputType = InputType.TYPE_CLASS_TEXT
                 }
             }
-
         })
-
-        blackOverlayView.setOnClickListener {
-            contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_add_contact)
-            blackOverlayView.animate().setDuration(300).alpha(0f).withEndAction {
-                blackOverlayView.visibility = View.GONE
-            }.withStartAction {
-                blackOverlayView.isClickable = false
-            }
-            searchAdditionalView.toggle()
-            state = false
-        }
-        blackOverlayView.isClickable = false
     }
 }
