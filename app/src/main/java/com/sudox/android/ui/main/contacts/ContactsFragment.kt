@@ -1,5 +1,6 @@
 package com.sudox.android.ui.main.contacts
 
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -37,7 +38,6 @@ class ContactsFragment : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactsViewModel = getViewModel(viewModelFactory)
         mainActivity = activity as MainActivity
-
         adapter = ContactsAdapter(ArrayList(), mainActivity)
 
         return inflater.inflate(R.layout.fragment_contacts, container, false)
@@ -49,6 +49,7 @@ class ContactsFragment : DaggerFragment() {
         setHasOptionsMenu(true)
         mainActivity.setSupportActionBar(contactsToolbar)
 
+        initSearchAdditionalView()
         initContactsList()
         initListeners()
     }
@@ -58,28 +59,31 @@ class ContactsFragment : DaggerFragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    private fun initSearchAdditionalView() {
+        searchAdditionalView.animator.setListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {}
+            override fun onAnimationEnd(animation: Animator?) {}
+            override fun onAnimationCancel(animation: Animator?) {}
+
+            override fun onAnimationStart(animation: Animator) {
+                val visible = searchAdditionalView.visible
+                val item = contactsToolbar.menu.findItem(R.id.add_contact)
+
+                if (visible) {
+                    item.setIcon(R.drawable.ic_close)
+                } else {
+                    item.setIcon(R.drawable.ic_add_contact)
+                }
+
+                blackOverlayView.toggle(!visible)
+            }
+        })
+    }
+
     @SuppressLint("ResourceType")
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.add_contact -> {
-                state = if (!state) {
-                    contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_close)
-                    black_bg.animate().setDuration(300).alpha(0.4f).withStartAction {
-                        black_bg.visibility = View.VISIBLE
-                    }.withEndAction {
-                        black_bg.isClickable = true
-                    }
-                    true
-                } else {
-                    contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_add_contact)
-                    black_bg.animate().setDuration(300).alpha(0f).withEndAction {
-                        black_bg.visibility = View.GONE
-                    }.withStartAction {
-                        black_bg.isClickable = false
-                    }
-                    false
-                }
                 searchAdditionalView.toggle()
             }
         }
@@ -124,16 +128,16 @@ class ContactsFragment : DaggerFragment() {
 
         })
 
-        black_bg.setOnClickListener {
+        blackOverlayView.setOnClickListener {
             contactsToolbar.menu.findItem(R.id.add_contact).setIcon(R.drawable.ic_add_contact)
-            black_bg.animate().setDuration(300).alpha(0f).withEndAction {
-                black_bg.visibility = View.GONE
+            blackOverlayView.animate().setDuration(300).alpha(0f).withEndAction {
+                blackOverlayView.visibility = View.GONE
             }.withStartAction {
-                black_bg.isClickable = false
+                blackOverlayView.isClickable = false
             }
             searchAdditionalView.toggle()
             state = false
         }
-        black_bg.isClickable = false
+        blackOverlayView.isClickable = false
     }
 }

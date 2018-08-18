@@ -25,14 +25,10 @@
             android:clipToPadding="false"
             android:paddingTop="16dp" />
 
-        <LinearLayout
-            android:id="@+id/black_bg"
+        <com.sudox.android.ui.views.BlackOverlayView
+            android:id="@+id/blackOverlayView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#000000"
-            android:alpha="0"
-            android:orientation="horizontal"
-            android:clickable="true" />
+            android:layout_height="match_parent" />
 
         <com.sudox.android.ui.views.SearchAdditionalView
             android:id="@+id/searchAdditionalView"
