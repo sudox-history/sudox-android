@@ -53,6 +53,7 @@ dependencies {
 
         // Room
         implementation "android.arch.persistence.room:runtime:$architectureComponentsVersion"
+    implementation "android.arch.persistence.room:rxjava2:$architectureComponentsVersion"
         kapt "android.arch.persistence.room:compiler:$architectureComponentsVersion"
 
     // Dagger
