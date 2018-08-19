@@ -69,6 +69,33 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         })
     }
 
+    fun findUserByNickname(nickname: String): MutableLiveData<Contact?> {
+        val mutableLiveData = MutableLiveData<Contact?>()
+
+        val contactSearchDTO = ContactSearchDTO()
+        contactSearchDTO.nickname = nickname
+
+        protocolClient.makeRequest("users.getByNickname", contactSearchDTO, object : ResponseCallback<ContactSearchDTO> {
+            override fun onMessage(response: ContactSearchDTO) {
+                if (response.code != 0) {
+                    val contact = if (response.checkAvatar) {
+                        Contact(response.scid, response.firstColor, response.secondColor,
+                                null, response.name, response.name)
+                    } else {
+                        Contact(response.scid, null, null,
+                                response.avatarUrl, response.name, response.name)
+                    }
+                    mutableLiveData.postValue(contact)
+                } else {
+                    mutableLiveData.postValue(null)
+                }
+
+            }
+
+        })
+        return mutableLiveData
+    }
+
     private fun requestContactsFromDatabase(offset: Int, count: Int) {
         val disposable = contactsDao
                 .getContacts(offset, count)

@@ -11,8 +11,8 @@
         android:drawableStart="@drawable/ic_search_16dp"
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
-        android:textSize="@dimen/font_size_increased_tiny"
-        android:text="@string/add_new_contact" />
+        android:text="@string/add_new_contact"
+        android:textSize="@dimen/font_size_increased_tiny" />
 
     <EditText
         android:id="@+id/nicknameEditText"
@@ -20,9 +20,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:textSize="@dimen/font_size_extra_tiny"
+        android:gravity="center_vertical"
         android:hint="@string/enter_nickname"
         android:inputType="textPersonName"
-        android:gravity="center_vertical"/>
+        android:textSize="@dimen/font_size_extra_tiny" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/add_contact_hint"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="31dp"
+            android:layout_marginEnd="31dp"
+            android:gravity="center"
+            android:text="Введите никнейм пользователя, которого хотите найти"
+            android:textColor="@color/colorHint" />
+
+        <include
+            android:id="@+id/card_add_contact"
+            layout="@layout/card_add_contact"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
 
 </LinearLayout>

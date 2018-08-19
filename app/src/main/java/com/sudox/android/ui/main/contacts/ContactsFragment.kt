@@ -7,12 +7,15 @@ import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.android.R
 import com.sudox.android.common.viewmodels.getViewModel
+import com.sudox.android.database.Contact
 import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.adapters.ContactsAdapter
 import dagger.android.support.DaggerFragment
@@ -92,6 +95,8 @@ class ContactsFragment : DaggerFragment() {
                 })
     }
 
+    private fun setSearchContact(contact: Contact?) = searchAdditionalView.setSearchContact(contact)
+
     private fun initListeners() {
         val nicknameRegex = ".+#.*".toRegex()
 
@@ -106,5 +111,16 @@ class ContactsFragment : DaggerFragment() {
                 }
             }
         })
+
+        nicknameEditText.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                contactsViewModel.contactsSearchUserByNickname(nicknameEditText.text.toString())
+                        .observe(this, Observer(::setSearchContact))
+                return@OnEditorActionListener true
+            }
+            false
+        })
     }
+
+
 }

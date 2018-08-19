@@ -5,7 +5,6 @@ import org.json.JSONObject
 
 class ContactDTO : CanErrorDTO() {
 
-
     var offset: Int = 0
     var count: Int = 0
 
@@ -26,12 +25,15 @@ class ContactDTO : CanErrorDTO() {
     }
 
     override fun fromJSON(jsonObject: JSONObject){
+        super.fromJSON(jsonObject)
         try {
             val photoJsonArray = jsonObject.getJSONArray("photo")
             firstColor = photoJsonArray[0].toString()
             secondColor = photoJsonArray[1].toString()
+            checkAvatar = true
         } catch (e: JSONException){
             avatarUrl = jsonObject.getString("photo")
+            checkAvatar = false
         }
 
         id = jsonObject.optString("id")
