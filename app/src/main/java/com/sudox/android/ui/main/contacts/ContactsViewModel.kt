@@ -8,4 +8,6 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
 
     fun contactsUpdateLiveData() = contactsRepository.contactsUpdateLiveData
     fun contactsLoadLiveData() = contactsRepository.contactsLoadLiveData
+    fun requestContacts(fromDatabase: Boolean, offset: Int, count: Int)
+            = contactsRepository.requestContacts(fromDatabase, offset, count)
 }

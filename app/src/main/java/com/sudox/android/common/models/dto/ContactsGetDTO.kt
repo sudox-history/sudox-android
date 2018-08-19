@@ -12,7 +12,7 @@ class ContactsGetDTO : CanErrorDTO() {
     var items: JSONArray? = null
 
     override fun toJSON(): JSONObject {
-        return with(JSONObject()){
+        return with(JSONObject()) {
             putOpt("offset", offset)
             putOpt("count", count)
         }
@@ -21,7 +21,7 @@ class ContactsGetDTO : CanErrorDTO() {
     override fun fromJSON(jsonObject: JSONObject) {
         super.fromJSON(jsonObject)
         code = jsonObject.optInt("code")
-        if(code != 0) {
+        if (code != 0) {
             items = jsonObject.optJSONArray("items")
         }
     }

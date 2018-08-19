@@ -3,7 +3,7 @@ package com.sudox.android.common.models.dto
 import org.json.JSONException
 import org.json.JSONObject
 
-class ContactsDTO : CanErrorDTO() {
+class ContactDTO : CanErrorDTO() {
 
 
     var offset: Int = 0
