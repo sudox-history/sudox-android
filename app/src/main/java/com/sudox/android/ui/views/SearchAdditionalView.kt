@@ -57,7 +57,7 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
         super.onLayout(changed, left, top, right, bottom)
 
         // Hide this view if bottom padding is negative
-        if (!visible) {
+        if (!visible && changed) {
             translationY = -height.toFloat()
         }
     }
