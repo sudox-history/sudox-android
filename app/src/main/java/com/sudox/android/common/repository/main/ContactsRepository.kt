@@ -2,6 +2,7 @@ package com.sudox.android.common.repository.main
 
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.State
+import com.sudox.android.common.models.dto.ContactSearchDTO
 import com.sudox.android.common.models.dto.ContactsDTO
 import com.sudox.android.common.models.dto.ContactsGetDTO
 import com.sudox.android.database.Contact
@@ -48,9 +49,9 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         val contactsGetDTO = ContactsGetDTO()
         contactsGetDTO.count = 10
 
-        protocolClient.makeRequest("contacts.get", contactsGetDTO, object : ResponseCallback<ContactsGetDTO>{
+        protocolClient.makeRequest("contacts.get", contactsGetDTO, object : ResponseCallback<ContactsGetDTO> {
             override fun onMessage(response: ContactsGetDTO) {
-                if(response.code != 0) {
+                if (response.code != 0) {
                     for (i in 0..(response.items!!.length() - 1)) {
                         val item = response.items!!.getJSONObject(i)
 
@@ -66,7 +67,34 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         })
     }
 
-    fun requestAllContactsFromDB(){
+    fun findUserByNickname(nickname: String): MutableLiveData<Contact?> {
+        val mutableLiveData = MutableLiveData<Contact?>()
+
+        val contactSearchDTO = ContactSearchDTO()
+        contactSearchDTO.nickname = nickname
+
+        protocolClient.makeRequest("users.getByNickname", contactSearchDTO, object : ResponseCallback<ContactSearchDTO> {
+            override fun onMessage(response: ContactSearchDTO) {
+                if (response.code != 0) {
+                    val contact = if (response.checkAvatar) {
+                        Contact(response.scid, response.firstColor, response.secondColor,
+                                null, response.name, response.name)
+                    } else {
+                        Contact(response.scid, null, null,
+                                response.avatarUrl, response.name, response.name)
+                    }
+                    mutableLiveData.postValue(contact)
+                } else {
+                    mutableLiveData.postValue(null)
+                }
+
+            }
+
+        })
+        return mutableLiveData
+    }
+
+    fun requestAllContactsFromDB() {
         //TODO: try to find the best way
         Schedulers.io().scheduleDirect {
             contactsLoadLiveData.postValue(contactsDao.getAllContacts())

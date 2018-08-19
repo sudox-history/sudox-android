@@ -27,19 +27,21 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginTop="15dp">
 
         <TextView
+            android:id="@+id/add_contact_hint"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="51dp"
-            android:layout_marginEnd="51dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="31dp"
+            android:layout_marginEnd="31dp"
             android:gravity="center"
             android:text="Введите никнейм пользователя, которого хотите найти"
             android:textColor="@color/colorHint" />
 
         <include
+            android:id="@+id/card_add_contact"
             layout="@layout/card_add_contact"
             android:visibility="gone" />
 

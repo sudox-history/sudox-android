@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     android:layout_marginBottom="6dp"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/colorPrimary"
@@ -15,12 +15,10 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginEnd="28dp">
+            android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/avatar"
+                android:id="@+id/avatar_search"
                 android:layout_width="48dp"
                 android:layout_height="48dp" />
 
@@ -29,18 +27,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="15dp"
-                android:layout_toEndOf="@id/avatar"
+                android:layout_toEndOf="@id/avatar_search"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/name"
+                    android:id="@+id/name_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Антон Янкин"
                     android:textSize="@dimen/font_size_increased_tiny" />
 
                 <TextView
-                    android:id="@+id/status"
+                    android:id="@+id/status_search"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -51,6 +49,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/add_contact_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

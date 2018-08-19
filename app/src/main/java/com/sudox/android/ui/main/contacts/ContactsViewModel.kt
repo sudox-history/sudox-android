@@ -8,4 +8,5 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
 
     fun contactsUpdateLiveData() = contactsRepository.contactsUpdateLiveData
     fun contactsLoadLiveData() = contactsRepository.contactsLoadLiveData
+    fun contactsSearchUserByNickname(nickname: String) = contactsRepository.findUserByNickname(nickname)
 }
