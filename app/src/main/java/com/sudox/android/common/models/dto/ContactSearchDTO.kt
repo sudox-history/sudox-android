@@ -5,7 +5,8 @@ import org.json.JSONObject
 
 class ContactSearchDTO : CanErrorDTO() {
 
-    lateinit var nickname: String
+    var nickname: String? = null
+    var id: String? = null
 
     lateinit var scid: String
     lateinit var name: String
@@ -20,7 +21,10 @@ class ContactSearchDTO : CanErrorDTO() {
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()) {
-            putOpt("nickname", nickname)
+            if (nickname != null)
+                putOpt("nickname", nickname)
+            else
+                putOpt("id", id)
         }
     }
 

@@ -19,6 +19,7 @@ import com.sudox.android.database.Contact
 import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.adapters.ContactsAdapter
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.card_add_contact.*
 import kotlinx.android.synthetic.main.fragment_contacts.*
 import kotlinx.android.synthetic.main.include_search_navbar_addition.*
 import javax.inject.Inject
@@ -30,6 +31,8 @@ class ContactsFragment : DaggerFragment() {
     private lateinit var contactsViewModel: ContactsViewModel
     private lateinit var mainActivity: MainActivity
     private lateinit var adapter: ContactsAdapter
+
+    private lateinit var contactSearch: Contact
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactsViewModel = getViewModel(viewModelFactory)
@@ -83,7 +86,6 @@ class ContactsFragment : DaggerFragment() {
         return true
     }
 
-
     private fun initContactsList() {
         contactsList.adapter = adapter
         contactsList.layoutManager = LinearLayoutManager(activity)
@@ -95,7 +97,12 @@ class ContactsFragment : DaggerFragment() {
                 })
     }
 
-    private fun setSearchContact(contact: Contact?) = searchAdditionalView.setSearchContact(contact)
+    private fun setSearchContact(contact: Contact?) {
+        if (contact != null) {
+            contactSearch = contact
+        }
+        searchAdditionalView.setSearchContact(contact)
+    }
 
     private fun initListeners() {
         val nicknameRegex = ".+#.*".toRegex()
@@ -120,6 +127,11 @@ class ContactsFragment : DaggerFragment() {
             }
             false
         })
+
+        add_contact_search.setOnClickListener {
+            contactsViewModel.contactAdd(contactSearch.cid)
+        }
+
     }
 
 

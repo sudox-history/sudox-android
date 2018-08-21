@@ -23,6 +23,8 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
             .setStartDelay(0)
             .setDuration(300)
 
+    private lateinit var contactP: Contact
+
     init {
         inflate(context, R.layout.include_search_navbar_addition, this)
 
@@ -59,11 +61,13 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
         // Hide this view if bottom padding is negative
         if (!visible && changed) {
             translationY = -height.toFloat()
+
         }
     }
 
     fun setSearchContact(contact: Contact?) {
         if (contact != null) {
+            contactP = contact
             add_contact_hint.visibility = View.GONE
             card_add_contact.visibility = View.VISIBLE
             if (contact.firstColor != null && contact.secondColor != null) {

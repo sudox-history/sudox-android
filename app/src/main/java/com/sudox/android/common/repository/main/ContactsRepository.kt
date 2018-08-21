@@ -3,8 +3,7 @@ package com.sudox.android.common.repository.main
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.StateData
 import com.sudox.android.common.enums.State
-import com.sudox.android.common.models.dto.ContactDTO
-import com.sudox.android.common.models.dto.ContactsGetDTO
+import com.sudox.android.common.models.dto.*
 import com.sudox.android.database.Contact
 import com.sudox.android.database.ContactsDao
 import com.sudox.protocol.ProtocolClient
@@ -22,19 +21,30 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
     fun initContactsListeners() {
         val mutableLiveData = MutableLiveData<State>()
 
-        protocolClient.listenMessage("contacts.add", object : ResponseCallback<ContactDTO> {
-            override fun onMessage(response: ContactDTO) {
-                if (response.checkAvatar) {
-                    contactsDao.insertContact(Contact(
-                            response.id, response.firstColor, response.secondColor, null,
-                            response.name, response.nickname)
-                    )
-                } else {
-                    contactsDao.insertContact(Contact(response.id, null, null,
-                            response.avatarUrl, response.name, response.nickname))
-                }
+        protocolClient.listenMessage("contacts.add", object : ResponseCallback<ContactAddDTO> {
+            override fun onMessage(response: ContactAddDTO) {
+                if (response.code != 0) {
+                    val usersGetDTO = UsersGetDTO()
+                    usersGetDTO.id = response.id!!
 
-                mutableLiveData.postValue(State.SUCCESS)
+                    protocolClient.makeRequest("contacts.get", usersGetDTO, object : ResponseCallback<UsersGetDTO> {
+                        override fun onMessage(response: UsersGetDTO) {
+                            if (response.checkAvatar) {
+                                contactsDao.insertContact(Contact(
+                                        response.id, response.firstColor, response.secondColor, null,
+                                        response.name, response.nickname)
+                                )
+                            } else {
+                                contactsDao.insertContact(Contact(response.id, null, null,
+                                        response.avatarUrl, response.name, response.nickname))
+                            }
+
+                            mutableLiveData.postValue(State.SUCCESS)
+                        }
+                    })
+                } else {
+                    mutableLiveData.postValue(State.FAILED)
+                }
             }
         })
 
@@ -94,6 +104,12 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
 
         })
         return mutableLiveData
+    }
+
+    fun contactAdd(id: String) {
+        val contactAddDTO = ContactAddDTO()
+        contactAddDTO.id = id
+        protocolClient.sendMessage("contacts.add", contactAddDTO)
     }
 
     private fun requestContactsFromDatabase(offset: Int, count: Int) {
