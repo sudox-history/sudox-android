@@ -10,4 +10,5 @@
     <color name="colorBottomNavbarItem">#BDBDBD</color>
     <color name="colorBottomNavbarItemSelected">#FFFFFF</color>
     <color name="colorNavbarAdditionEditText">#20242E</color>
+    <color name="colorNavbarTooltip">#242832</color>
 </resources>
