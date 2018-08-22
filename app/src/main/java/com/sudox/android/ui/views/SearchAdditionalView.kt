@@ -52,7 +52,9 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
 
     private fun clearSearchContact() {
         add_contact_hint.visibility = View.VISIBLE
+        add_contact_hint.text = context.getString(R.string.enter_username)
         card_add_contact.visibility = View.GONE
+        progress_bar.visibility = View.GONE
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -131,14 +133,15 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
     }
 
     fun toggle(toggle: Boolean) {
-        visible = if (toggle) {
+       if (toggle && !visible) {
             animator.interpolator = DecelerateInterpolator()
             animator.translationY(0F)
-            true
-        } else {
+
+            visible = true
+        } else if (visible){
             animator.interpolator = AccelerateInterpolator()
             animator.translationY(-height.toFloat())
-            false
+            visible = false
         }
     }
 }

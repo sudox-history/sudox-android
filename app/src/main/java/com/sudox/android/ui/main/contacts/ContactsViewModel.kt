@@ -9,4 +9,5 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
     fun contactsLoadLiveData() = contactsRepository.contactsLoadLiveData
     fun contactsSearchUserByNickname(nickname: String) = contactsRepository.findUserByNickname(nickname)
     fun contactAdd(id: String) = contactsRepository.contactAdd(id)
+    fun removeContact(id: String) = contactsRepository.removeContact(id)
 }

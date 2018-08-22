@@ -66,5 +66,8 @@
     <string name="ok">OK</string>
     <string name="search">Search</string>
     <string name="contact_has_already_added">Contact has already added!</string>
+    <string name="contact_has_not_find">Contact hasn\'t found!</string>
+    <string name="enter_username">Enter user\'s nickname which you want to find!</string>
+    <string name="remove_contact">Remove contact</string>
 
 </resources>
