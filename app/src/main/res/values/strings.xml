@@ -65,5 +65,6 @@
     <string name="toolbar_next">Next</string>
     <string name="ok">OK</string>
     <string name="search">Search</string>
+    <string name="contact_has_already_added">Contact has already added!</string>
 
 </resources>

@@ -42,6 +42,7 @@ class MainActivity : DaggerAppCompatActivity() {
         // init listeners
         mainViewModel.initContactsListeners()
 
+
         supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_main_container, ContactsFragment())
                 .commit()

@@ -14,7 +14,7 @@ import io.reactivex.disposables.CompositeDisposable
 class ContactsRepository(private val protocolClient: ProtocolClient,
                          private val contactsDao: ContactsDao) {
 
-    val disposables: CompositeDisposable = CompositeDisposable()
+    private val disposables: CompositeDisposable = CompositeDisposable()
     val contactsLoadLiveData = MutableLiveData<StateData<List<Contact>>>()
     val contactsUpdateLiveData = MutableLiveData<State>()
 
@@ -25,9 +25,9 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
             override fun onMessage(response: ContactAddDTO) {
                 if (response.code != 0) {
                     val usersGetDTO = UsersGetDTO()
-                    usersGetDTO.id = response.id!!
+                    usersGetDTO.id = response.aid
 
-                    protocolClient.makeRequest("contacts.get", usersGetDTO, object : ResponseCallback<UsersGetDTO> {
+                    protocolClient.makeRequest("users.get", usersGetDTO, object : ResponseCallback<UsersGetDTO> {
                         override fun onMessage(response: UsersGetDTO) {
                             if (response.checkAvatar) {
                                 contactsDao.insertContact(Contact(
