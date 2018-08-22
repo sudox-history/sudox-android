@@ -15,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.android.R
-import com.sudox.android.common.enums.State
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.database.Contact
 import com.sudox.android.ui.MainActivity
@@ -113,18 +112,6 @@ class ContactsFragment : DaggerFragment() {
     }
 
     private fun initListeners() {
-
-        contactsViewModel.contactsUpdateLiveData().observe(this, Observer{
-            when(it){
-                State.SUCCESS -> {
-
-                }
-                State.FAILED -> {
-                    mainActivity.showMessage(getString(R.string.contact_has_already_added))
-                }
-            }
-        })
-
         val nicknameRegex = ".+#.*".toRegex()
 
         nicknameEditText.addTextChangedListener(object : TextWatcher {

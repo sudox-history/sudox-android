@@ -12,6 +12,8 @@ import com.sudox.android.database.Contact
 import kotlinx.android.synthetic.main.card_contact.view.*
 
 
+
+
 class ContactsAdapter(var items: List<Contact>,
                       private val context: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
 
@@ -72,10 +74,14 @@ class ContactsAdapter(var items: List<Contact>,
         // Text bounds
         val textRect = Rect()
 
+        // Create typeface
+        val plain = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
+
         // Draw text
         paint.shader = null
         paint.color = Color.WHITE
         paint.textSize = 60F
+        paint.typeface = plain
         paint.getTextBounds(text, 0, text.length, textRect)
         canvas.drawText(text, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
 

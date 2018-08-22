@@ -8,7 +8,6 @@ import com.sudox.android.common.repository.auth.AuthRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -47,8 +46,6 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
 
     override fun onCleared() {
         disposables.dispose()
-
-        // Super!
         super.onCleared()
     }
 }

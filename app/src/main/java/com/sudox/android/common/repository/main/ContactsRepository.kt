@@ -17,7 +17,6 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
     val contactsUpdateLiveData = MutableLiveData<State>()
 
     fun initContactsListeners() {
-        val mutableLiveData = MutableLiveData<State>()
 
         protocolClient.listenMessage("contacts.add", object : ResponseCallback<ContactAddDTO> {
             override fun onMessage(response: ContactAddDTO) {
@@ -37,11 +36,9 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                                         response.avatarUrl, response.name, response.nickname))
                             }
 
-                            mutableLiveData.postValue(State.SUCCESS)
+                            requestAllContactsFromDB()
                         }
                     })
-                } else {
-                    mutableLiveData.postValue(State.FAILED)
                 }
             }
         })
@@ -49,7 +46,6 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         protocolClient.listenMessage("contacts.remove", object : ResponseCallback<ContactDTO> {
             override fun onMessage(response: ContactDTO) {
                 contactsDao.deleteContactById(response.id)
-                mutableLiveData.postValue(State.SUCCESS)
             }
         })
     }
@@ -70,6 +66,8 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                         contactsDao.insertContact(Contact(contactsDTO.id, contactsDTO.firstColor,
                                 contactsDTO.secondColor, contactsDTO.avatarUrl, contactsDTO.name, contactsDTO.nickname))
                     }
+                } else {
+                    contactsDao.deleteAllContacts()
                 }
                 it.onSuccess(State.SUCCESS)
             }
@@ -82,7 +80,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         val contactSearchDTO = ContactSearchDTO()
         contactSearchDTO.nickname = nickname
 
-        protocolClient.makeRequest("users.getByNickname", contactSearchDTO, object : ResponseCallback<ContactSearchDTO> {
+        protocolClient.makeRequest("users.search", contactSearchDTO, object : ResponseCallback<ContactSearchDTO> {
             override fun onMessage(response: ContactSearchDTO) {
                 if (response.code != 0) {
                     val contact = if (response.checkAvatar) {

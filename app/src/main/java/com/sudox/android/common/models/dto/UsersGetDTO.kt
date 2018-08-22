@@ -24,18 +24,20 @@ class UsersGetDTO : CanErrorDTO() {
 
     override fun fromJSON(jsonObject: JSONObject) {
         super.fromJSON(jsonObject)
+        val json = jsonObject.toString()
+        val user = jsonObject.getJSONObject("user")
         try {
-            val photoJsonArray = jsonObject.getJSONArray("photo")
+            val photoJsonArray = user.getJSONArray("photo")
             firstColor = photoJsonArray[0].toString()
             secondColor = photoJsonArray[1].toString()
             checkAvatar = true
         } catch (e: JSONException) {
-            avatarUrl = jsonObject.getString("photo")
+            avatarUrl = user.getString("photo")
             checkAvatar = false
         }
 
-        id = jsonObject.optString("id")
-        name = jsonObject.optString("name")
-        nickname = jsonObject.optString("nickname")
+        id = user.optString("id")
+        name = user.optString("name")
+        nickname = user.optString("nickname")
     }
 }
