@@ -15,8 +15,6 @@ import kotlinx.android.synthetic.main.card_contact.view.*
 class ContactsAdapter(var items: List<Contact>,
                       private val context: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
 
-    var loadedFromDatabase: Boolean = false
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.card_contact, parent, false))
     }

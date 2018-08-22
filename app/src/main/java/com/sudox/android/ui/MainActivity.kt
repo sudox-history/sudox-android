@@ -88,6 +88,8 @@ class MainActivity : DaggerAppCompatActivity() {
             mainViewModel.removeAllAccounts()
             mainViewModel.disconnect()
             showSplashActivity()
+        } else if (tokenData.tokenState == TokenState.CORRECT){
+            mainViewModel.loadContacts()
         }
     }
 

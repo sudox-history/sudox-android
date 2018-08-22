@@ -15,8 +15,8 @@ interface ContactsDao {
     @Query("delete from contacts_table where cid=:id")
     fun deleteContactById(id: String)
 
-    @Query("SELECT * FROM contacts_table LIMIT :limit OFFSET :offset")
-    fun getContacts(offset: Int, limit: Int): Flowable<List<Contact>>
+    @Query("SELECT * FROM contacts_table")
+    fun getContacts(): List<Contact>
 
     @Query("delete from contacts_table")
     fun deleteAllContacts()

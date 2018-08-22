@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.android.R
 import com.sudox.android.common.enums.State
@@ -19,6 +20,7 @@ import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.database.Contact
 import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.adapters.ContactsAdapter
+import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.card_add_contact.*
 import kotlinx.android.synthetic.main.fragment_contacts.*
@@ -94,7 +96,11 @@ class ContactsFragment : DaggerFragment() {
         contactsViewModel
                 .contactsLoadLiveData()
                 .observe(this, Observer {
+                    val result = DiffUtil.calculateDiff(ContactsDiffUtil(it, adapter.items))
 
+                    // Update data
+                    adapter.items = it
+                    result.dispatchUpdatesTo(adapter)
                 })
     }
 
@@ -102,6 +108,7 @@ class ContactsFragment : DaggerFragment() {
         if (contact != null) {
             contactSearch = contact
         }
+
         searchAdditionalView.setSearchContact(contact)
     }
 
