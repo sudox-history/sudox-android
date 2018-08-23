@@ -22,6 +22,7 @@ class ProtocolModule {
     fun provideSocket() : Socket {
         val options = IO.Options()
                 .apply {
+                    transports = arrayOf("websocket")
                     reconnection = true
                     path = "/"
                 }

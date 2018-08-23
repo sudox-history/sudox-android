@@ -14,16 +14,13 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                          private val contactsDao: ContactsDao) {
 
     val contactsLoadLiveData = MutableLiveData<List<Contact>>()
-    val contactsUpdateLiveData = MutableLiveData<State>()
 
     fun initContactsListeners() {
-        val mutableLiveData = MutableLiveData<State>()
-
-        protocolClient.listenMessage("contacts.add", object : ResponseCallback<ContactAddDTO> {
-            override fun onMessage(response: ContactAddDTO) {
+        protocolClient.listenMessage("contacts.add", object : ResponseCallback<ContactAddRemoveDTO> {
+            override fun onMessage(response: ContactAddRemoveDTO) {
                 if (response.code != 0) {
                     val usersGetDTO = UsersGetDTO()
-                    usersGetDTO.id = response.aid
+                    usersGetDTO.id = response.id
 
                     protocolClient.makeRequest("users.get", usersGetDTO, object : ResponseCallback<UsersGetDTO> {
                         override fun onMessage(response: UsersGetDTO) {
@@ -37,28 +34,26 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                                         response.avatarUrl, response.name, response.nickname))
                             }
 
-                            mutableLiveData.postValue(State.SUCCESS)
+                            requestAllContactsFromDB()
                         }
                     })
-                } else {
-                    mutableLiveData.postValue(State.FAILED)
                 }
             }
         })
 
-        protocolClient.listenMessage("contacts.remove", object : ResponseCallback<ContactDTO> {
-            override fun onMessage(response: ContactDTO) {
-                contactsDao.deleteContactById(response.id)
-                mutableLiveData.postValue(State.SUCCESS)
+        protocolClient.listenMessage("contacts.remove", object : ResponseCallback<ContactAddRemoveDTO> {
+            override fun onMessage(response: ContactAddRemoveDTO) {
+                if(response.code != 0) {
+                    contactsDao.deleteContactById(response.id)
+                    requestAllContactsFromDB()
+                }
             }
         })
     }
 
     fun getAllContactsFromServer(): Single<State> = Single.unsafeCreate {
-        val contactsGetDTO = ContactsGetDTO()
-        contactsGetDTO.count = 10
 
-        protocolClient.makeRequest("contacts.get", contactsGetDTO, object : ResponseCallback<ContactsGetDTO> {
+        protocolClient.makeRequest("contacts.get", SimpleAnswerDTO(), object : ResponseCallback<ContactsGetDTO> {
             override fun onMessage(response: ContactsGetDTO) {
                 if (response.code != 0) {
                     for (i in 0..(response.items!!.length() - 1)) {
@@ -70,6 +65,8 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                         contactsDao.insertContact(Contact(contactsDTO.id, contactsDTO.firstColor,
                                 contactsDTO.secondColor, contactsDTO.avatarUrl, contactsDTO.name, contactsDTO.nickname))
                     }
+                } else {
+                    contactsDao.deleteAllContacts()
                 }
                 it.onSuccess(State.SUCCESS)
             }
@@ -82,7 +79,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         val contactSearchDTO = ContactSearchDTO()
         contactSearchDTO.nickname = nickname
 
-        protocolClient.makeRequest("users.getByNickname", contactSearchDTO, object : ResponseCallback<ContactSearchDTO> {
+        protocolClient.makeRequest("users.search", contactSearchDTO, object : ResponseCallback<ContactSearchDTO> {
             override fun onMessage(response: ContactSearchDTO) {
                 if (response.code != 0) {
                     val contact = if (response.checkAvatar) {
@@ -104,15 +101,23 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
     }
 
     fun contactAdd(id: String) {
-        val contactAddDTO = ContactAddDTO()
-        contactAddDTO.id = id
+        val contactAddDTO = ContactAddRemoveDTO()
+        contactAddDTO.sendId = id
         protocolClient.sendMessage("contacts.add", contactAddDTO)
     }
 
+    fun removeContact(id: String) {
+        val contactRemove = ContactAddRemoveDTO()
+        contactRemove.sendId = id
+        protocolClient.sendMessage("contacts.remove", contactRemove)
+    }
+
     fun requestAllContactsFromDB() {
-//        //TODO: try to find the best way
+        //TODO: try to find the best way
         Schedulers.io().scheduleDirect {
             contactsLoadLiveData.postValue(contactsDao.getContacts())
         }
     }
+
+
 }

@@ -33,17 +33,29 @@
         <TextView
             android:id="@+id/add_contact_hint"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_marginStart="31dp"
             android:layout_marginEnd="31dp"
             android:gravity="center"
-            android:text="Введите никнейм пользователя, которого хотите найти"
+            android:text="@string/enter_username"
             android:textColor="@color/colorHint" />
 
         <include
             android:id="@+id/card_add_contact"
             layout="@layout/card_add_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:indeterminate="true"/>
 
     </RelativeLayout>
 

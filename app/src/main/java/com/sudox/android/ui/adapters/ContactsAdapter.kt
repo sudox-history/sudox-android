@@ -2,6 +2,7 @@ package com.sudox.android.ui.adapters
 
 import android.app.Activity
 import android.graphics.*
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +10,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sudox.android.R
 import com.sudox.android.database.Contact
+import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.card_contact.view.*
 
-
 class ContactsAdapter(var items: List<Contact>,
-                      private val context: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
+                      private val context: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>(), View.OnCreateContextMenuListener {
+
+
+    private val onClickSubject = PublishSubject.create<String>()
+
+    fun getViewClickedObservable(): Observable<String> {
+        return onClickSubject.hide()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.card_contact, parent, false))
     }
 
@@ -24,8 +34,10 @@ class ContactsAdapter(var items: List<Contact>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        // Get contact from list by position
         val contact = items[position]
 
+        // Setting image
         if (contact.firstColor != null && contact.secondColor != null) {
             val builder = StringBuilder()
             val names = contact.name.split(" ")
@@ -50,8 +62,23 @@ class ContactsAdapter(var items: List<Contact>,
             TODO("if photo is not gradient")
         }
 
+        // Set on click listener by using RxJava
+        holder.itemView.setOnLongClickListener {
+            onClickSubject.onNext(contact.cid)
+            return@setOnLongClickListener true
+        }
+
+        // Setting name
         holder.name.text = contact.name
+
+        // Setting nickname
         holder.nickname.text = contact.nickname
+
+        holder.itemView.setOnCreateContextMenuListener(this)
+    }
+
+    override fun onCreateContextMenu(p0: ContextMenu?, p1: View?, p2: ContextMenu.ContextMenuInfo?) {
+
     }
 
     private fun drawGradientBitmap(firstColor: String, secondColor: String, text: String): Bitmap {
@@ -72,10 +99,14 @@ class ContactsAdapter(var items: List<Contact>,
         // Text bounds
         val textRect = Rect()
 
+        // Create typeface
+        val plain = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
+
         // Draw text
         paint.shader = null
         paint.color = Color.WHITE
         paint.textSize = 60F
+        paint.typeface = plain
         paint.getTextBounds(text, 0, text.length, textRect)
         canvas.drawText(text, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
 
@@ -84,9 +115,10 @@ class ContactsAdapter(var items: List<Contact>,
 
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         val avatar = view.avatar!!
         val name = view.name!!
         val nickname = view.nickname!!
+
+
     }
 }

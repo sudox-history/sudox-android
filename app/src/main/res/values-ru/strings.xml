@@ -66,4 +66,7 @@
     <string name="add_contact">Добавить контакт</string>
     <string name="search">Поиск</string>
     <string name="contact_has_already_added">Контакт уже существует!</string>
+    <string name="contact_has_not_find">Контакт не найден!</string>
+    <string name="enter_username">Введите никнейм пользователя, которого хотите найти</string>
+    <string name="remove_contact">Удалить контакт</string>
 </resources>

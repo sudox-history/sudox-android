@@ -22,7 +22,7 @@ class BlackOverlayView : View {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
-        setBackgroundColor(Color.BLACK)
+        setBackgroundColor(Color.rgb(0,4,11))
         isClickable = false
         visibility = View.GONE
         alpha = 0F

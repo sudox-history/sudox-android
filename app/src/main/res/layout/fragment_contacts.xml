@@ -25,6 +25,15 @@
             android:clipToPadding="false"
             android:paddingTop="16dp" />
 
+        <TextView
+            android:id="@+id/have_not_got_contacts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/have_not_got_contacts"
+            android:gravity="center"
+            android:textColor="@color/colorHint"
+            android:layout_margin="70dp"/>
+
         <com.sudox.android.ui.views.BlackOverlayView
             android:id="@+id/blackOverlayView"
             android:layout_width="match_parent"

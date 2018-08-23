@@ -92,19 +92,24 @@ class AuthEmailFragment : DaggerFragment() {
     }
 
     private fun getCodeData(it: AuthSessionDTO?) {
-        if (it == null) {
-            emailEditText.isEnabled = true
-            hideInputError(emailEditTextContainer)
-            authActivity.showMessage(getString(R.string.no_internet_connection))
-        } else if (it.errorCode == 3) {
-            emailEditText.isEnabled = true
-            showInputError(emailEditTextContainer)
-        } else if (it.isError()) {
-            emailEditText.isEnabled = true
-            showInputError(emailEditTextContainer)
-        } else {
-            authActivity.hash = it.hash
-            authActivity.showAuthCodeFragment(email, it.status)
+        when {
+            it == null -> {
+                emailEditText.isEnabled = true
+                hideInputError(emailEditTextContainer)
+                authActivity.showMessage(getString(R.string.no_internet_connection))
+            }
+            it.errorCode == 3 -> {
+                emailEditText.isEnabled = true
+                showInputError(emailEditTextContainer)
+            }
+            it.isError() -> {
+                emailEditText.isEnabled = true
+                showInputError(emailEditTextContainer)
+            }
+            else -> {
+                authActivity.hash = it.hash
+                authActivity.showAuthCodeFragment(email, it.status)
+            }
         }
     }
 }

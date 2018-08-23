@@ -15,17 +15,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.android.R
-import com.sudox.android.common.enums.State
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.database.Contact
 import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.adapters.ContactsAdapter
 import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import dagger.android.support.DaggerFragment
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.card_add_contact.*
 import kotlinx.android.synthetic.main.fragment_contacts.*
 import kotlinx.android.synthetic.main.include_search_navbar_addition.*
 import javax.inject.Inject
+
+
+
 
 class ContactsFragment : DaggerFragment() {
 
@@ -36,6 +39,7 @@ class ContactsFragment : DaggerFragment() {
     private lateinit var adapter: ContactsAdapter
 
     private lateinit var contactSearch: Contact
+    private lateinit var onContactClickDisposable: Disposable
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactsViewModel = getViewModel(viewModelFactory)
@@ -61,6 +65,16 @@ class ContactsFragment : DaggerFragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    @SuppressLint("ResourceType")
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.add_contact -> {
+                searchAdditionalView.toggle()
+            }
+        }
+        return true
+    }
+
     private fun initSearchAdditionalView() {
         searchAdditionalView.startListener = {
             val item = contactsToolbar.menu.findItem(R.id.add_contact)
@@ -79,16 +93,6 @@ class ContactsFragment : DaggerFragment() {
         }
     }
 
-    @SuppressLint("ResourceType")
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.add_contact -> {
-                searchAdditionalView.toggle()
-            }
-        }
-        return true
-    }
-
     private fun initContactsList() {
         contactsList.adapter = adapter
         contactsList.layoutManager = LinearLayoutManager(activity)
@@ -96,35 +100,36 @@ class ContactsFragment : DaggerFragment() {
         contactsViewModel
                 .contactsLoadLiveData()
                 .observe(this, Observer {
-                    val result = DiffUtil.calculateDiff(ContactsDiffUtil(it, adapter.items))
+                    searchAdditionalView.toggle(false)
+                    if(it.isNotEmpty()) {
+                        contactsList.visibility = View.VISIBLE
+                        have_not_got_contacts.visibility = View.GONE
+                        val result = DiffUtil.calculateDiff(ContactsDiffUtil(it, adapter.items))
 
-                    // Update data
-                    adapter.items = it
-                    result.dispatchUpdatesTo(adapter)
+                        // Update data
+                        adapter.items = it
+                        result.dispatchUpdatesTo(adapter)
+                    } else {
+                        contactsList.visibility = View.GONE
+                        have_not_got_contacts.visibility = View.VISIBLE
+                    }
+
                 })
     }
 
     private fun setSearchContact(contact: Contact?) {
+        progress_bar.visibility = View.GONE
         if (contact != null) {
             contactSearch = contact
+            searchAdditionalView.setSearchContact(contact)
+        } else {
+            add_contact_hint.visibility = View.VISIBLE
+            card_add_contact.visibility = View.GONE
+            add_contact_hint.text = getString(R.string.contact_has_not_find)
         }
-
-        searchAdditionalView.setSearchContact(contact)
     }
 
     private fun initListeners() {
-
-        contactsViewModel.contactsUpdateLiveData().observe(this, Observer{
-            when(it){
-                State.SUCCESS -> {
-
-                }
-                State.FAILED -> {
-                    mainActivity.showMessage(getString(R.string.contact_has_already_added))
-                }
-            }
-        })
-
         val nicknameRegex = ".+#.*".toRegex()
 
         nicknameEditText.addTextChangedListener(object : TextWatcher {
@@ -141,6 +146,8 @@ class ContactsFragment : DaggerFragment() {
 
         nicknameEditText.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                progress_bar.visibility = View.VISIBLE
+                add_contact_hint.visibility = View.GONE
                 contactsViewModel.contactsSearchUserByNickname(nicknameEditText.text.toString())
                         .observe(this, Observer(::setSearchContact))
                 return@OnEditorActionListener true
@@ -150,6 +157,12 @@ class ContactsFragment : DaggerFragment() {
 
         add_contact_search.setOnClickListener {
             contactsViewModel.contactAdd(contactSearch.cid)
+            progress_bar.visibility = View.VISIBLE
+            card_add_contact.visibility = View.GONE
+        }
+
+        onContactClickDisposable = adapter.getViewClickedObservable().subscribe {
+            contactsViewModel.removeContact(it)
         }
 
     }
