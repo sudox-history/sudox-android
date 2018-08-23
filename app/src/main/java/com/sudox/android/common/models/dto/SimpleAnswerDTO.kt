@@ -1,18 +1,24 @@
 package com.sudox.android.common.models.dto
 
+import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONObject
 
-class SimpleAnswerDTO : CanErrorDTO() {
+class SimpleAnswerDTO: JsonModel {
 
-    var code: Int = 0
+    // To get
+    var errorCode = 0
 
     override fun toJSON(): JSONObject {
         return JSONObject()
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        super.fromJSON(jsonObject)
-        code = jsonObject.optInt("code")
+        errorCode = if(jsonObject.has("error")){
+            val response = jsonObject.getJSONObject("error")
+            response.optInt("code")
+        } else {
+            jsonObject.getInt("response")
+        }
     }
 
 }

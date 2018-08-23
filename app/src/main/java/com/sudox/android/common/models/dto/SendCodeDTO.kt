@@ -3,19 +3,30 @@ package com.sudox.android.common.models.dto
 import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONObject
 
-class SendCodeDTO(val email: String) : JsonModel {
+class SendCodeDTO : JsonModel {
+
+    // To send
+    lateinit var email: String
+
+    // To get
+    lateinit var hash: String
+    var status = 0
+    var errorCode = 0
 
     override fun toJSON(): JSONObject {
-        val jsonObject = JSONObject()
-
-        // Write email to the json object
-        jsonObject.putOpt("email", email)
-
-        // Return
-        return jsonObject
+        return with(JSONObject()){
+            putOpt("email", email)
+        }
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        throw UnsupportedOperationException()
+        if(jsonObject.has("error")){
+            val response = jsonObject.getJSONObject("error")
+            errorCode = response.optInt("code")
+        } else {
+            val response = jsonObject.getJSONObject("response")
+            hash = response.optString("hash")
+            status = response.optInt("status")
+        }
     }
 }

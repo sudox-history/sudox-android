@@ -1,13 +1,19 @@
 package com.sudox.android.common.models.dto
 
+import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONObject
 
-class ContactAddRemoveDTO : CanErrorDTO() {
+class ContactAddRemoveDTO: JsonModel {
 
+    // To send
     var sendId: String? = null
 
+    // To get
     lateinit var id: String
     var code: Int = 0
+
+    // Common
+    var errorCode = 0
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()) {
@@ -16,9 +22,11 @@ class ContactAddRemoveDTO : CanErrorDTO() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        super.fromJSON(jsonObject)
-        code = jsonObject.optInt("code")
-        if (code != 0)
-            id = jsonObject.optString("id")
+        if(jsonObject.has("error")){
+            val response = jsonObject.getJSONObject("error")
+            errorCode = response.optInt("code")
+        } else {
+            id = jsonObject.optString("response")
+        }
     }
 }

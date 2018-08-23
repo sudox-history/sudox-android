@@ -9,12 +9,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
+import com.sudox.android.common.enums.SignUpInState
 import com.sudox.android.common.enums.State
 import com.sudox.android.common.helpers.NAME_REGEX
 import com.sudox.android.common.helpers.NICKNAME_REGEX
 import com.sudox.android.common.helpers.hideInputError
 import com.sudox.android.common.helpers.showInputError
-import com.sudox.android.common.models.dto.SignUpDTO
+import com.sudox.android.common.models.SignUpInData
 import com.sudox.android.common.viewmodels.ViewModelFactory
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
@@ -109,23 +110,32 @@ class AuthRegisterFragment : DaggerFragment() {
                 })
     }
 
-    private fun getSignUpData(signUpDTO: SignUpDTO?) {
+    private fun getSignUpData(data: SignUpInData?) {
         when {
-            signUpDTO == null -> {
+            data == null -> {
                 nameEditText.isEnabled = true
                 surnameEditText.isEnabled = true
                 hideInputError(nameEditTextContainer)
                 hideInputError(surnameEditTextContainer)
                 authActivity.showMessage(getString(R.string.no_internet_connection))
             }
-            signUpDTO.errorCode == 3 -> {
+            data.state == SignUpInState.FAILED -> {
                 nameEditText.isEnabled = true
                 surnameEditText.isEnabled = true
                 showInputError(nameEditTextContainer)
                 showInputError(surnameEditTextContainer)
             }
+            data.state == SignUpInState.WRONG_FORMAT -> {
+                nameEditText.isEnabled = true
+                surnameEditText.isEnabled = true
+                showInputError(nameEditTextContainer)
+                showInputError(surnameEditTextContainer)
+            }
+            data.state == SignUpInState.ACCOUNT_EXISTS ->{
+                authActivity.showMessage(getString(R.string.account_is_already_exist))
+            }
             else -> {
-                authRegisterViewModel.saveAccount(signUpDTO.id, email, signUpDTO.token).observe(this, Observer {
+                authRegisterViewModel.saveAccount(data.id!!, email, data.token!!).observe(this, Observer {
                     if (it == State.SUCCESS)
                         authActivity.showMainActivity()
                 })

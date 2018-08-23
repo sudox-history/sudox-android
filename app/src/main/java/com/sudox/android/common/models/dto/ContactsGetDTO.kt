@@ -1,28 +1,33 @@
 package com.sudox.android.common.models.dto
 
+import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 
-class ContactsGetDTO : CanErrorDTO() {
+class ContactsGetDTO: JsonModel {
 
-    var offset: Int = 0
-    var count: Int = 0
-
+    // To get
     var code: Int = 0
     var items: JSONArray? = null
 
+    // Common
+    var errorCode = 0
+
     override fun toJSON(): JSONObject {
-        return with(JSONObject()) {
-            putOpt("offset", offset)
-            putOpt("count", count)
-        }
+        return JSONObject()
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        super.fromJSON(jsonObject)
-        code = jsonObject.optInt("code")
-        if (code != 0) {
-            items = jsonObject.optJSONArray("items")
+        if(jsonObject.has("error")){
+            val response = jsonObject.getJSONObject("error")
+            errorCode = response.optInt("code")
+        } else {
+            try {
+                items = jsonObject.optJSONArray("response")
+            } catch (e: JSONException){
+                code = jsonObject.getInt("response")
+            }
         }
     }
 }

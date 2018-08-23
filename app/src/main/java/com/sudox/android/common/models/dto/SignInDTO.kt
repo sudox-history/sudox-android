@@ -1,14 +1,19 @@
 package com.sudox.android.common.models.dto
 
+import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONObject
 
-class SignInDTO : CanErrorDTO() {
+class SignInDTO: JsonModel {
 
+    // To send
     var code: Int = 0
 
+    // To get
     lateinit var token: String
     lateinit var id: String
-    var status: Int = 0
+
+    // Common
+    var errorCode = 0
 
     override fun toJSON(): JSONObject {
        return with(JSONObject()){
@@ -17,10 +22,13 @@ class SignInDTO : CanErrorDTO() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        super.fromJSON(jsonObject)
-        token = jsonObject.optString("token")
-        id = jsonObject.optString("id")
-        status = jsonObject.optInt("code")
+        if(jsonObject.has("error")){
+            val response = jsonObject.getJSONObject("error")
+            errorCode = response.optInt("code")
+        } else {
+            val response = jsonObject.getJSONObject("response")
+            token = response.optString("token")
+            id = response.optString("id")
+        }
     }
-
 }

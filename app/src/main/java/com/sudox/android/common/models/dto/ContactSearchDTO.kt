@@ -1,13 +1,16 @@
 package com.sudox.android.common.models.dto
 
+import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONException
 import org.json.JSONObject
 
-class ContactSearchDTO : CanErrorDTO() {
+class ContactSearchDTO: JsonModel {
 
+    //To send
     var nickname: String? = null
     var id: String? = null
 
+    //To get
     lateinit var scid: String
     lateinit var name: String
     lateinit var status: String
@@ -15,9 +18,9 @@ class ContactSearchDTO : CanErrorDTO() {
     var secondColor: String? = null
     var avatarUrl: String? = null
 
+    // Common
     var checkAvatar: Boolean = false
-
-    var code: Int = 0
+    var errorCode = 0
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()) {
@@ -29,9 +32,12 @@ class ContactSearchDTO : CanErrorDTO() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        super.fromJSON(jsonObject)
-        if (jsonObject.getInt("code") == 1) {
-            val user = jsonObject.getJSONObject("user")
+        if(jsonObject.has("error")){
+            val response = jsonObject.getJSONObject("error")
+            errorCode = response.optInt("code")
+        } else {
+            val response = jsonObject.getJSONObject("response")
+            val user = response.getJSONObject("user")
             try {
                 val photoJsonArray = user.getJSONArray("photo")
                 firstColor = photoJsonArray[0].toString()
@@ -43,9 +49,6 @@ class ContactSearchDTO : CanErrorDTO() {
             }
             name = user.optString("name")
             scid = user.optString("id")
-            code = 1
-        } else {
-            code = 0
         }
     }
 }

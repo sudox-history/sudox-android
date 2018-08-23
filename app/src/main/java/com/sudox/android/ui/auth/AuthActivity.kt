@@ -7,9 +7,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.sudox.android.R
+import com.sudox.android.common.enums.AuthHashState
 import com.sudox.android.common.enums.ConnectState
+import com.sudox.android.common.enums.State
+import com.sudox.android.common.helpers.hideInputError
 import com.sudox.android.common.helpers.showSnackbar
-import com.sudox.android.common.models.dto.AuthHashDTO
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.auth.confirm.AUTH_STATUS_BUNDLE_KEY
@@ -19,6 +21,7 @@ import com.sudox.android.ui.auth.email.AuthEmailFragment
 import com.sudox.android.ui.auth.register.AuthRegisterFragment
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.android.synthetic.main.fragment_auth_confirm.*
 import javax.inject.Inject
 
 class AuthActivity : DaggerAppCompatActivity() {
@@ -53,9 +56,18 @@ class AuthActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun getHashData(authHashDTO: AuthHashDTO) {
-        if (authHashDTO.code == 0) {
-            showStartFragment(true)
+    private fun getHashData(data: AuthHashState) {
+        when (data) {
+            AuthHashState.DEAD -> showStartFragment(true)
+            State.FAILED -> {
+                showMessage(getString(R.string.unknown_error))
+                hideInputError(codeEditTextContainer)
+            }
+            AuthHashState.AUTH_HASH_ERROR -> {
+                showMessage(getString(R.string.unknown_error))
+                hideInputError(codeEditTextContainer)
+            }
+            else -> {}
         }
     }
 

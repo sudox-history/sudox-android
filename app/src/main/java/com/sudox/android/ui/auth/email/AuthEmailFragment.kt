@@ -9,11 +9,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
+import com.sudox.android.common.enums.EmailState
 import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.helpers.EMAIL_REGEX
 import com.sudox.android.common.helpers.hideInputError
 import com.sudox.android.common.helpers.showInputError
-import com.sudox.android.common.models.dto.AuthSessionDTO
+import com.sudox.android.common.models.SendCodeData
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.confirm.EMAIL_BUNDLE_KEY
@@ -91,24 +92,24 @@ class AuthEmailFragment : DaggerFragment() {
         }
     }
 
-    private fun getCodeData(it: AuthSessionDTO?) {
+    private fun getCodeData(data: SendCodeData?) {
         when {
-            it == null -> {
+            data == null -> {
                 emailEditText.isEnabled = true
                 hideInputError(emailEditTextContainer)
                 authActivity.showMessage(getString(R.string.no_internet_connection))
             }
-            it.errorCode == 3 -> {
+            data.state == EmailState.WRONG_FORMAT-> {
                 emailEditText.isEnabled = true
                 showInputError(emailEditTextContainer)
             }
-            it.isError() -> {
+            data.state == EmailState.FAILED -> {
                 emailEditText.isEnabled = true
                 showInputError(emailEditTextContainer)
             }
             else -> {
-                authActivity.hash = it.hash
-                authActivity.showAuthCodeFragment(email, it.status)
+                authActivity.hash = data.hash
+                authActivity.showAuthCodeFragment(email, data.status!!)
             }
         }
     }

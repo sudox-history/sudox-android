@@ -1,13 +1,12 @@
 package com.sudox.android.common.models.dto
 
+import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONException
 import org.json.JSONObject
 
-class ContactDTO : CanErrorDTO() {
+class ContactDTO: JsonModel {
 
-    var offset: Int = 0
-    var count: Int = 0
-
+    // To get
     lateinit var id: String
     var firstColor: String? = null
     var secondColor: String? = null
@@ -15,17 +14,14 @@ class ContactDTO : CanErrorDTO() {
     lateinit var name: String
     lateinit var nickname: String
 
+    // Common
     var checkAvatar: Boolean = false
 
     override fun toJSON(): JSONObject {
-        return with(JSONObject()){
-            put("offset", offset)
-            put("count", count)
-        }
+        return JSONObject()
     }
 
     override fun fromJSON(jsonObject: JSONObject){
-        super.fromJSON(jsonObject)
         try {
             val photoJsonArray = jsonObject.getJSONArray("photo")
             firstColor = photoJsonArray[0].toString()

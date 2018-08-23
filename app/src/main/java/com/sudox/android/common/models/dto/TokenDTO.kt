@@ -1,13 +1,16 @@
 package com.sudox.android.common.models.dto
 
+import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONObject
 
-class TokenDTO : CanErrorDTO() {
+class TokenDTO: JsonModel {
 
+    // To send
     lateinit var token: String
 
+    // To get
     lateinit var id: String
-    var code: Int = 0
+    var errorCode: Int = 0
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()){
@@ -16,10 +19,12 @@ class TokenDTO : CanErrorDTO() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        super.fromJSON(jsonObject)
-        with(jsonObject) {
-            id = optString("id")
-            code = optInt("code")
+        if(jsonObject.has("error")){
+            val response = jsonObject.getJSONObject("error")
+            errorCode = response.optInt("code")
+        } else {
+            val response = jsonObject.getJSONObject("response")
+            id = response.optString("id")
         }
     }
 
