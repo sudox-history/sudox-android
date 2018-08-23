@@ -8,13 +8,9 @@ import com.sudox.android.common.models.TokenData
 import com.sudox.android.common.models.dto.*
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.model.ResponseCallback
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(private val protocolClient: ProtocolClient) {
-
-    // Disposables list
-    private var disposables: CompositeDisposable = CompositeDisposable()
 
     fun sendToken(token: String?): LiveData<TokenData> {
         val tokenData = MutableLiveData<TokenData>()
@@ -142,11 +138,5 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         })
 
         return mutableLiveData
-    }
-
-    fun cleanDisposables() {
-        if (!disposables.isDisposed) {
-            disposables.dispose()
-        }
     }
 }

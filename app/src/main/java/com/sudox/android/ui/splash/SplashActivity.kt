@@ -31,7 +31,7 @@ class SplashActivity : DaggerAppCompatActivity() {
         splashViewModel = getViewModel(viewModelFactory)
 
         // Get account from database
-        splashViewModel.accountLiveData.observe(this, Observer { sudoxAccount ->
+        splashViewModel.getAccount().observe(this, Observer { sudoxAccount ->
             // Add account from AccountManager context
             if (intent.getIntExtra(AUTH_KEY, 1) == AUTH_CODE && sudoxAccount != null) {
                 AlertDialog.Builder(this)
@@ -42,10 +42,13 @@ class SplashActivity : DaggerAppCompatActivity() {
                             dialogInterface.cancel()
                         }.create().show()
             } else {
-                splashViewModel.connectLiveData.observe(this, Observer {
-                    getConnectState(sudoxAccount, it)
-                })
-
+                if(sudoxAccount != null) {
+                    splashViewModel.connectLiveData.observe(this, Observer {
+                        getConnectState(sudoxAccount, it)
+                    })
+                } else {
+                    splashViewModel.removeAllData()
+                }
                 splashViewModel.connect()
             }
         })

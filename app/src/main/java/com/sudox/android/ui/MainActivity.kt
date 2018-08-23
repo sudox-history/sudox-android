@@ -31,15 +31,19 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mainViewModel = getViewModel(viewModelFactory)
-        mainViewModel.accountLiveData.observe(this, Observer { account ->
-            mainViewModel.connectLiveData.observe(this, Observer {
-                getConnectState(account, it)
-            })
+        mainViewModel.getAccount().observe(this, Observer { account ->
+            if(account != null) {
+                mainViewModel.connectLiveData.observe(this, Observer {
+                    getConnectState(account, it)
+                })
+            } else {
+                mainViewModel.removeAllData()
+            }
         })
 
         // init listeners
         mainViewModel.initContactsListeners()
-        mainViewModel.loadContacts()
+        loadContacts()
 
         supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_main_container, ContactsFragment())
@@ -88,13 +92,23 @@ class MainActivity : DaggerAppCompatActivity() {
             mainViewModel.disconnect()
             showSplashActivity()
         } else if (tokenData.tokenState == TokenState.CORRECT){
-            mainViewModel.loadContacts()
+            loadContacts()
         }
     }
 
     private fun showSplashActivity() {
         startActivity(Intent(this, SplashActivity::class.java))
         finish()
+    }
+
+    private fun loadContacts(){
+        if(mainViewModel.isConnected()){
+            mainViewModel.getAllContactsFromServer().observe(this, Observer {
+                mainViewModel.getAllContactsFromDB()
+            })
+        } else {
+            mainViewModel.getAllContactsFromDB()
+        }
     }
 
     fun showMessage(message: String) {

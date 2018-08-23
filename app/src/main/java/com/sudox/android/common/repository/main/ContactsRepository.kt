@@ -1,5 +1,7 @@
 package com.sudox.android.common.repository.main
 
+import android.os.Handler
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.State
 import com.sudox.android.common.models.dto.*
@@ -7,8 +9,6 @@ import com.sudox.android.database.Contact
 import com.sudox.android.database.ContactsDao
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.model.ResponseCallback
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 
 class ContactsRepository(private val protocolClient: ProtocolClient,
                          private val contactsDao: ContactsDao) {
@@ -51,7 +51,8 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         })
     }
 
-    fun getAllContactsFromServer(): Single<State> = Single.unsafeCreate {
+    fun getAllContactsFromServer(): LiveData<State> {
+        val mutableLiveData = MutableLiveData<State>()
 
         protocolClient.makeRequest("contacts.get", SimpleAnswerDTO(), object : ResponseCallback<ContactsGetDTO> {
             override fun onMessage(response: ContactsGetDTO) {
@@ -68,12 +69,13 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                 } else {
                     contactsDao.deleteAllContacts()
                 }
-                it.onSuccess(State.SUCCESS)
+                mutableLiveData.postValue(State.SUCCESS)
             }
         })
+        return mutableLiveData
     }
 
-    fun findUserByNickname(nickname: String): MutableLiveData<Contact?> {
+    fun findUserByNickname(nickname: String): LiveData<Contact?> {
         val mutableLiveData = MutableLiveData<Contact?>()
 
         val contactSearchDTO = ContactSearchDTO()
@@ -113,8 +115,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
     }
 
     fun requestAllContactsFromDB() {
-        //TODO: try to find the best way
-        Schedulers.io().scheduleDirect {
+        Handler().post{
             contactsLoadLiveData.postValue(contactsDao.getContacts())
         }
     }
