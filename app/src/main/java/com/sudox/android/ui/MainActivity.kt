@@ -7,7 +7,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.androidadvance.topsnackbar.TSnackbar
 import com.sudox.android.R
-import com.sudox.android.common.Data
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.TokenState
@@ -32,7 +31,6 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mainViewModel = getViewModel(viewModelFactory)
-
         mainViewModel.accountLiveData.observe(this, Observer { account ->
             mainViewModel.connectLiveData.observe(this, Observer {
                 getConnectState(account, it)
@@ -42,11 +40,9 @@ class MainActivity : DaggerAppCompatActivity() {
         // init listeners
         mainViewModel.initContactsListeners()
 
-
         supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_main_container, ContactsFragment())
                 .commit()
-
 
         bottom_navigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
@@ -55,7 +51,6 @@ class MainActivity : DaggerAppCompatActivity() {
             }
             return@setOnNavigationItemSelectedListener true
         }
-
     }
 
     private fun goToSettingsFragment() {
@@ -73,13 +68,16 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
 
-    private fun getConnectState(account: SudoxAccount?, connectData: Data<ConnectState>) {
-        when (connectData.data) {
-            ConnectState.RECONNECTED -> {
-                showMessage(getString(R.string.connection_restored))
-                mainViewModel.sendToken(account).observe(this, Observer(::getTokenState))
-            }
-            ConnectState.DISCONNECTED -> showMessage(getString(R.string.lost_internet_connection))
+    private fun getConnectState(account: SudoxAccount?, connectState: ConnectState) {
+        if (connectState == ConnectState.RECONNECTED) {
+            showMessage(getString(R.string.connection_restored))
+
+            // Try to restore token
+            mainViewModel
+                    .sendToken(account)
+                    .observe(this, Observer(::getTokenState))
+        } else if (connectState == ConnectState.DISCONNECTED) {
+            showMessage(getString(R.string.lost_internet_connection))
         }
     }
 

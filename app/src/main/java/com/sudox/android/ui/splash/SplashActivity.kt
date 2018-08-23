@@ -8,7 +8,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
-import com.sudox.android.common.Data
 import com.sudox.android.common.auth.AUTH_CODE
 import com.sudox.android.common.auth.AUTH_KEY
 import com.sudox.android.common.auth.SudoxAccount
@@ -52,13 +51,13 @@ class SplashActivity : DaggerAppCompatActivity() {
         })
     }
 
-    private fun getConnectState(sudoxAccount: SudoxAccount?, connectData: Data<ConnectState>) {
-        if (connectData.data == ConnectState.CONNECTED) {
+    private fun getConnectState(sudoxAccount: SudoxAccount?, connectState: ConnectState) {
+        if (connectState == ConnectState.CONNECTED) {
             splashViewModel
                     .sendToken(sudoxAccount)
                     .observe(this, Observer(::getTokenState))
-        } else if (connectData.data == ConnectState.CONNECT_ERROR) {
-            chooseActivity(sudoxAccount, connectData)
+        } else if (connectState == ConnectState.CONNECT_ERROR) {
+            chooseActivity(sudoxAccount, connectState)
         }
     }
 
@@ -70,9 +69,9 @@ class SplashActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun chooseActivity(account: SudoxAccount?, connectData: Data<ConnectState>) {
+    private fun chooseActivity(account: SudoxAccount?, connectState: ConnectState) {
         if (account == null) {
-            if (connectData.data == ConnectState.CONNECT_ERROR) {
+            if (connectState == ConnectState.CONNECT_ERROR) {
                 Handler().postDelayed(::showAuthActivity, 500)
             } else {
                 showAuthActivity()

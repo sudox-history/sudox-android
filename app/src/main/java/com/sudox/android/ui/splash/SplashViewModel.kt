@@ -17,14 +17,8 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
                                           private val accountRepository: AccountRepository,
                                           private val authRepository: AuthRepository) : ViewModel() {
 
-    val connectLiveData = MutableLiveData<Data<ConnectState>>()
+    val connectLiveData = protocolClient.connectionStateLiveData
     val accountLiveData = MutableLiveData<SudoxAccount?>()
-
-    private var connectionDisposable: Disposable = protocolClient.connectionSubject
-            .subscribeOn(Schedulers.io())
-            .subscribe {
-                connectLiveData.postValue(Data(it))
-            }
 
     private var accountDisposable: Disposable = accountRepository.getAccount()
             .subscribeOn(Schedulers.io())
@@ -42,7 +36,6 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
     // Prevent memory leaks with protocol disposables
     override fun onCleared() {
         authRepository.cleanDisposables()
-        connectionDisposable.dispose()
         accountDisposable.dispose()
     }
 }

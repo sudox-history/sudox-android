@@ -1,6 +1,5 @@
 package com.sudox.protocol
 
-import com.sudox.protocol.exception.HandshakeException
 import com.sudox.protocol.helper.encryptRSA
 import com.sudox.protocol.helper.getHashString
 import com.sudox.protocol.helper.randomBase64String
@@ -9,29 +8,71 @@ import com.sudox.protocol.model.dto.HandshakeRandomDTO
 import com.sudox.protocol.model.dto.HandshakeSignatureDTO
 import com.sudox.protocol.model.dto.HandshakeUpgradeFromServerDTO
 import com.sudox.protocol.model.dto.HandshakeUpgradeToServerDTO
-import io.reactivex.Single
-import io.reactivex.SingleEmitter
-import io.reactivex.disposables.CompositeDisposable
 import org.json.JSONObject
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ProtocolHandshake @Inject constructor(private var protocolKeystore: ProtocolKeystore) {
 
-    // Disposables
-    private lateinit var disposables: CompositeDisposable
+    private fun validate(successCallback: (SymmetricKey) -> Unit,
+                         errorCallback: (Unit) -> (Unit),
+                         protocolClient: ProtocolClient,
+                         handshakeSignatureDTO: HandshakeSignatureDTO,
+                         random: String) {
 
-    fun execute(protocolClient: ProtocolClient): Single<SymmetricKey> = Single.create<SymmetricKey> {
-        disposables = CompositeDisposable()
+        // For null-safety
+        val signature = handshakeSignatureDTO.signature
 
-        // Get random hex string
+        if (signature != null) {
+            val publicKey = protocolKeystore.findKey(random, signature)
+
+            if (publicKey != null) {
+                val symmetricKey = SymmetricKey().apply {
+                    generate()
+                }
+
+                // Build the handshake payload
+                val payload = with(JSONObject()) {
+                    put("key", symmetricKey.key)
+                    put("random", random)
+                    encryptRSA(publicKey, toString())
+                }
+
+                // Get the hash
+                val hash = getHashString(symmetricKey.key + random)
+
+                // Build the handshake upgrade message
+                val handshakeUpgradeDTO = HandshakeUpgradeToServerDTO().apply {
+                    this.payload = payload
+                    this.hash = hash
+                }
+
+                // Check the result of handshake
+                protocolClient.listenMessageHandshake("upgrade", HandshakeUpgradeFromServerDTO::class) {
+                    if (it.code == 1) {
+                        successCallback(symmetricKey)
+                    } else {
+                        errorCallback(Unit)
+                    }
+                }
+
+                // Send upgrade message
+                protocolClient.sendHandshakeMessage("upgrade", handshakeUpgradeDTO)
+            } else errorCallback(Unit)
+        } else errorCallback(Unit)
+    }
+
+    fun start(successCallback: (SymmetricKey) -> (Unit),
+              errorCallback: (Unit) -> (Unit),
+              protocolClient: ProtocolClient) {
+
         val random = randomBase64String(32)
 
         // Set listener
-        val disposable = protocolClient.listenMessageHandshake("verify", HandshakeSignatureDTO::class)
-                .subscribe(ProtocolHandshakeObserver(protocolClient, it, protocolKeystore, random, disposables))
-
-        // Add disposable to composite disposable
-        disposables.add(disposable)
+        protocolClient.listenMessageHandshake("verify", HandshakeSignatureDTO::class) {
+            validate(successCallback, errorCallback, protocolClient, it, random)
+        }
 
         // Create message with random hex-string
         val handshakeRandomDTO = HandshakeRandomDTO().apply {
@@ -41,81 +82,4 @@ class ProtocolHandshake @Inject constructor(private var protocolKeystore: Protoc
         // Send message to the server and start handshake
         protocolClient.sendHandshakeMessage("verify", handshakeRandomDTO)
     }
-
-    class ProtocolHandshakeObserver(private var protocolClient: ProtocolClient,
-                                    private var handshakeEmitter: SingleEmitter<SymmetricKey>,
-                                    private var protocolKeystore: ProtocolKeystore,
-                                    private var random: String,
-                                    private var disposables: CompositeDisposable) : (HandshakeSignatureDTO) -> (Unit) {
-
-        override fun invoke(handshakeSignatureDTO: HandshakeSignatureDTO) {
-            if (handshakeSignatureDTO.signature == null) {
-                handshakeEmitter.onError(HandshakeException())
-                disposables.dispose()
-                return
-            }
-
-            val publicKey = protocolKeystore.findKey(random, handshakeSignatureDTO.signature!!)
-
-            // If signature valid, then key wasn't equals the null
-            if (publicKey != null) {
-                val symmetricKey = SymmetricKey()
-
-                // Initialize the symmetric key
-                symmetricKey.generate()
-
-                // Handshake payload json object
-                val handshakeJsonObject = JSONObject()
-
-                // Build the handshake payload
-                val encryptedPayload = with(handshakeJsonObject) {
-                    put("key", symmetricKey.key)
-                    put("random", random)
-
-                    encryptRSA(publicKey, toString())
-                }
-
-                // Get the hash
-                val hash = getHashString(symmetricKey.key + random)
-
-                // Build the handshake upgrade message
-                val handshakeUpgradeDTO = HandshakeUpgradeToServerDTO().apply {
-                    this.payload = encryptedPayload
-                    this.hash = hash
-                }
-
-                // Set the listener for upgrade event
-                val disposable = protocolClient.listenMessageHandshake("upgrade", HandshakeUpgradeFromServerDTO::class)
-                        .subscribe(ProtocolUpgradeObserver(symmetricKey, handshakeEmitter, disposables))
-
-                // Add disposable to the list
-                disposables.add(disposable)
-
-                // Send upgrade message
-                protocolClient.sendHandshakeMessage("upgrade", handshakeUpgradeDTO)
-            } else {
-                handshakeEmitter.onError(HandshakeException())
-
-                // Clear all
-                disposables.dispose()
-            }
-        }
-    }
-
-    class ProtocolUpgradeObserver(private val symmetricKey: SymmetricKey,
-                                  private val handshakeEmitter: SingleEmitter<SymmetricKey>,
-                                  private val disposables: CompositeDisposable) : (HandshakeUpgradeFromServerDTO) -> (Unit) {
-
-        override fun invoke(handshakeUpgradeFromServerDTO: HandshakeUpgradeFromServerDTO) {
-            if (handshakeUpgradeFromServerDTO.code == 1) {
-                handshakeEmitter.onSuccess(symmetricKey)
-            } else {
-                handshakeEmitter.onError(HandshakeException())
-            }
-
-            // Clear all
-            disposables.dispose()
-        }
-    }
 }
-

@@ -7,7 +7,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.sudox.android.R
-import com.sudox.android.common.Data
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.helpers.showSnackbar
 import com.sudox.android.common.models.dto.AuthHashDTO
@@ -40,20 +39,18 @@ class AuthActivity : DaggerAppCompatActivity() {
         showStartFragment(false)
     }
 
-    private fun getConnectState(connectData: Data<ConnectState>) {
-        when (connectData.data) {
-            ConnectState.RECONNECTED -> {
-                showMessage(getString(R.string.connection_restored))
-                if (hash != null) importAuthHash(hash!!)
+    private fun getConnectState(connectState: ConnectState) {
+        if (connectState == ConnectState.RECONNECTED) {
+            showMessage(getString(R.string.connection_restored))
 
+            if (hash != null) {
+                authViewModel
+                        .importAuthHash(hash!!)
+                        .observe(this, Observer(::getHashData))
             }
-            ConnectState.DISCONNECTED -> showMessage(getString(R.string.lost_internet_connection))
+        } else if (connectState == ConnectState.CONNECT_ERROR) {
+            showMessage(getString(R.string.lost_internet_connection))
         }
-    }
-
-    private fun importAuthHash(hash: String) {
-        authViewModel.importAuthHash(hash)
-                .observe(this, Observer(::getHashData))
     }
 
     private fun getHashData(authHashDTO: AuthHashDTO) {

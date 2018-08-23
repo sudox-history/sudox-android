@@ -2,9 +2,7 @@ package com.sudox.android.ui
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sudox.android.common.Data
 import com.sudox.android.common.auth.SudoxAccount
-import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.repository.auth.AccountRepository
 import com.sudox.android.common.repository.auth.AuthRepository
 import com.sudox.android.common.repository.main.ContactsRepository
@@ -20,24 +18,17 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
                                         private val authRepository: AuthRepository) : ViewModel() {
 
     val accountLiveData = MutableLiveData<SudoxAccount?>()
-    var connectLiveData = MutableLiveData<Data<ConnectState>>()
-
+    val connectLiveData = protocolClient.connectionStateLiveData
 
     private var accountDisposable: Disposable = accountRepository.getAccount()
             .subscribeOn(Schedulers.io())
             .subscribe(Consumer {
-                if (it == null)
+                if (it == null) {
                     accountRepository.deleteData()
+                }
+
                 accountLiveData.postValue(it)
-
             })
-
-    // Connection controller
-    private var connectionDisposable: Disposable = protocolClient
-            .connectionSubject
-            .subscribe {
-                connectLiveData.postValue(Data(it))
-            }
 
     fun initContactsListeners() {
         contactsRepository.initContactsListeners()
@@ -51,16 +42,13 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
 
     fun loadContacts() {
         if (protocolClient.isConnected())
-            contactsRepository.getAllContactsFromServer().subscribe(Consumer {
-                contactsRepository.requestAllContactsFromDB()
-            })
+            contactsRepository
+                    .getAllContactsFromServer()
+                    .subscribe(Consumer {
+                        contactsRepository.requestAllContactsFromDB()
+                    })
         else {
             contactsRepository.requestAllContactsFromDB()
         }
-    }
-
-    override fun onCleared() {
-        connectionDisposable.dispose()
-        super.onCleared()
     }
 }

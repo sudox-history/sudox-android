@@ -19,11 +19,6 @@ class ProtocolModule {
 
     @Provides
     @Singleton
-    fun provideProtocolHandshake(keystore: ProtocolKeystore)
-            = ProtocolHandshake(keystore)
-
-    @Provides
-    @Singleton
     fun provideSocket() : Socket {
         val options = IO.Options()
                 .apply {
