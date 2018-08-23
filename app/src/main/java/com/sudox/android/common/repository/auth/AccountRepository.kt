@@ -4,12 +4,12 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AccountManager.KEY_ACCOUNT_NAME
 import android.os.Build
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
+import com.sudox.android.common.enums.State
 import com.sudox.android.database.SudoxDatabase
-import io.reactivex.Completable
-import io.reactivex.Single
 
 class AccountRepository(private val accountManager: AccountManager,
                         private val sudoxDatabase: SudoxDatabase) {
@@ -17,7 +17,8 @@ class AccountRepository(private val accountManager: AccountManager,
     // Account type
     private val accountType = "com.sudox.account"
 
-    fun saveAccount(account: SudoxAccount): Completable = Completable.create {
+    fun saveAccount(account: SudoxAccount): LiveData<State> {
+        val mutableLiveData = MutableLiveData<State>()
         val accountInstance = Account(account.name, accountType)
 
         // Remove accounts
@@ -32,7 +33,8 @@ class AccountRepository(private val accountManager: AccountManager,
         accountManager.setPassword(accountInstance, account.token)
 
         // Notify, that operation was completed
-        it.onComplete()
+        mutableLiveData.postValue(State.SUCCESS)
+        return mutableLiveData
     }
 
     @Suppress("DEPRECATION")
@@ -52,7 +54,8 @@ class AccountRepository(private val accountManager: AccountManager,
         sudoxDatabase.clearAllTables()
     }
 
-    fun getAccount(): Single<SudoxAccount?> = Single.unsafeCreate {
+    fun getAccount(): LiveData<SudoxAccount?> {
+        val mutableLiveData = MutableLiveData<SudoxAccount?>()
         val accounts = accountManager.accounts
 
         if (accounts.isNotEmpty()) {
@@ -65,9 +68,10 @@ class AccountRepository(private val accountManager: AccountManager,
             val sudoxAccount = SudoxAccount(accountId, accountName, accountToken)
 
             // Send account to the single
-            it.onSuccess(sudoxAccount)
+            mutableLiveData.postValue(sudoxAccount)
         } else {
-            it.onSuccess(null)
+            mutableLiveData.postValue(null)
         }
+        return mutableLiveData
     }
 }

@@ -139,7 +139,7 @@ class AuthConfirmFragment : DaggerFragment() {
     }
 
     private fun setupTimer() {
-        authConfirmViewModel.setTimer(95)
+        authConfirmViewModel.setTimer(5)
         authConfirmFragmentNavbar.setClickable(buttonSomeFeature, false)
     }
 
@@ -186,19 +186,22 @@ class AuthConfirmFragment : DaggerFragment() {
     }
 
     private fun getSignInData(signInDTO: SignInDTO?) {
-        if (signInDTO == null) {
-            authActivity.showMessage(getString(R.string.no_internet_connection))
-            hideInputError(codeEditTextContainer)
-            codeEditText.isEnabled = true
-        } else if (signInDTO.status == 0) {
-            showInputError(codeEditTextContainer)
-            codeEditText.isEnabled = true
-        } else {
-            authConfirmViewModel.accountLiveData.observe(this, Observer<Boolean> {
-                authActivity.showMainActivity()
-            })
-
-            authConfirmViewModel.saveAccount(signInDTO.id, email, signInDTO.token)
+        when {
+            signInDTO == null -> {
+                authActivity.showMessage(getString(R.string.no_internet_connection))
+                hideInputError(codeEditTextContainer)
+                codeEditText.isEnabled = true
+            }
+            signInDTO.status == 0 -> {
+                showInputError(codeEditTextContainer)
+                codeEditText.isEnabled = true
+            }
+            else -> {
+                authConfirmViewModel.saveAccount(signInDTO.id, email, signInDTO.token).observe(this, Observer<State> {
+                    if(it == State.SUCCESS)
+                         authActivity.showMainActivity()
+                })
+            }
         }
     }
 

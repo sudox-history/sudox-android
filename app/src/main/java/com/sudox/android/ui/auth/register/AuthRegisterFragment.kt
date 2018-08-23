@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
+import com.sudox.android.common.enums.State
 import com.sudox.android.common.helpers.NAME_REGEX
 import com.sudox.android.common.helpers.NICKNAME_REGEX
 import com.sudox.android.common.helpers.hideInputError
@@ -124,11 +125,10 @@ class AuthRegisterFragment : DaggerFragment() {
                 showInputError(surnameEditTextContainer)
             }
             else -> {
-                authRegisterViewModel.accountLiveData.observe(this, Observer {
-                    authActivity.showMainActivity()
+                authRegisterViewModel.saveAccount(signUpDTO.id, email, signUpDTO.token).observe(this, Observer {
+                    if (it == State.SUCCESS)
+                        authActivity.showMainActivity()
                 })
-
-                authRegisterViewModel.saveAccount(signUpDTO.id, email, signUpDTO.token)
             }
         }
     }
