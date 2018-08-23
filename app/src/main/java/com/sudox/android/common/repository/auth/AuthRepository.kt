@@ -48,6 +48,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         } else {
             mutableLiveData.postValue(null)
         }
+
         return mutableLiveData
     }
 

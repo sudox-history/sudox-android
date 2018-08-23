@@ -21,14 +21,10 @@ import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.adapters.ContactsAdapter
 import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import dagger.android.support.DaggerFragment
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.card_add_contact.*
 import kotlinx.android.synthetic.main.fragment_contacts.*
 import kotlinx.android.synthetic.main.include_search_navbar_addition.*
 import javax.inject.Inject
-
-
-
 
 class ContactsFragment : DaggerFragment() {
 
@@ -37,9 +33,7 @@ class ContactsFragment : DaggerFragment() {
     private lateinit var contactsViewModel: ContactsViewModel
     private lateinit var mainActivity: MainActivity
     private lateinit var adapter: ContactsAdapter
-
     private lateinit var contactSearch: Contact
-    private lateinit var onContactClickDisposable: Disposable
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactsViewModel = getViewModel(viewModelFactory)
@@ -161,11 +155,8 @@ class ContactsFragment : DaggerFragment() {
             card_add_contact.visibility = View.GONE
         }
 
-        onContactClickDisposable = adapter.getViewClickedObservable().subscribe {
+        adapter.clickedContactLiveData.observe(this, Observer {
             contactsViewModel.removeContact(it)
-        }
-
+        })
     }
-
-
 }

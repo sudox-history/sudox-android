@@ -1,5 +1,6 @@
 package com.sudox.protocol
 
+import com.sudox.protocol.exception.KeyNotFoundException
 import com.sudox.protocol.helper.encryptRSA
 import com.sudox.protocol.helper.findKey
 import com.sudox.protocol.helper.getHashString
@@ -26,41 +27,45 @@ class ProtocolHandshake @Inject constructor() {
         val signature = handshakeSignatureDTO.signature
 
         if (signature != null) {
-            val publicKey = findKey(random, signature)
+            try {
+                val publicKey = findKey(random, signature)
 
-            if (publicKey != null) {
-                val symmetricKey = SymmetricKey().apply {
-                    generate()
-                }
-
-                // Build the handshake payload
-                val payload = with(JSONObject()) {
-                    put("key", symmetricKey.key)
-                    put("random", random)
-                    encryptRSA(publicKey, toString())
-                }
-
-                // Get the hash
-                val hash = getHashString(symmetricKey.key + random)
-
-                // Build the handshake upgrade message
-                val handshakeUpgradeDTO = HandshakeUpgradeToServerDTO().apply {
-                    this.payload = payload
-                    this.hash = hash
-                }
-
-                // Check the result of handshake
-                protocolClient.listenMessageHandshake("upgrade", HandshakeUpgradeFromServerDTO::class) {
-                    if (it.code == 1) {
-                        successCallback(symmetricKey)
-                    } else {
-                        errorCallback()
+                if (publicKey != null) {
+                    val symmetricKey = SymmetricKey().apply {
+                        generate()
                     }
-                }
 
-                // Send upgrade message
-                protocolClient.sendHandshakeMessage("upgrade", handshakeUpgradeDTO)
-            } else errorCallback()
+                    // Build the handshake payload
+                    val payload = with(JSONObject()) {
+                        put("key", symmetricKey.key)
+                        put("random", random)
+                        encryptRSA(publicKey, toString())
+                    }
+
+                    // Get the hash
+                    val hash = getHashString(symmetricKey.key + random)
+
+                    // Build the handshake upgrade message
+                    val handshakeUpgradeDTO = HandshakeUpgradeToServerDTO().apply {
+                        this.payload = payload
+                        this.hash = hash
+                    }
+
+                    // Check the result of handshake
+                    protocolClient.listenMessageHandshake("upgrade", HandshakeUpgradeFromServerDTO::class) {
+                        if (it.code == 1) {
+                            successCallback(symmetricKey)
+                        } else {
+                            errorCallback()
+                        }
+                    }
+
+                    // Send upgrade message
+                    protocolClient.sendHandshakeMessage("upgrade", handshakeUpgradeDTO)
+                } else errorCallback()
+            } catch (e: Exception) {
+                errorCallback()
+            }
         } else errorCallback()
     }
 

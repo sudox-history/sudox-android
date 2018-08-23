@@ -42,13 +42,10 @@ class SplashActivity : DaggerAppCompatActivity() {
                             dialogInterface.cancel()
                         }.create().show()
             } else {
-                if(sudoxAccount != null) {
-                    splashViewModel.connectLiveData.observe(this, Observer {
-                        getConnectState(sudoxAccount, it)
-                    })
-                } else {
-                    splashViewModel.removeAllData()
-                }
+                splashViewModel.connectLiveData.observe(this, Observer {
+                    getConnectState(sudoxAccount, it)
+                })
+
                 splashViewModel.connect()
             }
         })
@@ -59,6 +56,10 @@ class SplashActivity : DaggerAppCompatActivity() {
             splashViewModel
                     .sendToken(sudoxAccount)
                     .observe(this, Observer(::getTokenState))
+
+            if (sudoxAccount == null) {
+                splashViewModel.removeAllData()
+            }
         } else if (connectState == ConnectState.CONNECT_ERROR) {
             chooseActivity(sudoxAccount, connectState)
         }

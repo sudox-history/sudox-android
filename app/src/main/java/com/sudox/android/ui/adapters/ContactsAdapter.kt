@@ -6,26 +6,20 @@ import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sudox.android.R
 import com.sudox.android.database.Contact
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.card_contact.view.*
 
 class ContactsAdapter(var items: List<Contact>,
                       private val context: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>(), View.OnCreateContextMenuListener {
 
 
-    private val onClickSubject = PublishSubject.create<String>()
-
-    fun getViewClickedObservable(): Observable<String> {
-        return onClickSubject.hide()
-    }
+    val clickedContactLiveData = MutableLiveData<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.card_contact, parent, false))
     }
 
@@ -64,7 +58,7 @@ class ContactsAdapter(var items: List<Contact>,
 
         // Set on click listener by using RxJava
         holder.itemView.setOnLongClickListener {
-            onClickSubject.onNext(contact.cid)
+            clickedContactLiveData.postValue(contact.cid)
             return@setOnLongClickListener true
         }
 

@@ -1,16 +1,15 @@
 package com.sudox.protocol
 
 import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.ConnectState
-import com.sudox.protocol.exception.HandshakeException
 import com.sudox.protocol.helper.*
 import com.sudox.protocol.model.Callback
 import com.sudox.protocol.model.Payload
 import com.sudox.protocol.model.ResponseCallback
 import com.sudox.protocol.model.SymmetricKey
 import com.sudox.protocol.model.dto.JsonModel
-import io.reactivex.Completable
 import io.socket.client.Socket
 import org.json.JSONObject
 import javax.inject.Inject
@@ -35,7 +34,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
     private fun registerListeners() {
         socket.once(Socket.EVENT_CONNECT) {
-            startHandshake()
+            startHandshake(false)
         }
 
         socket.once(Socket.EVENT_CONNECT_ERROR) {
@@ -44,7 +43,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
         }
 
         socket.on(Socket.EVENT_RECONNECT) {
-            startHandshake()
+            startHandshake(true)
         }
 
         socket.on(Socket.EVENT_DISCONNECT) {
@@ -52,28 +51,34 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
         }
     }
 
-    private fun startHandshake(): Completable = Completable.create { emitter ->
+    private fun startHandshake(reconnect: Boolean) {
         var errors = 0
-
-        // TODO: test this
-
-        handshake.start({
+        val handler = Handler(Looper.getMainLooper())
+        val successCallback: (SymmetricKey) -> (Unit) = {
             symmetricKey = it
 
             // Start listen messages
             startListeningInboundMessages()
 
             // Notify subscribers, that socket was being connected
-            emitter.onComplete()
-        }, object : (() -> Unit) {
+            if (reconnect) {
+                connectionStateLiveData.postValue(ConnectState.RECONNECTED)
+            } else {
+                connectionStateLiveData.postValue(ConnectState.CONNECTED)
+            }
+        }
+
+        handshake.start(successCallback, object : (() -> Unit) {
             override fun invoke() {
                 errors++
 
                 // Check errors count
                 if (errors <= 5) {
-                    Handler().postDelayed(this, 5000L)
+                    handler.postDelayed({
+                        handshake.start(successCallback, this, this@ProtocolClient)
+                    }, 5000L)
                 } else {
-                    emitter.onError(HandshakeException())
+                    notifyConnectionAttacked()
                 }
             }
         }, this)
@@ -116,13 +121,13 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
                         // Convert message
                         val jsonModel = (pair.modelClass.java.newInstance()) as JsonModel
-                        val callback = pair.callback as ResponseCallback<JsonModel>
+                        val callback = pair.callback as ((JsonModel) -> (Unit))
 
                         // Read message
                         jsonModel.fromJSON(messageObject)
 
                         // Call callback
-                        callback.onMessage(jsonModel)
+                        callback(jsonModel)
 
                         // Clean-up callback from list
                         if (pair.once) {
@@ -131,6 +136,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
                     }
                 }
             } catch (e: Exception) {
+                println(e)
                 // Ignore
             }
         }

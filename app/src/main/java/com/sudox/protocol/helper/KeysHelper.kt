@@ -24,7 +24,7 @@ private val keys by lazy {
             "1Li5capxOSo7BR1Tyd6M0kufmm80qOyZ+6olcO+bNRSCbPJeU1bNHwkGapeAzOf4\n" +
             "R5Q2IaQ0soE0yZ7D9nNPlLaRUnsJwCQBd/howUCdZlBXII7Zjf+vNLzJKi52Tz2k\n" +
             "qmP/9OexFNDoQPVcRK5ClrHSD7i8JVn4LfYdGO6/s4ZlkASyWm4PGbT6V4EGO0Px\n" +
-            "NQIDAQAC\n" +
+            "NQIDAQAB\n" +
             "-----END PUBLIC KEY-----")
 
     keys
