@@ -2,7 +2,6 @@ package com.sudox.android.di.module
 
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.ProtocolHandshake
-import com.sudox.protocol.ProtocolKeystore
 import dagger.Module
 import dagger.Provides
 import io.socket.client.IO

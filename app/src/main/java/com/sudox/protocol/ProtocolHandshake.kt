@@ -1,6 +1,7 @@
 package com.sudox.protocol
 
 import com.sudox.protocol.helper.encryptRSA
+import com.sudox.protocol.helper.findKey
 import com.sudox.protocol.helper.getHashString
 import com.sudox.protocol.helper.randomBase64String
 import com.sudox.protocol.model.SymmetricKey
@@ -13,10 +14,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ProtocolHandshake @Inject constructor(private var protocolKeystore: ProtocolKeystore) {
+class ProtocolHandshake @Inject constructor() {
 
     private fun validate(successCallback: (SymmetricKey) -> Unit,
-                         errorCallback: (Unit) -> (Unit),
+                         errorCallback: () -> (Unit),
                          protocolClient: ProtocolClient,
                          handshakeSignatureDTO: HandshakeSignatureDTO,
                          random: String) {
@@ -25,7 +26,7 @@ class ProtocolHandshake @Inject constructor(private var protocolKeystore: Protoc
         val signature = handshakeSignatureDTO.signature
 
         if (signature != null) {
-            val publicKey = protocolKeystore.findKey(random, signature)
+            val publicKey = findKey(random, signature)
 
             if (publicKey != null) {
                 val symmetricKey = SymmetricKey().apply {
@@ -53,30 +54,30 @@ class ProtocolHandshake @Inject constructor(private var protocolKeystore: Protoc
                     if (it.code == 1) {
                         successCallback(symmetricKey)
                     } else {
-                        errorCallback(Unit)
+                        errorCallback()
                     }
                 }
 
                 // Send upgrade message
                 protocolClient.sendHandshakeMessage("upgrade", handshakeUpgradeDTO)
-            } else errorCallback(Unit)
-        } else errorCallback(Unit)
+            } else errorCallback()
+        } else errorCallback()
     }
 
     fun start(successCallback: (SymmetricKey) -> (Unit),
-              errorCallback: (Unit) -> (Unit),
+              errorCallback: () -> (Unit),
               protocolClient: ProtocolClient) {
 
         val random = randomBase64String(32)
 
-        // Set listener
-        protocolClient.listenMessageHandshake("verify", HandshakeSignatureDTO::class) {
-            validate(successCallback, errorCallback, protocolClient, it, random)
-        }
-
         // Create message with random hex-string
         val handshakeRandomDTO = HandshakeRandomDTO().apply {
             this.random = random
+        }
+
+        // Set listener
+        protocolClient.listenMessageHandshake("verify", HandshakeSignatureDTO::class) {
+            validate(successCallback, errorCallback, protocolClient, it, random)
         }
 
         // Send message to the server and start handshake

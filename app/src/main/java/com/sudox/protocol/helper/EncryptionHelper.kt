@@ -1,19 +1,27 @@
 package com.sudox.protocol.helper
 
+import java.security.InvalidKeyException
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.Signature
 import java.security.spec.X509EncodedKeySpec
+import javax.crypto.AEADBadTagException
+import javax.crypto.BadPaddingException
 import javax.crypto.Cipher
+import javax.crypto.IllegalBlockSizeException
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 // Read public key
-fun readPublicKey(body: String): PublicKey {
+fun readPublicKey(key: String): PublicKey {
     val keyFactory = KeyFactory.getInstance("RSA")
+    val keyBody = key
+            .replace("-----BEGIN PUBLIC KEY-----", "")
+            .replace("-----END PUBLIC KEY-----", "")
+            .replace("\n", "")
 
-    // Decode key body
-    val decoded = decodeBase64String(body)
+    // Decode key key
+    val decoded = decodeBase64String(keyBody)
 
     // Create key spec
     val x509EncodedKeySpec = X509EncodedKeySpec(decoded)
@@ -24,19 +32,15 @@ fun readPublicKey(body: String): PublicKey {
 
 // Verify data
 fun verifyData(publicKey: PublicKey, signature: ByteArray, data: ByteArray): Boolean {
-    return try {
-        val verifier = Signature.getInstance("SHA256withRSA")
+    val verifier = Signature.getInstance("SHA256withRSA")
 
-        // Init verifier
-        with(verifier) {
-            initVerify(publicKey)
-            update(data)
-        }
-
-        verifier.verify(signature)
-    } catch (ex: Exception) {
-        false
+    // Init verifier
+    with(verifier) {
+        initVerify(publicKey)
+        update(data)
     }
+
+    return verifier.verify(signature)
 }
 
 // Encrypt RSA
@@ -58,56 +62,50 @@ fun encryptRSA(publicKey: PublicKey, data: String): String {
 }
 
 // Encrypt AES
-fun encryptAES(key: String, iv: String, data: String): String? {
-    try {
-        val decodedKey = decodeBase64String(key) ?: return null
-        val keySpec = SecretKeySpec(decodedKey, "AES")
+@Throws(IllegalArgumentException::class, InvalidKeyException::class, IllegalBlockSizeException::class)
+fun encryptAES(key: String, iv: String, data: String): String {
+    val decodedKey = decodeBase64String(key)
+    val keySpec = SecretKeySpec(decodedKey, "AES")
 
-        // IV parameters
-        val decodedIv = decodeBase64String(iv) ?: return null
-        val parameterSpec = IvParameterSpec(decodedIv)
+    // IV parameters
+    val decodedIv = decodeBase64String(iv)
+    val parameterSpec = IvParameterSpec(decodedIv)
 
-        // Get the cipher instance
-        val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+    // Get the cipher instance
+    val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+
+    // Encrypt data
+    return with(cipher) {
+        init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec)
 
         // Encrypt data
-        return with(cipher) {
-            init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec)
+        val bytes = cipher.doFinal(data.toByteArray())
+        val encodedBytes = encodeBase64(bytes)
 
-            // Encrypt data
-            val bytes = cipher.doFinal(data.toByteArray())
-            val encodedBytes = encodeBase64(bytes)
-
-            // Encode the hex
-            String(encodedBytes)
-        }
-    } catch (ex: Exception) {
-        return null
+        // Encode the hex
+        String(encodedBytes)
     }
 }
 
 // Decrypt AES
-fun decryptAES(key: String, iv: String, data: String): String? {
-    try {
-        val keySpec = SecretKeySpec(decodeBase64String(key), "AES")
+@Throws(IllegalArgumentException::class, InvalidKeyException::class, IllegalBlockSizeException::class, BadPaddingException::class, AEADBadTagException::class)
+fun decryptAES(key: String, iv: String, data: String): String {
+    val keySpec = SecretKeySpec(decodeBase64String(key), "AES")
 
-        // Get the cipher instance
-        val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+    // Get the cipher instance
+    val cipher = Cipher.getInstance("AES/CTR/NoPadding")
 
-        // IV parameters
-        val parameterSpec = IvParameterSpec(decodeBase64String(iv))
+    // IV parameters
+    val parameterSpec = IvParameterSpec(decodeBase64String(iv))
+
+    // Encrypt data
+    return with(cipher) {
+        init(Cipher.DECRYPT_MODE, keySpec, parameterSpec)
 
         // Encrypt data
-        return with(cipher) {
-            init(Cipher.DECRYPT_MODE, keySpec, parameterSpec)
+        val bytes = cipher.doFinal(decodeBase64(data.toByteArray()))
 
-            // Encrypt data
-            val bytes = cipher.doFinal(decodeBase64(data.toByteArray()))
-
-            // To string
-            String(bytes)
-        }
-    } catch (e: Exception) {
-        return null
+        // To string
+        String(bytes)
     }
 }

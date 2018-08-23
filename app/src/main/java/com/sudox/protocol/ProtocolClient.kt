@@ -1,5 +1,6 @@
 package com.sudox.protocol
 
+import android.os.Handler
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.protocol.exception.HandshakeException
@@ -12,7 +13,6 @@ import com.sudox.protocol.model.dto.JsonModel
 import io.reactivex.Completable
 import io.socket.client.Socket
 import org.json.JSONObject
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.reflect.KClass
@@ -25,7 +25,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
     private lateinit var symmetricKey: SymmetricKey
 
     // Callbacks list
-    val messagesCallbacks: LinkedHashMap<String, Callback<*>> = LinkedHashMap()
+    val callbacks: LinkedHashMap<String, Callback<*>> = LinkedHashMap()
     val connectionStateLiveData: MutableLiveData<ConnectState> = MutableLiveData()
 
     fun connect() {
@@ -35,13 +35,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
     private fun registerListeners() {
         socket.once(Socket.EVENT_CONNECT) {
-            startHandshake().retryWhen {
-                it.delay(5, TimeUnit.SECONDS).take(10)
-            }.subscribe({
-                connectionStateLiveData.postValue(ConnectState.CONNECTED)
-            }, {
-                notifyConnectionAttacked()
-            })
+            startHandshake()
         }
 
         socket.once(Socket.EVENT_CONNECT_ERROR) {
@@ -50,13 +44,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
         }
 
         socket.on(Socket.EVENT_RECONNECT) {
-            startHandshake().retryWhen {
-                it.delay(5, TimeUnit.SECONDS).take(10)
-            }.subscribe({
-                connectionStateLiveData.postValue(ConnectState.RECONNECTED)
-            }, {
-                notifyConnectionAttacked()
-            })
+            startHandshake()
         }
 
         socket.on(Socket.EVENT_DISCONNECT) {
@@ -65,6 +53,10 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
     }
 
     private fun startHandshake(): Completable = Completable.create { emitter ->
+        var errors = 0
+
+        // TODO: test this
+
         handshake.start({
             symmetricKey = it
 
@@ -73,8 +65,17 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
             // Notify subscribers, that socket was being connected
             emitter.onComplete()
-        }, {
-            emitter.onError(HandshakeException())
+        }, object : (() -> Unit) {
+            override fun invoke() {
+                errors++
+
+                // Check errors count
+                if (errors <= 5) {
+                    Handler().postDelayed(this, 5000L)
+                } else {
+                    emitter.onError(HandshakeException())
+                }
+            }
         }, this)
     }
 
@@ -100,33 +101,37 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
         // Защита от MITM-атак
         if (iv != null && payload != null && hash != null) {
-            val decryptedPayload = decryptAES(symmetricKey.key, iv, payload)
+            try {
+                val decryptedPayload = decryptAES(symmetricKey.key, iv, payload)
 
-            // Защита от MITM-атаки
-            if (decryptedPayload != null && checkHashes(hash, decryptedPayload)) {
-                val prepareDataForClient = prepareDataForClient(decryptedPayload)
-                val pair = messagesCallbacks[prepareDataForClient.event]
+                // Защита от MITM-атаки
+                if (checkHashes(hash, decryptedPayload)) {
+                    val prepareDataForClient = prepareDataForClient(decryptedPayload)
+                    val pair = callbacks[prepareDataForClient.event]
 
-                // Check, that event was being linked with callback
-                if (pair != null) {
-                    // Get json object
-                    val messageObject = JSONObject(prepareDataForClient.message)
+                    // Check, that event was being linked with callback
+                    if (pair != null) {
+                        // Get json object
+                        val messageObject = JSONObject(prepareDataForClient.message)
 
-                    // Convert message
-                    val jsonModel = (pair.modelClass.java.newInstance()) as JsonModel
-                    val callback = pair.callback as ResponseCallback<JsonModel>
+                        // Convert message
+                        val jsonModel = (pair.modelClass.java.newInstance()) as JsonModel
+                        val callback = pair.callback as ResponseCallback<JsonModel>
 
-                    // Read message
-                    jsonModel.fromJSON(messageObject)
+                        // Read message
+                        jsonModel.fromJSON(messageObject)
 
-                    // Call callback
-                    callback.onMessage(jsonModel)
+                        // Call callback
+                        callback.onMessage(jsonModel)
 
-                    // Clean-up callback from list
-                    if (pair.once) {
-                        messagesCallbacks.remove(prepareDataForClient.event)
+                        // Clean-up callback from list
+                        if (pair.once) {
+                            callbacks.remove(prepareDataForClient.event)
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                // Ignore
             }
         }
     }
@@ -142,21 +147,24 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
             // Prepare data for encrypt
             val json = prepareDataForEncrypt(symmetricKey, event, messageJsonObject)
 
-            // Encrypt payload
-            val encryptedPayload = encryptAES(symmetricKey.key, symmetricKey.iv, json.payloadObject.toString())
-                    ?: return
+            try {
+                // Encrypt payload
+                val encryptedPayload = encryptAES(symmetricKey.key, symmetricKey.iv, json.payloadObject.toString())
 
-            // Make payloadJson
-            val payloadJson = Payload().apply {
-                payload = encryptedPayload
-                iv = symmetricKey.iv
-                hash = json.hash
-            }.toJSON()
+                // Make payloadJson
+                val payloadJson = Payload().apply {
+                    payload = encryptedPayload
+                    iv = symmetricKey.iv
+                    hash = json.hash
+                }.toJSON()
 
-            // Send payload to the server
-            socket.emit("packet", payloadJson)
+                // Send payload to the server
+                socket.emit("packet", payloadJson)
+            } catch (e: Exception) {
+                // Ignore
+            }
         } else {
-            connectionStateLiveData
+            connectionStateLiveData.postValue(ConnectState.DISCONNECTED)
         }
     }
 
@@ -183,15 +191,15 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
         }
     }
 
-    inline fun <reified T : JsonModel> listenMessageOnce(event: String, callback: ResponseCallback<T>) {
-        messagesCallbacks[event] = Callback(T::class, callback, true)
+    inline fun <reified T : JsonModel> listenMessageOnce(event: String, noinline callback: ((T) -> Unit)) {
+        callbacks[event] = Callback(T::class, callback, true)
     }
 
-    inline fun <reified T : JsonModel> listenMessage(event: String, callback: ResponseCallback<T>) {
-        messagesCallbacks[event] = Callback(T::class, callback, false)
+    inline fun <reified T : JsonModel> listenMessage(event: String, noinline callback: ((T) -> Unit)) {
+        callbacks[event] = Callback(T::class, callback, false)
     }
 
-    inline fun <reified T : JsonModel> makeRequest(event: String, messageJsonModel: JsonModel, callback: ResponseCallback<T>) {
+    inline fun <reified T : JsonModel> makeRequest(event: String, messageJsonModel: JsonModel, noinline callback: ((T) -> Unit)) {
         listenMessageOnce(event, callback)
 
         // Send message
@@ -199,7 +207,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
     }
 
     fun removeCallback(event: String) {
-        messagesCallbacks.remove(event)
+        callbacks.remove(event)
     }
 
     fun disconnect() {
