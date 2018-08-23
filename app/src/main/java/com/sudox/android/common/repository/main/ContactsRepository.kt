@@ -1,6 +1,6 @@
 package com.sudox.android.common.repository.main
 
-import android.os.Handler
+import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.State
@@ -103,7 +103,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
     }
 
     fun requestAllContactsFromDB() {
-        Handler().post {
+        AsyncTask.execute {
             contactsLoadLiveData.postValue(contactsDao.getContacts())
         }
     }

@@ -3,6 +3,7 @@ package com.sudox.android.common.repository.auth
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AccountManager.KEY_ACCOUNT_NAME
+import android.os.AsyncTask
 import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +11,8 @@ import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.State
 import com.sudox.android.database.SudoxDatabase
+
+
 
 class AccountRepository(private val accountManager: AccountManager,
                         private val sudoxDatabase: SudoxDatabase) {
@@ -51,7 +54,9 @@ class AccountRepository(private val accountManager: AccountManager,
     }
 
     fun deleteData(){
-        sudoxDatabase.clearAllTables()
+        AsyncTask.execute {
+            sudoxDatabase.clearAllTables()
+        }
     }
 
     fun getAccount(): LiveData<SudoxAccount?> {
