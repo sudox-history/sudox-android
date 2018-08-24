@@ -40,7 +40,10 @@ class ChatFragment: DaggerFragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 
         when(item!!.itemId){
-            android.R.id.home-> mainActivity.goToContactsFragment()
+            android.R.id.home->{
+                mainActivity.toggleBottomNavBar(true)
+                mainActivity.goToContactsFragment()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -53,7 +56,7 @@ class ChatFragment: DaggerFragment() {
         val bundle = arguments!!
         val contact = Contact(bundle.getString("id")!!, bundle.getString("firstColor"),
                 bundle.getString("secondColor"), bundle.getString("avatarUrl"),
-                bundle.getString("name")!!, "")
+                bundle.getString("name")!!, bundle.getString("nickname")!!)
 
         if (contact.firstColor != null && contact.secondColor != null) {
             val builder = StringBuilder()

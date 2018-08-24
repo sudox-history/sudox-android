@@ -19,6 +19,6 @@
         app:itemIconSize="22dp"
         app:itemIconTint="@drawable/selector_bottom_navigation_item"
         app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/menu_main" />
+        app:menu="@menu/menu_main"/>
 
 </RelativeLayout>

@@ -26,6 +26,8 @@ import kotlinx.android.synthetic.main.fragment_contacts.*
 import kotlinx.android.synthetic.main.include_search_navbar_addition.*
 import javax.inject.Inject
 
+
+
 class ContactsFragment : DaggerFragment() {
 
     @Inject
@@ -95,7 +97,7 @@ class ContactsFragment : DaggerFragment() {
                 .contactsLoadLiveData()
                 .observe(this, Observer {
                     searchAdditionalView.toggle(false)
-                    if(it.isNotEmpty()) {
+                    if (it.isNotEmpty()) {
                         contactsList.visibility = View.VISIBLE
                         have_not_got_contacts.visibility = View.GONE
                         val result = DiffUtil.calculateDiff(ContactsDiffUtil(it, adapter.items))
@@ -160,13 +162,16 @@ class ContactsFragment : DaggerFragment() {
         })
 
         adapter.clickedSimpleContactLiveData.observe(this, Observer {
-            val bundle = Bundle()
-            bundle.putString("name", it.name)
-            bundle.putString("firstColor", it.firstColor)
-            bundle.putString("secondColor", it.secondColor)
-            bundle.putString("avatarUrl", it.avatarUrl)
-            bundle.putString("id", it.cid)
-            mainActivity.goToChatFragment(bundle)
+            mainActivity.goToChatFragment( Bundle().apply {
+                putString("name", it.name)
+                putString("firstColor", it.firstColor)
+                putString("secondColor", it.secondColor)
+                putString("avatarUrl", it.avatarUrl)
+                putString("id", it.cid)
+                putString("nickname", it.nickname)
+            })
+
+            mainActivity.toggleBottomNavBar(false)
         })
     }
 }

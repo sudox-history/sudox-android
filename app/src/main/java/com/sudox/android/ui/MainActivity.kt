@@ -33,7 +33,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         mainViewModel = getViewModel(viewModelFactory)
         mainViewModel.getAccount().observe(this, Observer { account ->
-            if(account != null) {
+            if (account != null) {
                 mainViewModel.connectLiveData.observe(this, Observer {
                     getConnectState(account, it)
                 })
@@ -70,13 +70,14 @@ class MainActivity : DaggerAppCompatActivity() {
         supportFragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(R.id.fragment_main_container, ContactsFragment())
-                .commit()
+                .addToBackStack(null).commit()
+
     }
 
-    fun goToChatFragment(bundle: Bundle){
+    fun goToChatFragment(bundle: Bundle) {
         supportFragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_main_container, ChatFragment().apply {arguments = bundle})
+                .replace(R.id.fragment_main_container, ChatFragment().apply { arguments = bundle })
                 .commit()
     }
 
@@ -99,7 +100,7 @@ class MainActivity : DaggerAppCompatActivity() {
             mainViewModel.removeAllAccounts()
             mainViewModel.disconnect()
             showSplashActivity()
-        } else if (secretData.tokenState == TokenState.CORRECT){
+        } else if (secretData.tokenState == TokenState.CORRECT) {
             loadContacts()
         }
     }
@@ -109,13 +110,27 @@ class MainActivity : DaggerAppCompatActivity() {
         finish()
     }
 
-    private fun loadContacts(){
-        if(mainViewModel.isConnected()){
+    private fun loadContacts() {
+        if (mainViewModel.isConnected()) {
             mainViewModel.getAllContactsFromServer().observe(this, Observer {
                 mainViewModel.getAllContactsFromDB()
             })
         } else {
             mainViewModel.getAllContactsFromDB()
+        }
+    }
+
+    fun toggleBottomNavBar(visible: Boolean) {
+        if (visible) {
+            bottom_navigation.animate()
+                    .setDuration(300)
+                    .translationY(0f)
+
+        } else {
+            bottom_navigation.animate()
+                    .setDuration(300)
+                    .translationY(bottom_navigation.height.toFloat())
+
         }
     }
 
