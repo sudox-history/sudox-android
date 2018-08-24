@@ -3,29 +3,31 @@ package com.sudox.android.common.repository.auth
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.*
+import com.sudox.android.common.models.SecretData
 import com.sudox.android.common.models.SendCodeData
 import com.sudox.android.common.models.SignUpInData
-import com.sudox.android.common.models.TokenData
 import com.sudox.android.common.models.dto.*
 import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(private val protocolClient: ProtocolClient) {
 
-    fun sendToken(token: String?): LiveData<TokenData> {
-        val tokenData = MutableLiveData<TokenData>()
+    fun sendSecret(secret: String?, id: String?): LiveData<SecretData> {
+        val tokenData = MutableLiveData<SecretData>()
 
-        if (token == null) {
-            tokenData.postValue(TokenData(TokenState.MISSING))
+        if (secret == null || id == null) {
+            tokenData.postValue(SecretData(TokenState.MISSING))
         } else {
-            val tokenDTO = TokenDTO()
-            tokenDTO.token = token
+            val tokenDTO = SecretDTO()
+            tokenDTO.secret = secret
+            tokenDTO.sendId = id
 
-            protocolClient.makeRequest<TokenDTO>("auth.importToken", tokenDTO) {
-                if (it.errorCode == 3)
-                    tokenData.postValue(TokenData(TokenState.WRONG))
-                else
-                    tokenData.postValue(TokenData(TokenState.CORRECT, it.id))
+            protocolClient.makeRequest<SecretDTO>("auth.import", tokenDTO) {
+                when {
+                    it.errorCode == 201 -> tokenData.postValue(SecretData(TokenState.WRONG))
+                    it.status == 1 -> tokenData.postValue(SecretData(TokenState.CORRECT))
+                    else -> tokenData.postValue(SecretData(TokenState.WRONG))
+                }
             }
         }
         return tokenData
@@ -40,7 +42,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
             protocolClient.makeRequest<SendCodeDTO>("auth.sendCode", sendCodeDTO) {
                 when {
-                    it.errorCode == 1 -> mutableLiveData.postValue(SendCodeData(EmailState.FAILED))
+                    it.errorCode == 0 -> mutableLiveData.postValue(SendCodeData(EmailState.FAILED))
                     it.errorCode == 2 -> mutableLiveData.postValue(SendCodeData(EmailState.WRONG_FORMAT))
                     else -> mutableLiveData.postValue(SendCodeData(EmailState.SUCCESS, it.hash, it.status))
                 }
@@ -60,7 +62,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
             confirmCodeDTO.code = code.toInt()
 
             protocolClient.makeRequest<ConfirmCodeDTO>("auth.confirmCode", confirmCodeDTO) {
-                if (it.errorCode == 7) {
+                if (it.errorCode == 204) {
                     mutableLiveData.postValue(State.FAILED)
                 } else if (it.codeStatus == 1) {
                     mutableLiveData.postValue(State.SUCCESS)
@@ -77,7 +79,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
         if (protocolClient.isConnected()) {
             protocolClient.makeRequest<ResendDTO>("auth.resendCode", ResendDTO()) {
-                if (it.errorCode == 6)
+                if (it.errorCode == 203)
                     mutableLiveData.postValue(State.FAILED)
                 else if (it.code == 1)
                     mutableLiveData.postValue(State.SUCCESS)
@@ -99,10 +101,10 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
             protocolClient.makeRequest<SignUpDTO>("auth.signUp", signUpDTO) {
                 when {
-                    it.errorCode == 1 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
+                    it.errorCode == 0 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
                     it.errorCode == 2 -> mutableLiveData.postValue(SignUpInData(SignUpInState.WRONG_FORMAT))
-                    it.errorCode == 8 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_ERROR))
-                    else -> mutableLiveData.postValue(SignUpInData(SignUpInState.SUCCESS, it.id, it.token))
+                    it.errorCode == 205 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_ERROR))
+                    else -> mutableLiveData.postValue(SignUpInData(SignUpInState.SUCCESS, it.id, it.secret))
                 }
             }
             return mutableLiveData
@@ -121,9 +123,10 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
             protocolClient.makeRequest<SignInDTO>("auth.signIn", signInDTO) {
                 when {
-                    it.errorCode == 1 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
-                    it.errorCode == 2 -> mutableLiveData.postValue(SignUpInData(SignUpInState.WRONG_FORMAT))
-                    it.errorCode == 9 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_ERROR))
+                    it.errorCode == 0 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
+                    it.errorCode == 50 -> mutableLiveData.postValue(SignUpInData(SignUpInState.WRONG_FORMAT))
+                    it.errorCode == 205 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_ERROR))
+                    else -> mutableLiveData.postValue(SignUpInData(SignUpInState.SUCCESS, it.id, it.secret))
                 }
             }
             return mutableLiveData
@@ -138,10 +141,10 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         val authHashDTO = AuthHashDTO()
         authHashDTO.hash = hash
 
-        protocolClient.makeRequest<AuthHashDTO>("auth.import", authHashDTO) {
+        protocolClient.makeRequest<AuthHashDTO>("auth.restore", authHashDTO) {
             when {
-                it.errorCode == 1 -> mutableLiveData.postValue(AuthHashState.FAILED)
-                it.errorCode == 4 -> mutableLiveData.postValue(AuthHashState.AUTH_HASH_ERROR)
+                it.errorCode == 0 -> mutableLiveData.postValue(AuthHashState.FAILED)
+                it.errorCode == 202 -> mutableLiveData.postValue(AuthHashState.AUTH_HASH_ERROR)
                 it.code == 0 -> mutableLiveData.postValue(AuthHashState.DEAD)
                 else -> mutableLiveData.postValue(AuthHashState.ALIVE)
             }

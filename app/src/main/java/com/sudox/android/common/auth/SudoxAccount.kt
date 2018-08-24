@@ -5,4 +5,4 @@ const val KEY_ACCOUNT_ID = "ACCOUNT_ID"
 
 data class SudoxAccount(var id: String,
                         var name: String,
-                        var token: String)
+                        var secret: String)

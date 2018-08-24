@@ -10,7 +10,7 @@ class ConfirmCodeDTO: JsonModel {
 
     // To get
     var codeStatus: Int = 0
-    var errorCode = 0
+    var errorCode = -1
 
     // Common
     var isError = false

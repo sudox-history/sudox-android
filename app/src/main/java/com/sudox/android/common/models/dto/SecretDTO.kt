@@ -3,18 +3,20 @@ package com.sudox.android.common.models.dto
 import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONObject
 
-class TokenDTO: JsonModel {
+class SecretDTO: JsonModel {
 
     // To send
-    lateinit var token: String
+    lateinit var secret: String
+    lateinit var sendId: String
 
     // To get
-    lateinit var id: String
-    var errorCode: Int = 0
+    var status = 0
+    var errorCode: Int = -1
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()){
-            putOpt("token", token)
+            putOpt("secret", secret)
+            putOpt("id", sendId)
         }
     }
 
@@ -23,8 +25,7 @@ class TokenDTO: JsonModel {
             val response = jsonObject.getJSONObject("error")
             errorCode = response.optInt("code")
         } else {
-            val response = jsonObject.getJSONObject("response")
-            id = response.optString("id")
+            status = jsonObject.optInt("response")
         }
     }
 

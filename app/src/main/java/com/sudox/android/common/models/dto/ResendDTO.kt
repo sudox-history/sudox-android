@@ -7,7 +7,7 @@ class ResendDTO: JsonModel{
 
     // To get
     var code: Int = 0
-    var errorCode = 0
+    var errorCode = -1
 
     override fun toJSON(): JSONObject {
         return JSONObject()

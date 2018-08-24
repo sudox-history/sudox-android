@@ -139,7 +139,7 @@ class AuthConfirmFragment : DaggerFragment() {
     }
 
     private fun setupTimer() {
-        authConfirmViewModel.setTimer(5)
+        authConfirmViewModel.setTimer(91)
         authConfirmFragmentNavbar.setClickable(buttonSomeFeature, false)
     }
 
@@ -205,7 +205,7 @@ class AuthConfirmFragment : DaggerFragment() {
                 codeEditText.isEnabled = true
             }
             else -> {
-                authConfirmViewModel.saveAccount(data.id!!, email, data.token!!).observe(this, Observer<State> {
+                authConfirmViewModel.saveAccount(data.id!!, email, data.secret!!).observe(this, Observer<State> {
                     if(it == State.SUCCESS)
                          authActivity.showMainActivity()
                 })

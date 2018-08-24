@@ -13,7 +13,7 @@ import com.sudox.android.common.auth.AUTH_KEY
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.TokenState
-import com.sudox.android.common.models.TokenData
+import com.sudox.android.common.models.SecretData
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.MainActivity
 import com.sudox.android.ui.auth.AuthActivity
@@ -54,7 +54,7 @@ class SplashActivity : DaggerAppCompatActivity() {
     private fun getConnectState(sudoxAccount: SudoxAccount?, connectState: ConnectState) {
         if (connectState == ConnectState.CONNECTED) {
             splashViewModel
-                    .sendToken(sudoxAccount)
+                    .sendSecret(sudoxAccount)
                     .observe(this, Observer(::getTokenState))
 
             if (sudoxAccount == null) {
@@ -65,7 +65,7 @@ class SplashActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun getTokenState(data: TokenData) {
+    private fun getTokenState(data: SecretData) {
         when (data.tokenState) {
             TokenState.CORRECT -> showMainActivity()
             TokenState.WRONG -> showAuthActivity()

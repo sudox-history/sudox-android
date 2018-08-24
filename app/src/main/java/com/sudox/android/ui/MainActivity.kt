@@ -11,7 +11,7 @@ import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.helpers.showTopSnackbar
-import com.sudox.android.common.models.TokenData
+import com.sudox.android.common.models.SecretData
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.settings.SettingsFragment
@@ -79,19 +79,19 @@ class MainActivity : DaggerAppCompatActivity() {
 
             // Try to restore token
             mainViewModel
-                    .sendToken(account)
+                    .sendSecret(account)
                     .observe(this, Observer(::getTokenState))
         } else if (connectState == ConnectState.DISCONNECTED) {
             showMessage(getString(R.string.lost_internet_connection))
         }
     }
 
-    private fun getTokenState(tokenData: TokenData) {
-        if (tokenData.tokenState == TokenState.WRONG) {
+    private fun getTokenState(secretData: SecretData) {
+        if (secretData.tokenState == TokenState.WRONG) {
             mainViewModel.removeAllAccounts()
             mainViewModel.disconnect()
             showSplashActivity()
-        } else if (tokenData.tokenState == TokenState.CORRECT){
+        } else if (secretData.tokenState == TokenState.CORRECT){
             loadContacts()
         }
     }

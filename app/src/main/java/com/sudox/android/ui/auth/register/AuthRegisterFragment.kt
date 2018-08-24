@@ -28,7 +28,7 @@ class AuthRegisterFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    lateinit var authRegisterViewModel: AuthRegisterViewModel
+    private lateinit var authRegisterViewModel: AuthRegisterViewModel
     lateinit var authActivity: AuthActivity
     lateinit var email: String
 
@@ -135,7 +135,7 @@ class AuthRegisterFragment : DaggerFragment() {
                 authActivity.showMessage(getString(R.string.account_is_already_exist))
             }
             else -> {
-                authRegisterViewModel.saveAccount(data.id!!, email, data.token!!).observe(this, Observer {
+                authRegisterViewModel.saveAccount(data.id!!, email, data.secret!!).observe(this, Observer {
                     if (it == State.SUCCESS)
                         authActivity.showMainActivity()
                 })

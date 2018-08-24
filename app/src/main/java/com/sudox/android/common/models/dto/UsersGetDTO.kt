@@ -19,7 +19,7 @@ class UsersGetDTO: JsonModel {
 
     // Common
     var checkAvatar: Boolean = false
-    var errorCode = 0
+    var errorCode = -1
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()) {
@@ -33,20 +33,19 @@ class UsersGetDTO: JsonModel {
             errorCode = response.optInt("code")
         } else {
             val response = jsonObject.getJSONObject("response")
-            val user = response.getJSONObject("user")
             try {
-                val photoJsonArray = user.getJSONArray("photo")
+                val photoJsonArray = response.getJSONArray("photo")
                 firstColor = photoJsonArray[0].toString()
                 secondColor = photoJsonArray[1].toString()
                 checkAvatar = true
             } catch (e: JSONException) {
-                avatarUrl = user.getString("photo")
+                avatarUrl = response.getString("photo")
                 checkAvatar = false
             }
 
-            id = user.optString("id")
-            name = user.optString("name")
-            nickname = user.optString("nickname")
+            id = response.optString("id")
+            name = response.optString("name")
+            nickname = response.optString("nickname")
         }
     }
 }

@@ -13,7 +13,7 @@ class ContactAddRemoveDTO: JsonModel {
     var code: Int = 0
 
     // Common
-    var errorCode = 0
+    var errorCode = -1
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()) {

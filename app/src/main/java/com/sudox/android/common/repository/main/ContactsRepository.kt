@@ -16,7 +16,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
 
     fun initContactsListeners() {
         protocolClient.listenMessage<ContactAddRemoveDTO>("contacts.add") {
-            if (it.errorCode != 11) {
+            if (it.errorCode != 302) {
                 val usersGetDTO = UsersGetDTO()
                 usersGetDTO.id = it.id
 
@@ -48,7 +48,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         val mutableLiveData = MutableLiveData<State>()
 
         protocolClient.makeRequest<ContactsGetDTO>("contacts.get", SimpleAnswerDTO()) {
-            if (it.code != 0) {
+            if (it.errorCode != 301) {
                 for (i in 0..(it.items!!.length() - 1)) {
                     val item = it.items!!.getJSONObject(i)
 
@@ -72,8 +72,8 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         val contactSearchDTO = ContactSearchDTO()
         contactSearchDTO.nickname = nickname
 
-        protocolClient.makeRequest<ContactSearchDTO>("users.search", contactSearchDTO) {
-                if (it.errorCode != 12) {
+        protocolClient.makeRequest<ContactSearchDTO>("users.get", contactSearchDTO) {
+                if (it.errorCode != 51) {
                     val contact = if (it.checkAvatar) {
                         Contact(it.scid, it.firstColor, it.secondColor,
                                 null, it.name, it.name)

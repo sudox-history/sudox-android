@@ -11,7 +11,7 @@ class SendCodeDTO : JsonModel {
     // To get
     lateinit var hash: String
     var status = 0
-    var errorCode = 0
+    var errorCode = -1
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()){

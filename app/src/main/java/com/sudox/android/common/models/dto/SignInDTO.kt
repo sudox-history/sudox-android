@@ -9,11 +9,11 @@ class SignInDTO: JsonModel {
     var code: Int = 0
 
     // To get
-    lateinit var token: String
+    lateinit var secret: String
     lateinit var id: String
 
     // Common
-    var errorCode = 0
+    var errorCode = -1
 
     override fun toJSON(): JSONObject {
        return with(JSONObject()){
@@ -27,7 +27,7 @@ class SignInDTO: JsonModel {
             errorCode = response.optInt("code")
         } else {
             val response = jsonObject.getJSONObject("response")
-            token = response.optString("token")
+            secret = response.optString("secret")
             id = response.optString("id")
         }
     }

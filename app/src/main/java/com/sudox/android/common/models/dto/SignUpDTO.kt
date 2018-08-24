@@ -10,9 +10,9 @@ class SignUpDTO: JsonModel {
     lateinit var nickname: String
 
     // To get
-    lateinit var token: String
+    lateinit var secret: String
     lateinit var id: String
-    var errorCode = 0
+    var errorCode = -1
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()){
@@ -28,7 +28,7 @@ class SignUpDTO: JsonModel {
         } else {
             val response = jsonObject.getJSONObject("response")
             id = response.optString("id")
-            token = response.optString("token")
+            secret = response.optString("secret")
         }
     }
 }

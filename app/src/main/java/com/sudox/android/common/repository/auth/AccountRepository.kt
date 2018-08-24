@@ -33,7 +33,7 @@ class AccountRepository(private val accountManager: AccountManager,
         // Write account data
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_ID, account.id)
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_NAME, account.name)
-        accountManager.setPassword(accountInstance, account.token)
+        accountManager.setPassword(accountInstance, account.secret)
 
         // Notify, that operation was completed
         mutableLiveData.postValue(State.SUCCESS)
@@ -67,10 +67,10 @@ class AccountRepository(private val accountManager: AccountManager,
             val account = accounts[accounts.size - 1]
             val accountId = accountManager.getUserData(account, KEY_ACCOUNT_ID)
             val accountName = accountManager.getUserData(account, KEY_ACCOUNT_NAME)
-            val accountToken = accountManager.getPassword(account)
+            val accountSecret = accountManager.getPassword(account)
 
             // Account instance
-            val sudoxAccount = SudoxAccount(accountId, accountName, accountToken)
+            val sudoxAccount = SudoxAccount(accountId, accountName, accountSecret)
 
             // Send account to the single
             mutableLiveData.postValue(sudoxAccount)

@@ -6,7 +6,7 @@ import org.json.JSONObject
 class SimpleAnswerDTO: JsonModel {
 
     // To get
-    var errorCode = 0
+    var errorCode = -1
 
     override fun toJSON(): JSONObject {
         return JSONObject()
