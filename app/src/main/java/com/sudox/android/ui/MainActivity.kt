@@ -13,6 +13,7 @@ import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.helpers.showTopSnackbar
 import com.sudox.android.common.models.SecretData
 import com.sudox.android.common.viewmodels.getViewModel
+import com.sudox.android.ui.main.chats.ChatFragment
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.settings.SettingsFragment
 import com.sudox.android.ui.splash.SplashActivity
@@ -65,10 +66,17 @@ class MainActivity : DaggerAppCompatActivity() {
                 .commit()
     }
 
-    private fun goToContactsFragment() {
+    fun goToContactsFragment() {
         supportFragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(R.id.fragment_main_container, ContactsFragment())
+                .commit()
+    }
+
+    fun goToChatFragment(bundle: Bundle){
+        supportFragmentManager.beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.fragment_main_container, ChatFragment().apply {arguments = bundle})
                 .commit()
     }
 

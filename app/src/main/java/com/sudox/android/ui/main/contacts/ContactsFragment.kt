@@ -155,8 +155,18 @@ class ContactsFragment : DaggerFragment() {
             card_add_contact.visibility = View.GONE
         }
 
-        adapter.clickedContactLiveData.observe(this, Observer {
+        adapter.clickedLongContactLiveData.observe(this, Observer {
             contactsViewModel.removeContact(it)
+        })
+
+        adapter.clickedSimpleContactLiveData.observe(this, Observer {
+            val bundle = Bundle()
+            bundle.putString("name", it.name)
+            bundle.putString("firstColor", it.firstColor)
+            bundle.putString("secondColor", it.secondColor)
+            bundle.putString("avatarUrl", it.avatarUrl)
+            bundle.putString("id", it.cid)
+            mainActivity.goToChatFragment(bundle)
         })
     }
 }

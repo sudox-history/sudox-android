@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/chatbar_height"
+    android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/chat_avatar"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/ic_launcher"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/chat_avatar"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/chat_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Антон Янкин"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/chat_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="был в сети 5 минут назад"
+            android:textColor="@color/colorHint"
+            android:textSize="13sp" />
+    </LinearLayout>
+</RelativeLayout>

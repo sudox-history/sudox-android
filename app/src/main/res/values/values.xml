@@ -10,4 +10,7 @@
     <!-- Navigation bar -->
     <dimen name="navbar_height">56dp</dimen>
     <dimen name="navbar_button_drawable_padding">8dp</dimen>
+
+    <!--Main bar-->
+    <dimen name="chatbar_height">60dp</dimen>
 </resources>

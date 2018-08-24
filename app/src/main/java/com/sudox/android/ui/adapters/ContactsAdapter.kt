@@ -17,7 +17,8 @@ class ContactsAdapter(var items: List<Contact>,
                       private val context: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>(), View.OnCreateContextMenuListener {
 
 
-    val clickedContactLiveData = MutableLiveData<String>()
+    val clickedLongContactLiveData = MutableLiveData<String>()
+    val clickedSimpleContactLiveData = MutableLiveData<Contact>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.card_contact, parent, false))
@@ -58,8 +59,12 @@ class ContactsAdapter(var items: List<Contact>,
 
         // Set on click listener by using RxJava
         holder.itemView.setOnLongClickListener {
-            clickedContactLiveData.postValue(contact.cid)
+            clickedLongContactLiveData.postValue(contact.cid)
             return@setOnLongClickListener true
+        }
+
+        holder.itemView.setOnClickListener{
+            clickedSimpleContactLiveData.postValue(contact)
         }
 
         // Setting name
@@ -112,7 +117,5 @@ class ContactsAdapter(var items: List<Contact>,
         val avatar = view.avatar!!
         val name = view.name!!
         val nickname = view.nickname!!
-
-
     }
 }

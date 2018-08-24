@@ -69,4 +69,5 @@
     <string name="contact_has_not_find">Контакт не найден!</string>
     <string name="enter_username">Введите никнейм пользователя, которого хотите найти</string>
     <string name="remove_contact">Удалить контакт</string>
+    <string name="call_user">Позвонить пользователю</string>
 </resources>
