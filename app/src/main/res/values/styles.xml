@@ -30,6 +30,10 @@
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
+    <style name="EditFieldTheme">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
     <style name="ToolbarTheme.Addition">
         <item name="android:paddingLeft">25dp</item>
         <item name="android:paddingRight">28dp</item>

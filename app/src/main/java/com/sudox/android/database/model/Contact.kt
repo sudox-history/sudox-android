@@ -1,4 +1,4 @@
-package com.sudox.android.database
+package com.sudox.android.database.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

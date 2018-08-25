@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:windowSoftInputMode="adjustResize">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_chat"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chatbar_height"
+        app:contentInsetStartWithNavigation="0dp"
+        app:theme="@style/ToolbarTheme.ChatToolbar"
+        app:elevation="2dp">
+
+        <include layout="@layout/include_toolbar_chat" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp"
+        android:clipToPadding="false"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_below="@id/toolbar_chat"
+        android:layout_above="@id/edit_message_layout" />
+
+    <LinearLayout
+        android:id="@+id/edit_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:minHeight="@dimen/editfield_height"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/attach_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="18dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_attach_file"
+            android:contentDescription="@string/attach_file" />
+
+        <EditText
+            android:id="@+id/edit_message_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="18dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginEnd="15dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="@string/enter_message"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxHeight="100dp"
+            android:textSize="15sp"
+            tools:ignore="Autofill" />
+
+        <ImageButton
+            android:id="@+id/send_message_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:layout_gravity="bottom"
+            android:layout_marginEnd="15dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_send"
+            android:contentDescription="@string/send_message" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,9 +1,10 @@
-package com.sudox.android.database
+package com.sudox.android.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
+import com.sudox.android.database.model.Contact
 
 @Dao
 interface ContactsDao {

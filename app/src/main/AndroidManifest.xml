@@ -45,8 +45,17 @@
             android:name=".ui.auth.AuthActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
 
-        <activity android:name=".ui.MainActivity"
+        <activity android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
+
+        <activity
+            android:name=".ui.chats.ChatActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+
+        </activity>
     </application>
 </manifest>

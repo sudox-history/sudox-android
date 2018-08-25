@@ -70,4 +70,7 @@
     <string name="enter_username">Введите никнейм пользователя, которого хотите найти</string>
     <string name="remove_contact">Удалить контакт</string>
     <string name="call_user">Позвонить пользователю</string>
+    <string name="enter_message">Введите сообщение</string>
+    <string name="attach_file">Прикрепить файл</string>
+    <string name="send_message">Отправить сообщение</string>
 </resources>

@@ -15,7 +15,7 @@ import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.models.SecretData
 import com.sudox.android.common.viewmodels.getViewModel
-import com.sudox.android.ui.MainActivity
+import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.auth.AuthActivity
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject

@@ -13,4 +13,5 @@
 
     <!--Main bar-->
     <dimen name="chatbar_height">60dp</dimen>
+    <dimen name="editfield_height">48dp</dimen>
 </resources>

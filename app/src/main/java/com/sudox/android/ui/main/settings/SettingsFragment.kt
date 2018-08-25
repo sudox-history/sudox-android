@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
 import com.sudox.android.common.viewmodels.getViewModel
-import com.sudox.android.ui.MainActivity
+import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.splash.SplashActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_settings.*

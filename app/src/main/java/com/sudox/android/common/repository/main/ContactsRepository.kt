@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.State
 import com.sudox.android.common.models.dto.*
-import com.sudox.android.database.Contact
-import com.sudox.android.database.ContactsDao
+import com.sudox.android.database.model.Contact
+import com.sudox.android.database.dao.ContactsDao
 import com.sudox.protocol.ProtocolClient
 
 class ContactsRepository(private val protocolClient: ProtocolClient,

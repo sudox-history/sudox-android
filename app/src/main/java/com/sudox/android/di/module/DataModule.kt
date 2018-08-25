@@ -3,7 +3,7 @@ package com.sudox.android.di.module
 import android.accounts.AccountManager
 import com.sudox.android.common.repository.auth.AccountRepository
 import com.sudox.android.common.repository.main.ContactsRepository
-import com.sudox.android.database.ContactsDao
+import com.sudox.android.database.dao.ContactsDao
 import com.sudox.android.database.SudoxDatabase
 import com.sudox.protocol.ProtocolClient
 import dagger.Module

@@ -1,10 +1,10 @@
 package com.sudox.android.ui.diffutil
 
 import androidx.recyclerview.widget.DiffUtil
-import com.sudox.android.database.Contact
+import com.sudox.android.database.model.Contact
 
-class ContactsDiffUtil(val newContactsList: List<Contact>,
-                       val oldContactsList: List<Contact>) : DiffUtil.Callback() {
+class ContactsDiffUtil(private val newContactsList: List<Contact>,
+                       private val oldContactsList: List<Contact>) : DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newContact = newContactsList[newItemPosition]

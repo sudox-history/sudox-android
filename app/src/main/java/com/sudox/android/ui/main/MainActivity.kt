@@ -1,4 +1,4 @@
-package com.sudox.android.ui
+package com.sudox.android.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,7 +13,6 @@ import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.helpers.showTopSnackbar
 import com.sudox.android.common.models.SecretData
 import com.sudox.android.common.viewmodels.getViewModel
-import com.sudox.android.ui.main.chats.ChatFragment
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.settings.SettingsFragment
 import com.sudox.android.ui.splash.SplashActivity
@@ -66,7 +65,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 .commit()
     }
 
-    fun goToContactsFragment() {
+    private fun goToContactsFragment() {
         supportFragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(R.id.fragment_main_container, ContactsFragment())
@@ -74,13 +73,9 @@ class MainActivity : DaggerAppCompatActivity() {
 
     }
 
-    fun goToChatFragment(bundle: Bundle) {
-        supportFragmentManager.beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_main_container, ChatFragment().apply { arguments = bundle })
-                .commit()
+    fun goToChatActivity(intent: Intent) {
+        startActivity(intent)
     }
-
 
     private fun getConnectState(account: SudoxAccount?, connectState: ConnectState) {
         if (connectState == ConnectState.RECONNECTED) {
@@ -117,20 +112,6 @@ class MainActivity : DaggerAppCompatActivity() {
             })
         } else {
             mainViewModel.getAllContactsFromDB()
-        }
-    }
-
-    fun toggleBottomNavBar(visible: Boolean) {
-        if (visible) {
-            bottom_navigation.animate()
-                    .setDuration(300)
-                    .translationY(0f)
-
-        } else {
-            bottom_navigation.animate()
-                    .setDuration(300)
-                    .translationY(bottom_navigation.height.toFloat())
-
         }
     }
 

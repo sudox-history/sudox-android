@@ -13,7 +13,7 @@ import com.sudox.android.common.enums.State
 import com.sudox.android.common.helpers.hideInputError
 import com.sudox.android.common.helpers.showSnackbar
 import com.sudox.android.common.viewmodels.getViewModel
-import com.sudox.android.ui.MainActivity
+import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.auth.confirm.AUTH_STATUS_BUNDLE_KEY
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.confirm.EMAIL_BUNDLE_KEY

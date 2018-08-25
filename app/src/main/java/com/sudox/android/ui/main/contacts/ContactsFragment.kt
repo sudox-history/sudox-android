@@ -1,6 +1,7 @@
 package com.sudox.android.ui.main.contacts
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -16,10 +17,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.android.R
 import com.sudox.android.common.viewmodels.getViewModel
-import com.sudox.android.database.Contact
-import com.sudox.android.ui.MainActivity
+import com.sudox.android.database.model.Contact
 import com.sudox.android.ui.adapters.ContactsAdapter
+import com.sudox.android.ui.chats.ChatActivity
 import com.sudox.android.ui.diffutil.ContactsDiffUtil
+import com.sudox.android.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.card_add_contact.*
 import kotlinx.android.synthetic.main.fragment_contacts.*
@@ -91,7 +93,11 @@ class ContactsFragment : DaggerFragment() {
 
     private fun initContactsList() {
         contactsList.adapter = adapter
-        contactsList.layoutManager = LinearLayoutManager(activity)
+
+        val layoutManager = LinearLayoutManager(activity)
+        layoutManager.reverseLayout = true
+        layoutManager.stackFromEnd = true
+        contactsList.layoutManager = layoutManager
 
         contactsViewModel
                 .contactsLoadLiveData()
@@ -162,16 +168,14 @@ class ContactsFragment : DaggerFragment() {
         })
 
         adapter.clickedSimpleContactLiveData.observe(this, Observer {
-            mainActivity.goToChatFragment( Bundle().apply {
-                putString("name", it.name)
-                putString("firstColor", it.firstColor)
-                putString("secondColor", it.secondColor)
-                putString("avatarUrl", it.avatarUrl)
-                putString("id", it.cid)
-                putString("nickname", it.nickname)
+            mainActivity.goToChatActivity( Intent(mainActivity, ChatActivity::class.java).apply {
+                putExtra("name", it.name)
+                putExtra("firstColor", it.firstColor)
+                putExtra("secondColor", it.secondColor)
+                putExtra("avatarUrl", it.avatarUrl)
+                putExtra("id", it.cid)
+                putExtra("nickname", it.nickname)
             })
-
-            mainActivity.toggleBottomNavBar(false)
         })
     }
 }

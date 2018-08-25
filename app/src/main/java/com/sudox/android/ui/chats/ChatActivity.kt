@@ -1,62 +1,57 @@
-package com.sudox.android.ui.main.chats
+package com.sudox.android.ui.chats
 
 import android.graphics.*
 import android.os.Bundle
-import android.view.*
-import androidx.lifecycle.ViewModelProvider
+import android.view.Menu
+import android.view.MenuItem
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.sudox.android.R
-import com.sudox.android.database.Contact
-import com.sudox.android.ui.MainActivity
-import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_chat.*
+import com.sudox.android.database.model.Contact
+import com.sudox.android.database.model.Message
+import com.sudox.android.ui.adapters.MessagesAdapter
+import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.include_toolbar_chat.*
-import javax.inject.Inject
 
-class ChatFragment: DaggerFragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var chatViewModel: ChatViewModel
-    private lateinit var mainActivity: MainActivity
+class ChatActivity : DaggerAppCompatActivity() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mainActivity = activity as MainActivity
-        return inflater.inflate(R.layout.fragment_chat, container, false)
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
+    private lateinit var adapter: MessagesAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_chat)
 
         initToolbar()
+        initMessagesList()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_chat, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_chat, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
-        when(item!!.itemId){
-            android.R.id.home->{
-                mainActivity.toggleBottomNavBar(true)
-                mainActivity.goToContactsFragment()
+        return when (item!!.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun initToolbar() {
-        mainActivity.setSupportActionBar(toolbar_chat)
-        mainActivity.supportActionBar!!.setDisplayShowHomeEnabled(true)
-        mainActivity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        setSupportActionBar(toolbar_chat)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        val bundle = arguments!!
-        val contact = Contact(bundle.getString("id")!!, bundle.getString("firstColor"),
-                bundle.getString("secondColor"), bundle.getString("avatarUrl"),
-                bundle.getString("name")!!, bundle.getString("nickname")!!)
+        val contact = Contact(intent.getStringExtra("id"), intent.getStringExtra("firstColor"),
+                intent.getStringExtra("secondColor"), intent.getStringExtra("avatarUrl"),
+                intent.getStringExtra("name"), intent.getStringExtra("nickname"))
 
         if (contact.firstColor != null && contact.secondColor != null) {
             val builder = StringBuilder()
@@ -85,6 +80,29 @@ class ChatFragment: DaggerFragment() {
         chat_name.text = contact.name
         chat_status.text = contact.name
     }
+
+    private fun initMessagesList() {
+        adapter = MessagesAdapter(ArrayList(), this)
+        messagesList.adapter = adapter
+        val mLayoutManager = LinearLayoutManager(this)
+
+        mLayoutManager.stackFromEnd = true
+        messagesList.layoutManager = mLayoutManager
+
+        val items = ArrayList<Message>()
+
+        send_message_button.setOnClickListener{
+            if(edit_message_field.text.toString() != "") {
+                items.add(Message(1, edit_message_field.text.toString(), "3"))
+                edit_message_field.setText("")
+
+                adapter.items = items
+                adapter.notifyDataSetChanged()
+                messagesList.scrollToPosition(items.size - 1)
+            }
+        }
+    }
+
 
     private fun drawGradientBitmap(firstColor: String, secondColor: String, text: String): Bitmap {
         val bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
@@ -117,5 +135,4 @@ class ChatFragment: DaggerFragment() {
 
         return bitmap
     }
-
 }

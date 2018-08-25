@@ -10,7 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sudox.android.R
-import com.sudox.android.database.Contact
+import com.sudox.android.database.model.Contact
 import kotlinx.android.synthetic.main.card_contact.view.*
 
 class ContactsAdapter(var items: List<Contact>,

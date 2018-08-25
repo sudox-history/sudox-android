@@ -1,6 +1,5 @@
 package com.sudox.android.di.module.fragments
 
-import com.sudox.android.ui.main.chats.ChatFragment
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.settings.SettingsFragment
 import dagger.Module
@@ -14,7 +13,4 @@ abstract class MainActivityModule {
 
     @ContributesAndroidInjector
     abstract fun provideSettingsFragment(): SettingsFragment
-
-    @ContributesAndroidInjector
-    abstract fun provideChatFragment(): ChatFragment
 }

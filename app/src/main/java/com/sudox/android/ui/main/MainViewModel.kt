@@ -1,4 +1,4 @@
-package com.sudox.android.ui
+package com.sudox.android.ui.main
 
 import androidx.lifecycle.ViewModel
 import com.sudox.android.common.auth.SudoxAccount
