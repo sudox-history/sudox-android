@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="1dp"
+    android:layout_marginBottom="1dp">
+
+    <RelativeLayout
+        android:id="@+id/message_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/messages_from_shape">
+
+        <TextView
+            android:id="@+id/message_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:text="Тестовое сообщение"
+            android:maxWidth="200dp"
+            android:textSize="15sp" />
+        <TextView
+            android:id="@+id/time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/message_text"
+            android:text="15:30"
+            android:textColor="@color/colorHint"
+            android:layout_alignBottom="@id/message_text"
+            android:layout_marginStart="10dp"
+            android:textSize="12sp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

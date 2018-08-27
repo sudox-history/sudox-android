@@ -19,4 +19,8 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun providesContactsDao(database: SudoxDatabase) = database.contactsDao()
+
+    @Singleton
+    @Provides
+    fun providesMessagesDao(database: SudoxDatabase) = database.messagesDao()
 }

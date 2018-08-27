@@ -5,5 +5,6 @@ enum class ConnectState {
     CONNECT_ERROR,
     DISCONNECTED,
     RECONNECTED,
-    ATTACKED
+    ATTACKED,
+    FIRST_OBSERVE //костылек
 }

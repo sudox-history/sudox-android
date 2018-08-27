@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.State
 import com.sudox.android.common.models.dto.*
-import com.sudox.android.database.model.Contact
 import com.sudox.android.database.dao.ContactsDao
+import com.sudox.android.database.model.Contact
 import com.sudox.protocol.ProtocolClient
 
 class ContactsRepository(private val protocolClient: ProtocolClient,
@@ -16,7 +16,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
 
     fun initContactsListeners() {
         protocolClient.listenMessage<ContactAddRemoveDTO>("contacts.add") {
-            if (it.errorCode != 302) {
+            if (it.errorCode != 402) {
                 val usersGetDTO = UsersGetDTO()
                 usersGetDTO.id = it.id
 
@@ -48,7 +48,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         val mutableLiveData = MutableLiveData<State>()
 
         protocolClient.makeRequest<ContactsGetDTO>("contacts.get", SimpleAnswerDTO()) {
-            if (it.errorCode != 301) {
+            if (it.errorCode != 401) {
                 for (i in 0..(it.items!!.length() - 1)) {
                     val item = it.items!!.getJSONObject(i)
 
@@ -72,7 +72,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         val contactSearchDTO = ContactSearchDTO()
         contactSearchDTO.nickname = nickname
 
-        protocolClient.makeRequest<ContactSearchDTO>("users.get", contactSearchDTO) {
+        protocolClient.makeRequest<ContactSearchDTO>("users.getByNickname", contactSearchDTO) {
                 if (it.errorCode != 51) {
                     val contact = if (it.checkAvatar) {
                         Contact(it.scid, it.firstColor, it.secondColor,

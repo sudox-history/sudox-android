@@ -26,6 +26,8 @@ class MainActivity : DaggerAppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var mainViewModel: MainViewModel
 
+    private var isPause: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -34,7 +36,8 @@ class MainActivity : DaggerAppCompatActivity() {
         mainViewModel.getAccount().observe(this, Observer { account ->
             if (account != null) {
                 mainViewModel.connectLiveData.observe(this, Observer {
-                    getConnectState(account, it)
+                    if(!isPause && it != ConnectState.FIRST_OBSERVE)
+                        getConnectState(account, it)
                 })
             } else {
                 mainViewModel.removeAllData()
@@ -43,6 +46,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         // init listeners
         mainViewModel.initContactsListeners()
+        mainViewModel.initMessagesListener()
         loadContacts()
 
         supportFragmentManager.beginTransaction()
@@ -56,6 +60,16 @@ class MainActivity : DaggerAppCompatActivity() {
             }
             return@setOnNavigationItemSelectedListener true
         }
+    }
+
+    override fun onPause() {
+        isPause = true
+        super.onPause()
+    }
+
+    override fun onResume() {
+        isPause = false
+        super.onResume()
     }
 
     private fun goToSettingsFragment() {

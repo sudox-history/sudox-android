@@ -3,6 +3,7 @@
     <color name="colorPrimary">#1A1E28</color>
     <color name="colorPrimaryDark">#141822</color>
     <color name="colorFirstMessage">#3A3E48</color>
+    <color name="colorSecondMessage">#30343E</color>
     <color name="bottomBackground">#1A1E28</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="colorBackground">#20242E</color>
