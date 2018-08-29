@@ -17,11 +17,7 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
                                         private val accountRepository: AccountRepository,
                                         private val authRepository: AuthRepository) : ViewModel() {
 
-    var  connectLiveData: LiveData<ConnectState>
-    init {
-        protocolClient.nullLiveData()
-        connectLiveData = protocolClient.connectionStateLiveData
-    }
+    var connectLiveData: LiveData<ConnectState> = protocolClient.connectionStateLiveData
 
     fun getAccount() = accountRepository.getAccount()
 

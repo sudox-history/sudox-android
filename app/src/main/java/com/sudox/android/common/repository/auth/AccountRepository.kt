@@ -18,7 +18,7 @@ class AccountRepository(private val accountManager: AccountManager,
                         private val sudoxDatabase: SudoxDatabase) {
 
     // Account type
-    private val accountType = "com.sudox.account"
+    private val accountType = "sudox"
 
     fun saveAccount(account: SudoxAccount): LiveData<State> {
         val mutableLiveData = MutableLiveData<State>()

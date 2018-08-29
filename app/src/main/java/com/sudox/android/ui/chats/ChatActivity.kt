@@ -45,13 +45,9 @@ class ChatActivity : DaggerAppCompatActivity() {
 
         chatViewModel = getViewModel(viewModelFactory)
         chatViewModel.getAccount().observe(this, Observer { account ->
-            if (account != null) {
                 chatViewModel.connectLiveData.observe(this, Observer {
-                    if(it != ConnectState.FIRST_OBSERVE)
-                        getConnectState(account, it)
+                    getConnectState(account, it)
                 })
-            } else {
-            }
         })
 
         initToolbar()

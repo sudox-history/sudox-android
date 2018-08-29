@@ -3,7 +3,7 @@ package com.sudox.android.common.models.dto
 import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONObject
 
-class ConfirmCodeDTO: JsonModel {
+class ConfirmCodeDTO : JsonModel {
 
     // To send
     var code: Int = 0
@@ -16,13 +16,13 @@ class ConfirmCodeDTO: JsonModel {
     var isError = false
 
     override fun toJSON(): JSONObject {
-        return with(JSONObject()){
+        return with(JSONObject()) {
             putOpt("code", code)
         }
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        if(jsonObject.has("error")){
+        if (jsonObject.has("error")) {
             val response = jsonObject.getJSONObject("error")
             errorCode = response.optInt("code")
         } else {

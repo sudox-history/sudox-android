@@ -34,14 +34,9 @@ class MainActivity : DaggerAppCompatActivity() {
 
         mainViewModel = getViewModel(viewModelFactory)
         mainViewModel.getAccount().observe(this, Observer { account ->
-            if (account != null) {
-                mainViewModel.connectLiveData.observe(this, Observer {
-                    if(!isPause && it != ConnectState.FIRST_OBSERVE)
-                        getConnectState(account, it)
-                })
-            } else {
-                mainViewModel.removeAllData()
-            }
+            mainViewModel.connectLiveData.observe(this, Observer {
+                getConnectState(account, it)
+            })
         })
 
         // init listeners

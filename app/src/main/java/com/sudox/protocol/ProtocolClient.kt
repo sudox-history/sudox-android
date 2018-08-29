@@ -7,6 +7,7 @@ import com.sudox.android.common.enums.ConnectState
 import com.sudox.protocol.helper.*
 import com.sudox.protocol.model.Callback
 import com.sudox.protocol.model.Payload
+import com.sudox.protocol.model.SingleLiveEvent
 import com.sudox.protocol.model.SymmetricKey
 import com.sudox.protocol.model.dto.JsonModel
 import io.socket.client.Socket
@@ -24,11 +25,7 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
     // Callbacks list
     val callbacks: LinkedHashMap<String, Callback<*>> = LinkedHashMap()
-    var connectionStateLiveData: MutableLiveData<ConnectState> = MutableLiveData()
-
-    fun nullLiveData(){
-        connectionStateLiveData.postValue(ConnectState.FIRST_OBSERVE)
-    }
+    val connectionStateLiveData: MutableLiveData<ConnectState> = SingleLiveEvent()
 
     fun connect() {
         registerListeners()

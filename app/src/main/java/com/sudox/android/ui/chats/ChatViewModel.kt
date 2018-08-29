@@ -1,6 +1,7 @@
 package com.sudox.android.ui.chats
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.ConnectState
@@ -16,30 +17,20 @@ class ChatViewModel @Inject constructor(private val messagesRepository: Messages
                                         private val accountRepository: AccountRepository,
                                         private val authRepository: AuthRepository): ViewModel() {
 
-    var connectLiveData: LiveData<ConnectState>
-
+    var connectLiveData: LiveData<ConnectState> = protocolClient.connectionStateLiveData
     val newMessageLiveData: LiveData<Message?>
 
     init {
-        protocolClient.nullLiveData()
-        connectLiveData = protocolClient.connectionStateLiveData
-        messagesRepository.nullLiveData()
-        newMessageLiveData = messagesRepository.newMessageLiveData
+        newMessageLiveData = Transformations.map(messagesRepository.newMessageLiveData) {
+            it?.message
+        }
     }
 
     fun getFirstMessagesFromServer(id: String) = messagesRepository.getFirstMessagesFromServer(id)
-
     fun getMessagesFromDB(id: String) = messagesRepository.requestFromDB(id)
-
     fun sendSimpleMessage(id: String, text: String) = messagesRepository.sendSimpleMessage(id, text)
-
     fun getAccount() = accountRepository.getAccount()
-
     fun sendSecret(sudoxAccount: SudoxAccount?) = authRepository.sendSecret(sudoxAccount?.secret, sudoxAccount?.id)
-
     fun disconnect() = protocolClient.disconnect()
-
     fun isConnected() = protocolClient.isConnected()
-
-
 }

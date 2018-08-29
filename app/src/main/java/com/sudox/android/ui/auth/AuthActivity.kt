@@ -46,7 +46,7 @@ class AuthActivity : DaggerAppCompatActivity() {
         if (connectState == ConnectState.RECONNECTED) {
             showMessage(getString(R.string.connection_restored))
 
-            if (hash != null) {
+            if (codeEditTextContainer != null && hash != null) {
                 authViewModel
                         .importAuthHash(hash!!)
                         .observe(this, Observer(::getHashData))
@@ -67,7 +67,6 @@ class AuthActivity : DaggerAppCompatActivity() {
                 showMessage(getString(R.string.unknown_error))
                 hideInputError(codeEditTextContainer)
             }
-            else -> {}
         }
     }
 

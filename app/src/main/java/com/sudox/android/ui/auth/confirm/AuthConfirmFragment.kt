@@ -171,7 +171,7 @@ class AuthConfirmFragment : DaggerFragment() {
     }
 
     fun getConfirmData(data: State?) {
-        when(data) {
+        when (data) {
             null -> {
                 authActivity.showMessage(getString(R.string.no_internet_connection))
                 hideInputError(codeEditTextContainer)
@@ -204,10 +204,11 @@ class AuthConfirmFragment : DaggerFragment() {
                 showInputError(codeEditTextContainer)
                 codeEditText.isEnabled = true
             }
-            else -> {
+            data.state == SignUpInState.SUCCESS -> {
                 authConfirmViewModel.saveAccount(data.id!!, email, data.secret!!).observe(this, Observer<State> {
-                    if(it == State.SUCCESS)
-                         authActivity.showMainActivity()
+                    if (it == State.SUCCESS) {
+                        authActivity.showMainActivity()
+                    }
                 })
             }
         }

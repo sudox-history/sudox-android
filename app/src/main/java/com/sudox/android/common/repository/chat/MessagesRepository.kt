@@ -80,7 +80,7 @@ class MessagesRepository(private val protocolClient: ProtocolClient,
 
         protocolClient.makeRequest<SendMessageDTO>("chats.send", sendMessageDTO) {
             if(it.errorCode != 50){
-                sendMessageLiveData.postValue(SendMessageData(SendMessageState.SUCCESS, it.id, it.time))
+                sendMessageLiveData.postValue(SendMessageData(SendMessageState.SUCCESS, Message(it.id, it.text, it.time, 0, it.toId)))
             } else {
                 sendMessageLiveData.postValue(SendMessageData(SendMessageState.FAILED))
             }

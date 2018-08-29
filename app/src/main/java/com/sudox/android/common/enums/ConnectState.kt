@@ -6,5 +6,4 @@ enum class ConnectState {
     DISCONNECTED,
     RECONNECTED,
     ATTACKED,
-    FIRST_OBSERVE //костылек
 }

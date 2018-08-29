@@ -68,6 +68,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
                     mutableLiveData.postValue(State.SUCCESS)
                 }
             }
+
             return mutableLiveData
         }
         mutableLiveData.postValue(null)
@@ -125,6 +126,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
                 when {
                     it.errorCode == 0 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
                     it.errorCode == 50 -> mutableLiveData.postValue(SignUpInData(SignUpInState.WRONG_FORMAT))
+                    it.errorCode == 204 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
                     it.errorCode == 205 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_ERROR))
                     else -> mutableLiveData.postValue(SignUpInData(SignUpInState.SUCCESS, it.id, it.secret))
                 }
