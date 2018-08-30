@@ -30,8 +30,11 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mainViewModel = getViewModel(viewModelFactory)
-        mainViewModel.connectLiveData.observe(this, Observer {
-            getConnectState(it)
+        mainViewModel.getAccount().observe(this, Observer { sudoxAccount ->
+            mainViewModel.setSecret(sudoxAccount)
+            mainViewModel.connectLiveData.observe(this, Observer {
+                getConnectState(it)
+            })
         })
 
         // init listeners
@@ -86,12 +89,17 @@ class MainActivity : DaggerAppCompatActivity() {
             showMessage(getString(R.string.lost_internet_connection))
         } else if (connectState == ConnectState.MISSING_TOKEN || connectState == ConnectState.WRONG_TOKEN) {
             mainViewModel.removeAllAccounts()
-            mainViewModel.disconnect()
-            showSplashActivity()
+            exitFromAccount()
         } else if (connectState == ConnectState.CORRECT_TOKEN) {
             showMessage(getString(R.string.connection_restored))
             loadContacts()
         }
+    }
+
+
+    fun exitFromAccount() {
+        showSplashActivity()
+        mainViewModel.disconnect()
     }
 
     private fun showSplashActivity() {

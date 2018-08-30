@@ -2,7 +2,6 @@ package com.sudox.android.ui.main.contacts
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -10,7 +9,6 @@ import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
@@ -47,7 +45,6 @@ class ContactsFragment : DaggerFragment() {
         return inflater.inflate(R.layout.fragment_contacts, container, false)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
@@ -109,7 +106,7 @@ class ContactsFragment : DaggerFragment() {
                         val result = DiffUtil.calculateDiff(ContactsDiffUtil(it, adapter.items))
 
                         // Update data
-                        adapter.items = it
+                        adapter.items = it.reversed()
                         result.dispatchUpdatesTo(adapter)
                     } else {
                         contactsList.visibility = View.GONE

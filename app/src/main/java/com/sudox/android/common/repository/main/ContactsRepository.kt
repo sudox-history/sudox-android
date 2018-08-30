@@ -8,12 +8,11 @@ import com.sudox.android.common.models.dto.*
 import com.sudox.android.database.dao.ContactsDao
 import com.sudox.android.database.model.Contact
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.model.SingleLiveEvent
 
 class ContactsRepository(private val protocolClient: ProtocolClient,
                          private val contactsDao: ContactsDao) {
 
-    val contactsLoadLiveData = SingleLiveEvent<List<Contact>>()
+    val contactsLoadLiveData = MutableLiveData<List<Contact>>()
 
     fun initContactsListeners() {
         protocolClient.listenMessage<ContactAddRemoveDTO>("contacts.add") {
