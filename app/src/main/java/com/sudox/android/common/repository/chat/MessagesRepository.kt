@@ -23,7 +23,6 @@ class MessagesRepository(private val protocolClient: ProtocolClient,
                          private val messagesDao: MessagesDao) {
 
     var newMessageLiveData = SingleLiveEvent<NewMessageData>()
-    var messagesLiveData = SingleLiveEvent<ArrayList<Message>>()
 
     fun initMessagesListeners() {
         protocolClient.listenMessage<NotificationDTO>("notification") {
@@ -35,32 +34,34 @@ class MessagesRepository(private val protocolClient: ProtocolClient,
         }
     }
 
-    fun getFirstMessagesFromServer(id: String) {
+    fun getFirstMessagesFromServer(id: String, offset: Int, limit: Int, callback: (ArrayList<Message>) -> (Unit)) {
         val getMessagesDTO = GetMessagesDTO()
         getMessagesDTO.id = id
+        getMessagesDTO.limit = limit
+        getMessagesDTO.offset = offset
 
         protocolClient.makeRequest<GetMessagesDTO>("chats.getHistory", getMessagesDTO) {
+            val messages = ArrayList<Message>()
+
             for (i in 0..(it.items.length() - 1)) {
                 val item = it.items.getJSONObject(i)
-
                 val messageDTO = MessageDTO()
                 messageDTO.fromJSON(item)
 
-                if (messageDTO.toId == id) {
-                    messagesDao.insertMessage(Message(messageDTO.mid, messageDTO.text, messageDTO.time, MESSAGE_TO, messageDTO.toId))
+                val message = if (messageDTO.toId == id) {
+                    Message(messageDTO.mid, messageDTO.text, messageDTO.time, MESSAGE_TO, messageDTO.toId)
                 } else {
-                    messagesDao.insertMessage(Message(messageDTO.mid, messageDTO.text, messageDTO.time, MESSAGE_FROM, messageDTO.fromId))
+                    Message(messageDTO.mid, messageDTO.text, messageDTO.time, MESSAGE_FROM, messageDTO.fromId)
+                }
+
+                messages.plusAssign(message)
+
+                if (offset <= limit) {
+                    messagesDao.insertMessage(message)
                 }
             }
 
-            requestFromDB(id)
-        }
-    }
-
-    fun requestFromDB(id: String) {
-        AsyncTask.execute {
-            val messages = messagesDao.getMessages(id)
-            messagesLiveData.postValue(messages as ArrayList<Message>)
+            callback(messages)
         }
     }
 

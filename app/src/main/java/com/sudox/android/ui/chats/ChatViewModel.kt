@@ -8,22 +8,22 @@ import com.sudox.android.common.repository.auth.AccountRepository
 import com.sudox.android.common.repository.auth.AuthRepository
 import com.sudox.android.common.repository.chat.MessagesRepository
 import com.sudox.android.database.model.Message
+import com.sudox.android.ui.datasource.MessagesDataSource
 import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject
 
 class ChatViewModel @Inject constructor(private val messagesRepository: MessagesRepository,
                                         private val protocolClient: ProtocolClient,
                                         private val accountRepository: AccountRepository,
-                                        private val authRepository: AuthRepository): ViewModel() {
+                                        private val authRepository: AuthRepository,
+                                        val messagesDataSource: MessagesDataSource): ViewModel() {
 
     var connectLiveData = protocolClient.connectionStateLiveData
     val newMessageLiveData: LiveData<Message?> = Transformations.map(messagesRepository.newMessageLiveData) {
         it?.message
     }
-    val messagesLiveData = messagesRepository.messagesLiveData
 
-    fun getFirstMessagesFromServer(id: String) = messagesRepository.getFirstMessagesFromServer(id)
-    fun getMessagesFromDB(id: String) = messagesRepository.requestFromDB(id)
+//    fun getFirstMessagesFromServer(id: String) = messagesRepository.getFirstMessagesFromServer(id)
     fun sendSimpleMessage(id: String, text: String) = messagesRepository.sendSimpleMessage(id, text)
     fun getAccount() = accountRepository.getAccount()
     fun sendSecret(sudoxAccount: SudoxAccount?) = authRepository.setSecret(sudoxAccount?.secret, sudoxAccount?.id)

@@ -2,11 +2,15 @@ package com.sudox.android.ui.chats
 
 import android.content.Intent
 import android.graphics.*
+import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androidadvance.topsnackbar.TSnackbar
@@ -24,8 +28,8 @@ import com.sudox.android.ui.splash.SplashActivity
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.include_toolbar_chat.*
+import java.util.concurrent.Executors
 import javax.inject.Inject
-
 
 class ChatActivity : DaggerAppCompatActivity() {
 
@@ -33,16 +37,11 @@ class ChatActivity : DaggerAppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var chatViewModel: ChatViewModel
     private lateinit var adapter: MessagesAdapter
-
     private lateinit var contact: Contact
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-
-
-        adapter = MessagesAdapter(ArrayList(), this)
-        messagesList.adapter = adapter
 
         chatViewModel = getViewModel(viewModelFactory)
         chatViewModel.connectLiveData.observe(this, Observer {
@@ -52,13 +51,31 @@ class ChatActivity : DaggerAppCompatActivity() {
         initToolbar()
         initListeners()
 
-        chatViewModel.getMessagesFromDB(contact.cid)
+//        chatViewModel.getMessagesFromDB(contact.cid)
+    }
 
-        chatViewModel
-                .messagesLiveData
-                .observe(this, Observer(::setMessagesList))
+    override fun onStart() {
+        chatViewModel.messagesDataSource.userId = contact.cid
+        val config = PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+                .setInitialLoadSizeHint(100)
+                .setPageSize(50)
+                .build()
 
-        chatViewModel.getFirstMessagesFromServer(contact.cid)
+        val handler = Handler(Looper.getMainLooper())
+        val pagedList = PagedList.Builder(chatViewModel.messagesDataSource, config)
+                .setFetchExecutor(Executors.newSingleThreadExecutor())
+                .setNotifyExecutor { command -> handler.post(command) }
+                .build()
+
+        val mLayoutManager = LinearLayoutManager(this)
+        mLayoutManager.reverseLayout = true
+        messagesList.layoutManager = mLayoutManager
+        adapter = MessagesAdapter(ArrayList(), this)
+        adapter.submitList(pagedList)
+        messagesList.adapter = adapter
+
+        super.onStart()
     }
 
     private fun setMessagesList(messages: ArrayList<Message>) {
@@ -73,7 +90,7 @@ class ChatActivity : DaggerAppCompatActivity() {
             showSplashActivity()
         } else if (connectState == ConnectState.CORRECT_TOKEN) {
             showMessage(getString(R.string.connection_restored))
-            chatViewModel.getFirstMessagesFromServer(contact.cid)
+//            chatViewModel.getFirstMessagesFromServer(contact.cid)
         }
     }
 
@@ -131,11 +148,10 @@ class ChatActivity : DaggerAppCompatActivity() {
         chat_status.text = "online"
     }
 
-
     private fun initMessagesList(messages: ArrayList<Message>) {
 
         // Update data
-        if(adapter.items.size != messages.size) {
+        if (adapter.items.size != messages.size) {
             val result = DiffUtil.calculateDiff(MessagesDiffUtil(adapter.items, messages))
 
             adapter.items = messages
