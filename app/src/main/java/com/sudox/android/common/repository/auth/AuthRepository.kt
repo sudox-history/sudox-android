@@ -2,8 +2,10 @@ package com.sudox.android.common.repository.auth
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.sudox.android.common.enums.*
-import com.sudox.android.common.models.SecretData
+import com.sudox.android.common.enums.AuthHashState
+import com.sudox.android.common.enums.EmailState
+import com.sudox.android.common.enums.SignUpInState
+import com.sudox.android.common.enums.State
 import com.sudox.android.common.models.SendCodeData
 import com.sudox.android.common.models.SignUpInData
 import com.sudox.android.common.models.dto.*

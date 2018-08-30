@@ -7,18 +7,19 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.androidadvance.topsnackbar.TSnackbar
 import com.bumptech.glide.Glide
 import com.sudox.android.R
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.SendMessageState
-import com.sudox.android.common.enums.State
 import com.sudox.android.common.helpers.showTopSnackbar
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.database.model.Contact
 import com.sudox.android.database.model.Message
 import com.sudox.android.ui.adapters.MessagesAdapter
+import com.sudox.android.ui.diffutil.MessagesDiffUtil
 import com.sudox.android.ui.splash.SplashActivity
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -34,11 +35,14 @@ class ChatActivity : DaggerAppCompatActivity() {
     private lateinit var adapter: MessagesAdapter
 
     private lateinit var contact: Contact
-    lateinit var items: ArrayList<Message>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+
+
+        adapter = MessagesAdapter(ArrayList(), this)
+        messagesList.adapter = adapter
 
         chatViewModel = getViewModel(viewModelFactory)
         chatViewModel.connectLiveData.observe(this, Observer {
@@ -48,14 +52,17 @@ class ChatActivity : DaggerAppCompatActivity() {
         initToolbar()
         initListeners()
 
+        chatViewModel.getMessagesFromDB(contact.cid)
+
         chatViewModel
-                .getMessagesFromDB(contact.cid)
+                .messagesLiveData
                 .observe(this, Observer(::setMessagesList))
+
+        chatViewModel.getFirstMessagesFromServer(contact.cid)
     }
 
-    private fun setMessagesList(messages: List<Message>) {
-        items = messages as ArrayList<Message>
-        initMessagesList(items)
+    private fun setMessagesList(messages: ArrayList<Message>) {
+        initMessagesList(messages)
     }
 
     private fun getConnectState(connectState: ConnectState) {
@@ -66,14 +73,7 @@ class ChatActivity : DaggerAppCompatActivity() {
             showSplashActivity()
         } else if (connectState == ConnectState.CORRECT_TOKEN) {
             showMessage(getString(R.string.connection_restored))
-//            chatViewModel.getFirstMessagesFromServer(contact.cid)
-//                    .observe(this, Observer {
-//                        if (it == State.SUCCESS) {
-//                            chatViewModel
-//                                    .getMessagesFromDB(contact.cid)
-//                                    .observe(this, Observer(::setMessagesList))
-//                        }
-//                    })
+            chatViewModel.getFirstMessagesFromServer(contact.cid)
         }
     }
 
@@ -132,9 +132,16 @@ class ChatActivity : DaggerAppCompatActivity() {
     }
 
 
-    private fun initMessagesList(messages: List<Message>) {
-        adapter = MessagesAdapter(messages, this)
-        messagesList.adapter = adapter
+    private fun initMessagesList(messages: ArrayList<Message>) {
+
+        // Update data
+        if(adapter.items.size != messages.size) {
+            val result = DiffUtil.calculateDiff(MessagesDiffUtil(adapter.items, messages))
+
+            adapter.items = messages
+            result.dispatchUpdatesTo(adapter)
+        }
+
         val mLayoutManager = LinearLayoutManager(this)
         mLayoutManager.stackFromEnd = true
         messagesList.layoutManager = mLayoutManager
@@ -144,12 +151,11 @@ class ChatActivity : DaggerAppCompatActivity() {
                 chatViewModel.sendSimpleMessage(contact.cid, edit_message_field.text.toString())
                         .observe(this, Observer {
                             if (it.sendMessageState == SendMessageState.SUCCESS) {
-                                items.add(it.message!!)
+                                adapter.items.add(it.message!!)
                                 edit_message_field.setText("")
 
-                                adapter.items = items
-                                adapter.notifyItemChanged(items.size - 1)
-                                messagesList.scrollToPosition(items.size - 1)
+                                adapter.notifyItemChanged(adapter.items.size - 1)
+                                messagesList.scrollToPosition(adapter.items.size - 1)
                             } else {
 
                             }
@@ -160,11 +166,10 @@ class ChatActivity : DaggerAppCompatActivity() {
     private fun initListeners() {
         chatViewModel.newMessageLiveData.observe(this, Observer {
             if (it != null && it.userId == contact.cid) {
-                items.add(it)
+                adapter.items.add(it)
 
-                adapter.items = items
-                adapter.notifyItemChanged(items.size - 1)
-                messagesList.scrollToPosition(items.size - 1)
+                adapter.notifyItemChanged(adapter.items.size - 1)
+                messagesList.scrollToPosition(adapter.items.size - 1)
             }
         })
     }

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.sudox.android.common.auth.SudoxAccount
-import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.repository.auth.AccountRepository
 import com.sudox.android.common.repository.auth.AuthRepository
 import com.sudox.android.common.repository.chat.MessagesRepository
@@ -17,14 +16,11 @@ class ChatViewModel @Inject constructor(private val messagesRepository: Messages
                                         private val accountRepository: AccountRepository,
                                         private val authRepository: AuthRepository): ViewModel() {
 
-    var connectLiveData: LiveData<ConnectState> = protocolClient.connectionStateLiveData
-    val newMessageLiveData: LiveData<Message?>
-
-    init {
-        newMessageLiveData = Transformations.map(messagesRepository.newMessageLiveData) {
-            it?.message
-        }
+    var connectLiveData = protocolClient.connectionStateLiveData
+    val newMessageLiveData: LiveData<Message?> = Transformations.map(messagesRepository.newMessageLiveData) {
+        it?.message
     }
+    val messagesLiveData = messagesRepository.messagesLiveData
 
     fun getFirstMessagesFromServer(id: String) = messagesRepository.getFirstMessagesFromServer(id)
     fun getMessagesFromDB(id: String) = messagesRepository.requestFromDB(id)

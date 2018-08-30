@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.textview_message_to.view.*
 import java.util.*
 
 
-class MessagesAdapter(var items: List<Message>,
+class MessagesAdapter(var items: ArrayList<Message>,
                       private val context: Activity) : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
 
 

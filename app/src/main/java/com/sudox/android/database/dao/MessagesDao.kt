@@ -12,6 +12,6 @@ interface MessagesDao {
     @Query("SELECT * FROM messages_table WHERE userId =:mid")
     fun getMessages(mid: String): List<Message>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMessage(message: Message)
 }
