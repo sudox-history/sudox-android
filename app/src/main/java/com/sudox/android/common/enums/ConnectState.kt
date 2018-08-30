@@ -6,4 +6,7 @@ enum class ConnectState {
     DISCONNECTED,
     RECONNECTED,
     ATTACKED,
+    MISSING_TOKEN,
+    CORRECT_TOKEN,
+    WRONG_TOKEN
 }

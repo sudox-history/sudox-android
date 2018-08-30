@@ -12,8 +12,6 @@ import com.sudox.android.common.auth.AUTH_CODE
 import com.sudox.android.common.auth.AUTH_KEY
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.ConnectState
-import com.sudox.android.common.enums.TokenState
-import com.sudox.android.common.models.SecretData
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.MainActivity
@@ -42,6 +40,7 @@ class SplashActivity : DaggerAppCompatActivity() {
                             dialogInterface.cancel()
                         }.create().show()
             } else {
+                splashViewModel.setSecret(sudoxAccount)
                 splashViewModel.connectLiveData.observe(this, Observer {
                     getConnectState(sudoxAccount, it)
                 })
@@ -52,24 +51,12 @@ class SplashActivity : DaggerAppCompatActivity() {
     }
 
     private fun getConnectState(sudoxAccount: SudoxAccount?, connectState: ConnectState) {
-        if (connectState == ConnectState.CONNECTED) {
-            splashViewModel
-                    .sendSecret(sudoxAccount)
-                    .observe(this, Observer(::getTokenState))
-
-            if (sudoxAccount == null) {
-                splashViewModel.removeAllData()
-            }
-        } else if (connectState == ConnectState.CONNECT_ERROR) {
+        if (connectState == ConnectState.CONNECT_ERROR) {
             chooseActivity(sudoxAccount, connectState)
-        }
-    }
-
-    private fun getTokenState(data: SecretData) {
-        when (data.tokenState) {
-            TokenState.CORRECT -> showMainActivity()
-            TokenState.WRONG -> showAuthActivity()
-            TokenState.MISSING -> showAuthActivity()
+        } else if (connectState == ConnectState.MISSING_TOKEN || connectState == ConnectState.WRONG_TOKEN) {
+            showAuthActivity()
+        } else if(connectState == ConnectState.CORRECT_TOKEN) {
+            showMainActivity()
         }
     }
 

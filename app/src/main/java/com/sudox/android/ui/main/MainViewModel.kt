@@ -29,7 +29,7 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
 
     fun removeAllAccounts() = accountRepository.removeAccounts()
 
-    fun sendSecret(sudoxAccount: SudoxAccount?) = authRepository.sendSecret(sudoxAccount?.secret, sudoxAccount?.id)
+    fun sendSecret(sudoxAccount: SudoxAccount?) = authRepository.setSecret(sudoxAccount?.secret, sudoxAccount?.id)
 
     fun disconnect() = protocolClient.disconnect()
 

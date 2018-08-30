@@ -24,13 +24,13 @@ class MessagesRepository(private val protocolClient: ProtocolClient,
 
     var newMessageLiveData = MutableLiveData<NewMessageData?>()
 
-    fun nullLiveData(){
+    fun nullLiveData() {
         newMessageLiveData.postValue(null)
     }
 
     fun initMessagesListeners() {
         protocolClient.listenMessage<NotificationDTO>("notification") {
-            if(it.method == "chats.new") {
+            if (it.method == "chats.new") {
                 val message = Message(it.mid, it.text, it.time, MESSAGE_FROM, it.fromId)
                 newMessageLiveData.postValue(NewMessageData(message, it.fromId))
             }
@@ -39,23 +39,23 @@ class MessagesRepository(private val protocolClient: ProtocolClient,
 
     fun getFirstMessagesFromServer(id: String): LiveData<State> {
         val mutableLiveData = MutableLiveData<State>()
-
         val getMessagesDTO = GetMessagesDTO()
         getMessagesDTO.id = id
 
-        protocolClient.makeRequest<GetMessagesDTO>("chats.getHistory", getMessagesDTO){
+        protocolClient.makeRequest<GetMessagesDTO>("chats.getHistory", getMessagesDTO) {
             for (i in 0..(it.items.length() - 1)) {
                 val item = it.items.getJSONObject(i)
 
                 val messageDTO = MessageDTO()
                 messageDTO.fromJSON(item)
 
-                if(messageDTO.toId == id) {
+                if (messageDTO.toId == id) {
                     messagesDao.insertMessage(Message(messageDTO.mid, messageDTO.text, messageDTO.time, MESSAGE_TO, messageDTO.toId))
                 } else {
                     messagesDao.insertMessage(Message(messageDTO.mid, messageDTO.text, messageDTO.time, MESSAGE_FROM, messageDTO.fromId))
                 }
             }
+
             mutableLiveData.postValue(State.SUCCESS)
         }
 
@@ -64,10 +64,12 @@ class MessagesRepository(private val protocolClient: ProtocolClient,
 
     fun requestFromDB(id: String): LiveData<List<Message>> {
         val mutableLiveData = MutableLiveData<List<Message>>()
-        AsyncTask.execute{
+
+        AsyncTask.execute {
             val messages = messagesDao.getMessages(id)
             mutableLiveData.postValue(messages)
         }
+
         return mutableLiveData
     }
 
@@ -79,7 +81,7 @@ class MessagesRepository(private val protocolClient: ProtocolClient,
         sendMessageDTO.text = text
 
         protocolClient.makeRequest<SendMessageDTO>("chats.send", sendMessageDTO) {
-            if(it.errorCode != 50){
+            if (it.errorCode != 50) {
                 sendMessageLiveData.postValue(SendMessageData(SendMessageState.SUCCESS, Message(it.id, text, it.time, 0, id)))
             } else {
                 sendMessageLiveData.postValue(SendMessageData(SendMessageState.FAILED))

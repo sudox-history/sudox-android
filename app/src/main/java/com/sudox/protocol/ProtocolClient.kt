@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.ConnectState
+import com.sudox.android.common.models.dto.SecretDTO
 import com.sudox.protocol.helper.*
 import com.sudox.protocol.model.Callback
 import com.sudox.protocol.model.Payload
@@ -26,6 +27,8 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
     // Callbacks list
     val callbacks: LinkedHashMap<String, Callback<*>> = LinkedHashMap()
     val connectionStateLiveData: MutableLiveData<ConnectState> = SingleLiveEvent()
+    var id: String? = null
+    var secret: String? = null
 
     fun connect() {
         registerListeners()
@@ -51,6 +54,23 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
         }
     }
 
+    private fun sendSecret() {
+        if (secret != null && id != null) {
+            makeRequest<SecretDTO>("auth.import", SecretDTO().apply {
+                this.secret = this@ProtocolClient.secret!!
+                this.sendId = this@ProtocolClient.id!!
+            }) {
+                if (it.status == 1) {
+                    connectionStateLiveData.postValue(ConnectState.CORRECT_TOKEN)
+                } else {
+                    connectionStateLiveData.postValue(ConnectState.WRONG_TOKEN)
+                }
+            }
+        } else {
+            connectionStateLiveData.postValue(ConnectState.MISSING_TOKEN)
+        }
+    }
+
     private fun startHandshake(reconnect: Boolean) {
         var errors = 0
         val handler = Handler(Looper.getMainLooper())
@@ -66,6 +86,8 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
             } else {
                 connectionStateLiveData.postValue(ConnectState.CONNECTED)
             }
+
+            sendSecret()
         }
 
         handshake.start(successCallback, object : (() -> Unit) {

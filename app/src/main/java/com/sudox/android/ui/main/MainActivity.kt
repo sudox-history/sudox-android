@@ -7,11 +7,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.androidadvance.topsnackbar.TSnackbar
 import com.sudox.android.R
-import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.ConnectState
-import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.helpers.showTopSnackbar
-import com.sudox.android.common.models.SecretData
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.settings.SettingsFragment
@@ -33,10 +30,8 @@ class MainActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mainViewModel = getViewModel(viewModelFactory)
-        mainViewModel.getAccount().observe(this, Observer { account ->
-            mainViewModel.connectLiveData.observe(this, Observer {
-                getConnectState(account, it)
-            })
+        mainViewModel.connectLiveData.observe(this, Observer {
+            getConnectState(it)
         })
 
         // init listeners
@@ -86,25 +81,15 @@ class MainActivity : DaggerAppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun getConnectState(account: SudoxAccount?, connectState: ConnectState) {
-        if (connectState == ConnectState.RECONNECTED) {
-            showMessage(getString(R.string.connection_restored))
-
-            // Try to restore token
-            mainViewModel
-                    .sendSecret(account)
-                    .observe(this, Observer(::getTokenState))
-        } else if (connectState == ConnectState.DISCONNECTED) {
+    private fun getConnectState(connectState: ConnectState) {
+        if (connectState == ConnectState.DISCONNECTED) {
             showMessage(getString(R.string.lost_internet_connection))
-        }
-    }
-
-    private fun getTokenState(secretData: SecretData) {
-        if (secretData.tokenState == TokenState.WRONG) {
+        } else if (connectState == ConnectState.MISSING_TOKEN || connectState == ConnectState.WRONG_TOKEN) {
             mainViewModel.removeAllAccounts()
             mainViewModel.disconnect()
             showSplashActivity()
-        } else if (secretData.tokenState == TokenState.CORRECT) {
+        } else if (connectState == ConnectState.CORRECT_TOKEN) {
+            showMessage(getString(R.string.connection_restored))
             loadContacts()
         }
     }

@@ -30,7 +30,7 @@ class ChatViewModel @Inject constructor(private val messagesRepository: Messages
     fun getMessagesFromDB(id: String) = messagesRepository.requestFromDB(id)
     fun sendSimpleMessage(id: String, text: String) = messagesRepository.sendSimpleMessage(id, text)
     fun getAccount() = accountRepository.getAccount()
-    fun sendSecret(sudoxAccount: SudoxAccount?) = authRepository.sendSecret(sudoxAccount?.secret, sudoxAccount?.id)
+    fun sendSecret(sudoxAccount: SudoxAccount?) = authRepository.setSecret(sudoxAccount?.secret, sudoxAccount?.id)
     fun disconnect() = protocolClient.disconnect()
     fun isConnected() = protocolClient.isConnected()
 }

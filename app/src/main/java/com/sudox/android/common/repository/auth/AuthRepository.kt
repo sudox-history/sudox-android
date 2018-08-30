@@ -12,25 +12,11 @@ import javax.inject.Inject
 
 class AuthRepository @Inject constructor(private val protocolClient: ProtocolClient) {
 
-    fun sendSecret(secret: String?, id: String?): LiveData<SecretData> {
-        val tokenData = MutableLiveData<SecretData>()
-
-        if (secret == null || id == null) {
-            tokenData.postValue(SecretData(TokenState.MISSING))
-        } else {
-            val tokenDTO = SecretDTO()
-            tokenDTO.secret = secret
-            tokenDTO.sendId = id
-
-            protocolClient.makeRequest<SecretDTO>("auth.import", tokenDTO) {
-                when {
-                    it.errorCode == 201 -> tokenData.postValue(SecretData(TokenState.WRONG))
-                    it.status == 1 -> tokenData.postValue(SecretData(TokenState.CORRECT))
-                    else -> tokenData.postValue(SecretData(TokenState.WRONG))
-                }
-            }
+    fun setSecret(secret: String?, id: String?) {
+        if (secret != null && id != null) {
+            protocolClient.id = id
+            protocolClient.secret = secret
         }
-        return tokenData
     }
 
     fun sendEmail(email: String): LiveData<SendCodeData?> {

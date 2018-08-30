@@ -19,7 +19,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
 
     fun connect() = protocolClient.connect()
 
-    fun sendSecret(sudoxAccount: SudoxAccount?) = authRepository.sendSecret(sudoxAccount?.secret, sudoxAccount?.id)
+    fun setSecret(sudoxAccount: SudoxAccount?) = authRepository.setSecret(sudoxAccount?.secret, sudoxAccount?.id)
 
     fun disconnect() = protocolClient.disconnect()
 }

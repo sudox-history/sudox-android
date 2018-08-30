@@ -11,13 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.androidadvance.topsnackbar.TSnackbar
 import com.bumptech.glide.Glide
 import com.sudox.android.R
-import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.enums.SendMessageState
 import com.sudox.android.common.enums.State
-import com.sudox.android.common.enums.TokenState
 import com.sudox.android.common.helpers.showTopSnackbar
-import com.sudox.android.common.models.SecretData
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.database.model.Contact
 import com.sudox.android.database.model.Message
@@ -44,17 +41,16 @@ class ChatActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         chatViewModel = getViewModel(viewModelFactory)
-        chatViewModel.getAccount().observe(this, Observer { account ->
-                chatViewModel.connectLiveData.observe(this, Observer {
-                    getConnectState(account, it)
-                })
+        chatViewModel.connectLiveData.observe(this, Observer {
+            getConnectState(it)
         })
 
         initToolbar()
         initListeners()
 
-        chatViewModel.getMessagesFromDB(contact.cid).observe(this, Observer(::setMessagesList))
-
+        chatViewModel
+                .getMessagesFromDB(contact.cid)
+                .observe(this, Observer(::setMessagesList))
     }
 
     private fun setMessagesList(messages: List<Message>) {
@@ -62,36 +58,29 @@ class ChatActivity : DaggerAppCompatActivity() {
         initMessagesList(items)
     }
 
-    private fun getConnectState(account: SudoxAccount?, connectState: ConnectState) {
-        if (connectState == ConnectState.RECONNECTED) {
-            showMessage(getString(R.string.connection_restored))
-
-            // Try to restore token
-            chatViewModel
-                    .sendSecret(account)
-                    .observe(this, Observer(::getTokenState))
-        } else if (connectState == ConnectState.DISCONNECTED) {
+    private fun getConnectState(connectState: ConnectState) {
+        if (connectState == ConnectState.DISCONNECTED) {
             showMessage(getString(R.string.lost_internet_connection))
-        }
-    }
-
-    private fun getTokenState(secretData: SecretData) {
-        if (secretData.tokenState == TokenState.WRONG) {
+        } else if (connectState == ConnectState.MISSING_TOKEN || connectState == ConnectState.WRONG_TOKEN) {
             chatViewModel.disconnect()
             showSplashActivity()
-        } else if (secretData.tokenState == TokenState.CORRECT) {
-            chatViewModel.getFirstMessagesFromServer(contact.cid)
-                    .observe(this, Observer {
-                        if(it == State.SUCCESS){
-                            chatViewModel.getMessagesFromDB(contact.cid).observe(this, Observer(::setMessagesList))
-                        }
-                    })
+        } else if (connectState == ConnectState.CORRECT_TOKEN) {
+            showMessage(getString(R.string.connection_restored))
+//            chatViewModel.getFirstMessagesFromServer(contact.cid)
+//                    .observe(this, Observer {
+//                        if (it == State.SUCCESS) {
+//                            chatViewModel
+//                                    .getMessagesFromDB(contact.cid)
+//                                    .observe(this, Observer(::setMessagesList))
+//                        }
+//                    })
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_chat, menu)
+        menuInflater.inflate(R.menu.menu_chat, menu)
+
+        // Super!
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -143,7 +132,6 @@ class ChatActivity : DaggerAppCompatActivity() {
     }
 
 
-
     private fun initMessagesList(messages: List<Message>) {
         adapter = MessagesAdapter(messages, this)
         messagesList.adapter = adapter
@@ -151,28 +139,27 @@ class ChatActivity : DaggerAppCompatActivity() {
         mLayoutManager.stackFromEnd = true
         messagesList.layoutManager = mLayoutManager
 
-        send_message_button.setOnClickListener{
-            if(edit_message_field.text.toString() != "")
-            chatViewModel.sendSimpleMessage(contact.cid, edit_message_field.text.toString())
-                    .observe(this, Observer {
-                        if(it.sendMessageState == SendMessageState.SUCCESS) {
-                            items.add(it.message!!)
-                            edit_message_field.setText("")
+        send_message_button.setOnClickListener {
+            if (edit_message_field.text.toString() != "")
+                chatViewModel.sendSimpleMessage(contact.cid, edit_message_field.text.toString())
+                        .observe(this, Observer {
+                            if (it.sendMessageState == SendMessageState.SUCCESS) {
+                                items.add(it.message!!)
+                                edit_message_field.setText("")
 
-                            adapter.items = items
-                            adapter.notifyItemChanged(items.size - 1)
-                            messagesList.scrollToPosition(items.size - 1)
-                        } else {
+                                adapter.items = items
+                                adapter.notifyItemChanged(items.size - 1)
+                                messagesList.scrollToPosition(items.size - 1)
+                            } else {
 
-                        }
-                    })
+                            }
+                        })
         }
     }
 
     private fun initListeners() {
-
         chatViewModel.newMessageLiveData.observe(this, Observer {
-            if(it != null && it.userId == contact.cid){
+            if (it != null && it.userId == contact.cid) {
                 items.add(it)
 
                 adapter.items = items
