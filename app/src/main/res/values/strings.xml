@@ -60,14 +60,14 @@
     <string name="code_has_sent_successfully">Code has sent successfully!</string>
     <string name="add_contact">Add contact</string>
     <string name="add_new_contact">Add new contacts</string>
-    <string name="enter_nickname">Enter nickname</string>
+    <string name="enter_email_of_user">Enter nickname</string>
     <string name="toolbar_back">Back</string>
     <string name="toolbar_next">Next</string>
     <string name="ok">OK</string>
     <string name="search">Search</string>
     <string name="contact_has_already_added">Contact has already added!</string>
     <string name="contact_has_not_find">Contact hasn\'t found!</string>
-    <string name="enter_username">Enter user\'s nickname which you want to find!</string>
+    <string name="enter_email_to_find">Enter user\'s nickname which you want to find!</string>
     <string name="remove_contact">Remove contact</string>
     <string name="call_user">Call user</string>
     <string name="enter_message">Enter message</string>

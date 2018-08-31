@@ -52,7 +52,7 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
 
     private fun clearSearchContact() {
         add_contact_hint.visibility = View.VISIBLE
-        add_contact_hint.text = context.getString(R.string.enter_username)
+        add_contact_hint.text = context.getString(R.string.enter_email_to_find)
         card_add_contact.visibility = View.GONE
         progress_bar.visibility = View.GONE
     }

@@ -66,13 +66,13 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         return mutableLiveData
     }
 
-    fun findUserByNickname(nickname: String): LiveData<Contact?> {
+    fun findUserByEmail(email: String): LiveData<Contact?> {
         val mutableLiveData = MutableLiveData<Contact?>()
 
         val contactSearchDTO = ContactSearchDTO()
-        contactSearchDTO.nickname = nickname
+        contactSearchDTO.email = email
 
-        protocolClient.makeRequest<ContactSearchDTO>("users.getByNickname", contactSearchDTO) {
+        protocolClient.makeRequest<ContactSearchDTO>("users.getByEmail", contactSearchDTO) {
                 if (it.errorCode != 51) {
                     val contact = if (it.checkAvatar) {
                         Contact(it.scid, it.firstColor, it.secondColor,

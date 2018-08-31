@@ -7,7 +7,7 @@ import org.json.JSONObject
 class ContactSearchDTO: JsonModel {
 
     //To send
-    var nickname: String? = null
+    var email: String? = null
     var id: String? = null
 
     //To get
@@ -24,8 +24,8 @@ class ContactSearchDTO: JsonModel {
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()) {
-            if (nickname != null)
-                putOpt("nickname", nickname)
+            if (email != null)
+                putOpt("email", email)
             else
                 putOpt("id", id)
         }

@@ -61,13 +61,13 @@
     <string name="toolbar_back">Назад</string>
     <string name="toolbar_next">Далее</string>
     <string name="add_new_contact">Добавление новых контактов</string>
-    <string name="enter_nickname">Введите никнейм</string>
+    <string name="enter_email_of_user">Введите никнейм</string>
     <string name="ok">ОК</string>
     <string name="add_contact">Добавить контакт</string>
     <string name="search">Поиск</string>
     <string name="contact_has_already_added">Контакт уже существует!</string>
     <string name="contact_has_not_find">Контакт не найден!</string>
-    <string name="enter_username">Введите никнейм пользователя, которого хотите найти</string>
+    <string name="enter_email_to_find">Введите никнейм пользователя, которого хотите найти</string>
     <string name="remove_contact">Удалить контакт</string>
     <string name="call_user">Позвонить пользователю</string>
     <string name="enter_message">Введите сообщение</string>

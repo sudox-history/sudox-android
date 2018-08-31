@@ -106,13 +106,12 @@ class ContactsFragment : DaggerFragment() {
                         val result = DiffUtil.calculateDiff(ContactsDiffUtil(it, adapter.items))
 
                         // Update data
-                        adapter.items = it.reversed()
+                        adapter.items = it
                         result.dispatchUpdatesTo(adapter)
                     } else {
                         contactsList.visibility = View.GONE
                         have_not_got_contacts.visibility = View.VISIBLE
                     }
-
                 })
     }
 
@@ -129,25 +128,11 @@ class ContactsFragment : DaggerFragment() {
     }
 
     private fun initListeners() {
-        val nicknameRegex = ".+#.*".toRegex()
-
-        nicknameEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s!!.matches(nicknameRegex)) {
-                    nicknameEditText.inputType = InputType.TYPE_CLASS_NUMBER
-                } else {
-                    nicknameEditText.inputType = InputType.TYPE_CLASS_TEXT
-                }
-            }
-        })
-
         nicknameEditText.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 progress_bar.visibility = View.VISIBLE
                 add_contact_hint.visibility = View.GONE
-                contactsViewModel.contactsSearchUserByNickname(nicknameEditText.text.toString())
+                contactsViewModel.contactsSearchUserByEmail(nicknameEditText.text.toString())
                         .observe(this, Observer(::setSearchContact))
                 return@OnEditorActionListener true
             }
