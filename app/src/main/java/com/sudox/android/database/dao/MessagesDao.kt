@@ -14,4 +14,7 @@ interface MessagesDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMessage(message: Message)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAll(messages: List<Message>)
 }

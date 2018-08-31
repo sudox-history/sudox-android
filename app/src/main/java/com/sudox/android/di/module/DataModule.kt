@@ -17,8 +17,9 @@ class DataModule {
 
     @Provides
     @Singleton
-    fun provideAccountRepository(accountManager: AccountManager,
-                                 sudoxDatabase: SudoxDatabase) = AccountRepository(accountManager, sudoxDatabase)
+    fun provideAccountRepository(protocolClient: ProtocolClient,
+                                 accountManager: AccountManager,
+                                 sudoxDatabase: SudoxDatabase) = AccountRepository(protocolClient, accountManager, sudoxDatabase)
 
     @Provides
     @Singleton

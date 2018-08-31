@@ -33,6 +33,7 @@ class SendMessageDTO: JsonModel {
             time = response.optLong("date")
             id = response.optString("id")
             toId = response.optString("to_id")
+            text = response.optString("text")
         }
     }
 }

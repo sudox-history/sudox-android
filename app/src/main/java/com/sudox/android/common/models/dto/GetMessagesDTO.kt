@@ -4,7 +4,7 @@ import com.sudox.protocol.model.dto.JsonModel
 import org.json.JSONArray
 import org.json.JSONObject
 
-class GetMessagesDTO: JsonModel {
+class GetMessagesDTO : JsonModel {
 
 
     // To send
@@ -13,14 +13,14 @@ class GetMessagesDTO: JsonModel {
     lateinit var id: String
 
     // To get
-    lateinit var items: JSONArray
+    val messages by lazy { ArrayList<MessageDTO>() }
 
     // Common
     var errorCode = -1
 
 
     override fun toJSON(): JSONObject {
-        return with(JSONObject()){
+        return with(JSONObject()) {
             putOpt("offset", offset)
             putOpt("limit", limit)
             putOpt("id", id)
@@ -28,12 +28,18 @@ class GetMessagesDTO: JsonModel {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        if(jsonObject.has("error")){
+        if (jsonObject.has("error")) {
             val response = jsonObject.getJSONObject("error")
             errorCode = response.optInt("code")
         } else {
-            val response = jsonObject.getJSONArray("response")
-            items = response
+            val array = jsonObject.getJSONArray("response")
+            val length = array.length()
+
+            for (i in 0 until length) {
+                messages.plusAssign(MessageDTO().apply {
+                    fromJSON(array.getJSONObject(i))
+                })
+            }
         }
     }
 }

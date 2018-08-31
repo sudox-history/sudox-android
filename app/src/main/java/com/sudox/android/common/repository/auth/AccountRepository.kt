@@ -11,10 +11,11 @@ import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.State
 import com.sudox.android.database.SudoxDatabase
+import com.sudox.protocol.ProtocolClient
 
 
-
-class AccountRepository(private val accountManager: AccountManager,
+class AccountRepository(private val protocolClient: ProtocolClient,
+                        private val accountManager: AccountManager,
                         private val sudoxDatabase: SudoxDatabase) {
 
     // Account type
@@ -51,9 +52,12 @@ class AccountRepository(private val accountManager: AccountManager,
                 accountManager.removeAccount(account, null, null)
             }
         }
+
+        protocolClient.id = null
+        protocolClient.secret = null
     }
 
-    fun deleteData(){
+    fun deleteData() {
         AsyncTask.execute {
             sudoxDatabase.clearAllTables()
         }

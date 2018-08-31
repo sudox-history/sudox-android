@@ -26,23 +26,17 @@ import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.include_toolbar_chat.*
 import javax.inject.Inject
 
-
 class ChatActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var chatViewModel: ChatViewModel
     private lateinit var adapter: MessagesAdapter
-
     private lateinit var contact: Contact
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-
-
-        adapter = MessagesAdapter(ArrayList(), this)
-        messagesList.adapter = adapter
 
         chatViewModel = getViewModel(viewModelFactory)
         chatViewModel.connectLiveData.observe(this, Observer {
@@ -50,19 +44,42 @@ class ChatActivity : DaggerAppCompatActivity() {
         })
 
         initToolbar()
-        initListeners()
-
-        chatViewModel.getMessagesFromDB(contact.cid)
-
-        chatViewModel
-                .messagesLiveData
-                .observe(this, Observer(::setMessagesList))
-
-        chatViewModel.getFirstMessagesFromServer(contact.cid)
+        initMessagesList()
+        initSendButton()
     }
 
-    private fun setMessagesList(messages: ArrayList<Message>) {
-        initMessagesList(messages)
+    override fun onStart() {
+        chatViewModel.messagesLiveData.observe(this, Observer {
+            adapter.items.addAll(it)
+            adapter.notifyItemInserted(adapter.items.size - 1)
+            messagesList.scrollToPosition(adapter.items.size - 1)
+        })
+
+        if (!chatViewModel.loadedContactsIds.contains(contact.cid)) {
+            chatViewModel.loadHistoryIntoDatabase(contact.cid, 0, 100)
+        } else {
+            chatViewModel.loadHistoryFromDatabase(contact.cid)
+        }
+
+        super.onStart()
+    }
+
+    fun initMessagesList() {
+        adapter = MessagesAdapter(ArrayList(), this)
+        messagesList.layoutManager = LinearLayoutManager(this).apply { stackFromEnd = true }
+        messagesList.adapter = adapter
+    }
+
+    fun initSendButton() {
+        send_message_button.setOnClickListener {
+            // message_sent_icon
+            val text = edit_message_field.text.toString()
+
+            if (text.isNotBlank()) {
+                chatViewModel.sendTextMessage(contact.cid, text)
+                edit_message_field.setText("")
+            }
+        }
     }
 
     private fun getConnectState(connectState: ConnectState) {
@@ -73,7 +90,9 @@ class ChatActivity : DaggerAppCompatActivity() {
             showSplashActivity()
         } else if (connectState == ConnectState.CORRECT_TOKEN) {
             showMessage(getString(R.string.connection_restored))
-            chatViewModel.getFirstMessagesFromServer(contact.cid)
+            adapter.items.clear()
+            adapter.notifyDataSetChanged()
+            chatViewModel.loadHistoryIntoDatabase(contact.cid, 0, 100)
         }
     }
 
@@ -85,12 +104,11 @@ class ChatActivity : DaggerAppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item!!.itemId) {
-            android.R.id.home -> {
-                finish()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        return if (item?.itemId == android.R.id.home) {
+            finish()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
     }
 
@@ -131,49 +149,6 @@ class ChatActivity : DaggerAppCompatActivity() {
         chat_status.text = "online"
     }
 
-
-    private fun initMessagesList(messages: ArrayList<Message>) {
-
-        // Update data
-        if(adapter.items.size != messages.size) {
-            val result = DiffUtil.calculateDiff(MessagesDiffUtil(adapter.items, messages))
-
-            adapter.items = messages
-            result.dispatchUpdatesTo(adapter)
-        }
-
-        val mLayoutManager = LinearLayoutManager(this)
-        mLayoutManager.stackFromEnd = true
-        messagesList.layoutManager = mLayoutManager
-
-        send_message_button.setOnClickListener {
-            if (edit_message_field.text.toString() != "")
-                chatViewModel.sendSimpleMessage(contact.cid, edit_message_field.text.toString())
-                        .observe(this, Observer {
-                            if (it.sendMessageState == SendMessageState.SUCCESS) {
-                                adapter.items.add(it.message!!)
-                                edit_message_field.setText("")
-
-                                adapter.notifyItemChanged(adapter.items.size - 1)
-                                messagesList.scrollToPosition(adapter.items.size - 1)
-                            } else {
-
-                            }
-                        })
-        }
-    }
-
-    private fun initListeners() {
-        chatViewModel.newMessageLiveData.observe(this, Observer {
-            if (it != null && it.userId == contact.cid) {
-                adapter.items.add(it)
-
-                adapter.notifyItemChanged(adapter.items.size - 1)
-                messagesList.scrollToPosition(adapter.items.size - 1)
-            }
-        })
-    }
-
     private fun drawGradientBitmap(firstColor: String, secondColor: String, text: String): Bitmap {
         val bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -211,7 +186,7 @@ class ChatActivity : DaggerAppCompatActivity() {
         finish()
     }
 
-    fun showMessage(message: String) {
+    private fun showMessage(message: String) {
         showTopSnackbar(this, chat_layout, message, TSnackbar.LENGTH_LONG)
     }
 }

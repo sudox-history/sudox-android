@@ -69,6 +69,7 @@ dependencies {
 
     // Socket.io
     implementation "io.socket:socket.io-client:$socketVersion"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
 
     //Firebase
     implementation 'com.google.firebase:firebase-core:16.0.1'
@@ -144,4 +145,10 @@ android {
 kapt {
     mapDiagnosticLocations = true
     generateStubs true
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }

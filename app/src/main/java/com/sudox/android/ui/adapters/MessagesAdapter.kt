@@ -17,7 +17,6 @@ import java.util.*
 class MessagesAdapter(var items: ArrayList<Message>,
                       private val context: Activity) : RecyclerView.Adapter<MessagesAdapter.ViewHolder>() {
 
-
     override fun getItemViewType(position: Int): Int {
         return items[position].type
     }
@@ -28,8 +27,6 @@ class MessagesAdapter(var items: ArrayList<Message>,
         else
             MessagesAdapter.ViewHolder(LayoutInflater.from(context).inflate(R.layout.textview_message_from, parent, false))
     }
-
-
 
     override fun getItemCount(): Int {
        return items.size
