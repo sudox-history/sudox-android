@@ -2,7 +2,6 @@ package com.sudox.android.ui.chats
 
 import android.content.Intent
 import android.graphics.*
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
