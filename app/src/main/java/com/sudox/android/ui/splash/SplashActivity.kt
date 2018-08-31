@@ -55,6 +55,7 @@ class SplashActivity : DaggerAppCompatActivity() {
             chooseActivity(sudoxAccount, connectState)
         } else if (connectState == ConnectState.MISSING_TOKEN || connectState == ConnectState.WRONG_TOKEN) {
             showAuthActivity()
+            splashViewModel.removeAllData()
         } else if(connectState == ConnectState.CORRECT_TOKEN) {
             showMainActivity()
         }
@@ -66,6 +67,7 @@ class SplashActivity : DaggerAppCompatActivity() {
                 Handler().postDelayed(::showAuthActivity, 500)
             } else {
                 showAuthActivity()
+                splashViewModel.removeAllData()
             }
         } else {
             showMainActivity()
@@ -84,8 +86,6 @@ class SplashActivity : DaggerAppCompatActivity() {
 
     override fun onBackPressed() {
         splashViewModel.disconnect()
-
-        // Super!
         super.onBackPressed()
     }
 }
