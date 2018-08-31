@@ -141,4 +141,15 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         }
         return mutableLiveData
     }
+
+    fun logOut(): LiveData<State> {
+        val mutableLiveData = MutableLiveData<State>()
+
+        protocolClient.makeRequest<SimpleAnswerDTO>("account.logOut", SimpleAnswerDTO()){
+            if(it.response == 1){
+                mutableLiveData.postValue(State.SUCCESS)
+            }
+        }
+        return mutableLiveData
+    }
 }

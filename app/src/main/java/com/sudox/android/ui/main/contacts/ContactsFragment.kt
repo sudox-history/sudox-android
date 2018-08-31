@@ -14,6 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.android.R
+import com.sudox.android.common.enums.ContactSearchState
+import com.sudox.android.common.models.ContactSearchData
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.database.model.Contact
 import com.sudox.android.ui.adapters.ContactsAdapter
@@ -115,15 +117,23 @@ class ContactsFragment : DaggerFragment() {
                 })
     }
 
-    private fun setSearchContact(contact: Contact?) {
+    private fun setSearchContact(contactData: ContactSearchData) {
         progress_bar.visibility = View.GONE
-        if (contact != null) {
-            contactSearch = contact
-            searchAdditionalView.setSearchContact(contact)
-        } else {
-            add_contact_hint.visibility = View.VISIBLE
-            card_add_contact.visibility = View.GONE
-            add_contact_hint.text = getString(R.string.contact_has_not_find)
+        when {
+            contactData.state == ContactSearchState.WRONG_FORMAT -> {
+                add_contact_hint.visibility = View.VISIBLE
+                card_add_contact.visibility = View.GONE
+                add_contact_hint.text = getString(R.string.wrong_email_format)
+            }
+            contactData.state == ContactSearchState.USER_DOES_NOT_EXIST -> {
+                add_contact_hint.visibility = View.VISIBLE
+                card_add_contact.visibility = View.GONE
+                add_contact_hint.text = getString(R.string.contact_has_not_find)
+            }
+            else -> {
+                contactSearch = contactData.contact!!
+                searchAdditionalView.setSearchContact(contactData.contact)
+            }
         }
     }
 

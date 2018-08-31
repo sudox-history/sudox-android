@@ -10,6 +10,7 @@ import com.sudox.android.R
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.helpers.showTopSnackbar
 import com.sudox.android.common.viewmodels.getViewModel
+import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.settings.SettingsFragment
 import com.sudox.android.ui.splash.SplashActivity
@@ -88,22 +89,23 @@ class MainActivity : DaggerAppCompatActivity() {
         if (connectState == ConnectState.DISCONNECTED) {
             showMessage(getString(R.string.lost_internet_connection))
         } else if (connectState == ConnectState.MISSING_TOKEN || connectState == ConnectState.WRONG_TOKEN) {
-            mainViewModel.removeAllAccounts()
             exitFromAccount()
-        } else if (connectState == ConnectState.CORRECT_TOKEN) {
+        }
+        else if (connectState == ConnectState.CORRECT_TOKEN) {
             showMessage(getString(R.string.connection_restored))
             loadContacts()
         }
     }
 
-
     fun exitFromAccount() {
-        showSplashActivity()
-        mainViewModel.disconnect()
+        mainViewModel.logOut().observe(this, Observer {
+            mainViewModel.removeAllAccounts()
+            showAuthActivity()
+        })
     }
 
-    private fun showSplashActivity() {
-        startActivity(Intent(this, SplashActivity::class.java))
+    private fun showAuthActivity() {
+        startActivity(Intent(this, AuthActivity::class.java))
         finish()
     }
 

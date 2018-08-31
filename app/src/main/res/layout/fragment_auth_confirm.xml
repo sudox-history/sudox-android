@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             android:hint="@string/code"
             android:inputType="number"
-            android:textSize="@dimen/font_size_tiny" />
+            android:textSize="@dimen/font_size_increased_tiny" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -67,8 +67,7 @@
             android:gravity="center"
             android:text="@string/enter_code_from_mail"
             android:textColor="@color/colorHint"
-            android:textSize="@dimen/font_size_extra_tiny" />
-
+            android:textSize="@dimen/font_size_increased_tiny"/>
     </LinearLayout>
 
 </LinearLayout>

@@ -21,7 +21,7 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
 
     fun getAccount() = accountRepository.getAccount()
 
-    fun removeAllData() = accountRepository.deleteData()
+    fun logOut() = authRepository.logOut()
 
     fun initContactsListeners() = contactsRepository.initContactsListeners()
 

@@ -3,7 +3,9 @@ package com.sudox.android.common.repository.main
 import android.os.AsyncTask
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.sudox.android.common.enums.ContactSearchState
 import com.sudox.android.common.enums.State
+import com.sudox.android.common.models.ContactSearchData
 import com.sudox.android.common.models.dto.*
 import com.sudox.android.database.dao.ContactsDao
 import com.sudox.android.database.model.Contact
@@ -66,14 +68,17 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         return mutableLiveData
     }
 
-    fun findUserByEmail(email: String): LiveData<Contact?> {
-        val mutableLiveData = MutableLiveData<Contact?>()
+    fun findUserByEmail(email: String): LiveData<ContactSearchData> {
+        val mutableLiveData = MutableLiveData<ContactSearchData>()
 
         val contactSearchDTO = ContactSearchDTO()
         contactSearchDTO.email = email
 
         protocolClient.makeRequest<ContactSearchDTO>("users.getByEmail", contactSearchDTO) {
-                if (it.errorCode != 51) {
+            when {
+                it.errorCode == 51 -> mutableLiveData.postValue(ContactSearchData(ContactSearchState.USER_DOES_NOT_EXIST))
+                it.errorCode == 50 -> mutableLiveData.postValue(ContactSearchData(ContactSearchState.WRONG_FORMAT))
+                else -> {
                     val contact = if (it.checkAvatar) {
                         Contact(it.scid, it.firstColor, it.secondColor,
                                 null, it.name, it.name)
@@ -81,10 +86,9 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
                         Contact(it.scid, null, null,
                                 it.avatarUrl, it.name, it.name)
                     }
-                    mutableLiveData.postValue(contact)
-                } else {
-                    mutableLiveData.postValue(null)
+                    mutableLiveData.postValue(ContactSearchData(ContactSearchState.SUCCESS, contact))
                 }
+            }
 
         }
         return mutableLiveData

@@ -44,7 +44,7 @@
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:maxLines="1"
-            android:textSize="@dimen/font_size_tiny" />
+            android:textSize="@dimen/font_size_increased_tiny" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,7 +64,7 @@
             android:gravity="center"
             android:text="@string/hint_of_create_account"
             android:textColor="@color/colorHint"
-            android:textSize="@dimen/font_size_extra_tiny" />
+            android:textSize="@dimen/font_size_increased_tiny" />
 
     </LinearLayout>
 

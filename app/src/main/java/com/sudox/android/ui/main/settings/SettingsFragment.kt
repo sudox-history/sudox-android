@@ -31,7 +31,6 @@ class SettingsFragment: DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         exitButton.setOnClickListener {
-            settingsViewModel.removeAllAccounts()
             mainActivity.exitFromAccount()
         }
     }
