@@ -52,7 +52,6 @@ dependencies {
         implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
 
         // Room
-        implementation "android.arch.paging:runtime:1.0.0"
         implementation "android.arch.persistence.room:runtime:$architectureComponentsVersion"
         kapt "android.arch.persistence.room:compiler:$architectureComponentsVersion"
 
