@@ -64,13 +64,11 @@ class ContactsAdapter(var items: List<Contact>,
             return@setOnLongClickListener true
         }
 
-        holder.itemView.setOnClickListener {
-            object : DebouncingOnClickListener() {
-                override fun doClick(v: View?) {
-                    clickedSimpleContactLiveData.postValue(contact)
-                }
+        holder.itemView.setOnClickListener(object : DebouncingOnClickListener() {
+            override fun doClick(v: View?) {
+                clickedSimpleContactLiveData.postValue(contact)
             }
-        }
+        })
 
         // Setting name
         holder.name.text = contact.name
