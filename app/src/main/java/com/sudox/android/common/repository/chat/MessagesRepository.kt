@@ -16,6 +16,7 @@ const val MESSAGE_FROM = 1
 class MessagesRepository(private val protocolClient: ProtocolClient,
                          private val messagesDao: MessagesDao) {
 
+    var canUpdateLiveData: Boolean = false
     val loadedContactsIds: HashSet<String> = HashSet()
     val messagesLiveData = SingleLiveEvent<ArrayList<Message>>()
 
@@ -24,7 +25,7 @@ class MessagesRepository(private val protocolClient: ProtocolClient,
             if (it.method == "chats.new") {
                 Message(it.mid, it.text, it.time, MESSAGE_FROM, it.fromId).apply {
                     messagesDao.insertMessage(this)
-                    messagesLiveData.postValue(arrayListOf(this))
+                    if (canUpdateLiveData) messagesLiveData.postValue(arrayListOf(this))
                 }
             }
         }
@@ -32,7 +33,7 @@ class MessagesRepository(private val protocolClient: ProtocolClient,
         protocolClient.listenMessage<SendMessageDTO>("chats.send") {
             Message(it.id, it.text, it.time, MESSAGE_TO, it.toId).apply {
                 messagesDao.insertMessage(this)
-                messagesLiveData.postValue(arrayListOf(this))
+                if (canUpdateLiveData) messagesLiveData.postValue(arrayListOf(this))
             }
         }
 

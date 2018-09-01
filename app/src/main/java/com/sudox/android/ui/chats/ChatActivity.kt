@@ -39,6 +39,7 @@ class ChatActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         chatViewModel = getViewModel(viewModelFactory)
+        chatViewModel.messagesRepository.canUpdateLiveData = true
         chatViewModel.connectLiveData.observe(this, Observer {
             getConnectState(it)
         })
@@ -48,13 +49,12 @@ class ChatActivity : DaggerAppCompatActivity() {
         initSendButton()
 
         chatViewModel.messagesLiveData.observe(this, Observer {
-            if(!chatViewModel.loadedContactsIds.contains(contact.cid)) {
-                adapter.items.addAll(it.filter {
-                    it.userId == contact.cid
-                })
-                adapter.notifyDataSetChanged()
-                messagesList.scrollToPosition(adapter.items.size - 1)
-            }
+            adapter.items.addAll(it.filter {
+                it.userId == contact.cid
+            })
+
+            adapter.notifyDataSetChanged()
+            messagesList.scrollToPosition(adapter.items.size - 1)
         })
 
         if (!chatViewModel.loadedContactsIds.contains(contact.cid)) {
@@ -62,7 +62,6 @@ class ChatActivity : DaggerAppCompatActivity() {
         } else {
             chatViewModel.loadHistoryFromDatabase(contact.cid)
         }
-
     }
 
     private fun initMessagesList() {
@@ -189,5 +188,12 @@ class ChatActivity : DaggerAppCompatActivity() {
 
     private fun showMessage(message: String) {
         showTopSnackbar(this, chat_layout, message, TSnackbar.LENGTH_LONG)
+    }
+
+    override fun onDestroy() {
+        chatViewModel.messagesRepository.canUpdateLiveData = false
+
+        // Super!
+        super.onDestroy()
     }
 }

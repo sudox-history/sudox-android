@@ -7,7 +7,7 @@ import com.sudox.android.common.repository.chat.MessagesRepository
 import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject
 
-class ChatViewModel @Inject constructor(private val messagesRepository: MessagesRepository,
+class ChatViewModel @Inject constructor(val messagesRepository: MessagesRepository,
                                         private val protocolClient: ProtocolClient,
                                         private val accountRepository: AccountRepository,
                                         private val authRepository: AuthRepository): ViewModel() {
