@@ -3,26 +3,26 @@ apply plugin: 'kotlin-platform-android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
 
 // App version
 def versionMajor = 0
-def versionMinor = 1
+def versionMinor = 3
 def versionPatch = 0
 
 // App build params
-def buildToolsProjectVersion = "28.0.1"
+def buildToolsProjectVersion = "28.0.2"
 def compileSdkProjectVersion = 28
 def minSdkProjectVersion = 21
 
 // Versions of libraries
 ext {
-    appCompatVersion = "1.0.0-rc01"
+    appCompatVersion = "1.0.0-rc02"
     v4SupportVersion = "28.0.0-alpha3"
     designVersion = "27.1.1"
     architectureComponentsVersion = "1.1.1"
     daggerVersion = "2.16"
-    firebaseVersion = "16.0.1"
+    firebaseCore = "16.0.3"
     socketVersion = "1.0.0"
     timberVersion = "4.7.1"
     rxKotlinVersion = "2.2.0"
@@ -63,16 +63,20 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     // Firebase
-    implementation "com.google.firebase:firebase-crash:$firebaseVersion"
+
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
     implementation 'com.androidadvance:topsnackbar:1.1.1'
 
     // Socket.io
-    implementation "io.socket:socket.io-client:$socketVersion"
+    implementation('io.socket:socket.io-client:1.0.0') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
 
     //Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.3'
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timberVersion"
@@ -152,3 +156,4 @@ kotlin {
         coroutines "enable"
     }
 }
+apply plugin: 'com.google.gms.google-services'

@@ -43,7 +43,7 @@ class AuthActivity : DaggerAppCompatActivity() {
     }
 
     private fun getConnectState(connectState: ConnectState?) {
-        if (connectState == ConnectState.RECONNECTED) {
+        if (connectState == ConnectState.MISSING_TOKEN) {
             showMessage(getString(R.string.connection_restored))
 
             if (codeEditTextContainer != null && hash != null) {
@@ -51,7 +51,7 @@ class AuthActivity : DaggerAppCompatActivity() {
                         .importAuthHash(hash!!)
                         .observe(this, Observer(::getHashData))
             }
-        } else if (connectState == ConnectState.CONNECT_ERROR) {
+        } else if (connectState == ConnectState.DISCONNECTED) {
             showMessage(getString(R.string.lost_internet_connection))
         }
     }

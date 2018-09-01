@@ -47,8 +47,8 @@
     <string name="hello_world">Hello world</string>
     <string name="exit">Logout</string>
     <string name="retry_send_in">Try in %time</string>
-    <string name="account_is_already_exist">Account is already exist</string>
-    <string name="account_is_already_created">We\'ve found the account already exist</string>
+    <string name="account_is_already_exist">Account is already exists</string>
+    <string name="account_is_already_created">We\'ve found the account already exists</string>
     <string name="session_died">The session is out of date, please, sign up again</string>
     <string name="share_with_contact">Share with contact</string>
     <string name="find_new_friends">Find new friends</string>

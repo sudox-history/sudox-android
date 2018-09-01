@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "221791250648-jjrqt8unl30b90qpk3o35t9o52r57ktj.apps.googleusercontent.com",
+          "client_id": "221791250648-f519buofd1vfsa8f9sofjb9t0ks1ce1e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sudox.android",
-            "certificate_hash": "bf28fd76b16061cabad269c1f244dafa188ddb5d"
+            "certificate_hash": "ff46dc077010bdc77493145b3a316c02d2cffb6f"
           }
         },
         {

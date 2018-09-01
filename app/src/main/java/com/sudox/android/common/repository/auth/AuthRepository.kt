@@ -92,7 +92,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
                 when {
                     it.errorCode == 0 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
                     it.errorCode == 2 -> mutableLiveData.postValue(SignUpInData(SignUpInState.WRONG_FORMAT))
-                    it.errorCode == 205 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_ERROR))
+                    it.errorCode == 205 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_EXISTS))
                     else -> mutableLiveData.postValue(SignUpInData(SignUpInState.SUCCESS, it.id, it.secret))
                 }
             }
@@ -115,7 +115,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
                     it.errorCode == 0 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
                     it.errorCode == 50 -> mutableLiveData.postValue(SignUpInData(SignUpInState.WRONG_FORMAT))
                     it.errorCode == 204 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
-                    it.errorCode == 205 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_ERROR))
+                    it.errorCode == 206 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_ERROR))
                     else -> mutableLiveData.postValue(SignUpInData(SignUpInState.SUCCESS, it.id, it.secret))
                 }
             }
@@ -134,7 +134,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         protocolClient.makeRequest<AuthHashDTO>("auth.restore", authHashDTO) {
             when {
                 it.errorCode == 0 -> mutableLiveData.postValue(AuthHashState.FAILED)
-                it.errorCode == 202 -> mutableLiveData.postValue(AuthHashState.AUTH_HASH_ERROR)
+                it.errorCode == 202 -> mutableLiveData.postValue(AuthHashState.DEAD)
                 it.code == 0 -> mutableLiveData.postValue(AuthHashState.DEAD)
                 else -> mutableLiveData.postValue(AuthHashState.ALIVE)
             }

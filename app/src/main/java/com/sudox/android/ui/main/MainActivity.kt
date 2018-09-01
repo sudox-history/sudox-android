@@ -88,8 +88,11 @@ class MainActivity : DaggerAppCompatActivity() {
     private fun getConnectState(connectState: ConnectState) {
         if (connectState == ConnectState.DISCONNECTED) {
             showMessage(getString(R.string.lost_internet_connection))
-        } else if (connectState == ConnectState.MISSING_TOKEN || connectState == ConnectState.WRONG_TOKEN) {
+        } else if (connectState == ConnectState.WRONG_TOKEN) {
             exitFromAccount()
+        } else if(connectState == ConnectState.MISSING_TOKEN){
+            mainViewModel.removeAllAccounts()
+            showAuthActivity()
         }
         else if (connectState == ConnectState.CORRECT_TOKEN) {
             showMessage(getString(R.string.connection_restored))

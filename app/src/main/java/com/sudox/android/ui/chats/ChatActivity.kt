@@ -46,13 +46,15 @@ class ChatActivity : DaggerAppCompatActivity() {
         initToolbar()
         initMessagesList()
         initSendButton()
-    }
 
-    override fun onStart() {
         chatViewModel.messagesLiveData.observe(this, Observer {
-            adapter.items.addAll(it)
-            adapter.notifyItemInserted(adapter.items.size - 1)
-            messagesList.scrollToPosition(adapter.items.size - 1)
+            if(!chatViewModel.loadedContactsIds.contains(contact.cid)) {
+                adapter.items.addAll(it.filter {
+                    it.userId == contact.cid
+                })
+                adapter.notifyDataSetChanged()
+                messagesList.scrollToPosition(adapter.items.size - 1)
+            }
         })
 
         if (!chatViewModel.loadedContactsIds.contains(contact.cid)) {
@@ -61,10 +63,9 @@ class ChatActivity : DaggerAppCompatActivity() {
             chatViewModel.loadHistoryFromDatabase(contact.cid)
         }
 
-        super.onStart()
     }
 
-    fun initMessagesList() {
+    private fun initMessagesList() {
         adapter = MessagesAdapter(ArrayList(), this)
         messagesList.layoutManager = LinearLayoutManager(this).apply { stackFromEnd = true }
         messagesList.adapter = adapter

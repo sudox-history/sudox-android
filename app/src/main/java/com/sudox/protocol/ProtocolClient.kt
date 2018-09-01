@@ -32,12 +32,14 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
     fun connect() {
         registerListeners()
+
         socket.connect()
     }
 
     private fun registerListeners() {
         socket.once(Socket.EVENT_CONNECT) {
             startHandshake(false)
+            startListeningInboundMessages()
         }
 
         socket.once(Socket.EVENT_CONNECT_ERROR) {
@@ -76,9 +78,6 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
         val handler = Handler(Looper.getMainLooper())
         val successCallback: (SymmetricKey) -> (Unit) = {
             symmetricKey = it
-
-            // Start listen messages
-            startListeningInboundMessages()
 
             // Notify subscribers, that socket was being connected
             if (reconnect) {

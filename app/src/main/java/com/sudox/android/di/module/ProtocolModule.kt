@@ -23,6 +23,8 @@ class ProtocolModule {
                 .apply {
                     timeout = 5000
                     reconnection = true
+                    forceNew = true
+                    transports = arrayOf("websocket")
                     path = "/"
                 }
 
