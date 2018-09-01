@@ -7,11 +7,13 @@ import com.sudox.android.common.enums.ContactSearchState
 import com.sudox.android.common.enums.State
 import com.sudox.android.common.models.ContactSearchData
 import com.sudox.android.common.models.dto.*
+import com.sudox.android.common.repository.chat.MessagesRepository
 import com.sudox.android.database.dao.ContactsDao
 import com.sudox.android.database.model.Contact
 import com.sudox.protocol.ProtocolClient
 
 class ContactsRepository(private val protocolClient: ProtocolClient,
+                         private val messagesRepository: MessagesRepository,
                          private val contactsDao: ContactsDao) {
 
     val contactsLoadLiveData = MutableLiveData<List<Contact>>()
@@ -41,6 +43,7 @@ class ContactsRepository(private val protocolClient: ProtocolClient,
         protocolClient.listenMessage<ContactAddRemoveDTO>("contacts.remove") {
             if (it.code != 13) {
                 contactsDao.deleteContactById(it.id)
+                messagesRepository.loadedContactsIds.minusAssign(it.id)
                 requestAllContactsFromDB()
             }
         }

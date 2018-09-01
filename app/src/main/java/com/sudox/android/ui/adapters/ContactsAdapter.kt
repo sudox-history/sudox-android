@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
+import butterknife.internal.DebouncingOnClickListener
 import com.bumptech.glide.Glide
 import com.sudox.android.R
 import com.sudox.android.database.model.Contact
@@ -63,8 +64,12 @@ class ContactsAdapter(var items: List<Contact>,
             return@setOnLongClickListener true
         }
 
-        holder.itemView.setOnClickListener{
-            clickedSimpleContactLiveData.postValue(contact)
+        holder.itemView.setOnClickListener {
+            object : DebouncingOnClickListener() {
+                override fun doClick(v: View?) {
+                    clickedSimpleContactLiveData.postValue(contact)
+                }
+            }
         }
 
         // Setting name

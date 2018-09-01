@@ -32,7 +32,6 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
 
     fun connect() {
         registerListeners()
-
         socket.connect()
     }
 
