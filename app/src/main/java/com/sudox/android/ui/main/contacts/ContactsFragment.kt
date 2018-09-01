@@ -3,9 +3,6 @@ package com.sudox.android.ui.main.contacts
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.InputType
-import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
@@ -55,6 +52,11 @@ class ContactsFragment : DaggerFragment() {
         initSearchAdditionalView()
         initContactsList()
         initListeners()
+    }
+
+    override fun onResume() {
+        adapter.isBlocked = false
+        super.onResume()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

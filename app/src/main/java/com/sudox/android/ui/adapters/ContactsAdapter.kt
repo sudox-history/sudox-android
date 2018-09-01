@@ -2,24 +2,24 @@ package com.sudox.android.ui.adapters
 
 import android.app.Activity
 import android.graphics.*
-import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.internal.DebouncingOnClickListener
 import com.bumptech.glide.Glide
 import com.sudox.android.R
 import com.sudox.android.database.model.Contact
+import com.sudox.protocol.model.SingleLiveEvent
 import kotlinx.android.synthetic.main.card_contact.view.*
 
 class ContactsAdapter(var items: List<Contact>,
-                      private val context: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>(), View.OnCreateContextMenuListener {
+                      private val context: Activity) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
 
 
-    val clickedLongContactLiveData = MutableLiveData<String>()
-    val clickedSimpleContactLiveData = MutableLiveData<Contact>()
+    val clickedLongContactLiveData = SingleLiveEvent<String>()
+    val clickedSimpleContactLiveData = SingleLiveEvent<Contact>()
+
+    var isBlocked = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.card_contact, parent, false))
@@ -64,23 +64,18 @@ class ContactsAdapter(var items: List<Contact>,
             return@setOnLongClickListener true
         }
 
-        holder.itemView.setOnClickListener(object : DebouncingOnClickListener() {
-            override fun doClick(v: View?) {
+        holder.itemView.setOnClickListener {
+            if (!isBlocked) {
+                isBlocked = true
                 clickedSimpleContactLiveData.postValue(contact)
             }
-        })
+        }
 
         // Setting name
         holder.name.text = contact.name
 
         // Setting nickname
         holder.nickname.text = contact.nickname
-
-        holder.itemView.setOnCreateContextMenuListener(this)
-    }
-
-    override fun onCreateContextMenu(p0: ContextMenu?, p1: View?, p2: ContextMenu.ContextMenuInfo?) {
-
     }
 
     private fun drawGradientBitmap(firstColor: String, secondColor: String, text: String): Bitmap {

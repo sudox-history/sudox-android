@@ -27,11 +27,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="10dp"
+        android:paddingTop="10dp"
         android:clipToPadding="false"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:layout_below="@id/toolbar_chat"
-        android:layout_above="@id/edit_message_layout" />
+        android:layout_above="@id/edit_message_layout"
+        tools:ignore="RtlSymmetry" />
 
     <LinearLayout
         android:id="@+id/edit_message_layout"

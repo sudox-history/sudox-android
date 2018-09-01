@@ -1,20 +1,21 @@
 package com.sudox.android.common.helpers
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.text.Html
 import android.text.Spanned
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat.getColor
 import com.androidadvance.topsnackbar.TSnackbar
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.sudox.android.R
-import android.app.Activity
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import androidx.core.content.ContextCompat.getSystemService
+
+
 
 
 
@@ -67,4 +68,14 @@ fun hideKeyboard(context: Context, view: View) {
 
     // Hide keyboard & remove focus
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+fun convertDpToPixel(dp: Float, context: Context): Float {
+    val resources = context.resources
+    val metrics = resources.displayMetrics
+    return dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+}
+
+fun convertPixelsToDp(px: Float, context: Context): Float {
+    return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }
