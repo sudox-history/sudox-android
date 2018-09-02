@@ -19,7 +19,7 @@ class AccountRepository(private val protocolClient: ProtocolClient,
                         private val sudoxDatabase: SudoxDatabase) {
 
     // Account type
-    private val accountType = "sudox"
+    private val accountType = "com.sudox"
 
     fun saveAccount(account: SudoxAccount): LiveData<State> {
         val mutableLiveData = MutableLiveData<State>()
@@ -65,7 +65,7 @@ class AccountRepository(private val protocolClient: ProtocolClient,
 
     fun getAccount(): LiveData<SudoxAccount?> {
         val mutableLiveData = MutableLiveData<SudoxAccount?>()
-        val accounts = accountManager.accounts
+        val accounts = accountManager.getAccountsByType(accountType)
 
         if (accounts.isNotEmpty()) {
             val account = accounts[accounts.size - 1]

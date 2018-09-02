@@ -21,7 +21,6 @@ class ProtocolModule {
     fun provideSocket() : Socket {
         val options = IO.Options()
                 .apply {
-                    timeout = 5000
                     reconnection = true
                     forceNew = true
                     transports = arrayOf("websocket")

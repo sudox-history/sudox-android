@@ -12,6 +12,8 @@
         android:layout_alignParentEnd="true"
         android:background="@drawable/message_to_shape">
 
+
+        <!--TODO: update design-->
         <TextView
             android:id="@+id/message_text"
             android:layout_width="wrap_content"
