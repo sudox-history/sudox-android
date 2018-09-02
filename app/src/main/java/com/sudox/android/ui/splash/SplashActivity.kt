@@ -1,12 +1,12 @@
 package com.sudox.android.ui.splash
 
+import android.app.AlertDialog
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
 import com.sudox.android.common.auth.AUTH_CODE
 import com.sudox.android.common.auth.AUTH_KEY
@@ -42,7 +42,7 @@ class SplashActivity : DaggerAppCompatActivity() {
             } else {
                 splashViewModel.setSecret(sudoxAccount)
                 splashViewModel.connectLiveData.observe(this, Observer {
-                    getConnectState(sudoxAccount, it)
+                    getConnectState(sudoxAccount, it!!)
                 })
 
                 splashViewModel.connect()

@@ -1,11 +1,12 @@
 package com.sudox.android.ui.auth
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.snackbar.Snackbar
+import android.support.design.widget.Snackbar
+import android.support.v4.app.FragmentTransaction
+import android.support.v7.app.AppCompatActivity
 import com.sudox.android.R
 import com.sudox.android.common.enums.AuthHashState
 import com.sudox.android.common.enums.ConnectState
@@ -49,7 +50,7 @@ class AuthActivity : DaggerAppCompatActivity() {
             if (codeEditTextContainer != null && hash != null) {
                 authViewModel
                         .importAuthHash(hash!!)
-                        .observe(this, Observer(::getHashData))
+                        .observe(this, Observer { getHashData(it!!) })
             }
         } else if (connectState == ConnectState.DISCONNECTED) {
             showMessage(getString(R.string.lost_internet_connection))

@@ -3,16 +3,15 @@ package com.sudox.android.common.repository.auth
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AccountManager.KEY_ACCOUNT_NAME
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.os.AsyncTask
 import android.os.Build
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.State
 import com.sudox.android.database.SudoxDatabase
 import com.sudox.protocol.ProtocolClient
-
 
 class AccountRepository(private val protocolClient: ProtocolClient,
                         private val accountManager: AccountManager,

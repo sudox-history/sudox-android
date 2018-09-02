@@ -1,8 +1,8 @@
 package com.sudox.protocol
 
+import android.arch.lifecycle.MutableLiveData
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.models.dto.SecretDTO
 import com.sudox.protocol.helper.*

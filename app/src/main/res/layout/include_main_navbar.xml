@@ -7,7 +7,7 @@
     android:paddingEnd="20dp"
     android:background="?attr/colorPrimary">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textTag"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

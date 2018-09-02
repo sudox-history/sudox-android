@@ -7,8 +7,6 @@ import timber.log.Timber
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 
-
-
 class ApplicationLoader : DaggerApplication() {
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

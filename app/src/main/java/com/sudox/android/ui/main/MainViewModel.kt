@@ -1,7 +1,7 @@
 package com.sudox.android.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.ViewModel
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.repository.auth.AccountRepository

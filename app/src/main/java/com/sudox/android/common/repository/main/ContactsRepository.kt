@@ -1,8 +1,8 @@
 package com.sudox.android.common.repository.main
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.os.AsyncTask
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.ContactSearchState
 import com.sudox.android.common.enums.State
 import com.sudox.android.common.models.ContactSearchData

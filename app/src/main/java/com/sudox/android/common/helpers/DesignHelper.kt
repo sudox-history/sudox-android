@@ -3,21 +3,17 @@ package com.sudox.android.common.helpers
 import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.support.design.widget.Snackbar
+import android.support.design.widget.TextInputLayout
+import android.support.v4.content.ContextCompat.getColor
 import android.text.Html
 import android.text.Spanned
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getColor
 import com.androidadvance.topsnackbar.TSnackbar
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textfield.TextInputLayout
 import com.sudox.android.R
-
-
-
-
 
 fun showInputError(inputLayout: TextInputLayout) {
     inputLayout.error = " "

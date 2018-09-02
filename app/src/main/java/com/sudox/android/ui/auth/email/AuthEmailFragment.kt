@@ -1,13 +1,13 @@
 package com.sudox.android.ui.auth.email
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
 import com.sudox.android.common.enums.EmailState
 import com.sudox.android.common.enums.NavigationAction

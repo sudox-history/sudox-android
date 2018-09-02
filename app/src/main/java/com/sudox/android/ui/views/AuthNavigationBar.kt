@@ -1,12 +1,12 @@
 package com.sudox.android.ui.views
 
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import android.support.annotation.VisibleForTesting
+import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
-import androidx.annotation.VisibleForTesting
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.lifecycle.MutableLiveData
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
 import kotlinx.android.synthetic.main.include_auth_navbar.view.*

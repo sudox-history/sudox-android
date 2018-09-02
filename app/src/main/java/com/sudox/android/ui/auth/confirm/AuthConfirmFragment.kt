@@ -1,14 +1,14 @@
 package com.sudox.android.ui.auth.confirm
 
 import android.annotation.SuppressLint
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.enums.SignUpInState
@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_auth_confirm.*
 import kotlinx.android.synthetic.main.include_auth_navbar.*
 import java.text.SimpleDateFormat
 import java.util.*
+//import java.util.*
 import javax.inject.Inject
 
 // Email bundle key
@@ -77,7 +78,7 @@ class AuthConfirmFragment : DaggerFragment() {
     private fun initTimer() {
         authConfirmViewModel
                 .timerData
-                .observe(this, Observer(::setTimerText))
+                .observe(this, Observer { setTimerText(it!!) })
 
         setupTimer()
     }
@@ -216,9 +217,8 @@ class AuthConfirmFragment : DaggerFragment() {
 
     @SuppressLint("SimpleDateFormat")
     private fun formatTimeToEnd(second: Long): String {
-        val format = SimpleDateFormat("mm:ss").apply {
-            timeZone = TimeZone.getTimeZone("UTC")
-        }
-        return format.format(Date(second * 1000))
+        return SimpleDateFormat("mm:ss")
+                .apply { timeZone = TimeZone.getTimeZone("UTC") }
+                .format(Date(second * 1000))
     }
 }

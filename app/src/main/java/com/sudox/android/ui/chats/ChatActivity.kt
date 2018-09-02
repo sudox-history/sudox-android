@@ -1,14 +1,13 @@
 package com.sudox.android.ui.chats
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.androidadvance.topsnackbar.TSnackbar
 import com.bumptech.glide.Glide
 import com.sudox.android.R
@@ -41,7 +40,7 @@ class ChatActivity : DaggerAppCompatActivity() {
         chatViewModel = getViewModel(viewModelFactory)
         chatViewModel.messagesRepository.canUpdateLiveData = true
         chatViewModel.connectLiveData.observe(this, Observer {
-            getConnectState(it)
+            getConnectState(it!!)
         })
 
         initToolbar()
@@ -49,7 +48,7 @@ class ChatActivity : DaggerAppCompatActivity() {
         initSendButton()
 
         chatViewModel.messagesLiveData.observe(this, Observer {
-            adapter.items.addAll(it.filter {
+            adapter.items.addAll(it!!.filter {
                 it.userId == contact.cid
             })
 

@@ -9,7 +9,7 @@
 
     <!-- Navigation buttons start -->
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textSudoxTag"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -17,7 +17,7 @@
         android:gravity="center"
         android:text="@string/app_name" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/buttonNavbarBack"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -30,7 +30,7 @@
         android:gravity="center"
         android:text="@string/toolbar_back" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/buttonNavbarNext"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -43,7 +43,7 @@
         android:gravity="center"
         android:text="@string/toolbar_next" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/buttonSomeFeature"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

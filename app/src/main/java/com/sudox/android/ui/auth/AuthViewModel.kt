@@ -1,6 +1,6 @@
 package com.sudox.android.ui.auth
 
-import androidx.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModel
 import com.sudox.android.common.repository.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject

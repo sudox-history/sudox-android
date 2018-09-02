@@ -1,15 +1,15 @@
 package com.sudox.android.ui.main.contacts
 
 import android.annotation.SuppressLint
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.util.DiffUtil
+import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.android.R
 import com.sudox.android.common.enums.ContactSearchState
 import com.sudox.android.common.models.ContactSearchData
@@ -24,8 +24,6 @@ import kotlinx.android.synthetic.main.card_add_contact.*
 import kotlinx.android.synthetic.main.fragment_contacts.*
 import kotlinx.android.synthetic.main.include_search_navbar_addition.*
 import javax.inject.Inject
-
-
 
 class ContactsFragment : DaggerFragment() {
 
@@ -104,7 +102,7 @@ class ContactsFragment : DaggerFragment() {
                 .contactsLoadLiveData()
                 .observe(this, Observer {
                     searchAdditionalView.toggle(false)
-                    if (it.isNotEmpty()) {
+                    if (it!!.isNotEmpty()) {
                         contactsList.visibility = View.VISIBLE
                         have_not_got_contacts.visibility = View.GONE
                         val result = DiffUtil.calculateDiff(ContactsDiffUtil(it, adapter.items))
@@ -145,7 +143,7 @@ class ContactsFragment : DaggerFragment() {
                 progress_bar.visibility = View.VISIBLE
                 add_contact_hint.visibility = View.GONE
                 contactsViewModel.contactsSearchUserByEmail(nicknameEditText.text.toString())
-                        .observe(this, Observer(::setSearchContact))
+                        .observe(this, Observer { setSearchContact(it!!) })
                 return@OnEditorActionListener true
             }
             false
@@ -158,12 +156,12 @@ class ContactsFragment : DaggerFragment() {
         }
 
         adapter.clickedLongContactLiveData.observe(this, Observer {
-            contactsViewModel.removeContact(it)
+            contactsViewModel.removeContact(it!!)
         })
 
         adapter.clickedSimpleContactLiveData.observe(this, Observer {
             mainActivity.goToChatActivity( Intent(mainActivity, ChatActivity::class.java).apply {
-                putExtra("name", it.name)
+                putExtra("name", it!!.name)
                 putExtra("firstColor", it.firstColor)
                 putExtra("secondColor", it.secondColor)
                 putExtra("avatarUrl", it.avatarUrl)

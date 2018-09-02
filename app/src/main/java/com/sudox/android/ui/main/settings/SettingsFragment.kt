@@ -1,10 +1,10 @@
 package com.sudox.android.ui.main.settings
 
+import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.R
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity

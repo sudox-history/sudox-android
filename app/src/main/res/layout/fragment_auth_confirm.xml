@@ -30,7 +30,7 @@
         android:text="@string/we_glad_to_see_you"
         android:textSize="@dimen/font_size_medium" />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <android.support.design.widget.TextInputLayout
         android:id="@+id/codeEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:inputType="number"
             android:textSize="@dimen/font_size_increased_tiny" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+    </android.support.design.widget.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

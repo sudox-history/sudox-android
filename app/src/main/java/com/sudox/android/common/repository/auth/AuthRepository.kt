@@ -1,7 +1,7 @@
 package com.sudox.android.common.repository.auth
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import com.sudox.android.common.enums.AuthHashState
 import com.sudox.android.common.enums.EmailState
 import com.sudox.android.common.enums.SignUpInState

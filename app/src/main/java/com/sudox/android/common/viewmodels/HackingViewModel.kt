@@ -1,8 +1,8 @@
 package com.sudox.android.common.viewmodels
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.*
+import android.arch.lifecycle.*
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 
 inline fun <reified T : ViewModel> FragmentActivity.getViewModel(viewModelFactory: ViewModelProvider.Factory): T {
     return ViewModelProviders.of(this, viewModelFactory)[T::class.java]
@@ -24,6 +24,6 @@ inline fun <reified T : ViewModel> Fragment.withViewModel(viewModelFactory: View
     return vm
 }
 
-fun <T : Any, L : LiveData<T>> LifecycleOwner.observe(liveData: L, body: (T) -> Unit) {
+fun <T : Any, L : LiveData<T>> LifecycleOwner.observe(liveData: L, body: (T?) -> Unit) {
     liveData.observe(this, Observer(body))
 }

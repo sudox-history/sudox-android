@@ -1,10 +1,10 @@
 package com.sudox.android.ui.main
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import android.support.v4.app.FragmentTransaction
 import com.androidadvance.topsnackbar.TSnackbar
 import com.sudox.android.R
 import com.sudox.android.common.enums.ConnectState
@@ -34,7 +34,7 @@ class MainActivity : DaggerAppCompatActivity() {
         mainViewModel.getAccount().observe(this, Observer { sudoxAccount ->
             mainViewModel.setSecret(sudoxAccount)
             mainViewModel.connectLiveData.observe(this, Observer {
-                getConnectState(it)
+                getConnectState(it!!)
             })
         })
 

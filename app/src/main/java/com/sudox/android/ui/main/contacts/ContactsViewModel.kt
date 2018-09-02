@@ -1,6 +1,6 @@
 package com.sudox.android.ui.main.contacts
 
-import androidx.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModel
 import com.sudox.android.common.repository.main.ContactsRepository
 import javax.inject.Inject
 

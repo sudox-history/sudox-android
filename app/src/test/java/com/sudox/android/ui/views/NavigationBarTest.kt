@@ -1,7 +1,7 @@
 package com.sudox.android.ui.views
 
+import android.support.v7.widget.AppCompatTextView
 import android.view.View
-import androidx.appcompat.widget.AppCompatTextView
 import com.sudox.android.R
 import org.junit.Before
 import org.junit.Test

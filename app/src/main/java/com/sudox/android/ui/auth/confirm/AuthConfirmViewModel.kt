@@ -1,8 +1,8 @@
 package com.sudox.android.ui.auth.confirm
 
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
 import android.os.Handler
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.repository.auth.AccountRepository
 import com.sudox.android.common.repository.auth.AuthRepository

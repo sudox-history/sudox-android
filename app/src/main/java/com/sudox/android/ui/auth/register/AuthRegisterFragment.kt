@@ -1,12 +1,12 @@
 package com.sudox.android.ui.auth.register
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import com.sudox.android.R
 import com.sudox.android.common.enums.NavigationAction
 import com.sudox.android.common.enums.SignUpInState
