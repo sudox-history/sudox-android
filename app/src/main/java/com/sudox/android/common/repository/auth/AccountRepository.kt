@@ -80,6 +80,7 @@ class AccountRepository(private val protocolClient: ProtocolClient,
         } else {
             mutableLiveData.postValue(null)
         }
+
         return mutableLiveData
     }
 }
