@@ -42,7 +42,7 @@ class AccountRepository(private val protocolClient: ProtocolClient,
 
     @Suppress("DEPRECATION")
     fun removeAccounts() {
-        val accounts = accountManager.accounts
+        val accounts = accountManager.getAccountsByType(accountType)
 
         for (account in accounts) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
