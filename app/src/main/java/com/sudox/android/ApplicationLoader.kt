@@ -19,6 +19,7 @@ class ApplicationLoader : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
         Fabric.with(this, Crashlytics())
+
         // Enable Timber
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

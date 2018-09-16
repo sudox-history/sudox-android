@@ -1,7 +1,6 @@
 package com.sudox.android.common.models.dto
 
-import com.sudox.protocol.model.dto.JsonModel
-import org.json.JSONArray
+import com.sudox.protocol.model.JsonModel
 import org.json.JSONObject
 
 class GetMessagesDTO : JsonModel {

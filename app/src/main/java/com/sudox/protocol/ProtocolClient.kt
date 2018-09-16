@@ -1,61 +1,107 @@
 package com.sudox.protocol
 
-import android.arch.lifecycle.MutableLiveData
-import android.os.Handler
-import android.os.Looper
+import android.os.AsyncTask
+import android.util.Base64
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.models.dto.SecretDTO
-import com.sudox.protocol.helper.*
-import com.sudox.protocol.model.Callback
-import com.sudox.protocol.model.Payload
+import com.sudox.protocol.helpers.encryptAES
+import com.sudox.protocol.helpers.getHmac
+import com.sudox.protocol.helpers.randomBase64String
+import com.sudox.protocol.helpers.toJsonArray
+import com.sudox.protocol.model.JsonModel
+import com.sudox.protocol.model.ReadCallback
 import com.sudox.protocol.model.SingleLiveEvent
-import com.sudox.protocol.model.SymmetricKey
-import com.sudox.protocol.model.dto.JsonModel
-import io.socket.client.Socket
-import org.json.JSONObject
+import com.sudox.protocol.threads.ReadThread
+import com.sudox.protocol.threads.WriteThread
+import kotlinx.coroutines.experimental.async
+import java.io.IOException
+import java.net.InetSocketAddress
+import java.net.Socket
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.reflect.KClass
 
-@Singleton
-class ProtocolClient @Inject constructor(private val socket: Socket,
-                                         private val handshake: ProtocolHandshake) {
+class ProtocolClient @Inject constructor() {
 
-    // Symmetric key for encryption
-    private lateinit var symmetricKey: SymmetricKey
-
-    // Callbacks list
-    val callbacks: LinkedHashMap<String, Callback<*>> = LinkedHashMap()
-    val connectionStateLiveData: MutableLiveData<ConnectState> = SingleLiveEvent()
+    private val readCallbacks: ArrayList<ReadCallback<*>> = ArrayList()
+    val connectionStateLiveData = SingleLiveEvent<ConnectState>()
     var id: String? = null
     var secret: String? = null
 
-    fun connect() {
-        registerListeners()
-        socket.connect()
-    }
+    // Variables for connection setup
+    private val address by lazy { InetSocketAddress("api.sudox.ru", 5000) }
+    private val handler by lazy { ProtocolHandler(this@ProtocolClient) }
+    internal val socket by lazy { Socket() }
 
-    private fun registerListeners() {
-        socket.once(Socket.EVENT_CONNECT) {
-            startHandshake(false)
-            startListeningInboundMessages()
-        }
+    // Others IO variables
+    private val readThread by lazy { ReadThread(socket, { handler.handlePacket(it) }, { handler.handleEnd() }) }
+    private val writeThread by lazy { WriteThread(socket) }
 
-        socket.once(Socket.EVENT_CONNECT_ERROR) {
-            socket.off(Socket.EVENT_CONNECT)
+    fun connect() = AsyncTask.execute {
+        try {
+            socket.connect(address)
+
+            // Start threads ...
+            readThread.start()
+            writeThread.start()
+
+            // Preparing connection ...
+            handler.handleStart()
+        } catch (e: IOException) {
             connectionStateLiveData.postValue(ConnectState.CONNECT_ERROR)
-        }
 
-        socket.on(Socket.EVENT_RECONNECT) {
-            startHandshake(true)
-        }
-
-        socket.on(Socket.EVENT_DISCONNECT) {
-            connectionStateLiveData.postValue(ConnectState.DISCONNECTED)
+            // Remove key & close connection
+            handler.handleEnd()
         }
     }
 
-    private fun sendSecret() {
+    internal fun sendArray(array: Array<*>) {
+        sendString(array.toJsonArray().toString())
+    }
+
+    private fun sendString(string: String) {
+        writeThread.messagesQueue.put(string)
+    }
+
+    fun disconnect() {
+        socket.close()
+    }
+
+    fun isConnected(): Boolean {
+        return !socket.isClosed
+    }
+
+    fun sendMessage(event: String, message: JsonModel) {
+        if (!(handler.key != null && isConnected())) return
+
+        val iv = randomBase64String(16)
+        val salt = randomBase64String(32)
+        val json = message.toJSON()
+        val hmac = Base64.encodeToString(getHmac(handler.key!!, event + json + salt), Base64.NO_WRAP)
+        val payload = arrayOf(event, json, salt).toJsonArray().toString()
+        val encryptedPayload = encryptAES(handler.key!!, iv, payload)
+        val packet = arrayOf("msg", iv, encryptedPayload, hmac)
+
+        sendArray(packet)
+    }
+
+    fun <T : JsonModel> addToCallbacks(event: String, clazz: KClass<T>, resultFunction: (T) -> (Unit), once: Boolean) {
+        readCallbacks.plusAssign(ReadCallback(resultFunction, clazz, event, once))
+    }
+
+    inline fun <reified T : JsonModel> listenMessage(event: String, noinline resultFunction: (T) -> (Unit)) {
+        addToCallbacks(event, T::class, resultFunction, false)
+    }
+
+    inline fun <reified T : JsonModel> listenMessageOnce(event: String, noinline resultFunction: (T) -> (Unit)) {
+        addToCallbacks(event, T::class, resultFunction, true)
+    }
+
+    inline fun <reified T : JsonModel> makeRequest(event: String, message: JsonModel, noinline resultFunction: (T) -> (Unit)) {
+        listenMessageOnce(event, resultFunction)
+        sendMessage(event, message)
+    }
+
+    internal fun sendSecret() {
         if (secret != null && id != null) {
             makeRequest<SecretDTO>("auth.import", SecretDTO().apply {
                 this.secret = this@ProtocolClient.secret!!
@@ -72,171 +118,26 @@ class ProtocolClient @Inject constructor(private val socket: Socket,
         }
     }
 
-    private fun startHandshake(reconnect: Boolean) {
-        var errors = 0
-        val handler = Handler(Looper.getMainLooper())
-        val successCallback: (SymmetricKey) -> (Unit) = {
-            symmetricKey = it
+    internal fun notifyCallbacks(event: String, json: String) {
+        val iterator = readCallbacks.iterator()
 
-            // Notify subscribers, that socket was being connected
-            if (reconnect) {
-                connectionStateLiveData.postValue(ConnectState.RECONNECTED)
-            } else {
-                connectionStateLiveData.postValue(ConnectState.CONNECTED)
+        while (iterator.hasNext()) {
+            val next = iterator.next()
+
+            // Check, that event's equals
+            if (next.event != event)
+                continue
+
+            // Remove onceable callbacks
+            if (next.once)
+                iterator.remove()
+
+            // Read the message
+            val instance = next.clazz.java.newInstance().apply {
+                this.fromJSON(org.json.JSONObject(json))
             }
 
-            sendSecret()
+            (next.resultFunction as (Any) -> (Unit))(instance)
         }
-
-        handshake.start(successCallback, object : (() -> Unit) {
-            override fun invoke() {
-                errors++
-
-                // Check errors count
-                if (errors <= 5) {
-                    handler.postDelayed({
-                        handshake.start(successCallback, this, this@ProtocolClient)
-                    }, 5000L)
-                } else {
-                    notifyConnectionAttacked()
-                }
-            }
-        }, this)
-    }
-
-    fun isConnected() = socket.connected()
-
-    private fun notifyConnectionAttacked() {
-        connectionStateLiveData.postValue(ConnectState.ATTACKED)
-
-        // Remove protocol connection listener of disconnection
-        socket.off(Socket.EVENT_DISCONNECT)
-
-        // Close connection
-        socket.disconnect()
-    }
-
-    private fun startListeningInboundMessages() = socket.on("packet") {
-        val message = it[0] as JSONObject
-
-        // Packet data
-        val iv: String? = message.optString("iv")
-        val payload: String? = message.optString("payload")
-        val hash: String? = message.optString("hash")
-
-        // Защита от MITM-атак
-        if (iv != null && payload != null && hash != null) {
-            try {
-                val decryptedPayload = decryptAES(symmetricKey.key, iv, payload)
-
-                // Защита от MITM-атаки
-                if (checkHashes(hash, decryptedPayload)) {
-                    val prepareDataForClient = prepareDataForClient(decryptedPayload)
-                    val pair = callbacks[prepareDataForClient.event]
-
-                    // Check, that event was being linked with callback
-                    if (pair != null) {
-                        // Get json object
-                        val messageObject = JSONObject(prepareDataForClient.message)
-
-                        // Convert message
-                        val jsonModel = (pair.modelClass.java.newInstance()) as JsonModel
-                        val callback = pair.callback as ((JsonModel) -> (Unit))
-
-                        // Read message
-                        jsonModel.fromJSON(messageObject)
-
-                        // Call callback
-                        callback(jsonModel)
-
-                        // Clean-up callback from list
-                        if (pair.once) {
-                            callbacks.remove(prepareDataForClient.event)
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                println(e)
-                // Ignore
-            }
-        }
-    }
-
-    fun sendMessage(event: String, message: JsonModel) {
-        if (isConnected()) {
-            // Update iv and random
-            symmetricKey.update()
-
-            // Prepare message JSON Object
-            val messageJsonObject = message.toJSON()
-
-            // Prepare data for encrypt
-            val json = prepareDataForEncrypt(symmetricKey, event, messageJsonObject)
-
-            try {
-                // Encrypt payload
-                val encryptedPayload = encryptAES(symmetricKey.key, symmetricKey.iv, json.payloadObject.toString())
-
-                // Make payloadJson
-                val payloadJson = Payload().apply {
-                    payload = encryptedPayload
-                    iv = symmetricKey.iv
-                    hash = json.hash
-                }.toJSON()
-
-                // Send payload to the server
-                socket.emit("packet", payloadJson)
-            } catch (e: Exception) {
-                // Ignore
-            }
-        } else {
-            connectionStateLiveData.postValue(ConnectState.DISCONNECTED)
-        }
-    }
-
-    fun sendHandshakeMessage(event: String, message: JsonModel) {
-        // Prepare message JSON Object
-        val messageJsonObject = message.toJSON()
-
-        // Send handshake data to the server
-        socket.emit(event, messageJsonObject)
-    }
-
-    fun <T : JsonModel> listenMessageHandshake(event: String, clazz: KClass<T>, callback: (T) -> (Unit)) {
-        socket.once(event) {
-            val jsonObject = it[0] as JSONObject
-
-            // Create instance of the model
-            val modelInstance = clazz.java.newInstance()
-
-            // Parse data
-            modelInstance.fromJSON(jsonObject)
-
-            // Return to the single
-            callback.invoke(modelInstance)
-        }
-    }
-
-    inline fun <reified T : JsonModel> listenMessageOnce(event: String, noinline callback: ((T) -> Unit)) {
-        callbacks[event] = Callback(T::class, callback, true)
-    }
-
-    inline fun <reified T : JsonModel> listenMessage(event: String, noinline callback: ((T) -> Unit)) {
-        callbacks[event] = Callback(T::class, callback, false)
-    }
-
-    inline fun <reified T : JsonModel> makeRequest(event: String, messageJsonModel: JsonModel, noinline callback: ((T) -> Unit)) {
-        listenMessageOnce(event, callback)
-
-        // Send message
-        sendMessage(event, messageJsonModel)
-    }
-
-    fun removeCallback(event: String) {
-        callbacks.remove(event)
-    }
-
-    fun disconnect() {
-        socket.disconnect()
     }
 }

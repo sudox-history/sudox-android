@@ -17,7 +17,6 @@ import javax.inject.Singleton
     (AppModule::class),
     (ActivityModule::class),
     (AccountModule::class),
-    (ProtocolModule::class),
     (DatabaseModule::class),
     (DataModule::class),
     (ViewModelModule::class)])

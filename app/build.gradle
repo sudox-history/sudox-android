@@ -23,7 +23,6 @@ ext {
     architectureComponentsVersion = "1.1.1"
     daggerVersion = "2.16"
     firebaseCore = "16.0.3"
-    socketVersion = "1.0.0"
     timberVersion = "4.7.1"
     rxKotlinVersion = "2.2.0"
     rxAndroidVersion = "2.0.2"
@@ -45,15 +44,16 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$appCompatVersion"
     implementation "com.android.support:support-v4:$v4SupportVersion"
     implementation "com.android.support:design:$designVersion"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
 
     // Architecture components
 
-        // ViewModel, LiveData
-        implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
+    // ViewModel, LiveData
+    implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
 
-        // Room
-        implementation "android.arch.persistence.room:runtime:$architectureComponentsVersion"
-        kapt "android.arch.persistence.room:compiler:$architectureComponentsVersion"
+    // Room
+    implementation "android.arch.persistence.room:runtime:$architectureComponentsVersion"
+    kapt "android.arch.persistence.room:compiler:$architectureComponentsVersion"
 
     // Dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
@@ -63,20 +63,11 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     // Firebase
-
+    implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
+    // Some design libraries
     implementation 'com.androidadvance:topsnackbar:1.1.1'
-
-    // Socket.io
-    implementation('io.socket:socket.io-client:1.0.0') {
-        // excluding org.json which is provided by Android
-        exclude group: 'org.json', module: 'json'
-    }
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
-
-    //Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.3'
 
     // Timber
     implementation "com.jakewharton.timber:timber:$timberVersion"
@@ -155,4 +146,5 @@ kotlin {
         coroutines "enable"
     }
 }
+
 apply plugin: 'com.google.gms.google-services'

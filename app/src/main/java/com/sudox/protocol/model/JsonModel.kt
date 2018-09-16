@@ -1,8 +1,8 @@
-package com.sudox.protocol.model.dto
+package com.sudox.protocol.model
 
 import org.json.JSONObject
 
 interface JsonModel {
-    fun toJSON() : JSONObject
+    fun toJSON(): JSONObject
     fun fromJSON(jsonObject: JSONObject)
 }

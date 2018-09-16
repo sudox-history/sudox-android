@@ -1,6 +1,6 @@
 package com.sudox.android.common.models.dto
 
-import com.sudox.protocol.model.dto.JsonModel
+import com.sudox.protocol.model.JsonModel
 import org.json.JSONObject
 
 class SendCodeDTO : JsonModel {
