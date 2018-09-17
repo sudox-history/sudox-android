@@ -1,9 +1,8 @@
 package com.sudox.protocol
 
-import android.os.AsyncTask
 import android.util.Base64
 import com.sudox.android.common.enums.ConnectState
-import com.sudox.android.common.models.dto.SecretDTO
+import com.sudox.android.common.models.AuthImportDTO
 import com.sudox.protocol.helpers.encryptAES
 import com.sudox.protocol.helpers.getHmac
 import com.sudox.protocol.helpers.randomBase64String
@@ -18,14 +17,18 @@ import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.reflect.KClass
 
+@Singleton
 class ProtocolClient @Inject constructor() {
 
     private val readCallbacks: ArrayList<ReadCallback<*>> = ArrayList()
     val connectionStateLiveData = SingleLiveEvent<ConnectState>()
-    var id: String? = null
-    var secret: String? = null
+    var id: String? = "4"
+        set(value) {}
+    var secret: String? = "jNjXMW9QAIyXCu3vOFz0uNndOvd0qv"
+        set(value) {}
 
     // Variables for connection setup
     private val address by lazy { InetSocketAddress("api.sudox.ru", 5000) }
@@ -36,7 +39,7 @@ class ProtocolClient @Inject constructor() {
     private val readThread by lazy { ReadThread(socket, { handler.handlePacket(it) }, { handler.handleEnd() }) }
     private val writeThread by lazy { WriteThread(socket) }
 
-    fun connect() = AsyncTask.execute {
+    fun connect() = async {
         try {
             socket.connect(address)
 
@@ -62,7 +65,7 @@ class ProtocolClient @Inject constructor() {
         writeThread.messagesQueue.put(string)
     }
 
-    fun disconnect() {
+    fun close() = async {
         socket.close()
     }
 
@@ -102,19 +105,25 @@ class ProtocolClient @Inject constructor() {
     }
 
     internal fun sendSecret() {
-        if (secret != null && id != null) {
-            makeRequest<SecretDTO>("auth.import", SecretDTO().apply {
-                this.secret = this@ProtocolClient.secret!!
-                this.sendId = this@ProtocolClient.id!!
-            }) {
-                if (it.status == 1) {
-                    connectionStateLiveData.postValue(ConnectState.CORRECT_TOKEN)
-                } else {
-                    connectionStateLiveData.postValue(ConnectState.WRONG_TOKEN)
-                }
-            }
-        } else {
+        val id = id
+        val secret = secret
+
+        // Все-таки работаем в многопоточной среде, значения могут поменяться пока мы тут возимся
+        if (id == null || secret == null) {
             connectionStateLiveData.postValue(ConnectState.MISSING_TOKEN)
+            return
+        }
+
+        // Пробуем установить сессию
+        makeRequest<AuthImportDTO>("auth.importAuth", AuthImportDTO().apply {
+            this.id = id
+            this.secret = secret
+        }) {
+            if (it.isSuccess()) {
+                connectionStateLiveData.postValue(ConnectState.CORRECT_TOKEN)
+            } else {
+                connectionStateLiveData.postValue(ConnectState.WRONG_TOKEN)
+            }
         }
     }
 
@@ -137,7 +146,7 @@ class ProtocolClient @Inject constructor() {
                 this.fromJSON(org.json.JSONObject(json))
             }
 
-            (next.resultFunction as (Any) -> (Unit))(instance)
+            (next.resultFunction as (JsonModel) -> (Unit))(instance)
         }
     }
 }

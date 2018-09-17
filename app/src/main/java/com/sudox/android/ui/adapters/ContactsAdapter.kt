@@ -1,13 +1,13 @@
 package com.sudox.android.ui.adapters
 
 import android.app.Activity
-import android.graphics.*
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.sudox.android.R
+import com.sudox.android.common.helpers.drawContactAvatar
 import com.sudox.android.database.model.Contact
 import com.sudox.protocol.model.SingleLiveEvent
 import kotlinx.android.synthetic.main.card_contact.view.*
@@ -34,25 +34,7 @@ class ContactsAdapter(var items: List<Contact>,
 
         // Setting image
         if (contact.firstColor != null && contact.secondColor != null) {
-            val builder = StringBuilder()
-            val names = contact.name.split(" ")
-
-            if (names.isNotEmpty()) {
-                builder.append(names[0][0])
-            }
-
-            if (names.size >= 2) {
-                builder.append(names[1][0])
-            }
-
-            // Build text
-            val text = builder.toString()
-
-            // Get bitmap
-            val gradientBitmap = drawGradientBitmap(contact.firstColor!!, contact.secondColor!!, text)
-
-            // Load image
-            Glide.with(context).load(gradientBitmap).into(holder.avatar)
+            Glide.with(context).load(drawContactAvatar(contact)).into(holder.avatar)
         } else {
             TODO("if photo is not gradient")
         }
@@ -72,43 +54,8 @@ class ContactsAdapter(var items: List<Contact>,
 
         // Setting name
         holder.name.text = contact.name
-
-        // Setting nickname
         holder.nickname.text = contact.nickname
     }
-
-    private fun drawGradientBitmap(firstColor: String, secondColor: String, text: String): Bitmap {
-        val bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        val paint = Paint()
-
-        // Enable antialiasing
-        paint.isAntiAlias = true
-
-        // Draw gradient
-        paint.shader = LinearGradient(100F, 0F, 100F, 200F,
-                Color.parseColor(firstColor), Color.parseColor(secondColor), Shader.TileMode.REPEAT)
-
-        // Draw circle
-        canvas.drawCircle((bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat(), 180F, paint)
-
-        // Text bounds
-        val textRect = Rect()
-
-        // Create typeface
-        val plain = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
-
-        // Draw text
-        paint.shader = null
-        paint.color = Color.WHITE
-        paint.textSize = 60F
-        paint.typeface = plain
-        paint.getTextBounds(text, 0, text.length, textRect)
-        canvas.drawText(text, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
-
-        return bitmap
-    }
-
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val avatar = view.avatar!!

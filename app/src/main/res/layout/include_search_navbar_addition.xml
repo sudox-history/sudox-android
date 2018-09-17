@@ -8,8 +8,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_search_16dp"
         android:drawablePadding="10dp"
+        android:drawableStart="@drawable/ic_search_16dp"
         android:gravity="center_vertical"
         android:text="@string/add_new_contact"
         android:textSize="@dimen/font_size_increased_tiny" />
@@ -31,18 +31,18 @@
         android:layout_marginTop="15dp">
 
         <TextView
-            android:id="@+id/add_contact_hint"
+            android:id="@+id/addContactHint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginStart="31dp"
             android:layout_marginEnd="31dp"
+            android:layout_marginStart="31dp"
             android:gravity="center"
             android:text="@string/enter_email_to_find"
             android:textColor="@color/colorHint" />
 
         <include
-            android:id="@+id/card_add_contact"
+            android:id="@+id/addContactCard"
             layout="@layout/card_add_contact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,10 +54,8 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_centerInParent="true"
-            android:visibility="gone"
-            android:indeterminate="true"/>
+            android:indeterminate="true"
+            android:visibility="gone" />
 
     </RelativeLayout>
-
-
 </LinearLayout>

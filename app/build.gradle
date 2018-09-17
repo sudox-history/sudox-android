@@ -45,6 +45,7 @@ dependencies {
     implementation "com.android.support:support-v4:$v4SupportVersion"
     implementation "com.android.support:design:$designVersion"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0'
 
     // Architecture components
 

@@ -31,7 +31,7 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
 
     fun setSecret(sudoxAccount: SudoxAccount?) = authRepository.setSecret(sudoxAccount?.secret, sudoxAccount?.id)
 
-    fun disconnect() = protocolClient.disconnect()
+    fun disconnect() = protocolClient.close()
 
     fun isConnected() = protocolClient.isConnected()
 

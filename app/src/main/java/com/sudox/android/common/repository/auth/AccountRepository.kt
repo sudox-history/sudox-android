@@ -3,15 +3,12 @@ package com.sudox.android.common.repository.auth
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AccountManager.KEY_ACCOUNT_NAME
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.os.AsyncTask
 import android.os.Build
 import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
-import com.sudox.android.common.enums.State
 import com.sudox.android.database.SudoxDatabase
 import com.sudox.protocol.ProtocolClient
+import kotlinx.coroutines.experimental.async
 
 class AccountRepository(private val protocolClient: ProtocolClient,
                         private val accountManager: AccountManager,
@@ -20,12 +17,11 @@ class AccountRepository(private val protocolClient: ProtocolClient,
     // Account type
     private val accountType = "com.sudox"
 
-    fun saveAccount(account: SudoxAccount): LiveData<State> {
-        val mutableLiveData = MutableLiveData<State>()
+    fun saveAccount(account: SudoxAccount) = async {
         val accountInstance = Account(account.name, accountType)
 
         // Remove accounts
-        removeAccounts()
+        removeAccounts().await()
 
         // Add account
         accountManager.addAccountExplicitly(accountInstance, null, null)
@@ -34,21 +30,21 @@ class AccountRepository(private val protocolClient: ProtocolClient,
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_ID, account.id)
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_NAME, account.name)
         accountManager.setPassword(accountInstance, account.secret)
-
-        // Notify, that operation was completed
-        mutableLiveData.postValue(State.SUCCESS)
-        return mutableLiveData
     }
 
     @Suppress("DEPRECATION")
-    fun removeAccounts() {
+    fun removeAccounts() = async {
         val accounts = accountManager.getAccountsByType(accountType)
 
-        for (account in accounts) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                accountManager.removeAccountExplicitly(account)
-            } else {
-                accountManager.removeAccount(account, null, null)
+        if (accounts.isNotEmpty()) {
+            sudoxDatabase.clearAllTables()
+
+            for (account in accounts) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    accountManager.removeAccountExplicitly(account)
+                } else {
+                    accountManager.removeAccount(account, null, null)
+                }
             }
         }
 
@@ -56,14 +52,7 @@ class AccountRepository(private val protocolClient: ProtocolClient,
         protocolClient.secret = null
     }
 
-    fun deleteData() {
-        AsyncTask.execute {
-            sudoxDatabase.clearAllTables()
-        }
-    }
-
-    fun getAccount(): LiveData<SudoxAccount?> {
-        val mutableLiveData = MutableLiveData<SudoxAccount?>()
+    fun getAccount() = async {
         val accounts = accountManager.getAccountsByType(accountType)
 
         if (accounts.isNotEmpty()) {
@@ -72,15 +61,20 @@ class AccountRepository(private val protocolClient: ProtocolClient,
             val accountName = accountManager.getUserData(account, KEY_ACCOUNT_NAME)
             val accountSecret = accountManager.getPassword(account)
 
-            // Account instance
-            val sudoxAccount = SudoxAccount(accountId, accountName, accountSecret)
-
             // Send account to the single
-            mutableLiveData.postValue(sudoxAccount)
+            return@async SudoxAccount(accountId, accountName, accountSecret)
         } else {
-            mutableLiveData.postValue(null)
+            return@async null
         }
+    }
 
-        return mutableLiveData
+    fun clearSessionData() {
+        protocolClient.id = null
+        protocolClient.secret = null
+    }
+
+    fun setSessionData(account: SudoxAccount) {
+        protocolClient.id = account.id
+        protocolClient.secret = account.secret
     }
 }

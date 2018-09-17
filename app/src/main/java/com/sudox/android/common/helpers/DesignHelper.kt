@@ -2,6 +2,7 @@ package com.sudox.android.common.helpers
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.*
 import android.os.Build
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TextInputLayout
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import com.androidadvance.topsnackbar.TSnackbar
 import com.sudox.android.R
+import com.sudox.android.database.model.Contact
 
 fun showInputError(inputLayout: TextInputLayout) {
     inputLayout.error = " "
@@ -74,4 +76,48 @@ fun convertDpToPixel(dp: Float, context: Context): Float {
 
 fun convertPixelsToDp(px: Float, context: Context): Float {
     return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+}
+
+fun drawContactAvatar(contact: Contact): Bitmap {
+    // Build text
+    val builder = StringBuilder()
+    val names = contact.name.split(" ")
+
+    if (names.isNotEmpty()) {
+        builder.append(names[0][0])
+    }
+
+    if (names.size >= 2) {
+        builder.append(names[1][0])
+    }
+
+    return drawAvatar(builder.toString(), contact.firstColor!!, contact.secondColor!!)
+}
+
+fun drawAvatar(text: String, firstColor: String, secondColor: String): Bitmap {
+    val bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    val paint = Paint()
+
+    // Enable antialiasing
+    paint.isAntiAlias = true
+
+    // Draw gradient
+    paint.shader = LinearGradient(100F, 0F, 100F, 200F,
+            Color.parseColor(firstColor), Color.parseColor(secondColor), Shader.TileMode.REPEAT)
+
+    // Draw circle
+    canvas.drawCircle((bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat(), 180F, paint)
+
+    // Text bounds
+    val textRect = Rect()
+
+    // Draw text
+    paint.shader = null
+    paint.color = Color.WHITE
+    paint.textSize = 60F
+    paint.getTextBounds(text, 0, text.length, textRect)
+    canvas.drawText(text, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
+
+    return bitmap
 }

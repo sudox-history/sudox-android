@@ -25,5 +25,5 @@ class ChatViewModel @Inject constructor(val messagesRepository: MessagesReposito
     fun sendTextMessage(contactId: String, text: String)
             = messagesRepository.sendTextMessage(contactId, text)
 
-    fun disconnect() = protocolClient.disconnect()
+    fun disconnect() = protocolClient.close()
 }

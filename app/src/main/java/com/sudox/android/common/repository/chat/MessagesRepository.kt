@@ -1,9 +1,6 @@
 package com.sudox.android.common.repository.chat
 
 import com.sudox.android.common.enums.ConnectState
-import com.sudox.android.common.models.dto.GetMessagesDTO
-import com.sudox.android.common.models.dto.NotificationDTO
-import com.sudox.android.common.models.dto.SendMessageDTO
 import com.sudox.android.database.dao.MessagesDao
 import com.sudox.android.database.model.Message
 import com.sudox.protocol.ProtocolClient

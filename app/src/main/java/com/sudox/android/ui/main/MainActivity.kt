@@ -30,30 +30,30 @@ class MainActivity : DaggerAppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainViewModel = getViewModel(viewModelFactory)
-        mainViewModel.getAccount().observe(this, Observer { sudoxAccount ->
-            mainViewModel.setSecret(sudoxAccount)
-            mainViewModel.connectLiveData.observe(this, Observer {
-                getConnectState(it!!)
-            })
-        })
-
-        // init listeners
-        mainViewModel.initContactsListeners()
-        mainViewModel.initMessagesListener()
-        loadContacts()
-
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_main_container, ContactsFragment())
-                .commit()
-
-        bottom_navigation.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.contacts_item -> goToContactsFragment()
-                R.id.settings_item -> goToSettingsFragment()
-            }
-            return@setOnNavigationItemSelectedListener true
-        }
+//        mainViewModel = getViewModel(viewModelFactory)
+//        mainViewModel.getAccount().observe(this, Observer { sudoxAccount ->
+//            mainViewModel.setSecret(sudoxAccount)
+//            mainViewModel.connectLiveData.observe(this, Observer {
+//                getConnectState(it!!)
+//            })
+//        })
+//
+//        // init listeners
+//        mainViewModel.initContactsListeners()
+//        mainViewModel.initMessagesListener()
+//        loadContacts()
+//
+//        supportFragmentManager.beginTransaction()
+//                .replace(R.id.fragment_main_container, ContactsFragment())
+//                .commit()
+//
+//        bottom_navigation.setOnNavigationItemSelectedListener {
+//            when (it.itemId) {
+//                R.id.contacts_item -> goToContactsFragment()
+//                R.id.settings_item -> goToSettingsFragment()
+//            }
+//            return@setOnNavigationItemSelectedListener true
+//        }
     }
 
     override fun onPause() {

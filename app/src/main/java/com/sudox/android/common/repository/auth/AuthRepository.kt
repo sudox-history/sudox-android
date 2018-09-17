@@ -135,7 +135,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
             when {
                 it.errorCode == 0 -> mutableLiveData.postValue(AuthHashState.FAILED)
                 it.errorCode == 202 -> mutableLiveData.postValue(AuthHashState.DEAD)
-                it.code == 0 -> mutableLiveData.postValue(AuthHashState.DEAD)
+                it.codeStatus == 0 -> mutableLiveData.postValue(AuthHashState.DEAD)
                 else -> mutableLiveData.postValue(AuthHashState.ALIVE)
             }
         }

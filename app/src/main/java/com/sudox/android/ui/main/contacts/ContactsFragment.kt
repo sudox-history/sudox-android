@@ -11,8 +11,8 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.sudox.android.R
-import com.sudox.android.common.enums.ContactSearchState
-import com.sudox.android.common.models.ContactSearchData
+import com.sudox.android.common.enums.UserSearchState
+import com.sudox.android.common.models.UserSearchData
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.database.model.Contact
 import com.sudox.android.ui.adapters.ContactsAdapter
@@ -117,22 +117,22 @@ class ContactsFragment : DaggerFragment() {
                 })
     }
 
-    private fun setSearchContact(contactData: ContactSearchData) {
+    private fun setSearchContact(userData: UserSearchData) {
         progress_bar.visibility = View.GONE
         when {
-            contactData.state == ContactSearchState.WRONG_FORMAT -> {
-                add_contact_hint.visibility = View.VISIBLE
-                card_add_contact.visibility = View.GONE
-                add_contact_hint.text = getString(R.string.wrong_email_format)
+            userData.state == UserSearchState.WRONG_FORMAT -> {
+                addContactHint.visibility = View.VISIBLE
+                addContactCard.visibility = View.GONE
+                addContactHint.text = getString(R.string.wrong_email_format)
             }
-            contactData.state == ContactSearchState.USER_DOES_NOT_EXIST -> {
-                add_contact_hint.visibility = View.VISIBLE
-                card_add_contact.visibility = View.GONE
-                add_contact_hint.text = getString(R.string.contact_has_not_find)
+            userData.state == UserSearchState.USER_DOES_NOT_EXIST -> {
+                addContactHint.visibility = View.VISIBLE
+                addContactCard.visibility = View.GONE
+                addContactHint.text = getString(R.string.contact_has_not_find)
             }
             else -> {
-                contactSearch = contactData.contact!!
-                searchAdditionalView.setSearchContact(contactData.contact)
+                contactSearch = userData.contact!!
+                searchAdditionalView.setSearchContact(userData.contact)
             }
         }
     }
@@ -141,7 +141,7 @@ class ContactsFragment : DaggerFragment() {
         nicknameEditText.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 progress_bar.visibility = View.VISIBLE
-                add_contact_hint.visibility = View.GONE
+                addContactHint.visibility = View.GONE
                 contactsViewModel.contactsSearchUserByEmail(nicknameEditText.text.toString())
                         .observe(this, Observer { setSearchContact(it!!) })
                 return@OnEditorActionListener true
@@ -152,7 +152,7 @@ class ContactsFragment : DaggerFragment() {
         add_contact_search.setOnClickListener {
             contactsViewModel.contactAdd(contactSearch.cid)
             progress_bar.visibility = View.VISIBLE
-            card_add_contact.visibility = View.GONE
+            addContactCard.visibility = View.GONE
         }
 
         adapter.clickedLongContactLiveData.observe(this, Observer {
