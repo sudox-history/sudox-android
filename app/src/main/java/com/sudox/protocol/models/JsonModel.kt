@@ -1,12 +1,11 @@
-package com.sudox.protocol.model
+package com.sudox.protocol.models
 
-import com.sudox.android.common.models.ErrorType
 import org.json.JSONObject
 
 abstract class JsonModel {
 
     // Error codeStatus & codeStatus status
-    var error: ErrorType? = null
+    var error = -1
     var response = 0
 
     abstract fun toJSON(): JSONObject
@@ -14,8 +13,8 @@ abstract class JsonModel {
 
     fun readFromJSON(jsonObject: JSONObject) {
         if (jsonObject.has("error")) {
-            error = ErrorType.findByCode(jsonObject.optInt("error"))
-        } else if (jsonObject.has("response")) {
+            error = jsonObject.optInt("error")
+        } else {
             val value = jsonObject.opt("response")
 
             when (value) {
@@ -27,10 +26,10 @@ abstract class JsonModel {
     }
 
     fun containsError(): Boolean {
-        return error != null
+        return error != -1
     }
 
     fun isSuccess(): Boolean {
-        return error == null || response == 1
+        return error == -1 || response == 1
     }
 }

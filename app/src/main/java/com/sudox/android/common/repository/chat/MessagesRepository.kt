@@ -4,62 +4,65 @@ import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.database.dao.MessagesDao
 import com.sudox.android.database.model.Message
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.model.SingleLiveEvent
+import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.coroutines.experimental.async
+import javax.inject.Inject
+import javax.inject.Singleton
 
 const val MESSAGE_TO = 0
 const val MESSAGE_FROM = 1
 
-class MessagesRepository(private val protocolClient: ProtocolClient,
-                         private val messagesDao: MessagesDao) {
+@Singleton
+class MessagesRepository @Inject constructor(private val protocolClient: ProtocolClient,
+                                             private val messagesDao: MessagesDao) {
 
     var canUpdateLiveData: Boolean = false
     val loadedContactsIds: HashSet<String> = HashSet()
     val messagesLiveData = SingleLiveEvent<ArrayList<Message>>()
 
     fun initMessagesListener() {
-        protocolClient.listenMessage<NotificationDTO>("notification") {
-            if (it.method == "chats.new") {
-                Message(it.mid, it.text, it.time, MESSAGE_FROM, it.fromId).apply {
-                    messagesDao.insertMessage(this)
-                    if (canUpdateLiveData) messagesLiveData.postValue(arrayListOf(this))
-                }
-            }
-        }
-
-        protocolClient.listenMessage<SendMessageDTO>("chats.send") {
-            Message(it.id, it.text, it.time, MESSAGE_TO, it.toId).apply {
-                messagesDao.insertMessage(this)
-                if (canUpdateLiveData) messagesLiveData.postValue(arrayListOf(this))
-            }
-        }
-
-        protocolClient.connectionStateLiveData.observeForever {
-            if (it == ConnectState.CORRECT_TOKEN) {
-                loadedContactsIds.clear()
-            }
-        }
+//        protocolClient.listenMessage<NotificationDTO>("notification") {
+//            if (it.method == "chats.new") {
+//                Message(it.mid, it.text, it.time, MESSAGE_FROM, it.fromId).apply {
+//                    messagesDao.insertMessage(this)
+//                    if (canUpdateLiveData) messagesLiveData.postValue(arrayListOf(this))
+//                }
+//            }
+//        }
+//
+//        protocolClient.listenMessage<SendMessageDTO>("chats.send") {
+//            Message(it.id, it.text, it.time, MESSAGE_TO, it.toId).apply {
+//                messagesDao.insertMessage(this)
+//                if (canUpdateLiveData) messagesLiveData.postValue(arrayListOf(this))
+//            }
+//        }
+//
+//        protocolClient.connectionStateLiveData.observeForever {
+//            if (it == ConnectState.CORRECT_TOKEN) {
+//                loadedContactsIds.clear()
+//            }
+//        }
     }
 
     fun loadHistoryIntoDatabase(contactId: String, offset: Int, limit: Int) {
-        protocolClient.makeRequest<GetMessagesDTO>("chats.getHistory", GetMessagesDTO().apply {
-            this.id = contactId
-            this.offset = offset
-            this.limit = limit
-        }) {
-            val messages = it.messages.map {
-                Message(it.mid, it.text, it.time,
-                        if (it.toId == contactId) MESSAGE_TO else MESSAGE_FROM,
-                        contactId)
-            }.reversed()
-
-            if (!messages.isEmpty()) {
-                messagesDao.insertAll(messages)
-            }
-
-            loadedContactsIds.plusAssign(contactId)
-            loadHistoryFromDatabase(contactId)
-        }
+//        protocolClient.makeRequest<GetMessagesDTO>("chats.getHistory", GetMessagesDTO().apply {
+//            this.id = contactId
+//            this.offset = offset
+//            this.limit = limit
+//        }) {
+//            val messages = it.messages.map {
+//                Message(it.mid, it.text, it.time,
+//                        if (it.toId == contactId) MESSAGE_TO else MESSAGE_FROM,
+//                        contactId)
+//            }.reversed()
+//
+//            if (!messages.isEmpty()) {
+//                messagesDao.insertAll(messages)
+//            }
+//
+//            loadedContactsIds.plusAssign(contactId)
+//            loadHistoryFromDatabase(contactId)
+//        }
     }
 
     fun loadHistoryFromDatabase(contactId: String) = async {
@@ -67,10 +70,10 @@ class MessagesRepository(private val protocolClient: ProtocolClient,
     }
 
     fun sendTextMessage(contactId: String, text: String) {
-        protocolClient.sendMessage("chats.send", SendMessageDTO().apply {
-            this.sendId = contactId
-            this.text = text
-        })
+//        protocolClient.sendMessage("chats.send", SendMessageDTO().apply {
+//            this.sendId = contactId
+//            this.text = text
+//        })
     }
 
 //

@@ -8,7 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.sudox.android.ui.splash.SplashActivity
 
-internal const val AUTH_CODE = 0
+internal const val AUTH_ACCOUNT_MANAGER_START = 0
 internal const val AUTH_KEY = "auth"
 
 class SudoxAuthenticator(private val serviceContext: SudoxAuthenticatorService) : AbstractAccountAuthenticator(serviceContext) {
@@ -21,7 +21,7 @@ class SudoxAuthenticator(private val serviceContext: SudoxAuthenticatorService) 
     override fun editProperties(p0: AccountAuthenticatorResponse?, p1: String?) = null
     override fun addAccount(p0: AccountAuthenticatorResponse?, p1: String?, p2: String?, p3: Array<out String>?, p4: Bundle?): Bundle? {
         val intent = Intent(serviceContext, SplashActivity::class.java)
-        intent.putExtra(AUTH_KEY, AUTH_CODE)
+        intent.putExtra(AUTH_KEY, AUTH_ACCOUNT_MANAGER_START)
 
         val bundle = Bundle()
         bundle.putParcelable(AccountManager.KEY_INTENT, intent)

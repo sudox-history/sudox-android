@@ -16,7 +16,7 @@ class NavigationBarTest {
 
     // Navigation bar mock
     @Mock
-    private lateinit var navigationBarMock: AuthNavigationBar
+    private lateinit var navigationBarMock: NavigationBar
     private var buttonBackMock = mock(AppCompatTextView::class.java)
     private var buttonNextMock = mock(AppCompatTextView::class.java)
 

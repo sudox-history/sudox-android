@@ -6,12 +6,12 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.sudox.android.ui.views.AuthNavigationBar
+    <com.sudox.android.ui.views.NavigationBar
         android:id="@+id/authConfirmFragmentNavbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:backButtonIsVisible="true"
-        app:sendAgainIsVisible="true" />
+        app:someFeatureButtonIsVisible="false" />
 
     <TextView
         android:id="@+id/welcomeText"
@@ -34,11 +34,11 @@
         android:id="@+id/codeEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="40dp"
         app:counterEnabled="true"
-        app:counterMaxLength="5">
+        app:counterMaxLength="@integer/length_email_code">
 
         <EditText
             android:id="@+id/codeEditText"
@@ -46,6 +46,7 @@
             android:layout_height="match_parent"
             android:hint="@string/code"
             android:inputType="number"
+            android:maxLength="@integer/length_email_code"
             android:textSize="@dimen/font_size_increased_tiny" />
 
     </android.support.design.widget.TextInputLayout>
@@ -60,14 +61,14 @@
             android:id="@+id/enterYourCodeText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
             android:layout_weight="0.80"
             android:gravity="center"
             android:text="@string/enter_code_from_mail"
             android:textColor="@color/colorHint"
-            android:textSize="@dimen/font_size_increased_tiny"/>
+            android:textSize="@dimen/font_size_increased_tiny" />
     </LinearLayout>
 
 </LinearLayout>

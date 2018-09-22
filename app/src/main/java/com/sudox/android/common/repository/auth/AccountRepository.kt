@@ -3,16 +3,21 @@ package com.sudox.android.common.repository.auth
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AccountManager.KEY_ACCOUNT_NAME
+import android.arch.lifecycle.MutableLiveData
 import android.os.Build
 import com.sudox.android.common.auth.KEY_ACCOUNT_ID
 import com.sudox.android.common.auth.SudoxAccount
+import com.sudox.android.common.models.account.dto.AccountInfoDTO
 import com.sudox.android.database.SudoxDatabase
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.experimental.async
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AccountRepository(private val protocolClient: ProtocolClient,
-                        private val accountManager: AccountManager,
-                        private val sudoxDatabase: SudoxDatabase) {
+@Singleton
+class AccountRepository @Inject constructor(private val protocolClient: ProtocolClient,
+                                            private val accountManager: AccountManager,
+                                            private val sudoxDatabase: SudoxDatabase) {
 
     // Account type
     private val accountType = "com.sudox"

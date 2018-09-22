@@ -19,10 +19,13 @@ class SplashActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var splashViewModel: SplashViewModel
+    lateinit var splashViewModel: SplashViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Auth key для отличия запуска через AccountManager от обычного запуска
+        val authKey = intent.getIntExtra(AUTH_KEY, 1)
 
         // Get view model ...
         splashViewModel = getViewModel(viewModelFactory)
@@ -30,14 +33,14 @@ class SplashActivity : DaggerAppCompatActivity() {
         // Handle incoming actions ...
         splashViewModel.splashActionLiveData.observe(this, Observer {
             when (it) {
-                SplashAction.SHOW_AUTH_ACTIVITY -> showAuthActivity()
+                SplashAction.SHOW_AUTH_ACTIVITY -> showAuthActivity(authKey)
                 SplashAction.SHOW_MAIN_ACTIVITY -> showMainActivity()
                 SplashAction.SHOW_ACCOUNT_EXISTS_ALERT -> showAccountExistsAlert()
             }
         })
 
-        // Init session
-        splashViewModel.initSession(this, intent.getIntExtra(AUTH_KEY, 1))
+        // Init authSession
+        splashViewModel.initSession(this, authKey)
     }
 
     private fun showAccountExistsAlert() {
@@ -50,20 +53,17 @@ class SplashActivity : DaggerAppCompatActivity() {
                 }.create().show()
     }
 
-    private fun showAuthActivity() {
-        startActivity(Intent(this, AuthActivity::class.java))
+    private fun showAuthActivity(authKey: Int) {
+        startActivity(Intent(this, AuthActivity::class.java)
+                .apply {
+                    putExtra(AUTH_KEY, authKey)
+                })
+
         finish()
     }
 
     private fun showMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
-    }
-
-    override fun onBackPressed() {
-        splashViewModel.closeConnection()
-
-        // Super! (Антон, не мучай мой перфекционизм)
-        super.onBackPressed()
     }
 }

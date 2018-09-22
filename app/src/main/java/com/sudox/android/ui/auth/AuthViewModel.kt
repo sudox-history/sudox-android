@@ -8,8 +8,13 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(private val protocolClient: ProtocolClient,
                                         private val authRepository: AuthRepository) : ViewModel() {
 
-//    var connectLiveData = protocolClient.connectionStateLiveData
-//
-//    fun importAuthHash(hash: String) = authRepository.importAuthHash(hash)
-//    fun disconnect() = protocolClient.close()
+    // Шины событий
+    val connectionStateLiveData = protocolClient.connectionStateLiveData
+    val authSessionStateLiveData = authRepository.authSessionLiveData
+    val accountSessionLiveData = authRepository.accountSessionLiveData
+
+    /**
+     * Просто метод для закрытия соединения с сервером. Ничего сложного :)
+     * **/
+    fun closeConnection() = protocolClient.close()
 }

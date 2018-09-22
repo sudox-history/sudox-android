@@ -21,7 +21,7 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
 
     fun getAccount() = accountRepository.getAccount()
 
-    fun logOut() = authRepository.logOut()
+//    fun logOut() = authRepository.logOut()
 
     fun initContactsListeners() = contactsRepository.initContactsListeners()
 
@@ -29,13 +29,13 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
 
     fun removeAllAccounts() = accountRepository.removeAccounts()
 
-    fun setSecret(sudoxAccount: SudoxAccount?) = authRepository.setSecret(sudoxAccount?.secret, sudoxAccount?.id)
+//    fun setSecret(sudoxAccount: SudoxAccount?) = Unit //authRepository.setSecret(sudoxAccount?.secret, sudoxAccount?.id)
 
     fun disconnect() = protocolClient.close()
 
     fun isConnected() = protocolClient.isConnected()
 
-    fun getAllContactsFromServer() = contactsRepository.getAllContactsFromServer()
+//    fun getAllContactsFromServer() = contactsRepository.getAllContactsFromServer()
 
     fun getAllContactsFromDB() = contactsRepository.requestAllContactsFromDB()
 }

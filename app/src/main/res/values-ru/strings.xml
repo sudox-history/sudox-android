@@ -29,7 +29,7 @@
     <string name="tag">Надпись</string>
     <string name="sign_in">Вход</string>
     <string name="return_back">С возвращением!</string>
-    <string name="welcome">Добро пожаловать</string>
+    <string name="welcome">Добро пожаловать!</string>
     <string name="wrong_email_format">Неверный формат почты</string>
     <string name="no_internet_connection">Нет соединения!</string>
     <string name="registration">Регистрация</string>

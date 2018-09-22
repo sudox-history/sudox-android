@@ -1,38 +1,47 @@
 package com.sudox.android.ui.auth.confirm
 
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import android.os.Handler
-import com.sudox.android.common.auth.SudoxAccount
-import com.sudox.android.common.repository.auth.AccountRepository
 import com.sudox.android.common.repository.auth.AuthRepository
+import com.sudox.android.ui.auth.confirm.enums.AuthConfirmAction
+import com.sudox.protocol.models.SingleLiveEvent
 import javax.inject.Inject
 
-class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthRepository,
-                                               private val accountRepository: AccountRepository) : ViewModel() {
+class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
 
-    var timerData = MutableLiveData<Long>()
+    /**
+     * Шина для уведомления View об нужных для выполнения ему действий
+     * **/
+    val authConfirmActionLiveData = SingleLiveEvent<AuthConfirmAction>()
 
-    fun sendCode(code: String) = authRepository.sendCode(code)
-    fun signIn(code: String) = authRepository.signIn(code)
-    fun sendCodeAgain() = authRepository.sendCodeAgain()
+    /**
+     * Метод, запрашивающий проверку кода на сервере ...
+     *
+     * Важно! Вызывать только если статус регистрации == 0
+     * **/
+    fun checkCode(email: String, code: String, hash: String) {
+        authConfirmActionLiveData.postValue(AuthConfirmAction.FREEZE)
 
-    fun setTimer(seconds: Long) {
-        var seconds1 = seconds
-
-        Handler().apply {
-            val runnable = object : Runnable {
-                override fun run() {
-                    seconds1--
-                    timerData.postValue(seconds1)
-                    if(seconds1 != 0L)
-                        postDelayed(this, 1000)
-                }
+        // Запрос проверки кода ...
+        authRepository.checkCode(email, code, hash) {
+            if (!it) {
+                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_ERROR)
+            } else {
+                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_REGISTRATION)
             }
-            postDelayed(runnable, 0)
         }
     }
 
-    fun saveAccount(id: String, email: String, token: String)
-            = accountRepository.saveAccount(SudoxAccount(id, email, token))
+    /**
+     * Метод, запрашивающий проверку кода на сервере и выполняющий авторизацию ...
+     *
+     * Важно! Вызывать только если статус регистрации == 1
+     * **/
+    fun signIn(email: String, code: String, hash: String) {
+        authConfirmActionLiveData.postValue(AuthConfirmAction.FREEZE)
+
+        // Запрос проверки кода и авторизации ...
+        authRepository.signIn(email, code, hash) {
+            if (!it) authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_ERROR)
+        }
+    }
 }

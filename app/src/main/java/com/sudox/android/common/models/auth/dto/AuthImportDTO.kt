@@ -1,6 +1,6 @@
-package com.sudox.android.common.models
+package com.sudox.android.common.models.auth.dto
 
-import com.sudox.protocol.model.JsonModel
+import com.sudox.protocol.models.JsonModel
 import org.json.JSONObject
 
 class AuthImportDTO : JsonModel() {

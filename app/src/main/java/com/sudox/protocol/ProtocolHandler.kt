@@ -10,6 +10,7 @@ import javax.crypto.interfaces.DHPublicKey
 
 class ProtocolHandler(private val client: ProtocolClient) {
 
+    // AES encryption key
     internal var key: ByteArray? = null
 
     fun handleStart() {
@@ -122,8 +123,14 @@ class ProtocolHandler(private val client: ProtocolClient) {
     fun handleEnd() {
         key = null
 
+        // А толк от "одноразовых" слушателей, все равно потом после реконнекта сделаем запрос заново.
+        client.readCallbacks.removeAll { it.once }
+
         if (!client.socket.isClosed) {
             client.socket.close()
         }
+
+        // Говорим слушателям, что соединение прикрыто
+        client.connectionStateLiveData.postValue(ConnectState.DISCONNECTED)
     }
 }

@@ -101,10 +101,10 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     fun exitFromAccount() {
-        mainViewModel.logOut().observe(this, Observer {
-            mainViewModel.removeAllAccounts()
-            showAuthActivity()
-        })
+//        mainViewModel.logOut().observe(this, Observer {
+//            mainViewModel.removeAllAccounts()
+//            showAuthActivity()
+//        })
     }
 
     private fun showAuthActivity() {
@@ -114,9 +114,9 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun loadContacts() {
         if (mainViewModel.isConnected()) {
-            mainViewModel.getAllContactsFromServer().observe(this, Observer {
-                mainViewModel.getAllContactsFromDB()
-            })
+//            mainViewModel.getAllContactsFromServer().observe(this, Observer {
+//                mainViewModel.getAllContactsFromDB()
+//            })
         } else {
             mainViewModel.getAllContactsFromDB()
         }
@@ -124,10 +124,5 @@ class MainActivity : DaggerAppCompatActivity() {
 
     fun showMessage(message: String) {
         showTopSnackbar(this, fragment_main_container, message, TSnackbar.LENGTH_LONG)
-    }
-
-    override fun onBackPressed() {
-        mainViewModel.disconnect()
-        super.onBackPressed()
     }
 }

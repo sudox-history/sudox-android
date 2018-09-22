@@ -1,12 +1,12 @@
 package com.sudox.android.ui.splash
 
 import android.arch.lifecycle.*
-import com.sudox.android.common.auth.AUTH_CODE
+import com.sudox.android.common.auth.AUTH_ACCOUNT_MANAGER_START
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.repository.auth.AccountRepository
 import com.sudox.android.ui.splash.enums.SplashAction
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.model.SingleLiveEvent
+import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import javax.inject.Inject
@@ -32,7 +32,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
         // Handle connection status ...
         protocolClient.connectionStateLiveData.observe(lifecycleOwner, Observer {
             if (it == ConnectState.CONNECT_ERROR) {
-                if (authKey != AUTH_CODE && account != null) {
+                if (authKey == AUTH_ACCOUNT_MANAGER_START && account != null) {
                     splashActionLiveData.postValue(SplashAction.SHOW_ACCOUNT_EXISTS_ALERT)
                 } else {
                     splashActionLiveData.postValue(SplashAction.SHOW_AUTH_ACTIVITY)
@@ -41,7 +41,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
                 runBlocking { accountRepository.removeAccounts().await() }
                 splashActionLiveData.postValue(SplashAction.SHOW_AUTH_ACTIVITY)
             } else if (it == ConnectState.CORRECT_TOKEN) {
-                if (authKey != AUTH_CODE) {
+                if (authKey == AUTH_ACCOUNT_MANAGER_START) {
                     splashActionLiveData.postValue(SplashAction.SHOW_ACCOUNT_EXISTS_ALERT)
                 } else {
                     splashActionLiveData.postValue(SplashAction.SHOW_MAIN_ACTIVITY)
@@ -52,10 +52,4 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
         // Start async connection ...
         protocolClient.connect()
     }
-
-
-    /**
-     * Просто метод для закрытия соединения с сервером. Ничего сложного :)
-     * **/
-    fun closeConnection() = protocolClient.close()
 }

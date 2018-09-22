@@ -1,155 +1,146 @@
 package com.sudox.android.common.repository.auth
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import com.sudox.android.common.enums.AuthHashState
-import com.sudox.android.common.enums.EmailState
-import com.sudox.android.common.enums.SignUpInState
-import com.sudox.android.common.enums.State
-import com.sudox.android.common.models.SendCodeData
-import com.sudox.android.common.models.SignUpInData
-import com.sudox.android.common.models.dto.*
+import com.sudox.android.common.auth.SudoxAccount
+import com.sudox.android.common.helpers.*
+import com.sudox.android.common.models.account.state.AccountSessionState
+import com.sudox.android.common.models.auth.dto.*
+import com.sudox.android.common.models.auth.state.AuthSession
 import com.sudox.protocol.ProtocolClient
+import com.sudox.protocol.models.SingleLiveEvent
+import kotlinx.coroutines.experimental.runBlocking
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class AuthRepository @Inject constructor(private val protocolClient: ProtocolClient) {
+@Singleton
+class AuthRepository @Inject constructor(private val protocolClient: ProtocolClient,
+                                         private val accountRepository: AccountRepository) {
 
-    fun setSecret(secret: String?, id: String?) {
-        if (secret != null && id != null) {
-            protocolClient.id = id
-            protocolClient.secret = secret
-        }
-    }
+    // Шины
+    val authSessionLiveData: MutableLiveData<AuthSession> = SingleLiveEvent()
+    val accountSessionLiveData: MutableLiveData<AccountSessionState> = SingleLiveEvent()
 
-    fun sendEmail(email: String): LiveData<SendCodeData?> {
-        val mutableLiveData = MutableLiveData<SendCodeData?>()
+    /**
+     * Метод, запрашивающий отправку кода подтверждения на почту и уведомляющий сервер о начале
+     * сессии авторизации.
+     * **/
+    @Suppress("NAME_SHADOWING")
+    fun requestCode(email: String, callback: (Boolean) -> (Unit)) {
+        // "Кастрируем" пробелы в почте ...
+        val email = email.replace(WHITESPACES_REMOVE_REGEX, "")
 
-        if (protocolClient.isConnected()) {
-            val sendCodeDTO = SendCodeDTO()
-            sendCodeDTO.email = email
-
-            protocolClient.makeRequest<SendCodeDTO>("auth.sendCode", sendCodeDTO) {
-                when {
-                    it.errorCode == 0 -> mutableLiveData.postValue(SendCodeData(EmailState.FAILED))
-                    it.errorCode == 2 -> mutableLiveData.postValue(SendCodeData(EmailState.WRONG_FORMAT))
-                    else -> mutableLiveData.postValue(SendCodeData(EmailState.SUCCESS, it.hash, it.status))
-                }
-            }
+        // Проверка на валидность формата почты (для экономии трафика производим проверку ещё на клиенте)
+        if (!EMAIL_REGEX.matches(email)) {
+            // Сожалеем, но наше приложение не подходит для взлома левым E-mail'ом :)
+            callback(false)
         } else {
-            mutableLiveData.postValue(null)
-        }
-
-        return mutableLiveData
-    }
-
-    fun sendCode(code: String): LiveData<State?> {
-        val mutableLiveData = MutableLiveData<State?>()
-
-        if (protocolClient.isConnected()) {
-            val confirmCodeDTO = ConfirmCodeDTO()
-            confirmCodeDTO.code = code.toInt()
-
-            protocolClient.makeRequest<ConfirmCodeDTO>("auth.confirmCode", confirmCodeDTO) {
-                if (it.errorCode == 204) {
-                    mutableLiveData.postValue(State.FAILED)
-                } else if (it.codeStatus == 1) {
-                    mutableLiveData.postValue(State.SUCCESS)
+            // Ок, запрашиваем отправку кода ...
+            protocolClient.makeRequest<AuthCodeDTO>("auth.sendCode", AuthCodeDTO().apply {
+                this.email = email
+            }) {
+                if (it.isSuccess()) {
+                    authSessionLiveData.postValue(AuthSession(email, it.hash, it.status))
                 }
-            }
 
-            return mutableLiveData
+                // Notify caller about status of code request
+                callback(it.isSuccess())
+            }
         }
-        mutableLiveData.postValue(null)
-        return mutableLiveData
     }
 
-    fun sendCodeAgain(): LiveData<State?> {
-        val mutableLiveData = MutableLiveData<State?>()
+    /**
+     * Метод, проверяющий валидность введенного кода в данной сессии авторизации
+     * **/
+    @Suppress("NAME_SHADOWING")
+    fun checkCode(email: String, code: String, hash: String, callback: (Boolean) -> (Unit)) {
+        // "Кастрируем" пробелы в почте ...
+        val code = code.trim()
 
-        if (protocolClient.isConnected()) {
-            protocolClient.makeRequest<ResendDTO>("auth.resendCode", ResendDTO()) {
-                if (it.errorCode == 203)
-                    mutableLiveData.postValue(State.FAILED)
-                else if (it.code == 1)
-                    mutableLiveData.postValue(State.SUCCESS)
-
-            }
-            return mutableLiveData
+        // Проверяем валидность кода ...
+        if (!NUMBER_REGEX.matches(code)) {
+            // Защита от отличных от Gboard клавиатур (желательно было бы заблокировать ввод левых символов)
+            callback(false)
+        } else {
+            protocolClient.makeRequest<AuthCheckCodeDTO>("auth.checkCode", AuthCheckCodeDTO().apply {
+                this.code = code
+                this.hash = hash
+                this.email = email
+            }) { callback(it.isSuccess()) }
         }
-        mutableLiveData.postValue(null)
-        return mutableLiveData
     }
 
-    fun signUp(name: String, nickname: String): LiveData<SignUpInData?> {
-        val mutableLiveData = MutableLiveData<SignUpInData?>()
+    /**
+     * Выполняет вход в аккаунт. По окончанию записывает аккаунт в БД.
+     */
+    @Suppress("NAME_SHADOWING")
+    fun signIn(email: String, code: String, hash: String, callback: (Boolean) -> (Unit)) {
+        // "Кастрируем" пробелы в почте ...
+        val code = code.trim()
 
-        if (protocolClient.isConnected()) {
-            val signUpDTO = SignUpDTO()
-            signUpDTO.name = name
-            signUpDTO.nickname = nickname
+        // Проверяем валидность кода ...
+        if (!NUMBER_REGEX.matches(code)) {
+            // Защита от отличных от Gboard клавиатур (желательно было бы заблокировать ввод левых символов)
+            callback(false)
+        } else {
+            protocolClient.makeRequest<AuthSignInDTO>("auth.signIn", AuthSignInDTO().apply {
+                this.code = code
+                this.hash = hash
+                this.email = email
+            }) {
+                if (it.isSuccess()) {
+                    accountRepository.saveAccount(SudoxAccount(it.id, email, it.secret))
 
-            protocolClient.makeRequest<SignUpDTO>("auth.signUp", signUpDTO) {
-                when {
-                    it.errorCode == 0 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
-                    it.errorCode == 2 -> mutableLiveData.postValue(SignUpInData(SignUpInState.WRONG_FORMAT))
-                    it.errorCode == 205 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_EXISTS))
-                    else -> mutableLiveData.postValue(SignUpInData(SignUpInState.SUCCESS, it.id, it.secret))
+                    // Говорим, что сессия живая! (нужно, чтобы на MainActivity узнать о мертвой сессии)
+                    accountSessionLiveData.postValue(AccountSessionState(true))
                 }
-            }
-            return mutableLiveData
-        }
 
-        mutableLiveData.postValue(null)
-        return mutableLiveData
+                // Уведомим слушателя о статусе
+                callback(it.isSuccess())
+            }
+        }
     }
 
-    fun signIn(code: String): LiveData<SignUpInData?> {
-        val mutableLiveData = MutableLiveData<SignUpInData?>()
+    /**
+     * Выполняет регистрацию аккаунта. По окончанию записывает аккаунт в БД.
+     */
+    @Suppress("NAME_SHADOWING")
+    fun signUp(email: String, code: String, hash: String, name: String, nickname: String, callback: (Boolean) -> Unit) {
+        val name = name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
+        val nickname = nickname.replace(WHITESPACES_REMOVE_REGEX, "")
 
-        if (protocolClient.isConnected()) {
-            val signInDTO = SignInDTO()
-            signInDTO.code = code.toInt()
+        // Валидация
+        if (!NAME_REGEX.matches(name) || !NICKNAME_REGEX.matches(nickname)) {
+            callback(false)
+        } else {
+            protocolClient.makeRequest<AuthSignUpDTO>("auth.signUp", AuthSignUpDTO().apply {
+                this.email = email
+                this.code = code
+                this.hash = hash
+                this.name = name
+                this.nickname = nickname
+            }) {
+                if (it.isSuccess()) {
+                    accountRepository.saveAccount(SudoxAccount(it.id, email, it.secret))
 
-            protocolClient.makeRequest<SignInDTO>("auth.signIn", signInDTO) {
-                when {
-                    it.errorCode == 0 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
-                    it.errorCode == 50 -> mutableLiveData.postValue(SignUpInData(SignUpInState.WRONG_FORMAT))
-                    it.errorCode == 204 -> mutableLiveData.postValue(SignUpInData(SignUpInState.FAILED))
-                    it.errorCode == 206 -> mutableLiveData.postValue(SignUpInData(SignUpInState.ACCOUNT_ERROR))
-                    else -> mutableLiveData.postValue(SignUpInData(SignUpInState.SUCCESS, it.id, it.secret))
+                    // Говорим, что сессия живая! (нужно, чтобы на MainActivity узнать о мертвой сессии)
+                    accountSessionLiveData.postValue(AccountSessionState(true))
                 }
+
+                // Уведомим слушателя о статусе
+                callback(it.isSuccess())
             }
-            return mutableLiveData
         }
-        mutableLiveData.postValue(null)
-        return mutableLiveData
     }
 
-    fun importAuthHash(hash: String): LiveData<AuthHashState> {
-        val mutableLiveData = MutableLiveData<AuthHashState>()
-
-        val authHashDTO = AuthHashDTO()
-        authHashDTO.hash = hash
-
-        protocolClient.makeRequest<AuthHashDTO>("auth.restore", authHashDTO) {
-            when {
-                it.errorCode == 0 -> mutableLiveData.postValue(AuthHashState.FAILED)
-                it.errorCode == 202 -> mutableLiveData.postValue(AuthHashState.DEAD)
-                it.codeStatus == 0 -> mutableLiveData.postValue(AuthHashState.DEAD)
-                else -> mutableLiveData.postValue(AuthHashState.ALIVE)
-            }
+    /**
+     * Стартует сессию по указанным id и secret...
+     */
+    fun importAuth(id: String, secret: String, callback: (Boolean) -> (Unit)) {
+        protocolClient.makeRequest<AuthImportDTO>("auth.importAuth", AuthImportDTO().apply {
+            this.id = id
+            this.secret = secret
+        }) {
+            // TODO: Save to account manager
         }
-        return mutableLiveData
-    }
-
-    fun logOut(): LiveData<State> {
-        val mutableLiveData = MutableLiveData<State>()
-
-        protocolClient.makeRequest<SimpleAnswerDTO>("account.logOut", SimpleAnswerDTO()){
-            if(it.response == 1){
-                mutableLiveData.postValue(State.SUCCESS)
-            }
-        }
-        return mutableLiveData
     }
 }

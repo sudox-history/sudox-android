@@ -1,4 +1,4 @@
-package com.sudox.protocol.model;
+package com.sudox.protocol.models;
 
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.MutableLiveData;

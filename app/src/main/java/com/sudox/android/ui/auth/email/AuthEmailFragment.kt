@@ -9,26 +9,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
-import com.sudox.android.common.enums.EmailState
-import com.sudox.android.common.enums.NavigationAction
-import com.sudox.android.common.helpers.EMAIL_REGEX
+import com.sudox.android.ui.views.enums.NavigationAction
 import com.sudox.android.common.helpers.hideInputError
 import com.sudox.android.common.helpers.showInputError
-import com.sudox.android.common.models.SendCodeData
 import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
-import com.sudox.android.ui.auth.confirm.EMAIL_BUNDLE_KEY
-import dagger.android.support.DaggerFragment
+import com.sudox.android.ui.auth.email.enums.AuthEmailAction
+import com.sudox.android.ui.common.FreezableFragment
 import kotlinx.android.synthetic.main.fragment_auth_email.*
 import javax.inject.Inject
 
-class AuthEmailFragment : DaggerFragment() {
+class AuthEmailFragment @Inject constructor() : FreezableFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var authEmailViewModel: AuthEmailViewModel
     lateinit var authActivity: AuthActivity
-    lateinit var email: String
+
+    // Some data about of state ...
+    var email: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         authEmailViewModel = getViewModel(viewModelFactory)
@@ -40,12 +39,25 @@ class AuthEmailFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recoveryEmailIfNeeded()
+        // Слушаем заказанные ViewModel действия ...
+        authEmailViewModel.authEmailActionLiveData.observe(this, Observer {
+            if (it == AuthEmailAction.SHOW_ERROR) {
+                showInputError(emailEditTextContainer)
+                unfreeze()
+            } else if (it == AuthEmailAction.FREEZE) {
+                freeze()
+            }
+        })
+
+        // Init layout components
         initEmailEditText()
         initNavigationBar()
     }
 
     private fun initEmailEditText() {
+        emailEditText.setText(email)
+
+        // Сброс ошибки при вводе (TODO: Custom View)
         emailEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -59,58 +71,28 @@ class AuthEmailFragment : DaggerFragment() {
     }
 
     private fun initNavigationBar() {
-        authEmailFragmentNavbar
-                .navigationLiveData
-                .observe(this, Observer<NavigationAction> {
-                    if (it == NavigationAction.NEXT) {
-                        email = emailEditText.text
-                                .toString()
-                                .trim()
+        authEmailFragmentNavbar.navigationActionCallback = {
+            if (it == NavigationAction.NEXT) {
+                // Получим текст с EditText'а :) (да Антон, мне в кайф комментировать каждую строчку кода)
+                val email = emailEditText.text.toString()
 
-                        if (EMAIL_REGEX.matches(email)) {
-                            emailEditText.isEnabled = false
-
-                            authEmailViewModel
-                                    .sendEmail(email)
-                                    .observe(this, Observer(::getCodeData))
-                        } else {
-                            showInputError(emailEditTextContainer)
-                        }
-                    }
-                })
-    }
-
-    private fun recoveryEmailIfNeeded() {
-        val bundle = arguments
-
-        if (bundle != null) {
-            val email = bundle.getString(EMAIL_BUNDLE_KEY)
-
-            if (email != null) {
-                emailEditText.setText(email)
+                // Запросим отправку кода у сервера (ошибки прилетят в LiveData)
+                authEmailViewModel.requestCode(email)
             }
         }
     }
 
-    private fun getCodeData(data: SendCodeData?) {
-        when {
-            data == null -> {
-                emailEditText.isEnabled = true
-                hideInputError(emailEditTextContainer)
-                authActivity.showMessage(getString(R.string.no_internet_connection))
-            }
-            data.state == EmailState.WRONG_FORMAT-> {
-                emailEditText.isEnabled = true
-                showInputError(emailEditTextContainer)
-            }
-            data.state == EmailState.FAILED -> {
-                emailEditText.isEnabled = true
-                showInputError(emailEditTextContainer)
-            }
-            else -> {
-                authActivity.hash = data.hash
-                authActivity.showAuthCodeFragment(email, data.status!!)
-            }
-        }
+    override fun freeze() {
+        authEmailFragmentNavbar.freeze()
+
+        // Блокируем ввод, ибо нехрен ...
+        emailEditText.isEnabled = false
+    }
+
+    override fun unfreeze() {
+        authEmailFragmentNavbar.unfreeze()
+
+        // Разблокируем ввод
+        emailEditText.isEnabled = true
     }
 }

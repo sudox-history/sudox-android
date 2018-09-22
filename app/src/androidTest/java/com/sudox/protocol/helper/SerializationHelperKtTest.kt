@@ -1,6 +1,6 @@
 package com.sudox.protocol.helper
 
-import com.sudox.protocol.model.SymmetricKey
+import com.sudox.protocol.models.SymmetricKey
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test

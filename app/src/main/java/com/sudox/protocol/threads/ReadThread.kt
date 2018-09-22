@@ -22,8 +22,10 @@ class ReadThread(private val socket: Socket,
     }
 
     private fun doWork() {
-        while (!socket.isClosed) {
+        while (!socket.isClosed && !isInterrupted) {
             readCallback(reader.readLine())
         }
+
+        endCallback()
     }
 }
