@@ -73,4 +73,5 @@
     <string name="enter_message">Введите сообщение</string>
     <string name="attach_file">Прикрепить файл</string>
     <string name="send_message">Отправить сообщение</string>
+    <string name="code_expired">Срок действия кода истек</string>
 </resources>

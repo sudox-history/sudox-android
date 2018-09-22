@@ -1,6 +1,7 @@
 package com.sudox.android.ui.auth.confirm
 
 import android.arch.lifecycle.ViewModel
+import com.sudox.android.common.models.Errors
 import com.sudox.android.common.repository.auth.AuthRepository
 import com.sudox.android.ui.auth.confirm.enums.AuthConfirmAction
 import com.sudox.protocol.models.SingleLiveEvent
@@ -22,13 +23,15 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
         authConfirmActionLiveData.postValue(AuthConfirmAction.FREEZE)
 
         // Запрос проверки кода ...
-        authRepository.checkCode(email, code, hash) {
-            if (!it) {
-                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_ERROR)
+        authRepository.checkCode(email, code, hash, {
+            authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_REGISTER_FRAGMENT)
+        }, {
+            if (it == Errors.CODE_EXPIRED) {
+                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
             } else {
-                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_REGISTRATION)
+                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_ERROR)
             }
-        }
+        })
     }
 
     /**

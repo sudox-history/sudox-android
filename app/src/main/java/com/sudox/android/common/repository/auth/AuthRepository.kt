@@ -3,6 +3,7 @@ package com.sudox.android.common.repository.auth
 import android.arch.lifecycle.MutableLiveData
 import com.sudox.android.common.auth.SudoxAccount
 import com.sudox.android.common.helpers.*
+import com.sudox.android.common.models.Errors
 import com.sudox.android.common.models.account.state.AccountSessionState
 import com.sudox.android.common.models.auth.dto.*
 import com.sudox.android.common.models.auth.state.AuthSession
@@ -52,20 +53,26 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      * Метод, проверяющий валидность введенного кода в данной сессии авторизации
      * **/
     @Suppress("NAME_SHADOWING")
-    fun checkCode(email: String, code: String, hash: String, callback: (Boolean) -> (Unit)) {
+    fun checkCode(email: String, code: String, hash: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
         // "Кастрируем" пробелы в почте ...
         val code = code.trim()
 
         // Проверяем валидность кода ...
         if (!NUMBER_REGEX.matches(code)) {
             // Защита от отличных от Gboard клавиатур (желательно было бы заблокировать ввод левых символов)
-            callback(false)
+            errorCallback(Errors.INVALID_PARAMETERS)
         } else {
             protocolClient.makeRequest<AuthCheckCodeDTO>("auth.checkCode", AuthCheckCodeDTO().apply {
                 this.code = code
                 this.hash = hash
                 this.email = email
-            }) { callback(it.isSuccess()) }
+            }) {
+                if (it.isSuccess()) {
+                    successCallback()
+                } else {
+                    errorCallback(it.error)
+                }
+            }
         }
     }
 

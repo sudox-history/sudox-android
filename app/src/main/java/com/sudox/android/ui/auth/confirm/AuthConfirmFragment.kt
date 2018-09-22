@@ -44,7 +44,11 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
         authConfirmViewModel.authConfirmActionLiveData.observe(this, Observer {
             when (it) {
                 AuthConfirmAction.FREEZE -> freeze()
-                AuthConfirmAction.SHOW_REGISTRATION -> authActivity.showAuthRegisterFragment()
+                AuthConfirmAction.SHOW_REGISTER_FRAGMENT -> authActivity.showAuthRegisterFragment()
+                AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
+                    authActivity.showAuthEmailFragment(authSession.email)
+                    authActivity.showMessage(getString(R.string.code_expired))
+                }
                 AuthConfirmAction.SHOW_ERROR -> {
                     showInputError(codeEditTextContainer)
                     unfreeze()
