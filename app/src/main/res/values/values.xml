@@ -8,7 +8,7 @@
     <dimen name="font_size_large">25sp</dimen>
     <dimen name="font_size_increased_medium">19sp</dimen>
     <!-- Navigation bar -->
-    <dimen name="navbar_height">56dp</dimen>
+    <dimen name="navbar_height">60dp</dimen>
     <dimen name="navbar_button_drawable_padding">8dp</dimen>
     <!-- Main bar -->
     <dimen name="chatbar_height">60dp</dimen>

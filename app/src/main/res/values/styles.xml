@@ -9,11 +9,27 @@
         <item name="android:colorBackground">@color/colorBackground</item>
     </style>
 
+    <!-- Application launcher. -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/screen_splash</item>
+    </style>
+
+    <!-- Toolbar styles start -->
+    <style name="ToolbarTheme.AppBarLayout">
+        <item name="android:elevation">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="elevation">0dp</item>
+    </style>
+
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="contentInsetStart">27dp</item>
         <!-- Calculation of toolbar right padding:
-             right padding of the design in the design - padding of the menu item = 34dp - 16dp = 13dp -->
-        <item name="android:paddingRight">18dp</item>
+             right padding of the design in the design - padding of the menu item = 34dp - 16dp - 8dp = 10dp -->
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingEnd">18dp</item>
         <item name="android:elevation">0dp</item>
         <item name="android:layout_height">@dimen/navbar_height</item>
         <item name="android:background">?attr/colorPrimary</item>
@@ -24,7 +40,6 @@
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textSize">@dimen/font_size_increased_medium</item>
     </style>
-
 
     <style name="ToolbarTheme.ChatToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">@color/colorPrimary</item>
@@ -53,9 +68,20 @@
         <item name="android:textColorHint">@color/colorHint</item>
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
+    <!-- Toolbar styles end -->
 
-    <!-- Application launcher. -->
-    <style name="AppTheme.Launcher">
-        <item name="android:windowBackground">@drawable/screen_splash</item>
+    <!-- Bottom navigation view styles start -->
+    <style name="BottomNavigationView">
+        <item name="android:layout_height">45dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:elevation">0dp</item>
+        <item name="android:background">@color/colorBottomNavigationBackground</item>
+        <item name="android:itemPadding">42dp</item>
+        <item name="itemIconSize">22dp</item>
+        <item name="itemIconTint">@drawable/selector_bottom_navigation_item</item>
+        <item name="labelVisibilityMode">unlabeled</item>
+        <item name="elevation">0dp</item>
     </style>
+    <!-- Bottom navigation view styles end -->
 </resources>

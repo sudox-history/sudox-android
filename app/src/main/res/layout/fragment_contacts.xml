@@ -9,6 +9,7 @@
     <!-- Toolbar section start -->
 
     <android.support.design.widget.AppBarLayout
+        style="@style/ToolbarTheme.AppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
