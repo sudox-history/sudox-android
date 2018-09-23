@@ -1,6 +1,5 @@
 package com.sudox.android.ui.main
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
@@ -9,11 +8,9 @@ import com.androidadvance.topsnackbar.TSnackbar
 import com.sudox.android.R
 import com.sudox.android.common.enums.ConnectState
 import com.sudox.android.common.helpers.showTopSnackbar
-import com.sudox.android.common.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.settings.SettingsFragment
-import com.sudox.android.ui.splash.SplashActivity
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -69,14 +66,14 @@ class MainActivity : DaggerAppCompatActivity() {
     private fun goToSettingsFragment() {
         supportFragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_main_container, SettingsFragment())
+                .replace(R.id.fragmentMainContainer, SettingsFragment())
                 .commit()
     }
 
     private fun goToContactsFragment() {
         supportFragmentManager.beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_main_container, ContactsFragment())
+                .replace(R.id.fragmentMainContainer, ContactsFragment())
                 .addToBackStack(null).commit()
 
     }
@@ -90,11 +87,10 @@ class MainActivity : DaggerAppCompatActivity() {
             showMessage(getString(R.string.lost_internet_connection))
         } else if (connectState == ConnectState.WRONG_TOKEN) {
             exitFromAccount()
-        } else if(connectState == ConnectState.MISSING_TOKEN){
+        } else if (connectState == ConnectState.MISSING_TOKEN) {
             mainViewModel.removeAllAccounts()
             showAuthActivity()
-        }
-        else if (connectState == ConnectState.CORRECT_TOKEN) {
+        } else if (connectState == ConnectState.CORRECT_TOKEN) {
             showMessage(getString(R.string.connection_restored))
             loadContacts()
         }
@@ -123,6 +119,6 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     fun showMessage(message: String) {
-        showTopSnackbar(this, fragment_main_container, message, TSnackbar.LENGTH_LONG)
+        showTopSnackbar(this, fragmentMainContainer, message, TSnackbar.LENGTH_LONG)
     }
 }

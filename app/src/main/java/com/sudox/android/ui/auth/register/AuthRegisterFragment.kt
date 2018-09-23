@@ -41,12 +41,17 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
 
         // Слушаем заказанные ViewModel действия ...
         authRegisterViewModel.authRegisterActionLiveData.observe(this, Observer {
-            if (it == AuthRegisterAction.SHOW_ERROR) {
-                showInputError(nameEditTextContainer)
-                showInputError(nicknameEditTextContainer)
-                unfreeze()
-            } else if (it == AuthRegisterAction.FREEZE) {
-                freeze()
+            when (it) {
+                AuthRegisterAction.FREEZE -> freeze()
+                AuthRegisterAction.SHOW_ERROR -> {
+                    showInputError(nameEditTextContainer)
+                    showInputError(nicknameEditTextContainer)
+                    unfreeze()
+                }
+                AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
+                    authActivity.showAuthEmailFragment(authSession.email)
+                    authActivity.showMessage(getString(R.string.code_expired))
+                }
             }
         })
 

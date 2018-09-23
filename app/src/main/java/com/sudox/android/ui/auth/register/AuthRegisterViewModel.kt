@@ -1,7 +1,9 @@
 package com.sudox.android.ui.auth.register
 
 import android.arch.lifecycle.ViewModel
+import com.sudox.android.common.models.Errors
 import com.sudox.android.common.repository.auth.AuthRepository
+import com.sudox.android.ui.auth.confirm.enums.AuthConfirmAction
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
 import com.sudox.protocol.models.SingleLiveEvent
 import javax.inject.Inject
@@ -21,11 +23,12 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
         authRegisterActionLiveData.postValue(AuthRegisterAction.FREEZE)
 
         // Регистрируемся ...
-        authRepository.signUp(email, code, hash, name, nickname) {
-            if (!it) authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_ERROR)
-
-            /* Размораживать не нужно, т.к. мы не тупые и сами во View можем догадаться,
-               что при ошибке нужно разморозить Fragment ... */
-        }
+        authRepository.signUp(email, code, hash, name, nickname, {}, {
+            if (it == Errors.CODE_EXPIRED) {
+                authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
+            } else {
+                authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_ERROR)
+            }
+        })
     }
 }

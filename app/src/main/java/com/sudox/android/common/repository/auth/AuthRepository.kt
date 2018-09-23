@@ -80,14 +80,14 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      * Выполняет вход в аккаунт. По окончанию записывает аккаунт в БД.
      */
     @Suppress("NAME_SHADOWING")
-    fun signIn(email: String, code: String, hash: String, callback: (Boolean) -> (Unit)) {
+    fun signIn(email: String, code: String, hash: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
         // "Кастрируем" пробелы в почте ...
         val code = code.trim()
 
         // Проверяем валидность кода ...
         if (!NUMBER_REGEX.matches(code)) {
             // Защита от отличных от Gboard клавиатур (желательно было бы заблокировать ввод левых символов)
-            callback(false)
+            errorCallback(Errors.INVALID_PARAMETERS)
         } else {
             protocolClient.makeRequest<AuthSignInDTO>("auth.signIn", AuthSignInDTO().apply {
                 this.code = code
@@ -96,13 +96,11 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
             }) {
                 if (it.isSuccess()) {
                     accountRepository.saveAccount(SudoxAccount(it.id, email, it.secret))
-
-                    // Говорим, что сессия живая! (нужно, чтобы на MainActivity узнать о мертвой сессии)
                     accountSessionLiveData.postValue(AccountSessionState(true))
+                    successCallback()
+                } else {
+                    errorCallback(it.error)
                 }
-
-                // Уведомим слушателя о статусе
-                callback(it.isSuccess())
             }
         }
     }
@@ -111,13 +109,13 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      * Выполняет регистрацию аккаунта. По окончанию записывает аккаунт в БД.
      */
     @Suppress("NAME_SHADOWING")
-    fun signUp(email: String, code: String, hash: String, name: String, nickname: String, callback: (Boolean) -> Unit) {
+    fun signUp(email: String, code: String, hash: String, name: String, nickname: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
         val name = name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
         val nickname = nickname.replace(WHITESPACES_REMOVE_REGEX, "")
 
         // Валидация
         if (!NAME_REGEX.matches(name) || !NICKNAME_REGEX.matches(nickname)) {
-            callback(false)
+            errorCallback(Errors.INVALID_PARAMETERS)
         } else {
             protocolClient.makeRequest<AuthSignUpDTO>("auth.signUp", AuthSignUpDTO().apply {
                 this.email = email
@@ -128,13 +126,11 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
             }) {
                 if (it.isSuccess()) {
                     accountRepository.saveAccount(SudoxAccount(it.id, email, it.secret))
-
-                    // Говорим, что сессия живая! (нужно, чтобы на MainActivity узнать о мертвой сессии)
                     accountSessionLiveData.postValue(AccountSessionState(true))
+                    successCallback()
+                } else {
+                    errorCallback(it.error)
                 }
-
-                // Уведомим слушателя о статусе
-                callback(it.isSuccess())
             }
         }
     }

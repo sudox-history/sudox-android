@@ -52,4 +52,9 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
         // Start async connection ...
         protocolClient.connect()
     }
+
+    /**
+     * Просто метод для закрытия соединения с сервером. Ничего сложного :)
+     * **/
+    fun closeConnection() = protocolClient.close()
 }

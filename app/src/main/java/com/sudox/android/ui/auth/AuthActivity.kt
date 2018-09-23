@@ -136,7 +136,7 @@ class AuthActivity : DaggerAppCompatActivity() {
     override fun onBackPressed() {
         authViewModel.closeConnection()
 
-        // Super! (Антон, не мучай мой перфекционизм)
+        // Super!
         super.onBackPressed()
     }
 }

@@ -139,6 +139,7 @@ android {
 
 kapt {
     mapDiagnosticLocations = true
+    useBuildCache = true
     generateStubs true
 }
 

@@ -43,8 +43,12 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
         authConfirmActionLiveData.postValue(AuthConfirmAction.FREEZE)
 
         // Запрос проверки кода и авторизации ...
-        authRepository.signIn(email, code, hash) {
-            if (!it) authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_ERROR)
-        }
+        authRepository.signIn(email, code, hash, {}, {
+            if (it == Errors.CODE_EXPIRED) {
+                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
+            } else {
+                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_ERROR)
+            }
+        })
     }
 }
