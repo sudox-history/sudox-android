@@ -28,6 +28,7 @@ class AuthActivity : DaggerAppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var authViewModel: AuthViewModel
     lateinit var authSession: AuthSession
+    var authKey: Int? = null
 
     // Fragments
     @Inject
@@ -42,7 +43,7 @@ class AuthActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_auth)
 
         // Auth key для отличия запуска через AccountManager от обычного запуска
-        val authKey = intent.getIntExtra(AUTH_KEY, 1)
+        authKey = intent.getIntExtra(AUTH_KEY, 1)
 
         // Get view model
         authViewModel = getViewModel(viewModelFactory)
@@ -80,6 +81,13 @@ class AuthActivity : DaggerAppCompatActivity() {
         })
 
         showAuthEmailFragment(null, true)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        authKey = intent.getIntExtra(AUTH_KEY, 1)
+
+        // Super!
+        super.onNewIntent(intent)
     }
 
     private fun unfreezeCurrent() {
