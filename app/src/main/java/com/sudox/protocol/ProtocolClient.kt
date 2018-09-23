@@ -69,10 +69,6 @@ class ProtocolClient @Inject constructor() {
         writeThread!!.start()
     }
 
-    fun refresh() {
-
-    }
-
     internal fun sendArray(array: Array<*>) {
         sendString(array.toJsonArray().toString())
     }
