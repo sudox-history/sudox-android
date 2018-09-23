@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.sudox.android.R
 import com.sudox.android.common.helpers.drawContactAvatar
 import com.sudox.android.common.helpers.hideKeyboard
-import com.sudox.android.database.model.Contact
+import com.sudox.android.data.database.model.Contact
 import kotlinx.android.synthetic.main.card_add_contact.view.*
 import kotlinx.android.synthetic.main.include_search_navbar_addition.view.*
 

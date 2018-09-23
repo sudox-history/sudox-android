@@ -1,7 +1,7 @@
 package com.sudox.android.ui.diffutil
 
 import android.support.v7.util.DiffUtil
-import com.sudox.android.database.model.Message
+import com.sudox.android.data.database.model.Message
 
 class MessagesDiffUtil(private val oldMessagesList: ArrayList<Message>,
                        private val newMessagesList: ArrayList<Message>) : DiffUtil.Callback(){

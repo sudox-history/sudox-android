@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
-import com.sudox.android.common.viewmodels.getViewModel
+import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -31,7 +31,7 @@ class SettingsFragment: DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         exitButton.setOnClickListener {
-            mainActivity.exitFromAccount()
+//            mainActivity.exitFromAccount()
         }
     }
 }

@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
-import com.sudox.android.ui.views.enums.NavigationAction
+import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.hideInputError
 import com.sudox.android.common.helpers.showInputError
-import com.sudox.android.common.viewmodels.getViewModel
+import com.sudox.android.ui.views.enums.NavigationAction
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.email.enums.AuthEmailAction
 import com.sudox.android.ui.common.FreezableFragment

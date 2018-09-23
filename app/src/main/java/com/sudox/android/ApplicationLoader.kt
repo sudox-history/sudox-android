@@ -1,6 +1,6 @@
 package com.sudox.android
 
-import com.sudox.android.di.DaggerAppComponent
+import com.sudox.android.common.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import timber.log.Timber

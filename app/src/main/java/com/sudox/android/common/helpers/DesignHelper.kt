@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import com.androidadvance.topsnackbar.TSnackbar
 import com.sudox.android.R
-import com.sudox.android.database.model.Contact
+import com.sudox.android.data.database.model.Contact
 
 fun showInputError(inputLayout: TextInputLayout) {
     inputLayout.error = " "

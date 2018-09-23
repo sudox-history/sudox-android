@@ -1,7 +1,7 @@
 package com.sudox.android.ui.auth.email
 
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.common.repository.auth.AuthRepository
+import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.ui.auth.email.enums.AuthEmailAction
 import com.sudox.protocol.models.SingleLiveEvent
 import javax.inject.Inject

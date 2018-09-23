@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
-import com.sudox.android.common.repository.chat.MESSAGE_TO
-import com.sudox.android.database.model.Message
+import com.sudox.android.data.repositories.chat.MESSAGE_TO
+import com.sudox.android.data.database.model.Message
 import kotlinx.android.synthetic.main.textview_message_to.view.*
 import java.util.*
 

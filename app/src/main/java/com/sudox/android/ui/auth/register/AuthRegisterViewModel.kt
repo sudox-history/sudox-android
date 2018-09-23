@@ -1,9 +1,8 @@
 package com.sudox.android.ui.auth.register
 
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.common.models.Errors
-import com.sudox.android.common.repository.auth.AuthRepository
-import com.sudox.android.ui.auth.confirm.enums.AuthConfirmAction
+import com.sudox.android.data.models.Errors
+import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
 import com.sudox.protocol.models.SingleLiveEvent
 import javax.inject.Inject

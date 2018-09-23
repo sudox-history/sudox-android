@@ -1,7 +1,7 @@
 package com.sudox.protocol
 
 import android.util.Base64
-import com.sudox.android.common.enums.ConnectState
+import com.sudox.protocol.models.enums.ConnectState
 import com.sudox.protocol.helpers.*
 import org.json.JSONArray
 import org.json.JSONException

@@ -1,9 +1,9 @@
 package com.sudox.android.ui.chats
 
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.common.repository.auth.AccountRepository
-import com.sudox.android.common.repository.auth.AuthRepository
-import com.sudox.android.common.repository.chat.MessagesRepository
+import com.sudox.android.data.repositories.auth.AccountRepository
+import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.chat.MessagesRepository
 import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject
 

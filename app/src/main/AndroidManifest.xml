@@ -22,7 +22,7 @@
             android:value="1b52d7c00ea5730ee162bd375b807fc38f86e091" />
 
         <service
-            android:name=".common.auth.SudoxAuthenticatorService"
+            android:name="com.sudox.android.data.auth.SudoxAuthenticatorService"
             android:exported="true">
 
             <intent-filter>

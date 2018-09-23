@@ -1,8 +1,8 @@
 package com.sudox.protocol
 
 import android.util.Base64
-import com.sudox.android.common.enums.ConnectState
-import com.sudox.android.common.models.auth.dto.AuthImportDTO
+import com.sudox.protocol.models.enums.ConnectState
+import com.sudox.android.data.models.auth.dto.AuthImportDTO
 import com.sudox.protocol.helpers.encryptAES
 import com.sudox.protocol.helpers.getHmac
 import com.sudox.protocol.helpers.randomBase64String

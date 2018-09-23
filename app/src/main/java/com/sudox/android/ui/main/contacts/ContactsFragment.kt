@@ -1,173 +1,27 @@
 package com.sudox.android.ui.main.contacts
 
-import android.annotation.SuppressLint
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
-import android.content.Intent
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
-import android.view.*
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.sudox.android.R
-import com.sudox.android.common.enums.UserSearchState
-//import com.sudox.android.common.models.UserSearchData
-import com.sudox.android.common.viewmodels.getViewModel
-import com.sudox.android.database.model.Contact
-import com.sudox.android.ui.adapters.ContactsAdapter
-import com.sudox.android.ui.chats.ChatActivity
-import com.sudox.android.ui.diffutil.ContactsDiffUtil
+import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.card_add_contact.*
-import kotlinx.android.synthetic.main.fragment_contacts.*
-import kotlinx.android.synthetic.main.include_search_navbar_addition.*
 import javax.inject.Inject
 
-class ContactsFragment : DaggerFragment() {
+class ContactsFragment @Inject constructor() : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var contactsViewModel: ContactsViewModel
-    private lateinit var mainActivity: MainActivity
-    private lateinit var adapter: ContactsAdapter
-    private lateinit var contactSearch: Contact
+    lateinit var contactsViewModel: ContactsViewModel
+    lateinit var mainActivity: MainActivity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactsViewModel = getViewModel(viewModelFactory)
         mainActivity = activity as MainActivity
-        adapter = ContactsAdapter(ArrayList(), mainActivity)
 
         return inflater.inflate(R.layout.fragment_contacts, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
-        mainActivity.setSupportActionBar(contactsToolbar)
-
-        initSearchAdditionalView()
-        initContactsList()
-        initListeners()
-    }
-
-    override fun onResume() {
-        adapter.isBlocked = false
-        super.onResume()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_contacts, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    @SuppressLint("ResourceType")
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.add_contact -> {
-                searchAdditionalView.toggle()
-            }
-        }
-        return true
-    }
-
-    private fun initSearchAdditionalView() {
-        searchAdditionalView.startListener = {
-            val item = contactsToolbar.menu.findItem(R.id.add_contact)
-
-            if (it) {
-                item.setIcon(R.drawable.ic_close)
-            } else {
-                item.setIcon(R.drawable.ic_add_contact)
-            }
-
-            blackOverlayView.toggle(!it)
-        }
-
-        blackOverlayView.setOnClickListener {
-            searchAdditionalView.toggle(false)
-        }
-    }
-
-    private fun initContactsList() {
-        contactsList.adapter = adapter
-
-        val layoutManager = LinearLayoutManager(activity)
-        layoutManager.reverseLayout = true
-        layoutManager.stackFromEnd = true
-        contactsList.layoutManager = layoutManager
-
-        contactsViewModel
-                .contactsLoadLiveData()
-                .observe(this, Observer {
-                    searchAdditionalView.toggle(false)
-                    if (it!!.isNotEmpty()) {
-                        contactsList.visibility = View.VISIBLE
-                        have_not_got_contacts.visibility = View.GONE
-                        val result = DiffUtil.calculateDiff(ContactsDiffUtil(it, adapter.items))
-
-                        // Update data
-                        adapter.items = it
-                        result.dispatchUpdatesTo(adapter)
-                    } else {
-                        contactsList.visibility = View.GONE
-                        have_not_got_contacts.visibility = View.VISIBLE
-                    }
-                })
-    }
-
-//    private fun setSearchContact(userData: UserSearchData) {
-//        progress_bar.visibility = View.GONE
-//        when {
-//            userData.state == UserSearchState.WRONG_FORMAT -> {
-//                addContactHint.visibility = View.VISIBLE
-//                addContactCard.visibility = View.GONE
-//                addContactHint.text = getString(R.string.wrong_email_format)
-//            }
-//            userData.state == UserSearchState.USER_DOES_NOT_EXIST -> {
-//                addContactHint.visibility = View.VISIBLE
-//                addContactCard.visibility = View.GONE
-//                addContactHint.text = getString(R.string.contact_has_not_find)
-//            }
-//            else -> {
-//                contactSearch = userData.contact!!
-//                searchAdditionalView.setSearchContact(userData.contact)
-//            }
-//        }
-//    }
-
-    private fun initListeners() {
-//        nicknameEditText.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                progress_bar.visibility = View.VISIBLE
-//                addContactHint.visibility = View.GONE
-//                contactsViewModel.contactsSearchUserByEmail(nicknameEditText.text.toString())
-//                        .observe(this, Observer { setSearchContact(it!!) })
-//                return@OnEditorActionListener true
-//            }
-//            false
-//        })
-//
-//        add_contact_search.setOnClickListener {
-//            contactsViewModel.contactAdd(contactSearch.cid)
-//            progress_bar.visibility = View.VISIBLE
-//            addContactCard.visibility = View.GONE
-//        }
-
-        adapter.clickedLongContactLiveData.observe(this, Observer {
-            contactsViewModel.removeContact(it!!)
-        })
-
-        adapter.clickedSimpleContactLiveData.observe(this, Observer {
-            mainActivity.goToChatActivity( Intent(mainActivity, ChatActivity::class.java).apply {
-                putExtra("name", it!!.name)
-                putExtra("firstColor", it.firstColor)
-                putExtra("secondColor", it.secondColor)
-                putExtra("avatarUrl", it.avatarUrl)
-                putExtra("id", it.cid)
-                putExtra("nickname", it.nickname)
-            })
-        })
     }
 }

@@ -11,14 +11,11 @@ import android.view.MenuItem
 import com.androidadvance.topsnackbar.TSnackbar
 import com.bumptech.glide.Glide
 import com.sudox.android.R
-import com.sudox.android.common.enums.ConnectState
-import com.sudox.android.common.enums.SendMessageState
+import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.showTopSnackbar
-import com.sudox.android.common.viewmodels.getViewModel
-import com.sudox.android.database.model.Contact
-import com.sudox.android.database.model.Message
+import com.sudox.protocol.models.enums.ConnectState
+import com.sudox.android.data.database.model.Contact
 import com.sudox.android.ui.adapters.MessagesAdapter
-import com.sudox.android.ui.diffutil.MessagesDiffUtil
 import com.sudox.android.ui.splash.SplashActivity
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_chat.*

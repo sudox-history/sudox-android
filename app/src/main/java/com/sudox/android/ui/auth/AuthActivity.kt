@@ -7,12 +7,12 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentTransaction
 import com.sudox.android.R
-import com.sudox.android.common.auth.AUTH_ACCOUNT_MANAGER_START
-import com.sudox.android.common.auth.AUTH_KEY
-import com.sudox.android.common.enums.ConnectState
+import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.showSnackbar
-import com.sudox.android.common.models.auth.state.AuthSession
-import com.sudox.android.common.viewmodels.getViewModel
+import com.sudox.android.data.auth.AUTH_ACCOUNT_MANAGER_START
+import com.sudox.android.data.auth.AUTH_KEY
+import com.sudox.protocol.models.enums.ConnectState
+import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.email.AuthEmailFragment
 import com.sudox.android.ui.auth.register.AuthRegisterFragment
@@ -126,7 +126,6 @@ class AuthActivity : DaggerAppCompatActivity() {
     }
 
     fun showMainActivity() {
-
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }

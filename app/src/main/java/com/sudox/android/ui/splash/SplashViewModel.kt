@@ -1,9 +1,9 @@
 package com.sudox.android.ui.splash
 
 import android.arch.lifecycle.*
-import com.sudox.android.common.auth.AUTH_ACCOUNT_MANAGER_START
-import com.sudox.android.common.enums.ConnectState
-import com.sudox.android.common.repository.auth.AccountRepository
+import com.sudox.android.data.auth.AUTH_ACCOUNT_MANAGER_START
+import com.sudox.protocol.models.enums.ConnectState
+import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.ui.splash.enums.SplashAction
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent

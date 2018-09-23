@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.sudox.android.R
 import com.sudox.android.common.helpers.drawContactAvatar
-import com.sudox.android.database.model.Contact
+import com.sudox.android.data.database.model.Contact
 import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.android.synthetic.main.card_contact.view.*
 
