@@ -3,6 +3,7 @@ package com.sudox.protocol.implementations
 import java.io.BufferedReader
 import java.io.EOFException
 import java.io.Reader
+import java.lang.StringBuilder
 
 class SeparatedBufferedReader(reader: Reader,
                               separator: Char) : BufferedReader(reader) {
@@ -11,24 +12,27 @@ class SeparatedBufferedReader(reader: Reader,
     private val separatorNumber = separator.toInt()
 
     override fun readLine(): String = synchronized(lock) {
-        val buffer = StringBuffer()
+        val builder = StringBuilder()
 
-        while (true) {
-            val byte = read() and 0xFF
+        // Читаем строку
+        readString(builder)
 
-            if (byte == 255) {
-                // End of stream
-                throw EOFException()
-            } else {
-                buffer.append(byte.toChar())
+        // Возвращаем ответ
+        return builder.toString()
+    }
 
-                // End of message
-                if (byte == separatorNumber) {
-                    break
-                }
-            }
+    private tailrec fun readString(builder: StringBuilder) {
+        val byte = read() and 0xFF
+
+        // Конец потока (закрытие соединение и т.п.)
+        if (byte == 255) throw EOFException()
+
+        // Сохраним символ
+        builder.append(byte.toChar())
+
+        // Читаем следующий байт
+        if (byte != separatorNumber) {
+            readString(builder)
         }
-
-        return buffer.toString()
     }
 }
