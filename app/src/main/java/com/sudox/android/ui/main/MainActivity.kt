@@ -12,7 +12,7 @@ import com.sudox.android.common.helpers.showTopSnackbar
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.enums.MainActivityAction
-import com.sudox.protocol.models.enums.ConnectState
+import com.sudox.protocol.models.enums.ConnectionState
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -43,7 +43,11 @@ class MainActivity : DaggerAppCompatActivity() {
 
         // Слушаем изменения состояния соединения ...
         mainViewModel.connectionStateLiveData.observe(this, Observer {
-            if (it == ConnectState.DISCONNECTED) showMessage(getString(R.string.lost_internet_connection))
+            if (it == ConnectionState.CONNECTION_CLOSED) {
+                showMessage(getString(R.string.lost_internet_connection))
+            } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
+                showMessage(getString(R.string.connection_restored))
+            }
         })
 
         // Listen session state ...

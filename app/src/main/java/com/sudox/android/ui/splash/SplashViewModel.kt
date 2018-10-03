@@ -2,8 +2,9 @@ package com.sudox.android.ui.splash
 
 import android.arch.lifecycle.*
 import com.sudox.android.data.auth.AUTH_ACCOUNT_MANAGER_START
-import com.sudox.protocol.models.enums.ConnectState
+import com.sudox.protocol.models.enums.ConnectionState
 import com.sudox.android.data.repositories.auth.AccountRepository
+import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.ui.splash.enums.SplashAction
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
@@ -12,7 +13,8 @@ import kotlinx.coroutines.experimental.runBlocking
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(private val protocolClient: ProtocolClient,
-                                          private val accountRepository: AccountRepository) : ViewModel(), LifecycleObserver {
+                                          private val accountRepository: AccountRepository,
+                                          private val authRepository: AuthRepository) : ViewModel(), LifecycleObserver {
 
     val splashActionLiveData: SingleLiveEvent<SplashAction> = SingleLiveEvent()
 
@@ -23,34 +25,34 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
     fun initSession(lifecycleOwner: LifecycleOwner, authKey: Int) = async {
         val account = accountRepository.getAccount().await()
 
-        if (account != null) {
-            accountRepository.setSessionData(account)
-        } else {
-            accountRepository.clearSessionData()
-        }
-
         // Handle connection status ...
         protocolClient.connectionStateLiveData.observe(lifecycleOwner, Observer {
-            if (it == ConnectState.CONNECT_ERROR) {
+            if (it == ConnectionState.CONNECT_ERRORED) {
                 if (authKey == AUTH_ACCOUNT_MANAGER_START && account != null) {
                     splashActionLiveData.postValue(SplashAction.SHOW_ACCOUNT_EXISTS_ALERT)
+                } else if (account != null) {
+                    splashActionLiveData.postValue(SplashAction.SHOW_MAIN_ACTIVITY)
                 } else {
                     splashActionLiveData.postValue(SplashAction.SHOW_AUTH_ACTIVITY)
                 }
-            } else if (it == ConnectState.MISSING_TOKEN || it == ConnectState.WRONG_TOKEN) {
-                runBlocking { accountRepository.removeAccounts().await() }
-                splashActionLiveData.postValue(SplashAction.SHOW_AUTH_ACTIVITY)
-            } else if (it == ConnectState.CORRECT_TOKEN) {
+            }
+        })
+
+        // Handle session status ...
+        authRepository.accountSessionLiveData.observe(lifecycleOwner, Observer {
+            if (it?.lived!!) {
                 if (authKey == AUTH_ACCOUNT_MANAGER_START) {
                     splashActionLiveData.postValue(SplashAction.SHOW_ACCOUNT_EXISTS_ALERT)
                 } else {
                     splashActionLiveData.postValue(SplashAction.SHOW_MAIN_ACTIVITY)
                 }
+            } else {
+                splashActionLiveData.postValue(SplashAction.SHOW_AUTH_ACTIVITY)
             }
         })
 
         // Start async connection ...
-        protocolClient.connect()
+        protocolClient.connect(false)
     }
 
     /**

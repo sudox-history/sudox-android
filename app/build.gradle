@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'kotlin-platform-android'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -15,104 +16,53 @@ def buildToolsProjectVersion = "28.0.2"
 def compileSdkProjectVersion = 28
 def minSdkProjectVersion = 21
 
-// Versions of libraries
-ext {
-    appCompatVersion = "28.0.0-rc02"
-    v4SupportVersion = "28.0.0-alpha3"
-    designVersion = "28.0.0-rc01"
-    architectureComponentsVersion = "1.1.1"
-    daggerVersion = "2.16"
-    firebaseCore = "16.0.3"
-    timberVersion = "4.7.1"
-    rxKotlinVersion = "2.2.0"
-    rxAndroidVersion = "2.0.2"
-    rxJavaVersion = "2.1.16"
-    junitVersion = "4.12"
-    runnerVersion = "1.1.0-alpha4"
-    espressoVersion = "3.0.2"
-    mockitoVersion = "2.19.1"
-    lottieVersion = "2.5.5"
-    leakcanaryVersion = "1.6.1"
-    circleImageViewVersion = "2.2.0"
-    glideVersion = "4.7.1"
-}
-
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
-    // Google support libraries
-    implementation "com.android.support:appcompat-v7:$appCompatVersion"
-    implementation "com.android.support:support-v4:$v4SupportVersion"
-    implementation "com.android.support:design:$designVersion"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.25.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.25.0'
 
+    // Google Android basic libraries
+    implementation "com.android.support:appcompat-v7:28.0.0"
+    implementation "com.android.support:design:28.0.0"
+
     // Architecture components
-
-    // ViewModel, LiveData
-    implementation "android.arch.lifecycle:extensions:$architectureComponentsVersion"
-
-    // Room
-    implementation "android.arch.persistence.room:runtime:$architectureComponentsVersion"
-    kapt "android.arch.persistence.room:compiler:$architectureComponentsVersion"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
 
     // Dagger
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    implementation "com.google.dagger:dagger:2.17"
+    implementation "com.google.dagger:dagger-android:2.17"
+    implementation "com.google.dagger:dagger-android-support:2.17"
+    kapt "com.google.dagger:dagger-compiler:2.17"
+    kapt "com.google.dagger:dagger-android-processor:2.17"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.3'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
+    implementation "com.google.firebase:firebase-core:16.0.3"
+    implementation "com.crashlytics.sdk.android:crashlytics:2.9.5"
 
     // Some design libraries
-    implementation 'com.androidadvance:topsnackbar:1.1.1'
+    implementation "com.androidadvance:topsnackbar:1.1.1"
+    implementation "de.hdodenhof:circleimageview:2.2.0"
 
     // Timber
-    implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation "com.jakewharton.timber:timber:4.7.1"
 
     // Fresco
-    implementation "com.github.bumptech.glide:glide:$glideVersion"
-    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    implementation "com.github.bumptech.glide:glide:4.8.0"
+    kapt "com.github.bumptech.glide:compiler:4.8.0"
 
-    // Lottie
-    implementation "com.airbnb.android:lottie:$lottieVersion"
-
-    // Design libraries
-    implementation "de.hdodenhof:circleimageview:$circleImageViewVersion"
-
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakcanaryVersion"
-    debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$leakcanaryVersion"
-
-    // Testing libraries
-    testImplementation "junit:junit:$junitVersion"
-    testImplementation "org.mockito:mockito-core:$mockitoVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test:rules:1.0.2'
-    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
+//    testImplementation "junit:junit:$junitVersion"
+//    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+//    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+//    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+//    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+//    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
 }
 
 android {
     compileSdkVersion compileSdkProjectVersion
     buildToolsVersion buildToolsProjectVersion
-
-    testOptions {
-        androidExtensions {
-            experimental = true
-            defaultCacheImplementation = "NONE"
-        }
-    }
-
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
 
     defaultConfig {
         applicationId "com.sudox.android"
@@ -120,9 +70,10 @@ android {
         targetSdkVersion compileSdkProjectVersion
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        multiDexEnabled false
 
         // Runner for instrumental tests
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -131,15 +82,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-        debug {
-            renderscriptOptimLevel = 0
-        }
     }
 }
 
 kapt {
-    mapDiagnosticLocations = true
-    useBuildCache = true
+    mapDiagnosticLocations true
+    useBuildCache true
     generateStubs true
 }
 
@@ -148,5 +96,3 @@ kotlin {
         coroutines "enable"
     }
 }
-
-apply plugin: 'com.google.gms.google-services'

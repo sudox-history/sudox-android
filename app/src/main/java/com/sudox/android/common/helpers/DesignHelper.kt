@@ -19,8 +19,6 @@ import com.sudox.android.R
 import com.sudox.android.data.database.model.Contact
 import android.support.design.internal.BottomNavigationMenuView
 
-
-
 fun showInputError(inputLayout: TextInputLayout) {
     inputLayout.error = " "
 

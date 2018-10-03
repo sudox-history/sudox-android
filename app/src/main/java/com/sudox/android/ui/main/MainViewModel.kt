@@ -10,7 +10,6 @@ import com.sudox.android.data.repositories.chat.MessagesRepository
 import com.sudox.android.ui.main.enums.MainActivityAction
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
-import com.sudox.protocol.models.enums.ConnectState
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(private val protocolClient: ProtocolClient,

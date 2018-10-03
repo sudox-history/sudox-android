@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.showTopSnackbar
-import com.sudox.protocol.models.enums.ConnectState
+import com.sudox.protocol.models.enums.ConnectionState
 import com.sudox.android.data.database.model.Contact
 import com.sudox.android.ui.adapters.MessagesAdapter
 import com.sudox.android.ui.splash.SplashActivity
@@ -78,18 +78,18 @@ class ChatActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun getConnectState(connectState: ConnectState) {
-        if (connectState == ConnectState.DISCONNECTED) {
-            showMessage(getString(R.string.lost_internet_connection))
-        } else if (connectState == ConnectState.MISSING_TOKEN || connectState == ConnectState.WRONG_TOKEN) {
-            chatViewModel.disconnect()
-            showSplashActivity()
-        } else if (connectState == ConnectState.CORRECT_TOKEN) {
-            showMessage(getString(R.string.connection_restored))
-            adapter.items.clear()
-            adapter.notifyDataSetChanged()
-            chatViewModel.loadHistoryIntoDatabase(contact.cid, 0, 100)
-        }
+    private fun getConnectState(connectionState: ConnectionState) {
+//        if (connectionState == ConnectionState.DISCONNECTED) {
+//            showMessage(getString(R.string.lost_internet_connection))
+//        } else if (connectionState == ConnectionState.MISSING_TOKEN || connectionState == ConnectionState.WRONG_TOKEN) {
+//            chatViewModel.disconnect()
+//            showSplashActivity()
+//        } else if (connectionState == ConnectionState.CORRECT_TOKEN) {
+//            showMessage(getString(R.string.connection_restored))
+//            adapter.items.clear()
+//            adapter.notifyDataSetChanged()
+//            chatViewModel.loadHistoryIntoDatabase(contact.cid, 0, 100)
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -29,12 +29,12 @@
     <!--android:layout_height="match_parent"-->
     <!--android:orientation="vertical">-->
 
-    <!--<android.support.v7.widget.RecyclerView-->
-    <!--android:id="@+id/contactsList"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:clipToPadding="false"-->
-    <!--android:paddingTop="16dp" />-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/contactsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="16dp" />
 
     <!--<TextView-->
     <!--android:id="@+id/have_not_got_contacts"-->

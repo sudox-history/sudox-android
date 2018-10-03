@@ -7,14 +7,12 @@ import android.os.Build
 import com.sudox.android.data.auth.KEY_ACCOUNT_ID
 import com.sudox.android.data.auth.SudoxAccount
 import com.sudox.android.data.database.SudoxDatabase
-import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AccountRepository @Inject constructor(private val protocolClient: ProtocolClient,
-                                            private val accountManager: AccountManager,
+class AccountRepository @Inject constructor(private val accountManager: AccountManager,
                                             private val sudoxDatabase: SudoxDatabase) {
 
     // Account type
@@ -50,9 +48,6 @@ class AccountRepository @Inject constructor(private val protocolClient: Protocol
                 }
             }
         }
-
-        protocolClient.id = null
-        protocolClient.secret = null
     }
 
     fun getAccount() = async {
@@ -69,15 +64,5 @@ class AccountRepository @Inject constructor(private val protocolClient: Protocol
         } else {
             return@async null
         }
-    }
-
-    fun clearSessionData() {
-        protocolClient.id = null
-        protocolClient.secret = null
-    }
-
-    fun setSessionData(account: SudoxAccount) {
-        protocolClient.id = account.id
-        protocolClient.secret = account.secret
     }
 }

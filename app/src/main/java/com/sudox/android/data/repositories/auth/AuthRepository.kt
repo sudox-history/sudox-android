@@ -1,16 +1,16 @@
 package com.sudox.android.data.repositories.auth
 
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
+import com.sudox.android.common.helpers.*
 import com.sudox.android.data.auth.SudoxAccount
 import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.account.state.AccountSessionState
 import com.sudox.android.data.models.auth.dto.*
 import com.sudox.android.data.models.auth.state.AuthSession
-import com.sudox.android.common.helpers.*
 import com.sudox.protocol.ProtocolClient
+import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.SingleLiveEvent
-import com.sudox.protocol.models.enums.ConnectState
+import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,14 +26,35 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     init {
         // Для отслеживания "смерти сессии"
         protocolClient.connectionStateLiveData.observeForever {
-            if (it != ConnectState.MISSING_TOKEN || it != ConnectState.WRONG_TOKEN) return@observeForever
+            if (it != ConnectionState.HANDSHAKE_SUCCEED) return@observeForever
 
-            // Удаляем аккаунт из хранилища и доносим до слушателей информацию о том, что сессия закончилась.
+            // Импорт сессии если есть данные в AccountRepository
             async {
-                accountRepository.removeAccounts().await()
-                accountSessionLiveData.postValue(AccountSessionState(false))
+                val account = accountRepository.getAccount().await()
+
+                // Если нет аккаунта, то нет и сессии ...
+                if (account == null) {
+                    accountSessionLiveData.postValue(AccountSessionState(false))
+                    return@async
+                }
+
+                // Импортируем сессию ...
+                importAuth(account.id, account.secret)
             }
         }
+
+        // Отслеживаем ошибку unauthorized
+        protocolClient.listenErrorCodes {
+            if (it == Errors.UNAUTHORIZED) killAccountSession()
+        }
+    }
+
+    /**
+     * Убивает сесссию аккаунта и удаляет аккаунт из хранилища
+     **/
+    private fun killAccountSession() = async {
+        accountRepository.removeAccounts().await()
+        accountSessionLiveData.postValue(AccountSessionState(false))
     }
 
     /**
@@ -146,6 +167,27 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
                 } else {
                     errorCallback(it.error)
                 }
+            }
+        }
+    }
+
+    /**
+     * Импортирует сессию в соединение. Результат возвращает в LiveData.
+     **/
+    @Suppress("NAME_SHADOWING")
+    fun importAuth(id: String, secret: String) {
+        val id = id.trim()
+        val secret = secret.trim()
+
+        // Пробуем установить сессию
+        protocolClient.makeRequest<AuthImportDTO>("auth.importAuth", AuthImportDTO().apply {
+            this.id = id
+            this.secret = secret
+        }) {
+            if (it.isSuccess()) {
+                accountSessionLiveData.postValue(AccountSessionState(true))
+            } else {
+                killAccountSession()
             }
         }
     }

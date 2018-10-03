@@ -11,7 +11,7 @@ import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.showSnackbar
 import com.sudox.android.data.auth.AUTH_ACCOUNT_MANAGER_START
 import com.sudox.android.data.auth.AUTH_KEY
-import com.sudox.protocol.models.enums.ConnectState
+import com.sudox.protocol.models.enums.ConnectionState
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.email.AuthEmailFragment
@@ -50,11 +50,11 @@ class AuthActivity : DaggerAppCompatActivity() {
 
         // Listen connection status ...
         authViewModel.connectionStateLiveData.observe(this, Observer {
-            if (it == ConnectState.MISSING_TOKEN) {
-                showMessage(getString(R.string.connection_restored))
-            } else if (it == ConnectState.DISCONNECTED) {
+            if (it == ConnectionState.CONNECTION_CLOSED) {
                 showMessage(getString(R.string.lost_internet_connection))
                 unfreezeCurrent()
+            } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
+                showMessage(getString(R.string.connection_restored))
             }
         })
 

@@ -84,4 +84,10 @@
         <item name="elevation">0dp</item>
     </style>
     <!-- Bottom navigation view styles end -->
+
+    <!-- No padding text view -->
+    <style name="TextViewWithoutPaddings">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">0dp</item>
+    </style>
 </resources>

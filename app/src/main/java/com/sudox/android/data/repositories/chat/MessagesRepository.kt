@@ -37,7 +37,7 @@ class MessagesRepository @Inject constructor(private val protocolClient: Protoco
 //        }
 //
 //        protocolClient.connectionStateLiveData.observeForever {
-//            if (it == ConnectState.CORRECT_TOKEN) {
+//            if (it == ConnectionState.CORRECT_TOKEN) {
 //                loadedContactsIds.clear()
 //            }
 //        }
