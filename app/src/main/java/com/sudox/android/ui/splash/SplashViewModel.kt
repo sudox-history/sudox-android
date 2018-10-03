@@ -27,7 +27,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
 
         // Handle connection status ...
         protocolClient.connectionStateLiveData.observe(lifecycleOwner, Observer {
-            if (it == ConnectionState.CONNECT_ERRORED) {
+            if (it == ConnectionState.CONNECT_ERRORED || it == ConnectionState.CONNECTION_CLOSED) {
                 if (authKey == AUTH_ACCOUNT_MANAGER_START && account != null) {
                     splashActionLiveData.postValue(SplashAction.SHOW_ACCOUNT_EXISTS_ALERT)
                 } else if (account != null) {

@@ -42,7 +42,7 @@ class ProtocolClient @Inject constructor() {
             }
 
             socket = Socket().apply { keepAlive = false }
-            socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
+            socket!!.connect(InetSocketAddress("api.sudox.ru", 5000), 6000)
 
             // Круто, надо бы потоки запустить ...
             startThreads()
@@ -50,10 +50,11 @@ class ProtocolClient @Inject constructor() {
             // Кинем в шину событий ...
             handlerThread!!.handleStart()
         } catch (e: IOException) {
-            handlerThread!!.handleEnd(false, reconnect)
-
             // Notify subscribers ...
             if (!reconnect) connectionStateLiveData.postValue(ConnectionState.CONNECT_ERRORED)
+
+            // Handl end.
+            handlerThread!!.handleEnd(false, reconnect)
         }
     }
 
@@ -84,7 +85,7 @@ class ProtocolClient @Inject constructor() {
      * Возвращает статус TCP-соединения.
      * Внимание! TCP-соединение может быть установлено, но Handshake может быть не пройден.
      **/
-    fun isConnected() = !socket!!.isClosed
+    fun isConnected() = socket!!.isConnected && handlerThread?.key != null
 
     /**
      * Закрывает TCP-соединение с сервером.

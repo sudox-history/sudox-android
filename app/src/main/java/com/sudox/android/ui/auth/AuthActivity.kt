@@ -50,7 +50,7 @@ class AuthActivity : DaggerAppCompatActivity() {
 
         // Listen connection status ...
         authViewModel.connectionStateLiveData.observe(this, Observer {
-            if (it == ConnectionState.CONNECTION_CLOSED) {
+            if (it == ConnectionState.CONNECTION_CLOSED || it == ConnectionState.CONNECTION_CLOSED) {
                 showMessage(getString(R.string.lost_internet_connection))
                 unfreezeCurrent()
             } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
