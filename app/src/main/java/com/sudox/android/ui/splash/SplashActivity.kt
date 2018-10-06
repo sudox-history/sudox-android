@@ -24,11 +24,15 @@ class SplashActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Auth key для отличия запуска через AccountManager от обычного запуска
-        val authKey = intent.getIntExtra(AUTH_KEY, 1)
-
         // Get view model ...
         splashViewModel = getViewModel(viewModelFactory)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        // Auth key для отличия запуска через AccountManager от обычного запуска
+        val authKey = intent.getIntExtra(AUTH_KEY, 1)
 
         // Handle incoming actions ...
         splashViewModel.splashActionLiveData.observe(this, Observer {

@@ -29,8 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Антон Янкин"
             android:textColor="@color/colorAccent"
-            android:textSize="@dimen/font_size_increased_tiny"
-            android:textStyle="bold" />
+            android:textSize="@dimen/font_size_increased_tiny" />
 
         <TextView
             android:id="@+id/nickname"

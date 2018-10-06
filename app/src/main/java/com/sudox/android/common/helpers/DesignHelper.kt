@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.os.Build
-import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TextInputLayout
 import android.support.v4.content.ContextCompat.getColor
@@ -16,8 +15,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import com.androidadvance.topsnackbar.TSnackbar
 import com.sudox.android.R
-import com.sudox.android.data.database.model.Contact
-import android.support.design.internal.BottomNavigationMenuView
 
 fun showInputError(inputLayout: TextInputLayout) {
     inputLayout.error = " "
@@ -78,22 +75,6 @@ fun convertDpToPixel(dp: Float, context: Context): Float {
 
 fun convertPixelsToDp(px: Float, context: Context): Float {
     return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
-}
-
-fun drawContactAvatar(contact: Contact): Bitmap {
-    // Build text
-    val builder = StringBuilder()
-    val names = contact.name.split(" ")
-
-    if (names.isNotEmpty()) {
-        builder.append(names[0][0])
-    }
-
-    if (names.size >= 2) {
-        builder.append(names[1][0])
-    }
-
-    return drawAvatar(builder.toString(), contact.firstColor!!, contact.secondColor!!)
 }
 
 fun drawAvatar(text: String, firstColor: String, secondColor: String): Bitmap {

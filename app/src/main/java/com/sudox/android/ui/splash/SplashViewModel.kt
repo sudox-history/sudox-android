@@ -18,6 +18,9 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
 
     val splashActionLiveData: SingleLiveEvent<SplashAction> = SingleLiveEvent()
 
+    // Переменная-метка. Нужна для предотвращения рекурсии
+    private var blocked: Boolean = false
+
     /**
      * Метод для инициализации соединения и сессии с сервером .
      * Решает на какую Activity переключиться.
@@ -27,7 +30,10 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
 
         // Handle connection status ...
         protocolClient.connectionStateLiveData.observe(lifecycleOwner, Observer {
-            if (it == ConnectionState.CONNECT_ERRORED || it == ConnectionState.CONNECTION_CLOSED) {
+            if ((it == ConnectionState.CONNECT_ERRORED || it == ConnectionState.CONNECTION_CLOSED) && !blocked) {
+                blocked = true
+
+                // Выполняем нужные действия
                 if (authKey == AUTH_ACCOUNT_MANAGER_START && account != null) {
                     splashActionLiveData.postValue(SplashAction.SHOW_ACCOUNT_EXISTS_ALERT)
                 } else if (account != null) {
@@ -40,6 +46,11 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
 
         // Handle session status ...
         authRepository.accountSessionLiveData.observe(lifecycleOwner, Observer {
+            if (blocked) return@Observer
+
+            // Избегаем конфликтов
+            blocked = true
+
             if (it?.lived!!) {
                 if (authKey == AUTH_ACCOUNT_MANAGER_START) {
                     splashActionLiveData.postValue(SplashAction.SHOW_ACCOUNT_EXISTS_ALERT)

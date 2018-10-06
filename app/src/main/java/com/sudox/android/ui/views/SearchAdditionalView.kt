@@ -9,7 +9,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import com.bumptech.glide.Glide
 import com.sudox.android.R
-import com.sudox.android.common.helpers.drawContactAvatar
+//import com.sudox.android.common.helpers.drawContactAvatar
 import com.sudox.android.common.helpers.hideKeyboard
 import com.sudox.android.data.database.model.Contact
 import kotlinx.android.synthetic.main.card_add_contact.view.*
@@ -73,13 +73,13 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
         // Change data
         contactName.text = contact.name
 
-        if (contact.firstColor != null && contact.secondColor != null) {
-            Glide.with(this)
-                    .load(drawContactAvatar(contact))
-                    .into(contactAvatar)
-        } else {
-            TODO("if photo is not gradient")
-        }
+//        if (contact.firstColor != null && contact.secondColor != null) {
+//            Glide.with(this)
+//                    .load(drawContactAvatar(contact))
+//                    .into(contactAvatar)
+//        } else {
+//            TODO("if photo is not gradient")
+//        }
 
         // Change visibility of card elements
         addContactHint.visibility = View.GONE

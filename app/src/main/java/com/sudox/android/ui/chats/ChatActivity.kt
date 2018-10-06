@@ -44,20 +44,20 @@ class ChatActivity : DaggerAppCompatActivity() {
         initMessagesList()
         initSendButton()
 
-        chatViewModel.messagesLiveData.observe(this, Observer {
-            adapter.items.addAll(it!!.filter {
-                it.userId == contact.cid
-            })
-
-            adapter.notifyDataSetChanged()
-            messagesList.scrollToPosition(adapter.items.size - 1)
-        })
-
-        if (!chatViewModel.loadedContactsIds.contains(contact.cid)) {
-            chatViewModel.loadHistoryIntoDatabase(contact.cid, 0, 100)
-        } else {
-            chatViewModel.loadHistoryFromDatabase(contact.cid)
-        }
+//        chatViewModel.messagesLiveData.observe(this, Observer {
+//            adapter.items.addAll(it!!.filter {
+//                it.userId == contact.cid
+//            })
+//
+//            adapter.notifyDataSetChanged()
+//            messagesList.scrollToPosition(adapter.items.size - 1)
+//        })
+//
+//        if (!chatViewModel.loadedContactsIds.contains(contact.cid)) {
+//            chatViewModel.loadHistoryIntoDatabase(contact.cid, 0, 100)
+//        } else {
+//            chatViewModel.loadHistoryFromDatabase(contact.cid)
+//        }
     }
 
     private fun initMessagesList() {
@@ -72,7 +72,7 @@ class ChatActivity : DaggerAppCompatActivity() {
             val text = edit_message_field.text.toString()
 
             if (text.isNotBlank()) {
-                chatViewModel.sendTextMessage(contact.cid, text)
+//                chatViewModel.sendTextMessage(contact.cid, text)
                 edit_message_field.setText("")
             }
         }
@@ -113,33 +113,33 @@ class ChatActivity : DaggerAppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        contact = Contact(intent.getStringExtra("id"), intent.getStringExtra("firstColor"),
-                intent.getStringExtra("secondColor"), intent.getStringExtra("avatarUrl"),
-                intent.getStringExtra("name"), intent.getStringExtra("nickname"))
+//        contact = Contact(intent.getStringExtra("id"), intent.getStringExtra("firstColor"),
+//                intent.getStringExtra("secondColor"), intent.getStringExtra("avatarUrl"),
+//                intent.getStringExtra("name"), intent.getStringExtra("nickname"))
 
-        if (contact.firstColor != null && contact.secondColor != null) {
-            val builder = StringBuilder()
-            val names = contact.name.split(" ")
-
-            if (names.isNotEmpty()) {
-                builder.append(names[0][0])
-            }
-
-            if (names.size >= 2) {
-                builder.append(names[1][0])
-            }
-
-            // Build text
-            val text = builder.toString()
-
-            // Get bitmap
-            val gradientBitmap = drawGradientBitmap(contact.firstColor!!, contact.secondColor!!, text)
-
-            // Load image
-            Glide.with(this).load(gradientBitmap).into(chat_avatar)
-        } else {
-            TODO("if photo is not gradient")
-        }
+//        if (contact.firstColor != null && contact.secondColor != null) {
+//            val builder = StringBuilder()
+//            val names = contact.name.split(" ")
+//
+//            if (names.isNotEmpty()) {
+//                builder.append(names[0][0])
+//            }
+//
+//            if (names.size >= 2) {
+//                builder.append(names[1][0])
+//            }
+//
+//            // Build text
+//            val text = builder.toString()
+//
+//            // Get bitmap
+//            val gradientBitmap = drawGradientBitmap(contact.firstColor!!, contact.secondColor!!, text)
+//
+//            // Load image
+//            Glide.with(this).load(gradientBitmap).into(chat_avatar)
+//        } else {
+//            TODO("if photo is not gradient")
+//        }
 
         chat_name.text = contact.name
         chat_status.text = "online"

@@ -1,7 +1,9 @@
 package com.sudox.android.ui.main.contacts
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
@@ -9,6 +11,7 @@ import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.database.model.Contact
 import com.sudox.android.ui.adapters.ContactsAdapter
+import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.views.decorators.SecondColumnItemDecorator
 import dagger.android.support.DaggerFragment
@@ -58,10 +61,21 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
     private fun initContactsList() {
         contactsList.layoutManager = LinearLayoutManager(context)
         contactsList.addItemDecoration(SecondColumnItemDecorator(context!!))
-        contactsList.adapter = contactsAdapter.apply {
-            items = ArrayList()
-            items.add(Contact("1", "#233444", "#555555", null, "Антон Янкин", "kerjen#6666"))
-            items.add(Contact("2", "#100500", "#666666", null, "Максим Митюшкин", "themax#32053"))
-        }
+        contactsList.adapter = contactsAdapter
+
+        // Подписываемся на обновление данных
+        contactsViewModel
+                .contactsRepository
+                .contactsLiveData
+                .observe(this, Observer {
+                    val diffUtil = ContactsDiffUtil(it!!, contactsAdapter.items)
+                    val diffResult = DiffUtil.calculateDiff(diffUtil)
+
+                    // Update data ...
+                    contactsAdapter.items = it
+
+                    // Notify adapter about update
+                    diffResult.dispatchUpdatesTo(contactsAdapter)
+                })
     }
 }

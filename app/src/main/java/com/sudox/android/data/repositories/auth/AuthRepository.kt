@@ -1,6 +1,7 @@
 package com.sudox.android.data.repositories.auth
 
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import com.sudox.android.common.helpers.*
 import com.sudox.android.data.auth.SudoxAccount
 import com.sudox.android.data.models.Errors
@@ -8,10 +9,10 @@ import com.sudox.android.data.models.account.state.AccountSessionState
 import com.sudox.android.data.models.auth.dto.*
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.SingleLiveEvent
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.experimental.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,22 +25,20 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     val accountSessionLiveData: MutableLiveData<AccountSessionState> = SingleLiveEvent()
 
     init {
-        // Для отслеживания "смерти сессии"
+        // Для отслеживания "смерти сессии" (прилетит первым, ибо AuthRepository - первый репозиторий, который инициализируется)
         protocolClient.connectionStateLiveData.observeForever {
-            if (it != ConnectionState.HANDSHAKE_SUCCEED) return@observeForever
+            runBlocking {
+                if (it != ConnectionState.HANDSHAKE_SUCCEED) return@runBlocking
 
-            // Импорт сессии если есть данные в AccountRepository
-            async {
+                // Импорт сессии если есть данные в AccountRepository
                 val account = accountRepository.getAccount().await()
 
                 // Если нет аккаунта, то нет и сессии ...
-                if (account == null) {
+                if (account != null) {
+                    importAuth(account.id, account.secret)
+                } else {
                     accountSessionLiveData.postValue(AccountSessionState(false))
-                    return@async
                 }
-
-                // Импортируем сессию ...
-                importAuth(account.id, account.secret)
             }
         }
 

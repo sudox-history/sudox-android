@@ -19,6 +19,7 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 
 @Singleton
@@ -42,7 +43,7 @@ class ProtocolClient @Inject constructor() {
             }
 
             socket = Socket().apply { keepAlive = false }
-            socket!!.connect(InetSocketAddress("api.sudox.ru", 5000), 6000)
+            socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
 
             // Круто, надо бы потоки запустить ...
             startThreads()
@@ -110,13 +111,13 @@ class ProtocolClient @Inject constructor() {
         }
     }
 
-    fun sendMessage(event: String, message: JsonModel) = async {
+    fun sendMessage(event: String, message: JsonModel? = null) = async {
         if (!isConnected()) {
             connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
         } else {
             val iv = randomBase64String(16)
             val salt = randomBase64String(32)
-            val json = message.toJSON()
+            val json = message?.toJSON() ?: JSONObject()
             val hmac = Base64.encodeToString(getHmac(handlerThread!!.key!!, event + json + salt), Base64.NO_WRAP)
             val payload = arrayOf(event, json, salt)
                     .toJsonArray()
@@ -168,7 +169,7 @@ class ProtocolClient @Inject constructor() {
     /**
      * Подписывает кэллбэк на единственный ответ, шифрует и отправляет сообщение на сервер.
      */
-    inline fun <reified T : JsonModel> makeRequest(event: String, message: JsonModel, noinline resultFunction: (T) -> (Unit)) {
+    inline fun <reified T : JsonModel> makeRequest(event: String, message: JsonModel? = null, noinline resultFunction: (T) -> (Unit)) {
         listenMessageOnce(event, resultFunction)
         sendMessage(event, message)
     }
@@ -177,7 +178,7 @@ class ProtocolClient @Inject constructor() {
      * Метод, передающий в callback'и указанного эвента пришедшую информацию с сервера.
      * Предварительно выполняет чтение и парсинг JSON.
      */
-    internal fun notifyCallbacks(event: String, json: String) {
+    internal fun notifyCallbacks(event: String, json: String) = async {
         val iterator = readCallbacks.iterator()
 
         /* Тут будет выгоднее использовать Iterator, т.к. при его использовании мы можем удалить
@@ -187,7 +188,7 @@ class ProtocolClient @Inject constructor() {
             val instance = next.clazz.java.newInstance()
 
             // Загоним в него данные
-            instance.readFromJSON(JSONObject(json))
+            instance.readResponse(JSONObject(json))
 
             // Оперируем с кэллбэком
             if (instance.containsError()) errorsMessagesCallbacks.forEach { it(instance.error) }

@@ -10,7 +10,7 @@ class ContactsDiffUtil(private val newContactsList: List<Contact>,
         val newContact = newContactsList[newItemPosition]
         val oldContact = oldContactsList[oldItemPosition]
 
-        return newContact.cid == oldContact.cid
+        return newContact.uid == oldContact.uid
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -27,7 +27,7 @@ class MainViewModel @Inject constructor(private val protocolClient: ProtocolClie
      */
     fun listenSessionChanges(lifecycleOwner: LifecycleOwner) {
         authRepository.accountSessionLiveData.observe(lifecycleOwner, Observer {
-            if (!it?.lived!!) mainActivityActionsLiveData.postValue(MainActivityAction.SHOW_AUTH_FRAGMENT)
+            if (!it?.lived!!) mainActivityActionsLiveData.postValue(MainActivityAction.SHOW_AUTH_ACTIVITY)
         })
     }
 }

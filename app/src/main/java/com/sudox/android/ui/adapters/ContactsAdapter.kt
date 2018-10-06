@@ -7,14 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.sudox.android.R
-import com.sudox.android.common.helpers.drawContactAvatar
+import com.sudox.android.common.helpers.drawAvatar
 import com.sudox.android.data.database.model.Contact
+import com.sudox.android.data.models.avatar.AvatarInfo
+import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import kotlinx.android.synthetic.main.card_contact.view.*
 import javax.inject.Inject
 
 class ContactsAdapter @Inject constructor(val context: Context) : RecyclerView.Adapter<ContactsAdapter.Holder>() {
 
-    lateinit var items: ArrayList<Contact>
+    var items: List<Contact> = arrayListOf()
+
+    // Кэллбэки
     lateinit var clickCallback: (Contact) -> (Unit)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -30,33 +34,40 @@ class ContactsAdapter @Inject constructor(val context: Context) : RecyclerView.A
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val contact = items[position]
 
-        // Draw avatar
-        if (contact.firstColor != null && contact.secondColor != null) {
-            Glide.with(context)
-                    .load(drawContactAvatar(contact))
-                    .into(holder.avatar)
-        } else {
-            // TODO: Photo avatar
-        }
-
-        // Setting click listener
+        // Set listeners
         holder.itemView.apply {
             setOnClickListener { clickCallback(contact) }
             // TODO: Long click handle
         }
 
         // Bind data
-        holder.bind(contact)
+        holder.bindData(contact)
     }
 
-    class Holder(view: View) : RecyclerView.ViewHolder(view) {
+    class Holder(val view: View) : RecyclerView.ViewHolder(view) {
         val avatar = view.avatar!!
         val name = view.name!!
         val nickname = view.nickname!!
 
-        fun bind(contact: Contact) {
+        fun bindData(contact: Contact) {
+            bindAvatar(contact)
+
+            // Bind others data ...
             name.text = contact.name
             nickname.text = contact.nickname
+        }
+
+        private fun bindAvatar(contact: Contact) {
+            val avatarInfo = AvatarInfo.parse(contact.photo)
+
+            // aka GradientAvatar
+            if (avatarInfo is ColorAvatarInfo) {
+                Glide.with(view.context).load(drawAvatar(
+                        text = contact.buildShortName(),
+                        firstColor = avatarInfo.firstColor,
+                        secondColor = avatarInfo.secondColor
+                )).into(avatar)
+            }
         }
     }
 }

@@ -36,7 +36,7 @@ class MainActivity : DaggerAppCompatActivity() {
 
         // Listen actions ...
         mainViewModel.mainActivityActionsLiveData.observe(this, Observer {
-            if (it == MainActivityAction.SHOW_AUTH_FRAGMENT) {
+            if (it == MainActivityAction.SHOW_AUTH_ACTIVITY) {
                 showAuthActivity()
             }
         })

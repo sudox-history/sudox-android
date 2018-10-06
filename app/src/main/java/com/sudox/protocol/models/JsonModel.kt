@@ -1,5 +1,6 @@
 package com.sudox.protocol.models
 
+import org.json.JSONArray
 import org.json.JSONObject
 
 abstract class JsonModel {
@@ -8,10 +9,11 @@ abstract class JsonModel {
     var error = -1
     var response = 0
 
-    abstract fun toJSON(): JSONObject
-    abstract fun fromJSON(jsonObject: JSONObject)
+    open fun toJSON(): JSONObject { throw UnsupportedOperationException() }
+    open fun fromJSON(jsonObject: JSONObject) {}
+    open fun fromJSONArray(jsonArray: JSONArray) {}
 
-    fun readFromJSON(jsonObject: JSONObject) {
+    fun readResponse(jsonObject: JSONObject) {
         if (jsonObject.has("error")) {
             error = jsonObject.optInt("error")
         } else {
@@ -21,6 +23,7 @@ abstract class JsonModel {
                 null -> fromJSON(jsonObject)
                 is Int -> response = value
                 is JSONObject -> fromJSON(value)
+                is JSONArray -> fromJSONArray(value)
             }
         }
     }
