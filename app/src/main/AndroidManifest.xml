@@ -36,6 +36,7 @@
 
         <activity
             android:name="com.sudox.android.ui.splash.SplashActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
 
@@ -47,11 +48,13 @@
 
         <activity
             android:name=".ui.auth.AuthActivity"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
 
         </activity>
@@ -59,6 +62,7 @@
         <activity
             android:name=".ui.chats.ChatActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
 
         </activity>

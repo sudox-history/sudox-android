@@ -1,4 +1,4 @@
-package com.sudox.protocol.implementations
+package com.sudox.protocol.impls
 
 import java.io.BufferedReader
 import java.io.EOFException

@@ -63,7 +63,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
         })
 
         // Start async connection ...
-        protocolClient.connect(false)
+        protocolClient.connect()
     }
 
     /**

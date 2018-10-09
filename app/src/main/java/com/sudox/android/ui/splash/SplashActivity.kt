@@ -70,11 +70,4 @@ class SplashActivity : DaggerAppCompatActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
-
-    override fun onBackPressed() {
-        splashViewModel.closeConnection()
-
-        // Super! (Антон, не мучай мой перфекционизм)
-        super.onBackPressed()
-    }
 }

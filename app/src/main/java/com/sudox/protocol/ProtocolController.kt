@@ -1,32 +1,50 @@
-package com.sudox.protocol.threads
+package com.sudox.protocol
 
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import android.util.Base64
-import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.helpers.*
 import com.sudox.protocol.models.enums.ConnectionState
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
 import org.json.JSONArray
 import org.json.JSONException
 import java.security.spec.InvalidKeySpecException
 import javax.crypto.interfaces.DHPublicKey
 
-class HandlerThread(private val client: ProtocolClient) : HandlerThread("SSTPHandler") {
+/**
+ * Контроллер протокола (соединения).
+ *
+ * Выполняет функцию потока, принимает пакеты, обрабатывает их отправку.
+ * Контроллирует статус соединения, выполняет соединение с сервером.
+ * Может восстанавливать соединение с сервером.
+ **/
+class ProtocolController(val client: ProtocolClient) : HandlerThread("SSTP Controller") {
 
-    lateinit var handler: Handler
+    // Для взаимодействия с другими потоками.
+    internal lateinit var handler: Handler
     internal var key: ByteArray? = null
+    internal var alive: Boolean = false
 
-    // Метка "живучести" соединения (false при неполученном pong'е/ping'е)
-    private var alive: Boolean = false
+    // Looper prepared callback
+    internal var looperPreparedCallback: (() -> (Unit))? = null
 
+    // Создаем обработчик.
     override fun onLooperPrepared() {
         handler = Handler(looper)
+
+        // Инициализация Looper'а
+        if (looperPreparedCallback != null) looperPreparedCallback!!()
     }
 
-    fun handleStart() {
+    /**
+     * Проверяет, выполнено ли рукопожатие.
+     **/
+    private fun handshakeIsInvoked() = key != null
+
+    /**
+     * Вызывается когда соединение будет успешно установлено.
+     **/
+    fun onStart() {
         // Соединение активно (нужно для функционирования ping-pong'а)
         alive = true
 
@@ -34,12 +52,13 @@ class HandlerThread(private val client: ProtocolClient) : HandlerThread("SSTPHan
         client.sendArray("vrf") // Начинаем Handshake ...
     }
 
-    private fun handshakeIsInvoked() = key != null
-
-    fun handlePacket(string: String) {
+    /**
+     * Вызывается при приходе пакета.
+     **/
+    fun onPacket(string: String) = handler.post {
         try {
             val packet = string.toJsonArray()
-            val type = packet.optString(0) ?: return
+            val type = packet.optString(0) ?: return@post
 
             // Ищем метод-обработчик
             when (type) {
@@ -64,9 +83,9 @@ class HandlerThread(private val client: ProtocolClient) : HandlerThread("SSTPHan
                 handler.postAtTime({ if (!alive) client.close() }, 1, SystemClock.uptimeMillis() + 2000L)
             }, 0, SystemClock.uptimeMillis() + 6000L)
         } catch (e: JSONException) {
-            if (!handshakeIsInvoked()) handleEnd(true, true)
+            if (!handshakeIsInvoked()) client.close()
         } catch (e: InvalidKeySpecException) {
-            if (!handshakeIsInvoked()) handleEnd(true, true)
+            if (!handshakeIsInvoked()) client.close()
         }
     }
 
@@ -102,8 +121,8 @@ class HandlerThread(private val client: ProtocolClient) : HandlerThread("SSTPHan
 
                 // Send data to the server ...
                 client.sendArray("upg", encodedPublicKey, secretHash)
-            } else handleEnd(true, true)
-        } else handleEnd(true, true)
+            } else client.close()
+        } else client.close()
     }
 
     /**
@@ -113,7 +132,7 @@ class HandlerThread(private val client: ProtocolClient) : HandlerThread("SSTPHan
         if (packet.length() >= 2 && packet.optInt(1) == 1) {
             client.connectionStateLiveData.postValue(ConnectionState.HANDSHAKE_SUCCEED)
         } else {
-            handleEnd(true, true)
+            client.close()
         }
     }
 
@@ -154,26 +173,13 @@ class HandlerThread(private val client: ProtocolClient) : HandlerThread("SSTPHan
     }
 
     /**
-     * Метод, вызываемый при закрытии/разрыве соединения.
-     */
-    fun handleEnd(reasonIsAttack: Boolean = false, nextIsReconnect: Boolean = false) {
-        // Удалим ключ ...
-        key = null
+     * Вызывается при окончании соединения.
+     **/
+    fun onEnd() = handler.post {
+        handler.removeCallbacksAndMessages(null)
+        client.kill(false)
 
-        // Удаляем одноразовые слушатели
-        client.readCallbacks.removeAll { it.once }
-
-        // Остановим потоки
-        client.stopThreads()
-
-        // Удалим все задачи
-        handler.removeCallbacksAndMessages(0)
-        handler.removeCallbacksAndMessages(1)
-
-        // Говорим слушателям, что соединение прикрыто/атаковано
-        if (!reasonIsAttack && !nextIsReconnect) client.connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
-
-        // Reconnect
-        client.connect(true)
+        // TODO: В будущем реализовать определение статуса приложения (в фоне увеличивать интервал между попытками)
+        handler.postDelayed({ client.connect(false) }, 1000)
     }
 }

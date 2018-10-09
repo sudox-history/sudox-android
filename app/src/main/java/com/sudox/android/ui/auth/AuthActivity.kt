@@ -139,11 +139,4 @@ class AuthActivity : DaggerAppCompatActivity() {
     }
 
     fun showMessage(message: String) = showSnackbar(this, fragmentAuthContainer, message, Snackbar.LENGTH_LONG)
-
-    override fun onBackPressed() {
-        authViewModel.closeConnection()
-
-        // Super!
-        super.onBackPressed()
-    }
 }

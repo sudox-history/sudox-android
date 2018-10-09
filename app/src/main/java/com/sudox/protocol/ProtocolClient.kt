@@ -1,7 +1,6 @@
 package com.sudox.protocol
 
 import android.util.Base64
-import com.sudox.protocol.models.enums.ConnectionState
 import com.sudox.protocol.helpers.encryptAES
 import com.sudox.protocol.helpers.getHmac
 import com.sudox.protocol.helpers.randomBase64String
@@ -9,122 +8,155 @@ import com.sudox.protocol.helpers.toJsonArray
 import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.ReadCallback
 import com.sudox.protocol.models.SingleLiveEvent
-import com.sudox.protocol.threads.HandlerThread
-import com.sudox.protocol.threads.ReadThread
-import com.sudox.protocol.threads.WriteThread
-import kotlinx.coroutines.experimental.async
+import com.sudox.protocol.models.enums.ConnectionState
 import org.json.JSONObject
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.util.concurrent.LinkedBlockingQueue
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 
 @Singleton
 class ProtocolClient @Inject constructor() {
 
-    var socket: Socket? = null
+    internal var socket: Socket? = null
+    internal var controller: ProtocolController? = null
+    private var reader: ProtocolReader? = null
+    private var writer: ProtocolWriter? = null
     val readCallbacks = ArrayList<ReadCallback<*>>()
     val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
     val connectionStateLiveData = SingleLiveEvent<ConnectionState>()
 
-    // Потоки
-    var readThread: ReadThread? = null
-    var writeThread: WriteThread? = null
-    var handlerThread: HandlerThread? = null
-
-    fun connect(reconnect: Boolean = false) = async {
-        try {
-            if (handlerThread == null) {
-                handlerThread = HandlerThread(this@ProtocolClient)
-                handlerThread!!.start()
-            }
-
-            socket = Socket().apply { keepAlive = false }
-            socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
-
-            // Круто, надо бы потоки запустить ...
-            startThreads()
-
-            // Кинем в шину событий ...
-            handlerThread!!.handleStart()
-        } catch (e: IOException) {
-            // Notify subscribers ...
-            if (!reconnect) connectionStateLiveData.postValue(ConnectionState.CONNECT_ERRORED)
-
-            // Handl end.
-            handlerThread!!.handleEnd(false, reconnect)
-        }
-    }
-
     /**
-     * Запускает потоки записи/чтения ...
-     **/
-    fun startThreads() {
-        if (writeThread != null && writeThread!!.isAlive) writeThread!!.interrupt()
-        if (readThread != null && readThread!!.isAlive) readThread!!.interrupt()
-
-        readThread = ReadThread(socket!!, { handlerThread!!.handlePacket(it) }, { handlerThread!!.handleEnd(false, false) })
-        writeThread = WriteThread(socket!!)
-
-        // Start threads ...
-        readThread!!.start()
-        writeThread!!.start()
-    }
-
-    /**
-     * Останавливает потоки записи/чтения ...
+     * Метод для установки соединения с сервером.
+     *
+     * Если соединение уже установлено, то ничего не произойдет.
+     * Если соединение не установлено, но потоки включены, то произойдет их отключение и перезапуск вместе с соединением.
      */
-    fun stopThreads() {
-        if (readThread != null) readThread!!.interrupt()
-        if (writeThread != null) writeThread!!.interrupt()
+    fun connect(notifyAboutError: Boolean = true) {
+        if (isValid()) {
+            controller!!.handler.post { connectionStateLiveData.postValue(ConnectionState.HANDSHAKE_SUCCEED) }
+            return
+        }
+
+        // Предотвращение случаев с открытым сокетом.
+        kill(notifyAboutError)
+
+        // Запускаем контроллер если он выключен.
+        if (controller == null) {
+            controller = ProtocolController(this)
+        }
+
+        // Подключение выполняем в потоке контроллера.
+        if (controller!!.looperPreparedCallback == null) {
+            controller!!.looperPreparedCallback = {
+                controller!!.handler.post {
+                    socket = Socket()
+                    socket!!.keepAlive = false // У нас есть свой Ping-pong.
+
+                    // Устанавливаем соединение
+                    try {
+                        socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
+
+                        // Запускаем потоки чтения/записи.
+                        startThreads()
+
+                        // Рукопожатие.
+                        controller!!.onStart()
+                    } catch (e: IOException) {
+                        if (notifyAboutError) connectionStateLiveData.postValue(ConnectionState.CONNECT_ERRORED)
+
+                        // Реконнект.
+                        controller!!.handler.postDelayed({ connect(false) }, 1000)
+                    }
+                }
+            }
+        } else {
+            controller!!.looperPreparedCallback!!()
+        }
+
+        if (!controller!!.isAlive) controller!!.start()
+    }
+
+    private fun startThreads() {
+        if (reader == null) reader = ProtocolReader(this)
+        if (writer == null) writer = ProtocolWriter(this)
+
+        // Запуск.
+        if (!reader!!.isAlive || reader!!.isInterrupted) reader!!.start()
+        if (!writer!!.isAlive || writer!!.isInterrupted) writer!!.start()
     }
 
     /**
-     * Возвращает статус TCP-соединения.
-     * Внимание! TCP-соединение может быть установлено, но Handshake может быть не пройден.
+     * Метод для проверки правильности работы сокета и прочих потоков.
      **/
-    fun isConnected() = socket!!.isConnected && handlerThread?.key != null
-
-    /**
-     * Закрывает TCP-соединение с сервером.
-     **/
-    fun close() = async {
-        socket!!.close()
+    fun isValid(): Boolean {
+        return socket != null
+                && socket!!.isConnected
+                && controller != null
+                && reader != null
+                && writer != null
+                && controller!!.isAlive
+                && reader!!.isAlive
+                && writer!!.isAlive
+                && !controller!!.isInterrupted
+                && !reader!!.isInterrupted
+                && !writer!!.isInterrupted
     }
 
     /**
-     * Методы для "внешней" отправки (на уровне сети, без шифрования)
+     * Метод для отключения всех потоков, связанных с текущим сокетом.
+     * Также отключает сам сокет если он открыт.
+     *
+     * Нужен для безопасной остановки соединения.
      **/
+    fun kill(killController: Boolean = true) {
+        if (reader != null && (!reader!!.isInterrupted && reader!!.isAlive)) reader!!.interrupt()
+        if (controller != null && (!controller!!.isInterrupted && controller!!.isAlive) && killController) controller!!.interrupt()
+        if (writer != null && (!controller!!.isInterrupted && controller!!.isAlive)) writer!!.interrupt()
+        if (socket != null && (socket!!.isConnected || !socket!!.isClosed)) socket!!.close()
+
+        // Убираем ключ.
+        if (controller != null) controller!!.key = null
+    }
+
+    /**
+     * Закрывает соединение (сокет).
+     **/
+    fun close() {
+        if (socket != null && socket!!.isConnected) socket!!.close()
+    }
+
     fun sendArray(vararg params: Any) = sendString(params.toJsonArray().toString())
 
     /**
      * Методы для "внешней" отправки (на уровне сети, без шифрования)
      **/
-    fun sendString(string: String) = async {
+    fun sendString(string: String) {
         try {
-            writeThread!!.messagesQueue.put(string)
+            writer!!.messagesQueue.put(string)
         } catch (e: InterruptedException) {
-            // Ignore
+            writer!!.messagesQueue = LinkedBlockingQueue()
+            writer!!.messagesQueue.put(string)
         }
     }
 
-    fun sendMessage(event: String, message: JsonModel? = null) = async {
-        if (!isConnected()) {
+    fun sendMessage(event: String, message: JsonModel? = null) {
+        if (!isValid()) {
             connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
         } else {
             val iv = randomBase64String(16)
             val salt = randomBase64String(32)
             val json = message?.toJSON() ?: JSONObject()
-            val hmac = Base64.encodeToString(getHmac(handlerThread!!.key!!, event + json + salt), Base64.NO_WRAP)
+            val hmac = Base64.encodeToString(getHmac(controller!!.key!!, event + json + salt), Base64.NO_WRAP)
             val payload = arrayOf(event, json, salt)
                     .toJsonArray()
                     .toString()
 
             // Шифруем данные ...
-            val encryptedPayload = encryptAES(handlerThread!!.key!!, iv, payload)
+            val encryptedPayload = encryptAES(controller!!.key!!, iv, payload)
 
             // Отправим массив данных.
             sendArray("msg", iv, encryptedPayload, hmac)
@@ -140,7 +172,7 @@ class ProtocolClient @Inject constructor() {
      * Асинхронный, т.к. дурак может выполнить его в UI-потоке,
      * а как вы знаете, я против любых операций, кроме операций с дизайном в UI потоке...
      */
-    fun <T : JsonModel> addToCallbacks(event: String?, clazz: KClass<T>, resultFunction: (T) -> (Unit), once: Boolean) = async {
+    fun <T : JsonModel> addToCallbacks(event: String?, clazz: KClass<T>, resultFunction: (T) -> (Unit), once: Boolean) {
         readCallbacks.plusAssign(ReadCallback(resultFunction, clazz, event, once))
     }
 
@@ -178,7 +210,7 @@ class ProtocolClient @Inject constructor() {
      * Метод, передающий в callback'и указанного эвента пришедшую информацию с сервера.
      * Предварительно выполняет чтение и парсинг JSON.
      */
-    internal fun notifyCallbacks(event: String, json: String) = async {
+    internal fun notifyCallbacks(event: String, json: String) {
         val iterator = readCallbacks.iterator()
 
         /* Тут будет выгоднее использовать Iterator, т.к. при его использовании мы можем удалить
