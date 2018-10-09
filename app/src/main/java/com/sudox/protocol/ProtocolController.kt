@@ -179,6 +179,9 @@ class ProtocolController(val client: ProtocolClient) : HandlerThread("SSTP Contr
         handler.removeCallbacksAndMessages(null)
         client.kill(false)
 
+        // Для слушателей состояния.
+        client.connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
+
         // TODO: В будущем реализовать определение статуса приложения (в фоне увеличивать интервал между попытками)
         handler.postDelayed({ client.connect(false) }, 1000)
     }

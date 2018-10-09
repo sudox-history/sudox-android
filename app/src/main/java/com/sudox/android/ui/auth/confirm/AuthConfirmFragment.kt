@@ -32,7 +32,7 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         authConfirmViewModel = getViewModel(viewModelFactory)
         authActivity = activity as AuthActivity
-        authSession = authActivity.authSession
+        authSession = authActivity.authSession!!
 
         return inflater.inflate(R.layout.fragment_auth_confirm, container, false)
     }
@@ -77,6 +77,9 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
 
     private fun initCodeEditText() {
         val codeLength = resources.getInteger(R.integer.length_email_code)
+
+        // Чистим поле ввода
+        codeEditText.setText("")
 
         // Автоматический сброс ошибки при вводе и автоматическая отправка кода при достижении длины 5 символов
         codeEditText.addTextChangedListener(object : TextWatcher {

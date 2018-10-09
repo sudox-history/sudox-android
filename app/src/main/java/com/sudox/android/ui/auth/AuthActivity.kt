@@ -27,7 +27,7 @@ class AuthActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var authViewModel: AuthViewModel
-    lateinit var authSession: AuthSession
+    var authSession: AuthSession? = null
     var authKey: Int? = null
 
     // Fragments
@@ -53,6 +53,9 @@ class AuthActivity : DaggerAppCompatActivity() {
             if (it == ConnectionState.CONNECTION_CLOSED || it == ConnectionState.CONNECTION_CLOSED) {
                 showMessage(getString(R.string.lost_internet_connection))
                 unfreezeCurrent()
+
+                // Все равно код будет недействительным ...
+                if (authSession != null) showAuthEmailFragment(authSession!!.email)
             } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
                 showMessage(getString(R.string.connection_restored))
             }

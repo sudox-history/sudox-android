@@ -31,7 +31,7 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         authRegisterViewModel = getViewModel(viewModelFactory)
         authActivity = activity as AuthActivity
-        authSession = authActivity.authSession
+        authSession = authActivity.authSession!!
 
         return inflater.inflate(R.layout.fragment_auth_register, container, false)
     }
@@ -69,6 +69,10 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
                 if (nicknameEditTextContainer.isErrorEnabled) hideInputError(nicknameEditTextContainer)
             }
         }
+
+        // Чистим поля ввода
+        nameEditText.setText("")
+        nicknameEditText.setText("")
 
         // Linking watchers
         nameEditText.addTextChangedListener(watcher)
