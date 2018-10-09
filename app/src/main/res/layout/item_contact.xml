@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
     android:paddingStart="25dp"
     android:paddingEnd="25dp">
@@ -43,4 +46,4 @@
             android:textSize="@dimen/font_size_tiny" />
 
     </LinearLayout>
-</LinearLayout>
+</android.support.v7.widget.LinearLayoutCompat>

@@ -23,6 +23,7 @@ dependencies {
 
     // Google Android basic libraries
     implementation "com.android.support:appcompat-v7:28.0.0"
+    implementation "com.android.support:support-v4:28.0.0"
     implementation "com.android.support:design:28.0.0"
 
     // Architecture components

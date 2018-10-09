@@ -59,6 +59,9 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
     }
 
     private fun initContactsList() {
+        contactsAdapter.menuInflater = mainActivity.menuInflater
+
+        // Init recycler view
         contactsList.layoutManager = LinearLayoutManager(context)
         contactsList.addItemDecoration(SecondColumnItemDecorator(context!!))
         contactsList.adapter = contactsAdapter

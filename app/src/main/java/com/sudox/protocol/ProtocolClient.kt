@@ -9,6 +9,7 @@ import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.ReadCallback
 import com.sudox.protocol.models.SingleLiveEvent
 import com.sudox.protocol.models.enums.ConnectionState
+import kotlinx.coroutines.experimental.async
 import org.json.JSONObject
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -229,7 +230,7 @@ class ProtocolClient @Inject constructor() {
 
             // Крикнем в окно (для IDEA: не ори на отсуствие проверку типов)
             @Suppress("UNCHECKED_CAST")
-            (next.resultFunction as (JsonModel) -> (Unit))(instance)
+            async { (next.resultFunction as (JsonModel) -> (Unit))(instance) }
         }
     }
 }

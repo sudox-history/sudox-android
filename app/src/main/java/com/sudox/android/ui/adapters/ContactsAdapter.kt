@@ -2,16 +2,14 @@ package com.sudox.android.ui.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.bumptech.glide.Glide
 import com.sudox.android.R
 import com.sudox.android.common.helpers.drawAvatar
 import com.sudox.android.data.database.model.Contact
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
-import kotlinx.android.synthetic.main.card_contact.view.*
+import kotlinx.android.synthetic.main.item_contact.view.*
 import javax.inject.Inject
 
 class ContactsAdapter @Inject constructor(val context: Context) : RecyclerView.Adapter<ContactsAdapter.Holder>() {
@@ -20,11 +18,12 @@ class ContactsAdapter @Inject constructor(val context: Context) : RecyclerView.A
 
     // Кэллбэки
     lateinit var clickCallback: (Contact) -> (Unit)
+    lateinit var menuInflater: MenuInflater
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         return Holder(LayoutInflater
                 .from(context)
-                .inflate(R.layout.card_contact, parent, false))
+                .inflate(R.layout.item_contact, parent, false))
     }
 
     override fun getItemCount(): Int {
@@ -37,7 +36,8 @@ class ContactsAdapter @Inject constructor(val context: Context) : RecyclerView.A
         // Set listeners
         holder.itemView.apply {
             setOnClickListener { clickCallback(contact) }
-            // TODO: Long click handle
+            setOnCreateContextMenuListener { menu, _, _ -> menuInflater.inflate(R.menu.menu_contact_options, menu) }
+            setOnLongClickListener { showContextMenu() }
         }
 
         // Bind data

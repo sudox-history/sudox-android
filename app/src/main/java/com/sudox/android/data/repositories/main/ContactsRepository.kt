@@ -5,7 +5,7 @@ import com.sudox.android.data.database.dao.ContactsDao
 import com.sudox.android.data.database.model.Contact
 import com.sudox.android.data.database.model.Contact.Companion.TRANSFORMATION_FROM_USER_INFO_DTO
 import com.sudox.android.data.models.Errors
-import com.sudox.android.data.models.contacts.dto.ContactNotifyDTO
+import com.sudox.android.data.models.contacts.dto.ContactChangeDTO
 import com.sudox.android.data.models.contacts.dto.ContactsListDTO
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
@@ -28,12 +28,12 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
         }
 
         // Добавление контактов.
-        protocolClient.listenMessage<ContactNotifyDTO>("notify.contacts.new") {
+        protocolClient.listenMessage<ContactChangeDTO>("notify.contacts.new") {
             saveNotifyContact(it)
         }
 
         // Удаление контактов.
-        protocolClient.listenMessage<ContactNotifyDTO>("notify.contacts.remove") {
+        protocolClient.listenMessage<ContactChangeDTO>("notify.contacts.remove") {
             deleteNotifyContact(it)
         }
     }
@@ -41,7 +41,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
     /**
      * Получает пользователя по ID, пришедшему в уведомлении, маппит его до объекта контакта и сохраняет в БД
      **/
-    private fun saveNotifyContact(contactNotifyDTO: ContactNotifyDTO) = async {
+    private fun saveNotifyContact(contactNotifyDTO: ContactChangeDTO) = async {
         usersRepository.getUser(contactNotifyDTO.id) {
             contactsDao.insertOne(TRANSFORMATION_FROM_USER_INFO_DTO.invoke(it))
         }
@@ -51,7 +51,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
      * Удаляет пользователя с указанным ID из БД.
      * Если контакт с таким ID в БД не будет найден - ничего не произойдет.
      **/
-    private fun deleteNotifyContact(contactNotifyDTO: ContactNotifyDTO) = async {
+    private fun deleteNotifyContact(contactNotifyDTO: ContactChangeDTO) = async {
         contactsDao.deleteOne(contactNotifyDTO.id)
     }
 
@@ -70,6 +70,18 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
             } else if (it.error == Errors.EMPTY_CONTACTS_LIST) {
                 updateContactsInDatabase(emptyList())
             }
+        }
+    }
+
+
+    /**
+     * Удаляет контакт. Если нет соединения с сервером - ничего не произойдет.
+     **/
+    fun deleteContact(id: String) {
+        protocolClient.makeRequest<ContactChangeDTO>("contacts.remove", ContactChangeDTO().apply {
+            this.id = id
+        }) {
+            if (it.isSuccess() || it.error == Errors.INVALID_USER) contactsDao.deleteOne(id)
         }
     }
 
