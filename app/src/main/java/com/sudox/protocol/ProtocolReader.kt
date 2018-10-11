@@ -12,7 +12,7 @@ class ProtocolReader(val client: ProtocolClient) : Thread("SSTP Reader") {
             val reader = SeparatedBufferedReader(client.socket!!.getInputStream().reader(), ']')
 
             // Чтение ...
-            while (client.isValid() && !isInterrupted) {
+            while (!isInterrupted && client.isValid()) {
                 try {
                     val line = reader.readLine()
 

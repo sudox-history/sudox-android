@@ -11,7 +11,7 @@ class ProtocolWriter(val client: ProtocolClient) : Thread("SSTP Writer") {
             val writer = client.socket!!.getOutputStream().bufferedWriter()
 
             // Работа потока ...
-            while (client.isValid() && !isInterrupted) {
+            while (!isInterrupted && client.isValid()) {
                 try {
                     val message = messagesQueue.take() ?: continue
 
