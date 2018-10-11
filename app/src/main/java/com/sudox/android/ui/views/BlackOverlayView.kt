@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 
+@Deprecated("И НАХУЙ ЭТО ГОВНО ТОЖЕ!!!")
 class BlackOverlayView : View {
 
     private val showAnimator = ObjectAnimator

@@ -2,7 +2,7 @@ package com.sudox.protocol
 
 import java.util.concurrent.LinkedBlockingQueue
 
-class ProtocolWriter(val client: ProtocolClient) : Thread("SSTP Writer") {
+class ProtocolWriter(private val client: ProtocolClient) : Thread("SSTP Writer") {
 
     internal var messagesQueue: LinkedBlockingQueue<String> = LinkedBlockingQueue()
 

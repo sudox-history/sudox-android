@@ -6,6 +6,8 @@ import dagger.android.support.DaggerFragment
 
 /**
  * Позволяет переносить фрагменты в ледниковый период по желанию царя Activity
+ *
+ * @author TheMax
  * **/
 abstract class FreezableFragment : DaggerFragment() {
 

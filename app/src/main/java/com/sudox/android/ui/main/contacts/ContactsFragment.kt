@@ -4,12 +4,12 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.data.database.model.Contact
 import com.sudox.android.ui.adapters.ContactsAdapter
 import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import com.sudox.android.ui.main.MainActivity
@@ -22,10 +22,11 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var contactsAdapter: ContactsAdapter
-    lateinit var contactsViewModel: ContactsViewModel
-    lateinit var mainActivity: MainActivity
+    private lateinit var contactsViewModel: ContactsViewModel
+    private lateinit var mainActivity: MainActivity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactsViewModel = getViewModel(viewModelFactory)
@@ -49,7 +50,7 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
             val id = it.itemId
 
             if (id == R.id.add_contact) {
-                // TODO: Add contact
+                //TODO: Add contact
             } else {
                 return@setOnMenuItemClickListener false
             }
@@ -60,6 +61,9 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
 
     private fun initContactsList() {
         contactsAdapter.menuInflater = mainActivity.menuInflater
+        contactsAdapter.clickCallback = {
+
+        }
 
         // Init recycler view
         contactsList.layoutManager = LinearLayoutManager(context)

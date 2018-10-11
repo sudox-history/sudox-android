@@ -18,7 +18,7 @@ import javax.crypto.interfaces.DHPublicKey
  * Контроллирует статус соединения, выполняет соединение с сервером.
  * Может восстанавливать соединение с сервером.
  **/
-class ProtocolController(val client: ProtocolClient) : HandlerThread("SSTP Controller") {
+class ProtocolController(private val client: ProtocolClient) : HandlerThread("SSTP Controller") {
 
     // Для взаимодействия с другими потоками.
     internal lateinit var handler: Handler

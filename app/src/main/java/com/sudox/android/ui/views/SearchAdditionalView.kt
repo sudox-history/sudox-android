@@ -1,5 +1,6 @@
 package com.sudox.android.ui.views
 
+//import com.sudox.android.common.helpers.drawContactAvatar
 import android.animation.Animator
 import android.content.Context
 import android.util.AttributeSet
@@ -7,14 +8,13 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
-import com.bumptech.glide.Glide
 import com.sudox.android.R
-//import com.sudox.android.common.helpers.drawContactAvatar
 import com.sudox.android.common.helpers.hideKeyboard
 import com.sudox.android.data.database.model.Contact
-import kotlinx.android.synthetic.main.card_add_contact.view.*
 import kotlinx.android.synthetic.main.include_search_navbar_addition.view.*
 
+
+@Deprecated("НАХУЙ ЭТО ГОВНО!!!!!")
 class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
     var startListener: ((Boolean) -> Unit)? = null
@@ -67,24 +67,24 @@ class SearchAdditionalView(context: Context, attrs: AttributeSet) : RelativeLayo
         }
     }
 
-    fun setSearchContact(contact: Contact) {
-        foundedContact = contact
-
-        // Change data
-        contactName.text = contact.name
-
-//        if (contact.firstColor != null && contact.secondColor != null) {
-//            Glide.with(this)
-//                    .load(drawContactAvatar(contact))
-//                    .into(contactAvatar)
-//        } else {
-//            TODO("if photo is not gradient")
-//        }
-
-        // Change visibility of card elements
-        addContactHint.visibility = View.GONE
-        addContactCard.visibility = View.VISIBLE
-    }
+//    fun setSearchContact(contact: Contact) {
+//        foundedContact = contact
+//
+//        // Change data
+//        contactName.text = contact.name
+//
+////        if (contact.firstColor != null && contact.secondColor != null) {
+////            Glide.with(this)
+////                    .load(drawContactAvatar(contact))
+////                    .into(contactAvatar)
+////        } else {
+////            TODO("if photo is not gradient")
+////        }
+//
+//        // Change visibility of card elements
+//        addContactHint.visibility = View.GONE
+//        addContactCard.visibility = View.VISIBLE
+//    }
 
     fun toggle() {
         return toggle(!visible)

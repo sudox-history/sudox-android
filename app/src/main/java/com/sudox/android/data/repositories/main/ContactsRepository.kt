@@ -9,6 +9,7 @@ import com.sudox.android.data.models.contacts.dto.ContactChangeDTO
 import com.sudox.android.data.models.contacts.dto.ContactsListDTO
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,7 +42,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
     /**
      * Получает пользователя по ID, пришедшему в уведомлении, маппит его до объекта контакта и сохраняет в БД
      **/
-    private fun saveNotifyContact(contactNotifyDTO: ContactChangeDTO) = async {
+    private fun saveNotifyContact(contactNotifyDTO: ContactChangeDTO) = GlobalScope.async {
         usersRepository.getUser(contactNotifyDTO.id) {
             contactsDao.insertOne(TRANSFORMATION_FROM_USER_INFO_DTO.invoke(it))
         }
@@ -51,7 +52,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
      * Удаляет пользователя с указанным ID из БД.
      * Если контакт с таким ID в БД не будет найден - ничего не произойдет.
      **/
-    private fun deleteNotifyContact(contactNotifyDTO: ContactChangeDTO) = async {
+    private fun deleteNotifyContact(contactNotifyDTO: ContactChangeDTO) = GlobalScope.async {
         contactsDao.deleteOne(contactNotifyDTO.id)
     }
 
@@ -73,6 +74,23 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
         }
     }
 
+    /**
+     * Добавляет контакт по ID, в случае ошибки на любом этапе возвращает errorCallback
+     */
+    fun addContact(id: String, errorCallback: (Int) -> (Unit)) {
+        protocolClient.makeRequest<ContactChangeDTO>("contacts.new", ContactChangeDTO().apply {
+            this.id = id
+        }) {
+            if (it.isSuccess()) {
+                usersRepository.getUser(id) { userInfoDTO ->
+                    if (it.isSuccess())
+                        contactsDao.insertOne(Contact.TRANSFORMATION_FROM_USER_INFO_DTO.invoke(userInfoDTO))
+                    else
+                        errorCallback(it.error)
+                }
+            } else errorCallback(it.error)
+        }
+    }
 
     /**
      * Удаляет контакт. Если нет соединения с сервером - ничего не произойдет.
@@ -90,7 +108,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
      *
      * После обновления актуальная копия прилетит в LiveData.
      */
-    private fun updateContactsInDatabase(contacts: List<Contact>) = async {
+    private fun updateContactsInDatabase(contacts: List<Contact>) = GlobalScope.async {
         contactsDao.deleteAll()
 
         // Сохраним контакты в БД

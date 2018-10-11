@@ -7,4 +7,5 @@ import javax.inject.Inject
 
 class ContactsViewModel @Inject constructor(val authRepository: AuthRepository,
                                             val contactsRepository: ContactsRepository) : ViewModel() {
+
 }

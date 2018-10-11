@@ -7,6 +7,7 @@ import android.os.Build
 import com.sudox.android.data.auth.KEY_ACCOUNT_ID
 import com.sudox.android.data.auth.SudoxAccount
 import com.sudox.android.data.database.SudoxDatabase
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,7 +19,7 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
     // Account type
     private val accountType = "com.sudox"
 
-    fun saveAccount(account: SudoxAccount) = async {
+    fun saveAccount(account: SudoxAccount) = GlobalScope.async {
         val accountInstance = Account(account.name, accountType)
 
         // Remove accounts
@@ -33,8 +34,7 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
         accountManager.setPassword(accountInstance, account.secret)
     }
 
-    @Suppress("DEPRECATION")
-    fun removeAccounts() = async {
+    fun removeAccounts() = GlobalScope.async {
         val accounts = accountManager.getAccountsByType(accountType)
 
         if (accounts.isNotEmpty()) {
@@ -50,7 +50,7 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
         }
     }
 
-    fun getAccount() = async {
+    fun getAccount() = GlobalScope.async {
         val accounts = accountManager.getAccountsByType(accountType)
 
         if (accounts.isNotEmpty()) {

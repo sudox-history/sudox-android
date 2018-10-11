@@ -11,13 +11,13 @@ import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.showSnackbar
 import com.sudox.android.data.auth.AUTH_ACCOUNT_MANAGER_START
 import com.sudox.android.data.auth.AUTH_KEY
-import com.sudox.protocol.models.enums.ConnectionState
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.email.AuthEmailFragment
 import com.sudox.android.ui.auth.register.AuthRegisterFragment
 import com.sudox.android.ui.common.FreezableFragment
 import com.sudox.android.ui.main.MainActivity
+import com.sudox.protocol.models.enums.ConnectionState
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_auth.*
 import javax.inject.Inject
@@ -29,14 +29,6 @@ class AuthActivity : DaggerAppCompatActivity() {
     lateinit var authViewModel: AuthViewModel
     var authSession: AuthSession? = null
     var authKey: Int? = null
-
-    // Fragments
-    @Inject
-    lateinit var authEmailFragment: AuthEmailFragment
-    @Inject
-    lateinit var authConfirmFragment: AuthConfirmFragment
-    @Inject
-    lateinit var authRegisterFragment: AuthRegisterFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,6 +96,10 @@ class AuthActivity : DaggerAppCompatActivity() {
     }
 
     fun showAuthEmailFragment(email: String? = null, isFirstStart: Boolean = false) {
+
+        val authEmailFragment = AuthEmailFragment().apply {
+            this.email = email
+        }
         authEmailFragment.email = email
 
         // Build transaction for fragment change
@@ -120,11 +116,11 @@ class AuthActivity : DaggerAppCompatActivity() {
         transaction.commit()
     }
 
-    fun showAuthConfirmFragment() {
+    private fun showAuthConfirmFragment() {
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.animator.fragment_slide_left_anim, R.animator.fragment_slide_right_anim)
-                .replace(R.id.fragmentAuthContainer, authConfirmFragment)
+                .replace(R.id.fragmentAuthContainer, AuthConfirmFragment())
                 .commit()
     }
 
@@ -132,11 +128,11 @@ class AuthActivity : DaggerAppCompatActivity() {
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.animator.fragment_slide_left_anim, R.animator.fragment_slide_right_anim)
-                .replace(R.id.fragmentAuthContainer, authRegisterFragment)
+                .replace(R.id.fragmentAuthContainer, AuthRegisterFragment())
                 .commit()
     }
 
-    fun showMainActivity() {
+    private fun showMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }

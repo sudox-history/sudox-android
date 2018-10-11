@@ -11,6 +11,7 @@ import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
 import com.sudox.protocol.models.enums.ConnectionState
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import javax.inject.Inject
@@ -51,7 +52,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     /**
      * Убивает сесссию аккаунта и удаляет аккаунт из хранилища
      **/
-    private fun killAccountSession() = async {
+    private fun killAccountSession() = GlobalScope.async {
         accountRepository.removeAccounts().await()
         accountSessionLiveData.postValue(AccountSessionState(false))
     }
