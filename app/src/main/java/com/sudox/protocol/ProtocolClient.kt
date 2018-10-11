@@ -43,12 +43,10 @@ class ProtocolClient @Inject constructor() {
         }
 
         // Предотвращение случаев с открытым сокетом.
-        kill(notifyAboutError)
+        if (notifyAboutError) kill(notifyAboutError)
 
         // Запускаем контроллер если он выключен.
-        if (controller == null) {
-            controller = ProtocolController(this)
-        }
+        if (controller == null) controller = ProtocolController(this)
 
         // Подключение выполняем в потоке контроллера.
         if (controller!!.looperPreparedCallback == null) {
@@ -62,6 +60,7 @@ class ProtocolClient @Inject constructor() {
                         socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
 
                         // Запускаем потоки чтения/записи.
+                        kill(false)
                         startThreads()
 
                         // Рукопожатие.
