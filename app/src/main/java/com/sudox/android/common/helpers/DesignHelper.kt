@@ -10,6 +10,8 @@ import android.support.v4.content.ContextCompat.getColor
 import android.text.Html
 import android.text.Spanned
 import android.util.DisplayMetrics
+import android.view.ContextMenu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -103,4 +105,13 @@ fun drawAvatar(text: String, firstColor: String, secondColor: String): Bitmap {
     canvas.drawText(text, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
 
     return bitmap
+}
+
+fun ContextMenu.setOnItemClickListener(callback: (MenuItem) -> (Boolean)) {
+    val size = size()
+
+    // Установим слушатели
+    for (i in 0 until size) {
+        getItem(i).setOnMenuItemClickListener { callback(it) }
+    }
 }

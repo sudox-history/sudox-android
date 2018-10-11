@@ -20,7 +20,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
                                              private val usersRepository: UsersRepository,
                                              private val contactsDao: ContactsDao) {
 
-    val contactsLiveData: LiveData<List<Contact>> = contactsDao.getAll()
+    val contactsLiveData: LiveData<List<Contact>> = contactsDao.loadAll()
 
     init {
         // Обновим данные когда будет установлена сессия ...
@@ -35,7 +35,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
 
         // Удаление контактов.
         protocolClient.listenMessage<ContactChangeDTO>("notify.contacts.remove") {
-            deleteNotifyContact(it)
+            removeNotifyContact(it)
         }
     }
 
@@ -52,8 +52,8 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
      * Удаляет пользователя с указанным ID из БД.
      * Если контакт с таким ID в БД не будет найден - ничего не произойдет.
      **/
-    private fun deleteNotifyContact(contactNotifyDTO: ContactChangeDTO) = GlobalScope.async {
-        contactsDao.deleteOne(contactNotifyDTO.id)
+    private fun removeNotifyContact(contactNotifyDTO: ContactChangeDTO) = GlobalScope.async {
+        contactsDao.removeOne(contactNotifyDTO.id)
     }
 
     /**
@@ -83,23 +83,35 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
         }) {
             if (it.isSuccess()) {
                 usersRepository.getUser(id) { userInfoDTO ->
-                    if (it.isSuccess())
+                    if (it.isSuccess()) {
                         contactsDao.insertOne(Contact.TRANSFORMATION_FROM_USER_INFO_DTO.invoke(userInfoDTO))
-                    else
+                    } else {
                         errorCallback(it.error)
+                    }
                 }
-            } else errorCallback(it.error)
+            } else {
+                errorCallback(it.error)
+            }
         }
     }
 
     /**
      * Удаляет контакт. Если нет соединения с сервером - ничего не произойдет.
      **/
-    fun deleteContact(id: String) {
+    fun removeContact(id: String) {
+        // TODO: Убрать когда Ярик исправит баг
+        protocolClient.listenMessageOnce<ContactChangeDTO>("contacts.adremoved") {
+            if (it.isSuccess() || it.error == Errors.INVALID_USER) {
+                contactsDao.removeOne(id)
+            }
+        }
+
         protocolClient.makeRequest<ContactChangeDTO>("contacts.remove", ContactChangeDTO().apply {
             this.id = id
         }) {
-            if (it.isSuccess() || it.error == Errors.INVALID_USER) contactsDao.deleteOne(id)
+            if (it.isSuccess() || it.error == Errors.INVALID_USER) {
+                contactsDao.removeOne(id)
+            }
         }
     }
 
@@ -109,7 +121,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
      * После обновления актуальная копия прилетит в LiveData.
      */
     private fun updateContactsInDatabase(contacts: List<Contact>) = GlobalScope.async {
-        contactsDao.deleteAll()
+        contactsDao.removeAll()
 
         // Сохраним контакты в БД
         if (contacts.isNotEmpty()) contactsDao.insertAll(contacts)

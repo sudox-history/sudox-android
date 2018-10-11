@@ -11,10 +11,10 @@ import com.sudox.android.data.database.model.Contact
 interface ContactsDao {
 
     @Query("DELETE FROM contacts")
-    fun deleteAll()
+    fun removeAll()
 
     @Query("DELETE FROM contacts WHERE uid = :id")
-    fun deleteOne(id: String)
+    fun removeOne(id: String)
 
     @Insert
     fun insertAll(contacts: List<Contact>)
@@ -23,5 +23,5 @@ interface ContactsDao {
     fun insertOne(contact: Contact)
 
     @Query("SELECT * FROM contacts")
-    fun getAll(): LiveData<List<Contact>>
+    fun loadAll(): LiveData<List<Contact>>
 }
