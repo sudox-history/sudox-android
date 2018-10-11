@@ -36,7 +36,6 @@
 
         <activity
             android:name="com.sudox.android.ui.splash.SplashActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
 
@@ -48,8 +47,7 @@
 
         <activity
             android:name=".ui.auth.AuthActivity"
-            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden" />
 
         <activity
             android:name=".ui.main.MainActivity"

@@ -8,6 +8,7 @@ import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.ui.splash.enums.SplashAction
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
+import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import javax.inject.Inject
@@ -63,11 +64,6 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
         })
 
         // Start async connection ...
-        protocolClient.connect()
+        GlobalScope.async { protocolClient.connect() }
     }
-
-    /**
-     * Просто метод для закрытия соединения с сервером. Ничего сложного :)
-     * **/
-    fun closeConnection() = protocolClient.close()
 }

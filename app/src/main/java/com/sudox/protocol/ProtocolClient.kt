@@ -86,8 +86,16 @@ class ProtocolClient @Inject constructor() {
         if (writer == null) writer = ProtocolWriter(this)
 
         // Запуск.
-        if (!reader!!.isAlive || reader!!.isInterrupted) reader!!.start()
-        if (!writer!!.isAlive || writer!!.isInterrupted) writer!!.start()
+        try {
+            if (!reader!!.isAlive || reader!!.isInterrupted) reader!!.start()
+            if (!writer!!.isAlive || writer!!.isInterrupted) writer!!.start()
+        } catch (e: IllegalThreadStateException) {
+            // Solving SA-6 problem
+            reader!!.interrupt()
+            writer!!.interrupt()
+            reader!!.start()
+            writer!!.start()
+        }
     }
 
     /**

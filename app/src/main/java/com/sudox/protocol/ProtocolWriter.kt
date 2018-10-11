@@ -1,6 +1,5 @@
 package com.sudox.protocol
 
-import java.net.SocketException
 import java.util.concurrent.LinkedBlockingQueue
 
 class ProtocolWriter(val client: ProtocolClient) : Thread("SSTP Writer") {

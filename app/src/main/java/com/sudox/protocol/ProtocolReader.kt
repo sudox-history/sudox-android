@@ -31,6 +31,7 @@ class ProtocolReader(val client: ProtocolClient) : Thread("SSTP Reader") {
 
         // Поток данных завершен.
 
-        client.controller!!.onEnd()
+        // Solving SA-6 problem
+        if (!isInterrupted) client.controller!!.onEnd()
     }
 }

@@ -12,9 +12,4 @@ class AuthViewModel @Inject constructor(private val protocolClient: ProtocolClie
     val connectionStateLiveData = protocolClient.connectionStateLiveData
     val authSessionStateLiveData = authRepository.authSessionLiveData
     val accountSessionLiveData = authRepository.accountSessionLiveData
-
-    /**
-     * Просто метод для закрытия соединения с сервером. Ничего сложного :)
-     * **/
-    fun closeConnection() = protocolClient.close()
 }
