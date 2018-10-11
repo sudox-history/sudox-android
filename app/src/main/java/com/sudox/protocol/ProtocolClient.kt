@@ -43,7 +43,7 @@ class ProtocolClient @Inject constructor() {
         }
 
         // Предотвращение случаев с открытым сокетом.
-        if (notifyAboutError) kill(notifyAboutError)
+        kill(notifyAboutError)
 
         // Запускаем контроллер если он выключен.
         if (controller == null) controller = ProtocolController(this)
@@ -60,7 +60,6 @@ class ProtocolClient @Inject constructor() {
                         socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
 
                         // Запускаем потоки чтения/записи.
-                        kill(false)
                         startThreads()
 
                         // Рукопожатие.
@@ -113,9 +112,20 @@ class ProtocolClient @Inject constructor() {
      * Нужен для безопасной остановки соединения.
      **/
     fun kill(killController: Boolean = true) {
-        if (reader != null && (!reader!!.isInterrupted || reader!!.isAlive)) reader!!.interrupt()
-        if (controller != null && (!controller!!.isInterrupted || controller!!.isAlive) && killController) controller!!.interrupt()
-        if (writer != null && (!controller!!.isInterrupted || controller!!.isAlive)) writer!!.interrupt()
+        if (reader != null && (!reader!!.isInterrupted || reader!!.isAlive)) {
+            reader!!.interrupt()
+            reader = null
+        }
+        if (controller != null && (!controller!!.isInterrupted || controller!!.isAlive) && killController) {
+            controller!!.interrupt()
+            controller = null
+        }
+
+        if (writer != null && (!controller!!.isInterrupted || controller!!.isAlive)) {
+            writer!!.interrupt()
+            writer = null
+        }
+
         if (socket != null && (socket!!.isConnected || !socket!!.isClosed)) socket!!.close()
 
         // Убираем ключ.
