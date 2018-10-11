@@ -81,7 +81,7 @@ class ProtocolClient @Inject constructor() {
         if (!controller!!.isAlive) controller!!.start()
     }
 
-    private fun startThreads() {
+    private fun startThreads() = synchronized(this) {
         if (reader == null) reader = ProtocolReader(this)
         if (writer == null) writer = ProtocolWriter(this)
 
