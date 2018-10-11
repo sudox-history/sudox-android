@@ -86,12 +86,8 @@ class ProtocolClient @Inject constructor() {
         if (writer == null) writer = ProtocolWriter(this)
 
         // Запуск.
-        try {
-            if (!reader!!.isAlive || reader!!.isInterrupted) reader!!.start()
-            if (!writer!!.isAlive || writer!!.isInterrupted) writer!!.start()
-        } catch (e: IllegalThreadStateException) {
-            // Ignore
-        }
+        if (!reader!!.isAlive || reader!!.isInterrupted) reader!!.start()
+        if (!writer!!.isAlive || writer!!.isInterrupted) writer!!.start()
     }
 
     /**
@@ -118,9 +114,9 @@ class ProtocolClient @Inject constructor() {
      * Нужен для безопасной остановки соединения.
      **/
     fun kill(killController: Boolean = true) {
-        if (reader != null && (!reader!!.isInterrupted && reader!!.isAlive)) reader!!.interrupt()
-        if (controller != null && (!controller!!.isInterrupted && controller!!.isAlive) && killController) controller!!.interrupt()
-        if (writer != null && (!controller!!.isInterrupted && controller!!.isAlive)) writer!!.interrupt()
+        if (reader != null && (!reader!!.isInterrupted || reader!!.isAlive)) reader!!.interrupt()
+        if (controller != null && (!controller!!.isInterrupted || controller!!.isAlive) && killController) controller!!.interrupt()
+        if (writer != null && (!controller!!.isInterrupted || controller!!.isAlive)) writer!!.interrupt()
         if (socket != null && (socket!!.isConnected || !socket!!.isClosed)) socket!!.close()
 
         // Убираем ключ.
