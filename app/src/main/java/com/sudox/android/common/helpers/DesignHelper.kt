@@ -84,15 +84,12 @@ fun drawAvatar(text: String, firstColor: String, secondColor: String): Bitmap {
     val canvas = Canvas(bitmap)
     val paint = Paint()
 
-    // Enable antialiasing
-    paint.isAntiAlias = true
-
     // Draw gradient
-    paint.shader = LinearGradient(100F, 0F, 100F, 200F,
-            Color.parseColor(firstColor), Color.parseColor(secondColor), Shader.TileMode.REPEAT)
+    paint.color = Color.parseColor("#656565")
+    paint.shader = LinearGradient(0F, 0F, 200F, 200F, Color.parseColor(firstColor), Color.parseColor(secondColor), Shader.TileMode.REPEAT)
 
     // Draw circle
-    canvas.drawCircle((bitmap.width / 2).toFloat(), (bitmap.height / 2).toFloat(), 180F, paint)
+    canvas.drawRect(0F, 0F, 200F, 200F, paint)
 
     // Text bounds
     val textRect = Rect()

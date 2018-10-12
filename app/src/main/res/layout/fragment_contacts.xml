@@ -41,7 +41,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/appBar"
             android:background="@color/colorPrimaryDark"
-            android:alpha="0.6"/>
+            android:alpha="0"/>
 
     </RelativeLayout>
 

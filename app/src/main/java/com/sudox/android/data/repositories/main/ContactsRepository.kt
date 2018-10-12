@@ -99,13 +99,6 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
      * Удаляет контакт. Если нет соединения с сервером - ничего не произойдет.
      **/
     fun removeContact(id: String) {
-        // TODO: Убрать когда Ярик исправит баг
-        protocolClient.listenMessageOnce<ContactChangeDTO>("contacts.adremoved") {
-            if (it.isSuccess() || it.error == Errors.INVALID_USER) {
-                contactsDao.removeOne(id)
-            }
-        }
-
         protocolClient.makeRequest<ContactChangeDTO>("contacts.remove", ContactChangeDTO().apply {
             this.id = id
         }) {

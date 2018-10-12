@@ -69,7 +69,7 @@ dependencies {
 
 android {
     compileSdkVersion compileSdkProjectVersion
-    buildToolsVersion buildToolsProjectVersion
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.sudox.android"

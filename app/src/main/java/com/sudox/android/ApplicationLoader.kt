@@ -12,8 +12,6 @@ import timber.log.Timber
 
 class ApplicationLoader : DaggerApplication() {
 
-    private lateinit var sharedPreferences: SharedPreferences
-
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerAppComponent
                 .builder()
@@ -23,21 +21,20 @@ class ApplicationLoader : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        sharedPreferences = getSharedPreferences("com.sudox.android", Context.MODE_PRIVATE)
 
+        val sharedPreferences = getSharedPreferences("com.sudox.android", Context.MODE_PRIVATE)
         val isFirstLaunch = sharedPreferences.getBoolean("firstRun", true)
 
-        if (isFirstLaunch) {
-            sharedPreferences.edit().putBoolean("firstRun", false).apply()
-        }
+        // Это первый запуск?
+        if (isFirstLaunch) sharedPreferences.edit().putBoolean("firstRun", false).apply()
 
         // Initializing the AppMetrica SDK.
         val config = YandexMetricaConfig.newConfigBuilder(API_KEY)
                 .handleFirstActivationAsUpdate(!isFirstLaunch)
                 .withLogs()
                 .build()
+
         YandexMetrica.activate(applicationContext, config)
-        // Tracking user activity.
         YandexMetrica.enableActivityAutoTracking(this)
 
         // Enable Timber
