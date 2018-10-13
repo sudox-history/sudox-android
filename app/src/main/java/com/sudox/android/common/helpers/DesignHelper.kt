@@ -15,7 +15,11 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import com.androidadvance.topsnackbar.TSnackbar
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.request.RequestOptions
 import com.sudox.android.R
 
 fun showInputError(inputLayout: TextInputLayout) {
@@ -82,7 +86,7 @@ fun convertPixelsToDp(px: Float, context: Context): Float {
 fun drawAvatar(text: String, firstColor: String, secondColor: String): Bitmap {
     val bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bitmap)
-    val paint = Paint()
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     // Draw gradient
     paint.color = Color.parseColor("#656565")
@@ -111,4 +115,11 @@ fun ContextMenu.setOnItemClickListener(callback: (MenuItem) -> (Boolean)) {
     for (i in 0 until size) {
         getItem(i).setOnMenuItemClickListener { callback(it) }
     }
+}
+
+fun drawCircleBitmap(context: Context, bitmap: Bitmap, view: ImageView) {
+    Glide.with(context)
+            .load(bitmap)
+            .apply(RequestOptions.circleCropTransform())
+            .into(view)
 }

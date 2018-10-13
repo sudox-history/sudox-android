@@ -1,4 +1,4 @@
-package com.sudox.android.ui.views
+package com.sudox.android.ui.views.overlay
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 
-@Deprecated("И НАХУЙ ЭТО ГОВНО ТОЖЕ!!!")
 class BlackOverlayView : View {
 
     private val showAnimator = ObjectAnimator
@@ -49,7 +48,7 @@ class BlackOverlayView : View {
     }
 
     fun toggle(toggle: Boolean) {
-        if (toggle) {
+        if (!toggle) {
             showAnimator.end()
             hideAnimator.start()
         } else {

@@ -2,11 +2,14 @@ package com.sudox.android.ui.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.*
-import com.bumptech.glide.Glide
+import android.view.LayoutInflater
+import android.view.MenuInflater
+import android.view.View
+import android.view.ViewGroup
 import com.sudox.android.R
-import com.sudox.android.R.*
+import com.sudox.android.R.layout
 import com.sudox.android.common.helpers.drawAvatar
+import com.sudox.android.common.helpers.drawCircleBitmap
 import com.sudox.android.common.helpers.setOnItemClickListener
 import com.sudox.android.data.database.model.Contact
 import com.sudox.android.data.models.avatar.AvatarInfo
@@ -80,11 +83,10 @@ class ContactsAdapter @Inject constructor(val context: Context,
 
             // aka GradientAvatar
             if (avatarInfo is ColorAvatarInfo) {
-                Glide.with(view.context).load(drawAvatar(
+                drawCircleBitmap(view.context, drawAvatar(
                         text = contact.buildShortName(),
                         firstColor = avatarInfo.firstColor,
-                        secondColor = avatarInfo.secondColor
-                )).into(avatar)
+                        secondColor = avatarInfo.secondColor), avatar)
             }
         }
     }

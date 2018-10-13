@@ -50,7 +50,6 @@ dependencies {
 
     // Some design libraries
     implementation "com.androidadvance:topsnackbar:1.1.1"
-    implementation "de.hdodenhof:circleimageview:2.2.0"
 
     // Timber
     implementation "com.jakewharton.timber:timber:4.7.1"

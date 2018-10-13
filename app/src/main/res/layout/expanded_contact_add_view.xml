@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ToolbarTheme.Addition"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/ic_search_16dp"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:text="@string/add_new_contact"
+        android:textSize="@dimen/font_size_increased_tiny" />
+
+    <!-- Параметры дизайна EditText находятся внутри темы -->
+
+    <EditText
+        android:id="@+id/nicknameEditText"
+        style="@style/ToolbarTheme.Addition.EditText"
+        android:layout_marginTop="15dp"
+        android:hint="@string/enter_email_of_user"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName"
+        tools:targetApi="o" />
+
+</LinearLayout>
