@@ -7,40 +7,27 @@
 
     <!-- Toolbar section start -->
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBar"
-        style="@style/ToolbarTheme.AppBarLayout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/contactsToolbar"
+        style="@style/ToolbarTheme"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:title="@string/contacts" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/contactsToolbar"
-            style="@style/ToolbarTheme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="@string/contacts" />
+    <com.sudox.android.ui.views.toolbar.expanded.ContactAddExpandedView
+        android:id="@+id/contactAddExpandedView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contactsToolbar" />
 
-        <com.sudox.android.ui.views.toolbar.ContactAddExpandedView
-            android:id="@+id/contactAddExpandedView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </android.support.design.widget.AppBarLayout>
+    <!-- Toolbar section end -->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/contactsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/appBar"
+        android:layout_below="@id/contactsToolbar"
         android:clipToPadding="false"
         android:paddingTop="16dp" />
-
-    <!--<View-->
-        <!--android:id="@+id/blackOverlay"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_below="@id/appBar"-->
-        <!--android:alpha="0"-->
-        <!--android:background="@color/colorPrimaryDark" />-->
 
 </com.sudox.android.ui.views.overlay.OverlappedRelativeLayout>

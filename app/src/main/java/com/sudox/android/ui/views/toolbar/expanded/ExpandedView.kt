@@ -1,4 +1,4 @@
-package com.sudox.android.ui.views.toolbar
+package com.sudox.android.ui.views.toolbar.expanded
 
 import android.animation.Animator
 import android.content.Context
@@ -29,7 +29,10 @@ abstract class ExpandedView : RelativeLayout {
         animator.setListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {}
             override fun onAnimationCancel(animation: Animator?) {}
-            override fun onAnimationStart(animation: Animator?) = (parent.parent as OverlappedRelativeLayout).toggleOverlay(visible)
+            override fun onAnimationStart(animation: Animator?) {
+                if (parent is OverlappedRelativeLayout) (parent as OverlappedRelativeLayout).toggleOverlay(visible)
+            }
+
             override fun onAnimationEnd(animation: Animator?) {
                 focusedChild?.clearFocus()
                 hideKeyboard(context, this@ExpandedView)
@@ -58,6 +61,10 @@ abstract class ExpandedView : RelativeLayout {
         } else if (visible) {
             hide()
         }
+    }
+
+    fun toggle() {
+        toggle(!visible)
     }
 
     fun show() {

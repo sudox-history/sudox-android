@@ -22,14 +22,17 @@ class BlackOverlayView : View {
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
-        setBackgroundColor(Color.rgb(0,4,11))
+        setBackgroundColor(Color.rgb(0, 4, 11))
         isClickable = false
         visibility = View.GONE
         alpha = 0F
 
         showAnimator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {}
-            override fun onAnimationEnd(animation: Animator?) { isClickable = true }
+            override fun onAnimationEnd(animation: Animator?) {
+                isClickable = true
+            }
+
             override fun onAnimationCancel(animation: Animator?) {}
             override fun onAnimationStart(animation: Animator?) {
                 isClickable = false
@@ -40,7 +43,10 @@ class BlackOverlayView : View {
         hideAnimator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {}
             override fun onAnimationCancel(animation: Animator?) {}
-            override fun onAnimationStart(animation: Animator?) { isClickable = false }
+            override fun onAnimationStart(animation: Animator?) {
+                isClickable = false
+            }
+
             override fun onAnimationEnd(animation: Animator?) {
                 visibility = View.GONE
             }

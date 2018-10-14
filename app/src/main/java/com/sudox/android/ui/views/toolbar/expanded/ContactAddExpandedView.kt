@@ -1,4 +1,4 @@
-package com.sudox.android.ui.views.toolbar
+package com.sudox.android.ui.views.toolbar.expanded
 
 import android.content.Context
 import android.util.AttributeSet

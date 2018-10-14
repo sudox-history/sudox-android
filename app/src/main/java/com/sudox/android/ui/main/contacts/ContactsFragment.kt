@@ -50,7 +50,7 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
             val id = it.itemId
 
             if (id == R.id.add_contact) {
-                contactAddExpandedView.show()
+                contactAddExpandedView.toggle()
             } else {
                 return@setOnMenuItemClickListener false
             }
