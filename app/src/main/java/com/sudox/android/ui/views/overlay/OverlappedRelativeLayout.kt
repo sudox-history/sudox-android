@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.RelativeLayout
 import com.sudox.android.ui.views.NavigationBar
+import com.sudox.android.ui.views.toolbar.expanded.ExpandedView
 
 class OverlappedRelativeLayout : RelativeLayout {
 
@@ -29,9 +30,6 @@ class OverlappedRelativeLayout : RelativeLayout {
         blackOverlayView = BlackOverlayView(context).apply {
             layoutParams = RelativeLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
         }
-
-        addView(blackOverlayView)
-        bringChildToFront(blackOverlayView)
     }
 
     fun toggleOverlay(toggle: Boolean) = blackOverlayView.toggle(toggle)
@@ -41,6 +39,35 @@ class OverlappedRelativeLayout : RelativeLayout {
 
         // Выносим Toolbar на передний план после оверлея
         if (!initialized) {
+            addView(blackOverlayView)
+            bringChildToFront(blackOverlayView)
+
+            // При клике на оверлей скрываем выпадающие View'шки
+            blackOverlayView.setOnClickListener {
+                for (i in 0 until childCount) {
+                    val child = getChildAt(i)
+
+                    // Нужно задать View'шке высоту как у Toolbar'а
+                    (child as? ExpandedView)?.hide()
+                }
+            }
+
+            /**
+             * 1-е: Дополнения к Toolbar'у
+             * 2-е: Сам Toolbar
+             * 3-е: Оверлей
+             * 4-е: Остальное (перекрываемое)
+             **/
+
+            // Выпадающие менюшки
+            for (i in 0 until childCount) {
+                val child = getChildAt(i)
+
+                // Нужно задать View'шке высоту как у Toolbar'а
+                if (child is ExpandedView) bringChildToFront(child)
+            }
+
+            // Распологаем тулбар
             for (i in 0 until childCount) {
                 val child = getChildAt(i)
 

@@ -41,6 +41,8 @@ abstract class ExpandedView : RelativeLayout {
                 clear()
             }
         })
+
+        isFocusable = true
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
