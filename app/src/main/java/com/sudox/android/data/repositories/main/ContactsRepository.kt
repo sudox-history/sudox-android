@@ -1,6 +1,7 @@
 package com.sudox.android.data.repositories.main
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import com.sudox.android.data.database.dao.ContactsDao
 import com.sudox.android.data.database.model.Contact
 import com.sudox.android.data.database.model.Contact.Companion.TRANSFORMATION_FROM_USER_INFO_DTO
@@ -20,7 +21,8 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
                                              private val usersRepository: UsersRepository,
                                              private val contactsDao: ContactsDao) {
 
-    val contactsLiveData: LiveData<List<Contact>> = contactsDao.loadAll()
+    val contactsGetLiveData: LiveData<List<Contact>> = contactsDao.loadAll()
+    val contactSearchLiveData = MutableLiveData<Contact>()
 
     init {
         // Обновим данные когда будет установлена сессия ...
@@ -70,6 +72,19 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
                 updateContactsInDatabase(it.contacts.map(Contact.TRANSFORMATION_FROM_CONTACT_INFO_DTO))
             } else if (it.error == Errors.EMPTY_CONTACTS_LIST) {
                 updateContactsInDatabase(emptyList())
+            }
+        }
+    }
+
+    /**
+     * Метод поиска контакта по E-mail
+     */
+    fun searchContactByEmail(email: String, errorCallback: (Int) -> Unit) {
+        usersRepository.getUserByEmail(email) {
+            if(it.isSuccess()) {
+                contactSearchLiveData.postValue(Contact.TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO(it))
+            } else {
+                errorCallback(it.error)
             }
         }
     }

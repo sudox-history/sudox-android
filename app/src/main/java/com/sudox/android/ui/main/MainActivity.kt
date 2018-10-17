@@ -5,16 +5,15 @@ import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.FragmentTransaction
-import com.androidadvance.topsnackbar.TSnackbar
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.common.helpers.showTopSnackbar
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.enums.MainActivityAction
 import com.sudox.protocol.models.enums.ConnectionState
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_contacts.*
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
@@ -83,7 +82,7 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     fun showMessage(message: String) {
-        showTopSnackbar(this, fragmentMainContainer, message, TSnackbar.LENGTH_LONG)
+        errorExpandedView.show()
     }
 
     private fun showAuthActivity() {

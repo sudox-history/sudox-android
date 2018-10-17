@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.sudox.android.data.models.contacts.dto.ContactInfoDTO
 import com.sudox.android.data.models.users.dto.UserInfoDTO
+import com.sudox.android.data.models.users.dto.UsersGetByEmailDTO
 
 @Entity(tableName = "contacts")
 class Contact {
@@ -72,6 +73,15 @@ class Contact {
         }
 
         val TRANSFORMATION_FROM_USER_INFO_DTO: (UserInfoDTO) -> (Contact) = {
+            Contact().apply {
+                uid = it.id
+                name = it.name
+                nickname = it.nickname
+                photo = it.photo
+            }
+        }
+
+        val TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO: (UsersGetByEmailDTO) -> (Contact) = {
             Contact().apply {
                 uid = it.id
                 name = it.name

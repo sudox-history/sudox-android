@@ -20,7 +20,7 @@ class SecondColumnItemDecorator(val context: Context) : RecyclerView.ItemDecorat
         val childCount = parent.childCount
 
         // Draw decorators
-        for (i in 0 until childCount) {
+        for (i in 0..childCount) {
             val child = parent.getChildAt(i)
 
             // Calculate coordinates for drawing

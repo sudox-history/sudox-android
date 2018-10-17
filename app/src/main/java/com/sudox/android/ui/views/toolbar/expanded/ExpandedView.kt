@@ -11,12 +11,16 @@ import com.sudox.android.ui.views.overlay.OverlappedRelativeLayout
 
 abstract class ExpandedView : RelativeLayout {
 
-    private var visible: Boolean = false
+    var expanded: Boolean = false
+    var turnBlackOverlay: Boolean = true
     private var animator = animate()
             .setStartDelay(0)
             .setDuration(300)
 
-    constructor(context: Context) : super(context)
+    constructor(context: Context, turnBlackOverlay: Boolean) : super(context){
+        this.turnBlackOverlay = turnBlackOverlay
+    }
+
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
@@ -30,7 +34,8 @@ abstract class ExpandedView : RelativeLayout {
             override fun onAnimationRepeat(animation: Animator?) {}
             override fun onAnimationCancel(animation: Animator?) {}
             override fun onAnimationStart(animation: Animator?) {
-                if (parent is OverlappedRelativeLayout) (parent as OverlappedRelativeLayout).toggleOverlay(visible)
+                if (turnBlackOverlay && parent is OverlappedRelativeLayout)
+                    (parent as OverlappedRelativeLayout).toggleOverlay(expanded)
             }
 
             override fun onAnimationEnd(animation: Animator?) {
@@ -49,7 +54,7 @@ abstract class ExpandedView : RelativeLayout {
         super.onLayout(changed, l, t, r, b)
 
         // Hide this view if bottom padding is negative
-        if (!visible && changed) {
+        if (!expanded && changed) {
             translationY = -height.toFloat()
         }
     }
@@ -58,26 +63,26 @@ abstract class ExpandedView : RelativeLayout {
      * Общая логика для всех раскрывающихся View'шек
      **/
     fun toggle(toggle: Boolean) {
-        if (toggle && !visible) {
+        if (toggle && !expanded) {
             show()
-        } else if (visible) {
+        } else if (expanded) {
             hide()
         }
     }
 
     fun toggle() {
-        toggle(!visible)
+        toggle(!expanded)
     }
 
     fun show() {
         animator.interpolator = DecelerateInterpolator()
         animator.translationY(0F)
-        visible = true
+        expanded = true
     }
 
     fun hide() {
         animator.interpolator = AccelerateInterpolator()
         animator.translationY(-height.toFloat())
-        visible = false
+        expanded = false
     }
 }

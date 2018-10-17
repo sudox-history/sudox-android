@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sudox.android.ui.views.overlay.OverlappedRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/ToolbarTheme.ExpandedView"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ToolbarTheme.ContactAddExpandedView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipChildren="false"
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/hintAddNewContact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_search_16dp"
@@ -16,14 +19,34 @@
         android:textSize="@dimen/font_size_increased_tiny" />
 
     <!-- Параметры дизайна EditText находятся внутри темы -->
-
     <EditText
         android:id="@+id/nicknameEditText"
-        style="@style/ToolbarTheme.ExpandedView.EditText"
+        style="@style/ToolbarTheme.ContactAddExpandedView.EditText"
+        android:layout_below="@id/hintAddNewContact"
         android:layout_marginTop="15dp"
         android:hint="@string/enter_email_of_user"
+        android:imeOptions="actionSearch"
         android:importantForAutofill="no"
         android:inputType="textPersonName"
         tools:targetApi="o" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/contactAddHint"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@id/nicknameEditText"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/enter_email_to_find"
+        android:textColor="@color/colorHint"
+        android:visibility="gone" />
+
+    <com.sudox.android.ui.views.toolbar.expanded.ContactFoundedExpandedView
+        android:id="@+id/foundedContactLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nicknameEditText"
+        android:layout_marginTop="15dp" />
+
+
+</com.sudox.android.ui.views.overlay.OverlappedRelativeLayout>
