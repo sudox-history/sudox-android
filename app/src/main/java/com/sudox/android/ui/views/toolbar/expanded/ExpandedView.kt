@@ -26,6 +26,12 @@ abstract class ExpandedView : RelativeLayout {
             .setStartDelay(0)
             .setDuration(300)
 
+    init {
+        // Чтобы не работали клики под нижними элементами (оверлей и т.п.).
+        isFocusable = true
+        isClickable = true
+    }
+
     constructor(context: Context, turnBlackOverlay: Boolean) : super(context) {
         this.turnBlackOverlay = turnBlackOverlay
     }
