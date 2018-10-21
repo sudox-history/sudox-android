@@ -20,11 +20,14 @@ class ContactAddExpandedView : ExpandedView {
     lateinit var contactsRepository: ContactsRepository
     lateinit var foundedContact: Contact
 
-    constructor(context: Context) : super(context, true)
+    constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
+        turnBlackOverlay = true
+
+        // Inflate view
         inflate(context, R.layout.expanded_contact_add_view, this)
 
         // Заинжектим здесь все к хуям

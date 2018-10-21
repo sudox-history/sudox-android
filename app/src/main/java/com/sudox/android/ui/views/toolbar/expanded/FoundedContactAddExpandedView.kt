@@ -16,11 +16,14 @@ class FoundedContactAddExpandedView : ExpandedView {
 
     var contactAddButtonClickCallback: (() -> (Unit))? = null
 
-    constructor(context: Context) : super(context, false)
+    constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
+        turnBlackOverlay = false
+
+        // Inflate view
         inflate(context, R.layout.founded_contact_add_layout, this)
 
         // Bind button

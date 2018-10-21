@@ -6,14 +6,8 @@ import android.util.AttributeSet
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
-import com.sudox.android.common.helpers.drawAvatar
-import com.sudox.android.common.helpers.drawCircleBitmap
 import com.sudox.android.common.helpers.hideKeyboard
-import com.sudox.android.data.database.model.Contact
-import com.sudox.android.data.models.avatar.AvatarInfo
-import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.ui.views.overlay.OverlappedRelativeLayout
-import kotlinx.android.synthetic.main.founded_contact_add_layout.view.*
 
 abstract class ExpandedView : RelativeLayout {
 
@@ -32,10 +26,7 @@ abstract class ExpandedView : RelativeLayout {
         isClickable = true
     }
 
-    constructor(context: Context, turnBlackOverlay: Boolean) : super(context) {
-        this.turnBlackOverlay = turnBlackOverlay
-    }
-
+    constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
