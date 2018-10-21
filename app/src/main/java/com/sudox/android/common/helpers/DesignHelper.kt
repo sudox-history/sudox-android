@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import com.androidadvance.topsnackbar.TSnackbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -89,7 +90,6 @@ fun drawAvatar(text: String, firstColor: String, secondColor: String): Bitmap {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     // Draw gradient
-    paint.color = Color.parseColor("#656565")
     paint.shader = LinearGradient(0F, 0F, 200F, 200F, Color.parseColor(firstColor), Color.parseColor(secondColor), Shader.TileMode.REPEAT)
 
     // Draw circle

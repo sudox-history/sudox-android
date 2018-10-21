@@ -1,8 +1,8 @@
 package com.sudox.android
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.sudox.android.common.API_KEY
+import com.sudox.android.common.di.AppComponent
 import com.sudox.android.common.di.DaggerAppComponent
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
@@ -12,16 +12,25 @@ import timber.log.Timber
 
 class ApplicationLoader : DaggerApplication() {
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent
+    // Бывают случаи, что компонент Dagger'а нужен в Custom View
+    companion object {
+        lateinit var component: AppComponent
+    }
+
+    // Для класса AndroidInjection
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> = component
+
+    override fun onCreate() {
+        // Создадим компонент
+        component = DaggerAppComponent
                 .builder()
                 .application(this)
                 .build()
-    }
 
-    override fun onCreate() {
+        // А теперь скажем Android'у: "А блять, уебался!"
         super.onCreate()
 
+        // Запуск статистики и т.п.
         val sharedPreferences = getSharedPreferences("com.sudox.android", Context.MODE_PRIVATE)
         val isFirstLaunch = sharedPreferences.getBoolean("firstRun", true)
 
@@ -38,8 +47,6 @@ class ApplicationLoader : DaggerApplication() {
         YandexMetrica.enableActivityAutoTracking(this)
 
         // Enable Timber
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
+        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
 }

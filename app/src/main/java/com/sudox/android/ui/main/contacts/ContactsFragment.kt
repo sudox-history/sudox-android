@@ -41,31 +41,21 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
         // Configuring layout components
         initToolbar()
         initContactsList()
-
         initContactsExpandedView()
     }
 
     private fun initToolbar() {
         // Ненавижу когда с View'шками происходят неявные для разработчика действия (например: onCreateOptionsMenu)
         // Антон от 15-го октября: Справедливые слова, Макс, справедливые!
+
+        // Настройка меню
         contactsToolbar.inflateMenu(R.menu.menu_contacts)
         contactsToolbar.setOnMenuItemClickListener {
-            val id = it.itemId
-
-            if (id == R.id.add_contact) {
-                contactAddExpandedView.toggle()
-
-                // Change Icon
-                if (contactAddExpandedView.expanded) {
-                    it.setIcon(R.drawable.ic_close)
-                } else {
-                    it.setIcon(R.drawable.ic_add_contact)
-                }
-
-            } else {
-                return@setOnMenuItemClickListener false
+            when (it.itemId) {
+                R.id.add_contact -> contactAddExpandedView.toggle()
             }
 
+            // Все прошло успешно
             return@setOnMenuItemClickListener true
         }
     }
@@ -96,30 +86,11 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
     }
 
     private fun initContactsExpandedView() {
-        contactAddExpandedView.listenForEmail { email ->
-            contactsViewModel
-                    .contactsRepository
-                    .searchContactByEmail(email) {
+        val addContactMenuItem = contactsToolbar.menu.findItem(R.id.add_contact)
 
-                    }
-        }
-
-        contactsViewModel
-                .contactsRepository
-                .contactSearchLiveData
-                .observe(this, Observer {
-                    contactAddExpandedView.setUpContact(it!!)
-                })
-
-        contactAddExpandedView.listenSelectContact {
-        }
-
-        contactAddExpandedView.listenAddContact {
-            contactsViewModel
-                    .contactsRepository
-                    .addContact(it.uid) {
-
-                    }
+        // Слушатель открытия/закрытия меню добавления контакта.
+        contactAddExpandedView.expandingCallback = {
+            addContactMenuItem.setIcon(if (it) R.drawable.ic_close else R.drawable.ic_add_contact)
         }
     }
 }

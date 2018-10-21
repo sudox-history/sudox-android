@@ -22,7 +22,6 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
                                              private val contactsDao: ContactsDao) {
 
     val contactsGetLiveData: LiveData<List<Contact>> = contactsDao.loadAll()
-    val contactSearchLiveData = MutableLiveData<Contact>()
 
     init {
         // Обновим данные когда будет установлена сессия ...
@@ -79,10 +78,10 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
     /**
      * Метод поиска контакта по E-mail
      */
-    fun searchContactByEmail(email: String, errorCallback: (Int) -> Unit) {
+    fun searchContactByEmail(email: String, successCallback: (Contact) -> (Unit), errorCallback: (Int) -> Unit) {
         usersRepository.getUserByEmail(email) {
-            if(it.isSuccess()) {
-                contactSearchLiveData.postValue(Contact.TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO(it))
+            if (it.isSuccess()) {
+                successCallback(Contact.TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO(it))
             } else {
                 errorCallback(it.error)
             }
@@ -92,20 +91,21 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
     /**
      * Добавляет контакт по ID, в случае ошибки на любом этапе возвращает errorCallback
      */
-    fun addContact(id: String, errorCallback: (Int) -> (Unit)) {
-        protocolClient.makeRequest<ContactChangeDTO>("contacts.new", ContactChangeDTO().apply {
+    fun addContact(id: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
+        protocolClient.makeRequest<ContactChangeDTO>("contacts.add", ContactChangeDTO().apply {
             this.id = id
         }) {
-            if (it.isSuccess()) {
-                usersRepository.getUser(id) { userInfoDTO ->
-                    if (it.isSuccess()) {
-                        contactsDao.insertOne(Contact.TRANSFORMATION_FROM_USER_INFO_DTO.invoke(userInfoDTO))
-                    } else {
-                        errorCallback(it.error)
-                    }
-                }
-            } else {
-                errorCallback(it.error)
+            if (it.containsError()) return@makeRequest errorCallback(it.error)
+
+            // Получаем пользователя для добавления.
+            usersRepository.getUser(id) { userInfoDTO ->
+                if (it.containsError()) return@getUser errorCallback(it.error)
+
+                // Сохраняем в БД
+                contactsDao.insertOne(Contact.TRANSFORMATION_FROM_USER_INFO_DTO.invoke(userInfoDTO))
+
+                // Уведомляем об успешном добавлении контакта
+                successCallback()
             }
         }
     }

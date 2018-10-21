@@ -6,18 +6,27 @@ import android.util.AttributeSet
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
+import com.sudox.android.common.helpers.drawAvatar
+import com.sudox.android.common.helpers.drawCircleBitmap
 import com.sudox.android.common.helpers.hideKeyboard
+import com.sudox.android.data.database.model.Contact
+import com.sudox.android.data.models.avatar.AvatarInfo
+import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.ui.views.overlay.OverlappedRelativeLayout
+import kotlinx.android.synthetic.main.founded_contact_add_layout.view.*
 
 abstract class ExpandedView : RelativeLayout {
 
-    var expanded: Boolean = false
-    var turnBlackOverlay: Boolean = true
+    internal var expanded: Boolean = false
+    internal var turnBlackOverlay: Boolean = true
+    var expandingCallback: ((Boolean) -> Unit)? = null
+
+    // Анимация раскрытия
     private var animator = animate()
             .setStartDelay(0)
             .setDuration(300)
 
-    constructor(context: Context, turnBlackOverlay: Boolean) : super(context){
+    constructor(context: Context, turnBlackOverlay: Boolean) : super(context) {
         this.turnBlackOverlay = turnBlackOverlay
     }
 
@@ -39,11 +48,13 @@ abstract class ExpandedView : RelativeLayout {
             }
 
             override fun onAnimationEnd(animation: Animator?) {
-                focusedChild?.clearFocus()
-                hideKeyboard(context, this@ExpandedView)
+                if (!expanded) {
+                    focusedChild?.clearFocus()
+                    hideKeyboard(context, this@ExpandedView)
 
-                // Clear all fields and etc ..
-                clear()
+                    // Clear all fields and etc ..
+                    clear()
+                }
             }
         })
 
@@ -70,6 +81,7 @@ abstract class ExpandedView : RelativeLayout {
         }
     }
 
+
     fun toggle() {
         toggle(!expanded)
     }
@@ -78,11 +90,17 @@ abstract class ExpandedView : RelativeLayout {
         animator.interpolator = DecelerateInterpolator()
         animator.translationY(0F)
         expanded = true
+
+        // Notify
+        expandingCallback?.invoke(true)
     }
 
     fun hide() {
         animator.interpolator = AccelerateInterpolator()
         animator.translationY(-height.toFloat())
         expanded = false
+
+        // Notify
+        expandingCallback?.invoke(false)
     }
 }

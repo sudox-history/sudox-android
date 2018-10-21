@@ -58,14 +58,13 @@ class MainActivity : DaggerAppCompatActivity() {
 
     fun initBottomNavigationView() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
-            val id = it.itemId
-
-            if (id == R.id.contacts_item) {
-                showContactsFragment()
-            } else {
-                return@setOnNavigationItemSelectedListener false
+            when (it.itemId) {
+                R.id.contacts_item -> {
+                    showContactsFragment()
+                }
             }
 
+            // Все прошло успешно
             return@setOnNavigationItemSelectedListener true
         }
 

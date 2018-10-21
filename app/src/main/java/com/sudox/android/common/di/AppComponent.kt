@@ -4,6 +4,7 @@ import android.app.Application
 import com.sudox.android.ApplicationLoader
 import com.sudox.android.common.di.module.*
 import com.sudox.android.common.di.module.activities.ActivityModule
+import com.sudox.android.ui.views.toolbar.expanded.ContactAddExpandedView
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -22,7 +23,9 @@ import javax.inject.Singleton
 interface AppComponent : AndroidInjector<DaggerApplication> {
 
     fun inject(app: ApplicationLoader)
+    fun inject(contactAddExpandedView: ContactAddExpandedView)
 
+    // Не ебу зачем это здесь написали, но без него не работает
     override fun inject(instance: DaggerApplication?)
 
     @Component.Builder

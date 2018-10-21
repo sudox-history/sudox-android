@@ -49,14 +49,14 @@
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
-    <style name="ToolbarTheme.ContactAddExpandedView">
+    <style name="ToolbarTheme.ExpandedView">
         <item name="android:paddingLeft">27dp</item>
         <!-- In design - 1/2 of menu icon in the toolbar = 34dp - 8dp = 26dp -->
         <item name="android:paddingRight">26dp</item>
         <item name="android:paddingBottom">10dp</item>
     </style>
 
-    <style name="ToolbarTheme.ContactAddExpandedView.EditText">
+    <style name="ToolbarTheme.ExpandedView.EditText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@drawable/edit_text_navbar_addition</item>
@@ -72,7 +72,7 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="ToolbarTheme.ContactAddExpandedView.NameTextView">
+    <style name="ToolbarTheme.ExpandedView.NameTextView">
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textSize">14sp</item>
     </style>

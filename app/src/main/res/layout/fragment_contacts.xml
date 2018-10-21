@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/contactsToolbar" />
 
-    <com.sudox.android.ui.views.ErrorExpandedView
+    <com.sudox.android.ui.views.toolbar.expanded.ErrorExpandedView
         android:id="@+id/errorExpandedView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

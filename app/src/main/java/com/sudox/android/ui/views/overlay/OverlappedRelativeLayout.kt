@@ -36,8 +36,9 @@ class OverlappedRelativeLayout : RelativeLayout {
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
-        // Выносим Toolbar на передний план после оверлея
+
         if (!initialized) {
+            // Выносим Toolbar на передний план после оверлея
             addView(blackOverlayView)
             bringChildToFront(blackOverlayView)
 
@@ -62,7 +63,7 @@ class OverlappedRelativeLayout : RelativeLayout {
             for (i in 0..childCount) {
                 val child = getChildAt(i)
 
-                // Нужно задать View'шке высоту как у Toolbar'а
+                // Выносим наверх
                 if (child is ExpandedView) bringChildToFront(child)
             }
 
