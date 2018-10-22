@@ -7,7 +7,7 @@ import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
 import com.sudox.android.data.database.model.Contact
 import com.sudox.android.data.repositories.main.ContactsRepository
-import kotlinx.android.synthetic.main.expanded_contact_add_view.view.*
+import kotlinx.android.synthetic.main.view_contact_add_expanded.view.*
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
@@ -28,7 +28,7 @@ class ContactAddExpandedView : ExpandedView {
         turnBlackOverlay = true
 
         // Inflate view
-        inflate(context, R.layout.expanded_contact_add_view, this)
+        inflate(context, R.layout.view_contact_add_expanded, this)
 
         // Заинжектим здесь все к хуям
         ApplicationLoader.component.inject(this)
