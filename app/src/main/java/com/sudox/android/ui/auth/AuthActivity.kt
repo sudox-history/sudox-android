@@ -9,8 +9,6 @@ import android.support.v4.app.FragmentTransaction
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.showSnackbar
-import com.sudox.android.data.auth.AUTH_ACCOUNT_MANAGER_START
-import com.sudox.android.data.auth.AUTH_KEY
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.email.AuthEmailFragment
@@ -33,9 +31,6 @@ class AuthActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
-
-        // Auth key для отличия запуска через AccountManager от обычного запуска
-        authKey = intent.getIntExtra(AUTH_KEY, 1)
 
         // Get view model
         authViewModel = getViewModel(viewModelFactory)
@@ -66,23 +61,10 @@ class AuthActivity : DaggerAppCompatActivity() {
 
         // Слушаем сессию аккаунта (точнее статус её жизни)
         authViewModel.accountSessionLiveData.observe(this, Observer {
-            if (it?.lived!!) {
-                if (authKey != AUTH_ACCOUNT_MANAGER_START) {
-                    showMainActivity()
-                } else {
-                    finish()
-                }
-            }
+            if (it?.lived!!) showMainActivity()
         })
 
         showAuthEmailFragment(null, true)
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        authKey = intent.getIntExtra(AUTH_KEY, 1)
-
-        // Super!
-        super.onNewIntent(intent)
     }
 
     private fun unfreezeCurrent() {

@@ -44,7 +44,7 @@ class SplashActivity : DaggerAppCompatActivity() {
         })
 
         // Init authSession
-        splashViewModel.initSession(this, authKey)
+        splashViewModel.initSession(this)
     }
 
     private fun showAccountExistsAlert() {

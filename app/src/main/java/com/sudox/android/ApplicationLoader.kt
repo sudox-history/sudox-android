@@ -1,6 +1,7 @@
 package com.sudox.android
 
 import android.content.Context
+import android.os.StrictMode
 import com.sudox.android.common.API_KEY
 import com.sudox.android.common.di.AppComponent
 import com.sudox.android.common.di.DaggerAppComponent
@@ -29,6 +30,21 @@ class ApplicationLoader : DaggerApplication() {
 
         // А теперь скажем Android'у: "А блять, уебался!"
         super.onCreate()
+
+        // Strict-mode
+        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectAll()
+                .penaltyLog()
+                .build())
+
+        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectLeakedClosableObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build())
 
         // Запуск статистики и т.п.
         val sharedPreferences = getSharedPreferences("com.sudox.android", Context.MODE_PRIVATE)

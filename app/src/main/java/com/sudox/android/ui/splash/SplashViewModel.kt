@@ -1,7 +1,6 @@
 package com.sudox.android.ui.splash
 
 import android.arch.lifecycle.*
-import com.sudox.android.data.auth.AUTH_ACCOUNT_MANAGER_START
 import com.sudox.protocol.models.enums.ConnectionState
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
@@ -10,7 +9,6 @@ import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
 import javax.inject.Inject
 
 class SplashViewModel @Inject constructor(private val protocolClient: ProtocolClient,
@@ -26,7 +24,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
      * Метод для инициализации соединения и сессии с сервером .
      * Решает на какую Activity переключиться.
      * **/
-    fun initSession(lifecycleOwner: LifecycleOwner, authKey: Int) = async {
+    fun initSession(lifecycleOwner: LifecycleOwner) = GlobalScope.async {
         val account = accountRepository.getAccount().await()
 
         // Handle connection status ...
@@ -35,9 +33,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
                 blocked = true
 
                 // Выполняем нужные действия
-                if (authKey == AUTH_ACCOUNT_MANAGER_START && account != null) {
-                    splashActionLiveData.postValue(SplashAction.SHOW_ACCOUNT_EXISTS_ALERT)
-                } else if (account != null) {
+                if (account != null) {
                     splashActionLiveData.postValue(SplashAction.SHOW_MAIN_ACTIVITY)
                 } else {
                     splashActionLiveData.postValue(SplashAction.SHOW_AUTH_ACTIVITY)
@@ -53,11 +49,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
             blocked = true
 
             if (it?.lived!!) {
-                if (authKey == AUTH_ACCOUNT_MANAGER_START) {
-                    splashActionLiveData.postValue(SplashAction.SHOW_ACCOUNT_EXISTS_ALERT)
-                } else {
-                    splashActionLiveData.postValue(SplashAction.SHOW_MAIN_ACTIVITY)
-                }
+                splashActionLiveData.postValue(SplashAction.SHOW_MAIN_ACTIVITY)
             } else {
                 splashActionLiveData.postValue(SplashAction.SHOW_AUTH_ACTIVITY)
             }
