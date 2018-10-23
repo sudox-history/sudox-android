@@ -8,6 +8,10 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import com.sudox.android.common.helpers.hideKeyboard
 import com.sudox.android.ui.views.overlay.OverlappedRelativeLayout
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.launch
 
 abstract class ExpandedView : RelativeLayout {
 
@@ -19,12 +23,6 @@ abstract class ExpandedView : RelativeLayout {
     private var animator = animate()
             .setStartDelay(0)
             .setDuration(300)
-
-    init {
-        // Чтобы не работали клики под нижними элементами (оверлей и т.п.).
-        isFocusable = true
-        isClickable = true
-    }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -40,8 +38,9 @@ abstract class ExpandedView : RelativeLayout {
             override fun onAnimationRepeat(animation: Animator?) {}
             override fun onAnimationCancel(animation: Animator?) {}
             override fun onAnimationStart(animation: Animator?) {
-                if (turnBlackOverlay && parent is OverlappedRelativeLayout)
+                if (turnBlackOverlay && parent is OverlappedRelativeLayout) {
                     (parent as OverlappedRelativeLayout).toggleOverlay(expanded)
+                }
             }
 
             override fun onAnimationEnd(animation: Animator?) {
@@ -54,8 +53,6 @@ abstract class ExpandedView : RelativeLayout {
                 }
             }
         })
-
-        isFocusable = true
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -83,7 +80,7 @@ abstract class ExpandedView : RelativeLayout {
         toggle(!expanded)
     }
 
-    fun show() {
+    fun show() = GlobalScope.launch(Dispatchers.Main) {
         animator.interpolator = DecelerateInterpolator()
         animator.translationY(0F)
         expanded = true
@@ -92,7 +89,7 @@ abstract class ExpandedView : RelativeLayout {
         expandingCallback?.invoke(true)
     }
 
-    fun hide() {
+    fun hide() = GlobalScope.launch(Dispatchers.Main) {
         animator.interpolator = AccelerateInterpolator()
         animator.translationY(-height.toFloat())
         expanded = false

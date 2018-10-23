@@ -40,15 +40,6 @@ class MainActivity : DaggerAppCompatActivity() {
             }
         })
 
-        // Слушаем изменения состояния соединения ...
-        mainViewModel.connectionStateLiveData.observe(this, Observer {
-            if (it == ConnectionState.CONNECTION_CLOSED) {
-                showMessage(getString(R.string.lost_internet_connection))
-            } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
-                showMessage(getString(R.string.connection_restored))
-            }
-        })
-
         // Listen session state ...
         mainViewModel.listenSessionChanges(this)
 
@@ -78,10 +69,6 @@ class MainActivity : DaggerAppCompatActivity() {
                 .replace(R.id.fragmentMainContainer, contactsFragment)
                 .addToBackStack(null)
                 .commit()
-    }
-
-    fun showMessage(message: String) {
-        errorExpandedView.show()
     }
 
     private fun showAuthActivity() {

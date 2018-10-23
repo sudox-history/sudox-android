@@ -6,6 +6,7 @@ import android.view.inputmethod.EditorInfo
 import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
 import com.sudox.android.data.database.model.Contact
+import com.sudox.android.data.models.Errors
 import com.sudox.android.data.repositories.main.ContactsRepository
 import kotlinx.android.synthetic.main.view_contact_add_expanded.view.*
 import kotlinx.coroutines.experimental.Dispatchers
@@ -18,7 +19,6 @@ class ContactAddExpandedView : ExpandedView {
 
     @Inject
     lateinit var contactsRepository: ContactsRepository
-    lateinit var foundedContact: Contact
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -35,42 +35,30 @@ class ContactAddExpandedView : ExpandedView {
 
         // Настроим View'шки
         initEmailEditText()
-        initAddButton()
     }
 
     private fun initEmailEditText() {
         emailEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId != EditorInfo.IME_ACTION_SEARCH) searchContact(emailEditText.text.toString())
 
-            // Клавиатуру не скрываем
+            // Клавиатуру скрываем
             return@setOnEditorActionListener false
-        }
-    }
-
-    private fun initAddButton() {
-        foundedContactAddExpandedView.contactAddButtonClickCallback = {
-            contactsRepository.addContact(foundedContact.uid, {
-                GlobalScope.launch(Dispatchers.Main) { clear() }
-            }) {
-                // TODO: Вывести ошибку
-            }
         }
     }
 
     private fun searchContact(email: String) {
         contactsRepository.searchContactByEmail(email, {
-            foundedContact = it
-
-            // Show contact
-            showFoundedContact(it)
+            foundedContactAddExpandedView.bindData(it)
+            foundedContactAddExpandedView.show()
         }, {
-            // TODO: Вывести ошибку
-        })
-    }
+            if (it == Errors.INVALID_USER) {
+                contactAddStatusExpandedView.showMessage(context.getString(R.string.contact_has_not_find))
+            } else {
+                contactAddStatusExpandedView.showMessage(context.getString(R.string.unknown_error))
+            }
 
-    private fun showFoundedContact(contact: Contact) = GlobalScope.launch(Dispatchers.Main) {
-        foundedContactAddExpandedView.bindData(contact)
-        foundedContactAddExpandedView.show()
+            foundedContactAddExpandedView.hide()
+        })
     }
 
     override fun clear() {

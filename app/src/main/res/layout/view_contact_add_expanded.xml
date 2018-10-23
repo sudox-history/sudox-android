@@ -9,6 +9,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/contactAddExpandedViewContainer" />
 
+    <com.sudox.android.ui.views.toolbar.expanded.StatusExpandedView
+        android:id="@+id/contactAddStatusExpandedView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contactAddExpandedViewContainer" />
+
     <LinearLayout
         android:id="@+id/contactAddExpandedViewContainer"
         style="@style/ToolbarTheme.ExpandedView"
