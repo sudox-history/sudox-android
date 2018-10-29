@@ -22,6 +22,6 @@ class UsersGetByEmailDTO: JsonModel() {
         id = jsonObject.optString("id")
         name = jsonObject.optString("name")
         nickname = jsonObject.optString("nickname")
-        photo = jsonObject.optString("photo")
+        photo = jsonObject.optString("avatar")
     }
 }

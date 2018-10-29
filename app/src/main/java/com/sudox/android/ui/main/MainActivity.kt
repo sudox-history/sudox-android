@@ -7,13 +7,14 @@ import android.os.Bundle
 import android.support.v4.app.FragmentTransaction
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.data.models.chats.ChatType
+import com.sudox.android.data.models.chats.UserChatRecipient
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.enums.MainActivityAction
-import com.sudox.protocol.models.enums.ConnectionState
+import com.sudox.android.ui.messages.MessagesActivity
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_contacts.*
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
@@ -74,5 +75,12 @@ class MainActivity : DaggerAppCompatActivity() {
     private fun showAuthActivity() {
         startActivity(Intent(this, AuthActivity::class.java))
         finish()
+    }
+
+    fun showChatWithUser(userChatRecipient: UserChatRecipient) {
+        startActivity(Intent(this, MessagesActivity::class.java).apply {
+            putExtra(MessagesActivity.CONVERSATION_TYPE_KEY, ChatType.CHAT.ordinal)
+            putExtra(MessagesActivity.CONVERSATION_RECIPIENT_KEY, userChatRecipient)
+        })
     }
 }

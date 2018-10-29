@@ -12,10 +12,11 @@
     <dimen name="navbar_height">60dp</dimen>
     <dimen name="navbar_button_drawable_padding">8dp</dimen>
     <!-- Main bar -->
-    <dimen name="chatbar_height">60dp</dimen>
     <dimen name="editfield_height">48dp</dimen>
     <!-- Authorization -->
     <integer name="length_email_code">5</integer>
     <integer name="length_name">20</integer>
     <integer name="length_nickname">20</integer>
+    <!-- Toolbar -->
+    <dimen name="toolbar_height">60dp</dimen>
 </resources>

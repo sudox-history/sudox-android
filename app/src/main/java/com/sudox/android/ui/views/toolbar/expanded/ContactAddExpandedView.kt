@@ -5,14 +5,9 @@ import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
-import com.sudox.android.data.database.model.Contact
 import com.sudox.android.data.models.Errors
 import com.sudox.android.data.repositories.main.ContactsRepository
 import kotlinx.android.synthetic.main.view_contact_add_expanded.view.*
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
 class ContactAddExpandedView : ExpandedView {

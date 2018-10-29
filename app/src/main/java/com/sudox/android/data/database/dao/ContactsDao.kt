@@ -5,7 +5,7 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import com.sudox.android.data.database.model.Contact
+import com.sudox.android.data.database.model.User
 
 @Dao
 interface ContactsDao {
@@ -17,11 +17,11 @@ interface ContactsDao {
     fun removeOne(id: String)
 
     @Insert
-    fun insertAll(contacts: List<Contact>)
+    fun insertAll(users: List<User>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOne(contact: Contact)
+    fun insertOne(user: User)
 
     @Query("SELECT * FROM contacts")
-    fun loadAll(): LiveData<List<Contact>>
+    fun loadAll(): LiveData<List<User>>
 }

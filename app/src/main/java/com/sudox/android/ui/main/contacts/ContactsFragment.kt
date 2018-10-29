@@ -10,21 +10,22 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.data.database.model.User
 import com.sudox.android.ui.adapters.ContactsAdapter
 import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.views.decorators.SecondColumnItemDecorator
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_contacts.*
+import kotlinx.android.synthetic.main.fragment_main_contacts.*
 import javax.inject.Inject
 
 class ContactsFragment @Inject constructor() : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
     @Inject
     lateinit var contactsAdapter: ContactsAdapter
+
     private lateinit var contactsViewModel: ContactsViewModel
     private lateinit var mainActivity: MainActivity
 
@@ -32,7 +33,7 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
         contactsViewModel = getViewModel(viewModelFactory)
         mainActivity = activity as MainActivity
 
-        return inflater.inflate(R.layout.fragment_contacts, container, false)
+        return inflater.inflate(R.layout.fragment_main_contacts, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,7 +63,9 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
 
     private fun initContactsList() {
         contactsAdapter.menuInflater = mainActivity.menuInflater
-        contactsAdapter.clickCallback = {}
+        contactsAdapter.clickCallback = {
+            mainActivity.showChatWithUser(User.TRANSFORMATION_TO_USER_CHAT_RECIPIENT(it))
+        }
 
         // Init recycler view
         contactsList.layoutManager = LinearLayoutManager(context)
@@ -80,7 +83,7 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
                     // Update data ...
                     contactsAdapter.items = it
 
-                    // Notify adapter about update
+                    // Notify chatAdapter about update
                     diffResult.dispatchUpdatesTo(contactsAdapter)
                 })
     }

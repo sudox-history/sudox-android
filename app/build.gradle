@@ -40,6 +40,27 @@ dependencies {
     implementation 'com.yandex.android:mobmetricalib:3.2.2'
     implementation 'com.android.installreferrer:installreferrer:1.0'
 
+    // Litho
+    implementation 'com.facebook.litho:litho-core:0.20.0'
+    implementation 'com.facebook.litho:litho-widget:0.20.0'
+    compileOnly 'com.facebook.litho:litho-annotations:0.20.0'
+    kapt 'com.facebook.litho:litho-processor:0.20.0'
+
+    // Sections
+    implementation 'com.facebook.litho:litho-sections-core:0.20.0'
+    implementation 'com.facebook.litho:litho-sections-widget:0.20.0'
+    compileOnly 'com.facebook.litho:litho-sections-annotations:0.20.0'
+    kapt 'com.facebook.litho:litho-sections-processor:0.20.0'
+    implementation group: 'com.facebook.litho', name: 'litho-stetho', version: '0.6.0'
+
+    // SoLoader
+    implementation 'com.facebook.soloader:soloader:0.5.1'
+
+    // For testing
+    testImplementation 'com.facebook.litho:litho-testing:0.20.0'
+
+    // Stetho
+    implementation 'com.facebook.stetho:stetho:1.5.0'
 
     //TODO: Закончить подключение AppMetricaPush
 //    // AppMetricaPush

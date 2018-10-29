@@ -123,3 +123,21 @@ fun drawCircleBitmap(context: Context, bitmap: Bitmap, view: ImageView) {
             .apply(RequestOptions.circleCropTransform())
             .into(view)
 }
+
+/**
+ * Генерирует строку из 1-х букв имени и фамилии
+ *
+ * Например:
+ * Полное имя: Максим Митюшкин
+ * Короткое: ММ
+ **/
+fun String.getTwoFirstLetters(): String {
+    val builder = StringBuilder()
+    val names = split(" ")
+
+    // Билдим имя
+    if (names.isNotEmpty()) builder.append(names[0][0])
+    if (names.size >= 2) builder.append(names[1][0])
+
+    return builder.toString()
+}

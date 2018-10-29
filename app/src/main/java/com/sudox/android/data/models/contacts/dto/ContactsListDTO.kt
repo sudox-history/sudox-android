@@ -13,7 +13,7 @@ class ContactsListDTO : JsonModel() {
         jsonArray.asSequence().forEach {
             if (it !is JSONObject) return@forEach
 
-            // Read contact data
+            // Read user data
             val contactInfoDTO = ContactInfoDTO().apply { fromJSON(it) }
 
             // Add to list

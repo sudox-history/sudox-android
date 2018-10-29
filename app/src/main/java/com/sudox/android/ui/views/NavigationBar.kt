@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.RelativeLayout
 import com.sudox.android.R
 import com.sudox.android.ui.views.enums.NavigationAction
-import kotlinx.android.synthetic.main.include_auth_navbar.view.*
+import kotlinx.android.synthetic.main.view_navigation_bar.view.*
 
 class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -34,7 +34,7 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         readAttrs(attrs)
 
         // Inflate view
-        inflate(context, R.layout.include_auth_navbar, this)
+        inflate(context, R.layout.view_navigation_bar, this)
     }
 
     override fun onFinishInflate() {

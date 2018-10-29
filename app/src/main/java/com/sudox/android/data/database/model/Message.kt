@@ -4,9 +4,9 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 
-@Entity(tableName = "messages_table")
-class Message(@PrimaryKey var mid: String,
-              @ColumnInfo var text: String,
-              @ColumnInfo var time: Long,
-              @ColumnInfo var type: Int,
-              @ColumnInfo var userId: String)
+@Entity(tableName = "user_chat_messages")
+class UserChatMessage(@PrimaryKey var mid: Int,
+                      @ColumnInfo var text: String,
+                      @ColumnInfo var date: Long,
+                      @ColumnInfo var type: Int,
+                      @ColumnInfo var userId: String)

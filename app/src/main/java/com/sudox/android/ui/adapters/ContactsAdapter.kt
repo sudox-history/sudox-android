@@ -10,8 +10,9 @@ import com.sudox.android.R
 import com.sudox.android.R.layout
 import com.sudox.android.common.helpers.drawAvatar
 import com.sudox.android.common.helpers.drawCircleBitmap
+import com.sudox.android.common.helpers.getTwoFirstLetters
 import com.sudox.android.common.helpers.setOnItemClickListener
-import com.sudox.android.data.database.model.Contact
+import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.repositories.main.ContactsRepository
@@ -21,10 +22,10 @@ import javax.inject.Inject
 class ContactsAdapter @Inject constructor(val context: Context,
                                           val contactsRepository: ContactsRepository) : RecyclerView.Adapter<ContactsAdapter.Holder>() {
 
-    var items: List<Contact> = arrayListOf()
+    var items: List<User> = arrayListOf()
 
     // Кэллбэки
-    lateinit var clickCallback: (Contact) -> (Unit)
+    lateinit var clickCallback: (User) -> (Unit)
     lateinit var menuInflater: MenuInflater
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -45,18 +46,16 @@ class ContactsAdapter @Inject constructor(val context: Context,
             setOnClickListener { clickCallback(contact) }
             setOnLongClickListener { showContextMenu() }
             setOnCreateContextMenuListener { menu, _, _ ->
-                run {
-                    menuInflater.inflate(R.menu.menu_contact_options, menu)
+                menuInflater.inflate(R.menu.menu_contact_options, menu)
 
-                    // Свой способ :)
-                    menu.setOnItemClickListener {
-                        when (it.itemId) {
-                            R.id.remove_contact -> contactsRepository.removeContact(contact.uid)
-                        }
-
-                        // Все норм
-                        return@setOnItemClickListener true
+                // Свой способ :)
+                menu.setOnItemClickListener {
+                    when (it.itemId) {
+                        R.id.remove_contact -> contactsRepository.removeContact(contact.uid)
                     }
+
+                    // Все норм
+                    return@setOnItemClickListener true
                 }
             }
         }
@@ -70,21 +69,21 @@ class ContactsAdapter @Inject constructor(val context: Context,
         val name = view.name!!
         val nickname = view.nickname!!
 
-        fun bindData(contact: Contact) {
-            bindAvatar(contact)
+        fun bindData(user: User) {
+            bindAvatar(user)
 
             // Bind others data ...
-            name.text = contact.name
-            nickname.text = contact.nickname
+            name.text = user.name
+            nickname.text = user.nickname
         }
 
-        private fun bindAvatar(contact: Contact) {
-            val avatarInfo = AvatarInfo.parse(contact.photo)
+        private fun bindAvatar(user: User) {
+            val avatarInfo = AvatarInfo.parse(user.avatar)
 
             // aka GradientAvatar
             if (avatarInfo is ColorAvatarInfo) {
                 drawCircleBitmap(view.context, drawAvatar(
-                        text = contact.buildShortName(),
+                        text = user.name.getTwoFirstLetters(),
                         firstColor = avatarInfo.firstColor,
                         secondColor = avatarInfo.secondColor), avatar)
             }

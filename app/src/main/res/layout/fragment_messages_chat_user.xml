@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/userChatToolbar"
+        style="@style/ToolbarTheme.Child"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            style="@style/ToolbarTheme.Child.Container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/chatRecipientAvatar"
+                android:layout_width="36dp"
+                android:layout_height="36dp" />
+
+            <!-- Other information -->
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@id/chatRecipientAvatar"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/chatRecipientName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:includeFontPadding="false"
+                    android:textSize="@dimen/font_size_increased_tiny" />
+
+                <TextView
+                    android:id="@+id/chatRecipientLastJoin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="sans-serif-light"
+                    android:includeFontPadding="false"
+                    android:text="Был в сети 15 минут назад"
+                    android:textColor="@color/colorHint"
+                    android:textSize="@dimen/font_size_extra_tiny" />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chatMessagesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/edit_message_layout"
+        android:layout_below="@id/userChatToolbar" />
+
+    <LinearLayout
+        android:id="@+id/edit_message_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimary"
+        android:minHeight="@dimen/editfield_height"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/attach_file"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="18dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/attach_file"
+            android:src="@drawable/ic_attach_file" />
+
+        <EditText
+            android:id="@+id/edit_message_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="1dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="@string/enter_message"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxHeight="100dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textSize="15sp"
+            tools:ignore="Autofill" />
+
+        <ImageButton
+            android:id="@+id/send_message_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="18dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="@string/send_message"
+            android:src="@drawable/ic_send" />
+    </LinearLayout>
+</RelativeLayout>

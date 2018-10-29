@@ -1,10 +1,9 @@
 package com.sudox.android.data.repositories.main
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import com.sudox.android.data.database.dao.ContactsDao
-import com.sudox.android.data.database.model.Contact
-import com.sudox.android.data.database.model.Contact.Companion.TRANSFORMATION_FROM_USER_INFO_DTO
+import com.sudox.android.data.database.model.User
+import com.sudox.android.data.database.model.User.Companion.TRANSFORMATION_FROM_USER_INFO_DTO
 import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.contacts.dto.ContactChangeDTO
 import com.sudox.android.data.models.contacts.dto.ContactsListDTO
@@ -21,7 +20,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
                                              private val usersRepository: UsersRepository,
                                              private val contactsDao: ContactsDao) {
 
-    val contactsGetLiveData: LiveData<List<Contact>> = contactsDao.loadAll()
+    val contactsGetLiveData: LiveData<List<User>> = contactsDao.loadAll()
 
     init {
         // Обновим данные когда будет установлена сессия ...
@@ -68,7 +67,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
         protocolClient.makeRequest<ContactsListDTO>("contacts.get") {
             // Если будет UNAUTHORIZED, то выполнится перехват на глобальном уровне и произойдет сброс сессии
             if (it.isSuccess()) {
-                updateContactsInDatabase(it.contacts.map(Contact.TRANSFORMATION_FROM_CONTACT_INFO_DTO))
+                updateContactsInDatabase(it.contacts.map(User.TRANSFORMATION_FROM_CONTACT_INFO_DTO))
             } else if (it.error == Errors.EMPTY_CONTACTS_LIST) {
                 updateContactsInDatabase(emptyList())
             }
@@ -78,10 +77,10 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
     /**
      * Метод поиска контакта по E-mail
      */
-    fun searchContactByEmail(email: String, successCallback: (Contact) -> (Unit), errorCallback: (Int) -> Unit) {
+    fun searchContactByEmail(email: String, successCallback: (User) -> (Unit), errorCallback: (Int) -> Unit) {
         usersRepository.getUserByEmail(email) {
             if (it.isSuccess()) {
-                successCallback(Contact.TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO(it))
+                successCallback(User.TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO(it))
             } else {
                 errorCallback(it.error)
             }
@@ -102,7 +101,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
                 if (it.containsError()) return@getUser errorCallback(it.error)
 
                 // Сохраняем в БД
-                contactsDao.insertOne(Contact.TRANSFORMATION_FROM_USER_INFO_DTO.invoke(userInfoDTO))
+                contactsDao.insertOne(User.TRANSFORMATION_FROM_USER_INFO_DTO.invoke(userInfoDTO))
 
                 // Уведомляем об успешном добавлении контакта
                 successCallback()
@@ -128,10 +127,10 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
      *
      * После обновления актуальная копия прилетит в LiveData.
      */
-    private fun updateContactsInDatabase(contacts: List<Contact>) = GlobalScope.async {
+    private fun updateContactsInDatabase(users: List<User>) = GlobalScope.async {
         contactsDao.removeAll()
 
         // Сохраним контакты в БД
-        if (contacts.isNotEmpty()) contactsDao.insertAll(contacts)
+        if (users.isNotEmpty()) contactsDao.insertAll(users)
     }
 }

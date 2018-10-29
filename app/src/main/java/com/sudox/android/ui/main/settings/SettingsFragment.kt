@@ -9,7 +9,7 @@ import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.android.synthetic.main.fragment_main_settings.*
 import javax.inject.Inject
 
 class SettingsFragment: DaggerFragment() {
@@ -24,7 +24,7 @@ class SettingsFragment: DaggerFragment() {
         settingsViewModel = getViewModel(viewModelFactory)
         mainActivity = activity as MainActivity
 
-        return inflater.inflate(R.layout.fragment_settings, container, false)
+        return inflater.inflate(R.layout.fragment_main_settings, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

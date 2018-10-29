@@ -23,7 +23,7 @@ class AccountInfoDTO : JsonModel() {
         name = jsonObject.optString("name")
         nickname = jsonObject.optString("nickname")
         email = jsonObject.optString("email")
-        photo = AvatarInfo.parse(jsonObject.optString("photo"))
+        photo = AvatarInfo.parse(jsonObject.optString("avatar"))
         status = jsonObject.optString("status")
         bio = jsonObject.optString("bio")
     }

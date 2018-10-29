@@ -25,9 +25,9 @@
     </style>
 
     <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="contentInsetStart">27dp</item>
+        <item name="contentInsetStart">25dp</item>
         <!-- Calculation of toolbar right padding:
-             right padding of the design in the design - padding of the menu item = 34dp - 16dp - 8dp = 10dp -->
+             right padding of the design in the design - padding of the menu item - half of icon width = 34dp - 16dp - 8dp = 10dp -->
         <item name="android:paddingRight">10dp</item>
         <item name="android:paddingEnd">18dp</item>
         <item name="android:elevation">0dp</item>
@@ -36,9 +36,24 @@
         <item name="titleTextAppearance">@style/ToolbarTheme.Title</item>
     </style>
 
+    <style name="ToolbarTheme.Child" parent="ToolbarTheme">
+        <item name="navigationIcon">@drawable/ic_arrow_back</item>
+        <!-- Calculation of toolbar left padding:
+             left padding of the design in the design - padding of the icon - half of icon width = 27dp - 16dp - 8dp = 3dp -->
+        <item name="android:paddingStart">3dp</item>
+        <item name="android:paddingLeft">3dp</item>
+    </style>
+
+    <style name="ToolbarTheme.Child.Container">
+        <item name="android:translationX">-15dp</item>
+    </style>
+
     <style name="ToolbarTheme.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textSize">@dimen/font_size_increased_medium</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
     </style>
 
     <style name="ToolbarTheme.ChatToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

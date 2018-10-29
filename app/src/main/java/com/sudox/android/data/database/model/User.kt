@@ -3,12 +3,13 @@ package com.sudox.android.data.database.model
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import com.sudox.android.data.models.chats.UserChatRecipient
 import com.sudox.android.data.models.contacts.dto.ContactInfoDTO
 import com.sudox.android.data.models.users.dto.UserInfoDTO
 import com.sudox.android.data.models.users.dto.UsersGetByEmailDTO
 
 @Entity(tableName = "contacts")
-class Contact {
+class User {
 
     @PrimaryKey
     lateinit var uid: String
@@ -20,36 +21,18 @@ class Contact {
     lateinit var nickname: String
 
     @ColumnInfo
-    lateinit var photo: String
-
-    /**
-     * Генерирует строку из 1-х букв имени и фамилии
-     *
-     * Например:
-     * Полное имя: Максим Митюшкин
-     * Короткое: ММ
-     **/
-    fun buildShortName(): String {
-        val builder = StringBuilder()
-        val names = name.split(" ")
-
-        // Билдим имя
-        if (names.isNotEmpty()) builder.append(names[0][0])
-        if (names.size >= 2) builder.append(names[1][0])
-
-        return builder.toString()
-    }
+    lateinit var avatar: String
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Contact
+        other as User
 
         if (uid != other.uid) return false
         if (name != other.name) return false
         if (nickname != other.nickname) return false
-        if (photo != other.photo) return false
+        if (avatar != other.avatar) return false
 
         return true
     }
@@ -58,35 +41,44 @@ class Contact {
         var result = uid.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + nickname.hashCode()
-        result = 31 * result + photo.hashCode()
+        result = 31 * result + avatar.hashCode()
         return result
     }
 
     companion object {
-        val TRANSFORMATION_FROM_CONTACT_INFO_DTO: (ContactInfoDTO) -> (Contact) = {
-            Contact().apply {
+        val TRANSFORMATION_FROM_CONTACT_INFO_DTO: (ContactInfoDTO) -> (User) = {
+            User().apply {
                 uid = it.id
                 name = it.name
                 nickname = it.nickname
-                photo = it.photo
+                avatar = it.photo
             }
         }
 
-        val TRANSFORMATION_FROM_USER_INFO_DTO: (UserInfoDTO) -> (Contact) = {
-            Contact().apply {
+        val TRANSFORMATION_FROM_USER_INFO_DTO: (UserInfoDTO) -> (User) = {
+            User().apply {
                 uid = it.id
                 name = it.name
                 nickname = it.nickname
-                photo = it.photo
+                avatar = it.photo
             }
         }
 
-        val TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO: (UsersGetByEmailDTO) -> (Contact) = {
-            Contact().apply {
+        val TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO: (UsersGetByEmailDTO) -> (User) = {
+            User().apply {
                 uid = it.id
                 name = it.name
                 nickname = it.nickname
-                photo = it.photo
+                avatar = it.photo
+            }
+        }
+
+        val TRANSFORMATION_TO_USER_CHAT_RECIPIENT: (User) -> (UserChatRecipient) = {
+            UserChatRecipient().apply {
+                uid = it.uid
+                name = it.name
+                nickname = it.nickname
+                photo = it.avatar
             }
         }
     }

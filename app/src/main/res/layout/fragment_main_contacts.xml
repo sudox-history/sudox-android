@@ -12,7 +12,7 @@
         style="@style/ToolbarTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/contacts" />
+        app:title="@string/users" />
 
     <com.sudox.android.ui.views.toolbar.expanded.ContactAddExpandedView
         android:id="@+id/contactAddExpandedView"

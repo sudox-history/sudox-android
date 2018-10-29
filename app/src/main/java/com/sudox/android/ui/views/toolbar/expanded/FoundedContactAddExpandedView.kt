@@ -6,12 +6,12 @@ import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
 import com.sudox.android.common.helpers.drawAvatar
 import com.sudox.android.common.helpers.drawCircleBitmap
-import com.sudox.android.data.database.model.Contact
+import com.sudox.android.common.helpers.getTwoFirstLetters
+import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.repositories.main.ContactsRepository
-import kotlinx.android.synthetic.main.view_contact_add_expanded.view.*
 import kotlinx.android.synthetic.main.view_contact_add_founded_expanded.view.*
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
@@ -23,7 +23,7 @@ class FoundedContactAddExpandedView : ExpandedView {
 
     @Inject
     lateinit var contactsRepository: ContactsRepository
-    lateinit var contact: Contact
+    lateinit var user: User
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -43,8 +43,8 @@ class FoundedContactAddExpandedView : ExpandedView {
     }
 
     private fun addContact() {
-        contactsRepository.addContact(contact.uid, {
-            GlobalScope.launch(Dispatchers.Main) { clear() }
+        contactsRepository.addContact(user.uid, {
+            GlobalScope.launch(Dispatchers.Main) { hide() }
         }) {
             if (it == Errors.INVALID_USER) {
                 contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.contact_has_already_added))
@@ -54,20 +54,20 @@ class FoundedContactAddExpandedView : ExpandedView {
         }
     }
 
-    fun bindData(contact: Contact) = GlobalScope.launch(Dispatchers.Main) {
-        this@FoundedContactAddExpandedView.contact = contact
+    fun bindData(user: User) = GlobalScope.launch(Dispatchers.Main) {
+        this@FoundedContactAddExpandedView.user = user
 
         // Bind data
-        foundedContactName.text = contact.name
-        foundedContactNickname.text = contact.nickname
+        foundedContactName.text = user.name
+        foundedContactNickname.text = user.nickname
 
         // Find avatar info
-        val avatarInfo = AvatarInfo.parse(contact.photo)
+        val avatarInfo = AvatarInfo.parse(user.avatar)
 
         // Show avatar
         if (avatarInfo is ColorAvatarInfo) {
             drawCircleBitmap(context, drawAvatar(
-                    text = contact.buildShortName(),
+                    text = user.name.getTwoFirstLetters(),
                     firstColor = avatarInfo.firstColor,
                     secondColor = avatarInfo.secondColor
             ), foundedContactAvatar)
