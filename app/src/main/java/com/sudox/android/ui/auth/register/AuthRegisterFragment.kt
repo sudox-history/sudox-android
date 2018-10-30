@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.common.helpers.hideInputError
-import com.sudox.android.common.helpers.showInputError
-import com.sudox.android.ui.views.enums.NavigationAction
+import com.sudox.design.helpers.hideInputError
+import com.sudox.design.helpers.showInputError
+import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
@@ -73,8 +73,6 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
         // Чистим поля ввода
         nameEditText.setText("")
         nicknameEditText.setText("")
-
-        // Linking watchers
         nameEditText.addTextChangedListener(watcher)
         nicknameEditText.addTextChangedListener(watcher)
     }
@@ -82,27 +80,24 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
     private fun initNavigationBar() {
         authRegisterFragmentNavbar.navigationActionCallback = {
             if (it == NavigationAction.NEXT) {
-                val name = nameEditText.text.toString()
-                val nickname = nicknameEditText.text.toString()
-
-                // Запрос ...
-                authRegisterViewModel.signUp(authSession.email, authSession.code!!, authSession.hash, name, nickname)
+                authRegisterViewModel.signUp(
+                        authSession.email,
+                        authSession.code!!,
+                        authSession.hash,
+                        nameEditText.text.toString(),
+                        nicknameEditText.text.toString())
             }
         }
     }
 
     override fun freeze() {
         authRegisterFragmentNavbar.freeze()
-
-        // Блокируем ввод данных
         nameEditText.isEnabled = false
         nicknameEditText.isEnabled = false
     }
 
     override fun unfreeze() {
         authRegisterFragmentNavbar.unfreeze()
-
-        // Разблокируем ввод данных
         nameEditText.isEnabled = true
         nicknameEditText.isEnabled = true
     }

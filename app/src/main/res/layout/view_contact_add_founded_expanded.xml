@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.sudox.android.ui.views.toolbar.expanded.StatusExpandedView
+    <com.sudox.design.navigation.toolbar.expanded.StatusExpandedView
         android:id="@+id/contactAddFoundedStatusExpandedView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

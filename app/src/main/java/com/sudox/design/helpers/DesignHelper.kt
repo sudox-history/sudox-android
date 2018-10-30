@@ -1,4 +1,4 @@
-package com.sudox.android.common.helpers
+package com.sudox.design.helpers
 
 import android.app.Activity
 import android.content.Context
@@ -16,10 +16,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import com.androidadvance.topsnackbar.TSnackbar
 import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.request.RequestOptions
 import com.sudox.android.R
 

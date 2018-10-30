@@ -21,13 +21,8 @@ class AuthEmailViewModel @Inject constructor(private val authRepository: AuthRep
      * */
     fun requestCode(email: String) {
         authEmailActionLiveData.postValue(AuthEmailAction.FREEZE)
-
-        // Запрашиваем код ...
         authRepository.requestCode(email) {
             if (!it) authEmailActionLiveData.postValue(AuthEmailAction.SHOW_ERROR)
-
-            /* Размораживать не нужно, т.к. мы не тупые и сами во View можем догадаться,
-               что при ошибке нужно разморозить Fragment ... */
         }
     }
 }

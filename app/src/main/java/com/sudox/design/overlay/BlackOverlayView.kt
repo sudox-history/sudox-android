@@ -1,4 +1,4 @@
-package com.sudox.android.ui.views.overlay
+package com.sudox.design.overlay
 
 import android.animation.Animator
 import android.animation.ObjectAnimator

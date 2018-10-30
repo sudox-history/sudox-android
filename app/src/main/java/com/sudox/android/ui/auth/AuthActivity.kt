@@ -8,7 +8,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.FragmentTransaction
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.common.helpers.showSnackbar
+import com.sudox.design.helpers.showSnackbar
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.email.AuthEmailFragment
@@ -26,7 +26,6 @@ class AuthActivity : DaggerAppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var authViewModel: AuthViewModel
     var authSession: AuthSession? = null
-    var authKey: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,32 +33,23 @@ class AuthActivity : DaggerAppCompatActivity() {
 
         // Get view model
         authViewModel = getViewModel(viewModelFactory)
-
-        // Listen connection status ...
         authViewModel.connectionStateLiveData.observe(this, Observer {
             if (it == ConnectionState.CONNECTION_CLOSED || it == ConnectionState.CONNECTION_CLOSED) {
-                showMessage(getString(R.string.lost_internet_connection))
-                unfreezeCurrent()
-
-                // Все равно код будет недействительным ...
-                if (authSession != null) showAuthEmailFragment(authSession!!.email)
-            } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
-                showMessage(getString(R.string.connection_restored))
+                if (authSession != null) {
+                    showAuthEmailFragment(authSession!!.email)
+                } else {
+                    unfreezeCurrent()
+                }
             }
         })
 
-        // Слушаем сессию авторизации
         authViewModel.authSessionStateLiveData.observe(this, Observer {
             if (it?.status != -1) {
-                // Сохраним сессию, потом пригодится :)
                 authSession = it!!
-
-                // Переключим фрагмент (новые данные он подхватит при подгрузке)
                 showAuthConfirmFragment()
             }
         })
 
-        // Слушаем сессию аккаунта (точнее статус её жизни)
         authViewModel.accountSessionLiveData.observe(this, Observer {
             if (it?.lived!!) showMainActivity()
         })
@@ -78,11 +68,7 @@ class AuthActivity : DaggerAppCompatActivity() {
     }
 
     fun showAuthEmailFragment(email: String? = null, isFirstStart: Boolean = false) {
-
-        val authEmailFragment = AuthEmailFragment().apply {
-            this.email = email
-        }
-        authEmailFragment.email = email
+        val authEmailFragment = AuthEmailFragment().apply { this.email = email }
 
         // Build transaction for fragment change
         val transaction = supportFragmentManager
@@ -96,6 +82,9 @@ class AuthActivity : DaggerAppCompatActivity() {
         }
 
         transaction.commit()
+
+        // Remove the auth session
+        authSession = null
     }
 
     private fun showAuthConfirmFragment() {

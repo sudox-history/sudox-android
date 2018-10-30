@@ -10,10 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.common.helpers.formatHtml
-import com.sudox.android.common.helpers.hideInputError
-import com.sudox.android.common.helpers.showInputError
-import com.sudox.android.ui.views.enums.NavigationAction
+import com.sudox.design.helpers.formatHtml
+import com.sudox.design.helpers.hideInputError
+import com.sudox.design.helpers.showInputError
+import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.confirm.enums.AuthConfirmAction
@@ -80,8 +80,6 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
 
         // Чистим поле ввода
         codeEditText.setText("")
-
-        // Автоматический сброс ошибки при вводе и автоматическая отправка кода при достижении длины 5 символов
         codeEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
@@ -110,10 +108,7 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
     private fun initNavigationBar() {
         authConfirmFragmentNavbar.navigationActionCallback = {
             if (it == NavigationAction.BACK) {
-                // Clear data
-                codeEditText.text = null
-
-                // Change fragment
+                codeEditText.setText("")
                 authActivity.showAuthEmailFragment(authSession.email)
             } else if (it == NavigationAction.SOME_FEATURE) {
                 // TODO: Try send code again
@@ -123,15 +118,11 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
 
     override fun freeze() {
         codeEditText.isEnabled = false
-
-        // Freeze navbar
         authConfirmFragmentNavbar.freeze()
     }
 
     override fun unfreeze() {
         codeEditText.isEnabled = true
-
-        // Unfreeze navbar
         authConfirmFragmentNavbar.unfreeze()
     }
 }

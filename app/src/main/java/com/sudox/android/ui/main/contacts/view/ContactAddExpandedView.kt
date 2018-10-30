@@ -1,4 +1,4 @@
-package com.sudox.android.ui.views.toolbar.expanded
+package com.sudox.android.ui.main.contacts.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,14 +6,15 @@ import android.view.inputmethod.EditorInfo
 import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
 import com.sudox.android.data.models.Errors
-import com.sudox.android.data.repositories.main.ContactsRepository
+import com.sudox.android.data.repositories.main.UsersRepository
+import com.sudox.design.navigation.toolbar.expanded.ExpandedView
 import kotlinx.android.synthetic.main.view_contact_add_expanded.view.*
 import javax.inject.Inject
 
 class ContactAddExpandedView : ExpandedView {
 
     @Inject
-    lateinit var contactsRepository: ContactsRepository
+    lateinit var usersRepository: UsersRepository
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -42,18 +43,20 @@ class ContactAddExpandedView : ExpandedView {
     }
 
     private fun searchContact(email: String) {
-        contactsRepository.searchContactByEmail(email, {
-            foundedContactAddExpandedView.bindData(it)
-            foundedContactAddExpandedView.show()
-        }, {
-            if (it == Errors.INVALID_USER) {
-                contactAddStatusExpandedView.showMessage(context.getString(R.string.contact_has_not_find))
+        usersRepository.getUserByEmail(email) {
+            if (it.isSuccess()) {
+                foundedContactAddExpandedView.bindData(it)
+                foundedContactAddExpandedView.show()
             } else {
-                contactAddStatusExpandedView.showMessage(context.getString(R.string.unknown_error))
-            }
+                contactAddStatusExpandedView.showMessage(context.getString(when {
+                    it.error == Errors.INVALID_USER -> R.string.contact_has_not_find
+                    it.error == Errors.INVALID_PARAMETERS -> R.string.wrong_email_format
+                    else -> R.string.unknown_error
+                }))
 
-            foundedContactAddExpandedView.hide()
-        })
+                foundedContactAddExpandedView.hide()
+            }
+        }
     }
 
     override fun clear() {

@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.common.helpers.hideInputError
-import com.sudox.android.common.helpers.showInputError
-import com.sudox.android.ui.views.enums.NavigationAction
+import com.sudox.design.helpers.hideInputError
+import com.sudox.design.helpers.showInputError
+import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.email.enums.AuthEmailAction
 import com.sudox.android.ui.common.FreezableFragment
@@ -56,16 +56,11 @@ class AuthEmailFragment @Inject constructor() : FreezableFragment() {
 
     private fun initEmailEditText() {
         emailEditText.setText(email)
-
-        // Сброс ошибки при вводе (TODO: Custom View)
         emailEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (emailEditTextContainer.isErrorEnabled) {
-                    hideInputError(emailEditTextContainer)
-                }
+                if (emailEditTextContainer.isErrorEnabled) hideInputError(emailEditTextContainer)
             }
         })
     }
@@ -84,15 +79,11 @@ class AuthEmailFragment @Inject constructor() : FreezableFragment() {
 
     override fun freeze() {
         authEmailFragmentNavbar.freeze()
-
-        // Блокируем ввод, ибо нехрен ...
         emailEditText.isEnabled = false
     }
 
     override fun unfreeze() {
         authEmailFragmentNavbar.unfreeze()
-
-        // Разблокируем ввод
         emailEditText.isEnabled = true
     }
 }

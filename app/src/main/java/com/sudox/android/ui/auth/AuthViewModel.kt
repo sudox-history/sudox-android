@@ -5,8 +5,8 @@ import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject
 
-class AuthViewModel @Inject constructor(private val protocolClient: ProtocolClient,
-                                        private val authRepository: AuthRepository) : ViewModel() {
+class AuthViewModel @Inject constructor(protocolClient: ProtocolClient,
+                                        authRepository: AuthRepository) : ViewModel() {
 
     // Шины событий
     val connectionStateLiveData = protocolClient.connectionStateLiveData

@@ -1,4 +1,4 @@
-package com.sudox.android.ui.views.enums
+package com.sudox.design.navigation.toolbar.enums
 
 enum class NavigationAction {
     BACK,

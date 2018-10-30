@@ -1,4 +1,4 @@
-package com.sudox.android.ui.views.toolbar.expanded
+package com.sudox.design.navigation.toolbar.expanded
 
 import android.animation.Animator
 import android.content.Context
@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
-import com.sudox.android.common.helpers.hideKeyboard
-import com.sudox.android.ui.views.overlay.OverlappedRelativeLayout
+import com.sudox.design.helpers.hideKeyboard
+import com.sudox.design.overlay.OverlappedRelativeLayout
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main

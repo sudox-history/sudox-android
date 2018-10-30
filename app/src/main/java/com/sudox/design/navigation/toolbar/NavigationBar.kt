@@ -1,13 +1,12 @@
-package com.sudox.android.ui.views
+package com.sudox.design.navigation.toolbar
 
 import android.content.Context
-import android.support.annotation.VisibleForTesting
 import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import com.sudox.android.R
-import com.sudox.android.ui.views.enums.NavigationAction
+import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import kotlinx.android.synthetic.main.view_navigation_bar.view.*
 
 class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -61,8 +60,7 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         }
     }
 
-    @VisibleForTesting
-    internal fun configureComponents() {
+    fun configureComponents() {
         configureButton(buttonNavbarBack, backButtonIsVisible, backButtonText, NavigationAction.BACK)
         configureButton(buttonNavbarNext, nextButtonIsVisible, nextButtonText, NavigationAction.NEXT)
         configureButton(buttonSomeFeature, someFeatureButtonIsVisible, someFeatureText, NavigationAction.SOME_FEATURE)

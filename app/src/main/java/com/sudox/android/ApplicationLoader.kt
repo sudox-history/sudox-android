@@ -3,7 +3,6 @@ package com.sudox.android
 import android.content.Context
 import android.os.StrictMode
 import com.facebook.soloader.SoLoader
-import com.facebook.stetho.Stetho
 import com.sudox.android.common.API_KEY
 import com.sudox.android.common.di.AppComponent
 import com.sudox.android.common.di.DaggerAppComponent
@@ -69,6 +68,5 @@ class ApplicationLoader : DaggerApplication() {
 
         // Load Litho
         SoLoader.init(this, false)
-        Stetho.initializeWithDefaults(this)
     }
 }

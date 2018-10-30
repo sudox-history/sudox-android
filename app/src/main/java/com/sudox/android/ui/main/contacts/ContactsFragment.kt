@@ -11,12 +11,12 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.database.model.User
-import com.sudox.android.ui.adapters.ContactsAdapter
 import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import com.sudox.android.ui.main.MainActivity
-import com.sudox.android.ui.views.decorators.SecondColumnItemDecorator
+import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_main_contacts.*
+import kotlinx.android.synthetic.main.fragment_main_contacts.view.*
 import javax.inject.Inject
 
 class ContactsFragment @Inject constructor() : DaggerFragment() {
@@ -50,6 +50,7 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
         // Антон от 15-го октября: Справедливые слова, Макс, справедливые!
 
         // Настройка меню
+        contactsToolbar.
         contactsToolbar.inflateMenu(R.menu.menu_contacts)
         contactsToolbar.setOnMenuItemClickListener {
             when (it.itemId) {

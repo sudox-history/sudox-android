@@ -1,4 +1,4 @@
-package com.sudox.android.ui.views.decorators
+package com.sudox.design.recyclerview.decorators
 
 import android.content.Context
 import android.graphics.Canvas

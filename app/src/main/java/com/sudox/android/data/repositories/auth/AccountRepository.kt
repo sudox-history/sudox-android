@@ -25,6 +25,8 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
         // Remove accounts
         removeAccounts().await()
 
+        // TODO: Clear database
+
         // Add account
         accountManager.addAccountExplicitly(accountInstance, null, null)
 

@@ -1,17 +1,18 @@
-package com.sudox.android.ui.views.toolbar.expanded
+package com.sudox.android.ui.main.contacts.view
 
 import android.content.Context
 import android.util.AttributeSet
 import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
-import com.sudox.android.common.helpers.drawAvatar
-import com.sudox.android.common.helpers.drawCircleBitmap
-import com.sudox.android.common.helpers.getTwoFirstLetters
-import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
+import com.sudox.android.data.models.users.dto.UsersGetByEmailDTO
 import com.sudox.android.data.repositories.main.ContactsRepository
+import com.sudox.design.helpers.drawAvatar
+import com.sudox.design.helpers.drawCircleBitmap
+import com.sudox.design.helpers.getTwoFirstLetters
+import com.sudox.design.navigation.toolbar.expanded.ExpandedView
 import kotlinx.android.synthetic.main.view_contact_add_founded_expanded.view.*
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
@@ -23,7 +24,7 @@ class FoundedContactAddExpandedView : ExpandedView {
 
     @Inject
     lateinit var contactsRepository: ContactsRepository
-    lateinit var user: User
+    lateinit var usersGetByEmailDTO: UsersGetByEmailDTO
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -43,7 +44,7 @@ class FoundedContactAddExpandedView : ExpandedView {
     }
 
     private fun addContact() {
-        contactsRepository.addContact(user.uid, {
+        contactsRepository.addContact(usersGetByEmailDTO.id, {
             GlobalScope.launch(Dispatchers.Main) { hide() }
         }) {
             if (it == Errors.INVALID_USER) {
@@ -54,20 +55,20 @@ class FoundedContactAddExpandedView : ExpandedView {
         }
     }
 
-    fun bindData(user: User) = GlobalScope.launch(Dispatchers.Main) {
-        this@FoundedContactAddExpandedView.user = user
+    fun bindData(userGetByEmail: UsersGetByEmailDTO) = GlobalScope.launch(Dispatchers.Main) {
+        this@FoundedContactAddExpandedView.usersGetByEmailDTO = userGetByEmail
 
         // Bind data
-        foundedContactName.text = user.name
-        foundedContactNickname.text = user.nickname
+        foundedContactName.text = userGetByEmail.name
+        foundedContactNickname.text = userGetByEmail.nickname
 
         // Find avatar info
-        val avatarInfo = AvatarInfo.parse(user.avatar)
+        val avatarInfo = AvatarInfo.parse(userGetByEmail.photo)
 
         // Show avatar
         if (avatarInfo is ColorAvatarInfo) {
             drawCircleBitmap(context, drawAvatar(
-                    text = user.name.getTwoFirstLetters(),
+                    text = userGetByEmail.name.getTwoFirstLetters(),
                     firstColor = avatarInfo.firstColor,
                     secondColor = avatarInfo.secondColor
             ), foundedContactAvatar)

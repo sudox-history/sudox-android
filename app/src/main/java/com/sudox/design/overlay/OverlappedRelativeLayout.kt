@@ -1,12 +1,12 @@
-package com.sudox.android.ui.views.overlay
+package com.sudox.design.overlay
 
 import android.content.Context
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.RelativeLayout
-import com.sudox.android.ui.views.NavigationBar
-import com.sudox.android.ui.views.toolbar.expanded.ExpandedView
+import com.sudox.design.navigation.toolbar.NavigationBar
+import com.sudox.design.navigation.toolbar.expanded.ExpandedView
 
 class OverlappedRelativeLayout : RelativeLayout {
 

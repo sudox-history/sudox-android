@@ -1,4 +1,4 @@
-package com.sudox.android.ui.adapters
+package com.sudox.android.ui.main.contacts
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -8,10 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.R.layout
-import com.sudox.android.common.helpers.drawAvatar
-import com.sudox.android.common.helpers.drawCircleBitmap
-import com.sudox.android.common.helpers.getTwoFirstLetters
-import com.sudox.android.common.helpers.setOnItemClickListener
+import com.sudox.design.helpers.drawAvatar
+import com.sudox.design.helpers.drawCircleBitmap
+import com.sudox.design.helpers.getTwoFirstLetters
+import com.sudox.design.helpers.setOnItemClickListener
 import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo

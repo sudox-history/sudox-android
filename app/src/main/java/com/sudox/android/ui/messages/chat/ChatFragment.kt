@@ -1,6 +1,5 @@
 package com.sudox.android.ui.messages.chat
 
-import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -9,20 +8,17 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.facebook.litho.ComponentContext
-import com.facebook.litho.LithoView
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.common.helpers.drawAvatar
-import com.sudox.android.common.helpers.drawCircleBitmap
-import com.sudox.android.common.helpers.getTwoFirstLetters
+import com.sudox.design.helpers.drawAvatar
+import com.sudox.design.helpers.drawCircleBitmap
+import com.sudox.design.helpers.getTwoFirstLetters
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.chats.UserChatRecipient
 import com.sudox.android.ui.adapters.ChatAdapter
 import com.sudox.android.ui.diffutil.UserChatMessagesDiffUtil
 import com.sudox.android.ui.messages.MessagesActivity
-import com.sudox.android.ui.messages.components.ChatFragmentLayout
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_messages_chat_user.*
 import javax.inject.Inject
@@ -41,10 +37,7 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
 //        userChatRecipient = arguments!!.getParcelable(MessagesActivity.CONVERSATION_RECIPIENT_KEY)!!
         chatViewModel = getViewModel(viewModelFactory)
 
-        // For litho
-        val context = ComponentContext(context)
-
-        return LithoView.create(context, ChatFragmentLayout.create(context).activity(activity as Activity).build())
+        return null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

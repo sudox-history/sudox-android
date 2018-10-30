@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sudox.android.ui.views.overlay.OverlappedRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sudox.design.overlay.OverlappedRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,17 +14,17 @@
         android:layout_height="wrap_content"
         app:title="@string/users" />
 
-    <com.sudox.android.ui.views.toolbar.expanded.ContactAddExpandedView
+    <com.sudox.android.ui.main.contacts.view.ContactAddExpandedView
         android:id="@+id/contactAddExpandedView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/contactsToolbar" />
 
-    <com.sudox.android.ui.views.toolbar.expanded.StatusExpandedView
+    <com.sudox.design.navigation.toolbar.expanded.StatusExpandedView
         android:id="@+id/contactsStatusExpandedView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/contactsToolbar"/>
+        android:layout_below="@id/contactsToolbar" />
 
     <!-- Toolbar section end -->
 
@@ -36,4 +36,4 @@
         android:clipToPadding="false"
         android:paddingTop="16dp" />
 
-</com.sudox.android.ui.views.overlay.OverlappedRelativeLayout>
+</com.sudox.design.overlay.OverlappedRelativeLayout>
