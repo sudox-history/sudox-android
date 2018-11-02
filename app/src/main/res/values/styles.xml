@@ -68,7 +68,7 @@
         <item name="android:paddingLeft">27dp</item>
         <!-- In design - 1/2 of menu icon in the toolbar = 34dp - 8dp = 26dp -->
         <item name="android:paddingRight">26dp</item>
-        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingBottom">20dp</item>
     </style>
 
     <style name="ToolbarTheme.ExpandedView.EditText">
