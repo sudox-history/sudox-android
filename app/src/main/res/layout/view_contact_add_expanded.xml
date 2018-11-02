@@ -33,12 +33,12 @@
             android:textSize="@dimen/font_size_increased_tiny" />
 
         <EditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/queryEditText"
             style="@style/ToolbarTheme.ExpandedView.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:hint="@string/enter_email_of_user"
+            android:hint="@string/enter_query"
             android:imeOptions="actionSearch"
             android:inputType="textEmailAddress" />
 

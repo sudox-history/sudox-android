@@ -30,20 +30,20 @@ class ContactAddExpandedView : ExpandedView {
         ApplicationLoader.component.inject(this)
 
         // Настроим View'шки
-        initEmailEditText()
+        initQueryEditText()
     }
 
-    private fun initEmailEditText() {
-        emailEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId != EditorInfo.IME_ACTION_SEARCH) searchContact(emailEditText.text.toString())
+    private fun initQueryEditText() {
+        queryEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId != EditorInfo.IME_ACTION_SEARCH) searchContact(queryEditText.text.toString())
 
             // Клавиатуру скрываем
             return@setOnEditorActionListener false
         }
     }
 
-    private fun searchContact(email: String) {
-        usersRepository.getUserByEmail(email) {
+    private fun searchContact(query: String) {
+        usersRepository.searchUser(query) {
             if (it.isSuccess()) {
                 foundedContactAddExpandedView.bindData(it)
                 foundedContactAddExpandedView.show()
@@ -63,6 +63,6 @@ class ContactAddExpandedView : ExpandedView {
         foundedContactAddExpandedView.hide()
 
         // Clear all
-        emailEditText.setText("")
+        queryEditText.setText("")
     }
 }

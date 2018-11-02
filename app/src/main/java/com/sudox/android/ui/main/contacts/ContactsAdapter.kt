@@ -8,19 +8,19 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.R.layout
-import com.sudox.design.helpers.drawAvatar
-import com.sudox.design.helpers.drawCircleBitmap
-import com.sudox.design.helpers.getTwoFirstLetters
-import com.sudox.design.helpers.setOnItemClickListener
 import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.repositories.main.ContactsRepository
+import com.sudox.design.helpers.drawAvatar
+import com.sudox.design.helpers.drawCircleBitmap
+import com.sudox.design.helpers.getTwoFirstLetters
+import com.sudox.design.helpers.setOnItemClickListener
 import kotlinx.android.synthetic.main.item_contact.view.*
 import javax.inject.Inject
 
 class ContactsAdapter @Inject constructor(val context: Context,
-                                          val contactsRepository: ContactsRepository) : RecyclerView.Adapter<ContactsAdapter.Holder>() {
+                                          private val contactsRepository: ContactsRepository) : RecyclerView.Adapter<ContactsAdapter.Holder>() {
 
     var items: List<User> = arrayListOf()
 

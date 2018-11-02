@@ -75,19 +75,6 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
     }
 
     /**
-     * Метод поиска контакта по E-mail
-     */
-    fun searchContactByEmail(email: String, successCallback: (User) -> (Unit), errorCallback: (Int) -> Unit) {
-        usersRepository.getUserByEmail(email) {
-            if (it.isSuccess()) {
-                successCallback(User.TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO(it))
-            } else {
-                errorCallback(it.error)
-            }
-        }
-    }
-
-    /**
      * Добавляет контакт по ID, в случае ошибки на любом этапе возвращает errorCallback
      */
     fun addContact(id: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {

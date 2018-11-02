@@ -7,7 +7,7 @@ import com.sudox.android.R
 import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
-import com.sudox.android.data.models.users.dto.UsersGetByEmailDTO
+import com.sudox.android.data.models.users.dto.SearchUserDTO
 import com.sudox.android.data.repositories.main.ContactsRepository
 import com.sudox.design.helpers.drawAvatar
 import com.sudox.design.helpers.drawCircleBitmap
@@ -24,7 +24,7 @@ class FoundedContactAddExpandedView : ExpandedView {
 
     @Inject
     lateinit var contactsRepository: ContactsRepository
-    lateinit var usersGetByEmailDTO: UsersGetByEmailDTO
+    private lateinit var searchUserDTO: SearchUserDTO
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -44,7 +44,7 @@ class FoundedContactAddExpandedView : ExpandedView {
     }
 
     private fun addContact() {
-        contactsRepository.addContact(usersGetByEmailDTO.id, {
+        contactsRepository.addContact(searchUserDTO.id, {
             GlobalScope.launch(Dispatchers.Main) { hide() }
         }) {
             if (it == Errors.INVALID_USER) {
@@ -55,8 +55,8 @@ class FoundedContactAddExpandedView : ExpandedView {
         }
     }
 
-    fun bindData(userGetByEmail: UsersGetByEmailDTO) = GlobalScope.launch(Dispatchers.Main) {
-        this@FoundedContactAddExpandedView.usersGetByEmailDTO = userGetByEmail
+    fun bindData(userGetByEmail: SearchUserDTO) = GlobalScope.launch(Dispatchers.Main) {
+        this@FoundedContactAddExpandedView.searchUserDTO = userGetByEmail
 
         // Bind data
         foundedContactName.text = userGetByEmail.name

@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:includeFontPadding="false"
-                    android:text="@string/enter_email_of_user"
+                    android:text="@string/enter_query"
                     android:textSize="@dimen/font_size_increased_tiny" />
 
                 <TextView

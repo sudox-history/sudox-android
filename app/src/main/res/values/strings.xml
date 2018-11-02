@@ -60,7 +60,7 @@
     <string name="code_has_sent_successfully">Code has sent successfully!</string>
     <string name="add_contact">Add user</string>
     <string name="add_new_contact">Add new users</string>
-    <string name="enter_email_of_user">Enter email</string>
+    <string name="enter_query">Enter query</string>
     <string name="toolbar_back">Back</string>
     <string name="toolbar_next">Next</string>
     <string name="ok">OK</string>

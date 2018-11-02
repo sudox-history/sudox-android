@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 import com.sudox.android.data.models.chats.UserChatRecipient
 import com.sudox.android.data.models.contacts.dto.ContactInfoDTO
 import com.sudox.android.data.models.users.dto.UserInfoDTO
-import com.sudox.android.data.models.users.dto.UsersGetByEmailDTO
+import com.sudox.android.data.models.users.dto.SearchUserDTO
 
 @Entity(tableName = "contacts")
 class User {
@@ -64,7 +64,7 @@ class User {
             }
         }
 
-        val TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO: (UsersGetByEmailDTO) -> (User) = {
+        val TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO: (SearchUserDTO) -> (User) = {
             User().apply {
                 uid = it.id
                 name = it.name

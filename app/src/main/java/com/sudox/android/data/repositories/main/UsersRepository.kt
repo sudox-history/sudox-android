@@ -1,7 +1,7 @@
 package com.sudox.android.data.repositories.main
 
+import com.sudox.android.data.models.users.dto.SearchUserDTO
 import com.sudox.android.data.models.users.dto.UserInfoDTO
-import com.sudox.android.data.models.users.dto.UsersGetByEmailDTO
 import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,9 +21,9 @@ class UsersRepository @Inject constructor(private val protocolClient: ProtocolCl
     /**
      * Получает информацию о пользователе с сервера по E-mail.;
      */
-    fun getUserByEmail(email: String, responseCallback: (UsersGetByEmailDTO) -> (Unit)) {
-        protocolClient.makeRequest<UsersGetByEmailDTO>("users.getByEmail", UsersGetByEmailDTO().apply {
-            this.email = email
+    fun searchUser(query: String, responseCallback: (SearchUserDTO) -> (Unit)) {
+        protocolClient.makeRequest<SearchUserDTO>("users.search", SearchUserDTO().apply {
+            this.query = query
         }) { responseCallback(it) }
     }
 }

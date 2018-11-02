@@ -3,10 +3,10 @@ package com.sudox.android.data.models.users.dto
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONObject
 
-class UsersGetByEmailDTO: JsonModel() {
+class SearchUserDTO: JsonModel() {
 
     // For sending & reading
-    lateinit var email: String
+    lateinit var query: String
 
     // For reading
     lateinit var id: String
@@ -15,7 +15,7 @@ class UsersGetByEmailDTO: JsonModel() {
     lateinit var photo: String
 
     override fun toJSON(): JSONObject {
-        return JSONObject().apply { putOpt("email", email) }
+        return JSONObject().apply { putOpt("q", query) }
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
