@@ -58,7 +58,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/edit_message_layout"
-        android:layout_below="@id/userChatToolbar" />
+        android:layout_below="@id/userChatToolbar"
+        android:clipToPadding="false"
+        android:padding="10dp" />
 
     <LinearLayout
         android:id="@+id/edit_message_layout"
