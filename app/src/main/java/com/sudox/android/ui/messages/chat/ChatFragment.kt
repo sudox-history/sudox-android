@@ -83,14 +83,19 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
                 .chatRepository
                 .observeWithCurrentRecipient(userChatRecipient.uid)
                 .observe(this, Observer {
-                    val diffUtil = UserChatMessagesDiffUtil(it!!, chatAdapter.items)
+                    val oldSize = chatAdapter.items.size
+                    val newSize = it!!.size
+                    val sizesDifference = newSize - oldSize
+                    val diffUtil = UserChatMessagesDiffUtil(it, chatAdapter.items)
                     val diffResult = DiffUtil.calculateDiff(diffUtil)
 
                     // Update data ...
                     chatAdapter.items = it
 
                     // Notify chatAdapter about update
-                    diffResult.dispatchUpdatesTo(chatAdapter)
+
+                    chatAdapter.notifyItemInserted(sizesDifference)
+                    chatMessagesList.scrollToPosition(newSize - 1)
                 })
     }
 
