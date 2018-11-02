@@ -34,21 +34,22 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         messagesActivity = activity as MessagesActivity
-//        userChatRecipient = arguments!!.getParcelable(MessagesActivity.CONVERSATION_RECIPIENT_KEY)!!
+        userChatRecipient = arguments!!.getParcelable(MessagesActivity.CONVERSATION_RECIPIENT_KEY)!!
         chatViewModel = getViewModel(viewModelFactory)
 
-        return null
+        return inflater.inflate(R.layout.fragment_messages_chat_user, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        configureToolbar()
-//        configureMessagesList()
-//        configureButtons()
+        configureToolbar()
+        configureMessagesList()
+        configureButtons()
     }
 
     private fun configureToolbar() {
         // Inflating the menu ...
         userChatToolbar.inflateMenu(R.menu.menu_messages_chat_user)
+        userChatToolbar.setNavigationOnClickListener { activity!!.onBackPressed() }
         userChatToolbar.setOnMenuItemClickListener {
             return@setOnMenuItemClickListener true
         }

@@ -36,7 +36,7 @@ class MessagesActivity : DaggerAppCompatActivity() {
 
     private fun showUserChatFragment() {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentChatContainer, ChatFragment())
+                .replace(R.id.fragmentChatContainer, ChatFragment().apply { arguments = intent.extras })
                 .commit()
     }
 }
