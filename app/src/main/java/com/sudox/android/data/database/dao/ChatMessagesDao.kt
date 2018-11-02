@@ -5,14 +5,14 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import com.sudox.android.data.database.model.UserChatMessage
+import com.sudox.android.data.database.model.ChatMessage
 
 @Dao
-interface UserChatMessagesDao {
+interface ChatMessagesDao {
 
-    @Query("SELECT * FROM user_chat_messages WHERE userId = :recipientId ORDER by date")
-    fun loadMessagesWithRecipient(recipientId: String): LiveData<List<UserChatMessage>>
+    @Query("SELECT * FROM chat_messages WHERE peer = :peerId AND sender = :peerId ORDER by date")
+    fun loadMessagesByPeer(peerId: String): LiveData<List<ChatMessage>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOne(userChatMessage: UserChatMessage)
+    fun insertOne(chatMessage: ChatMessage)
 }

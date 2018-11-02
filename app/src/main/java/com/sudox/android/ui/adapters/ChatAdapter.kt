@@ -7,13 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
-import com.sudox.android.data.repositories.chat.MESSAGE_TO
-import com.sudox.android.data.database.model.UserChatMessage
+import com.sudox.android.data.database.model.ChatMessage
 import kotlinx.android.synthetic.main.textview_message_to.view.*
 import android.text.format.DateFormat
+import com.sudox.android.data.repositories.chat.MESSAGE_TO
 import java.util.*
 
-class ChatAdapter(var items: List<UserChatMessage>,
+class ChatAdapter(var items: List<ChatMessage>,
                   private val context: Activity) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
@@ -33,7 +33,7 @@ class ChatAdapter(var items: List<UserChatMessage>,
 
     @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.text.text = items[position].text
+        holder.text.text = items[position].message
         holder.time.text = DateFormat.format("HH:mm", Date(items[position].date)).toString()
     }
 

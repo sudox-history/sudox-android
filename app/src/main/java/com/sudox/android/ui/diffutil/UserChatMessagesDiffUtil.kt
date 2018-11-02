@@ -1,10 +1,10 @@
 package com.sudox.android.ui.diffutil
 
 import android.support.v7.util.DiffUtil
-import com.sudox.android.data.database.model.UserChatMessage
+import com.sudox.android.data.database.model.ChatMessage
 
-class UserChatMessagesDiffUtil(private val oldMessagesList: List<UserChatMessage>,
-                               private val newMessagesList: List<UserChatMessage>) : DiffUtil.Callback(){
+class UserChatMessagesDiffUtil(private val oldMessagesList: List<ChatMessage>,
+                               private val newMessagesList: List<ChatMessage>) : DiffUtil.Callback(){
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         val newMessage = newMessagesList[newItemPosition]
