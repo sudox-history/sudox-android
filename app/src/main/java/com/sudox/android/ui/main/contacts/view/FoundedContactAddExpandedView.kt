@@ -8,6 +8,7 @@ import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.users.dto.SearchUserDTO
+import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.main.ContactsRepository
 import com.sudox.design.helpers.drawAvatar
 import com.sudox.design.helpers.drawCircleBitmap
@@ -18,12 +19,17 @@ import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.experimental.runBlocking
 import javax.inject.Inject
 
 class FoundedContactAddExpandedView : ExpandedView {
 
     @Inject
     lateinit var contactsRepository: ContactsRepository
+
+    @Inject
+    lateinit var accountRepository: AccountRepository
+
     private lateinit var searchUserDTO: SearchUserDTO
 
     constructor(context: Context) : super(context)
@@ -47,10 +53,18 @@ class FoundedContactAddExpandedView : ExpandedView {
         contactsRepository.addContact(searchUserDTO.id, {
             GlobalScope.launch(Dispatchers.Main) { hide() }
         }) {
-            if (it == Errors.INVALID_USER) {
-                contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.contact_has_already_added))
-            } else {
-                contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.unknown_error))
+            runBlocking {
+                if (it == Errors.INVALID_USER) {
+                    val account = accountRepository.getAccount().await() ?: return@runBlocking
+
+                    if (account.id != searchUserDTO.id) {
+                        contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.contact_has_already_added))
+                    } else {
+                        contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.contact_add_yourself))
+                    }
+                } else {
+                    contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.unknown_error))
+                }
             }
         }
     }
