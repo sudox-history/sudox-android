@@ -1,4 +1,4 @@
-package com.sudox.android.data.repositories.chat
+package com.sudox.android.data.repositories.messages
 
 import android.arch.lifecycle.LiveData
 import com.sudox.android.data.database.dao.ChatMessagesDao
@@ -41,6 +41,8 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
             } else {
                 MESSAGE_TO
             }))
+
+            chatMessagesDao.removeOldMessages()
         }
     }
 
@@ -53,6 +55,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
 
             // Save messages to database
             chatMessagesDao.insertOne(ChatMessage(it.messageId, senderId!!, peerId, message, it.date, MESSAGE_TO))
+            chatMessagesDao.removeOldMessages()
         }
     }
 

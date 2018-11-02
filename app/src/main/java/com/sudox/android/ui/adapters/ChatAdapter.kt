@@ -10,7 +10,7 @@ import com.sudox.android.R
 import com.sudox.android.data.database.model.ChatMessage
 import kotlinx.android.synthetic.main.textview_message_to.view.*
 import android.text.format.DateFormat
-import com.sudox.android.data.repositories.chat.MESSAGE_TO
+import com.sudox.android.data.repositories.messages.MESSAGE_TO
 import java.util.*
 
 class ChatAdapter(var items: List<ChatMessage>,

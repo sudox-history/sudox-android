@@ -1,10 +1,7 @@
 package com.sudox.android.data.database.dao
 
 import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.sudox.android.data.database.model.ChatMessage
 
 @Dao
@@ -15,4 +12,8 @@ interface ChatMessagesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOne(chatMessage: ChatMessage)
+
+    @Transaction
+    @Query("DELETE FROM chat_messages where mid NOT IN (SELECT mid from chat_messages ORDER BY mid DESC LIMIT 100)")
+    fun removeOldMessages()
 }
