@@ -10,15 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.design.helpers.drawAvatar
-import com.sudox.design.helpers.drawCircleBitmap
-import com.sudox.design.helpers.getTwoFirstLetters
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.chats.UserChatRecipient
 import com.sudox.android.ui.adapters.ChatAdapter
 import com.sudox.android.ui.diffutil.UserChatMessagesDiffUtil
 import com.sudox.android.ui.messages.MessagesActivity
+import com.sudox.design.helpers.drawAvatar
+import com.sudox.design.helpers.drawCircleBitmap
+import com.sudox.design.helpers.getTwoFirstLetters
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_messages_chat_user.*
 import javax.inject.Inject
@@ -27,10 +27,10 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var messagesActivity: MessagesActivity
-    lateinit var userChatRecipient: UserChatRecipient
-    lateinit var chatViewModel: ChatViewModel
-    lateinit var chatAdapter: ChatAdapter
+    private lateinit var messagesActivity: MessagesActivity
+    private lateinit var userChatRecipient: UserChatRecipient
+    private lateinit var chatViewModel: ChatViewModel
+    private lateinit var chatAdapter: ChatAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         messagesActivity = activity as MessagesActivity
