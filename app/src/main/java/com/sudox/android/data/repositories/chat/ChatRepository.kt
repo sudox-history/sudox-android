@@ -52,7 +52,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
             if (it.containsError()) return@makeRequest
 
             // Save messages to database
-            chatMessagesDao.insertOne(ChatMessage(it.messageId, senderId!!, it.peerId, message, it.date, MESSAGE_TO))
+            chatMessagesDao.insertOne(ChatMessage(it.messageId, senderId!!, peerId, message, it.date, MESSAGE_TO))
         }
     }
 

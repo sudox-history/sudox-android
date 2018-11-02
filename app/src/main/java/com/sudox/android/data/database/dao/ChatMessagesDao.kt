@@ -10,7 +10,7 @@ import com.sudox.android.data.database.model.ChatMessage
 @Dao
 interface ChatMessagesDao {
 
-    @Query("SELECT * FROM chat_messages WHERE peer = :peerId AND sender = :peerId ORDER by date")
+    @Query("SELECT * FROM chat_messages WHERE peer = :peerId OR sender = :peerId ORDER by date")
     fun loadMessagesByPeer(peerId: String): LiveData<List<ChatMessage>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
