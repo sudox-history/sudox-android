@@ -27,7 +27,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
                                          private val accountRepository: AccountRepository,
                                          private val chatMessagesDao: ChatMessagesDao) {
 
-    private val loadedPeerChatsIds: HashSet<String> = hashSetOf()
+    private val loadedPeerChatsIds = hashSetOf<String>()
     val newMessageLiveData: SingleLiveEvent<ChatMessage> = SingleLiveEvent()
 
     init {
@@ -94,6 +94,9 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
         }
     }
 
+    /**
+     * Должна быть подгружена начальная копия сообщений!
+     **/
     fun getHistory(peerId: String,
                    offset: Int,
                    messagesCallback: (List<ChatMessage>) -> Unit,
@@ -117,6 +120,10 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
 
                     // Return result
                     messagesCallback(messages)
+
+                    // Save to database & validate cache for this peer
+                    chatMessagesDao.insertAll(messages)
+                    chatMessagesDao.removeOldMessages(peerId, CHAT_MESSAGES_INITIAL_SIZE_DATABASE)
                 } else {
                     errorCallback(it.error)
                 }
