@@ -46,7 +46,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
                 it.sender
             } else {
                 it.peer
-            })
+            }, CHAT_MESSAGES_INITIAL_SIZE_DATABASE)
         }
 
         authRepository.accountSessionLiveData.observeForever {
@@ -138,7 +138,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
             // Save messages to database
             chatMessagesDao.insertOne(chatMessage)
             newMessageLiveData.postValue(chatMessage)
-            chatMessagesDao.removeOldMessages(peerId)
+            chatMessagesDao.removeOldMessages(peerId, CHAT_MESSAGES_INITIAL_SIZE_DATABASE)
         }
     }
 }
