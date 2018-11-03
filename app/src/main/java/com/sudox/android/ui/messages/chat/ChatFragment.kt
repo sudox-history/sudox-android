@@ -3,24 +3,30 @@ package com.sudox.android.ui.messages.chat
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.common.helpers.formatMessage
+import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.chats.UserChatRecipient
+import com.sudox.android.data.repositories.messages.CHAT_MESSAGES_SIZE
 import com.sudox.android.ui.adapters.ChatAdapter
-import com.sudox.android.ui.diffutil.UserChatMessagesDiffUtil
 import com.sudox.android.ui.messages.MessagesActivity
 import com.sudox.design.helpers.drawAvatar
 import com.sudox.design.helpers.drawCircleBitmap
 import com.sudox.design.helpers.getTwoFirstLetters
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_messages_chat_user.*
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 
 class ChatFragment @Inject constructor() : DaggerFragment() {
@@ -74,33 +80,62 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
 
     private fun configureMessagesList() {
         chatAdapter = ChatAdapter(ArrayList(), messagesActivity)
+
+        val linearLayoutManager = LinearLayoutManager(messagesActivity)
+
+        // Set parameters
         chatMessagesList.itemAnimator = null
-        chatMessagesList.layoutManager = LinearLayoutManager(messagesActivity)
-                .apply { stackFromEnd = true }
+        chatMessagesList.layoutManager = linearLayoutManager.apply { stackFromEnd = true }
         chatMessagesList.adapter = chatAdapter
+        chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                val updatePosition = linearLayoutManager.itemCount - 1
 
-        // Подписываемся на обновление данных
-        chatViewModel
-                .chatRepository
-                .observeWithCurrentRecipient(userChatRecipient.uid)
-                .observe(this, Observer {
-                    val newSize = it!!.size
-                    val diffUtil = UserChatMessagesDiffUtil(it, chatAdapter.items)
-                    val diffResult = DiffUtil.calculateDiff(diffUtil, false)
+                if (position == 0 && linearLayoutManager.itemCount >= CHAT_MESSAGES_SIZE) {
+                    chatViewModel.chatRepository.getHistory(userChatRecipient.uid, updatePosition, {
+                        GlobalScope.async(Dispatchers.Main) {
+                            chatAdapter.items.addAll(0, it.reversed())
+                            chatAdapter.notifyItemRangeInserted(0, it.size)
+                        }
+                    }, {
+                        if (it == Errors.INVALID_PARAMETERS || it == Errors.INVALID_USER) {
+                            activity!!.onBackPressed()
+                        }
+                    })
+                }
+            }
+        })
 
-                    // Update data ...
-                    chatAdapter.items = it
+        chatViewModel.chatRepository.getInitialHistory(userChatRecipient.uid, {
+            GlobalScope.async(Dispatchers.Main) {
+                chatAdapter.items = ArrayList(it.reversed())
+                chatAdapter.notifyItemRangeInserted(0, it.size)
+            }
+        }, {
+            if (it == Errors.INVALID_PARAMETERS || it == Errors.INVALID_USER) {
+                activity!!.onBackPressed()
+            }
+        })
 
-                    diffResult.dispatchUpdatesTo(chatAdapter)
-                    chatMessagesList.scrollToPosition(newSize - 1)
-                })
+        chatViewModel.chatRepository.newMessageLiveData.observe(this, Observer {
+            if (it!!.sender == userChatRecipient.uid || it.peer == userChatRecipient.uid) {
+                chatAdapter.items.add(it)
+                chatAdapter.notifyItemInserted(chatAdapter.items.size - 1)
+                chatMessagesList.scrollToPosition(chatAdapter.items.size - 1)
+            }
+        })
     }
 
 
     private fun configureButtons() {
         send_message_button.setOnClickListener {
-            chatViewModel.chatRepository.sendSimpleMessage(userChatRecipient.uid,
-                    edit_message_field.text.toString())
+            val message = formatMessage(edit_message_field.text.toString())
+
+            if (message.isNotEmpty()) {
+                chatViewModel.chatRepository.sendSimpleMessage(userChatRecipient.uid, message)
+                edit_message_field.text = null
+            }
         }
     }
 }

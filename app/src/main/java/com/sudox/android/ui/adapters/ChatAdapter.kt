@@ -12,8 +12,9 @@ import kotlinx.android.synthetic.main.textview_message_to.view.*
 import android.text.format.DateFormat
 import com.sudox.android.data.repositories.messages.MESSAGE_TO
 import java.util.*
+import kotlin.collections.ArrayList
 
-class ChatAdapter(var items: List<ChatMessage>,
+class ChatAdapter(var items: ArrayList<ChatMessage>,
                   private val context: Activity) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {

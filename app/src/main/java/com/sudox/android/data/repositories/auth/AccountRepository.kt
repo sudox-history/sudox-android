@@ -19,6 +19,9 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
     // Account type
     private val accountType = "com.sudox"
 
+    // Cached account
+    var cachedAccount: SudoxAccount? = null
+
     fun saveAccount(account: SudoxAccount) = GlobalScope.async {
         val accountInstance = Account(account.name, accountType)
 
@@ -34,6 +37,9 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_ID, account.id)
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_NAME, account.name)
         accountManager.setPassword(accountInstance, account.secret)
+
+        // Update cache
+        cachedAccount = account
     }
 
     fun removeAccounts() = GlobalScope.async {
@@ -49,6 +55,9 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
                     accountManager.removeAccount(account, null, null)
                 }
             }
+
+            // Update cache
+            cachedAccount = null
         }
     }
 
@@ -60,10 +69,16 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
             val accountId = accountManager.getUserData(account, KEY_ACCOUNT_ID)
             val accountName = accountManager.getUserData(account, KEY_ACCOUNT_NAME)
             val accountSecret = accountManager.getPassword(account)
+            val sudoxAccount = SudoxAccount(accountId, accountName, accountSecret)
+
+            // Update cache
+            cachedAccount = sudoxAccount
 
             // Send account to the single
-            return@async SudoxAccount(accountId, accountName, accountSecret)
+            return@async sudoxAccount
         } else {
+            // Update cache
+            cachedAccount = null
             return@async null
         }
     }

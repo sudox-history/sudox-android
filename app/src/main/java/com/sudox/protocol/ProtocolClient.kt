@@ -15,6 +15,8 @@ import org.json.JSONObject
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.LinkedBlockingQueue
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,7 +29,7 @@ class ProtocolClient @Inject constructor() {
     internal var controller: ProtocolController? = null
     private var reader: ProtocolReader? = null
     private var writer: ProtocolWriter? = null
-    val readCallbacks = ArrayList<ReadCallback<*>>()
+    val readCallbacks = ConcurrentLinkedQueue<ReadCallback<*>>()
     val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
     val connectionStateLiveData = SingleLiveEvent<ConnectionState>()
 
