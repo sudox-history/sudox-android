@@ -41,7 +41,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
 
             chatMessagesDao.insertOne(message)
             newMessageLiveData.postValue(message)
-            chatMessagesDao.removeOldMessages()
+            chatMessagesDao.removeOldMessages(it.peer)
         }
 
         authRepository.accountSessionLiveData.observeForever {
@@ -74,7 +74,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
                         messagesCallback(messages)
 
                         // Save to database & validate cache for this peer
-                        chatMessagesDao.removeAll()
+                        chatMessagesDao.removeAll(peerId)
                         chatMessagesDao.insertAll(messages)
                         loadedPeerChatsIds.add(peerId)
                     } else {
@@ -82,10 +82,10 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
                     }
                 }
             } else {
-                messagesCallback(chatMessagesDao.loadAll(0, CHAT_MESSAGES_INITIAL_SIZE))
+                messagesCallback(chatMessagesDao.loadAll(peerId, 0, CHAT_MESSAGES_INITIAL_SIZE))
             }
         } else {
-            messagesCallback(chatMessagesDao.loadAll(0, CHAT_MESSAGES_INITIAL_SIZE))
+            messagesCallback(chatMessagesDao.loadAll(peerId, 0, CHAT_MESSAGES_INITIAL_SIZE))
         }
     }
 
@@ -133,7 +133,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
             // Save messages to database
             chatMessagesDao.insertOne(chatMessage)
             newMessageLiveData.postValue(chatMessage)
-            chatMessagesDao.removeOldMessages()
+            chatMessagesDao.removeOldMessages(peerId)
         }
     }
 }
