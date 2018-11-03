@@ -17,8 +17,8 @@ interface ChatMessagesDao {
     fun insertAll(chatMessages: List<ChatMessage>)
 
     @Transaction
-    @Query("DELETE FROM chat_messages where mid NOT IN (SELECT * from chat_messages WHERE peer = :peerId OR sender = :peerId ORDER BY date DESC LIMIT 30) ")
-    fun removeOldMessages(peerId: String)
+    @Query("DELETE FROM chat_messages where mid NOT IN (SELECT * from chat_messages WHERE peer = :peerId OR sender = :peerId ORDER BY date DESC LIMIT :count) ")
+    fun removeOldMessages(peerId: String, count: Int)
 
     @Transaction
     @Query("DELETE FROM chat_messages WHERE peer = :peerId OR sender = :peerId")

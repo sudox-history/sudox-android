@@ -17,6 +17,7 @@ import javax.inject.Singleton
 const val MESSAGE_TO = 0
 const val MESSAGE_FROM = 1
 
+const val CHAT_MESSAGES_INITIAL_SIZE_DATABASE = 100
 const val CHAT_MESSAGES_INITIAL_SIZE = 30
 const val CHAT_MESSAGES_SIZE = 30
 
@@ -45,7 +46,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
                 it.sender
             } else {
                 it.peer
-            })
+            }, CHAT_MESSAGES_INITIAL_SIZE_DATABASE)
         }
 
         authRepository.accountSessionLiveData.observeForever {
@@ -86,10 +87,10 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
                     }
                 }
             } else {
-                messagesCallback(chatMessagesDao.loadAll(peerId, 0, CHAT_MESSAGES_INITIAL_SIZE))
+                messagesCallback(chatMessagesDao.loadAll(peerId, 0, CHAT_MESSAGES_INITIAL_SIZE_DATABASE))
             }
         } else {
-            messagesCallback(chatMessagesDao.loadAll(peerId, 0, CHAT_MESSAGES_INITIAL_SIZE))
+            messagesCallback(chatMessagesDao.loadAll(peerId, 0, CHAT_MESSAGES_INITIAL_SIZE_DATABASE))
         }
     }
 
@@ -137,7 +138,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
             // Save messages to database
             chatMessagesDao.insertOne(chatMessage)
             newMessageLiveData.postValue(chatMessage)
-            chatMessagesDao.removeOldMessages(peerId)
+            chatMessagesDao.removeOldMessages(peerId, CHAT_MESSAGES_INITIAL_SIZE_DATABASE)
         }
     }
 }
