@@ -97,7 +97,7 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
                 val updatePosition = linearLayoutManager.itemCount - 1
 
                 if (position == 0 && linearLayoutManager.itemCount >= CHAT_MESSAGES_SIZE) {
-                    chatViewModel.chatRepository.getHistory(userChatRecipient.uid, updatePosition, {
+                    chatViewModel.chatRepository.getHistory(userChatRecipient.uid, updatePosition + 1, {
                         GlobalScope.async(Dispatchers.Main) {
                             chatAdapter.items.addAll(0, it.reversed())
                             chatAdapter.notifyItemRangeInserted(0, it.size)

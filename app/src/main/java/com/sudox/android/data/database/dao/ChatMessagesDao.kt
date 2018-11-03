@@ -17,12 +17,12 @@ interface ChatMessagesDao {
     fun insertAll(chatMessages: List<ChatMessage>)
 
     @Transaction
-    @Query("DELETE FROM chat_messages where mid NOT IN (SELECT mid from chat_messages WHERE peer = :peerId OR sender = :peerId ORDER BY date DESC LIMIT :count)")
+    @Query("DELETE FROM chat_messages where mid NOT IN (SELECT mid from chat_messages WHERE peer = :peerId OR sender = :peerId ORDER BY date DESC LIMIT :count) AND (peer = :peerId OR sender = :peerId)")
     fun removeOldMessages(peerId: String, count: Int)
 
     @Transaction
     @Query("DELETE FROM chat_messages WHERE peer = :peerId OR sender = :peerId")
-    fun removeAll(peerId: String)
+    fun removeMessages(peerId: String)
 
     @Query("SELECT * FROM chat_messages WHERE peer = :peerId OR sender = :peerId ORDER BY date DESC")
     fun loadAll(peerId: String): List<ChatMessage>
