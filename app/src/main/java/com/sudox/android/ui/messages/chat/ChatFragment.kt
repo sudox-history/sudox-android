@@ -80,7 +80,11 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
 
     private fun configureMessagesList() {
         chatAdapter = ChatAdapter(ArrayList(), messagesActivity)
+        chatViewModel.authRepository.accountSessionLiveData.observe(this, Observer {
+            if (it!!.lived) loadInitialMessages()
+        })
 
+        // Layout manager
         val linearLayoutManager = LinearLayoutManager(messagesActivity)
 
         // Set parameters
@@ -107,6 +111,18 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
             }
         })
 
+        loadInitialMessages()
+
+        chatViewModel.chatRepository.newMessageLiveData.observe(this, Observer {
+            if (it!!.sender == userChatRecipient.uid || it.peer == userChatRecipient.uid) {
+                chatAdapter.items.add(it)
+                chatAdapter.notifyItemInserted(chatAdapter.items.size - 1)
+                chatMessagesList.scrollToPosition(chatAdapter.items.size - 1)
+            }
+        })
+    }
+
+    private fun loadInitialMessages() {
         chatViewModel.chatRepository.getInitialHistory(userChatRecipient.uid, {
             GlobalScope.async(Dispatchers.Main) {
                 chatAdapter.items = ArrayList(it.reversed())
@@ -115,14 +131,6 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
         }, {
             if (it == Errors.INVALID_PARAMETERS || it == Errors.INVALID_USER) {
                 activity!!.onBackPressed()
-            }
-        })
-
-        chatViewModel.chatRepository.newMessageLiveData.observe(this, Observer {
-            if (it!!.sender == userChatRecipient.uid || it.peer == userChatRecipient.uid) {
-                chatAdapter.items.add(it)
-                chatAdapter.notifyItemInserted(chatAdapter.items.size - 1)
-                chatMessagesList.scrollToPosition(chatAdapter.items.size - 1)
             }
         })
     }
