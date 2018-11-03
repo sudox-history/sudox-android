@@ -41,7 +41,11 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
 
             chatMessagesDao.insertOne(message)
             newMessageLiveData.postValue(message)
-            chatMessagesDao.removeOldMessages(it.peer)
+            chatMessagesDao.removeOldMessages(if (it.peer == accountRepository.cachedAccount!!.id) {
+                it.sender
+            } else {
+                it.peer
+            })
         }
 
         authRepository.accountSessionLiveData.observeForever {
