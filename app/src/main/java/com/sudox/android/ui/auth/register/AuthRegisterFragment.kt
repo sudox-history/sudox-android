@@ -2,21 +2,21 @@ package com.sudox.android.ui.auth.register
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.design.helpers.hideInputError
-import com.sudox.design.helpers.showInputError
-import com.sudox.design.navigation.toolbar.enums.NavigationAction
+import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.auth.state.AuthSession
+import com.sudox.android.data.repositories.auth.AUTH_NAME_REGEX_ERROR
+import com.sudox.android.data.repositories.auth.AUTH_NICKNAME_REGEX_ERROR
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
 import com.sudox.android.ui.common.FreezableFragment
+import com.sudox.design.navigation.toolbar.enums.NavigationAction
+import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_register.*
 import javax.inject.Inject
 
@@ -40,17 +40,38 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Слушаем заказанные ViewModel действия ...
+        authRegisterViewModel.authRegisterRegexErrorsLiveData.observe(this, Observer {
+            if (it == AUTH_NAME_REGEX_ERROR) {
+                nameEditTextContainer.error = getString(R.string.wrong_name_format)
+            } else if (it == AUTH_NICKNAME_REGEX_ERROR) {
+                nicknameEditTextContainer.error = getString(R.string.wrong_nickname_format)
+            }
+
+            unfreeze()
+        })
+
+        authRegisterViewModel.authRegisterErrorsLiveData.observe(this, Observer {
+            if (it == Errors.INVALID_PARAMETERS) {
+                nameEditTextContainer.error = getString(R.string.wrong_name_format)
+                nicknameEditTextContainer.error = getString(R.string.wrong_nickname_format)
+            } else {
+                nameEditTextContainer.error = getString(R.string.unknown_error)
+                nicknameEditTextContainer.error = getString(R.string.unknown_error)
+            }
+
+            unfreeze()
+        })
+
         authRegisterViewModel.authRegisterActionLiveData.observe(this, Observer {
             when (it) {
                 AuthRegisterAction.FREEZE -> freeze()
-                AuthRegisterAction.SHOW_ERROR -> {
-                    showInputError(nameEditTextContainer)
-                    showInputError(nicknameEditTextContainer)
-                    unfreeze()
-                }
                 AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
                     authActivity.showAuthEmailFragment(authSession.email)
                     authActivity.showMessage(getString(R.string.code_expired))
+                }
+                AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_INVALID_ACCOUNT_ERROR -> {
+                    authActivity.showAuthEmailFragment(authSession.email)
+                    authActivity.showMessage(getString(R.string.account_is_already_registered))
                 }
             }
         })
@@ -61,24 +82,15 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
     }
 
     private fun initEditTexts() {
-        val watcher = object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(chars: CharSequence, start: Int, before: Int, count: Int) {
-                if (nameEditTextContainer.isErrorEnabled) hideInputError(nameEditTextContainer)
-                if (nicknameEditTextContainer.isErrorEnabled) hideInputError(nicknameEditTextContainer)
-            }
-        }
-
-        // Чистим поля ввода
         nameEditText.setText("")
         nicknameEditText.setText("")
-        nameEditText.addTextChangedListener(watcher)
-        nicknameEditText.addTextChangedListener(watcher)
     }
 
     private fun initNavigationBar() {
-        authRegisterFragmentNavbar.navigationActionCallback = {
+        authActivity.authNavigationBar.reset()
+        authActivity.authNavigationBar.nextButtonIsVisible = true
+        authActivity.authNavigationBar.sudoxTagIsVisible = false
+        authActivity.authNavigationBar.navigationActionCallback = {
             if (it == NavigationAction.NEXT) {
                 authRegisterViewModel.signUp(
                         authSession.email,
@@ -88,16 +100,18 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
                         nicknameEditText.text.toString())
             }
         }
+
+        authActivity.authNavigationBar.configureComponents()
     }
 
     override fun freeze() {
-        authRegisterFragmentNavbar.freeze()
+        authActivity.authNavigationBar.freeze()
         nameEditText.isEnabled = false
         nicknameEditText.isEnabled = false
     }
 
     override fun unfreeze() {
-        authRegisterFragmentNavbar.unfreeze()
+        authActivity.authNavigationBar.unfreeze()
         nameEditText.isEnabled = true
         nicknameEditText.isEnabled = true
     }

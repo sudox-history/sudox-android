@@ -67,6 +67,17 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         configureText(textSudoxTag, sudoxTagIsVisible)
     }
 
+    fun reset() {
+        backButtonIsVisible = false
+        backButtonText = null
+        nextButtonIsVisible = false
+        nextButtonText = null
+        sudoxTagIsVisible = false
+        someFeatureButtonIsVisible = false
+        someFeatureText = null
+        navigationActionCallback = null
+    }
+
     fun setText(view: AppCompatTextView, text: String) {
         view.text = text
     }

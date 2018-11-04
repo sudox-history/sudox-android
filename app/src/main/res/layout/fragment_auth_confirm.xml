@@ -6,13 +6,6 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.sudox.design.navigation.toolbar.NavigationBar
-        android:id="@+id/authConfirmFragmentNavbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:backButtonIsVisible="true"
-        app:someFeatureButtonIsVisible="false" />
-
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
@@ -30,7 +23,7 @@
         android:text="@string/we_glad_to_see_you"
         android:textSize="16sp" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.sudox.design.edittext.SudoxTextInputLayout
         android:id="@+id/codeEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +42,7 @@
             android:maxLength="@integer/length_email_code"
             android:textSize="14sp" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.sudox.design.edittext.SudoxTextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

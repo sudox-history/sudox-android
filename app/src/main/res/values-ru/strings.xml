@@ -31,6 +31,7 @@
     <string name="return_back">С возвращением!</string>
     <string name="welcome">Добро пожаловать!</string>
     <string name="wrong_email_format">Неверный формат почты</string>
+    <string name="too_many_requests">Слишком много запросов!</string>
     <string name="no_internet_connection">Нет соединения!</string>
     <string name="registration">Регистрация</string>
     <string name="authorisation">Авторизация</string>
@@ -40,7 +41,8 @@
     <string name="code">Код</string>
     <string name="wrong_code_format">Неверный формат кода</string>
     <string name="wrong_code">Неверный код</string>
-    <string name="wrong_name_format">Неверный формат имени или фамилии</string>
+    <string name="wrong_name_format">Неверный формат имени</string>
+    <string name="wrong_nickname_format">Неверный формат никнейма</string>
     <string name="info">Информация</string>
     <string name="decoration_label">Украшения</string>
     <string name="dialogs_label">Диалоги</string>
@@ -48,8 +50,7 @@
     <string name="hello_world">Привет мир!</string>
     <string name="exit">Выйти</string>
     <string name="retry_send_in">Попытка через %time</string>
-    <string name="account_is_already_exist">Аккаунт уже существует!</string>
-    <string name="account_is_already_created">Мы обнаружили, что аккаунт уже существует</string>
+    <string name="account_is_already_registered">Аккаунт уже зарегистрирован</string>
     <string name="session_died">Сессия устарела, пройдите регистрацию заново</string>
     <string name="share_with_contact">Поделиться контактом</string>
     <string name="find_new_friends">Найдите себе новых друзей</string>

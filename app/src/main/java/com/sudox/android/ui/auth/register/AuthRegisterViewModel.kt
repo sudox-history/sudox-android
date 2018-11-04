@@ -13,6 +13,8 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
      * Шина для уведомления View об нужных для выполнения ему действий
      * **/
     val authRegisterActionLiveData = SingleLiveEvent<AuthRegisterAction>()
+    val authRegisterRegexErrorsLiveData = SingleLiveEvent<Int>()
+    val authRegisterErrorsLiveData = SingleLiveEvent<Int>()
 
     /**
      * Отправляет запрос регистрации на сервер.
@@ -22,11 +24,15 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
         authRegisterActionLiveData.postValue(AuthRegisterAction.FREEZE)
 
         // Регистрируемся ...
-        authRepository.signUp(email, code, hash, name, nickname, {}, {
-            if (it == Errors.CODE_EXPIRED) {
+        authRepository.signUp(email, code, hash, name, nickname, {
+            authRegisterRegexErrorsLiveData.postValue(it)
+        }, {}, {
+            if (it == Errors.CODE_EXPIRED || it == Errors.WRONG_CODE) {
                 authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
+            } else if (it == Errors.INVALID_ACCOUNT) {
+                authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_INVALID_ACCOUNT_ERROR)
             } else {
-                authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_ERROR)
+                authRegisterErrorsLiveData.postValue(it)
             }
         })
     }

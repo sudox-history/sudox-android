@@ -12,6 +12,7 @@ class AuthEmailViewModel @Inject constructor(private val authRepository: AuthRep
      * Шина для уведомления View об нужных для выполнения ему действий
      * **/
     val authEmailActionLiveData = SingleLiveEvent<AuthEmailAction>()
+    val authErrorsLiveData = SingleLiveEvent<Int>()
 
     /**
      * Метод для запроса отправки кода на указанный E-mail.
@@ -21,8 +22,6 @@ class AuthEmailViewModel @Inject constructor(private val authRepository: AuthRep
      * */
     fun requestCode(email: String) {
         authEmailActionLiveData.postValue(AuthEmailAction.FREEZE)
-        authRepository.requestCode(email) {
-            if (!it) authEmailActionLiveData.postValue(AuthEmailAction.SHOW_ERROR)
-        }
+        authRepository.requestCode(email, {}, { authErrorsLiveData.postValue(it) })
     }
 }

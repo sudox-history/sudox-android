@@ -10,14 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.data.models.Errors
 import com.sudox.design.helpers.formatHtml
-import com.sudox.design.helpers.hideInputError
-import com.sudox.design.helpers.showInputError
 import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.confirm.enums.AuthConfirmAction
 import com.sudox.android.ui.common.FreezableFragment
+import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_confirm.*
 import javax.inject.Inject
 
@@ -41,6 +41,16 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Handle actions requests ...
+        authConfirmViewModel.authConfirmErrorsLiveData.observe(this, Observer {
+            codeEditTextContainer.error = if (it == Errors.WRONG_CODE) {
+                getString(R.string.wrong_code)
+            } else {
+                getString(R.string.unknown_error)
+            }
+
+            unfreeze()
+        })
+
         authConfirmViewModel.authConfirmActionLiveData.observe(this, Observer {
             when (it) {
                 AuthConfirmAction.FREEZE -> freeze()
@@ -48,10 +58,6 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
                 AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
                     authActivity.showAuthEmailFragment(authSession.email)
                     authActivity.showMessage(getString(R.string.code_expired))
-                }
-                AuthConfirmAction.SHOW_ERROR -> {
-                    showInputError(codeEditTextContainer)
-                    unfreeze()
                 }
             }
         })
@@ -84,10 +90,6 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
             override fun afterTextChanged(p0: Editable?) {}
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(chars: CharSequence, start: Int, before: Int, count: Int) {
-                if (codeEditTextContainer.isErrorEnabled) {
-                    hideInputError(codeEditTextContainer)
-                }
-
                 if (count + start == codeLength) {
                     val code = codeEditText.text.toString()
 
@@ -106,7 +108,10 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
     }
 
     private fun initNavigationBar() {
-        authConfirmFragmentNavbar.navigationActionCallback = {
+        authActivity.authNavigationBar.reset()
+        authActivity.authNavigationBar.backButtonIsVisible = true
+        authActivity.authNavigationBar.someFeatureButtonIsVisible = false
+        authActivity.authNavigationBar.navigationActionCallback = {
             if (it == NavigationAction.BACK) {
                 codeEditText.setText("")
                 authActivity.showAuthEmailFragment(authSession.email)
@@ -114,15 +119,17 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
                 // TODO: Try send code again
             }
         }
+
+        authActivity.authNavigationBar.configureComponents()
     }
 
     override fun freeze() {
         codeEditText.isEnabled = false
-        authConfirmFragmentNavbar.freeze()
+        authActivity.authNavigationBar.freeze()
     }
 
     override fun unfreeze() {
         codeEditText.isEnabled = true
-        authConfirmFragmentNavbar.unfreeze()
+        authActivity.authNavigationBar.unfreeze()
     }
 }

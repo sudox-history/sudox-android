@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical">
-
-    <com.sudox.design.navigation.toolbar.NavigationBar
-        android:id="@+id/authEmailFragmentNavbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:nextButtonIsVisible="true"
-        app:sudoxTagIsVisible="false" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,13 +21,13 @@
         android:text="@string/enter_your_email"
         android:textSize="16sp" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.sudox.design.edittext.SudoxTextInputLayout
         android:id="@+id/emailEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp">
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp">
 
         <EditText
             android:id="@+id/emailEditText"
@@ -46,7 +38,7 @@
             android:maxLines="1"
             android:textSize="14sp" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.sudox.design.edittext.SudoxTextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,9 +49,9 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="12dp"
+            android:layout_marginEnd="40dp"
             android:layout_weight="0.80"
             android:gravity="center"
             android:text="@string/hint_of_create_account"

@@ -3,19 +3,17 @@ package com.sudox.android.ui.auth.email
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.design.helpers.hideInputError
-import com.sudox.design.helpers.showInputError
-import com.sudox.design.navigation.toolbar.enums.NavigationAction
+import com.sudox.android.data.models.Errors
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.email.enums.AuthEmailAction
 import com.sudox.android.ui.common.FreezableFragment
+import com.sudox.design.navigation.toolbar.enums.NavigationAction
+import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_email.*
 import javax.inject.Inject
 
@@ -40,11 +38,20 @@ class AuthEmailFragment @Inject constructor() : FreezableFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Слушаем заказанные ViewModel действия ...
+        authEmailViewModel.authErrorsLiveData.observe(this, Observer {
+            emailEditTextContainer.error = if (it == Errors.INVALID_PARAMETERS) {
+                getString(R.string.wrong_email_format)
+            } else if (it == Errors.TOO_MANY_ATTEMPTS) {
+                getString(R.string.too_many_requests)
+            } else {
+                getString(R.string.unknown_error)
+            }
+
+            unfreeze()
+        })
+
         authEmailViewModel.authEmailActionLiveData.observe(this, Observer {
-            if (it == AuthEmailAction.SHOW_ERROR) {
-                showInputError(emailEditTextContainer)
-                unfreeze()
-            } else if (it == AuthEmailAction.FREEZE) {
+            if (it == AuthEmailAction.FREEZE) {
                 freeze()
             }
         })
@@ -56,17 +63,13 @@ class AuthEmailFragment @Inject constructor() : FreezableFragment() {
 
     private fun initEmailEditText() {
         emailEditText.setText(email)
-        emailEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {}
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (emailEditTextContainer.isErrorEnabled) hideInputError(emailEditTextContainer)
-            }
-        })
     }
 
     private fun initNavigationBar() {
-        authEmailFragmentNavbar.navigationActionCallback = {
+        authActivity.authNavigationBar.reset()
+        authActivity.authNavigationBar.nextButtonIsVisible = true
+        authActivity.authNavigationBar.sudoxTagIsVisible = false
+        authActivity.authNavigationBar.navigationActionCallback = {
             if (it == NavigationAction.NEXT) {
                 // Получим текст с EditText'а :) (да Антон, мне в кайф комментировать каждую строчку кода)
                 val email = emailEditText.text.toString()
@@ -75,15 +78,17 @@ class AuthEmailFragment @Inject constructor() : FreezableFragment() {
                 authEmailViewModel.requestCode(email)
             }
         }
+
+        authActivity.authNavigationBar.configureComponents()
     }
 
     override fun freeze() {
-        authEmailFragmentNavbar.freeze()
+        authActivity.authNavigationBar.freeze()
         emailEditText.isEnabled = false
     }
 
     override fun unfreeze() {
-        authEmailFragmentNavbar.unfreeze()
+        authActivity.authNavigationBar.unfreeze()
         emailEditText.isEnabled = true
     }
 }

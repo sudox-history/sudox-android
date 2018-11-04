@@ -1,7 +1,6 @@
 package com.sudox.android.data.repositories.auth
 
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
 import com.sudox.android.common.helpers.*
 import com.sudox.android.data.auth.SudoxAccount
 import com.sudox.android.data.models.Errors
@@ -16,6 +15,9 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
+
+const val AUTH_NAME_REGEX_ERROR = 0
+const val AUTH_NICKNAME_REGEX_ERROR = 1
 
 @Singleton
 class AuthRepository @Inject constructor(private val protocolClient: ProtocolClient,
@@ -62,14 +64,13 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      * сессии авторизации.
      * **/
     @Suppress("NAME_SHADOWING")
-    fun requestCode(email: String, callback: (Boolean) -> (Unit)) {
+    fun requestCode(email: String, successCallback: (AuthCodeDTO) -> Unit, errorCallback: (Int) -> Unit) {
         // "Кастрируем" пробелы в почте ...
         val email = email.replace(WHITESPACES_REMOVE_REGEX, "")
 
         // Проверка на валидность формата почты (для экономии трафика производим проверку ещё на клиенте)
         if (!EMAIL_REGEX.matches(email)) {
-            // Сожалеем, но наше приложение не подходит для взлома левым E-mail'ом :)
-            callback(false)
+            errorCallback(Errors.INVALID_PARAMETERS)
         } else {
             // Ок, запрашиваем отправку кода ...
             protocolClient.makeRequest<AuthCodeDTO>("auth.sendCode", AuthCodeDTO().apply {
@@ -77,10 +78,10 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
             }) {
                 if (it.isSuccess()) {
                     authSessionLiveData.postValue(AuthSession(email, it.hash, it.status))
+                    successCallback(it)
+                } else {
+                    errorCallback(it.error)
                 }
-
-                // Notify caller about status of code request
-                callback(it.isSuccess())
             }
         }
     }
@@ -145,13 +146,18 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      * Выполняет регистрацию аккаунта. По окончанию записывает аккаунт в БД.
      */
     @Suppress("NAME_SHADOWING")
-    fun signUp(email: String, code: String, hash: String, name: String, nickname: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
+    fun signUp(email: String, code: String, hash: String, name: String, nickname: String,
+               regexCallback: (Int) -> (Unit),
+               successCallback: () -> (Unit),
+               errorCallback: (Int) -> (Unit)) {
         val name = name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
         val nickname = nickname.replace(WHITESPACES_REMOVE_REGEX, "")
 
         // Валидация
-        if (!NAME_REGEX.matches(name) || !NICKNAME_REGEX.matches(nickname)) {
-            errorCallback(Errors.INVALID_PARAMETERS)
+        if (!NAME_REGEX.matches(name)) {
+            regexCallback(AUTH_NAME_REGEX_ERROR)
+        } else if (!NICKNAME_REGEX.matches(nickname)) {
+            regexCallback(AUTH_NICKNAME_REGEX_ERROR)
         } else {
             protocolClient.makeRequest<AuthSignUpDTO>("auth.signUp", AuthSignUpDTO().apply {
                 this.email = email

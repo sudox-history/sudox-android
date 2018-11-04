@@ -13,6 +13,7 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
      * Шина для уведомления View об нужных для выполнения ему действий
      * **/
     val authConfirmActionLiveData = SingleLiveEvent<AuthConfirmAction>()
+    val authConfirmErrorsLiveData = SingleLiveEvent<Int>()
 
     /**
      * Метод, запрашивающий проверку кода на сервере ...
@@ -29,7 +30,7 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
             if (it == Errors.CODE_EXPIRED) {
                 authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
             } else {
-                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_ERROR)
+                authConfirmErrorsLiveData.postValue(it)
             }
         })
     }
@@ -47,7 +48,7 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
             if (it == Errors.CODE_EXPIRED) {
                 authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
             } else {
-                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_ERROR)
+                authConfirmErrorsLiveData.postValue(it)
             }
         })
     }

@@ -31,6 +31,7 @@
     <string name="return_back">Welcome back!</string>
     <string name="welcome">Welcome!</string>
     <string name="wrong_email_format">Wrong email format!</string>
+    <string name="too_many_requests">Too many requests!</string>
     <string name="no_internet_connection">No Internet connection!</string>
     <string name="registration">Register</string>
     <string name="authorisation">Auth</string>
@@ -39,7 +40,8 @@
     <string name="code_did_nit_come">If code didn\'t come then push the send again button</string>
     <string name="code">Code</string>
     <string name="wrong_code_format">Wrong code format</string>
-    <string name="wrong_name_format">Wrong format of name or surname</string>
+    <string name="wrong_name_format">Wrong name format</string>
+    <string name="wrong_nickname_format">Wrong nickname format</string>
     <string name="info">Information</string>
     <string name="decoration_label">Decorations</string>
     <string name="dialogs_label">Dialogs</string>
@@ -47,8 +49,7 @@
     <string name="hello_world">Hello world</string>
     <string name="exit">Logout</string>
     <string name="retry_send_in">Try in %time</string>
-    <string name="account_is_already_exist">Account is already exists</string>
-    <string name="account_is_already_created">We\'ve found the account already exists</string>
+    <string name="account_is_already_registered">Account is already registered</string>
     <string name="session_died">The session is out of date, please, sign up again</string>
     <string name="share_with_contact">Share with user</string>
     <string name="find_new_friends">Find new friends</string>

@@ -6,13 +6,6 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <com.sudox.design.navigation.toolbar.NavigationBar
-        android:id="@+id/authRegisterFragmentNavbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:nextButtonIsVisible="true"
-        app:sudoxTagIsVisible="false" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,13 +22,13 @@
         android:text="@string/enter_your_name_and_nickname"
         android:textSize="16sp" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.sudox.design.edittext.SudoxTextInputLayout
         android:id="@+id/nameEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
         app:counterEnabled="true"
         app:counterMaxLength="@integer/length_name">
 
@@ -49,14 +42,14 @@
             android:maxLines="1"
             android:textSize="14sp" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.sudox.design.edittext.SudoxTextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.sudox.design.edittext.SudoxTextInputLayout
         android:id="@+id/nicknameEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         app:counterEnabled="true"
         app:counterMaxLength="@integer/length_nickname">
 
@@ -70,7 +63,7 @@
             android:maxLines="1"
             android:textSize="14sp" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.sudox.design.edittext.SudoxTextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,9 +74,9 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="12dp"
+            android:layout_marginEnd="40dp"
             android:layout_weight="0.80"
             android:gravity="center"
             android:text="@string/about_name"
