@@ -6,7 +6,7 @@
     <color name="colorReceivedMessage">#30343E</color>
     <color name="colorBottomNavigationBackground">#1A1E28</color>
     <color name="colorAccent">#FFFFFF</color>
-    <color name="colorBackground">#20242E</color>
+    <color name="colorBackground">#1F232D</color>
     <color name="colorHint">#BDBDBD</color>
     <color name="colorDivider">#2B2F39</color>
     <color name="colorBottomNavbarItem">#BDBDBD</color>
