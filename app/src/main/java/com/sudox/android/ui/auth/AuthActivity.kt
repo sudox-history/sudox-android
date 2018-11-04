@@ -69,18 +69,15 @@ class AuthActivity : DaggerAppCompatActivity() {
 
     fun showAuthEmailFragment(email: String? = null, isFirstStart: Boolean = false) {
         val authEmailFragment = AuthEmailFragment().apply { this.email = email }
-
-        // Build transaction for fragment change
-        val transaction = supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentAuthContainer, authEmailFragment)
+        val transaction = supportFragmentManager.beginTransaction()
 
         if (isFirstStart) {
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
         } else {
-            transaction.setCustomAnimations(R.animator.fragment_slide_right_exit_anim, R.animator.fragment_slide_left_exit_anim)
+            transaction.setCustomAnimations(R.animator.animator_fragment_change, 0)
         }
 
+        transaction.replace(R.id.fragmentAuthContainer, authEmailFragment)
         transaction.commit()
 
         // Remove the auth session
@@ -90,7 +87,7 @@ class AuthActivity : DaggerAppCompatActivity() {
     private fun showAuthConfirmFragment() {
         supportFragmentManager
                 .beginTransaction()
-                .setCustomAnimations(R.animator.fragment_slide_left_anim, R.animator.fragment_slide_right_anim)
+                .setCustomAnimations(R.animator.animator_fragment_change, 0)
                 .replace(R.id.fragmentAuthContainer, AuthConfirmFragment())
                 .commit()
     }
@@ -98,7 +95,7 @@ class AuthActivity : DaggerAppCompatActivity() {
     fun showAuthRegisterFragment() {
         supportFragmentManager
                 .beginTransaction()
-                .setCustomAnimations(R.animator.fragment_slide_left_anim, R.animator.fragment_slide_right_anim)
+                .setCustomAnimations(R.animator.animator_fragment_change, 0)
                 .replace(R.id.fragmentAuthContainer, AuthRegisterFragment())
                 .commit()
     }
