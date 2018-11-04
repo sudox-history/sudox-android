@@ -18,6 +18,7 @@ import com.sudox.android.ui.main.MainActivity
 import com.sudox.protocol.models.enums.ConnectionState
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.android.synthetic.main.fragment_auth_email.*
 import javax.inject.Inject
 
 class AuthActivity : DaggerAppCompatActivity() {
@@ -105,5 +106,14 @@ class AuthActivity : DaggerAppCompatActivity() {
         finish()
     }
 
-    fun showMessage(message: String) = showSnackbar(this, fragmentAuthContainer, message, Snackbar.LENGTH_LONG)
+    fun showMessage(message: String) {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentAuthContainer)
+                ?: return
+
+        if (currentFragment is AuthEmailFragment) {
+            currentFragment.emailEditTextContainer.error = message
+        } else {
+            showSnackbar(this, fragmentAuthContainer, message, Snackbar.LENGTH_LONG)
+        }
+    }
 }
