@@ -16,12 +16,12 @@ import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.confirm.enums.AuthConfirmAction
-import com.sudox.android.ui.common.FreezableFragment
+import com.sudox.android.ui.auth.common.BaseAuthFragment
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_confirm.*
 import javax.inject.Inject
 
-class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
+class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -44,7 +44,7 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
         authConfirmViewModel.authConfirmErrorsLiveData.observe(this, Observer {
             codeEditTextContainer.error = if (it == Errors.WRONG_CODE) {
                 getString(R.string.wrong_code)
-            } else {
+            } else  {
                 getString(R.string.unknown_error)
             }
 
@@ -56,8 +56,10 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
                 AuthConfirmAction.FREEZE -> freeze()
                 AuthConfirmAction.SHOW_REGISTER_FRAGMENT -> authActivity.showAuthRegisterFragment()
                 AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
-                    authActivity.showAuthEmailFragment(authSession.email)
-                    authActivity.showMessage(getString(R.string.code_expired))
+                    authActivity.showAuthEmailFragment(authSession.email, getString(R.string.code_expired))
+                }
+                AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_TOO_MANY_REQUESTS -> {
+                    authActivity.showAuthEmailFragment(authSession.email, getString(R.string.too_many_requests))
                 }
             }
         })
@@ -66,7 +68,7 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
         initWelcomeText()
         initFooterText()
         initCodeEditText()
-        initNavigationBar()
+        onConnectionRecovered()
     }
 
     private fun initWelcomeText() {
@@ -91,23 +93,27 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(chars: CharSequence, start: Int, before: Int, count: Int) {
                 if (count + start == codeLength) {
-                    val code = codeEditText.text.toString()
-
-                    // Начинаем отправку, блокируем ввод кода ...
-                    if (authSession.status == AuthSession.AUTH_STATUS_NOT_REGISTERED) {
-                        authConfirmViewModel.checkCode(authSession.email, code, authSession.hash)
-                    } else {
-                        authConfirmViewModel.signIn(authSession.email, code, authSession.hash)
-                    }
-
-                    // Сохраним код ... (похер если вылезет ошибка, код в таких случаях перезапишется по-любому)
-                    authSession.code = code
+                    sendCode()
                 }
             }
         })
     }
 
-    private fun initNavigationBar() {
+    private fun sendCode() {
+        val code = codeEditText.text.toString()
+
+        // Начинаем отправку, блокируем ввод кода ...
+        if (authSession.status == AuthSession.AUTH_STATUS_NOT_REGISTERED) {
+            authConfirmViewModel.checkCode(authSession.email, code, authSession.hash)
+        } else {
+            authConfirmViewModel.signIn(authSession.email, code, authSession.hash)
+        }
+
+        // Сохраним код ... (похер если вылезет ошибка, код в таких случаях перезапишется по-любому)
+        authSession.code = code
+    }
+
+    override fun onConnectionRecovered() {
         authActivity.authNavigationBar.reset()
         authActivity.authNavigationBar.backButtonIsVisible = true
         authActivity.authNavigationBar.someFeatureButtonIsVisible = false
@@ -121,6 +127,11 @@ class AuthConfirmFragment @Inject constructor() : FreezableFragment() {
         }
 
         authActivity.authNavigationBar.configureComponents()
+
+        // Send code
+        if (codeEditText.text.length == resources.getInteger(R.integer.length_email_code)) {
+            sendCode()
+        }
     }
 
     override fun freeze() {

@@ -14,13 +14,13 @@ import com.sudox.android.data.repositories.auth.AUTH_NAME_REGEX_ERROR
 import com.sudox.android.data.repositories.auth.AUTH_NICKNAME_REGEX_ERROR
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
-import com.sudox.android.ui.common.FreezableFragment
+import com.sudox.android.ui.auth.common.BaseAuthFragment
 import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_register.*
 import javax.inject.Inject
 
-class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
+class AuthRegisterFragment @Inject constructor() : BaseAuthFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -41,10 +41,15 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
 
         // Слушаем заказанные ViewModel действия ...
         authRegisterViewModel.authRegisterRegexErrorsCallback = {
-            if (it == AUTH_NAME_REGEX_ERROR) {
-                nameEditTextContainer.error = getString(R.string.wrong_name_format)
-            } else if (it == AUTH_NICKNAME_REGEX_ERROR) {
-                nicknameEditTextContainer.error = getString(R.string.wrong_nickname_format)
+            nameEditTextContainer.error = null
+            nicknameEditTextContainer.error = null
+
+            it.forEach {
+                if (it == AUTH_NAME_REGEX_ERROR)  {
+                    nameEditTextContainer.error = getString(R.string.wrong_name_format)
+                } else if (it == AUTH_NICKNAME_REGEX_ERROR) {
+                    nicknameEditTextContainer.error = getString(R.string.wrong_nickname_format)
+                }
             }
 
             unfreeze()
@@ -66,19 +71,17 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
             when (it) {
                 AuthRegisterAction.FREEZE -> freeze()
                 AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
-                    authActivity.showAuthEmailFragment(authSession.email)
-                    authActivity.showMessage(getString(R.string.code_expired))
+                    authActivity.showAuthEmailFragment(authSession.email, getString(R.string.code_expired))
                 }
                 AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_INVALID_ACCOUNT_ERROR -> {
-                    authActivity.showAuthEmailFragment(authSession.email)
-                    authActivity.showMessage(getString(R.string.account_is_already_registered))
+                    authActivity.showAuthEmailFragment(authSession.email, getString(R.string.account_is_already_registered))
                 }
             }
         })
 
         // Initializing layout components
         initEditTexts()
-        initNavigationBar()
+        onConnectionRecovered()
     }
 
     private fun initEditTexts() {
@@ -86,7 +89,7 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
         nicknameEditText.setText("")
     }
 
-    private fun initNavigationBar() {
+    override fun onConnectionRecovered() {
         authActivity.authNavigationBar.reset()
         authActivity.authNavigationBar.nextButtonIsVisible = true
         authActivity.authNavigationBar.sudoxTagIsVisible = false

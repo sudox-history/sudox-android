@@ -8,7 +8,7 @@ apply plugin: 'io.fabric'
 // App version
 def versionMajor = 0
 def versionMinor = 3
-def versionPatch = 0
+def versionPatch = 3
 
 // App build params
 def compileSdkProjectVersion = 28
@@ -40,12 +40,6 @@ dependencies {
     implementation 'com.yandex.android:mobmetricalib:3.2.2'
     implementation 'com.android.installreferrer:installreferrer:1.0'
 
-    // SoLoader
-    implementation 'com.facebook.soloader:soloader:0.5.1'
-
-    // For testing
-    testImplementation 'com.facebook.litho:litho-testing:0.20.0'
-
     //TODO: Закончить подключение AppMetricaPush
 //    // AppMetricaPush
 //    implementation "com.yandex.android:mobmetricapushlib:1.2.0"
@@ -54,9 +48,6 @@ dependencies {
 //    implementation "com.android.support:support-compat:28.0.0"
 
     implementation "com.crashlytics.sdk.android:crashlytics:2.9.5"
-
-    // Some design libraries
-    implementation "com.androidadvance:topsnackbar:1.1.1"
 
     // Timber
     implementation "com.jakewharton.timber:timber:4.7.1"

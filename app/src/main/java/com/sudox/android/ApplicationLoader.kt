@@ -3,7 +3,6 @@ package com.sudox.android
 import android.content.Context
 import android.os.StrictMode
 import com.crashlytics.android.Crashlytics
-import com.facebook.soloader.SoLoader
 import com.sudox.android.common.API_KEY
 import com.sudox.android.common.di.AppComponent
 import com.sudox.android.common.di.DaggerAppComponent
@@ -20,7 +19,6 @@ class ApplicationLoader : DaggerApplication() {
     companion object {
         lateinit var component: AppComponent
     }
-
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> = component
 
@@ -67,8 +65,5 @@ class ApplicationLoader : DaggerApplication() {
 
         // Enable Timber
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
-
-        // Load Litho
-        SoLoader.init(this, false)
     }
 }

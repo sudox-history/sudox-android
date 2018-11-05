@@ -17,7 +17,7 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
      * Шина для уведомления View об нужных для выполнения ему действий
      * **/
     val authRegisterActionLiveData = SingleLiveEvent<AuthRegisterAction>()
-    var authRegisterRegexErrorsCallback: ((Int) -> Unit)? = null
+    var authRegisterRegexErrorsCallback: ((List<Int>) -> Unit)? = null
     val authRegisterErrorsLiveData = SingleLiveEvent<Int>()
 
     /**

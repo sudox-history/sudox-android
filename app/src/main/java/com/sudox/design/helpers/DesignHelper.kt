@@ -4,57 +4,15 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.os.Build
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TextInputLayout
-import android.support.v4.content.ContextCompat.getColor
 import android.text.Html
 import android.text.Spanned
-import android.util.DisplayMetrics
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
-import com.androidadvance.topsnackbar.TSnackbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.sudox.android.R
-
-fun showInputError(inputLayout: TextInputLayout) {
-    inputLayout.error = " "
-
-    if (inputLayout.childCount == 2) {
-        (inputLayout.getChildAt(1) as ViewGroup)
-                .getChildAt(0)
-                .visibility = View.GONE
-    }
-}
-
-fun hideInputError(inputLayout: TextInputLayout) {
-    inputLayout.isErrorEnabled = false
-}
-
-fun showSnackbar(context: Context, container: View, message: String, length: Int): Snackbar {
-    val snackbar = Snackbar.make(container, message, length)
-
-    // Change background color & show
-    snackbar.view.setBackgroundColor(getColor(context, R.color.colorPrimary))
-    snackbar.show()
-
-    return snackbar
-}
-
-fun showTopSnackbar(context: Context, container: View, message: String, length: Int): TSnackbar {
-    val snackbar = TSnackbar.make(container, message, length)
-
-    // Change background color & show
-    snackbar.view.setBackgroundColor(getColor(context, R.color.colorPrimary))
-    snackbar.show()
-
-    return snackbar
-}
-
 
 @Suppress("DEPRECATION")
 fun formatHtml(string: String): Spanned {
@@ -70,16 +28,6 @@ fun hideKeyboard(context: Context, view: View) {
 
     // Hide keyboard & remove focus
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-}
-
-fun convertDpToPixel(dp: Float, context: Context): Float {
-    val resources = context.resources
-    val metrics = resources.displayMetrics
-    return dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
-}
-
-fun convertPixelsToDp(px: Float, context: Context): Float {
-    return px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
 }
 
 fun drawAvatar(text: String, firstColor: String, secondColor: String): Bitmap {

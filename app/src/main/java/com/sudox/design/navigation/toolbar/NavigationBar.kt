@@ -41,8 +41,10 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     override fun onFinishInflate() {
         super.onFinishInflate()
 
-        // Configure components
+        // Save original state
         originalRightDrawableNext = buttonNavbarNext.compoundDrawablesRelative[2]
+
+        // Configure components
         configureComponents()
     }
 
@@ -113,6 +115,11 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         if (visibility) {
             view.visibility = View.VISIBLE
             view.isClickable = true
+
+            // Icon
+            if (view == buttonNavbarNext) {
+                buttonNavbarNext.setCompoundDrawables(null, null, originalRightDrawableNext, null)
+            }
 
             // Set text
             if (text != null) {

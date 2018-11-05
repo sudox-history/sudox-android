@@ -147,26 +147,27 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      */
     @Suppress("NAME_SHADOWING")
     fun signUp(email: String, code: String, hash: String, name: String, nickname: String,
-               regexCallback: (Int) -> (Unit),
+               regexCallback: (List<Int>) -> (Unit),
                successCallback: () -> (Unit),
                errorCallback: (Int) -> (Unit)) = GlobalScope.async {
         val name = name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
         val nickname = nickname.replace(WHITESPACES_REMOVE_REGEX, "")
-        var containsRegexError = false
+        val regexErrors = arrayListOf<Int>()
 
         // Валидация
         if (!NAME_REGEX.matches(name)) {
-            regexCallback(AUTH_NAME_REGEX_ERROR)
-            containsRegexError = true
+            regexErrors.plusAssign(AUTH_NAME_REGEX_ERROR)
         }
 
         if (!NICKNAME_REGEX.matches(nickname)) {
-            regexCallback(AUTH_NICKNAME_REGEX_ERROR)
-            containsRegexError = true
+            regexErrors.plusAssign(AUTH_NICKNAME_REGEX_ERROR)
         }
 
         // Fix bug with single validation
-        if (containsRegexError) return@async
+        if (regexErrors.isNotEmpty()) {
+            regexCallback(regexErrors)
+            return@async
+        }
 
         protocolClient.makeRequest<AuthSignUpDTO>("auth.signUp", AuthSignUpDTO().apply {
             this.email = email

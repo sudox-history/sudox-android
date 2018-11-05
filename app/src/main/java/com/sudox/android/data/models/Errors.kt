@@ -5,7 +5,7 @@ class Errors {
         const val UNAUTHORIZED = 1
         const val INVALID_PARAMETERS = 50
         const val INVALID_USER = 51
-        const val TOO_MANY_ATTEMPTS = 200
+        const val TOO_MANY_REQUESTS = 200
         const val CODE_EXPIRED = 201
         const val WRONG_CODE = 202
         const val INVALID_ACCOUNT = 203

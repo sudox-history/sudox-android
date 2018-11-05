@@ -27,10 +27,10 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
         authRepository.checkCode(email, code, hash, {
             authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_REGISTER_FRAGMENT)
         }, {
-            if (it == Errors.CODE_EXPIRED) {
-                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
-            } else {
-                authConfirmErrorsLiveData.postValue(it)
+            when (it) {
+                Errors.CODE_EXPIRED -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
+                Errors.TOO_MANY_REQUESTS -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_TOO_MANY_REQUESTS)
+                else -> authConfirmErrorsLiveData.postValue(it)
             }
         })
     }
@@ -45,10 +45,10 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
 
         // Запрос проверки кода и авторизации ...
         authRepository.signIn(email, code, hash, {}, {
-            if (it == Errors.CODE_EXPIRED) {
-                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
-            } else {
-                authConfirmErrorsLiveData.postValue(it)
+            when (it) {
+                Errors.CODE_EXPIRED -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
+                Errors.TOO_MANY_REQUESTS -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_TOO_MANY_REQUESTS)
+                else -> authConfirmErrorsLiveData.postValue(it)
             }
         })
     }

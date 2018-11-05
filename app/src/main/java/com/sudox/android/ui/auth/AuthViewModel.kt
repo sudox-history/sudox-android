@@ -5,7 +5,7 @@ import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject
 
-class AuthViewModel @Inject constructor(protocolClient: ProtocolClient,
+class AuthViewModel @Inject constructor(val protocolClient: ProtocolClient,
                                         authRepository: AuthRepository) : ViewModel() {
 
     // Шины событий

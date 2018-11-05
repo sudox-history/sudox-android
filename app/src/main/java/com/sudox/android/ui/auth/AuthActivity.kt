@@ -4,20 +4,19 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import android.view.View
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.design.helpers.showSnackbar
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.email.AuthEmailFragment
 import com.sudox.android.ui.auth.register.AuthRegisterFragment
-import com.sudox.android.ui.common.FreezableFragment
+import com.sudox.android.ui.auth.common.BaseAuthFragment
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.protocol.models.enums.ConnectionState
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_auth.*
-import kotlinx.android.synthetic.main.fragment_auth_email.*
+import kotlinx.android.synthetic.main.view_navigation_bar.view.*
 import javax.inject.Inject
 
 class AuthActivity : DaggerAppCompatActivity() {
@@ -35,10 +34,13 @@ class AuthActivity : DaggerAppCompatActivity() {
         authViewModel = getViewModel(viewModelFactory)
         authViewModel.connectionStateLiveData.observe(this, Observer {
             if (it == ConnectionState.CONNECTION_CLOSED) {
-                if (authSession != null) {
-                    showAuthEmailFragment(authSession!!.email)
-                } else {
-                    unfreezeCurrent()
+                showWaitForConnectStatus()
+                unfreezeCurrent()
+            } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
+                val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentAuthContainer)
+
+                if (currentFragment is BaseAuthFragment) {
+                    currentFragment.onConnectionRecovered()
                 }
             }
         })
@@ -54,7 +56,7 @@ class AuthActivity : DaggerAppCompatActivity() {
             if (it?.lived!!) showMainActivity()
         })
 
-        showAuthEmailFragment(null)
+        showAuthEmailFragment()
     }
 
     private fun unfreezeCurrent() {
@@ -62,17 +64,19 @@ class AuthActivity : DaggerAppCompatActivity() {
                 ?: return
 
         // Разморозим текущий фрагмент
-        if (currentFragment is FreezableFragment) {
+        if (currentFragment is BaseAuthFragment) {
             currentFragment.unfreeze()
         }
     }
 
-    fun showAuthEmailFragment(email: String? = null) {
+    fun showAuthEmailFragment(email: String? = null, error: String? = null) {
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.animator.animator_fragment_change, 0)
-                .replace(R.id.fragmentAuthContainer, AuthEmailFragment().apply { this.email = email })
-                .commit()
+                .replace(R.id.fragmentAuthContainer, AuthEmailFragment().apply {
+                    this.email = email
+                    this.error = error
+                }).commit()
 
         // Remove the auth session
         authSession = null
@@ -99,14 +103,19 @@ class AuthActivity : DaggerAppCompatActivity() {
         finish()
     }
 
-    fun showMessage(message: String) {
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentAuthContainer)
-                ?: return
+    override fun onResume() {
+        super.onResume()
 
-        if (currentFragment is AuthEmailFragment) {
-            currentFragment.emailEditTextContainer.error = message
-        } else {
-            showSnackbar(this, fragmentAuthContainer, message, Snackbar.LENGTH_LONG)
+        if (!authViewModel.protocolClient.isValid()) {
+            showWaitForConnectStatus()
         }
+    }
+
+    internal fun showWaitForConnectStatus() {
+        authNavigationBar.setClickable(authNavigationBar.buttonNavbarNext, false)
+        authNavigationBar.buttonNavbarNext.visibility = View.VISIBLE
+        authNavigationBar.buttonNavbarNext.isClickable = false
+        authNavigationBar.buttonNavbarNext.setCompoundDrawables(null, null, null, null)
+        authNavigationBar.buttonNavbarNext.text = getString(R.string.wait_for_connect)
     }
 }
