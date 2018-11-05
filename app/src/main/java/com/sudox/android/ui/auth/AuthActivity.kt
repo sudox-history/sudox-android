@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.app.FragmentTransaction
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.design.helpers.showSnackbar
@@ -55,7 +54,7 @@ class AuthActivity : DaggerAppCompatActivity() {
             if (it?.lived!!) showMainActivity()
         })
 
-        showAuthEmailFragment(null, true)
+        showAuthEmailFragment(null)
     }
 
     private fun unfreezeCurrent() {
@@ -68,18 +67,12 @@ class AuthActivity : DaggerAppCompatActivity() {
         }
     }
 
-    fun showAuthEmailFragment(email: String? = null, isFirstStart: Boolean = false) {
-        val authEmailFragment = AuthEmailFragment().apply { this.email = email }
-        val transaction = supportFragmentManager.beginTransaction()
-
-        if (isFirstStart) {
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        } else {
-            transaction.setCustomAnimations(R.animator.animator_fragment_change, 0)
-        }
-
-        transaction.replace(R.id.fragmentAuthContainer, authEmailFragment)
-        transaction.commit()
+    fun showAuthEmailFragment(email: String? = null) {
+        supportFragmentManager
+                .beginTransaction()
+                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+                .replace(R.id.fragmentAuthContainer, AuthEmailFragment().apply { this.email = email })
+                .commit()
 
         // Remove the auth session
         authSession = null
