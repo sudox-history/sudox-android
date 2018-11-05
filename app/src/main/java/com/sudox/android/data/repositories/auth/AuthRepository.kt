@@ -149,30 +149,38 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     fun signUp(email: String, code: String, hash: String, name: String, nickname: String,
                regexCallback: (Int) -> (Unit),
                successCallback: () -> (Unit),
-               errorCallback: (Int) -> (Unit)) {
+               errorCallback: (Int) -> (Unit)) = GlobalScope.async {
         val name = name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
         val nickname = nickname.replace(WHITESPACES_REMOVE_REGEX, "")
+        var containsRegexError = false
 
         // Валидация
         if (!NAME_REGEX.matches(name)) {
             regexCallback(AUTH_NAME_REGEX_ERROR)
-        } else if (!NICKNAME_REGEX.matches(nickname)) {
+            containsRegexError = true
+        }
+
+        if (!NICKNAME_REGEX.matches(nickname)) {
             regexCallback(AUTH_NICKNAME_REGEX_ERROR)
-        } else {
-            protocolClient.makeRequest<AuthSignUpDTO>("auth.signUp", AuthSignUpDTO().apply {
-                this.email = email
-                this.code = code
-                this.hash = hash
-                this.name = name
-                this.nickname = nickname
-            }) {
-                if (it.isSuccess()) {
-                    accountRepository.saveAccount(SudoxAccount(it.id, email, it.secret))
-                    accountSessionLiveData.postValue(AccountSessionState(true))
-                    successCallback()
-                } else {
-                    errorCallback(it.error)
-                }
+            containsRegexError = true
+        }
+
+        // Fix bug with single validation
+        if (containsRegexError) return@async
+
+        protocolClient.makeRequest<AuthSignUpDTO>("auth.signUp", AuthSignUpDTO().apply {
+            this.email = email
+            this.code = code
+            this.hash = hash
+            this.name = name
+            this.nickname = nickname
+        }) {
+            if (it.isSuccess()) {
+                accountRepository.saveAccount(SudoxAccount(it.id, email, it.secret))
+                accountSessionLiveData.postValue(AccountSessionState(true))
+                successCallback()
+            } else {
+                errorCallback(it.error)
             }
         }
     }

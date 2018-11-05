@@ -37,10 +37,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/name"
-            android:inputType="textPersonName"
+            android:inputType="textPersonName|textNoSuggestions"
             android:maxLength="@integer/length_name"
             android:maxLines="1"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
 
     </com.sudox.design.edittext.SudoxTextInputLayout>
 
@@ -58,10 +58,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/nickname"
-            android:inputType="textPersonName"
+            android:inputType="textVisiblePassword|textNoSuggestions"
             android:maxLength="@integer/length_nickname"
             android:maxLines="1"
-            android:textSize="14sp" />
+            android:textSize="15sp" />
 
     </com.sudox.design.edittext.SudoxTextInputLayout>
 

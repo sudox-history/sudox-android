@@ -5,6 +5,10 @@ import com.sudox.android.data.models.Errors
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
 import com.sudox.protocol.models.SingleLiveEvent
+import kotlinx.coroutines.experimental.Dispatchers
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.android.Main
+import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 
 class AuthRegisterViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
@@ -13,7 +17,7 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
      * Шина для уведомления View об нужных для выполнения ему действий
      * **/
     val authRegisterActionLiveData = SingleLiveEvent<AuthRegisterAction>()
-    val authRegisterRegexErrorsLiveData = SingleLiveEvent<Int>()
+    var authRegisterRegexErrorsCallback: ((Int) -> Unit)? = null
     val authRegisterErrorsLiveData = SingleLiveEvent<Int>()
 
     /**
@@ -25,7 +29,7 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
 
         // Регистрируемся ...
         authRepository.signUp(email, code, hash, name, nickname, {
-            authRegisterRegexErrorsLiveData.postValue(it)
+            GlobalScope.async(Dispatchers.Main) { authRegisterRegexErrorsCallback?.invoke(it) }
         }, {}, {
             if (it == Errors.CODE_EXPIRED || it == Errors.WRONG_CODE) {
                 authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)

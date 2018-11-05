@@ -39,12 +39,10 @@ class AuthEmailFragment @Inject constructor() : FreezableFragment() {
 
         // Слушаем заказанные ViewModel действия ...
         authEmailViewModel.authErrorsLiveData.observe(this, Observer {
-            emailEditTextContainer.error = if (it == Errors.INVALID_PARAMETERS) {
-                getString(R.string.wrong_email_format)
-            } else if (it == Errors.TOO_MANY_ATTEMPTS) {
-                getString(R.string.too_many_requests)
-            } else {
-                getString(R.string.unknown_error)
+            emailEditTextContainer.error = when (it) {
+                Errors.INVALID_PARAMETERS -> getString(R.string.wrong_email_format)
+                Errors.TOO_MANY_ATTEMPTS -> getString(R.string.exceeded_limit_of_attempts)
+                else -> getString(R.string.unknown_error)
             }
 
             unfreeze()
@@ -71,11 +69,10 @@ class AuthEmailFragment @Inject constructor() : FreezableFragment() {
         authActivity.authNavigationBar.sudoxTagIsVisible = false
         authActivity.authNavigationBar.navigationActionCallback = {
             if (it == NavigationAction.NEXT) {
-                // Получим текст с EditText'а :) (да Антон, мне в кайф комментировать каждую строчку кода)
-                val email = emailEditText.text.toString()
+                emailEditTextContainer.error = null
 
                 // Запросим отправку кода у сервера (ошибки прилетят в LiveData)
-                authEmailViewModel.requestCode(email)
+                authEmailViewModel.requestCode(emailEditText.text.toString())
             }
         }
 

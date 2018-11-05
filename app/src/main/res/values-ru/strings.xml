@@ -31,7 +31,7 @@
     <string name="return_back">С возвращением!</string>
     <string name="welcome">Добро пожаловать!</string>
     <string name="wrong_email_format">Неверный формат почты</string>
-    <string name="too_many_requests">Слишком много запросов!</string>
+    <string name="exceeded_limit_of_attempts">Превышен лимит попыток!</string>
     <string name="no_internet_connection">Нет соединения!</string>
     <string name="registration">Регистрация</string>
     <string name="authorisation">Авторизация</string>

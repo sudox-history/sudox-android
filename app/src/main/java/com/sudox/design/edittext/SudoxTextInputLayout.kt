@@ -9,8 +9,7 @@ import android.view.ViewGroup
 
 class SudoxTextInputLayout : TextInputLayout {
 
-    // Hint can be changed in working process time (error showing)
-    private var initHint: CharSequence? = hint
+    private var initialHint: CharSequence? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -19,11 +18,18 @@ class SudoxTextInputLayout : TextInputLayout {
     override fun setError(errorText: CharSequence?) {
         super.setError(errorText)
 
+        // Load initial hint
+        if (initialHint == null)
+            initialHint = TextInputLayout::class.java
+                    .getDeclaredField("originalHint")
+                    .apply { isAccessible = true }
+                    .get(this) as CharSequence?
+
         // Update hint
         hint = if (!TextUtils.isEmpty(errorText)) {
             errorText
         } else {
-            initHint
+            initialHint
         }
 
         // Hide bottom error text

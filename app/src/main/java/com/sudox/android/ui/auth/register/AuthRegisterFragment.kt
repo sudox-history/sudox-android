@@ -40,7 +40,7 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Слушаем заказанные ViewModel действия ...
-        authRegisterViewModel.authRegisterRegexErrorsLiveData.observe(this, Observer {
+        authRegisterViewModel.authRegisterRegexErrorsCallback = {
             if (it == AUTH_NAME_REGEX_ERROR) {
                 nameEditTextContainer.error = getString(R.string.wrong_name_format)
             } else if (it == AUTH_NICKNAME_REGEX_ERROR) {
@@ -48,7 +48,7 @@ class AuthRegisterFragment @Inject constructor() : FreezableFragment() {
             }
 
             unfreeze()
-        })
+        }
 
         authRegisterViewModel.authRegisterErrorsLiveData.observe(this, Observer {
             if (it == Errors.INVALID_PARAMETERS) {

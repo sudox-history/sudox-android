@@ -31,7 +31,7 @@
     <string name="return_back">Welcome back!</string>
     <string name="welcome">Welcome!</string>
     <string name="wrong_email_format">Wrong email format!</string>
-    <string name="too_many_requests">Too many requests!</string>
+    <string name="exceeded_limit_of_attempts">Exceeded limit of attempts!</string>
     <string name="no_internet_connection">No Internet connection!</string>
     <string name="registration">Register</string>
     <string name="authorisation">Auth</string>
