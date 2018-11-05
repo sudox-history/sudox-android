@@ -14,7 +14,7 @@
     <string name="enter_your_name">Для начала введите вашу почту</string>
     <string name="entrance">Вход</string>
     <string name="email">Электронная почта</string>
-    <string name="users">Контакты</string>
+    <string name="contacts">Контакты</string>
     <string name="cloud">Облако</string>
     <string name="messages">Сообщения</string>
     <string name="profile">Профиль</string>
@@ -76,4 +76,5 @@
     <string name="attach_file">Прикрепить файл</string>
     <string name="send_message">Отправить сообщение</string>
     <string name="code_expired">Срок действия кода истек</string>
+    <string name="wait_for_connect">Подключение...</string>
 </resources>

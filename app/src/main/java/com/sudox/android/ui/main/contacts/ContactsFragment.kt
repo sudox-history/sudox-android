@@ -14,6 +14,7 @@ import com.sudox.android.data.database.model.User
 import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
+import com.sudox.protocol.models.enums.ConnectionState
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_main_contacts.*
 import kotlinx.android.synthetic.main.fragment_main_contacts.view.*
@@ -45,13 +46,21 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
         initContactsExpandedView()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        // Проверка, оффлайн ли сейчас режим
+        if (!contactsViewModel.contactsRepository.protocolClient.isValid()) {
+            contactsToolbar.title = getString(R.string.wait_for_connect)
+        }
+    }
+
     private fun initToolbar() {
         // Ненавижу когда с View'шками происходят неявные для разработчика действия (например: onCreateOptionsMenu)
         // Антон от 15-го октября: Справедливые слова, Макс, справедливые!
 
         // Настройка меню
-        contactsToolbar.
-        contactsToolbar.inflateMenu(R.menu.menu_contacts)
+        contactsToolbar.contactsToolbar.inflateMenu(R.menu.menu_contacts)
         contactsToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.add_contact -> contactAddExpandedView.toggle()
@@ -86,6 +95,18 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
 
                     // Notify chatAdapter about update
                     diffResult.dispatchUpdatesTo(contactsAdapter)
+                })
+
+        contactsViewModel
+                .contactsRepository
+                .protocolClient
+                .connectionStateLiveData
+                .observe(this, Observer {
+                    if (it == ConnectionState.CONNECTION_CLOSED) {
+                        contactsToolbar.title = getString(R.string.wait_for_connect)
+                    } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
+                        contactsToolbar.title = getString(R.string.contacts)
+                    }
                 })
     }
 

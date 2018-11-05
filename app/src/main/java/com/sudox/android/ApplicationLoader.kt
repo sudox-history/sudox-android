@@ -2,6 +2,7 @@ package com.sudox.android
 
 import android.content.Context
 import android.os.StrictMode
+import com.crashlytics.android.Crashlytics
 import com.facebook.soloader.SoLoader
 import com.sudox.android.common.API_KEY
 import com.sudox.android.common.di.AppComponent
@@ -10,6 +11,7 @@ import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
+import io.fabric.sdk.android.Fabric
 import timber.log.Timber
 
 class ApplicationLoader : DaggerApplication() {
@@ -19,18 +21,18 @@ class ApplicationLoader : DaggerApplication() {
         lateinit var component: AppComponent
     }
 
-    // Для класса AndroidInjection
+
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> = component
 
     override fun onCreate() {
-        // Создадим компонент
         component = DaggerAppComponent
                 .builder()
                 .application(this)
                 .build()
 
-        // А теперь скажем Android'у: "А блять, уебался!"
         super.onCreate()
+
+        Fabric.with(this, Crashlytics())
 
         // Strict-mode
         StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()

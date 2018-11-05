@@ -12,20 +12,13 @@
         style="@style/ToolbarTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/users" />
+        app:title="@string/contacts" />
 
     <com.sudox.android.ui.main.contacts.view.ContactAddExpandedView
         android:id="@+id/contactAddExpandedView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/contactsToolbar" />
-
-    <com.sudox.design.navigation.toolbar.expanded.StatusExpandedView
-        android:id="@+id/contactsStatusExpandedView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/contactsToolbar" />
-
     <!-- Toolbar section end -->
 
     <android.support.v7.widget.RecyclerView
@@ -34,6 +27,6 @@
         android:layout_height="match_parent"
         android:layout_below="@id/contactsToolbar"
         android:clipToPadding="false"
-        android:paddingTop="16dp" />
+        android:paddingTop="5dp" />
 
 </com.sudox.design.overlay.OverlappedRelativeLayout>

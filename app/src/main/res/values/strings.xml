@@ -14,7 +14,7 @@
     <string name="enter_your_name">For beginning enter your name</string>
     <string name="entrance">Enter</string>
     <string name="email">E-mail</string>
-    <string name="users">Contacts</string>
+    <string name="contacts">Contacts</string>
     <string name="cloud">Cloud</string>
     <string name="messages">Messages</string>
     <string name="profile">Profile</string>
@@ -76,4 +76,5 @@
     <string name="attach_file">Attach file</string>
     <string name="send_message">Send message</string>
     <string name="code_expired">Code expired</string>
+    <string name="wait_for_connect">Connecting...</string>
 </resources>

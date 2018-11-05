@@ -44,6 +44,17 @@ class StatusExpandedView : ExpandedView {
         if (time > 0L) handler.postDelayed({ hide() }, time)
     }
 
+    fun openWithMessage(message: String) {
+        if (!expanded) {
+            statusExpandedViewText.text = message
+            show()
+        }
+    }
+
+    fun close() {
+        hide()
+    }
+
     override fun clear() {
         // Ignore
     }

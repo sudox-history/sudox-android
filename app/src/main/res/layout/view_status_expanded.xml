@@ -5,5 +5,5 @@
     android:layout_height="wrap_content"
     android:background="@color/colorStatusViewBackground"
     android:gravity="center"
-    android:padding="3dp"
-    android:textSize="@dimen/font_size_extra_small_tiny" />
+    android:padding="5dp"
+    android:textSize="@dimen/font_size_tiny" />

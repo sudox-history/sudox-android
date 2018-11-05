@@ -15,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ContactsRepository @Inject constructor(private val protocolClient: ProtocolClient,
+class ContactsRepository @Inject constructor( val protocolClient: ProtocolClient,
                                              private val authRepository: AuthRepository,
                                              private val usersRepository: UsersRepository,
                                              private val contactsDao: ContactsDao) {
@@ -120,4 +120,5 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
         // Сохраним контакты в БД
         if (users.isNotEmpty()) contactsDao.insertAll(users)
     }
+
 }
