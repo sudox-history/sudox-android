@@ -1,10 +1,10 @@
 package com.sudox.design.navigation.toolbar
 
 import android.content.Context
-import android.support.v7.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.sudox.android.R
 import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import kotlinx.android.synthetic.main.view_navigation_bar.view.*
@@ -78,11 +78,11 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         navigationActionCallback = null
     }
 
-    fun setText(view: AppCompatTextView, text: String) {
+    fun setText(view: TextView, text: String) {
         view.text = text
     }
 
-    fun setClickable(view: AppCompatTextView, clickable: Boolean) {
+    fun setClickable(view: TextView, clickable: Boolean) {
         view.isClickable = clickable
     }
 
@@ -98,7 +98,7 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         buttonSomeFeature.isEnabled = true
     }
 
-    private fun configureText(view: AppCompatTextView, visibility: Boolean) {
+    private fun configureText(view: TextView, visibility: Boolean) {
         if (visibility) {
             view.visibility = View.VISIBLE
         } else {
@@ -106,7 +106,7 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         }
     }
 
-    private fun configureButton(view: AppCompatTextView, visibility: Boolean, text: String?, action: NavigationAction) {
+    private fun configureButton(view: TextView, visibility: Boolean, text: String?, action: NavigationAction) {
         if (visibility) {
             view.visibility = View.VISIBLE
             view.isClickable = true
