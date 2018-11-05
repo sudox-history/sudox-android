@@ -1,6 +1,7 @@
 package com.sudox.design.navigation.toolbar
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
@@ -28,6 +29,7 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
     // Callback
     var navigationActionCallback: ((NavigationAction) -> (Unit))? = null
+    var originalRightDrawableNext: Drawable? = null
 
     init {
         readAttrs(attrs)
@@ -40,6 +42,7 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         super.onFinishInflate()
 
         // Configure components
+        originalRightDrawableNext = buttonNavbarNext.compoundDrawablesRelative[2]
         configureComponents()
     }
 
@@ -69,12 +72,12 @@ class NavigationBar(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
     fun reset() {
         backButtonIsVisible = false
-        backButtonText = null
         nextButtonIsVisible = false
-        nextButtonText = null
         sudoxTagIsVisible = false
         someFeatureButtonIsVisible = false
-        someFeatureText = null
+    }
+
+    fun removeCallback() {
         navigationActionCallback = null
     }
 

@@ -34,7 +34,7 @@ class AuthActivity : DaggerAppCompatActivity() {
         // Get view model
         authViewModel = getViewModel(viewModelFactory)
         authViewModel.connectionStateLiveData.observe(this, Observer {
-            if (it == ConnectionState.CONNECTION_CLOSED || it == ConnectionState.CONNECTION_CLOSED) {
+            if (it == ConnectionState.CONNECTION_CLOSED) {
                 if (authSession != null) {
                     showAuthEmailFragment(authSession!!.email)
                 } else {

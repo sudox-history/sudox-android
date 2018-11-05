@@ -3,10 +3,12 @@ package com.sudox.android.ui.auth.email
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.ui.auth.email.enums.AuthEmailAction
+import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
 import javax.inject.Inject
 
-class AuthEmailViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
+class AuthEmailViewModel @Inject constructor(private val authRepository: AuthRepository,
+                                             val protocolClient: ProtocolClient) : ViewModel() {
 
     /**
      * Шина для уведомления View об нужных для выполнения ему действий

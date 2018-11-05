@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentTransaction
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.chats.ChatType
@@ -48,15 +47,14 @@ class MainActivity : DaggerAppCompatActivity() {
         initBottomNavigationView()
     }
 
-    fun initBottomNavigationView() {
+    private fun initBottomNavigationView() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.contacts_item -> {
-                    showContactsFragment()
-                }
+            if (it.itemId == R.id.contacts_item) {
+                showContactsFragment()
+            } else {
+                return@setOnNavigationItemSelectedListener false
             }
 
-            // Все прошло успешно
             return@setOnNavigationItemSelectedListener true
         }
 
@@ -66,9 +64,8 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun showContactsFragment() {
         supportFragmentManager.beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setCustomAnimations(R.animator.animator_fragment_change, 0)
                 .replace(R.id.fragmentMainContainer, contactsFragment)
-                .addToBackStack(null)
                 .commit()
     }
 

@@ -13,8 +13,11 @@ import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.email.enums.AuthEmailAction
 import com.sudox.android.ui.common.FreezableFragment
 import com.sudox.design.navigation.toolbar.enums.NavigationAction
+import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_email.*
+import kotlinx.android.synthetic.main.fragment_main_contacts.*
+import kotlinx.android.synthetic.main.view_navigation_bar.view.*
 import javax.inject.Inject
 
 class AuthEmailFragment @Inject constructor() : FreezableFragment() {
@@ -23,6 +26,15 @@ class AuthEmailFragment @Inject constructor() : FreezableFragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var authEmailViewModel: AuthEmailViewModel
     lateinit var authActivity: AuthActivity
+
+    // Observer
+    private var connectionObserver = Observer<ConnectionState> {
+        if (it == ConnectionState.CONNECTION_CLOSED) {
+            showWaitForConnectStatus()
+        } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
+            initNavigationBar()
+        }
+    }
 
     // Some data about of state ...
     var email: String? = null
@@ -48,15 +60,31 @@ class AuthEmailFragment @Inject constructor() : FreezableFragment() {
             unfreeze()
         })
 
+        authEmailViewModel.protocolClient.connectionStateLiveData.observeForever(connectionObserver)
         authEmailViewModel.authEmailActionLiveData.observe(this, Observer {
             if (it == AuthEmailAction.FREEZE) {
                 freeze()
             }
         })
 
+
         // Init layout components
         initEmailEditText()
         initNavigationBar()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (!authEmailViewModel.protocolClient.isValid()) {
+            showWaitForConnectStatus()
+        }
+    }
+
+    private fun showWaitForConnectStatus() {
+        authActivity.authNavigationBar.setClickable(authActivity.authNavigationBar.buttonNavbarNext, false)
+        authActivity.authNavigationBar.buttonNavbarNext.setCompoundDrawables(null, null, null, null)
+        authActivity.authNavigationBar.buttonNavbarNext.text = getString(R.string.wait_for_connect)
     }
 
     private fun initEmailEditText() {
@@ -77,6 +105,16 @@ class AuthEmailFragment @Inject constructor() : FreezableFragment() {
         }
 
         authActivity.authNavigationBar.configureComponents()
+        authActivity.authNavigationBar.setClickable(authActivity.authNavigationBar.buttonNavbarNext, true)
+        authActivity.authNavigationBar.buttonNavbarNext.text = authActivity.authNavigationBar.nextButtonText
+        authActivity.authNavigationBar.buttonNavbarNext.setCompoundDrawables(null, null, authActivity.authNavigationBar.originalRightDrawableNext, null)
+    }
+
+    override fun onDetach() {
+        authEmailViewModel.protocolClient.connectionStateLiveData.removeObserver(connectionObserver)
+
+        // Super!
+        super.onDetach()
     }
 
     override fun freeze() {
