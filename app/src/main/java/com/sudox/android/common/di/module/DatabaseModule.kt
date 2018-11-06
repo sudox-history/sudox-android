@@ -14,6 +14,7 @@ class DatabaseModule {
     @Provides
     fun providesSudoxDatabase(context: Context) = Room
             .databaseBuilder(context, SudoxDatabase::class.java, "sudox-database")
+            .fallbackToDestructiveMigration()
             .build()
 
     @Singleton
