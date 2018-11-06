@@ -19,7 +19,7 @@ class UsersRepository @Inject constructor(private val protocolClient: ProtocolCl
     }
 
     /**
-     * Получает информацию о пользователе с сервера по E-mail.;
+     * Получает информацию о пользователе с сервера по E-mail.
      */
     fun searchUser(query: String, responseCallback: (SearchUserDTO) -> (Unit)) {
         protocolClient.makeRequest<SearchUserDTO>("users.search", SearchUserDTO().apply {

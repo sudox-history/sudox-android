@@ -11,12 +11,12 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.Errors
-import com.sudox.design.helpers.formatHtml
-import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.AuthActivity
-import com.sudox.android.ui.auth.confirm.enums.AuthConfirmAction
 import com.sudox.android.ui.auth.common.BaseAuthFragment
+import com.sudox.android.ui.auth.confirm.enums.AuthConfirmAction
+import com.sudox.design.helpers.formatHtml
+import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_confirm.*
 import javax.inject.Inject
@@ -59,7 +59,8 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
                     authActivity.showAuthEmailFragment(authSession.email, getString(R.string.code_expired))
                 }
                 AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_TOO_MANY_REQUESTS -> {
-                    authActivity.showAuthEmailFragment(authSession.email, getString(R.string.too_many_requests))
+                    codeEditTextContainer.error = getString(R.string.too_many_requests)
+                    unfreeze()
                 }
             }
         })
