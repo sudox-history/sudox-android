@@ -16,7 +16,6 @@ import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.LinkedBlockingQueue
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -163,7 +162,14 @@ class ProtocolClient @Inject constructor() {
             val iv = randomBase64String(16)
             val salt = randomBase64String(32)
             val json = message?.toJSON() ?: JSONObject()
-            val hmac = Base64.encodeToString(getHmac(controller!!.key!!, event + json + salt), Base64.NO_WRAP)
+            val msg = json
+                    .toString()
+                    .replace("\\/", "/")
+
+            val hmac = Base64.encodeToString(
+                    getHmac(controller!!.key!!, event + msg + salt),
+                    Base64.NO_WRAP)
+
             val payload = arrayOf(event, json, salt)
                     .toJsonArray()
                     .toString()

@@ -8,7 +8,8 @@ apply plugin: 'io.fabric'
 // App version
 def versionMajor = 0
 def versionMinor = 3
-def versionPatch = 3
+def versionUpdate = 3
+def versionPatch = 0
 
 // App build params
 def compileSdkProjectVersion = 28
@@ -78,8 +79,8 @@ android {
         applicationId "com.sudox.android"
         minSdkVersion minSdkProjectVersion
         targetSdkVersion compileSdkProjectVersion
-        versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
-        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        versionCode versionMajor * 1000 + versionMinor * 100 + versionUpdate * 10 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionUpdate}.${versionPatch}"
         multiDexEnabled false
 
         // Runner for instrumental tests

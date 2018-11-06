@@ -35,7 +35,7 @@ class MessagesInnerActivity : DaggerAppCompatActivity() {
 
     private fun showUserChatFragment() {
         supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+//                .setCustomAnimations(R.animator.animator_fragment_change, 0)
                 .replace(R.id.fragmentChatContainer, ChatFragment().apply { arguments = intent.extras })
                 .commit()
     }
