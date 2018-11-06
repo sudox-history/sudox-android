@@ -25,12 +25,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_search_16dp"
+            android:layout_marginTop="5dp"
             android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_search_16dp"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
             android:text="@string/add_new_contact"
-            android:textSize="@dimen/font_size_increased_tiny" />
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/queryEditText"
@@ -40,7 +41,8 @@
             android:layout_marginTop="15dp"
             android:hint="@string/enter_query"
             android:imeOptions="actionSearch"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textSize="14sp" />
 
     </LinearLayout>
 </RelativeLayout>

@@ -2,8 +2,8 @@
 <resources>
     <color name="colorPrimary">#1A1E28</color>
     <color name="colorPrimaryDark">#141822</color>
-    <color name="colorFirstMessage">#3A3E48</color>
-    <color name="colorReceivedMessage">#30343E</color>
+    <color name="colorFirstMessage">#343842</color>
+    <color name="colorReceivedMessage">#2E323C</color>
     <color name="colorBottomNavigationBackground">#1A1E28</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="colorBackground">#1F232D</color>

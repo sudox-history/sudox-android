@@ -25,9 +25,9 @@
         android:id="@+id/emailEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="40dp">
+        android:layout_marginTop="40dp">
 
         <EditText
             android:id="@+id/emailEditText"
@@ -36,6 +36,7 @@
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             android:maxLines="1"
+            android:textColorHint="#9f9f9f"
             android:textSize="15sp" />
 
     </com.sudox.design.edittext.SudoxTextInputLayout>
@@ -49,15 +50,17 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
             android:layout_marginStart="40dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="40dp"
             android:layout_weight="0.80"
             android:gravity="center"
             android:text="@string/hint_of_create_account"
             android:textColor="@color/colorHint"
+            android:textColorHint="#9f9f9f"
             android:textSize="14sp" />
 
     </LinearLayout>
 
 </LinearLayout>
+    <!--TODO: name color-->

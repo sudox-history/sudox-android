@@ -5,15 +5,15 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:paddingStart="25dp"
-    android:paddingEnd="25dp">
+    android:paddingEnd="26dp"
+    android:paddingStart="26dp">
 
     <ImageView
         android:id="@+id/avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="6dp"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
         android:layout_marginBottom="6dp"
+        android:layout_marginTop="6dp"
         android:src="@color/colorAccent" />
 
     <LinearLayout
@@ -31,18 +31,18 @@
             android:layout_height="wrap_content"
             android:text="Антон Янкин"
             android:textColor="@color/colorAccent"
-            android:textSize="@dimen/font_size_increased_tiny" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/nickname"
             style="@style/TextViewWithoutPaddings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:fontFamily="sans-serif-light"
             android:text="kerjen01"
             android:textColor="@color/colorHint"
-            android:textSize="@dimen/font_size_tiny" />
+            android:textSize="14sp" />
 
     </LinearLayout>
 </LinearLayout>
