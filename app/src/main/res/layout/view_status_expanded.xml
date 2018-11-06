@@ -6,4 +6,4 @@
     android:background="@color/colorStatusViewBackground"
     android:gravity="center"
     android:padding="5dp"
-    android:textSize="@dimen/font_size_tiny" />
+    android:textSize="14sp" />

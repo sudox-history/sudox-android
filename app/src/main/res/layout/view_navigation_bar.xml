@@ -4,8 +4,8 @@
     android:layout_height="@dimen/navbar_height"
     android:background="@color/colorPrimary"
     android:gravity="center_vertical"
-    android:paddingEnd="20dp"
-    android:paddingStart="20dp">
+    android:paddingEnd="26dp"
+    android:paddingStart="26dp">
 
     <!-- Navigation buttons start -->
 

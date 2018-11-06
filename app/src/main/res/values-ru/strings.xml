@@ -62,7 +62,7 @@
     <string name="toolbar_back">Назад</string>
     <string name="toolbar_next">Далее</string>
     <string name="add_new_contact">Добавление новых контактов</string>
-    <string name="enter_query">Введите запрос</string>
+    <string name="enter_query">Введите электронную почту</string>
     <string name="ok">ОК</string>
     <string name="add_contact">Добавить контакт</string>
     <string name="search">Поиск</string>
