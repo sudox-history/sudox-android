@@ -77,4 +77,11 @@
     <string name="send_message">Отправить сообщение</string>
     <string name="code_expired">Срок действия кода истек</string>
     <string name="wait_for_connect">Подключение...</string>
+
+    <plurals name="contacts_amount">
+        <item quantity="one">%1$d контакт</item>
+        <item quantity="few">%1$d контакта</item>
+        <item quantity="many">%1$d контактов</item>
+        <item quantity="other">%1$d контактов</item>
+    </plurals>
 </resources>

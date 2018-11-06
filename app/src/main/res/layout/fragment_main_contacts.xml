@@ -24,9 +24,20 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/contactsList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/contactsToolbar"
         android:clipToPadding="false"
         android:paddingTop="5dp" />
+
+    <TextView
+        android:id="@+id/contactsAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contactsList"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="3 контакта"
+        android:textColor="@color/colorHint"
+        android:textSize="14sp" />
 
 </com.sudox.design.overlay.OverlappedRelativeLayout>

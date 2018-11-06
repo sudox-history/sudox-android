@@ -77,4 +77,11 @@
     <string name="send_message">Send message</string>
     <string name="code_expired">Code expired</string>
     <string name="wait_for_connect">Connecting...</string>
+
+    <plurals name="contacts_amount">
+        <item quantity="one">%1$d contact</item>
+        <item quantity="few">%1$d contacts</item>
+        <item quantity="many">%1$d contacts</item>
+        <item quantity="other">%1$d contacts</item>
+    </plurals>
 </resources>

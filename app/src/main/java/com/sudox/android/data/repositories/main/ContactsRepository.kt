@@ -15,7 +15,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ContactsRepository @Inject constructor( val protocolClient: ProtocolClient,
+class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                              private val authRepository: AuthRepository,
                                              private val usersRepository: UsersRepository,
                                              private val contactsDao: ContactsDao) {

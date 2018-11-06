@@ -93,6 +93,18 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
                     // Update data ...
                     contactsAdapter.items = it
 
+
+                    // Узнаем количество контактов
+                    val amount = it.size
+
+                    // Применяем изменения, учитывая падежи
+                    if (amount == 0){
+                        contactsAmount.visibility = View.GONE
+                    } else {
+                        contactsAmount.visibility = View.VISIBLE
+                        contactsAmount.text = resources.getQuantityString(R.plurals.contacts_amount, it.size, it.size)
+                    }
+
                     // Notify chatAdapter about update
                     diffResult.dispatchUpdatesTo(contactsAdapter)
                 })
