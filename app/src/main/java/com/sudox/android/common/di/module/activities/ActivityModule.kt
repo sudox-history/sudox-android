@@ -2,7 +2,7 @@ package com.sudox.android.common.di.module.activities
 
 import com.sudox.android.common.di.module.fragments.AuthActivityModule
 import com.sudox.android.common.di.module.fragments.MainActivityModule
-import com.sudox.android.ui.messages.MessagesActivity
+import com.sudox.android.ui.messages.MessagesInnerActivity
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.splash.SplashActivity
@@ -22,5 +22,5 @@ abstract class ActivityModule {
     abstract fun bindMainActivity() : MainActivity
 
     @ContributesAndroidInjector(modules = [(MessagesActivityModule::class)])
-    abstract fun bindMessagesActivity() : MessagesActivity
+    abstract fun bindMessagesActivity() : MessagesInnerActivity
 }

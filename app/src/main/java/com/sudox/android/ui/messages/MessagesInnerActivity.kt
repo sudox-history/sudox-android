@@ -2,14 +2,13 @@ package com.sudox.android.ui.messages
 
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import com.sudox.android.R
 import com.sudox.android.data.models.chats.ChatType
 import com.sudox.android.ui.messages.chat.ChatFragment
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-class MessagesActivity : DaggerAppCompatActivity() {
+class MessagesInnerActivity : DaggerAppCompatActivity() {
 
     companion object {
         const val CONVERSATION_TYPE_KEY = "chat_type_key"

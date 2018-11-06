@@ -1,4 +1,4 @@
-package com.sudox.android.ui.main.dialogs
+package com.sudox.android.ui.main.messages
 
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -12,7 +12,7 @@ import com.sudox.android.ui.main.contacts.ContactsViewModel
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-class DialogsFragment @Inject constructor(): DaggerFragment() {
+class MessagesFragment @Inject constructor(): DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -25,6 +25,6 @@ class DialogsFragment @Inject constructor(): DaggerFragment() {
         dialogsViewModel = getViewModel(viewModelFactory)
         mainActivity = activity as MainActivity
 
-        return inflater.inflate(R.layout.fragment_main_contacts, container, false)
+        return inflater.inflate(R.layout.fragment_messages, container, false)
     }
 }

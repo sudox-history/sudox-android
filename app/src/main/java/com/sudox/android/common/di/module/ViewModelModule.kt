@@ -8,11 +8,11 @@ import com.sudox.android.ui.auth.AuthViewModel
 import com.sudox.android.ui.auth.confirm.AuthConfirmViewModel
 import com.sudox.android.ui.auth.email.AuthEmailViewModel
 import com.sudox.android.ui.auth.register.AuthRegisterViewModel
-import com.sudox.android.ui.messages.MessagesViewModel
 import com.sudox.android.ui.main.MainViewModel
 import com.sudox.android.ui.main.contacts.ContactsViewModel
-import com.sudox.android.ui.main.dialogs.DialogsViewModel
+import com.sudox.android.ui.main.messages.MessagesViewModel
 import com.sudox.android.ui.main.settings.SettingsViewModel
+import com.sudox.android.ui.messages.MessagesInnerViewModel
 import com.sudox.android.ui.messages.chat.ChatViewModel
 import com.sudox.android.ui.splash.SplashViewModel
 import dagger.Binds
@@ -47,8 +47,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MessagesViewModel::class)
-    internal abstract fun chatViewModel(viewModel: MessagesViewModel): ViewModel
+    @ViewModelKey(MessagesInnerViewModel::class)
+    internal abstract fun chatViewModel(viewModel: MessagesInnerViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -67,8 +67,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(DialogsViewModel::class)
-    internal abstract fun dialogsViewModel(viewModel: DialogsViewModel): ViewModel
+    @ViewModelKey(MessagesViewModel::class)
+    internal abstract fun messagesViewModel(viewModel: MessagesViewModel): ViewModel
 
     @Binds
     @IntoMap

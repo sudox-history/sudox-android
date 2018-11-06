@@ -11,7 +11,8 @@ import com.sudox.android.data.models.chats.UserChatRecipient
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.enums.MainActivityAction
-import com.sudox.android.ui.messages.MessagesActivity
+import com.sudox.android.ui.main.messages.MessagesFragment
+import com.sudox.android.ui.messages.MessagesInnerActivity
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -25,6 +26,9 @@ class MainActivity : DaggerAppCompatActivity() {
     // Fragments
     @Inject
     lateinit var contactsFragment: ContactsFragment
+
+    @Inject
+    lateinit var messagesFragment: MessagesFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,10 +53,10 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun initBottomNavigationView() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
-            if (it.itemId == R.id.contacts_item) {
-                showContactsFragment()
-            } else {
-                return@setOnNavigationItemSelectedListener false
+            when {
+                it.itemId == R.id.contacts_item -> showContactsFragment()
+                it.itemId == R.id.messages_item -> showMessagesFragment()
+                else -> return@setOnNavigationItemSelectedListener false
             }
 
             return@setOnNavigationItemSelectedListener true
@@ -60,6 +64,13 @@ class MainActivity : DaggerAppCompatActivity() {
 
         // Set default fragment
         bottomNavigationView.selectedItemId = R.id.contacts_item
+    }
+
+    private fun showMessagesFragment() {
+        supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+                .replace(R.id.fragmentMainContainer, messagesFragment)
+                .commit()
     }
 
     private fun showContactsFragment() {
@@ -75,9 +86,9 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     fun showChatWithUser(userChatRecipient: UserChatRecipient) {
-        startActivity(Intent(this, MessagesActivity::class.java).apply {
-            putExtra(MessagesActivity.CONVERSATION_TYPE_KEY, ChatType.CHAT.ordinal)
-            putExtra(MessagesActivity.CONVERSATION_RECIPIENT_KEY, userChatRecipient)
+        startActivity(Intent(this, MessagesInnerActivity::class.java).apply {
+            putExtra(MessagesInnerActivity.CONVERSATION_TYPE_KEY, ChatType.CHAT.ordinal)
+            putExtra(MessagesInnerActivity.CONVERSATION_RECIPIENT_KEY, userChatRecipient)
         })
     }
 }

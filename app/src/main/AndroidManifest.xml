@@ -57,7 +57,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name=".ui.messages.MessagesActivity"
+            android:name=".ui.messages.MessagesInnerActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
             android:parentActivityName=".ui.main.MainActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />

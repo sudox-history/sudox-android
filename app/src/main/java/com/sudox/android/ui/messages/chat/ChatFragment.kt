@@ -17,7 +17,7 @@ import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.chats.UserChatRecipient
 import com.sudox.android.data.repositories.messages.CHAT_MESSAGES_SIZE
 import com.sudox.android.ui.adapters.ChatAdapter
-import com.sudox.android.ui.messages.MessagesActivity
+import com.sudox.android.ui.messages.MessagesInnerActivity
 import com.sudox.design.helpers.drawAvatar
 import com.sudox.design.helpers.drawCircleBitmap
 import com.sudox.design.helpers.getTwoFirstLetters
@@ -33,14 +33,14 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var messagesActivity: MessagesActivity
+    private lateinit var messagesInnerActivity: MessagesInnerActivity
     private lateinit var userChatRecipient: UserChatRecipient
     private lateinit var chatViewModel: ChatViewModel
     private lateinit var chatAdapter: ChatAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        messagesActivity = activity as MessagesActivity
-        userChatRecipient = arguments!!.getParcelable(MessagesActivity.CONVERSATION_RECIPIENT_KEY)!!
+        messagesInnerActivity = activity as MessagesInnerActivity
+        userChatRecipient = arguments!!.getParcelable(MessagesInnerActivity.CONVERSATION_RECIPIENT_KEY)!!
         chatViewModel = getViewModel(viewModelFactory)
 
         return inflater.inflate(R.layout.fragment_messages_chat_user, container, false)
@@ -79,13 +79,13 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
     }
 
     private fun configureMessagesList() {
-        chatAdapter = ChatAdapter(ArrayList(), messagesActivity)
+        chatAdapter = ChatAdapter(ArrayList(), messagesInnerActivity)
         chatViewModel.authRepository.accountSessionLiveData.observe(this, Observer {
             if (it!!.lived) loadInitialMessages()
         })
 
         // Layout manager
-        val linearLayoutManager = LinearLayoutManager(messagesActivity)
+        val linearLayoutManager = LinearLayoutManager(messagesInnerActivity)
 
         // Set parameters
         chatMessagesList.itemAnimator = null
