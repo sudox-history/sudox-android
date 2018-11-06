@@ -52,8 +52,6 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
         authRepository.accountSessionLiveData.observeForever {
             if (it!!.lived) loadedPeerChatsIds.clear()
         }
-
-
     }
 
     fun getInitialHistory(peerId: String,
@@ -134,8 +132,6 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
     }
 
     fun sendSimpleMessage(peerId: String, message: String) {
-
-        val message1= message
         protocolClient.makeRequest<SendChatMessageDTO>("chats.send", SendChatMessageDTO().apply {
             this.peerId = peerId
             this.message = message

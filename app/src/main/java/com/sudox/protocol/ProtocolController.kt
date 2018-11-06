@@ -161,7 +161,8 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                     val salt = decryptedPayload.optString(2)
 
                     if (event != null && message != null && salt != null && key != null) {
-                        val hmacReaded = getHmac(key!!, event + message + salt)
+                        val msg = message.toString().replace("\\/", "/")
+                        val hmacReaded = getHmac(key!!, event + msg + salt)
                         val encodedHmac = Base64.encodeToString(hmacReaded, Base64.NO_WRAP)
 
                         // Проверим HMAC'ки ...

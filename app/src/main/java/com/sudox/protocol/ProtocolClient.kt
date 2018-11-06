@@ -16,7 +16,6 @@ import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.LinkedBlockingQueue
 import javax.inject.Inject
 import javax.inject.Singleton
