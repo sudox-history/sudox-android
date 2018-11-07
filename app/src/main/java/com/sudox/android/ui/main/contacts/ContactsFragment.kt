@@ -33,6 +33,8 @@ class ContactsFragment @Inject constructor() : BaseMainFragment() {
         contactsViewModel = getViewModel(viewModelFactory)
         mainActivity = activity as MainActivity
 
+        listenForConnection()
+
         return inflater.inflate(R.layout.fragment_main_contacts, container, false)
     }
 

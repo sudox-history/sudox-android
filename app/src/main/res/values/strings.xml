@@ -45,7 +45,8 @@
     <string name="info">Information</string>
     <string name="decoration_label">Decorations</string>
     <string name="dialogs_label">Dialogs</string>
-    <string name="channels">Channels</string>
+    <string name="channels_label">Channels</string>
+    <string name="talks_label">Talks</string>
     <string name="hello_world">Hello world</string>
     <string name="exit">Logout</string>
     <string name="retry_send_in">Try in %time</string>

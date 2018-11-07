@@ -12,7 +12,7 @@ import javax.inject.Inject
  *
  * @author KerJen
  * **/
-abstract class BaseMainFragment: DaggerFragment() {
+abstract class BaseMainFragment : DaggerFragment() {
 
     @Inject
     lateinit var protocolClient: ProtocolClient
@@ -21,16 +21,14 @@ abstract class BaseMainFragment: DaggerFragment() {
 
     init {
         ApplicationLoader.component.inject(this)
-
-        listenForConnection()
     }
 
-    private fun listenForConnection(){
+    fun listenForConnection() {
         protocolClient
                 .connectionStateLiveData
                 .observe(this, Observer {
 
-                    val state: Boolean = if(it == ConnectionState.CONNECTION_CLOSED){
+                    val state: Boolean = if (it == ConnectionState.CONNECTION_CLOSED) {
                         false
                     } else it == ConnectionState.HANDSHAKE_SUCCEED
 
@@ -43,6 +41,8 @@ abstract class BaseMainFragment: DaggerFragment() {
 
         if (!protocolClient.isValid()) {
             showConnectionStatus(false)
+        } else {
+            showConnectionStatus(true)
         }
     }
 }

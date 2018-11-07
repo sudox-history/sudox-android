@@ -46,7 +46,8 @@
     <string name="info">Информация</string>
     <string name="decoration_label">Украшения</string>
     <string name="dialogs_label">Диалоги</string>
-    <string name="channels">Каналы</string>
+    <string name="talks_label">Беседы</string>
+    <string name="channels_label">Каналы</string>
     <string name="hello_world">Привет мир!</string>
     <string name="exit">Выйти</string>
     <string name="retry_send_in">Попытка через %time</string>
