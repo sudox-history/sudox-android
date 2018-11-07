@@ -13,9 +13,10 @@ import com.sudox.design.helpers.drawAvatar
 import com.sudox.design.helpers.drawCircleBitmap
 import com.sudox.design.helpers.getTwoFirstLetters
 import kotlinx.android.synthetic.main.item_dialog.view.*
+import javax.inject.Inject
 
 
-class DialogsAdapter(val context: Context): RecyclerView.Adapter<DialogsAdapter.Holder>(){
+class DialogsAdapter @Inject constructor(val context: Context): RecyclerView.Adapter<DialogsAdapter.Holder>(){
 
     var items: List<User> = arrayListOf()
 
@@ -27,27 +28,28 @@ class DialogsAdapter(val context: Context): RecyclerView.Adapter<DialogsAdapter.
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(p0: Holder, p1: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onBindViewHolder(holder: Holder, position: Int) {
+        val dialog = items[position]
+
+        holder.bindData(dialog)
     }
 
     class Holder(val view: View) : RecyclerView.ViewHolder(view) {
         val avatar = view.avatar!!
         val name = view.name!!
-        val nickname = view.lastMessage!!
+        val lastMessage = view.lastMessage!!
 
         fun bindData(user: User) {
-            bindAvatar(user)
+//            bindAvatar(user)
 
             // Bind others data ...
             name.text = user.name
-            nickname.text = user.nickname
+            lastMessage.text = user.nickname
         }
 
         private fun bindAvatar(user: User) {
             val avatarInfo = AvatarInfo.parse(user.avatar)
 
-            // aka GradientAvatar
             if (avatarInfo is ColorAvatarInfo) {
                 drawCircleBitmap(view.context, drawAvatar(
                         text = user.name.getTwoFirstLetters(),

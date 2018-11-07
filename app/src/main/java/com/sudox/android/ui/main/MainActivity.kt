@@ -68,14 +68,14 @@ class MainActivity : DaggerAppCompatActivity() {
 
     private fun showMessagesFragment() {
         supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+//                .setCustomAnimations(R.animator.animator_fragment_change, 0)
                 .replace(R.id.fragmentMainContainer, messagesFragment)
                 .commit()
     }
 
     private fun showContactsFragment() {
         supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+//                .setCustomAnimations(R.animator.animator_fragment_change, 0)
                 .replace(R.id.fragmentMainContainer, contactsFragment)
                 .commit()
     }

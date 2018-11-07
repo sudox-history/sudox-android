@@ -80,7 +80,6 @@ class ContactsAdapter @Inject constructor(val context: Context,
         private fun bindAvatar(user: User) {
             val avatarInfo = AvatarInfo.parse(user.avatar)
 
-            // aka GradientAvatar
             if (avatarInfo is ColorAvatarInfo) {
                 drawCircleBitmap(view.context, drawAvatar(
                         text = user.name.getTwoFirstLetters(),

@@ -23,6 +23,7 @@ class ContactsFragment @Inject constructor() : BaseMainFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     @Inject
     lateinit var contactsAdapter: ContactsAdapter
 
