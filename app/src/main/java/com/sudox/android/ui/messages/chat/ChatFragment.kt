@@ -139,16 +139,21 @@ class ChatFragment @Inject constructor() : BaseMainFragment() {
     }
 
     private fun loadInitialMessages() {
-        chatViewModel.chatRepository.getInitialHistory(userChatRecipient.uid, {
-            GlobalScope.async(Dispatchers.Main) {
-                chatAdapter.items = ArrayList(it.reversed())
-                chatAdapter.notifyItemRangeInserted(0, it.size)
-            }
-        }, {
-            if (it == Errors.INVALID_PARAMETERS || it == Errors.INVALID_USER) {
-                activity!!.onBackPressed()
-            }
-        })
+        chatViewModel.chatRepository.getInitialHistoryFromDb(userChatRecipient.uid) {
+            chatAdapter.items = ArrayList(it.reversed())
+            chatAdapter.notifyItemRangeInserted(0, it.size)
+
+            chatViewModel.chatRepository.getInitialHistory(userChatRecipient.uid, {
+                GlobalScope.async(Dispatchers.Main) {
+                    chatAdapter.items = ArrayList(it.reversed())
+                    chatAdapter.notifyItemRangeInserted(0, it.size)
+                }
+            }, {
+                if (it == Errors.INVALID_PARAMETERS || it == Errors.INVALID_USER) {
+                    activity!!.onBackPressed()
+                }
+            })
+        }
     }
 
 

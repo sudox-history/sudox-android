@@ -54,6 +54,10 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
         }
     }
 
+    fun getInitialHistoryFromDb(peerId: String, messagesCallback: (List<ChatMessage>) -> Unit) = GlobalScope.async {
+        messagesCallback(chatMessagesDao.loadAll(peerId, 0, CHAT_MESSAGES_INITIAL_SIZE_DATABASE))
+    }
+
     fun getInitialHistory(peerId: String,
                           messagesCallback: (List<ChatMessage>) -> Unit,
                           errorCallback: (Int) -> Unit) = GlobalScope.async {
