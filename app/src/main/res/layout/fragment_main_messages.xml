@@ -1,33 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/messagesToolbar"
+        style="@style/ToolbarTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        app:title="@string/messages" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/messagesToolbar"
-            style="@style/ToolbarTheme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="@string/messages" />
+    <android.support.design.widget.TabLayout
+        android:id="@+id/sliding_tabs"
+        style="@style/MessagesTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/messagesToolbar"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:tabTextAppearance="@style/MessagesTabLayoutTextAppearance" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/sliding_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/messagesPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/sliding_tabs" />
 
-</LinearLayout>
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/messagesAddFABButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_add"
+        fab:fab_colorNormal="#3F4352"
+        fab:fab_colorPressed="#3F4352"
+        fab:fab_colorRipple="#434958"
+        fab:fab_shadowColor="#1A1E28" />
+
+</RelativeLayout>

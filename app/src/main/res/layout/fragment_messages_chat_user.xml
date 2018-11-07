@@ -110,4 +110,5 @@
             android:contentDescription="@string/send_message"
             android:src="@drawable/ic_send" />
     </LinearLayout>
+
 </RelativeLayout>

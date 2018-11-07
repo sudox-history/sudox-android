@@ -105,7 +105,6 @@
         <item name="itemIconTint">@drawable/selector_bottom_navigation_item</item>
         <item name="labelVisibilityMode">unlabeled</item>
         <item name="elevation">0dp</item>
-        <item name="itemBackground">@null</item>
     </style>
     <!-- Bottom navigation view styles end -->
 
@@ -113,5 +112,23 @@
     <style name="TextViewWithoutPaddings">
         <item name="android:includeFontPadding">false</item>
         <item name="android:lineSpacingExtra">0dp</item>
+    </style>
+
+    <style name="MessagesTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">?attr/colorAccent</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabPaddingStart">6dp</item>
+        <item name="tabPaddingEnd">6dp</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabTextAppearance">@style/MessagesTabLayoutTextAppearance</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="MessagesTabLayoutTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorHint</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="textAllCaps">false</item>
     </style>
 </resources>

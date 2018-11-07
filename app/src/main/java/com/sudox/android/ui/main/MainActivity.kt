@@ -55,7 +55,7 @@ class MainActivity : DaggerAppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when {
                 it.itemId == R.id.contacts_item -> showContactsFragment()
-//                it.itemId == R.id.messages_item -> showMessagesFragment()
+                it.itemId == R.id.messages_item -> showMessagesFragment()
                 else -> return@setOnNavigationItemSelectedListener false
             }
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,8 +50,10 @@ class MessagesFragment @Inject constructor(): BaseMainFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initToolbar()
         initViewPager()
     }
+
 
     override fun showConnectionStatus(isConnect: Boolean) {
        if(isConnect){
@@ -60,8 +63,36 @@ class MessagesFragment @Inject constructor(): BaseMainFragment() {
        }
     }
 
+    private fun initToolbar() {
+        messagesToolbar.inflateMenu(R.menu.menu_messages)
+        messagesToolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+
+            }
+
+            return@setOnMenuItemClickListener true
+        }
+    }
+
+
     private fun initViewPager() {
         messagesPager.adapter = MessagesAdapter(childFragmentManager)
+
+        messagesPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(position: Int) {}
+            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
+
+            override fun onPageSelected(position: Int) {
+                when(position){
+                    0 -> messagesAddFABButton.setImageResource(R.drawable.ic_add)
+
+                    1 -> messagesAddFABButton.setImageResource(R.drawable.ic_close)
+
+                    2 -> messagesAddFABButton.setImageResource(R.drawable.ic_arrow_back)
+                }
+            }
+
+        })
         sliding_tabs.setupWithViewPager(messagesPager)
     }
 
@@ -69,7 +100,7 @@ class MessagesFragment @Inject constructor(): BaseMainFragment() {
 
         override fun getItem(position: Int): Fragment {
             return when(position){
-                0 ->  dialogsFragment
+                0 -> dialogsFragment
                 1 -> talksFragment
                 else -> channelsFragment
             }
