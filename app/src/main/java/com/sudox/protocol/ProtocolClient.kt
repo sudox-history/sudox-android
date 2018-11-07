@@ -70,7 +70,7 @@ class ProtocolClient @Inject constructor() {
                         if (notifyAboutError) connectionStateLiveData.postValue(ConnectionState.CONNECT_ERRORED)
 
                         // Реконнект.
-                        controller!!.handler.postDelayed({ connect(false) }, 1000)
+                        controller?.handler?.postDelayed({ connect(false) }, 1000)
                     }
                 }
             }
