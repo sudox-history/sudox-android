@@ -105,7 +105,6 @@
         <item name="itemIconTint">@drawable/selector_bottom_navigation_item</item>
         <item name="labelVisibilityMode">unlabeled</item>
         <item name="elevation">0dp</item>
-        <item name="itemBackground">@null</item>
     </style>
     <!-- Bottom navigation view styles end -->
 
