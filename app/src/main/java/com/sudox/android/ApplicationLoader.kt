@@ -81,7 +81,7 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
     override fun onActivityPaused(p0: Activity?) {}
 
     override fun onActivityResumed(p0: Activity?) {
-        if(!protocolClient.isValid()){
+        if (!protocolClient.isValid()) {
             protocolClient.connect()
         }
     }

@@ -114,7 +114,7 @@ class ProtocolClient @Inject constructor() {
      * Нужен для безопасной остановки соединения.
      **/
     fun kill(killController: Boolean = true) {
-        if (reader != null && (!reader!!.isInterrupted || reader!!.isAlive)) {
+        if (reader != null && controller != null && (!reader!!.isInterrupted || reader!!.isAlive)) {
             reader!!.interrupt()
             reader = null
         }
@@ -123,7 +123,7 @@ class ProtocolClient @Inject constructor() {
             controller = null
         }
 
-        if (writer != null && (!controller!!.isInterrupted || controller!!.isAlive)) {
+        if (writer != null && controller != null && (!controller!!.isInterrupted || controller!!.isAlive)) {
             writer!!.interrupt()
             writer = null
         }
