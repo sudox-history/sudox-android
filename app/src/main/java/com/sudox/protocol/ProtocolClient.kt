@@ -40,7 +40,7 @@ class ProtocolClient @Inject constructor() {
      */
     fun connect(notifyAboutError: Boolean = true) {
         if (isValid()) {
-            controller!!.handler.post { connectionStateLiveData.postValue(ConnectionState.HANDSHAKE_SUCCEED) }
+            controller!!.handler?.post { connectionStateLiveData.postValue(ConnectionState.HANDSHAKE_SUCCEED) }
             return
         }
 
@@ -51,31 +51,27 @@ class ProtocolClient @Inject constructor() {
         if (controller == null) controller = ProtocolController(this)
 
         // Подключение выполняем в потоке контроллера.
-        if (controller!!.looperPreparedCallback == null) {
-            controller!!.looperPreparedCallback = {
-                controller!!.handler.post {
-                    socket = Socket()
-                    socket!!.keepAlive = false // У нас есть свой Ping-pong.
+        controller!!.looperPreparedCallback = {
+            controller!!.handler.post {
+                socket = Socket()
+                socket!!.keepAlive = false // У нас есть свой Ping-pong.
 
-                    // Устанавливаем соединение
-                    try {
-                        socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
+                // Устанавливаем соединение
+                try {
+                    socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
 
-                        // Запускаем потоки чтения/записи.
-                        startThreads()
+                    // Запускаем потоки чтения/записи.
+                    startThreads()
 
-                        // Рукопожатие.
-                        controller!!.onStart()
-                    } catch (e: IOException) {
-                        if (notifyAboutError) connectionStateLiveData.postValue(ConnectionState.CONNECT_ERRORED)
+                    // Рукопожатие.
+                    controller!!.onStart()
+                } catch (e: IOException) {
+                    if (notifyAboutError) connectionStateLiveData.postValue(ConnectionState.CONNECT_ERRORED)
 
-                        // Реконнект.
-                        controller?.handler?.postDelayed({ connect(false) }, 1000)
-                    }
+                    // Реконнект.
+                    controller?.handler?.postDelayed({ connect(false) }, 1000)
                 }
             }
-        } else {
-            controller!!.looperPreparedCallback!!()
         }
 
         if (!controller!!.isAlive) controller!!.start()
