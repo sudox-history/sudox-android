@@ -40,7 +40,7 @@ class ProtocolClient @Inject constructor() {
      */
     fun connect(notifyAboutError: Boolean = true) {
         if (isValid()) {
-            controller!!.handler?.post { connectionStateLiveData.postValue(ConnectionState.HANDSHAKE_SUCCEED) }
+            controller!!.handler.post { connectionStateLiveData.postValue(ConnectionState.HANDSHAKE_SUCCEED) }
             return
         }
 
@@ -74,7 +74,11 @@ class ProtocolClient @Inject constructor() {
             }
         }
 
-        if (!controller!!.isAlive) controller!!.start()
+        if (!controller!!.isAlive) {
+            controller!!.start()
+        } else {
+            controller!!.looperPreparedCallback?.let { it() }
+        }
     }
 
     private fun startThreads() {
