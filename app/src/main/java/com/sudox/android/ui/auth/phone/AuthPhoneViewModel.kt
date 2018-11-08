@@ -1,13 +1,13 @@
-package com.sudox.android.ui.auth.email
+package com.sudox.android.ui.auth.phone
 
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.repositories.auth.AuthRepository
-import com.sudox.android.ui.auth.email.enums.AuthEmailAction
+import com.sudox.android.ui.auth.phone.enums.AuthEmailAction
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
 import javax.inject.Inject
 
-class AuthEmailViewModel @Inject constructor(private val authRepository: AuthRepository,
+class AuthPhoneViewModel @Inject constructor(private val authRepository: AuthRepository,
                                              val protocolClient: ProtocolClient) : ViewModel() {
 
     /**
@@ -22,8 +22,8 @@ class AuthEmailViewModel @Inject constructor(private val authRepository: AuthRep
      * Во ViewModel обрабатывает только ошибки, состояние сессии передается по LiveData до AuthActivity,
      * там уже и происходит переключение на AuthConfirmFragment.
      * */
-    fun requestCode(email: String) {
+    fun requestCode(phoneNumber: String) {
         authEmailActionLiveData.postValue(AuthEmailAction.FREEZE)
-        authRepository.requestCode(email, {}, { authErrorsLiveData.postValue(it) })
+        authRepository.requestCode(phoneNumber, {}, { authErrorsLiveData.postValue(it) })
     }
 }

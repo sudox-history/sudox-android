@@ -7,13 +7,13 @@ class AuthCheckCodeDTO : JsonModel() {
 
     lateinit var code: String
     lateinit var hash: String
-    lateinit var email: String
+    lateinit var phoneNumber: String
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
             put("code", code.toInt())
             put("hash", hash)
-            put("email", email)
+            put("phone", phoneNumber)
         }
     }
 

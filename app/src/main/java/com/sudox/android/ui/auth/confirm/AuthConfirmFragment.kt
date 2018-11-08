@@ -56,7 +56,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
                 AuthConfirmAction.FREEZE -> freeze()
                 AuthConfirmAction.SHOW_REGISTER_FRAGMENT -> authActivity.showAuthRegisterFragment()
                 AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
-                    authActivity.showAuthEmailFragment(authSession.email, getString(R.string.code_expired))
+                    authActivity.showAuthPhoneFragment(authSession.phoneNumber, getString(R.string.code_expired))
                 }
                 AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_TOO_MANY_REQUESTS -> {
                     codeEditTextContainer.error = getString(R.string.too_many_requests)
@@ -81,7 +81,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
     }
 
     private fun initFooterText() {
-        enterYourCodeText.text = formatHtml(getString(R.string.enter_code_from_mail, authSession.email))
+        enterYourCodeText.text = formatHtml(getString(R.string.enter_code_from_messages, authSession.phoneNumber))
     }
 
     private fun initCodeEditText() {
@@ -105,9 +105,9 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
 
         // Начинаем отправку, блокируем ввод кода ...
         if (authSession.status == AuthSession.AUTH_STATUS_NOT_REGISTERED) {
-            authConfirmViewModel.checkCode(authSession.email, code, authSession.hash)
+            authConfirmViewModel.checkCode(authSession.phoneNumber, code, authSession.hash)
         } else {
-            authConfirmViewModel.signIn(authSession.email, code, authSession.hash)
+            authConfirmViewModel.signIn(authSession.phoneNumber, code, authSession.hash)
         }
 
         // Сохраним код ... (похер если вылезет ошибка, код в таких случаях перезапишется по-любому)
@@ -121,7 +121,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
         authActivity.authNavigationBar.navigationActionCallback = {
             if (it == NavigationAction.BACK) {
                 codeEditText.setText("")
-                authActivity.showAuthEmailFragment(authSession.email)
+                authActivity.showAuthPhoneFragment(authSession.phoneNumber)
             } else if (it == NavigationAction.SOME_FEATURE) {
                 // TODO: Try send code again
             }

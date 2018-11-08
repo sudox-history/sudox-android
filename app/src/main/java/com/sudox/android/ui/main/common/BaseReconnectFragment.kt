@@ -12,7 +12,7 @@ import javax.inject.Inject
  *
  * @author KerJen
  * **/
-abstract class BaseMainFragment : DaggerFragment() {
+abstract class BaseReconnectFragment : DaggerFragment() {
 
     @Inject
     lateinit var protocolClient: ProtocolClient

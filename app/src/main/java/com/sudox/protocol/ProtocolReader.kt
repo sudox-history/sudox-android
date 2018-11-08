@@ -2,10 +2,9 @@ package com.sudox.protocol
 
 import com.sudox.protocol.impls.SeparatedBufferedReader
 import java.io.EOFException
-import java.lang.Exception
 import java.net.SocketException
 
-class ProtocolReader(val client: ProtocolClient) : Thread("SSTP Reader") {
+class ProtocolReader(private val client: ProtocolClient) : Thread("SSTP Reader") {
 
     override fun run() {
         try {

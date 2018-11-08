@@ -6,7 +6,7 @@ import org.json.JSONObject
 class AuthSignUpDTO : JsonModel() {
 
     // For sending ...
-    lateinit var email: String
+    lateinit var phoneNumber: String
     lateinit var hash: String
     lateinit var code: String
     lateinit var name: String
@@ -18,7 +18,7 @@ class AuthSignUpDTO : JsonModel() {
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
-            put("email", email)
+            put("phone", phoneNumber)
             put("hash", hash)
             put("code", code.toInt())
             put("name", name)

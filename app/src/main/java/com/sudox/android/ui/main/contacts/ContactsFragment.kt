@@ -13,13 +13,13 @@ import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.database.model.User
 import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import com.sudox.android.ui.main.MainActivity
-import com.sudox.android.ui.main.common.BaseMainFragment
+import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import kotlinx.android.synthetic.main.fragment_main_contacts.*
 import kotlinx.android.synthetic.main.fragment_main_contacts.view.*
 import javax.inject.Inject
 
-class ContactsFragment @Inject constructor() : BaseMainFragment() {
+class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory

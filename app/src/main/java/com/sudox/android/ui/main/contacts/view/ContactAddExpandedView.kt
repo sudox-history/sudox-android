@@ -50,7 +50,7 @@ class ContactAddExpandedView : ExpandedView {
             } else {
                 contactAddStatusExpandedView.showMessage(context.getString(when {
                     it.error == Errors.INVALID_USER -> R.string.contact_has_not_find
-                    it.error == Errors.INVALID_PARAMETERS -> R.string.wrong_email_format
+                    it.error == Errors.INVALID_PARAMETERS -> R.string.wrong_phone_format
                     else -> R.string.unknown_error
                 }))
 

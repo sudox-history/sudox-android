@@ -8,7 +8,7 @@ class AuthSignInDTO : JsonModel() {
     // For sending ...
     lateinit var code: String
     lateinit var hash: String
-    lateinit var email: String
+    lateinit var phoneNumber: String
 
     // For receiving ...
     lateinit var id: String
@@ -18,7 +18,7 @@ class AuthSignInDTO : JsonModel() {
         return JSONObject().apply {
             put("code", code.toInt())
             put("hash", hash)
-            put("email", email)
+            put("phone", phoneNumber)
         }
     }
 

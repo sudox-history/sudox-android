@@ -8,10 +8,10 @@ import android.view.View
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.auth.state.AuthSession
-import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
-import com.sudox.android.ui.auth.email.AuthEmailFragment
-import com.sudox.android.ui.auth.register.AuthRegisterFragment
 import com.sudox.android.ui.auth.common.BaseAuthFragment
+import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
+import com.sudox.android.ui.auth.phone.AuthPhoneFragment
+import com.sudox.android.ui.auth.register.AuthRegisterFragment
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.protocol.models.enums.ConnectionState
 import dagger.android.support.DaggerAppCompatActivity
@@ -56,7 +56,7 @@ class AuthActivity : DaggerAppCompatActivity() {
             if (it?.lived!!) showMainActivity()
         })
 
-        showAuthEmailFragment()
+        showAuthPhoneFragment()
     }
 
     private fun unfreezeCurrent() {
@@ -69,12 +69,12 @@ class AuthActivity : DaggerAppCompatActivity() {
         }
     }
 
-    fun showAuthEmailFragment(email: String? = null, error: String? = null) {
+    fun showAuthPhoneFragment(phoneNumber: String? = null, error: String? = null) {
         supportFragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.animator.animator_fragment_change, 0)
-                .replace(R.id.fragmentAuthContainer, AuthEmailFragment().apply {
-                    this.email = email
+                .replace(R.id.fragmentAuthContainer, AuthPhoneFragment().apply {
+                    this.phoneNumber = phoneNumber
                     this.error = error
                 }).commit()
 

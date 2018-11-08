@@ -28,8 +28,8 @@ class ProtocolClient @Inject constructor() {
     internal var controller: ProtocolController? = null
     private var reader: ProtocolReader? = null
     private var writer: ProtocolWriter? = null
-    val readCallbacks = ConcurrentLinkedQueue<ReadCallback<*>>()
-    val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
+    private val readCallbacks = ConcurrentLinkedQueue<ReadCallback<*>>()
+    private val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
     val connectionStateLiveData = SingleLiveEvent<ConnectionState>()
 
     /**

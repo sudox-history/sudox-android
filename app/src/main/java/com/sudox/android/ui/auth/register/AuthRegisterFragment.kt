@@ -13,8 +13,8 @@ import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.data.repositories.auth.AUTH_NAME_REGEX_ERROR
 import com.sudox.android.data.repositories.auth.AUTH_NICKNAME_REGEX_ERROR
 import com.sudox.android.ui.auth.AuthActivity
-import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
 import com.sudox.android.ui.auth.common.BaseAuthFragment
+import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
 import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_register.*
@@ -71,10 +71,10 @@ class AuthRegisterFragment @Inject constructor() : BaseAuthFragment() {
             when (it) {
                 AuthRegisterAction.FREEZE -> freeze()
                 AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
-                    authActivity.showAuthEmailFragment(authSession.email, getString(R.string.code_expired))
+                    authActivity.showAuthPhoneFragment(authSession.phoneNumber, getString(R.string.code_expired))
                 }
                 AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_INVALID_ACCOUNT_ERROR -> {
-                    authActivity.showAuthEmailFragment(authSession.email, getString(R.string.account_is_already_registered))
+                    authActivity.showAuthPhoneFragment(authSession.phoneNumber, getString(R.string.account_is_already_registered))
                 }
             }
         })
@@ -96,7 +96,7 @@ class AuthRegisterFragment @Inject constructor() : BaseAuthFragment() {
         authActivity.authNavigationBar.navigationActionCallback = {
             if (it == NavigationAction.NEXT) {
                 authRegisterViewModel.signUp(
-                        authSession.email,
+                        authSession.phoneNumber,
                         authSession.code!!,
                         authSession.hash,
                         nameEditText.text.toString(),

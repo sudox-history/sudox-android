@@ -17,12 +17,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:gravity="center"
         android:fontFamily="sans-serif-light"
-        android:text="@string/enter_your_email"
+        android:text="@string/enter_your_phone"
         android:textSize="16sp" />
 
     <com.sudox.design.edittext.SudoxTextInputLayout
-        android:id="@+id/emailEditTextContainer"
+        android:id="@+id/phoneEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="40dp"
@@ -30,11 +33,11 @@
         android:layout_marginTop="40dp">
 
         <EditText
-            android:id="@+id/emailEditText"
+            android:id="@+id/phoneEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
+            android:hint="@string/phone_number"
+            android:inputType="phone"
             android:maxLines="1"
             android:textColorHint="#9f9f9f"
             android:textSize="15sp" />

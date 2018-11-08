@@ -6,7 +6,7 @@ import com.sudox.android.common.di.annotation.ViewModelKey
 import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.ui.auth.AuthViewModel
 import com.sudox.android.ui.auth.confirm.AuthConfirmViewModel
-import com.sudox.android.ui.auth.email.AuthEmailViewModel
+import com.sudox.android.ui.auth.phone.AuthPhoneViewModel
 import com.sudox.android.ui.auth.register.AuthRegisterViewModel
 import com.sudox.android.ui.main.MainViewModel
 import com.sudox.android.ui.main.contacts.ContactsViewModel
@@ -52,8 +52,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(AuthEmailViewModel::class)
-    internal abstract fun authEmailViewModel(viewModel: AuthEmailViewModel): ViewModel
+    @ViewModelKey(AuthPhoneViewModel::class)
+    internal abstract fun authEmailViewModel(viewModel: AuthPhoneViewModel): ViewModel
 
     @Binds
     @IntoMap

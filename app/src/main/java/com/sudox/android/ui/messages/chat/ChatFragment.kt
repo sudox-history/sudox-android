@@ -17,7 +17,7 @@ import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.chats.UserChatRecipient
 import com.sudox.android.data.repositories.messages.CHAT_MESSAGES_SIZE
 import com.sudox.android.ui.adapters.ChatAdapter
-import com.sudox.android.ui.main.common.BaseMainFragment
+import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import com.sudox.design.helpers.drawAvatar
 import com.sudox.design.helpers.drawCircleBitmap
@@ -29,7 +29,7 @@ import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.async
 import javax.inject.Inject
 
-class ChatFragment @Inject constructor() : BaseMainFragment() {
+class ChatFragment @Inject constructor() : BaseReconnectFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory

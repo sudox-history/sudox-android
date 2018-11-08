@@ -3,8 +3,8 @@
     <string name="app_name">Sudox</string>
     <string name="hint_of_create_account">If you haven\'t got an account we will suggest you to create it</string>
     <string name="we_have_send_code">Check your mail we have sent the code</string>
-    <string name="change_email">Change email</string>
-    <string name="enter_code_from_mail">Enter code from email we have sent to &lt;font color="#FFFFFF">%1$s&lt;/font></string>
+    <string name="change_phone_number">Change email</string>
+    <string name="enter_code_from_messages"><![CDATA[Enter code from messages we have sent to <br><font color="#FFFFFF">\n%1$s</font></br>]]></string>
     <string name="about_name">Don\'t be careful, it\'s last step</string>
     <string name="next">Next</string>
     <string name="what_is_your_name">What\'s your name?</string>
@@ -14,6 +14,7 @@
     <string name="enter_your_name">For beginning enter your name</string>
     <string name="entrance">Enter</string>
     <string name="email">E-mail</string>
+    <string name="phone_number">Phone number</string>
     <string name="contacts">Contacts</string>
     <string name="cloud">Cloud</string>
     <string name="messages">Messages</string>
@@ -30,7 +31,7 @@
     <string name="tag">Tag</string>
     <string name="return_back">Welcome back!</string>
     <string name="welcome">Welcome!</string>
-    <string name="wrong_email_format">Wrong email format</string>
+    <string name="wrong_phone_format">Wrong phone number format</string>
     <string name="too_many_requests">Exceeded limit of requests</string>
     <string name="no_internet_connection">No Internet connection!</string>
     <string name="registration">Register</string>
@@ -56,7 +57,7 @@
     <string name="find_new_friends">Find new friends</string>
     <string name="wrong_code">Wrong confirmation code</string>
     <string name="have_not_got_contacts">You havent\'t got users! Add them right now!</string>
-    <string name="enter_your_email">For the beginning enter your email</string>
+    <string name="enter_your_phone">For the beginning enter your phone number</string>
     <string name="we_glad_to_see_you">We glad to see you!</string>
     <string name="unknown_error">Unknown error</string>
     <string name="code_has_sent_successfully">Code has sent successfully!</string>
@@ -77,7 +78,7 @@
     <string name="attach_file">Attach file</string>
     <string name="send_message">Send message</string>
     <string name="code_expired">Code expired</string>
-    <string name="wait_for_connect">Connecting...</string>
+    <string name="wait_for_connect">Connecting…</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d contact</item>

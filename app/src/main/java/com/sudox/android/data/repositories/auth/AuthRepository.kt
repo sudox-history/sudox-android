@@ -64,20 +64,20 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      * сессии авторизации.
      * **/
     @Suppress("NAME_SHADOWING")
-    fun requestCode(email: String, successCallback: (AuthCodeDTO) -> Unit, errorCallback: (Int) -> Unit) {
+    fun requestCode(phoneNumber: String, successCallback: (AuthCodeDTO) -> Unit, errorCallback: (Int) -> Unit) {
         // "Кастрируем" пробелы в почте ...
-        val email = email.replace(WHITESPACES_REMOVE_REGEX, "")
+        val phoneNumberL = phoneNumber.replace(WHITESPACES_REMOVE_REGEX, "")
 
         // Проверка на валидность формата почты (для экономии трафика производим проверку ещё на клиенте)
-        if (!EMAIL_REGEX.matches(email)) {
+        if (!PHONE_REGEX.matches(phoneNumberL)) {
             errorCallback(Errors.INVALID_PARAMETERS)
         } else {
             // Ок, запрашиваем отправку кода ...
             protocolClient.makeRequest<AuthCodeDTO>("auth.sendCode", AuthCodeDTO().apply {
-                this.email = email
+                this.phoneNumber = phoneNumberL
             }) {
                 if (it.isSuccess()) {
-                    authSessionLiveData.postValue(AuthSession(email, it.hash, it.status))
+                    authSessionLiveData.postValue(AuthSession(formatPhoneByMask(phoneNumberL), it.hash, it.status))
                     successCallback(it)
                 } else {
                     errorCallback(it.error)
@@ -90,7 +90,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      * Метод, проверяющий валидность введенного кода в данной сессии авторизации
      * **/
     @Suppress("NAME_SHADOWING")
-    fun checkCode(email: String, code: String, hash: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
+    fun checkCode(phoneNumber: String, code: String, hash: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
         // "Кастрируем" пробелы в почте ...
         val code = code.trim()
 
@@ -102,7 +102,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
             protocolClient.makeRequest<AuthCheckCodeDTO>("auth.checkCode", AuthCheckCodeDTO().apply {
                 this.code = code
                 this.hash = hash
-                this.email = email
+                this.phoneNumber = phoneNumber
             }) {
                 if (it.isSuccess()) {
                     successCallback()
@@ -117,7 +117,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      * Выполняет вход в аккаунт. По окончанию записывает аккаунт в БД.
      */
     @Suppress("NAME_SHADOWING")
-    fun signIn(email: String, code: String, hash: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
+    fun signIn(phoneNumber: String, code: String, hash: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
         // "Кастрируем" пробелы в почте ...
         val code = code.trim()
 
@@ -129,10 +129,10 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
             protocolClient.makeRequest<AuthSignInDTO>("auth.signIn", AuthSignInDTO().apply {
                 this.code = code
                 this.hash = hash
-                this.email = email
+                this.phoneNumber = phoneNumber
             }) {
                 if (it.isSuccess()) {
-                    accountRepository.saveAccount(SudoxAccount(it.id, email, it.secret))
+                    accountRepository.saveAccount(SudoxAccount(it.id, phoneNumber, it.secret))
                     accountSessionLiveData.postValue(AccountSessionState(true))
                     successCallback()
                 } else {
@@ -146,7 +146,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      * Выполняет регистрацию аккаунта. По окончанию записывает аккаунт в БД.
      */
     @Suppress("NAME_SHADOWING")
-    fun signUp(email: String, code: String, hash: String, name: String, nickname: String,
+    fun signUp(phoneNumber: String, code: String, hash: String, name: String, nickname: String,
                regexCallback: (List<Int>) -> (Unit),
                successCallback: () -> (Unit),
                errorCallback: (Int) -> (Unit)) = GlobalScope.async {
@@ -170,14 +170,14 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         }
 
         protocolClient.makeRequest<AuthSignUpDTO>("auth.signUp", AuthSignUpDTO().apply {
-            this.email = email
+            this.phoneNumber = phoneNumber
             this.code = code
             this.hash = hash
             this.name = name
             this.nickname = nickname
         }) {
             if (it.isSuccess()) {
-                accountRepository.saveAccount(SudoxAccount(it.id, email, it.secret))
+                accountRepository.saveAccount(SudoxAccount(it.id, phoneNumber, it.secret))
                 accountSessionLiveData.postValue(AccountSessionState(true))
                 successCallback()
             } else {

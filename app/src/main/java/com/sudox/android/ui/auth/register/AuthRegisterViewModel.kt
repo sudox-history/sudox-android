@@ -24,11 +24,11 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
      * Отправляет запрос регистрации на сервер.
      * Заказывает действия у View через LiveData в качестве результата
      */
-    fun signUp(email: String, code: String, hash: String, name: String, nickname: String) {
+    fun signUp(phoneNumber: String, code: String, hash: String, name: String, nickname: String) {
         authRegisterActionLiveData.postValue(AuthRegisterAction.FREEZE)
 
         // Регистрируемся ...
-        authRepository.signUp(email, code, hash, name, nickname, {
+        authRepository.signUp(phoneNumber, code, hash, name, nickname, {
             GlobalScope.async(Dispatchers.Main) { authRegisterRegexErrorsCallback?.invoke(it) }
         }, {}, {
             if (it == Errors.CODE_EXPIRED || it == Errors.WRONG_CODE) {

@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
-import com.sudox.android.ui.main.common.BaseMainFragment
+import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.main.contacts.ContactsViewModel
 import com.sudox.android.ui.main.messages.channels.ChannelsFragment
 import com.sudox.android.ui.main.messages.dialogs.DialogsFragment
@@ -20,7 +20,7 @@ import com.sudox.android.ui.main.messages.talks.TalksFragment
 import kotlinx.android.synthetic.main.fragment_main_messages.*
 import javax.inject.Inject
 
-class MessagesFragment @Inject constructor() : BaseMainFragment() {
+class MessagesFragment @Inject constructor() : BaseReconnectFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -84,7 +84,7 @@ class MessagesFragment @Inject constructor() : BaseMainFragment() {
                 when (position) {
                     0 -> messagesAddFABButton.setImageResource(R.drawable.ic_add)
 
-                    1 -> messagesAddFABButton.setImageResource(R.drawable.ic_close)
+                    1 -> messagesAddFABButton.setImageResource(R.drawable.ic_add_talk)
 
                     2 -> messagesAddFABButton.setImageResource(R.drawable.ic_arrow_back)
                 }

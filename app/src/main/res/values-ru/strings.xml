@@ -2,9 +2,9 @@
 <resources>
     <string name="app_name">Sudox</string>
     <string name="hint_of_create_account">Если у вас нет аккаунта, вам будет предложено его создать</string>
-    <string name="we_have_send_code">Проверьте почту, мы выслали вам 5-значный код</string>
-    <string name="change_email">Изменить почту</string>
-    <string name="enter_code_from_mail">Введите код, отправленный на &lt;font color="#FFFFFF">%1$s&lt;/font></string>
+    <string name="we_have_send_code">Проверьте сообщения, мы выслали вам 5-значный код</string>
+    <string name="change_phone_number">Изменить номер телефона</string>
+    <string name="enter_code_from_messages"><![CDATA[Введите код, отправленный на <br><font color="#FFFFFF">%1$s</font></br>]]></string>
     <string name="about_name">Не волнуйтесь, это последний шаг</string>
     <string name="next">Далее</string>
     <string name="what_is_your_name">Как вас зовут?</string>
@@ -14,6 +14,7 @@
     <string name="enter_your_name">Для начала введите вашу почту</string>
     <string name="entrance">Вход</string>
     <string name="email">Электронная почта</string>
+    <string name="phone_number">Номер телефона</string>
     <string name="contacts">Контакты</string>
     <string name="cloud">Облако</string>
     <string name="messages">Сообщения</string>
@@ -30,7 +31,7 @@
     <string name="sign_in">Вход</string>
     <string name="return_back">С возвращением!</string>
     <string name="welcome">Добро пожаловать!</string>
-    <string name="wrong_email_format">Неверный формат почты</string>
+    <string name="wrong_phone_format">Неверный формат номера</string>
     <string name="too_many_requests">Превышен лимит запросов</string>
     <string name="no_internet_connection">Нет соединения</string>
     <string name="registration">Регистрация</string>
@@ -56,7 +57,7 @@
     <string name="share_with_contact">Поделиться контактом</string>
     <string name="find_new_friends">Найдите себе новых друзей</string>
     <string name="have_not_got_contacts">У вас еще нет контактов, добавьте прямо сейчас!</string>
-    <string name="enter_your_email">Для начала введите вашу почту</string>
+    <string name="enter_your_phone">Для начала введите Ваш номер телефона</string>
     <string name="we_glad_to_see_you">Мы очень рады вас видеть!</string>
     <string name="unknown_error">Неизвестная ошибка</string>
     <string name="code_has_sent_successfully">Код отправлен успешно!</string>
@@ -77,7 +78,7 @@
     <string name="attach_file">Прикрепить файл</string>
     <string name="send_message">Отправить сообщение</string>
     <string name="code_expired">Срок действия кода истек</string>
-    <string name="wait_for_connect">Подключение...</string>
+    <string name="wait_for_connect">Подключение…</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>

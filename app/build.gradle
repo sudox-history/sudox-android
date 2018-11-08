@@ -9,7 +9,7 @@ apply plugin: 'io.fabric'
 def versionMajor = 0
 def versionMinor = 3
 def versionUpdate = 3
-def versionPatch = 2
+def versionPatch = 3
 
 // App build params
 def compileSdkProjectVersion = 28
@@ -59,6 +59,7 @@ dependencies {
 
 
     implementation 'com.github.clans:fab:1.6.4'
+    implementation 'com.redmadrobot:inputmask:3.4.4'
 
 //    testImplementation "junit:junit:$junitVersion"
 //    testImplementation "org.mockito:mockito-core:$mockitoVersion"
