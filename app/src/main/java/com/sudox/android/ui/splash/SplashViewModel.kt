@@ -56,6 +56,6 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
         })
 
         // Start async connection ...
-        GlobalScope.async { protocolClient.connect() }
+//        GlobalScope.async { protocolClient.connect() }
     }
 }
