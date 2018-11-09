@@ -83,8 +83,6 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
 
-        println("Sudox Kill: $level")
-
         if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND) {
             protocolClient.kill()
         }
