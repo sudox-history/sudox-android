@@ -12,6 +12,7 @@ import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.enums.MainActivityAction
 import com.sudox.android.ui.main.messages.MessagesFragment
+import com.sudox.android.ui.main.profile.ProfileFragment
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import com.sudox.protocol.ProtocolClient
 import dagger.android.support.DaggerAppCompatActivity
@@ -29,6 +30,9 @@ class MainActivity : DaggerAppCompatActivity() {
     lateinit var mainViewModel: MainViewModel
 
     // Fragments
+    @Inject
+    lateinit var profileFragment: ProfileFragment
+
     @Inject
     lateinit var contactsFragment: ContactsFragment
 
@@ -61,6 +65,7 @@ class MainActivity : DaggerAppCompatActivity() {
             when {
                 it.itemId == R.id.contacts_item -> showContactsFragment()
                 it.itemId == R.id.messages_item -> showMessagesFragment()
+                it.itemId == R.id.profile_item -> showProfileFragment()
                 else -> return@setOnNavigationItemSelectedListener false
             }
 
@@ -82,6 +87,13 @@ class MainActivity : DaggerAppCompatActivity() {
         supportFragmentManager.beginTransaction()
 //                .setCustomAnimations(R.animator.animator_fragment_change, 0)
                 .replace(R.id.fragmentMainContainer, contactsFragment)
+                .commit()
+    }
+
+    private fun showProfileFragment() {
+        supportFragmentManager.beginTransaction()
+//                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+                .replace(R.id.fragmentMainContainer, profileFragment)
                 .commit()
     }
 
