@@ -1,46 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <View
+        android:id="@+id/profileParameterIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/ic_emoticon"
+        android:backgroundTint="#FFFFFF" />
+
     <LinearLayout
+        android:id="@+id/profileItemInfoContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginStart="18dp"
+        android:layout_toEndOf="@id/profileParameterIcon"
+        android:orientation="vertical">
 
-        <View
-            android:id="@+id/profileParameterIcon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/ic_emoticon"
-            android:backgroundTint="#FFFFFF" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/profileParameterName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:orientation="vertical">
+            android:includeFontPadding="false"
+            android:text="@string/nickname"
+            android:textColor="@color/colorHint"
+            android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/profileParameterName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:includeFontPadding="false"
-                android:text="@string/nickname"
-                android:textColor="@color/colorHint"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/profileParameterValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-light"
-                android:text="themax"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp" />
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/profileParameterValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="sans-serif-light"
+            android:text="themax"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
     </LinearLayout>
-</LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignStart="@id/profileItemInfoContainer"
+        android:layout_alignBottom="@id/profileItemInfoContainer"
+        android:background="@drawable/divider_item" />
+</RelativeLayout>

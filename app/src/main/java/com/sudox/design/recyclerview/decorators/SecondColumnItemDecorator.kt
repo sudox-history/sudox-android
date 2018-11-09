@@ -29,9 +29,9 @@ class SecondColumnItemDecorator(val context: Context) : RecyclerView.ItemDecorat
                 val bottom = child.bottom + divider.intrinsicHeight
 
                 // Second column coordinates
-                val column = child.getChildAt(1)
-                val left = column.left
-                val right = column.right
+                val secondColumn = child.getChildAt(1)
+                val left = secondColumn.left
+                val right = secondColumn.right
 
                 // Drawing
                 divider.setBounds(left, top, right, bottom)

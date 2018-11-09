@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.main.profile.adapter.ProfileParametersAdapter
+import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import kotlinx.android.synthetic.main.fragment_main_profile.*
 import javax.inject.Inject
 
@@ -25,8 +26,8 @@ class ProfileFragment @Inject constructor() : BaseReconnectFragment() {
                 ProfileParametersAdapter.ProfileParameter(R.drawable.ic_message, "Name", "Value")
         )
 
-        profileParameters.adapter = profileParametersAdapter
         profileParameters.layoutManager = LinearLayoutManager(context)
+        profileParameters.adapter = profileParametersAdapter
     }
 
     override fun showConnectionStatus(isConnect: Boolean) {
