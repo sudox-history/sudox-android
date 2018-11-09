@@ -1,14 +1,16 @@
 package com.sudox.android.ui.auth.phone
 
+import android.Manifest
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.redmadrobot.inputmask.MaskedTextChangedListener
-import com.redmadrobot.inputmask.helper.Mask
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.Errors
@@ -19,6 +21,7 @@ import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_phone.*
 import javax.inject.Inject
+
 
 class AuthPhoneFragment @Inject constructor() : BaseAuthFragment() {
 
@@ -40,6 +43,8 @@ class AuthPhoneFragment @Inject constructor() : BaseAuthFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        requestSmsPermission()
 
         // Show started error
         if (error != null) phoneEditTextContainer.error = error
@@ -83,9 +88,16 @@ class AuthPhoneFragment @Inject constructor() : BaseAuthFragment() {
         phoneEditText.addTextChangedListener(listener)
 
         phoneEditText.setText(phoneNumber)
+    }
 
-
-        val t = Mask
+    private fun requestSmsPermission() {
+        val permission = Manifest.permission.RECEIVE_SMS
+        val grant = ContextCompat.checkSelfPermission(activity!!, permission)
+        if (grant != PackageManager.PERMISSION_GRANTED) {
+            val permissions = arrayOfNulls<String>(1)
+            permissions[0] = permission
+            ActivityCompat.requestPermissions(activity!!, permissions, 1)
+        }
     }
 
     override fun onConnectionRecovered() {
@@ -95,9 +107,6 @@ class AuthPhoneFragment @Inject constructor() : BaseAuthFragment() {
         authActivity.authNavigationBar.navigationActionCallback = {
             if (it == NavigationAction.NEXT) {
                 phoneEditTextContainer.error = null
-
-                Log.d("phoneLog", phoneNumber)
-
                 // Запросим отправку кода у сервера (ошибки прилетят в LiveData)
                 authPhoneViewModel.requestCode("7$phoneNumber")
             }

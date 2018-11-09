@@ -8,6 +8,8 @@ val EMAIL_REGEX = "^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]
 
 val PHONE_REGEX = "^((7)+([0-9]){10})\$".toRegex()
 
+val SMS_CODE_REGEX = "^Sudox: [0-9]{5}$".toRegex()
+
 val NUMBER_REGEX = "^[0-9]+".toRegex()
 val NAME_REGEX = "^[-a-zA-Zа-яА-Я]{1,20}[ ]?[-a-zA-Zа-яА-Я]{1,20}$".toRegex()
 val NICKNAME_REGEX = "^[-a-zA-Z0-9.]{1,20}$".toRegex()

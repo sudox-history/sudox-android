@@ -20,6 +20,7 @@ class AuthCodeDTO : JsonModel() {
 
     override fun fromJSON(jsonObject: JSONObject) {
         hash = jsonObject.optString("hash")
-        status = jsonObject.optInt("status")
+        status = jsonObject.optInt("reg")
+        val t = status
     }
 }

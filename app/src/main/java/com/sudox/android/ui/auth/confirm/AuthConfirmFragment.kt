@@ -1,15 +1,26 @@
 package com.sudox.android.ui.auth.confirm
 
+import android.Manifest
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.Telephony
+import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
+import com.sudox.android.common.SMS_RECEIVED
 import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.common.helpers.SMS_CODE_REGEX
+import com.sudox.android.common.helpers.formatPhoneByMask
 import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.AuthActivity
@@ -44,7 +55,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
         authConfirmViewModel.authConfirmErrorsLiveData.observe(this, Observer {
             codeEditTextContainer.error = if (it == Errors.WRONG_CODE) {
                 getString(R.string.wrong_code)
-            } else  {
+            } else {
                 getString(R.string.unknown_error)
             }
 
@@ -72,6 +83,42 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
         onConnectionRecovered()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        // Активируем слушатель sms-сообщений для автоматического ввода кода
+        val permission = Manifest.permission.RECEIVE_SMS
+        val grant = ContextCompat.checkSelfPermission(activity!!, permission)
+        if (grant == PackageManager.PERMISSION_GRANTED)
+            registerReceiver()
+    }
+
+    private lateinit var smsBroadcastReceiver: BroadcastReceiver
+
+    private fun registerReceiver() {
+        smsBroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (intent.action == SMS_RECEIVED) {
+                    val bundle = intent.extras
+
+                    if (bundle != null) {
+                        val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
+
+                        for (sms in messages) {
+                            val message = sms.messageBody
+                            if (sms.messageBody.matches(SMS_CODE_REGEX)) {
+                                activity!!.runOnUiThread {
+                                    codeEditText.setText(message.replace("Sudox: ", ""))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        activity!!.registerReceiver(smsBroadcastReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+    }
+
     private fun initWelcomeText() {
         welcomeText.text = getString(if (authSession.status == AuthSession.AUTH_STATUS_REGISTERED) {
             R.string.return_back
@@ -81,7 +128,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
     }
 
     private fun initFooterText() {
-        enterYourCodeText.text = formatHtml(getString(R.string.enter_code_from_messages, authSession.phoneNumber))
+        enterYourCodeText.text = formatHtml(getString(R.string.enter_code_from_messages, formatPhoneByMask(authSession.phoneNumber)))
     }
 
     private fun initCodeEditText() {
@@ -135,6 +182,11 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        activity!!.unregisterReceiver(smsBroadcastReceiver)
+    }
+
     override fun freeze() {
         codeEditText.isEnabled = false
         authActivity.authNavigationBar.freeze()
@@ -144,4 +196,6 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
         codeEditText.isEnabled = true
         authActivity.authNavigationBar.unfreeze()
     }
+
+
 }

@@ -77,7 +77,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
                 this.phoneNumber = phoneNumberL
             }) {
                 if (it.isSuccess()) {
-                    authSessionLiveData.postValue(AuthSession(formatPhoneByMask(phoneNumberL), it.hash, it.status))
+                    authSessionLiveData.postValue(AuthSession(phoneNumberL, it.hash, it.status))
                     successCallback(it)
                 } else {
                     errorCallback(it.error)
