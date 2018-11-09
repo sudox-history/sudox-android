@@ -67,7 +67,7 @@ class OverlappedRelativeLayout : RelativeLayout {
                 if (child is ExpandedView) bringChildToFront(child)
             }
 
-            // Распологаем тулбар
+            // Располагаем тулбар
             for (i in 0..childCount) {
                 val child = getChildAt(i)
 

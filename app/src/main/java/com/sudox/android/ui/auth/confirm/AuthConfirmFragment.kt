@@ -107,7 +107,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
                         for (sms in messages) {
                             val message = sms.messageBody
                             if (sms.messageBody.matches(SMS_CODE_REGEX)) {
-                                activity!!.runOnUiThread {
+                                authActivity.runOnUiThread {
                                     codeEditText.setText(message.replace("Sudox: ", ""))
                                 }
                             }
@@ -116,7 +116,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
                 }
             }
         }
-        activity!!.registerReceiver(smsBroadcastReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+        authActivity.registerReceiver(smsBroadcastReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
     }
 
     private fun initWelcomeText() {

@@ -22,7 +22,7 @@ abstract class ExpandedView : RelativeLayout {
     // Анимация раскрытия
     private var animator = animate()
             .setStartDelay(0)
-            .setDuration(300)
+            .setDuration(330)
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

@@ -13,6 +13,7 @@ import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.enums.MainActivityAction
 import com.sudox.android.ui.main.messages.MessagesFragment
 import com.sudox.android.ui.messages.MessagesInnerActivity
+import com.sudox.protocol.ProtocolClient
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -21,6 +22,10 @@ class MainActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var protocolClient: ProtocolClient
+
     lateinit var mainViewModel: MainViewModel
 
     // Fragments

@@ -11,11 +11,11 @@ class BlackOverlayView : View {
 
     private val showAnimator = ObjectAnimator
             .ofFloat(this, "alpha", 0.4F)
-            .setDuration(300)
+            .setDuration(320)
 
     private val hideAnimator = ObjectAnimator
             .ofFloat(this, "alpha", 0F)
-            .setDuration(300)
+            .setDuration(320)
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
