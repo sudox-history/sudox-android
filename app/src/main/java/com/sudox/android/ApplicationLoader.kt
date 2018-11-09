@@ -10,6 +10,7 @@ import com.crashlytics.android.Crashlytics
 import com.sudox.android.common.API_KEY
 import com.sudox.android.common.di.AppComponent
 import com.sudox.android.common.di.DaggerAppComponent
+import com.sudox.android.ui.splash.SplashActivity
 import com.sudox.protocol.ProtocolClient
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
@@ -91,8 +92,10 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
 
     override fun onActivityPaused(p0: Activity?) {}
 
-    override fun onActivityResumed(p0: Activity?) {
-        protocolClient.connect()
+    override fun onActivityResumed(activity: Activity) {
+        if (!protocolClient.isValid() || activity is SplashActivity) {
+            protocolClient.connect()
+        }
     }
 
     override fun onActivityStarted(p0: Activity?) {}
