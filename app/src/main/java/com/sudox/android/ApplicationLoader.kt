@@ -2,6 +2,7 @@ package com.sudox.android
 
 import android.app.Activity
 import android.app.Application
+import android.content.ComponentCallbacks2
 import android.content.Context
 import android.os.Bundle
 import android.os.StrictMode
@@ -78,6 +79,16 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
 
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+
+        println("Sudox Kill: $level")
+
+        if (level >= ComponentCallbacks2.TRIM_MEMORY_BACKGROUND) {
+            protocolClient.kill()
+        }
+    }
+
     override fun onActivityPaused(p0: Activity?) {}
 
     override fun onActivityResumed(p0: Activity?) {
@@ -93,6 +104,4 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
     override fun onActivityStopped(p0: Activity?) {}
 
     override fun onActivityCreated(p0: Activity?, p1: Bundle?) {}
-
-
 }
