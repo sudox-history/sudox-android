@@ -18,6 +18,7 @@
         android:id="@+id/profileItemInfoContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_marginStart="18dp"
         android:layout_toEndOf="@id/profileParameterIcon"
         android:orientation="vertical">

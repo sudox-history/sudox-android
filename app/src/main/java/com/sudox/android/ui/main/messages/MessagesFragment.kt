@@ -66,7 +66,6 @@ class MessagesFragment @Inject constructor() : BaseReconnectFragment() {
         messagesToolbar.inflateMenu(R.menu.menu_messages)
         messagesToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-
             }
 
             return@setOnMenuItemClickListener true
@@ -83,9 +82,7 @@ class MessagesFragment @Inject constructor() : BaseReconnectFragment() {
             override fun onPageSelected(position: Int) {
                 when (position) {
                     0 -> messagesAddFABButton.setImageResource(R.drawable.ic_add)
-
                     1 -> messagesAddFABButton.setImageResource(R.drawable.ic_add_talk)
-
                     2 -> messagesAddFABButton.setImageResource(R.drawable.ic_arrow_back)
                 }
 
