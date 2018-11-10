@@ -16,7 +16,7 @@ abstract class MainActivityModule {
     @ContributesAndroidInjector(modules = [MessagesFragmentModule::class])
     abstract fun provideMessagesFragment(): MessagesFragment
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = [ProfileFragmentModule::class])
     abstract fun provideProfileFragment(): ProfileFragment
 
     @ContributesAndroidInjector

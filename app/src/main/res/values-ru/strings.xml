@@ -22,7 +22,7 @@
     <string name="settings">Настройки</string>
     <string name="cat_is_love">Любой котейка, который захочет изменить мир - изменит</string>
     <string name="name_of_cat">Кот Кошанский</string>
-    <string name="info_about_myself">Информация о себе</string>
+    <string name="profile_info">Информация</string>
     <string name="nickname">Никнейм</string>
     <string name="retry_send">Не пришел код?</string>
     <string name="hi_from_cloud">Привет из облака</string>
@@ -44,7 +44,7 @@
     <string name="wrong_code">Неверный код</string>
     <string name="wrong_name_format">Неверный формат имени</string>
     <string name="wrong_nickname_format">Неверный формат никнейма</string>
-    <string name="info">Информация</string>
+    <string name="info_label">Информация</string>
     <string name="decoration_label">Украшения</string>
     <string name="dialogs_label">Диалоги</string>
     <string name="talks_label">Беседы</string>
@@ -79,6 +79,7 @@
     <string name="send_message">Отправить сообщение</string>
     <string name="code_expired">Срок действия кода истек</string>
     <string name="wait_for_connect">Подключение…</string>
+    <string name="website">Сайт</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>

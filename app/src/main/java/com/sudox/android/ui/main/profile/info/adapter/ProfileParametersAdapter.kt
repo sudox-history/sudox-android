@@ -1,4 +1,4 @@
-package com.sudox.android.ui.main.profile.adapter
+package com.sudox.android.ui.main.profile.info.adapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -14,7 +14,8 @@ class ProfileParametersAdapter @Inject constructor(private val context: Context)
     lateinit var parameters: List<ProfileParameter>
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, type: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context)
+        return ViewHolder(LayoutInflater
+                .from(context)
                 .inflate(R.layout.item_profile_parameter, viewGroup, false))
     }
 
@@ -25,6 +26,7 @@ class ProfileParametersAdapter @Inject constructor(private val context: Context)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+
         fun bind(profileParameter: ProfileParameter) {
             view.profileParameterIcon.setBackgroundResource(profileParameter.iconRes)
             view.profileParameterName.text = profileParameter.name

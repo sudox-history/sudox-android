@@ -22,7 +22,7 @@
     <string name="settings">Settings</string>
     <string name="cat_is_love">Any kitty which want to change the world will change it</string>
     <string name="name_of_cat">Cat Cat</string>
-    <string name="info_about_myself">Info</string>
+    <string name="profile_info">Info</string>
     <string name="nickname">Nickname</string>
     <string name="retry_send">Where is code?</string>
     <string name="hi_from_cloud">Hello from cloud</string>
@@ -43,7 +43,7 @@
     <string name="wrong_code_format">Wrong code format</string>
     <string name="wrong_name_format">Wrong name format</string>
     <string name="wrong_nickname_format">Wrong nickname format</string>
-    <string name="info">Information</string>
+    <string name="info_label">Information</string>
     <string name="decoration_label">Decorations</string>
     <string name="dialogs_label">Dialogs</string>
     <string name="channels_label">Channels</string>
@@ -79,6 +79,7 @@
     <string name="send_message">Send message</string>
     <string name="code_expired">Code expired</string>
     <string name="wait_for_connect">Connecting…</string>
+    <string name="website">Website</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d contact</item>

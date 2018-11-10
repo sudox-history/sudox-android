@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
     <View
         android:id="@+id/profileParameterIcon"
@@ -33,17 +35,12 @@
             android:id="@+id/profileParameterValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="6dp"
             android:fontFamily="sans-serif-light"
+            android:includeFontPadding="false"
             android:text="themax"
             android:textColor="#FFFFFF"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:textSize="15sp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_alignStart="@id/profileItemInfoContainer"
-        android:layout_alignBottom="@id/profileItemInfoContainer"
-        android:background="@drawable/divider_item" />
+    </LinearLayout>
 </RelativeLayout>

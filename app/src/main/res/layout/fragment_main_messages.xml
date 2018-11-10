@@ -14,13 +14,10 @@
 
     <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"
-        style="@style/MessagesTabLayout"
+        style="@style/AppTheme.TabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/messagesToolbar"
-        app:tabSelectedTextColor="@color/colorAccent"
-        app:tabTextAppearance="@style/MessagesTabLayoutTextAppearance" />
-
+        android:layout_below="@id/messagesToolbar" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/messagesPager"
