@@ -48,6 +48,7 @@
     <string name="dialogs_label">Dialogs</string>
     <string name="channels_label">Channels</string>
     <string name="talks_label">Talks</string>
+    <string name="decorations_label">Decorations</string>
     <string name="hello_world">Hello world</string>
     <string name="exit">Logout</string>
     <string name="retry_send_in">Try in %time</string>

@@ -12,7 +12,6 @@
         android:background="?attr/colorPrimary"
         android:elevation="0dp"
         android:paddingStart="25dp"
-        android:paddingTop="5dp"
         android:paddingEnd="25dp"
         android:overScrollMode="never"
         android:paddingBottom="5dp" />

@@ -40,7 +40,7 @@ class DialogsAdapter @Inject constructor(val context: Context): RecyclerView.Ada
         val lastMessage = view.lastMessage!!
 
         fun bindData(user: User) {
-//            bindAvatar(user)
+            bindAvatar(user)
 
             // Bind others data ...
             name.text = user.name

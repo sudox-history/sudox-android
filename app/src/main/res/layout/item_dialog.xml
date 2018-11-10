@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/ripple_effect"
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
@@ -10,10 +11,10 @@
 
     <ImageView
         android:id="@+id/avatar"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"
         android:src="@color/colorAccent" />
 
     <RelativeLayout
@@ -39,10 +40,10 @@
             style="@style/TextViewWithoutPaddings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/name"
             android:layout_marginTop="6dp"
             android:fontFamily="sans-serif-light"
             android:text="Привет!!!!!!"
-            android:layout_below="@id/name"
             android:textColor="@color/colorHint"
             android:textSize="14sp" />
 
@@ -51,8 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:text="18:44"
-            android:textSize="13sp"
-            android:textColor="@color/colorHint"/>
+            android:textColor="@color/colorHint"
+            android:textSize="13sp" />
 
     </RelativeLayout>
 

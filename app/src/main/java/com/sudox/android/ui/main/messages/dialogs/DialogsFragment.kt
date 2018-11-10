@@ -12,6 +12,7 @@ import com.sudox.android.ui.main.messages.MessagesFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_dialogs.*
+import java.util.*
 import javax.inject.Inject
 
 class DialogsFragment @Inject constructor() : DaggerFragment() {
@@ -36,7 +37,7 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
     private fun initTestDialogs() {
         dialogsList.layoutManager = LinearLayoutManager(context)
         dialogsList.addItemDecoration(SecondColumnItemDecorator(context!!))
-        dialogsAdapter.items = getFakeDialogs()
+        dialogsAdapter.items = getFakeDialogs(15)
         dialogsList.adapter = dialogsAdapter
 
         dialogsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -51,14 +52,33 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
         })
     }
 
-    private fun getFakeDialogs(): List<User> {
+    private fun getFakeDialogs(count: Int): List<User> {
         val items = ArrayList<User>()
-        for (i in 0..15) {
+        val random = Random()
+        val colors = arrayListOf("col.f093fb.f5576c", "col.00f2fe.4facfe", "col.fee140.fa709a", "col.38f9d7.43e97b", "col.ffb199.ff0844")
+
+        for (i in 0..count) {
             items.add(User().apply {
-                name = "Тестируемый Объект"
-                nickname = "Привет, что делаешь?"
+                avatar = colors[random.nextInt(5)]
+                name = "${generateRandomWord(7)} ${generateRandomWord(7)}"
+                nickname = generateRandomWord(20)
             })
         }
         return items
+    }
+
+
+    private fun generateRandomWord(lenght: Int): String {
+        val random = Random()
+        val alphabet = "abcdefghijklmnopqrstuvwxyz"
+        val word = StringBuilder()
+
+        word.append(alphabet[random.nextInt(26)].toUpperCase())
+
+        for (i in 1..lenght) {
+            word.append(alphabet[random.nextInt(26)])
+        }
+
+        return word.toString()
     }
 }

@@ -73,7 +73,7 @@ class MainActivity : DaggerAppCompatActivity() {
         }
 
         // Set default fragment
-        bottomNavigationView.selectedItemId = R.id.contacts_item
+        bottomNavigationView.selectedItemId = R.id.messages_item
     }
 
     private fun showMessagesFragment() {
