@@ -39,12 +39,6 @@ class ProtocolClient @Inject constructor() {
      * Если соединение не установлено, но потоки включены, то произойдет их отключение и перезапуск вместе с соединением.
      */
     fun connect(notifyAboutError: Boolean = true) {
-        if (isValid()) {
-            controller!!.handler.post { connectionStateLiveData.postValue(ConnectionState.HANDSHAKE_SUCCEED) }
-            return
-        }
-
-        // Предотвращение случаев с открытым сокетом.
         kill(notifyAboutError)
 
         // Запускаем контроллер если он выключен.
@@ -57,7 +51,7 @@ class ProtocolClient @Inject constructor() {
 
             // Устанавливаем соединение
             try {
-                socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
+                socket!!.connect(InetSocketAddress("api.sudox.ru", 5000), 5000)
 
                 // Запускаем потоки чтения/записи.
                 startThreads()
@@ -67,8 +61,10 @@ class ProtocolClient @Inject constructor() {
             } catch (e: IOException) {
                 if (notifyAboutError) connectionStateLiveData.postValue(ConnectionState.CONNECT_ERRORED)
 
-                // Реконнект.
-                controller?.handler?.postDelayed({ connect(false) }, 1000)
+                if (controller != null && controller!!.handler != null) {
+                    controller!!.handler!!.removeCallbacksAndMessages(null)
+                    controller!!.handler!!.postDelayed({ connect(false) }, 1000)
+                }
             }
         }
 
@@ -92,17 +88,23 @@ class ProtocolClient @Inject constructor() {
      * Метод для проверки правильности работы сокета и прочих потоков.
      **/
     fun isValid(): Boolean {
-        return socket != null
+        return controller != null
+                && controller!!.isAlive
+                && !controller!!.isInterrupted
+                && socket != null
                 && socket!!.isConnected
-                && controller != null
                 && reader != null
                 && writer != null
-                && controller!!.isAlive
                 && reader!!.isAlive
                 && writer!!.isAlive
-                && !controller!!.isInterrupted
                 && !reader!!.isInterrupted
                 && !writer!!.isInterrupted
+    }
+
+    fun isWorking(): Boolean {
+        return controller != null
+                && controller!!.isAlive
+                && !controller!!.isInterrupted
     }
 
     /**
@@ -157,7 +159,7 @@ class ProtocolClient @Inject constructor() {
         if (!isValid()) {
             connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
         } else {
-            controller!!.handler.post {
+            controller!!.handler!!.post {
                 if (isValid()) {
                     val iv = randomBase64String(16)
                     val salt = randomBase64String(32)

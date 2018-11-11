@@ -21,7 +21,7 @@ import javax.crypto.interfaces.DHPublicKey
 class ProtocolController(private val client: ProtocolClient) : HandlerThread("SSTP Controller") {
 
     // Для взаимодействия с другими потоками.
-    internal lateinit var handler: Handler
+    internal var handler: Handler? = null
     internal var key: ByteArray? = null
     internal var alive: Boolean = false
 
@@ -55,7 +55,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
     /**
      * Вызывается при приходе пакета.
      **/
-    fun onPacket(string: String) = handler.post {
+    fun onPacket(string: String) = handler!!.post {
         try {
             val packet = string.toJsonArray()
             val type = packet.optString(0) ?: return@post
@@ -69,18 +69,18 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
             }
 
             // Remove all old tasks
-            handler.removeCallbacksAndMessages(0)
-            handler.removeCallbacksAndMessages(1)
+            handler!!.removeCallbacksAndMessages(0)
+            handler!!.removeCallbacksAndMessages(1)
 
             // Plane tasks
-            handler.postAtTime({
+            handler!!.postAtTime({
                 alive = false
 
                 // Send ping
                 client.sendArray("png")
 
                 // Отправляем пинг
-                handler.postAtTime({ if (!alive) client.close() }, 1, SystemClock.uptimeMillis() + 2000L)
+                handler!!.postAtTime({ if (!alive) client.close() }, 1, SystemClock.uptimeMillis() + 2000L)
             }, 0, SystemClock.uptimeMillis() + 6000L)
         } catch (e: JSONException) {
             if (!handshakeIsInvoked()) client.close()
@@ -176,14 +176,21 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
     /**
      * Вызывается при окончании соединения.
      **/
-    fun onEnd() = handler.post {
-        handler.removeCallbacksAndMessages(null)
+    fun onEnd() = handler!!.post {
+        handler!!.removeCallbacksAndMessages(null)
         client.kill(false)
 
         // Для слушателей состояния.
         client.connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
 
         // TODO: В будущем реализовать определение статуса приложения (в фоне увеличивать интервал между попытками)
-        handler.postDelayed({ client.connect(false) }, 1000)
+        handler!!.postDelayed({ client.connect(false) }, 1000)
+    }
+
+    override fun interrupt() {
+        handler!!.removeCallbacksAndMessages(null)
+
+        // Super!
+        super.interrupt()
     }
 }

@@ -91,7 +91,7 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
     override fun onActivityPaused(p0: Activity?) {}
 
     override fun onActivityResumed(activity: Activity) {
-        if (!protocolClient.isValid() || activity is SplashActivity) {
+        if (!protocolClient.isWorking()) {
             protocolClient.connect()
         }
     }
