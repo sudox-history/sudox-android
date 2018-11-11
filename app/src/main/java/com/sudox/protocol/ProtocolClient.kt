@@ -52,32 +52,30 @@ class ProtocolClient @Inject constructor() {
 
         // Подключение выполняем в потоке контроллера.
         controller!!.looperPreparedCallback = {
-            controller!!.handler.post {
-                socket = Socket()
-                socket!!.keepAlive = false // У нас есть свой Ping-pong.
+            socket = Socket()
+            socket!!.keepAlive = false // У нас есть свой Ping-pong.
 
-                // Устанавливаем соединение
-                try {
-                    socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
+            // Устанавливаем соединение
+            try {
+                socket!!.connect(InetSocketAddress("api.sudox.ru", 5000))
 
-                    // Запускаем потоки чтения/записи.
-                    startThreads()
+                // Запускаем потоки чтения/записи.
+                startThreads()
 
-                    // Рукопожатие.
-                    controller!!.onStart()
-                } catch (e: IOException) {
-                    if (notifyAboutError) connectionStateLiveData.postValue(ConnectionState.CONNECT_ERRORED)
+                // Рукопожатие.
+                controller!!.onStart()
+            } catch (e: IOException) {
+                if (notifyAboutError) connectionStateLiveData.postValue(ConnectionState.CONNECT_ERRORED)
 
-                    // Реконнект.
-                    controller?.handler?.postDelayed({ connect(false) }, 1000)
-                }
+                // Реконнект.
+                controller?.handler?.postDelayed({ connect(false) }, 1000)
             }
         }
 
         if (!controller!!.isAlive) {
             controller!!.start()
         } else {
-            controller!!.looperPreparedCallback?.let { it() }
+            controller?.handler?.post { controller!!.looperPreparedCallback?.let { it() } }
         }
     }
 
