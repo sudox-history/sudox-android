@@ -17,6 +17,8 @@ import com.yandex.metrica.YandexMetricaConfig
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import io.fabric.sdk.android.Fabric
+import kotlinx.coroutines.experimental.GlobalScope
+import kotlinx.coroutines.experimental.async
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -91,8 +93,10 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
     override fun onActivityPaused(p0: Activity?) {}
 
     override fun onActivityResumed(activity: Activity) {
-        if (!protocolClient.isWorking()) {
-            protocolClient.connect()
+        GlobalScope.async {
+            if (!protocolClient.isWorking()) {
+                protocolClient.connect()
+            }
         }
     }
 
