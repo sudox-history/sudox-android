@@ -160,26 +160,30 @@ class ProtocolClient @Inject constructor() {
             connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
         } else {
             controller!!.handler.post {
-                val iv = randomBase64String(16)
-                val salt = randomBase64String(32)
-                val json = message?.toJSON() ?: JSONObject()
-                val msg = json
-                        .toString()
-                        .replace("\\/", "/")
+                if (isValid()) {
+                    val iv = randomBase64String(16)
+                    val salt = randomBase64String(32)
+                    val json = message?.toJSON() ?: JSONObject()
+                    val msg = json
+                            .toString()
+                            .replace("\\/", "/")
 
-                val hmac = Base64.encodeToString(
-                        getHmac(controller!!.key!!, event + msg + salt),
-                        Base64.NO_WRAP)
+                    val hmac = Base64.encodeToString(
+                            getHmac(controller!!.key!!, event + msg + salt),
+                            Base64.NO_WRAP)
 
-                val payload = arrayOf(event, json, salt)
-                        .toJsonArray()
-                        .toString()
+                    val payload = arrayOf(event, json, salt)
+                            .toJsonArray()
+                            .toString()
 
-                // Шифруем данные ...
-                val encryptedPayload = encryptAES(controller!!.key!!, iv, payload)
+                    // Шифруем данные ...
+                    val encryptedPayload = encryptAES(controller!!.key!!, iv, payload)
 
-                // Отправим массив данных.
-                sendArray("msg", iv, encryptedPayload, hmac)
+                    // Отправим массив данных.
+                    sendArray("msg", iv, encryptedPayload, hmac)
+                } else {
+                    connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
+                }
             }
         }
     }
