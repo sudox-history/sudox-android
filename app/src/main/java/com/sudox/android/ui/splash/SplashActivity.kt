@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
-import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.MainActivity
@@ -37,7 +36,7 @@ class SplashActivity : DaggerAppCompatActivity() {
         })
 
         // Init authSession
-        splashViewModel.initSession(this)
+        splashViewModel.initSession()
     }
 
     private fun showAuthActivity() {
