@@ -81,6 +81,7 @@
     <string name="code_expired">Срок действия кода истек</string>
     <string name="wait_for_connect">Подключение…</string>
     <string name="website">Сайт</string>
+    <string name="new_contact">Новый контакт</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>

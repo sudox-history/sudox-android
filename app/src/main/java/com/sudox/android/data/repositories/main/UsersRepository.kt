@@ -13,14 +13,16 @@ class UsersRepository @Inject constructor(private val protocolClient: ProtocolCl
      * Получает информацию о пользователе с сервера по ID.
      **/
     fun getUser(id: String, responseCallback: (UserInfoDTO) -> (Unit)) {
-        protocolClient.makeRequest<UserInfoDTO>("users.get", UserInfoDTO().apply {
+        protocolClient.makeRequest<UserInfoDTO>("users.getUser", UserInfoDTO().apply {
             this.id = id
         }) { responseCallback(it) }
     }
 
+
     /**
      * Получает информацию о пользователе с сервера по E-mail.
      */
+    @Deprecated("Поиска в приложении больше не существует")
     fun searchUser(query: String, responseCallback: (SearchUserDTO) -> (Unit)) {
         protocolClient.makeRequest<SearchUserDTO>("users.search", SearchUserDTO().apply {
             this.query = query

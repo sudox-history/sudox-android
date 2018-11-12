@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="25dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp" />
+
+        <com.sudox.design.edittext.SudoxTextInputLayout
+            android:id="@+id/nameEditTextContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp">
+
+            <EditText
+                android:id="@+id/nameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/name"
+                android:inputType="textPersonName|textNoSuggestions"
+                android:maxLength="@integer/length_name"
+                android:maxLines="1"
+                android:textColorHint="#9f9f9f"
+                android:textSize="15sp" />
+
+        </com.sudox.design.edittext.SudoxTextInputLayout>
+    </LinearLayout>
+
+    <com.sudox.design.edittext.SudoxTextInputLayout
+        android:id="@+id/phoneEditTextContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:id="@+id/phoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/phone_number"
+            android:maxLines="1"
+            android:textColorHint="#9f9f9f"
+            android:textSize="15sp" />
+
+    </com.sudox.design.edittext.SudoxTextInputLayout>
+
+</LinearLayout>

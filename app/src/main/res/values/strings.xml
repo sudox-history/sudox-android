@@ -81,6 +81,7 @@
     <string name="code_expired">Code expired</string>
     <string name="wait_for_connect">Connecting…</string>
     <string name="website">Website</string>
+    <string name="new_contact">New contact</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d contact</item>
