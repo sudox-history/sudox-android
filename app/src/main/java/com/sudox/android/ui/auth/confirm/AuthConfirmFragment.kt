@@ -116,7 +116,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
                 }
             }
         }
-        authActivity.registerReceiver(smsBroadcastReceiver, IntentFilter("android.provider.Telephony.SMS_RECEIVED"))
+        authActivity.registerReceiver(smsBroadcastReceiver, IntentFilter(SMS_RECEIVED))
     }
 
     private fun initWelcomeText() {

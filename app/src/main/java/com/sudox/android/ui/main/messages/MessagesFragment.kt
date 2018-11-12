@@ -53,7 +53,6 @@ class MessagesFragment @Inject constructor() : BaseReconnectFragment() {
         initViewPager()
     }
 
-
     override fun showConnectionStatus(isConnect: Boolean) {
         if (isConnect) {
             messagesToolbar.title = getString(R.string.messages)

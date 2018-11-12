@@ -8,12 +8,12 @@ import android.arch.persistence.room.Query
 import com.sudox.android.data.database.model.User
 
 @Dao
-interface ContactsDao {
+interface UserDao {
 
-    @Query("DELETE FROM contacts")
+    @Query("DELETE FROM users")
     fun removeAll()
 
-    @Query("DELETE FROM contacts WHERE uid = :id")
+    @Query("DELETE FROM users WHERE uid = :id")
     fun removeOne(id: String)
 
     @Insert
@@ -22,6 +22,14 @@ interface ContactsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOne(user: User)
 
-    @Query("SELECT * FROM contacts")
+    @Query("SELECT * FROM users")
     fun loadAll(): LiveData<List<User>>
+
+    /**
+     * 1 - Профиль
+     * 2 - Контакт
+     * 3 - Неизвестный
+     */
+    @Query("SELECT * FROM users WHERE type = :type")
+    fun getUserByType(type: Int): LiveData<List<User>>
 }

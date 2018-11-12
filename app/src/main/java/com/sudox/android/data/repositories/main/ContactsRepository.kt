@@ -1,7 +1,8 @@
 package com.sudox.android.data.repositories.main
 
 import android.arch.lifecycle.LiveData
-import com.sudox.android.data.database.dao.ContactsDao
+import com.sudox.android.common.userContact
+import com.sudox.android.data.database.dao.UserDao
 import com.sudox.android.data.database.model.User
 import com.sudox.android.data.database.model.User.Companion.TRANSFORMATION_FROM_USER_INFO_DTO
 import com.sudox.android.data.models.Errors
@@ -18,9 +19,9 @@ import javax.inject.Singleton
 class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                              private val authRepository: AuthRepository,
                                              private val usersRepository: UsersRepository,
-                                             private val contactsDao: ContactsDao) {
+                                             private val userDao: UserDao) {
 
-    val contactsGetLiveData: LiveData<List<User>> = contactsDao.loadAll()
+    val contactsGetLiveData: LiveData<List<User>> = userDao.getUserByType(userContact)
 
     init {
         // Обновим данные когда будет установлена сессия ...
@@ -44,7 +45,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
      **/
     private fun saveNotifyContact(contactNotifyDTO: ContactChangeDTO) = GlobalScope.async {
         usersRepository.getUser(contactNotifyDTO.id) {
-            contactsDao.insertOne(TRANSFORMATION_FROM_USER_INFO_DTO.invoke(it))
+            userDao.insertOne(TRANSFORMATION_FROM_USER_INFO_DTO.invoke(it))
         }
     }
 
@@ -53,7 +54,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
      * Если контакт с таким ID в БД не будет найден - ничего не произойдет.
      **/
     private fun removeNotifyContact(contactNotifyDTO: ContactChangeDTO) = GlobalScope.async {
-        contactsDao.removeOne(contactNotifyDTO.id)
+        userDao.removeOne(contactNotifyDTO.id)
     }
 
     /**
@@ -64,7 +65,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
      **/
     fun requestContacts() {
         // Получаем данные ...
-        protocolClient.makeRequest<ContactsListDTO>("contacts.get") {
+        protocolClient.makeRequest<ContactsListDTO>("contacts.getContacts") {
             // Если будет UNAUTHORIZED, то выполнится перехват на глобальном уровне и произойдет сброс сессии
             if (it.isSuccess()) {
                 updateContactsInDatabase(it.contacts.map(User.TRANSFORMATION_FROM_CONTACT_INFO_DTO))
@@ -88,7 +89,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                 if (it.containsError()) return@getUser errorCallback(it.error)
 
                 // Сохраняем в БД
-                contactsDao.insertOne(User.TRANSFORMATION_FROM_USER_INFO_DTO.invoke(userInfoDTO))
+                userDao.insertOne(User.TRANSFORMATION_FROM_USER_INFO_DTO.invoke(userInfoDTO))
 
                 // Уведомляем об успешном добавлении контакта
                 successCallback()
@@ -104,7 +105,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
             this.id = id
         }) {
             if (it.isSuccess() || it.error == Errors.INVALID_USER) {
-                contactsDao.removeOne(id)
+                userDao.removeOne(id)
             }
         }
     }
@@ -115,10 +116,10 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
      * После обновления актуальная копия прилетит в LiveData.
      */
     private fun updateContactsInDatabase(users: List<User>) = GlobalScope.async {
-        contactsDao.removeAll()
+        userDao.removeAll()
 
         // Сохраним контакты в БД
-        if (users.isNotEmpty()) contactsDao.insertAll(users)
+        if (users.isNotEmpty()) userDao.insertAll(users)
     }
 
 }

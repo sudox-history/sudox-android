@@ -13,6 +13,10 @@ class UserInfoDTO : JsonModel() {
     lateinit var nickname: String
     lateinit var photo: String
 
+    var phone: String? = null
+    var status: String? = null
+    var bio: String? = null
+
     override fun toJSON(): JSONObject {
         return JSONObject().apply { putOpt("id", id) }
     }
@@ -22,5 +26,12 @@ class UserInfoDTO : JsonModel() {
         name = jsonObject.optString("name")
         nickname = jsonObject.optString("nickname")
         photo = jsonObject.optString("photo")
+
+        if (jsonObject.has("phone"))
+            phone = jsonObject.optString("phone")
+        if (jsonObject.has("status"))
+            status = jsonObject.optString("status")
+        if (jsonObject.has("bio"))
+            bio = jsonObject.optString("bio")
     }
 }

@@ -6,4 +6,8 @@ const val SMS_RECEIVE_PERMISSION = "android.permission.RECEIVE_SMS"
 
 const val SMS_RECEIVED: String = "android.provider.Telephony.SMS_RECEIVED"
 
-const val NEW_OUTGOIND_SMS: String = "android.provider.Telephony.NEW_OUTGOING_SMS"
+const val userSelf: Int = 1
+
+const val userContact: Int = 2
+
+const val userUnknown: Int = 3

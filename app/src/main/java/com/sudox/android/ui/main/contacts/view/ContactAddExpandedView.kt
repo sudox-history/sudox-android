@@ -11,6 +11,7 @@ import com.sudox.design.navigation.toolbar.expanded.ExpandedView
 import kotlinx.android.synthetic.main.view_contact_add_expanded.view.*
 import javax.inject.Inject
 
+@Deprecated("Дизайн был изменен")
 class ContactAddExpandedView : ExpandedView {
 
     @Inject
@@ -42,6 +43,7 @@ class ContactAddExpandedView : ExpandedView {
         }
     }
 
+    @Deprecated("Поиска в приложении больше не существует")
     private fun searchContact(query: String) {
         usersRepository.searchUser(query) {
             if (it.isSuccess()) {
