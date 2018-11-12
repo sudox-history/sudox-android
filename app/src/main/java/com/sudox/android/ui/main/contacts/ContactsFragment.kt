@@ -14,6 +14,7 @@ import com.sudox.android.data.database.model.User
 import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.common.BaseReconnectFragment
+import com.sudox.android.ui.main.contacts.add.ContactAddFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import kotlinx.android.synthetic.main.fragment_main_contacts.*
 import kotlinx.android.synthetic.main.fragment_main_contacts.view.*
@@ -26,6 +27,9 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
 
     @Inject
     lateinit var contactsAdapter: ContactsAdapter
+
+    @Inject
+    lateinit var contactAddFragment: ContactAddFragment
 
     private lateinit var contactsViewModel: ContactsViewModel
     private lateinit var mainActivity: MainActivity
@@ -62,7 +66,7 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
         contactsToolbar.contactsToolbar.inflateMenu(R.menu.menu_contacts)
         contactsToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.add_contact -> contactAddExpandedView.toggle()
+                R.id.add_contact -> showContactAddFragment()
             }
 
             return@setOnMenuItemClickListener true
@@ -110,5 +114,12 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
         contactAddExpandedView.expandingCallback = {
             addContactMenuItem.setIcon(if (it) R.drawable.ic_close else R.drawable.ic_add_contact)
         }
+    }
+
+    private fun showContactAddFragment() {
+        mainActivity.supportFragmentManager.beginTransaction()
+//                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+                .replace(R.id.fragmentMainContainer, contactAddFragment)
+                .commit()
     }
 }

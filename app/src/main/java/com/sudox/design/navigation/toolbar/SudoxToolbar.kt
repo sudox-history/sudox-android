@@ -1,11 +1,14 @@
 package com.sudox.design.navigation.toolbar
 
 import android.content.Context
+import android.support.v4.view.MarginLayoutParamsCompat
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
 import com.sudox.android.R
 import com.sudox.design.helpers.FontsHelper.Companion.SANS_SERIF_LIGHT
@@ -14,6 +17,7 @@ class SudoxToolbar : Toolbar {
 
     private var titleTextView: TextView? = null
     private var actionMenuView: ActionMenuView? = null
+    private var navigationButtonView: ImageButton? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -24,7 +28,19 @@ class SudoxToolbar : Toolbar {
 
         // Configuring toolbar
         configureMenu()
+        configureNavigationButton()
         configureBasic()
+    }
+
+    private fun configureNavigationButton() {
+        navigationButtonView = Toolbar::class.java
+                .getDeclaredField("mNavButtonView")
+                .apply { isAccessible = true }
+                .get(this) as ImageButton
+
+        if (navigationButtonView != null) {
+            navigationButtonView?.setImageResource(R.drawable.ic_arrow_back)
+        }
     }
 
     private fun configureBasic() {
@@ -49,11 +65,20 @@ class SudoxToolbar : Toolbar {
 
     private fun configurePaddings() {
         val menuItemsCount = actionMenuView?.childCount ?: 0
+        val initialStartPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25F, resources.displayMetrics)
         val initialEndPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25F, resources.displayMetrics)
-        val startPadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25F, resources.displayMetrics).toInt()
+        val startPadding = calculateStartPadding(initialStartPadding)
         val endPadding = calculateEndPadding(menuItemsCount, initialEndPadding.toInt())
 
         setPaddingRelative(startPadding, 0, endPadding, 0)
+    }
+
+    private fun calculateStartPadding(initialStartPadding: Float): Int {
+        if (navigationButtonView != null) {
+            return (initialStartPadding - navigationButtonView!!.drawable.intrinsicWidth).toInt()
+        }
+
+        return initialStartPadding.toInt()
     }
 
     private fun calculateEndPadding(menuItemsCount: Int, initialEndPadding: Int): Int {
@@ -120,6 +145,9 @@ class SudoxToolbar : Toolbar {
 
         // Align action menu to vertical center
         actionMenuView?.layoutParams = (actionMenuView?.layoutParams as Toolbar.LayoutParams)
+                .apply { gravity = Gravity.CENTER_VERTICAL }
+
+        navigationButtonView?.layoutParams = (navigationButtonView?.layoutParams as Toolbar.LayoutParams)
                 .apply { gravity = Gravity.CENTER_VERTICAL }
     }
 }
