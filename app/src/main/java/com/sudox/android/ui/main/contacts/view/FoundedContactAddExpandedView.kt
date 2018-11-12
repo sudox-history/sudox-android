@@ -15,11 +15,11 @@ import com.sudox.design.helpers.drawCircleBitmap
 import com.sudox.design.helpers.getTwoFirstLetters
 import com.sudox.design.navigation.toolbar.expanded.ExpandedView
 import kotlinx.android.synthetic.main.view_contact_add_founded_expanded.view.*
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.android.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class FoundedContactAddExpandedView : ExpandedView {

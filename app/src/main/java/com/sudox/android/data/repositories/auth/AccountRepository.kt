@@ -7,8 +7,8 @@ import android.os.Build
 import com.sudox.android.data.auth.KEY_ACCOUNT_ID
 import com.sudox.android.data.auth.SudoxAccount
 import com.sudox.android.data.database.SudoxDatabase
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import javax.inject.Inject
 import javax.inject.Singleton
 

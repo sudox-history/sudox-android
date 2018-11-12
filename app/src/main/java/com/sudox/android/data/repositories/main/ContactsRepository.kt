@@ -10,8 +10,8 @@ import com.sudox.android.data.models.contacts.dto.ContactChangeDTO
 import com.sudox.android.data.models.contacts.dto.ContactsListDTO
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import javax.inject.Inject
 import javax.inject.Singleton
 

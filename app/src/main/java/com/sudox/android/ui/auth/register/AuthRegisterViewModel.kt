@@ -5,10 +5,10 @@ import com.sudox.android.data.models.Errors
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
 import com.sudox.protocol.models.SingleLiveEvent
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.android.Main
+import kotlinx.coroutines.async
 import javax.inject.Inject
 
 class AuthRegisterViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {

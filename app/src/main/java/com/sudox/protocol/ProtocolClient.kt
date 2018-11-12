@@ -9,8 +9,8 @@ import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.ReadCallback
 import com.sudox.protocol.models.SingleLiveEvent
 import com.sudox.protocol.models.enums.ConnectionState
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.json.JSONObject
 import java.io.IOException
 import java.net.InetSocketAddress

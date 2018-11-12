@@ -8,10 +8,10 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
 import com.sudox.design.helpers.hideKeyboard
 import com.sudox.design.overlay.OverlappedRelativeLayout
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.android.Main
+import kotlinx.coroutines.launch
 
 abstract class ExpandedView : RelativeLayout {
 

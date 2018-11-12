@@ -23,10 +23,10 @@ import com.sudox.design.helpers.drawAvatar
 import com.sudox.design.helpers.drawCircleBitmap
 import com.sudox.design.helpers.getTwoFirstLetters
 import kotlinx.android.synthetic.main.fragment_messages_chat_user.*
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.async
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.android.Main
+import kotlinx.coroutines.async
 import javax.inject.Inject
 
 class ChatFragment @Inject constructor() : BaseReconnectFragment() {

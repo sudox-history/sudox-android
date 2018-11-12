@@ -6,10 +6,10 @@ import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
 import com.sudox.protocol.ProtocolClient
 import kotlinx.android.synthetic.main.view_status_expanded.view.*
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.android.Main
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class StatusExpandedView : ExpandedView {
