@@ -18,5 +18,5 @@
     <integer name="length_name">20</integer>
     <integer name="length_nickname">20</integer>
     <!-- Toolbar -->
-    <dimen name="toolbar_height">60dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
 </resources>
