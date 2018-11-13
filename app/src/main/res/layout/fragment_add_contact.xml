@@ -9,7 +9,8 @@
         android:id="@+id/contactAddToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:featureButtonText="@string/add_contact"
+        app:featureButtonText="@string/add"
+        app:title="@string/new_contact"
         app:navigationIcon="@drawable/ic_arrow_back" />
 
     <LinearLayout
@@ -24,9 +25,10 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/avatar"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:background="#FFFFFF" />
+                android:src="@color/colorAccent"/>
 
             <com.sudox.design.edittext.SudoxTextInputLayout
                 android:id="@+id/nameEditTextContainer"

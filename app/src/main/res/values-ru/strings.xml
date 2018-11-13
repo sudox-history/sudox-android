@@ -82,6 +82,8 @@
     <string name="wait_for_connect">Подключение…</string>
     <string name="website">Сайт</string>
     <string name="new_contact">Новый контакт</string>
+    <string name="nameNotNecessary">Имя (необязательно)</string>
+    <string name="add">Добавить</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>

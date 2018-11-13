@@ -5,7 +5,7 @@
     <string name="we_have_send_code">Check your mail we have sent the code</string>
     <string name="change_phone_number">Change email</string>
     <string name="enter_code_from_messages"><![CDATA[Enter code from messages we have sent to <br><font color="#FFFFFF">\n%1$s</font></br>]]></string>
-    <string name="about_name">Don\'t be careful, it\'s last step</string>
+    <string name="about_name">Don\'t worry, it\'s the last step</string>
     <string name="next">Next</string>
     <string name="what_is_your_name">What\'s your name?</string>
     <string name="enter_your_name_and_nickname">Enter your name and nickname</string>
@@ -82,6 +82,8 @@
     <string name="wait_for_connect">Connecting…</string>
     <string name="website">Website</string>
     <string name="new_contact">New contact</string>
+    <string name="nameNotNecessary">Name (not necessary)</string>
+    <string name="add">Add</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d contact</item>
