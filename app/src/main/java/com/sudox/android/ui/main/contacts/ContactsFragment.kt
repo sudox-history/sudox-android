@@ -119,6 +119,7 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
     private fun showContactAddFragment() {
         mainActivity.supportFragmentManager.beginTransaction()
 //                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+                .addToBackStack(null)
                 .replace(R.id.fragmentMainContainer, contactAddFragment)
                 .commit()
     }

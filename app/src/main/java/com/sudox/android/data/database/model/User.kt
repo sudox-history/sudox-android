@@ -97,6 +97,9 @@ class User {
                 name = it.name
                 nickname = it.nickname
                 avatar = it.photo
+                status = it.status
+                bio = it.bio
+                type = 2
             }
         }
 

@@ -30,12 +30,12 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         }
 
         // Добавление контактов.
-        protocolClient.listenMessage<ContactChangeDTO>("notify.contacts.new") {
+        protocolClient.listenMessage<ContactChangeDTO>("updates.importContact") {
             saveNotifyContact(it)
         }
 
         // Удаление контактов.
-        protocolClient.listenMessage<ContactChangeDTO>("notify.contacts.remove") {
+        protocolClient.listenMessage<ContactChangeDTO>("updates.removeContac") {
             removeNotifyContact(it)
         }
     }
