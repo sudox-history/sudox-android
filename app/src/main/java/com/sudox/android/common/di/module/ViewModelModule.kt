@@ -10,6 +10,7 @@ import com.sudox.android.ui.auth.phone.AuthPhoneViewModel
 import com.sudox.android.ui.auth.register.AuthRegisterViewModel
 import com.sudox.android.ui.main.MainViewModel
 import com.sudox.android.ui.main.contacts.ContactsViewModel
+import com.sudox.android.ui.main.contacts.add.ContactAddViewModel
 import com.sudox.android.ui.main.messages.MessagesViewModel
 import com.sudox.android.ui.main.settings.SettingsViewModel
 import com.sudox.android.ui.messages.MessagesInnerViewModel
@@ -64,6 +65,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ContactsViewModel::class)
     internal abstract fun contactsViewModel(viewModel: ContactsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ContactAddViewModel::class)
+    internal abstract fun contactAddViewModel(viewModel: ContactAddViewModel): ViewModel
 
     @Binds
     @IntoMap

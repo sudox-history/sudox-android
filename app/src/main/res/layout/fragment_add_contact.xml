@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:featureButtonText="@string/add"
-        app:title="@string/new_contact"
-        app:navigationIcon="@drawable/ic_arrow_back" />
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/new_contact" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:id="@+id/avatar"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:src="@color/colorAccent"/>
+                android:src="@color/colorAccent" />
 
             <com.sudox.design.edittext.SudoxTextInputLayout
                 android:id="@+id/nameEditTextContainer"
@@ -41,7 +41,7 @@
                     android:id="@+id/nameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="@string/name"
+                    android:hint="@string/nameNotNecessary"
                     android:inputType="textPersonName|textNoSuggestions"
                     android:maxLength="@integer/length_name"
                     android:maxLines="1"
@@ -62,6 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/phone_number"
+                android:inputType="phone"
                 android:maxLines="1"
                 android:textColorHint="#9f9f9f"
                 android:textSize="15sp" />

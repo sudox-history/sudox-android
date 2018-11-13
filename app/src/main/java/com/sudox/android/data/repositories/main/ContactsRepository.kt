@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import com.sudox.android.common.userContact
 import com.sudox.android.data.database.dao.UserDao
 import com.sudox.android.data.database.model.User
-import com.sudox.android.data.database.model.User.Companion.TRANSFORMATION_FROM_USER_INFO_DTO
 import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.contacts.dto.ContactChangeDTO
 import com.sudox.android.data.models.contacts.dto.ContactsListDTO
@@ -31,7 +30,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
         // Добавление контактов.
         protocolClient.listenMessage<ContactChangeDTO>("updates.importContact") {
-            saveNotifyContact(it)
+//            saveNotifyContact(it)
         }
 
         // Удаление контактов.
@@ -43,11 +42,11 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
     /**
      * Получает пользователя по ID, пришедшему в уведомлении, маппит его до объекта контакта и сохраняет в БД
      **/
-    private fun saveNotifyContact(contactNotifyDTO: ContactChangeDTO) = GlobalScope.async {
-        usersRepository.getUser(contactNotifyDTO.id) {
-            userDao.insertOne(TRANSFORMATION_FROM_USER_INFO_DTO.invoke(it))
-        }
-    }
+//    private fun saveNotifyContact(contactNotifyDTO: ContactChangeDTO) = GlobalScope.async {
+//        usersRepository.getUser(contactNotifyDTO.id) {
+//            userDao.insertOne(TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(it))
+//        }
+//    }
 
     /**
      * Удаляет пользователя с указанным ID из БД.
@@ -78,24 +77,20 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
     /**
      * Добавляет контакт по ID, в случае ошибки на любом этапе возвращает errorCallback
      */
-    fun addContact(id: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
-        protocolClient.makeRequest<ContactChangeDTO>("contacts.add", ContactChangeDTO().apply {
-            this.id = id
+    fun addContact(name: String, phone: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
+        protocolClient.makeRequest<ContactChangeDTO>("contacts.importContact", ContactChangeDTO().apply {
+            this.name = name
+            this.phone = phone
         }) {
             if (it.containsError()) return@makeRequest errorCallback(it.error)
 
-            // Получаем пользователя для добавления.
-            usersRepository.getUser(id) { userInfoDTO ->
-                if (it.containsError()) return@getUser errorCallback(it.error)
+            // Сохраняем в БД
+            userDao.insertOne(User.TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(it))
 
-                // Сохраняем в БД
-                userDao.insertOne(User.TRANSFORMATION_FROM_USER_INFO_DTO.invoke(userInfoDTO))
-
-                // Уведомляем об успешном добавлении контакта
-                successCallback()
-            }
+            successCallback()
         }
     }
+
 
     /**
      * Удаляет контакт. Если нет соединения с сервером - ничего не произойдет.

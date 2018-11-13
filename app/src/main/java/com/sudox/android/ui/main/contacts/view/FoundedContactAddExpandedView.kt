@@ -2,9 +2,6 @@ package com.sudox.android.ui.main.contacts.view
 
 import android.content.Context
 import android.util.AttributeSet
-import com.sudox.android.ApplicationLoader
-import com.sudox.android.R
-import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.users.dto.SearchUserDTO
@@ -19,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.android.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class FoundedContactAddExpandedView : ExpandedView {
@@ -36,38 +32,38 @@ class FoundedContactAddExpandedView : ExpandedView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    init {
-        turnBlackOverlay = false
+//    init {
+//        turnBlackOverlay = false
+//
+//        // Inflate view
+//        inflate(context, R.layout.view_contact_add_founded_expanded, this)
+//
+//        // Заинжектим здесь все к хуям
+//        ApplicationLoader.component.inject(this)
+//
+//        // Bind button
+//        foundedContactAddButton.setOnClickListener { addContact() }
+//    }
 
-        // Inflate view
-        inflate(context, R.layout.view_contact_add_founded_expanded, this)
-
-        // Заинжектим здесь все к хуям
-        ApplicationLoader.component.inject(this)
-
-        // Bind button
-        foundedContactAddButton.setOnClickListener { addContact() }
-    }
-
-    private fun addContact() {
-        contactsRepository.addContact(searchUserDTO.id, {
-            GlobalScope.launch(Dispatchers.Main) { hide() }
-        }) {
-            runBlocking {
-                if (it == Errors.INVALID_USER) {
-                    val account = accountRepository.getAccount().await() ?: return@runBlocking
-
-                    if (account.id != searchUserDTO.id) {
-                        contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.contact_has_already_added))
-                    } else {
-                        contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.contact_add_yourself))
-                    }
-                } else {
-                    contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.unknown_error))
-                }
-            }
-        }
-    }
+//    private fun addContact() {
+//        contactsRepository.addContact(searchUserDTO.id, {
+//            GlobalScope.launch(Dispatchers.Main) { hide() }
+//        }) {
+//            runBlocking {
+//                if (it == Errors.INVALID_USER) {
+//                    val account = accountRepository.getAccount().await() ?: return@runBlocking
+//
+//                    if (account.id != searchUserDTO.id) {
+//                        contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.contact_has_already_added))
+//                    } else {
+//                        contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.contact_add_yourself))
+//                    }
+//                } else {
+//                    contactAddFoundedStatusExpandedView.showMessage(context.getString(R.string.unknown_error))
+//                }
+//            }
+//        }
+//    }
 
     fun bindData(userGetByEmail: SearchUserDTO) = GlobalScope.launch(Dispatchers.Main) {
         this@FoundedContactAddExpandedView.searchUserDTO = userGetByEmail
