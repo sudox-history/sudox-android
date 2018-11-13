@@ -9,4 +9,8 @@
         <attr name="nextButtonText" format="string" />
         <attr name="someFeatureButtonText" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="SudoxToolbar">
+        <attr name="featureButtonText" format="string" />
+    </declare-styleable>
 </resources>

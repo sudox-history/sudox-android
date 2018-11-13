@@ -9,6 +9,7 @@
         android:id="@+id/contactAddToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:featureButtonText="@string/add_contact"
         app:navigationIcon="@drawable/ic_arrow_back" />
 
     <LinearLayout

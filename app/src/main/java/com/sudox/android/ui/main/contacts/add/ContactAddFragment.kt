@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.fragment_add_contact.*
 import javax.inject.Inject
 
 class ContactAddFragment @Inject constructor() : DaggerFragment() {
@@ -16,5 +17,9 @@ class ContactAddFragment @Inject constructor() : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        contactAddToolbar.setFeatureButtonOnClickListener(View.OnClickListener {
+            println("Hello World!")
+        })
     }
 }
