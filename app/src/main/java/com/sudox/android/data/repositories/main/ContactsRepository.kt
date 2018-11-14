@@ -6,7 +6,8 @@ import com.sudox.android.common.userContact
 import com.sudox.android.data.database.dao.UserDao
 import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.Errors
-import com.sudox.android.data.models.contacts.dto.ContactChangeDTO
+import com.sudox.android.data.models.contacts.dto.ContactAddDTO
+import com.sudox.android.data.models.contacts.dto.ContactRemoveDTO
 import com.sudox.android.data.models.contacts.dto.ContactsListDTO
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
@@ -30,12 +31,12 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         }
 
         // Добавление контактов.
-        protocolClient.listenMessage<ContactChangeDTO>("updates.importContact") {
+        protocolClient.listenMessage<ContactAddDTO>("updates.importContact") {
             //            saveNotifyContact(it)
         }
 
         // Удаление контактов.
-        protocolClient.listenMessage<ContactChangeDTO>("updates.removeContac") {
+        protocolClient.listenMessage<ContactAddDTO>("updates.removeContac") {
             removeNotifyContact(it)
         }
     }
@@ -53,7 +54,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
      * Удаляет пользователя с указанным ID из БД.
      * Если контакт с таким ID в БД не будет найден - ничего не произойдет.
      **/
-    private fun removeNotifyContact(contactNotifyDTO: ContactChangeDTO) = GlobalScope.async {
+    private fun removeNotifyContact(contactNotifyDTO: ContactAddDTO) = GlobalScope.async {
         userDao.removeOne(contactNotifyDTO.id)
     }
 
@@ -81,7 +82,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
     fun addContact(name: String, phone: String): LiveData<Int> {
         val contactAddLiveData = MutableLiveData<Int>()
 
-        protocolClient.makeRequest<ContactChangeDTO>("contacts.importContact", ContactChangeDTO().apply {
+        protocolClient.makeRequest<ContactAddDTO>("contacts.importContact", ContactAddDTO().apply {
             this.name = name
             this.phone = phone
         }) {
@@ -99,11 +100,11 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
      * Удаляет контакт. Если нет соединения с сервером - ничего не произойдет.
      **/
     fun removeContact(id: String) {
-        protocolClient.makeRequest<ContactChangeDTO>("contacts.remove", ContactChangeDTO().apply {
+        protocolClient.makeRequest<ContactRemoveDTO>("contacts.removeContact", ContactRemoveDTO().apply {
             this.id = id
         }) {
             if (it.isSuccess() || it.error == Errors.INVALID_USER) {
-                userDao.removeOne(id)
+                userDao.removeUserFromContacts(id, it.name)
             }
         }
     }

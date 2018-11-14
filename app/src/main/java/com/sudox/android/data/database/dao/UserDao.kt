@@ -22,6 +22,9 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOne(user: User)
 
+    @Query("UPDATE users SET name=:name, type = 3 where uid=:id")
+    fun removeUserFromContacts(id: String, name: String)
+
     @Query("SELECT * FROM users")
     fun loadAll(): LiveData<List<User>>
 

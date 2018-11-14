@@ -3,7 +3,7 @@ package com.sudox.android.data.models.contacts.dto
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONObject
 
-class ContactChangeDTO : JsonModel() {
+class ContactAddDTO : JsonModel() {
 
     // For read ...
     lateinit var name: String

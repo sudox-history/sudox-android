@@ -4,7 +4,7 @@ import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import com.sudox.android.data.models.chats.UserChatRecipient
-import com.sudox.android.data.models.contacts.dto.ContactChangeDTO
+import com.sudox.android.data.models.contacts.dto.ContactAddDTO
 import com.sudox.android.data.models.contacts.dto.ContactInfoDTO
 import com.sudox.android.data.models.users.dto.SearchUserDTO
 
@@ -91,7 +91,7 @@ class User {
             }
         }
 
-        val TRANSFORMATION_FROM_CONTACT_CHANGE_DTO: (ContactChangeDTO) -> (User) = {
+        val TRANSFORMATION_FROM_CONTACT_CHANGE_DTO: (ContactAddDTO) -> (User) = {
             User().apply {
                 uid = it.id
                 name = it.nameS
@@ -102,7 +102,6 @@ class User {
                 type = 2
             }
         }
-
 
         @Deprecated("")
         val TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO: (SearchUserDTO) -> (User) = {

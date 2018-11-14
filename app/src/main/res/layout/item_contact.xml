@@ -6,7 +6,8 @@
     android:focusable="true"
     android:orientation="horizontal"
     android:paddingEnd="26dp"
-    android:paddingStart="26dp">
+    android:paddingStart="26dp"
+    android:background="@drawable/ripple_effect">
 
     <ImageView
         android:id="@+id/avatar"
