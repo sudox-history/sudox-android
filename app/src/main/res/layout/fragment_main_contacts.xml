@@ -36,7 +36,8 @@
         android:layout_below="@id/contactsList"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="3 контакта"
+        android:text="1 контакт"
+        android:visibility="gone"
         android:textColor="@color/colorHint"
         android:textSize="14sp" />
 

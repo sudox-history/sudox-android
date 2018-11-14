@@ -1,6 +1,7 @@
 package com.sudox.android.data.repositories.main
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import com.sudox.android.common.userContact
 import com.sudox.android.data.database.dao.UserDao
 import com.sudox.android.data.database.model.User
@@ -30,7 +31,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
         // Добавление контактов.
         protocolClient.listenMessage<ContactChangeDTO>("updates.importContact") {
-//            saveNotifyContact(it)
+            //            saveNotifyContact(it)
         }
 
         // Удаление контактов.
@@ -77,18 +78,21 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
     /**
      * Добавляет контакт по ID, в случае ошибки на любом этапе возвращает errorCallback
      */
-    fun addContact(name: String, phone: String, successCallback: () -> (Unit), errorCallback: (Int) -> (Unit)) {
+    fun addContact(name: String, phone: String): LiveData<Int> {
+        val contactAddLiveData = MutableLiveData<Int>()
+
         protocolClient.makeRequest<ContactChangeDTO>("contacts.importContact", ContactChangeDTO().apply {
             this.name = name
             this.phone = phone
         }) {
-            if (it.containsError()) return@makeRequest errorCallback(it.error)
+            if (it.containsError()) contactAddLiveData.postValue(it.error)
 
             // Сохраняем в БД
             userDao.insertOne(User.TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(it))
 
-            successCallback()
+            contactAddLiveData.postValue(0)
         }
+        return contactAddLiveData
     }
 
 
