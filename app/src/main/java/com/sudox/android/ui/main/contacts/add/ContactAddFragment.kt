@@ -12,11 +12,11 @@ import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.Errors
-import dagger.android.support.DaggerFragment
+import com.sudox.android.ui.main.common.BaseReconnectFragment
 import kotlinx.android.synthetic.main.fragment_add_contact.*
 import javax.inject.Inject
 
-class ContactAddFragment @Inject constructor() : DaggerFragment() {
+class ContactAddFragment @Inject constructor() : BaseReconnectFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -26,6 +26,8 @@ class ContactAddFragment @Inject constructor() : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactAddViewModel = getViewModel(viewModelFactory)
 
+        listenForConnection()
+
         return inflater.inflate(R.layout.fragment_add_contact, container, false)
     }
 
@@ -34,6 +36,14 @@ class ContactAddFragment @Inject constructor() : DaggerFragment() {
 
         initToolbarListeners()
         initMainScreen()
+    }
+
+    override fun showConnectionStatus(isConnect: Boolean) {
+        if (isConnect) {
+            contactAddToolbar.title = getString(R.string.new_contact)
+        } else {
+            contactAddToolbar.title = getString(R.string.wait_for_connect)
+        }
     }
 
     var phoneNumber: String = ""

@@ -86,11 +86,10 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
             this.phone = phone
         }) {
             if (it.containsError()) contactAddLiveData.postValue(it.error)
-
-            // Сохраняем в БД
-            userDao.insertOne(User.TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(it))
-
-            contactAddLiveData.postValue(0)
+            else {
+                userDao.insertOne(User.TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(it))
+                contactAddLiveData.postValue(0)
+            }
         }
         return contactAddLiveData
     }

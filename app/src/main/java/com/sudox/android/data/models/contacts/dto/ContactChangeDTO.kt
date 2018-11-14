@@ -13,8 +13,8 @@ class ContactChangeDTO : JsonModel() {
     lateinit var nameS: String
     lateinit var nickname: String
     lateinit var photo: String
-    lateinit var status: String
-    lateinit var bio: String
+    var status: String? = null
+    var bio: String? = null
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
@@ -28,7 +28,10 @@ class ContactChangeDTO : JsonModel() {
         nameS = jsonObject.optString("name")
         nickname = jsonObject.optString("nickname")
         photo = jsonObject.optString("photo")
-        status = jsonObject.optString("status")
-        bio = jsonObject.optString("bio")
+
+        if(jsonObject.has("status"))
+            status = jsonObject.optString("status")
+        if(jsonObject.has("bio"))
+            bio = jsonObject.optString("bio")
     }
 }

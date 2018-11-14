@@ -7,7 +7,6 @@ import com.sudox.android.data.models.chats.UserChatRecipient
 import com.sudox.android.data.models.contacts.dto.ContactChangeDTO
 import com.sudox.android.data.models.contacts.dto.ContactInfoDTO
 import com.sudox.android.data.models.users.dto.SearchUserDTO
-import com.sudox.android.data.models.users.dto.UserInfoDTO
 
 @Entity(tableName = "users")
 class User {
@@ -95,7 +94,7 @@ class User {
         val TRANSFORMATION_FROM_CONTACT_CHANGE_DTO: (ContactChangeDTO) -> (User) = {
             User().apply {
                 uid = it.id
-                name = it.name
+                name = it.nameS
                 nickname = it.nickname
                 avatar = it.photo
                 status = it.status
