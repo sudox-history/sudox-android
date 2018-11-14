@@ -17,6 +17,7 @@ class ContactRemoveDTO: JsonModel() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
+        id = jsonObject.optString("id")
         name = jsonObject.optString("name")
     }
 }

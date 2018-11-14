@@ -44,16 +44,20 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
     /**
      * Получает пользователя по ID, пришедшему в уведомлении, маппит его до объекта контакта и сохраняет в БД
      **/
-    private fun saveNotifyContact(contactNotifyDTO: ContactAddDTO) = GlobalScope.async {
-        userDao.insertOne(User.TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(contactNotifyDTO))
+    private fun saveNotifyContact(contactNotifyDTO: ContactAddDTO) {
+        GlobalScope.async {
+            userDao.insertOne(User.TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(contactNotifyDTO))
+        }
     }
 
     /**
      * Удаляет пользователя с указанным ID из БД.
      * Если контакт с таким ID в БД не будет найден - ничего не произойдет.
      **/
-    private fun removeNotifyContact(contactNotifyDTO: ContactRemoveDTO) = GlobalScope.async {
-        userDao.removeUserFromContacts(contactNotifyDTO.id, contactNotifyDTO.name)
+    private fun removeNotifyContact(contactNotifyDTO: ContactRemoveDTO) {
+        GlobalScope.async {
+            userDao.removeUserFromContacts(contactNotifyDTO.id, contactNotifyDTO.name)
+        }
     }
 
     /**
@@ -112,11 +116,13 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
      *
      * После обновления актуальная копия прилетит в LiveData.
      */
-    private fun updateContactsInDatabase(users: List<User>) = GlobalScope.async {
-        userDao.removeAll()
+    private fun updateContactsInDatabase(users: List<User>) {
+        GlobalScope.async {
+            userDao.removeAll()
 
-        // Сохраним контакты в БД
-        if (users.isNotEmpty()) userDao.insertAll(users)
+            // Сохраним контакты в БД
+            if (users.isNotEmpty()) userDao.insertAll(users)
+        }
     }
-
 }
+
