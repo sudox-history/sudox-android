@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -82,6 +83,7 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
         contactsList.layoutManager = LinearLayoutManager(context)
         contactsList.addItemDecoration(SecondColumnItemDecorator(context!!))
         contactsList.adapter = contactsAdapter
+        contactsList.itemAnimator = null
 
         contactsViewModel
                 .contactsRepository
