@@ -32,11 +32,11 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
         // Добавление контактов.
         protocolClient.listenMessage<ContactAddDTO>("updates.importContact") {
-            //            saveNotifyContact(it)
+            saveNotifyContact(it)
         }
 
         // Удаление контактов.
-        protocolClient.listenMessage<ContactAddDTO>("updates.removeContac") {
+        protocolClient.listenMessage<ContactRemoveDTO>("updates.removeContact") {
             removeNotifyContact(it)
         }
     }
@@ -44,18 +44,16 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
     /**
      * Получает пользователя по ID, пришедшему в уведомлении, маппит его до объекта контакта и сохраняет в БД
      **/
-//    private fun saveNotifyContact(contactNotifyDTO: ContactChangeDTO) = GlobalScope.async {
-//        usersRepository.getUser(contactNotifyDTO.id) {
-//            userDao.insertOne(TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(it))
-//        }
-//    }
+    private fun saveNotifyContact(contactNotifyDTO: ContactAddDTO) = GlobalScope.async {
+        userDao.insertOne(User.TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(contactNotifyDTO))
+    }
 
     /**
      * Удаляет пользователя с указанным ID из БД.
      * Если контакт с таким ID в БД не будет найден - ничего не произойдет.
      **/
-    private fun removeNotifyContact(contactNotifyDTO: ContactAddDTO) = GlobalScope.async {
-        userDao.removeOne(contactNotifyDTO.id)
+    private fun removeNotifyContact(contactNotifyDTO: ContactRemoveDTO) = GlobalScope.async {
+        userDao.removeUserFromContacts(contactNotifyDTO.id, contactNotifyDTO.name)
     }
 
     /**

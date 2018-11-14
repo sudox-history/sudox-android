@@ -76,9 +76,13 @@ class ContactAddFragment @Inject constructor() : BaseReconnectFragment() {
                         if (response == 0) {
                             fragmentManager!!.popBackStack()
                         } else {
-                            phoneEditTextContainer.error = when (response) {
-                                Errors.INVALID_PARAMETERS -> getString(R.string.wrong_phone_format)
-                                else -> getString(R.string.unknown_error)
+                            if (response == Errors.INVALID_USER) {
+
+                            } else {
+                                phoneEditTextContainer.error = when (response) {
+                                    Errors.INVALID_PARAMETERS -> getString(R.string.wrong_phone_format)
+                                    else -> getString(R.string.unknown_error)
+                                }
                             }
                         }
                     })
