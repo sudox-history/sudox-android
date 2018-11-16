@@ -6,7 +6,7 @@ import com.redmadrobot.inputmask.model.CaretString
 val EMAIL_REGEX = "^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\$"
         .toRegex()
 
-val PHONE_REGEX = "^((7)+([0-9]){10})\$".toRegex()
+val PHONE_REGEX = "7([0-9]{10})".toRegex()
 
 val SMS_CODE_REGEX = "^Sudox: [0-9]{5}$".toRegex()
 

@@ -2,6 +2,9 @@ package com.sudox.android.data.repositories.main
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import com.sudox.android.common.helpers.NAME_REGEX
+import com.sudox.android.common.helpers.PHONE_REGEX
+import com.sudox.android.common.helpers.WHITESPACES_REMOVE_REGEX
 import com.sudox.android.common.userContact
 import com.sudox.android.data.database.dao.UserDao
 import com.sudox.android.data.database.model.User
@@ -9,12 +12,16 @@ import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.contacts.dto.ContactAddDTO
 import com.sudox.android.data.models.contacts.dto.ContactRemoveDTO
 import com.sudox.android.data.models.contacts.dto.ContactsListDTO
+import com.sudox.android.data.repositories.auth.AUTH_NAME_REGEX_ERROR
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import javax.inject.Inject
 import javax.inject.Singleton
+
+const val CONTACTS_NAME_REGEX_ERROR = 0
+const val CONTACTS_PHONE_REGEX_ERROR = 1
 
 @Singleton
 class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
@@ -81,20 +88,41 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
     /**
      * Добавляет контакт по ID, в случае ошибки на любом этапе возвращает errorCallback
      */
-    fun addContact(name: String, phone: String): LiveData<Int> {
-        val contactAddLiveData = MutableLiveData<Int>()
+    fun addContact(name: String,
+                   phone: String,
+                   regexCallback: (List<Int>) -> (Unit),
+                   errorCallback: (Int) -> (Unit),
+                   successCallback: () -> (Unit)) = GlobalScope.async {
+
+        val filteredName = name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
+        val regexErrors = arrayListOf<Int>()
+
+        // Валидация
+        if (filteredName.isNotEmpty() && !NAME_REGEX.matches(filteredName)) {
+            regexErrors.plusAssign(CONTACTS_NAME_REGEX_ERROR)
+        }
+
+        if (!PHONE_REGEX.matches(phone)) {
+            regexErrors.plusAssign(CONTACTS_PHONE_REGEX_ERROR)
+        }
+
+        // Fix bug with single validation
+        if (regexErrors.isNotEmpty()) {
+            regexCallback(regexErrors)
+            return@async
+        }
 
         protocolClient.makeRequest<ContactAddDTO>("contacts.importContact", ContactAddDTO().apply {
-            this.name = name
+            this.name = filteredName
             this.phone = phone
         }) {
-            if (it.containsError()) contactAddLiveData.postValue(it.error)
-            else {
+            if (it.isSuccess()) {
                 userDao.insertOne(User.TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(it))
-                contactAddLiveData.postValue(0)
+                successCallback()
+            } else {
+                errorCallback(it.error)
             }
         }
-        return contactAddLiveData
     }
 
 

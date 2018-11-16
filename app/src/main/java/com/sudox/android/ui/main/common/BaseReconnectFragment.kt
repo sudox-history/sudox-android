@@ -27,7 +27,6 @@ abstract class BaseReconnectFragment : DaggerFragment() {
         protocolClient
                 .connectionStateLiveData
                 .observe(this, Observer {
-
                     val state: Boolean = if (it == ConnectionState.CONNECTION_CLOSED) {
                         false
                     } else it == ConnectionState.HANDSHAKE_SUCCEED
