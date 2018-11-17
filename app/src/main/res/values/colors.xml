@@ -3,6 +3,7 @@
     <color name="colorPrimary">#1A1E28</color>
     <color name="colorPrimaryDark">#141822</color>
     <color name="colorFirstMessage">#343842</color>
+    <color name="colorLightRipple">#343842</color>
     <color name="colorReceivedMessage">#2E323C</color>
     <color name="colorBottomNavigationBackground">#1A1E28</color>
     <color name="colorAccent">#FFFFFF</color>

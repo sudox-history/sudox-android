@@ -4,7 +4,10 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
-    android:padding="25dp">
+    android:paddingStart="25dp"
+    android:paddingEnd="25dp"
+    android:paddingTop="25dp"
+    android:paddingBottom="15dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -25,20 +28,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="15dp">
 
         <TextView
             android:id="@+id/cancelAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="@string/cancelButton" />
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/ripple_effect_light"
+            android:clickable="true"
+            android:padding="7dp"
+            android:text="@string/cancelButton"
+            android:focusable="true" />
 
         <TextView
             android:id="@+id/inviteAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/invite_button" />
+            android:background="@drawable/ripple_effect_light"
+            android:clickable="true"
+            android:padding="7dp"
+            android:text="@string/invite_button"
+            android:focusable="true" />
 
     </LinearLayout>
 
