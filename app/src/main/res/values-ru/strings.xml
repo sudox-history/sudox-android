@@ -82,8 +82,13 @@
     <string name="wait_for_connect">Подключение…</string>
     <string name="website">Сайт</string>
     <string name="new_contact">Новый контакт</string>
-    <string name="nameNotNecessary">Имя (необязательно)</string>
+    <string name="name_not_necessary">Имя (необязательно)</string>
     <string name="add">Добавить</string>
+    <string name="hint_phone_wil_not_be_found">Если номер не будет найден, вы сможете пригласить вашего друга в Sudox</string>
+    <string name="invite_button">ПРИГЛАСИТЬ</string>
+    <string name="cancelButton">ОТМЕНА</string>
+    <string name="hint_no_contact_in_sudox">Контакта еще нет в Sudox, хотите пригласить его с вами пообщаться?</string>
+    <string name="title_oops">Упс! Не получилось!</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>

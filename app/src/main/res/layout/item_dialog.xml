@@ -6,8 +6,8 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:paddingStart="26dp"
-    android:paddingEnd="26dp">
+    android:paddingStart="25dp"
+    android:paddingEnd="25dp">
 
     <ImageView
         android:id="@+id/avatar"

@@ -35,7 +35,7 @@
                         android:id="@+id/profileAvatar"
                         android:layout_width="92dp"
                         android:layout_height="92dp"
-                        android:background="#FFFFFF" />
+                        android:src="#FFFFFF" />
 
                     <TextView
                         android:id="@+id/profileName"

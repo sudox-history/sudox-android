@@ -20,7 +20,7 @@ abstract class MainActivityModule {
     @ContributesAndroidInjector(modules = [ProfileFragmentModule::class])
     abstract fun provideProfileFragment(): ProfileFragment
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = [ContactAddFragmentModule::class])
     abstract fun provideContactAddFragment(): ContactAddFragment
 
     @ContributesAndroidInjector

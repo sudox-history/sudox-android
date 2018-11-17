@@ -18,6 +18,7 @@ import kotlinx.coroutines.android.Main
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Deprecated("Новый способ добавления контактов")
 class FoundedContactAddExpandedView : ExpandedView {
 
     @Inject
