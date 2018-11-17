@@ -36,9 +36,12 @@ class ContactAddFragment @Inject constructor() : BaseReconnectFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var contactAddViewModel: ContactAddViewModel
+    @Inject
+    lateinit var inviteFriendDialogFragment: InviteFriendDialogFragment
+
     private var firstCharsOfName = CharArray(2)
-    private var phoneNumber: String = ""
+    private lateinit var contactAddViewModel: ContactAddViewModel
+    var phoneNumber: String = ""
     private var isMaskFilled: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -57,7 +60,7 @@ class ContactAddFragment @Inject constructor() : BaseReconnectFragment() {
             if (it == ContactAddAction.POP_BACKSTACK) {
                 fragmentManager!!.popBackStack()
             } else if (it == ContactAddAction.SHOW_USER_NOT_FOUND_ERROR) {
-                // TODO: Show notify
+                inviteFriendDialogFragment.show(childFragmentManager,"inviteFriend5")
             }
         })
 

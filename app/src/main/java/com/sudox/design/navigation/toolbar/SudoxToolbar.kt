@@ -2,18 +2,18 @@ package com.sudox.design.navigation.toolbar
 
 import android.content.Context
 import android.graphics.Color
+import android.support.v4.view.GravityCompat
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import com.sudox.android.R
 import com.sudox.design.helpers.FontsHelper.Companion.SANS_SERIF_LIGHT
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.ViewCompat
-import android.view.View
 
 class SudoxToolbar : Toolbar {
 
@@ -69,7 +69,7 @@ class SudoxToolbar : Toolbar {
         if (featureButtonText != null) {
             featureTextButton = TextView(context)
             featureTextButton!!.text = featureButtonText
-            featureTextButton!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16F)
+            featureTextButton!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
             featureTextButton!!.setTextColor(Color.WHITE)
             featureTextButton!!.gravity = Gravity.CENTER
             featureTextButton!!.layoutParams = generateDefaultLayoutParams().apply {

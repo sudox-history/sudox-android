@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Sudox</string>
     <string name="hint_of_create_account">If you haven\'t got an account we will suggest you to create it</string>
     <string name="we_have_send_code">Check your mail we have sent the code</string>
@@ -82,8 +82,13 @@
     <string name="wait_for_connect">Connecting…</string>
     <string name="website">Website</string>
     <string name="new_contact">New contact</string>
-    <string name="nameNotNecessary">Name (not necessary)</string>
+    <string name="name_not_necessary">Name (not necessary)</string>
     <string name="add">Add</string>
+    <string name="hint_phone_wil_not_be_found">If phone won\'t be found you could invite your friend into Sudox</string>
+    <string name="invite_button">INVITE</string>
+    <string name="cancelButton">CANCEL</string>
+    <string name="hint_no_contact_in_sudox">No contact in Sudox, do you want to invite him?</string>
+    <string name="title_oops">Oops! Fail!</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d contact</item>
