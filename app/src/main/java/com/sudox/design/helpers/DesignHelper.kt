@@ -30,9 +30,10 @@ fun hideKeyboard(context: Context, view: View) {
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-fun drawAvatar(text: String, firstColor: String, secondColor: String): Bitmap {
+fun drawAvatar(text: String, firstColor: String, secondColor: String, textColor: Int = Color.WHITE): Bitmap {
     val bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
     val canvas = Canvas(bitmap)
+    val formattedText = text.toUpperCase()
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     // Draw gradient
@@ -46,10 +47,10 @@ fun drawAvatar(text: String, firstColor: String, secondColor: String): Bitmap {
 
     // Draw text
     paint.shader = null
-    paint.color = Color.WHITE
+    paint.color = textColor
     paint.textSize = 60F
-    paint.getTextBounds(text, 0, text.length, textRect)
-    canvas.drawText(text, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
+    paint.getTextBounds(formattedText, 0, formattedText.length, textRect)
+    canvas.drawText(formattedText, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
 
     return bitmap
 }
