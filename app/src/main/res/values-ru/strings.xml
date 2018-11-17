@@ -89,6 +89,7 @@
     <string name="cancelButton">ОТМЕНА</string>
     <string name="hint_no_contact_in_sudox">Контакта еще нет в Sudox, хотите пригласить его с вами пообщаться?</string>
     <string name="title_oops">Упс! Не получилось!</string>
+    <string name="invite_friend_sms">Привет! Я хочу с тобой пообщаться в Sudox! https://vk.com/sudox_messenger</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>
