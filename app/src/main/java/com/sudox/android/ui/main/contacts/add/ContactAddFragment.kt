@@ -40,9 +40,8 @@ class ContactAddFragment @Inject constructor() : BaseReconnectFragment() {
     lateinit var inviteFriendDialogFragment: InviteFriendDialogFragment
 
     private var firstCharsOfName = CharArray(2)
+    internal var phoneNumber: String = ""
     private lateinit var contactAddViewModel: ContactAddViewModel
-    var phoneNumber: String = ""
-    private var isMaskFilled: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactAddViewModel = getViewModel(viewModelFactory)
@@ -149,7 +148,6 @@ class ContactAddFragment @Inject constructor() : BaseReconnectFragment() {
                 object : MaskedTextChangedListener.ValueListener {
                     override fun onTextChanged(maskFilled: Boolean, extractedValue: String) {
                         phoneNumber = extractedValue
-                        isMaskFilled = maskFilled
                     }
                 }
         ))
