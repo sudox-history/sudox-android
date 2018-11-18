@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
+import com.sudox.android.data.database.model.ChatMessage
 import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 class DialogsAdapter @Inject constructor(val context: Context) : RecyclerView.Adapter<DialogsAdapter.Holder>() {
 
-    var items: List<User> = arrayListOf()
+    var items: List<Pair<User, ChatMessage>> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): Holder {
         return Holder(LayoutInflater
@@ -36,12 +37,16 @@ class DialogsAdapter @Inject constructor(val context: Context) : RecyclerView.Ad
         val name = view.name!!
         val lastMessage = view.lastMessage!!
 
-        fun bindData(user: User) {
+        fun bindData(dialog: Pair<User, ChatMessage>) {
+
+            val user = dialog.first
+            val message = dialog.second
+
             bindAvatar(user)
 
             // Bind others data ...
             name.text = user.name
-            lastMessage.text = user.nickname
+            lastMessage.text = message.message
         }
 
         private fun bindAvatar(user: User) {

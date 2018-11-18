@@ -4,6 +4,7 @@ import com.sudox.android.data.database.dao.ChatMessagesDao
 import com.sudox.android.data.database.dao.UserDao
 import com.sudox.android.data.database.model.ChatMessage
 import com.sudox.android.data.database.model.User
+import com.sudox.android.data.models.messages.LastMessagesDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
@@ -63,5 +64,19 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
         // Return result
         callback(dialogs)
+    }
+
+
+    fun loadInitialDialogsFromServer(callback: (List<Pair<User, ChatMessage>>) -> (Unit)) {
+        if(protocolClient.isValid()){
+            protocolClient.makeRequest<LastMessagesDTO>("chats.getChats", LastMessagesDTO().apply {
+                limit = MAX_INITIAL_DIALOGS_COUNT
+                offset = 0
+            }) {
+
+
+
+            }
+        }
     }
 }

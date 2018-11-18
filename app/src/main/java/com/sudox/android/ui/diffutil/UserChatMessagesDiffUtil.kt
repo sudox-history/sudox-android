@@ -13,7 +13,6 @@ class UserChatMessagesDiffUtil(private val oldMessagesList: List<ChatMessage>,
         return newMessage.mid == oldMessage.mid
     }
 
-
     override fun getOldListSize() = oldMessagesList.size
     override fun getNewListSize() = newMessagesList.size
 
