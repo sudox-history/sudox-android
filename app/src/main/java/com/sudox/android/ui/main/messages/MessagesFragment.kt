@@ -86,14 +86,14 @@ class MessagesFragment @Inject constructor() : BaseReconnectFragment() {
                 }
 
                 // Если на прошлом экране кнопка была скрыта
-                hideOrShowFAB(true)
+                toggleFloatingActionButton(true)
             }
 
         })
         sliding_tabs.setupWithViewPager(messagesPager)
     }
 
-    fun hideOrShowFAB(show: Boolean) {
+    fun toggleFloatingActionButton(show: Boolean) {
         if (show) {
             messagesAddFABButton.show(true)
         } else {

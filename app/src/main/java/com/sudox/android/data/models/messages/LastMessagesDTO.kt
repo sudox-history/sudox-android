@@ -6,17 +6,17 @@ import com.sudox.protocol.models.JsonModel
 import org.json.JSONArray
 import org.json.JSONObject
 
-class LastMessagesDTO: JsonModel() {
+class LastMessagesDTO : JsonModel() {
 
-    //TO SEND
+    // To send
     var limit = 10
     var offset = 0
 
-    //TO READ
+    // To read
     lateinit var messages: ArrayList<ChatMessageDTO>
 
     override fun toJSON(): JSONObject {
-        return with(JSONObject()){
+        return with(JSONObject()) {
             putOpt("limit", limit)
             putOpt("offset", offset)
         }
@@ -24,6 +24,7 @@ class LastMessagesDTO: JsonModel() {
 
     override fun fromJSONArray(jsonArray: JSONArray) {
         messages = arrayListOf()
+
         jsonArray.forEachObject {
             messages.plusAssign(ChatMessageDTO().apply {
                 fromJSON(it)

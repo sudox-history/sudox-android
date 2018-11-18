@@ -15,11 +15,11 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"
         style="@style/AppTheme.TabLayout"
-        app:tabMode="fixed"
-        app:tabGravity="fill"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/messagesToolbar" />
+        android:layout_below="@id/messagesToolbar"
+        app:tabGravity="fill"
+        app:tabMode="fixed" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/messagesPager"

@@ -15,8 +15,7 @@ import com.sudox.design.helpers.getTwoFirstLetters
 import kotlinx.android.synthetic.main.item_dialog.view.*
 import javax.inject.Inject
 
-
-class DialogsAdapter @Inject constructor(val context: Context): RecyclerView.Adapter<DialogsAdapter.Holder>(){
+class DialogsAdapter @Inject constructor(val context: Context) : RecyclerView.Adapter<DialogsAdapter.Holder>() {
 
     var items: List<User> = arrayListOf()
 
@@ -29,9 +28,7 @@ class DialogsAdapter @Inject constructor(val context: Context): RecyclerView.Ada
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        val dialog = items[position]
-
-        holder.bindData(dialog)
+        holder.bindData(items[position])
     }
 
     class Holder(val view: View) : RecyclerView.ViewHolder(view) {

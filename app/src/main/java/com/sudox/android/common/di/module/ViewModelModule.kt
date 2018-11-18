@@ -12,6 +12,7 @@ import com.sudox.android.ui.main.MainViewModel
 import com.sudox.android.ui.main.contacts.ContactsViewModel
 import com.sudox.android.ui.main.contacts.add.ContactAddViewModel
 import com.sudox.android.ui.main.messages.MessagesViewModel
+import com.sudox.android.ui.main.messages.dialogs.DialogsViewModel
 import com.sudox.android.ui.main.settings.SettingsViewModel
 import com.sudox.android.ui.messages.MessagesInnerViewModel
 import com.sudox.android.ui.messages.chat.ChatViewModel
@@ -85,4 +86,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(AuthRegisterViewModel::class)
     internal abstract fun authRegisterViewModel(viewModel: AuthRegisterViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DialogsViewModel::class)
+    internal abstract fun dialogsViewModel(viewModel: DialogsViewModel): ViewModel
 }

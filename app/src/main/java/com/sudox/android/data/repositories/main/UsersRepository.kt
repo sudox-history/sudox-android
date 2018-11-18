@@ -18,6 +18,14 @@ class UsersRepository @Inject constructor(private val protocolClient: ProtocolCl
         }) { responseCallback(it) }
     }
 
+    /**
+     * Получить информацию о пользователях.
+     */
+    fun getUsers(ids: List<String>, responseCallback: (UserInfoDTO) -> Unit) {
+        protocolClient.makeRequest<UserInfoDTO>("users.getUsers", UserInfoDTO().apply {
+            this.ids = ids
+        }) { responseCallback(it) }
+    }
 
     /**
      * Получает информацию о пользователе с сервера по E-mail.
