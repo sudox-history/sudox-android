@@ -1,7 +1,6 @@
 package com.sudox.android.data.repositories.main
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import com.sudox.android.common.helpers.NAME_REGEX
 import com.sudox.android.common.helpers.PHONE_REGEX
 import com.sudox.android.common.helpers.WHITESPACES_REMOVE_REGEX
@@ -12,7 +11,6 @@ import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.contacts.dto.ContactAddDTO
 import com.sudox.android.data.models.contacts.dto.ContactRemoveDTO
 import com.sudox.android.data.models.contacts.dto.ContactsListDTO
-import com.sudox.android.data.repositories.auth.AUTH_NAME_REGEX_ERROR
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.GlobalScope
@@ -124,7 +122,6 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
             }
         }
     }
-
 
     /**
      * Удаляет контакт. Если нет соединения с сервером - ничего не произойдет.
