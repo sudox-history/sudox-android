@@ -103,16 +103,6 @@ class User {
             }
         }
 
-        @Deprecated("")
-        val TRANSFORMATION_FROM_USER_GET_BY_EMAIL_DTO: (SearchUserDTO) -> (User) = {
-            User().apply {
-                uid = it.id
-                name = it.name
-                nickname = it.nickname
-                avatar = it.photo
-            }
-        }
-
         val TRANSFORMATION_TO_USER_CHAT_RECIPIENT: (User) -> (UserChatRecipient) = {
             UserChatRecipient().apply {
                 uid = it.uid

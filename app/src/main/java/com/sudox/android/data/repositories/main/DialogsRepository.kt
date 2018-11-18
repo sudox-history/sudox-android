@@ -7,6 +7,8 @@ import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.messages.LastMessagesDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.messages.MESSAGE_FROM
+import com.sudox.android.data.repositories.messages.MESSAGE_TO
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -23,7 +25,6 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
     fun loadInitialDialogsFromDb(callback: (List<Pair<User, ChatMessage>>) -> (Unit)) = GlobalScope.async {
         val messages = ArrayList(messagesDao.loadLastMessages(MAX_INITIAL_DIALOGS_COUNT))
-        val accountId = accountRepository.cachedAccount?.id
         val usersIds = ArrayList<String>()
 
         // Get users ids
@@ -36,7 +37,14 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
         }
 
         val users = userDao.getUsers(usersIds)
-        val dialogs = arrayListOf<Pair<User, ChatMessage>>()
+
+        // Return result
+        callback(buildDialogs(messages, users))
+    }
+
+    private fun buildDialogs(messages: List<ChatMessage>, users: List<User>): ArrayList<Pair<User, ChatMessage>> {
+        val dialogs: ArrayList<Pair<User, ChatMessage>> = ArrayList()
+        val accountId = accountRepository.cachedAccount?.id
 
         messages.forEach { message ->
             var peer: User? = null
@@ -62,21 +70,41 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
             }
         }
 
-        // Return result
-        callback(dialogs)
+        return dialogs
     }
 
 
-    fun loadInitialDialogsFromServer(callback: (List<Pair<User, ChatMessage>>) -> (Unit)) {
-        if(protocolClient.isValid()){
-            protocolClient.makeRequest<LastMessagesDTO>("chats.getChats", LastMessagesDTO().apply {
-                limit = MAX_INITIAL_DIALOGS_COUNT
-                offset = 0
-            }) {
+    fun loadInitialDialogsFromServer(callback: (List<Pair<User, ChatMessage>>) -> (Unit)) = GlobalScope.async {
+        if (!protocolClient.isValid()) return@async
 
+        protocolClient.makeRequest<LastMessagesDTO>("chats.getChats", LastMessagesDTO().apply {
+            limit = MAX_INITIAL_DIALOGS_COUNT
+        }) {
+            if (it.containsError()) return@makeRequest
 
-
+            // Last messages
+            val messages = it.messages.map {
+                ChatMessage(it.id, it.sender, it.peer, it.message, it.date, if (it.peer == accountRepository.cachedAccount!!.id) {
+                    MESSAGE_FROM
+                } else {
+                    MESSAGE_TO
+                })
             }
+
+            // Users ids for users.getUsers
+            val usersIds = ArrayList<String>()
+
+            // Search the users ids
+            messages.forEach {
+                if (!usersIds.contains(it.peer)) {
+                    usersIds.plusAssign(it.peer)
+                } else if (!usersIds.contains(it.sender)) {
+                    usersIds.plusAssign(it.sender)
+                }
+            }
+
+            // Final step
+            usersRepository.getUsers(usersIds) { callback(buildDialogs(messages, it)) }
         }
     }
 }

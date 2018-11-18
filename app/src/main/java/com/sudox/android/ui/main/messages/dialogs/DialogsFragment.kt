@@ -60,8 +60,11 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
             dialogsAdapter.items = it
             dialogsAdapter.notifyItemRangeInserted(0, it.size)
 
-
-
+            // Try load dialogs from server
+            dialogsViewModel.dialogsRepository.loadInitialDialogsFromServer {
+                dialogsAdapter.items = it
+                dialogsAdapter.notifyItemRangeInserted(0, it.size)
+            }
         }
     }
 }
