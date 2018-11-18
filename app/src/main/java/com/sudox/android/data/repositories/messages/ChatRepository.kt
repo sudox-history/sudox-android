@@ -31,7 +31,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
     val newMessageLiveData: SingleLiveEvent<ChatMessage> = SingleLiveEvent()
 
     init {
-        protocolClient.listenMessage<NewChatMessageNotifyDTO>("notify.chats.new") {
+        protocolClient.listenMessage<NewChatMessageNotifyDTO>("updates.newMessage") {
             if (accountRepository.cachedAccount == null) return@listenMessage
 
             val message = ChatMessage(it.id, it.sender, it.peer, it.message, it.date, if (it.peer == accountRepository.cachedAccount!!.id) {

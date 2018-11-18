@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.sudox.android.R
 
-class SecondColumnItemDecorator(val context: Context, val showOnLatestElement: Boolean = true) : RecyclerView.ItemDecoration() {
+class SecondColumnItemDecorator(val context: Context, val showOnLatestElement: Boolean = true, val showBeforeLatestElement: Boolean = true) : RecyclerView.ItemDecoration() {
 
     private val divider: Drawable = ContextCompat.getDrawable(context, R.drawable.divider_item)!!
 
@@ -21,11 +21,11 @@ class SecondColumnItemDecorator(val context: Context, val showOnLatestElement: B
 
         // Draw decorators
         for (i in 0 until childCount) {
-            val child = parent.getChildAt(i)
+            if (i == childCount - 1 && !showOnLatestElement) break
+            if (i == childCount - 2 && !showBeforeLatestElement) continue
 
-            if (i == childCount - 1 && !showOnLatestElement) {
-                break
-            }
+            // Элемент под которым нужно нарисовать Divider
+            val child = parent.getChildAt(i)
 
             // Calculate coordinates for drawing
             if (child is ViewGroup) {

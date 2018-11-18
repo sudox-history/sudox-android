@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
-import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.main.contacts.add.ContactAddFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import kotlinx.android.synthetic.main.fragment_main_contacts.*
-import kotlinx.android.synthetic.main.fragment_main_contacts.view.*
 import javax.inject.Inject
 
 class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
@@ -29,9 +27,6 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
     @Inject
     lateinit var contactsAdapter: ContactsAdapter
 
-    @Inject
-    lateinit var contactAddFragment: ContactAddFragment
-
     private lateinit var contactsViewModel: ContactsViewModel
     private lateinit var mainActivity: MainActivity
 
@@ -39,17 +34,18 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
         contactsViewModel = getViewModel(viewModelFactory)
         mainActivity = activity as MainActivity
 
-        listenForConnection()
-
         return inflater.inflate(R.layout.fragment_main_contacts, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         initToolbar()
         initContactsList()
-        initContactsExpandedView()
+
+        // Start listen connection status
+        listenForConnection()
+
+        // Start showing ...
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun showConnectionStatus(isConnect: Boolean) {
@@ -61,10 +57,7 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
     }
 
     private fun initToolbar() {
-        // Ненавижу когда с View'шками происходят неявные для разработчика действия (например: onCreateOptionsMenu)
-        // Антон от 15-го октября: Справедливые слова, Макс, справедливые!
-
-        contactsToolbar.contactsToolbar.inflateMenu(R.menu.menu_contacts)
+        contactsToolbar.inflateMenu(R.menu.menu_contacts)
         contactsToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.add_contact -> showContactAddFragment()
@@ -81,7 +74,7 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
         }
 
         contactsList.layoutManager = LinearLayoutManager(context)
-        contactsList.addItemDecoration(SecondColumnItemDecorator(context!!))
+        contactsList.addItemDecoration(SecondColumnItemDecorator(context!!, false, false))
         contactsList.adapter = contactsAdapter
         contactsList.itemAnimator = null
 
@@ -92,30 +85,12 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
                     val diffUtil = ContactsDiffUtil(it!!, contactsAdapter.items)
                     val diffResult = DiffUtil.calculateDiff(diffUtil)
 
+                    // Update data
                     contactsAdapter.items = it
 
-                    // Узнаем количество контактов
-                    val amount = it.size
-
-                    // Применяем изменения, учитывая падежи
-                    if (amount == 0) {
-                        contactsAmount.visibility = View.GONE
-                    } else {
-                        contactsAmount.visibility = View.VISIBLE
-                        contactsAmount.text = resources.getQuantityString(R.plurals.contacts_amount, it.size, it.size)
-                    }
-
+                    // Notify about updates
                     diffResult.dispatchUpdatesTo(contactsAdapter)
                 })
-    }
-
-    private fun initContactsExpandedView() {
-        val addContactMenuItem = contactsToolbar.menu.findItem(R.id.add_contact)
-
-        // Слушатель открытия/закрытия меню добавления контакта.
-        contactAddExpandedView.expandingCallback = {
-            addContactMenuItem.setIcon(if (it) R.drawable.ic_close else R.drawable.ic_add_contact)
-        }
     }
 
     private fun showContactAddFragment() {
