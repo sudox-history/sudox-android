@@ -9,7 +9,6 @@ import com.sudox.android.common.di.module.ViewModelModule
 import com.sudox.android.common.di.module.activities.ActivityModule
 import com.sudox.android.ui.auth.common.BaseAuthFragment
 import com.sudox.android.ui.main.common.BaseReconnectFragment
-import com.sudox.android.ui.main.contacts.view.ContactAddExpandedView
 import com.sudox.android.ui.main.contacts.view.FoundedContactAddExpandedView
 import com.sudox.design.navigation.toolbar.expanded.StatusExpandedView
 import dagger.BindsInstance
@@ -30,7 +29,6 @@ import javax.inject.Singleton
 interface AppComponent : AndroidInjector<DaggerApplication> {
 
     fun inject(app: ApplicationLoader)
-    fun inject(contactAddExpandedView: ContactAddExpandedView)
     fun inject(statusExpandedView: StatusExpandedView)
     fun inject(foundedContactAddExpandedView: FoundedContactAddExpandedView)
     fun inject(baseAuthFragment: BaseAuthFragment)

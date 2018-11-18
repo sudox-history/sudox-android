@@ -6,11 +6,12 @@ class Errors {
         const val INVALID_PARAMETERS = 50
         const val INVALID_USER = 51
         const val INVALID_USERS = 52
-        const val TOO_MANY_REQUESTS = 200
-        const val CODE_EXPIRED = 201
-        const val WRONG_CODE = 202
-        const val INVALID_ACCOUNT = 203
-        const val INVALID_IMPORT_DATA = 204
-        const val EMPTY_CONTACTS_LIST = 400
+        const val TOO_MANY_REQUESTS = 100
+        const val CODE_EXPIRED = 101
+        const val WRONG_CODE = 102
+        const val INVALID_ACCOUNT = 103
+        const val INVALID_IMPORT_DATA = 104
+        const val EMPTY_CHATS = 200
+        const val EMPTY_CONTACTS_LIST = 300
     }
 }
