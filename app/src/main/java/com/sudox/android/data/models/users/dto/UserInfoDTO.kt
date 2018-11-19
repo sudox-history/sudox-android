@@ -24,7 +24,7 @@ class UserInfoDTO : JsonModel() {
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
             if (ids != null) {
-                putOpt("ids", ids)
+                putOpt("ids", JSONArray(ids))
             } else {
                 putOpt("id", id)
             }

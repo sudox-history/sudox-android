@@ -36,6 +36,6 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE type = :type")
     fun getUserByType(type: Int): LiveData<List<User>>
 
-    @Query("SELECT uid FROM users WHERE uid IN (:ids)")
+    @Query("SELECT * FROM users WHERE uid IN (:ids)")
     fun getUsers(ids: List<String>): List<User>
 }

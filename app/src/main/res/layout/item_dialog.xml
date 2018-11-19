@@ -10,7 +10,7 @@
     android:paddingEnd="25dp">
 
     <ImageView
-        android:id="@+id/avatar"
+        android:id="@+id/dialogRecipientAvatar"
         android:layout_width="54dp"
         android:layout_height="54dp"
         android:layout_marginTop="7dp"
@@ -23,11 +23,11 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="15dp"
-        android:layout_toEndOf="@id/avatar"
+        android:layout_toEndOf="@id/dialogRecipientAvatar"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/dialogRecipientName"
             style="@style/TextViewWithoutPaddings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,26 +36,23 @@
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/lastMessage"
+            android:id="@+id/dialogLastMessage"
             style="@style/TextViewWithoutPaddings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/name"
+            android:layout_below="@id/dialogRecipientName"
             android:layout_marginTop="6dp"
             android:fontFamily="sans-serif-light"
-            android:text="Привет!!!!!!"
             android:textColor="@color/colorHint"
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/dialogLastMessageDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="18:44"
             android:textColor="@color/colorHint"
             android:textSize="13sp" />
 
     </RelativeLayout>
-
-
 </RelativeLayout>

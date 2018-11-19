@@ -10,7 +10,7 @@
     android:background="@drawable/ripple_effect">
 
     <ImageView
-        android:id="@+id/avatar"
+        android:id="@+id/dialogRecipientAvatar"
         android:layout_width="52dp"
         android:layout_height="52dp"
         android:layout_marginBottom="6dp"
@@ -26,7 +26,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/dialogRecipientName"
             style="@style/TextViewWithoutPaddings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

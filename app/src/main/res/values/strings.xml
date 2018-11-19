@@ -90,6 +90,7 @@
     <string name="hint_no_contact_in_sudox">No contact in Sudox, do you want to invite him?</string>
     <string name="title_oops">Oops! Fail!</string>
     <string name="invite_friend_sms">Hi! I want to talk with you in Sudox! https://vk.com/sudox_messenger</string>
+    <string name="you">You</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d contact</item>

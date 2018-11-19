@@ -136,7 +136,7 @@ class ChatRepository @Inject constructor(private val protocolClient: ProtocolCli
     }
 
     fun sendSimpleMessage(peerId: String, message: String) {
-        protocolClient.makeRequest<SendChatMessageDTO>("chats.send", SendChatMessageDTO().apply {
+        protocolClient.makeRequest<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
             this.peerId = peerId
             this.message = message
         }) {

@@ -62,11 +62,10 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
                 if (peer != null && sender != null) break
             }
 
-            if (peer != null && sender != null) {
-                val user = if (peer.uid == accountId) sender else peer
-
-                // Build dialog
-                dialogs.plusAssign(Pair(user, message))
+            if (peer != null && message.peer != accountId) {
+                dialogs.plusAssign(Pair(peer, message))
+            } else if (sender != null && message.sender != accountId) {
+                dialogs.plusAssign(Pair(sender, message))
             }
         }
 

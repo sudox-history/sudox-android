@@ -85,7 +85,7 @@ class ContactsAdapter @Inject constructor(val context: Context,
             bindAvatar(user)
 
             // Bind others data ...
-            view.name.text = user.name
+            view.dialogRecipientName.text = user.name
             view.nickname.text = user.nickname
         }
 
@@ -96,7 +96,7 @@ class ContactsAdapter @Inject constructor(val context: Context,
                 drawCircleBitmap(view.context, drawAvatar(
                         text = user.name.getTwoFirstLetters(),
                         firstColor = avatarInfo.firstColor,
-                        secondColor = avatarInfo.secondColor), view.avatar!!)
+                        secondColor = avatarInfo.secondColor), view.dialogRecipientAvatar!!)
             }
         }
     }
