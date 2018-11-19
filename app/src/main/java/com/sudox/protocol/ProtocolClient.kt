@@ -159,32 +159,40 @@ class ProtocolClient @Inject constructor() {
         if (!isValid()) {
             connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
         } else {
-            controller!!.handler!!.post {
-                if (isValid()) {
-                    val iv = randomBase64String(16)
-                    val salt = randomBase64String(32)
-                    val json = message?.toJSON() ?: JSONObject()
-                    val msg = json
-                            .toString()
-                            .replace("\\/", "/")
+            controller!!.handler!!.post(object : Runnable {
+                override fun run() {
+                    if (isValid()) {
+                        val key = controller!!.key
 
-                    val hmac = Base64.encodeToString(
-                            getHmac(controller!!.key!!, event + msg + salt),
-                            Base64.NO_WRAP)
+                        if (key != null) {
+                            val iv = randomBase64String(16)
+                            val salt = randomBase64String(32)
+                            val json = message?.toJSON() ?: JSONObject()
+                            val msg = json
+                                    .toString()
+                                    .replace("\\/", "/")
 
-                    val payload = arrayOf(event, json, salt)
-                            .toJsonArray()
-                            .toString()
+                            val hmac = Base64.encodeToString(
+                                    getHmac(controller!!.key!!, event + msg + salt),
+                                    Base64.NO_WRAP)
 
-                    // Шифруем данные ...
-                    val encryptedPayload = encryptAES(controller!!.key!!, iv, payload)
+                            val payload = arrayOf(event, json, salt)
+                                    .toJsonArray()
+                                    .toString()
 
-                    // Отправим массив данных.
-                    sendArray("msg", iv, encryptedPayload, hmac)
-                } else {
-                    connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
+                            // Шифруем данные ...
+                            val encryptedPayload = encryptAES(controller!!.key!!, iv, payload)
+
+                            // Отправим массив данных.
+                            sendArray("msg", iv, encryptedPayload, hmac)
+                        } else {
+                            controller!!.handler?.postDelayed(this, 1000)
+                        }
+                    } else {
+                        connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
+                    }
                 }
-            }
+            })
         }
     }
 
