@@ -10,7 +10,6 @@ import com.crashlytics.android.Crashlytics
 import com.sudox.android.common.API_KEY
 import com.sudox.android.common.di.AppComponent
 import com.sudox.android.common.di.DaggerAppComponent
-import com.sudox.android.ui.splash.SplashActivity
 import com.sudox.protocol.ProtocolClient
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
@@ -101,12 +100,8 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
     }
 
     override fun onActivityStarted(p0: Activity?) {}
-
     override fun onActivityDestroyed(p0: Activity?) {}
-
     override fun onActivitySaveInstanceState(p0: Activity?, p1: Bundle?) {}
-
     override fun onActivityStopped(p0: Activity?) {}
-
     override fun onActivityCreated(p0: Activity?, p1: Bundle?) {}
 }

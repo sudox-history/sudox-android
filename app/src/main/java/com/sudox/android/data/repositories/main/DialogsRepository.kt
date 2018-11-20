@@ -15,6 +15,7 @@ import kotlinx.coroutines.async
 import javax.inject.Inject
 
 const val MAX_INITIAL_DIALOGS_COUNT = 10
+const val MAX_DIALOGS_COUNT = 10
 
 class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                             private val authRepository: AuthRepository,
@@ -72,6 +73,47 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
         return dialogs
     }
 
+    fun loadDialogsFromServer(offset: Int, callback: (List<Pair<User, ChatMessage>>) -> (Unit)) {
+        protocolClient.makeRequest<LastMessagesDTO>("chats.getChats", LastMessagesDTO().apply {
+            this.limit = MAX_DIALOGS_COUNT
+            this.offset = offset
+        }) {
+            if (it.containsError()) return@makeRequest
+
+            // Last messages
+            val messages = it.messages.map {
+                ChatMessage(it.id, it.sender, it.peer, it.message, it.date, if (it.peer == accountRepository.cachedAccount!!.id) {
+                    MESSAGE_FROM
+                } else {
+                    MESSAGE_TO
+                })
+            }
+
+            // Users ids for users.getUsers
+            val usersIds = ArrayList<String>()
+
+            // Search the users ids
+            messages.forEach {
+                if (!usersIds.contains(it.peer)) {
+                    usersIds.plusAssign(it.peer)
+                } else if (!usersIds.contains(it.sender)) {
+                    usersIds.plusAssign(it.sender)
+                }
+            }
+
+            // Final step
+            usersRepository.getUsers(usersIds) {
+                val dialogs = buildDialogs(messages, it)
+                val dialogsMessages = dialogs.map { it.second }
+
+                // Save last messages
+                messagesDao.insertAll(dialogsMessages)
+
+                // Return result
+                callback(dialogs)
+            }
+        }
+    }
 
     fun loadInitialDialogsFromServer(callback: (List<Pair<User, ChatMessage>>) -> (Unit)) = GlobalScope.async {
         if (!protocolClient.isValid()) return@async
@@ -103,7 +145,16 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
             }
 
             // Final step
-            usersRepository.getUsers(usersIds) { callback(buildDialogs(messages, it)) }
+            usersRepository.getUsers(usersIds) {
+                val dialogs = buildDialogs(messages, it)
+                val dialogsMessages = dialogs.map { it.second }
+
+                // Save last messages
+                messagesDao.insertAll(dialogsMessages)
+
+                // Return result
+                callback(dialogs)
+            }
         }
     }
 }

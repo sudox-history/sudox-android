@@ -1,4 +1,4 @@
-package com.sudox.android.ui.diffutil
+package com.sudox.android.ui.main.contacts
 
 import android.support.v7.util.DiffUtil
 import com.sudox.android.data.database.model.User

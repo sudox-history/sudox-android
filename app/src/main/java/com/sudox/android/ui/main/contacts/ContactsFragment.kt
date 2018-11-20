@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.database.model.User
-import com.sudox.android.ui.diffutil.ContactsDiffUtil
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.main.contacts.add.ContactAddFragment
