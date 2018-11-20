@@ -85,7 +85,7 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                 val updatePosition = linearLayoutManager.itemCount - 1
 
                 if (position == updatePosition && linearLayoutManager.itemCount >= MAX_DIALOGS_COUNT) {
-                    dialogsViewModel.loadPartOfDialog(linearLayoutManager.itemCount + 1)
+                    dialogsViewModel.loadPartOfDialog(linearLayoutManager.itemCount)
                 }
             }
         })
