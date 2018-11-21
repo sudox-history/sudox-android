@@ -11,6 +11,7 @@ import com.sudox.android.data.repositories.messages.ChatRepository
 import com.sudox.android.data.repositories.messages.MESSAGE_FROM
 import com.sudox.android.data.repositories.messages.MESSAGE_TO
 import com.sudox.protocol.ProtocolClient
+import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import javax.inject.Inject
@@ -25,6 +26,21 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                             private val chatRepository: ChatRepository,
                                             private val messagesDao: ChatMessagesDao,
                                             private val userDao: UserDao) {
+
+    var newMessageInDialogLiveData: SingleLiveEvent<Pair<String, ChatMessage>> = SingleLiveEvent()
+
+    init {
+        chatRepository.newMessageLiveData.observeForever {
+            GlobalScope.async {
+                val accountId = accountRepository.cachedAccount?.id
+
+                when {
+                    it!!.peer != accountId -> newMessageInDialogLiveData.postValue(Pair(it.peer, it))
+                    it.sender != accountId -> newMessageInDialogLiveData.postValue(Pair(it.sender, it))
+                }
+            }
+        }
+    }
 
     fun loadInitialDialogsFromDb(callback: (List<Pair<User, ChatMessage>>) -> (Unit)) = GlobalScope.async {
         val messages = ArrayList(messagesDao.loadLastMessages(0, MAX_INITIAL_DIALOGS_COUNT))

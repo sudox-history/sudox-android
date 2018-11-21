@@ -14,9 +14,11 @@ import com.sudox.protocol.models.SingleLiveEvent
 import javax.inject.Inject
 
 class DialogsViewModel @Inject constructor(val dialogsRepository: DialogsRepository,
+                                           val chatRepository: ChatRepository,
                                            val authRepository: AuthRepository,
                                            val protocolClient: ProtocolClient) : ViewModel() {
 
+    var newMessageInDialogLiveData: SingleLiveEvent<Pair<String, ChatMessage>> = dialogsRepository.newMessageInDialogLiveData
     var initialDialogsLiveData: MutableLiveData<List<Pair<User, ChatMessage>>> = SingleLiveEvent()
     var partsOfDialogsLiveData: MutableLiveData<List<Pair<User, ChatMessage>>> = SingleLiveEvent()
     var loadedFromNetwork: Boolean = false

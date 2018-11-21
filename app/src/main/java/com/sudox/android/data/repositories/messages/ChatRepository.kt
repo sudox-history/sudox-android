@@ -2,6 +2,7 @@ package com.sudox.android.data.repositories.messages
 
 import com.sudox.android.data.database.dao.ChatMessagesDao
 import com.sudox.android.data.database.model.ChatMessage
+import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.chats.dto.ChatHistoryDTO
 import com.sudox.android.data.models.chats.dto.NewChatMessageNotifyDTO
 import com.sudox.android.data.models.chats.dto.SendChatMessageDTO

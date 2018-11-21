@@ -18,6 +18,8 @@ import com.sudox.android.ui.main.messages.MessagesFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_dialogs.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import javax.inject.Inject
 
 class DialogsFragment @Inject constructor() : DaggerFragment() {
@@ -118,6 +120,23 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
 
                 if (position == updatePosition && linearLayoutManager.itemCount >= MAX_INITIAL_DIALOGS_COUNT) {
                     dialogsViewModel.loadPartOfDialog(linearLayoutManager.itemCount)
+                }
+            }
+        })
+
+        // Move new dialogs/messages to the top
+        dialogsViewModel.newMessageInDialogLiveData.observe(this, Observer {
+            GlobalScope.async {
+                val userId = it!!.first
+                val message = it.second
+
+                // To the top if loaded
+                val position = dialogsAdapter.items.indexOfFirst { it.first.uid == userId }
+
+                // If loaded
+                if (position > 0) {
+                    dialogsAdapter.items.
+//                    dialogsAdapter.notifyItemMoved()
                 }
             }
         })
