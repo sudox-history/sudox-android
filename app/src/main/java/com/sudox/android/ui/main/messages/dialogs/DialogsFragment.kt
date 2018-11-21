@@ -54,7 +54,6 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
         dialogsList.layoutManager = linearLayoutManager
         dialogsList.addItemDecoration(SecondColumnItemDecorator(context!!))
         dialogsList.adapter = dialogsAdapter
-        dialogsList.itemAnimator = null
 
         // Listen for dialog click
         dialogsAdapter.clickCallback = {
@@ -77,12 +76,16 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
         dialogsViewModel.partsOfDialogsLiveData.observe(this, Observer {
             if (dialogsAdapter.items.isEmpty()) return@Observer
 
-            val start = dialogsAdapter.items.size - 1
-            val end = start + it!!.size
+            // New dialogs
+            val newItems = ArrayList(dialogsAdapter.items).apply { addAll(it!!) }
+            val diffUtil = DialogsDiffUtil(dialogsAdapter.items, it!!)
+            val diffResult = DiffUtil.calculateDiff(diffUtil)
 
-            // Update
-            dialogsAdapter.items.addAll(it)
-            dialogsAdapter.notifyItemRangeInserted(start, end)
+            // Update data
+            dialogsAdapter.items = newItems
+
+            // Notify about updates
+            diffResult.dispatchUpdatesTo(dialogsAdapter)
         })
 
         // Paging & floating action button
@@ -102,5 +105,7 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                 }
             }
         })
+
+        dialogsViewModel.loadInitialDialogsFromDb()
     }
 }
