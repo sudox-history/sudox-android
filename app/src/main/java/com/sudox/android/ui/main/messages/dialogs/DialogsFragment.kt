@@ -20,6 +20,7 @@ import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_dialogs.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import java.util.*
 import javax.inject.Inject
 
 class DialogsFragment @Inject constructor() : DaggerFragment() {
@@ -135,8 +136,14 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
 
                 // If loaded
                 if (position > 0) {
-                    dialogsAdapter.items.
-//                    dialogsAdapter.notifyItemMoved()
+                    val dialog = dialogsAdapter.items.removeAt(position)
+                    val newDialog = Pair(dialog.first, message)
+
+                    // Add new dialog
+                    dialogsAdapter.items.add(0, newDialog)
+                    dialogsAdapter.notifyItemMoved(position, 0)
+                } else {
+                    // TODO: Get user and build dialog.
                 }
             }
         })
