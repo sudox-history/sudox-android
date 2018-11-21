@@ -19,12 +19,13 @@ import com.sudox.design.helpers.getTwoFirstLetters
 import kotlinx.android.synthetic.main.item_dialog.view.*
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 class DialogsAdapter @Inject constructor(val context: Context,
                                          val accountRepository: AccountRepository) : RecyclerView.Adapter<DialogsAdapter.Holder>() {
 
     var items: ArrayList<Pair<User, ChatMessage>> = arrayListOf()
+
+    lateinit var clickCallback: (User) -> (Unit)
     val accountId = accountRepository.cachedAccount?.id
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): Holder {
@@ -36,6 +37,8 @@ class DialogsAdapter @Inject constructor(val context: Context,
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
+        holder.itemView.setOnClickListener { clickCallback(items[position].first) }
+
         holder.bindData(items[position])
     }
 

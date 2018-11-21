@@ -75,7 +75,6 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
         contactsList.layoutManager = LinearLayoutManager(context)
         contactsList.addItemDecoration(SecondColumnItemDecorator(context!!, false, false))
         contactsList.adapter = contactsAdapter
-        contactsList.itemAnimator = null
 
         contactsViewModel
                 .contactsRepository

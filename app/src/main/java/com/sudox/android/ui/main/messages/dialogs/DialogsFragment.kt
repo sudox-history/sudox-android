@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.data.database.model.User
 import com.sudox.android.data.repositories.main.MAX_DIALOGS_COUNT
+import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.messages.MessagesFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import dagger.android.support.DaggerFragment
@@ -28,9 +30,13 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
     lateinit var dialogsViewModel: DialogsViewModel
     lateinit var messagesFragment: MessagesFragment
 
+    private lateinit var mainActivity: MainActivity
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dialogsViewModel = getViewModel(viewModelFactory)
         messagesFragment = parentFragment as MessagesFragment
+
+        mainActivity = activity!! as MainActivity
 
         return inflater.inflate(R.layout.fragment_dialogs, container, false)
     }
@@ -49,6 +55,11 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
         dialogsList.addItemDecoration(SecondColumnItemDecorator(context!!))
         dialogsList.adapter = dialogsAdapter
         dialogsList.itemAnimator = null
+
+        // Listen for dialog click
+        dialogsAdapter.clickCallback = {
+            mainActivity.showChatWithUser(User.TRANSFORMATION_TO_USER_CHAT_RECIPIENT(it))
+        }
 
         // Subscribe to initial dialog loading
         dialogsViewModel.initialDialogsLiveData.observe(this, Observer {
@@ -84,7 +95,7 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                 }
 
                 val position = linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                val updatePosition = linearLayoutManager.itemCount - 1
+                val updatePosition = linearLayoutManager.itemCount -1
 
                 if (position == updatePosition && linearLayoutManager.itemCount >= MAX_DIALOGS_COUNT) {
                     dialogsViewModel.loadPartOfDialog(linearLayoutManager.itemCount)
