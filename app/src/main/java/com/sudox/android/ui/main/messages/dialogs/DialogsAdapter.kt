@@ -38,7 +38,6 @@ class DialogsAdapter @Inject constructor(val context: Context,
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.itemView.setOnClickListener { clickCallback(items[position].first) }
-
         holder.bindData(items[position])
     }
 

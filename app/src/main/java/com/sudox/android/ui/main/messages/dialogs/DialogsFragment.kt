@@ -13,6 +13,7 @@ import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.database.model.User
 import com.sudox.android.data.repositories.main.MAX_DIALOGS_COUNT
+import com.sudox.android.data.repositories.main.MAX_INITIAL_DIALOGS_COUNT
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.messages.MessagesFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
@@ -35,7 +36,6 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dialogsViewModel = getViewModel(viewModelFactory)
         messagesFragment = parentFragment as MessagesFragment
-
         mainActivity = activity!! as MainActivity
 
         return inflater.inflate(R.layout.fragment_dialogs, container, false)
@@ -95,9 +95,9 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                 }
 
                 val position = linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                val updatePosition = linearLayoutManager.itemCount -1
+                val updatePosition = linearLayoutManager.itemCount - 1
 
-                if (position == updatePosition && linearLayoutManager.itemCount >= MAX_DIALOGS_COUNT) {
+                if (position == updatePosition && linearLayoutManager.itemCount >= MAX_INITIAL_DIALOGS_COUNT) {
                     dialogsViewModel.loadPartOfDialog(linearLayoutManager.itemCount)
                 }
             }
