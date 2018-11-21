@@ -64,11 +64,13 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
 
         // Subscribe to partitial load
         dialogsViewModel.partsOfDialogsLiveData.observe(this, Observer {
+            if (dialogsAdapter.items.isEmpty()) return@Observer
+
             val start = dialogsAdapter.items.size - 1
             val end = start + it!!.size
 
             // Update
-            dialogsAdapter.items.addAll(start, it)
+            dialogsAdapter.items.addAll(it)
             dialogsAdapter.notifyItemRangeInserted(start, end)
         })
 
@@ -89,8 +91,5 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                 }
             }
         })
-
-        // Try loading dialogs
-        dialogsViewModel.loadInitialDialogs()
     }
 }
