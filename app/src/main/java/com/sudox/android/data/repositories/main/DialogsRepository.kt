@@ -7,6 +7,7 @@ import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.messages.LastMessagesDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.messages.ChatRepository
 import com.sudox.android.data.repositories.messages.MESSAGE_FROM
 import com.sudox.android.data.repositories.messages.MESSAGE_TO
 import com.sudox.protocol.ProtocolClient
@@ -21,6 +22,7 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                             private val authRepository: AuthRepository,
                                             private val accountRepository: AccountRepository,
                                             private val usersRepository: UsersRepository,
+                                            private val chatRepository: ChatRepository,
                                             private val messagesDao: ChatMessagesDao,
                                             private val userDao: UserDao) {
 

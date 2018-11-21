@@ -8,6 +8,7 @@ import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.account.state.AccountSessionState
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.main.DialogsRepository
+import com.sudox.android.data.repositories.messages.ChatRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
 import javax.inject.Inject
