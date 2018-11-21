@@ -2,6 +2,7 @@ package com.sudox.android.data.models.messages
 
 import com.sudox.android.data.models.chats.dto.ChatMessageDTO
 import com.sudox.protocol.helpers.forEachObject
+import com.sudox.protocol.helpers.reversedForEachObject
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONArray
 import org.json.JSONObject
@@ -25,10 +26,14 @@ class LastMessagesDTO : JsonModel() {
     override fun fromJSONArray(jsonArray: JSONArray) {
         messages = arrayListOf()
 
+        // Read data
         jsonArray.forEachObject {
             messages.plusAssign(ChatMessageDTO().apply {
                 fromJSON(it)
             })
         }
+
+        // Sort by date
+        messages.sortByDescending { it.date }
     }
 }

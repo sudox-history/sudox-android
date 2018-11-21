@@ -25,7 +25,7 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                             private val userDao: UserDao) {
 
     fun loadInitialDialogsFromDb(callback: (List<Pair<User, ChatMessage>>) -> (Unit)) = GlobalScope.async {
-        val messages = ArrayList(messagesDao.loadLastMessages(MAX_INITIAL_DIALOGS_COUNT))
+        val messages = ArrayList(messagesDao.loadLastMessages(0, MAX_INITIAL_DIALOGS_COUNT))
         val usersIds = ArrayList<String>()
 
         // Get users ids
@@ -71,6 +71,25 @@ class DialogsRepository @Inject constructor(val protocolClient: ProtocolClient,
         }
 
         return dialogs
+    }
+
+    fun loadDialogsFromDatabase(offset: Int, callback: (List<Pair<User, ChatMessage>>) -> (Unit)) = GlobalScope.async {
+        val messages = ArrayList(messagesDao.loadLastMessages(offset, MAX_INITIAL_DIALOGS_COUNT))
+        val usersIds = ArrayList<String>()
+
+        // Get users ids
+        messages.forEach {
+            if (!usersIds.contains(it.peer)) {
+                usersIds.plusAssign(it.peer)
+            } else if (!usersIds.contains(it.sender)) {
+                usersIds.plusAssign(it.sender)
+            }
+        }
+
+        val users = userDao.getUsers(usersIds)
+
+        // Return result
+        callback(buildDialogs(messages, users))
     }
 
     fun loadDialogsFromServer(offset: Int, callback: (List<Pair<User, ChatMessage>>) -> (Unit)) {

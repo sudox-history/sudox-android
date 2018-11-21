@@ -30,3 +30,11 @@ fun JSONArray.forEachObject(callback: (JSONObject) -> (Unit)) {
         callback(getJSONObject(i))
     }
 }
+
+fun JSONArray.reversedForEachObject(callback: (JSONObject) -> (Unit)) {
+    val length = length()
+
+    for (i in 0 until length) {
+        callback(getJSONObject(length - i - 1))
+    }
+}

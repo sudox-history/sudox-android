@@ -12,7 +12,6 @@ import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.database.model.User
-import com.sudox.android.data.repositories.main.MAX_DIALOGS_COUNT
 import com.sudox.android.data.repositories.main.MAX_INITIAL_DIALOGS_COUNT
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.messages.MessagesFragment
@@ -62,10 +61,27 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
 
         // Subscribe to initial dialog loading
         dialogsViewModel.initialDialogsLiveData.observe(this, Observer {
+            if (dialogsAdapter.items.isNotEmpty() && dialogsAdapter.items.size >= it!!.size) {
+                var isEquality = false
+
+                for (i in 0 until it.size) {
+                    val dialog = dialogsAdapter.items[i]
+
+                    if (dialog.first != it[i].first || dialog.second != it[i].second) {
+                        isEquality = false
+                        break
+                    } else {
+                        isEquality = true
+                    }
+                }
+
+                if (isEquality) return@Observer
+            }
+
             val diffUtil = DialogsDiffUtil(dialogsAdapter.items, it!!)
             val diffResult = DiffUtil.calculateDiff(diffUtil)
 
-            // Update data
+            // Update
             dialogsAdapter.items = ArrayList(it)
 
             // Notify about updates
