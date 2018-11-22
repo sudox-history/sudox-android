@@ -77,23 +77,41 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun showMessagesFragment() {
+        var fragment = supportFragmentManager.findFragmentByTag("messages")
+
+        if (fragment == null) {
+            fragment = MessagesFragment()
+        }
+
         supportFragmentManager.beginTransaction()
 //                .setCustomAnimations(R.animator.animator_fragment_change, 0)
-                .replace(R.id.fragmentMainContainer, messagesFragment)
+                .replace(R.id.fragmentMainContainer, fragment, "messages")
                 .commit()
     }
 
     private fun showContactsFragment() {
+        var fragment = supportFragmentManager.findFragmentByTag("contacts")
+
+        if (fragment == null) {
+            fragment = ContactsFragment()
+        }
+
         supportFragmentManager.beginTransaction()
 //                .setCustomAnimations(R.animator.animator_fragment_change, 0)
-                .replace(R.id.fragmentMainContainer, contactsFragment)
+                .replace(R.id.fragmentMainContainer, fragment, "contacts")
                 .commit()
     }
 
     private fun showProfileFragment() {
+        var fragment = supportFragmentManager.findFragmentByTag("profile")
+
+        if (fragment == null) {
+            fragment = profileFragment
+        }
+
         supportFragmentManager.beginTransaction()
 //                .setCustomAnimations(R.animator.animator_fragment_change, 0)
-                .replace(R.id.fragmentMainContainer, profileFragment)
+                .replace(R.id.fragmentMainContainer, fragment, "profile")
                 .commit()
     }
 

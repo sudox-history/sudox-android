@@ -60,12 +60,11 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
         // Paging ...
         chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val firstVisibleItemPosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                val itemsCount = linearLayoutManager.itemCount
+                val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                val updatePosition = linearLayoutManager.itemCount - 1
 
-                // Paging rules (exclude loading before initial copy)
-                if (firstVisibleItemPosition < 5 && itemsCount > 0) {
-                    chatViewModel.loadPartOfMessages(userChatRecipient.uid, itemsCount)
+                if (position == 0 && linearLayoutManager.itemCount >= 20) {
+                    chatViewModel.loadPartOfMessages(userChatRecipient.uid, updatePosition + 1)
                 }
             }
         })
@@ -75,7 +74,7 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
         // Bind paging messages listener
         chatViewModel.pagingChatHistoryLiveData.observe(this, Observer {
             chatAdapter.messages.addAll(0, it!!)
-            chatAdapter.notifyDataSetChanged()
+            chatAdapter.notifyItemRangeInserted(0, it.size)
         })
 
         // Bind initial messages listener

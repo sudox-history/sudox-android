@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import com.sudox.android.common.helpers.NAME_REGEX
 import com.sudox.android.common.helpers.PHONE_REGEX
 import com.sudox.android.common.helpers.WHITESPACES_REMOVE_REGEX
-import com.sudox.android.common.userContact
 import com.sudox.android.data.database.dao.UserDao
 import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.Errors
@@ -27,7 +26,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                              private val usersRepository: UsersRepository,
                                              private val userDao: UserDao) {
 
-    val contactsGetLiveData: LiveData<List<User>> = userDao.getUserByType(userContact)
+    val contactsGetLiveData: LiveData<List<User>> = userDao.getContacts()
 
     init {
         // Обновим данные когда будет установлена сессия ...

@@ -6,7 +6,6 @@ import android.arch.persistence.room.PrimaryKey
 import com.sudox.android.data.models.chats.UserChatRecipient
 import com.sudox.android.data.models.contacts.dto.ContactAddDTO
 import com.sudox.android.data.models.contacts.dto.ContactInfoDTO
-import com.sudox.android.data.models.users.dto.SearchUserDTO
 
 @Entity(tableName = "users")
 class User {
@@ -38,7 +37,7 @@ class User {
      * 3 - Неизвестный
      */
     @ColumnInfo
-    var type: Int = 0
+    var type: Int = 3
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

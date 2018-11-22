@@ -33,8 +33,8 @@ interface UserDao {
      * 2 - Контакт
      * 3 - Неизвестный
      */
-    @Query("SELECT * FROM users WHERE type = :type")
-    fun getUserByType(type: Int): LiveData<List<User>>
+    @Query("SELECT * FROM users WHERE type = 2 ORDER BY name")
+    fun getContacts(): LiveData<List<User>>
 
     @Query("SELECT * FROM users WHERE uid IN (:ids)")
     fun getUsers(ids: List<String>): List<User>

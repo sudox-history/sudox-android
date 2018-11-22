@@ -79,7 +79,7 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                 }
 
                 if (isEquality) return@Observer
-            }
+             }
 
             val diffUtil = DialogsDiffUtil(dialogsAdapter.items, it!!)
             val diffResult = DiffUtil.calculateDiff(diffUtil)
@@ -135,7 +135,7 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                 val position = dialogsAdapter.items.indexOfFirst { it.first.uid == userId }
 
                 // If loaded
-                if (position > 0) {
+                if (position >= 0) {
                     val dialog = dialogsAdapter.items.removeAt(position)
                     val newDialog = Pair(dialog.first, message)
 
