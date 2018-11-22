@@ -6,6 +6,7 @@ import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.chats.ChatLoadingType
 import com.sudox.android.data.models.chats.dto.ChatHistoryDTO
 import com.sudox.android.data.models.chats.dto.NewChatMessageNotifyDTO
+import com.sudox.android.data.models.chats.dto.SendChatMessageDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
@@ -36,11 +37,24 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     var openedChatRecipientId: String? = null
 
     // Защита от десинхронизации данных при скролле (от двух одновременных запросов)
-    private var isChatHistoryLoading: Boolean = false
     private var isChatHistoryEnded: Boolean = false
 
     init {
         listenNewMessages()
+        listenConnectionStatus()
+    }
+
+    private fun listenConnectionStatus() {
+        authRepository.accountSessionLiveData.observeForever {
+            if (it!!.lived) {
+                loadedRecipientChatsIds.clear() // Clean initial cache.
+
+                // Reload initial copy
+                if (openedChatRecipientId != null) {
+                    loadInitialMessages(openedChatRecipientId!!)
+                }
+            }
+        }
     }
 
     private fun listenNewMessages() {
@@ -90,8 +104,6 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     }
 
     fun loadInitialMessages(recipientId: String) {
-        if (isChatHistoryLoading) return
-
         // Initial copy not load from database
         if (!loadedRecipientChatsIds.contains(recipientId) && protocolClient.isValid()) {
             loadMessagesFromNetwork(recipientId)
@@ -101,21 +113,32 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     }
 
     fun loadPagedMessages(recipientId: String, offset: Int) {
-        if (offset <= 0 || isChatHistoryLoading || isChatHistoryEnded) return
+        if (offset <= 0 || isChatHistoryEnded) return
 
         // Initial copy loaded from database
-        if (!loadedRecipientChatsIds.contains(recipientId)) {
+        if (!protocolClient.isValid()) {
             loadMessagesFromDatabase(recipientId, offset)
         } else {
             loadMessagesFromNetwork(recipientId, offset)
         }
     }
 
-    private fun loadMessagesFromDatabase(recipientId: String, offset: Int = 0) = GlobalScope.launch {
-        isChatHistoryLoading = true
+//    fun sendTextMessage(recipientId: String, message: String) {
+//        if (!protocolClient.isValid()) {
+//            return
+//        }
+//
+//        protocolClient.makeRequest<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
+//            this.peerId = recipientId
+//            this.message = message
+//        }) {
+//            if (it.containsError())
+//        }
+//    }
 
+    private fun loadMessagesFromDatabase(recipientId: String, offset: Int = 0) = GlobalScope.launch {
         // Load data
-        val messages = chatMessagesDao.loadAll(recipientId, offset, 20)
+        val messages = chatMessagesDao.loadAll(recipientId, offset, 20).sortedBy { it.date }
 
         // Remove from cache
         if (messages.isEmpty()) {
@@ -127,14 +150,9 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                 chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.PAGING, messages))
             }
         }
-
-        // Unblock!
-        isChatHistoryLoading = false
     }
 
     private fun loadMessagesFromNetwork(recipientId: String, offset: Int = 0) {
-        isChatHistoryLoading = true
-
         // Execute request!
         protocolClient.makeRequest<ChatHistoryDTO>("chats.getHistory", ChatHistoryDTO().apply {
             this.id = recipientId
@@ -166,9 +184,6 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                     chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.PAGING, messages))
                 }
             }
-
-            // Unblock!
-            isChatHistoryLoading = false
         }
     }
 
