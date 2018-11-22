@@ -20,7 +20,7 @@ class MessagesInnerActivity : DaggerAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chat)
+        setContentView(R.layout.activity_messages_inner)
 
         // Get type of the chat
         val chatTypeOrdinal = intent.getIntExtra(CONVERSATION_TYPE_KEY, -1)

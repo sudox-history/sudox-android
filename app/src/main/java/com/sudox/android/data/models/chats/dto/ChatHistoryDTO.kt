@@ -1,6 +1,7 @@
 package com.sudox.android.data.models.chats.dto
 
 import com.sudox.protocol.helpers.forEachObject
+import com.sudox.protocol.helpers.reversedForEachObject
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONArray
 import org.json.JSONObject
@@ -25,7 +26,9 @@ class ChatHistoryDTO : JsonModel() {
 
     override fun fromJSONArray(jsonArray: JSONArray) {
         messages = arrayListOf()
-        jsonArray.forEachObject {
+
+        // Reverse! (sorted by id as default)
+        jsonArray.reversedForEachObject {
             messages.plusAssign(ChatMessageDTO().apply {
                 fromJSON(it)
             })

@@ -10,40 +10,33 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.common.helpers.formatMessage
-import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.chats.UserChatRecipient
-import com.sudox.android.data.repositories.messages.CHAT_MESSAGES_SIZE
-import com.sudox.android.ui.adapters.ChatAdapter
 import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import com.sudox.design.helpers.drawAvatar
 import com.sudox.design.helpers.drawCircleBitmap
 import com.sudox.design.helpers.getTwoFirstLetters
 import kotlinx.android.synthetic.main.fragment_messages_chat_user.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.android.Main
-import kotlinx.coroutines.async
 import javax.inject.Inject
 
 class ChatFragment @Inject constructor() : BaseReconnectFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var chatAdapter: ChatAdapter
+
     private lateinit var messagesInnerActivity: MessagesInnerActivity
     private lateinit var userChatRecipient: UserChatRecipient
     private lateinit var chatViewModel: ChatViewModel
-    private lateinit var chatAdapter: ChatAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         messagesInnerActivity = activity as MessagesInnerActivity
         userChatRecipient = arguments!!.getParcelable(MessagesInnerActivity.CONVERSATION_RECIPIENT_KEY)!!
         chatViewModel = getViewModel(viewModelFactory)
-
-        listenForConnection()
 
         return inflater.inflate(R.layout.fragment_messages_chat_user, container, false)
     }
@@ -51,21 +44,48 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         configureToolbar()
         configureMessagesList()
-        configureButtons()
+
+        // Data-logic
+        listenForConnection()
+        listenData()
     }
 
-    override fun showConnectionStatus(isConnect: Boolean) {
-        if(isConnect){
-            chatRecipientLastJoin.text = userChatRecipient.nickname
-        } else {
-            chatRecipientLastJoin.text = getString(R.string.wait_for_connect)
-        }
+    private fun configureMessagesList() {
+        val linearLayoutManager = LinearLayoutManager(messagesInnerActivity).apply { stackFromEnd = true }
+
+        // Configure
+        chatMessagesList.layoutManager = linearLayoutManager
+        chatMessagesList.adapter = chatAdapter
+
+        // Paging ...
+        chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val firstVisibleItemPosition = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                val itemsCount = linearLayoutManager.itemCount
+
+                // Paging rules (exclude loading before initial copy)
+                if (firstVisibleItemPosition < 5 && itemsCount > 0) {
+                    chatViewModel.loadPartOfMessages(userChatRecipient.uid, itemsCount)
+                }
+            }
+        })
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun listenData() {
+        // Bind paging messages listener
+        chatViewModel.pagingChatHistoryLiveData.observe(this, Observer {
+            chatAdapter.messages.addAll(0, it!!)
+            chatAdapter.notifyDataSetChanged()
+        })
 
-        loadInitialMessages()
+        // Bind initial messages listener
+        chatViewModel.initialChatHistoryLiveData.observe(this, Observer {
+            chatAdapter.messages = ArrayList(it!!)
+            chatAdapter.notifyDataSetChanged()
+        })
+
+        // Start business logic work
+        chatViewModel.start(userChatRecipient.uid)
     }
 
     private fun configureToolbar() {
@@ -94,77 +114,11 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
         chatRecipientLastJoin.text = userChatRecipient.nickname
     }
 
-    private fun configureMessagesList() {
-        chatAdapter = ChatAdapter(ArrayList(), messagesInnerActivity)
-        chatViewModel.authRepository.accountSessionLiveData.observe(this, Observer {
-            if (it!!.lived) loadInitialMessages()
-        })
-
-        // Layout manager
-        val linearLayoutManager = LinearLayoutManager(messagesInnerActivity)
-
-        // Set parameters
-        chatMessagesList.itemAnimator = null
-        chatMessagesList.layoutManager = linearLayoutManager.apply { stackFromEnd = true }
-        chatMessagesList.adapter = chatAdapter
-        chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                val updatePosition = linearLayoutManager.itemCount - 1
-
-                if (position == 0 && linearLayoutManager.itemCount >= CHAT_MESSAGES_SIZE) {
-                    chatViewModel.chatRepository.getHistory(userChatRecipient.uid, updatePosition + 1, {
-                        GlobalScope.async(Dispatchers.Main) {
-                            chatAdapter.items.addAll(0, it.reversed())
-                            chatAdapter.notifyItemRangeInserted(0, it.size)
-                        }
-                    }, {
-                        if (it == Errors.INVALID_PARAMETERS || it == Errors.INVALID_USER) {
-                            activity!!.onBackPressed()
-                        }
-                    })
-                }
-            }
-        })
-
-        loadInitialMessages()
-
-        chatViewModel.chatRepository.newMessageLiveData.observe(this, Observer {
-            if (it!!.sender == userChatRecipient.uid || it.peer == userChatRecipient.uid) {
-                chatAdapter.items.add(it)
-                chatAdapter.notifyItemInserted(chatAdapter.items.size - 1)
-                chatMessagesList.scrollToPosition(chatAdapter.items.size - 1)
-            }
-        })
-    }
-
-    private fun loadInitialMessages() {
-        chatViewModel.chatRepository.getInitialHistoryFromDb(userChatRecipient.uid) {
-            chatAdapter.items = ArrayList(it.reversed())
-            chatAdapter.notifyItemRangeInserted(0, it.size)
-
-            chatViewModel.chatRepository.getInitialHistory(userChatRecipient.uid, {
-                GlobalScope.async(Dispatchers.Main) {
-                    chatAdapter.items = ArrayList(it.reversed())
-                    chatAdapter.notifyItemRangeInserted(0, it.size)
-                }
-            }, {
-                if (it == Errors.INVALID_PARAMETERS || it == Errors.INVALID_USER) {
-                    activity!!.onBackPressed()
-                }
-            })
-        }
-    }
-
-
-    private fun configureButtons() {
-        send_message_button.setOnClickListener {
-            val message = formatMessage(edit_message_field.text.toString())
-
-            if (message.isNotEmpty()) {
-                chatViewModel.chatRepository.sendSimpleMessage(userChatRecipient.uid, message)
-                edit_message_field.text = null
-            }
+    override fun showConnectionStatus(isConnect: Boolean) {
+        if (isConnect) {
+            chatRecipientLastJoin.text = userChatRecipient.nickname
+        } else {
+            chatRecipientLastJoin.text = getString(R.string.wait_for_connect)
         }
     }
 }
