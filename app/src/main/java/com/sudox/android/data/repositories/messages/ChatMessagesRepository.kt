@@ -6,6 +6,7 @@ import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.chats.ChatLoadingType
 import com.sudox.android.data.models.chats.dto.ChatHistoryDTO
 import com.sudox.android.data.models.chats.dto.NewChatMessageNotifyDTO
+import com.sudox.android.data.models.chats.dto.SendChatMessageDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
@@ -30,7 +31,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     private val loadedRecipientChatsIds = hashMapOf<String, Int>()
 
     // PublishSubject для доставки новых сообщений.
-    val globalNewMessagesChannel: BroadcastChannel<ChatMessage> = ConflatedBroadcastChannel()
+    private val globalNewMessagesChannel: BroadcastChannel<ChatMessage> = ConflatedBroadcastChannel()
     var chatDialogNewMessageChannel: BroadcastChannel<ChatMessage>? = null
     var chatDialogHistoryChannel: BroadcastChannel<Pair<ChatLoadingType, List<ChatMessage>>>? = null
     var openedChatRecipientId: String? = null
@@ -76,6 +77,21 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
             if (openedChatRecipientId != null && openedChatRecipientId == recipientId) {
                 chatDialogNewMessageChannel?.sendBlocking(message)
             }
+        }
+    }
+
+    fun sendMessage(peerId: String, message: String) {
+        protocolClient.makeRequest<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
+            this.peerId = peerId
+            this.message = message
+        }) {
+            if (it.containsError() || accountRepository.cachedAccount == null) return@makeRequest
+
+            val chatMessage = ChatMessage(it.messageId, accountRepository.cachedAccount!!.id, peerId, message, it.date, MESSAGE_TO)
+
+            chatMessagesDao.insertOne(chatMessage)
+
+            globalNewMessagesChannel.sendBlocking(chatMessage)
         }
     }
 

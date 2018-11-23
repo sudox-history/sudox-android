@@ -16,6 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
+            android:textColor="#ffffff"
             android:layout_marginBottom="1dp"
             android:text="Тестовое сообщение"
             android:maxWidth="200dp"
