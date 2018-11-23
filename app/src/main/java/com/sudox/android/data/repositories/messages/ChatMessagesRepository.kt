@@ -6,7 +6,6 @@ import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.chats.ChatLoadingType
 import com.sudox.android.data.models.chats.dto.ChatHistoryDTO
 import com.sudox.android.data.models.chats.dto.NewChatMessageNotifyDTO
-import com.sudox.android.data.models.chats.dto.SendChatMessageDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
@@ -28,7 +27,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                                                  private val chatMessagesDao: ChatMessagesDao) {
 
     // ID загруженных чатов ...
-    private val loadedRecipientChatsIds = hashSetOf<String>()
+    private val loadedRecipientChatsIds = hashMapOf<String, Int>()
 
     // PublishSubject для доставки новых сообщений.
     val globalNewMessagesChannel: BroadcastChannel<ChatMessage> = ConflatedBroadcastChannel()
@@ -87,9 +86,6 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     }
 
     fun endChatDialog() {
-        if (openedChatRecipientId == null && chatDialogNewMessageChannel == null) return
-
-        // Remove chat recipient id
         openedChatRecipientId = null
         isChatHistoryEnded = false
 
@@ -115,29 +111,18 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     fun loadPagedMessages(recipientId: String, offset: Int) {
         if (offset <= 0 || isChatHistoryEnded) return
 
+        // Get offset cache
+        val cachedOffset = loadedRecipientChatsIds[recipientId]
+
         // Initial copy loaded from database
-        if (!protocolClient.isValid()) {
+        if (!protocolClient.isValid() || cachedOffset != null && cachedOffset >= offset) {
             loadMessagesFromDatabase(recipientId, offset)
         } else {
             loadMessagesFromNetwork(recipientId, offset)
         }
     }
 
-//    fun sendTextMessage(recipientId: String, message: String) {
-//        if (!protocolClient.isValid()) {
-//            return
-//        }
-//
-//        protocolClient.makeRequest<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
-//            this.peerId = recipientId
-//            this.message = message
-//        }) {
-//            if (it.containsError())
-//        }
-//    }
-
     private fun loadMessagesFromDatabase(recipientId: String, offset: Int = 0) = GlobalScope.launch {
-        // Load data
         val messages = chatMessagesDao.loadAll(recipientId, offset, 20).sortedBy { it.date }
 
         // Remove from cache
@@ -174,17 +159,21 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                 // Save messages into database (for offline mode supporting)
                 chatMessagesDao.insertAll(messages)
 
+                // Cache offset
+                updateCachedOffset(recipientId, offset)
+
                 // offset == 0 => first initializing
                 if (offset == 0) {
-                    loadedRecipientChatsIds.plusAssign(recipientId)
-
-                    // Notify subscribers
                     chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.INITIAL, messages))
                 } else {
                     chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.PAGING, messages))
                 }
             }
         }
+    }
+
+    private fun updateCachedOffset(recipientId: String, offset: Int) {
+        loadedRecipientChatsIds[recipientId] = offset // Allow load from this offset
     }
 
     private fun removeSavedMessages(recipientId: String, removeFromDb: Boolean = true) {
@@ -194,8 +183,8 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         if (removeFromDb) chatMessagesDao.removeAll(recipientId)
     }
 
-    private fun toStorableMessages(it: ChatHistoryDTO): List<ChatMessage> {
-        return it.messages.map {
+    private fun toStorableMessages(chatHistoryDTO: ChatHistoryDTO): List<ChatMessage> {
+        return chatHistoryDTO.messages.map {
             ChatMessage(it.id, it.sender, it.peer, it.message, it.date, if (it.peer != accountRepository.cachedAccount?.id) {
                 MESSAGE_TO
             } else {
