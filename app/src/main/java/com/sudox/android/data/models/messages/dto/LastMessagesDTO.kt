@@ -1,8 +1,7 @@
-package com.sudox.android.data.models.messages
+package com.sudox.android.data.models.messages.dto
 
-import com.sudox.android.data.models.chats.dto.ChatMessageDTO
+import com.sudox.android.data.models.messages.chats.dto.ChatMessageDTO
 import com.sudox.protocol.helpers.forEachObject
-import com.sudox.protocol.helpers.reversedForEachObject
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONArray
 import org.json.JSONObject

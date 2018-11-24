@@ -10,9 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.common.helpers.formatMessage
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
-import com.sudox.android.data.models.chats.UserChatRecipient
+import com.sudox.android.data.models.messages.chats.UserChatRecipient
 import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import com.sudox.design.helpers.drawAvatar
@@ -81,10 +82,34 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
         chatViewModel.initialChatHistoryLiveData.observe(this, Observer {
             chatAdapter.messages = ArrayList(it!!)
             chatAdapter.notifyDataSetChanged()
+
+            // Start listen to new messages
+            chatViewModel.newChatMessageLiveData.observe(this, Observer {
+                chatAdapter.messages.add(it!!)
+                chatAdapter.notifyItemInserted(chatAdapter.messages.size - 1)
+
+                // Scroll to bottom
+                chatMessagesList.scrollToPosition(chatAdapter.messages.size - 1)
+            })
+
+            // Listen messages sending requests
+            listenMessagesSendingRequests()
         })
 
         // Start business logic work
         chatViewModel.start(userChatRecipient.uid)
+    }
+
+    private fun listenMessagesSendingRequests() = chatSendMessageButton.setOnClickListener {
+        val text = formatMessage(chatMessageTextField.text.toString())
+
+        // Filter empty text
+        if (text.isNotEmpty()) {
+            chatViewModel.sendTextMessage(userChatRecipient.uid, text)
+
+            // Clear sent text
+            chatMessageTextField.text = null
+        }
     }
 
     private fun configureToolbar() {

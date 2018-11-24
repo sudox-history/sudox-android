@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
-import com.sudox.android.data.database.model.ChatMessage
-import com.sudox.android.data.repositories.messages.MESSAGE_TO
+import com.sudox.android.data.database.model.messages.ChatMessage
+import com.sudox.android.data.models.messages.MessageDirection
 import kotlinx.android.synthetic.main.textview_message_to.view.*
 import java.util.*
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class ChatAdapter @Inject constructor(val context: Context) : RecyclerView.Adapt
     internal var messages: ArrayList<ChatMessage> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return if (viewType == MESSAGE_TO) {
+        return if (viewType == MessageDirection.TO.ordinal) {
             ViewHolder(LayoutInflater.from(context).inflate(R.layout.textview_message_to, parent, false))
         } else {
             ViewHolder(LayoutInflater.from(context).inflate(R.layout.textview_message_from, parent, false))
@@ -33,7 +33,7 @@ class ChatAdapter @Inject constructor(val context: Context) : RecyclerView.Adapt
         holder.time.text = DateFormat.format("HH:mm", Date(messages[position].date)).toString()
     }
 
-    override fun getItemViewType(position: Int) = messages[position].type
+    override fun getItemViewType(position: Int) = messages[position].type.ordinal
     override fun getItemCount() = messages.size
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

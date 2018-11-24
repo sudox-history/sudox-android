@@ -1,4 +1,4 @@
-package com.sudox.android.data.models.chats.dto
+package com.sudox.android.data.models.messages.chats.dto
 
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONObject

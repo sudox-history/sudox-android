@@ -3,7 +3,7 @@ package com.sudox.android.data.database.model
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
-import com.sudox.android.data.models.chats.UserChatRecipient
+import com.sudox.android.data.models.messages.chats.UserChatRecipient
 import com.sudox.android.data.models.contacts.dto.ContactAddDTO
 import com.sudox.android.data.models.contacts.dto.ContactInfoDTO
 

@@ -2,8 +2,8 @@ package com.sudox.android.ui.messages.chat
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.data.database.model.ChatMessage
-import com.sudox.android.data.models.chats.ChatLoadingType
+import com.sudox.android.data.database.model.messages.ChatMessage
+import com.sudox.android.data.models.messages.chats.ChatLoadingType
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.messages.ChatMessagesRepository
 import com.sudox.protocol.models.SingleLiveEvent
@@ -17,6 +17,7 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessagesRepository,
                                         val authRepository: AuthRepository) : ViewModel() {
 
+    val newChatMessageLiveData: MutableLiveData<ChatMessage> = SingleLiveEvent()
     val initialChatHistoryLiveData: MutableLiveData<List<ChatMessage>> = SingleLiveEvent()
     val pagingChatHistoryLiveData: MutableLiveData<List<ChatMessage>> = SingleLiveEvent()
 
@@ -39,9 +40,7 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
 
         // Set callback for new messages receiving
         GlobalScope.async {
-            newMessagesSubscription!!.consumeEach {
-
-            }
+            newMessagesSubscription!!.consumeEach { newChatMessageLiveData.postValue(it) }
         }
 
         GlobalScope.async {
@@ -62,6 +61,10 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
 
     fun loadPartOfMessages(recipientId: String, offset: Int) = GlobalScope.launch {
         chatMessagesRepository.loadPagedMessages(recipientId, offset)
+    }
+
+    fun sendTextMessage(recipientId: String, text: String) {
+        chatMessagesRepository.sendTextMessage(recipientId, text)
     }
 
     override fun onCleared() {

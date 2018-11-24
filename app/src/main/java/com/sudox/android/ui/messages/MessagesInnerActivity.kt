@@ -3,7 +3,7 @@ package com.sudox.android.ui.messages
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import com.sudox.android.R
-import com.sudox.android.data.models.chats.ChatType
+import com.sudox.android.data.models.messages.chats.ChatType
 import com.sudox.android.ui.messages.chat.ChatFragment
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject

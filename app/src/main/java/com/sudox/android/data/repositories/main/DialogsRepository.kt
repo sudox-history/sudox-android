@@ -1,15 +1,12 @@
 package com.sudox.android.data.repositories.main
 
-import com.sudox.android.data.database.dao.ChatMessagesDao
+import com.sudox.android.data.database.dao.messages.ChatMessagesDao
 import com.sudox.android.data.database.dao.UserDao
-import com.sudox.android.data.database.model.ChatMessage
+import com.sudox.android.data.database.model.messages.ChatMessage
 import com.sudox.android.data.database.model.User
-import com.sudox.android.data.models.messages.LastMessagesDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.messages.ChatMessagesRepository
-import com.sudox.android.data.repositories.messages.MESSAGE_FROM
-import com.sudox.android.data.repositories.messages.MESSAGE_TO
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.coroutines.GlobalScope

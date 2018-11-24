@@ -83,7 +83,7 @@
             android:src="@drawable/ic_attach_file" />
 
         <EditText
-            android:id="@+id/edit_message_field"
+            android:id="@+id/chatMessageTextField"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -101,7 +101,7 @@
             tools:ignore="Autofill" />
 
         <ImageButton
-            android:id="@+id/send_message_button"
+            android:id="@+id/chatSendMessageButton"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
@@ -110,5 +110,4 @@
             android:contentDescription="@string/send_message"
             android:src="@drawable/ic_send" />
     </LinearLayout>
-
 </RelativeLayout>

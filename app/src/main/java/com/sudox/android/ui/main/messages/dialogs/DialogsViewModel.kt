@@ -3,7 +3,7 @@ package com.sudox.android.ui.main.messages.dialogs
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.data.database.model.ChatMessage
+import com.sudox.android.data.database.model.messages.ChatMessage
 import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.account.state.AccountSessionState
 import com.sudox.android.data.repositories.auth.AuthRepository

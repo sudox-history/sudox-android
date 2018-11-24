@@ -6,8 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.data.models.chats.ChatType
-import com.sudox.android.data.models.chats.UserChatRecipient
+import com.sudox.android.data.models.messages.chats.ChatType
+import com.sudox.android.data.models.messages.chats.UserChatRecipient
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.enums.MainActivityAction

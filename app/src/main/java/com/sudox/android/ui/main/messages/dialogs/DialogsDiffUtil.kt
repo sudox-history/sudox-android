@@ -1,7 +1,7 @@
 package com.sudox.android.ui.main.messages.dialogs
 
 import android.support.v7.util.DiffUtil
-import com.sudox.android.data.database.model.ChatMessage
+import com.sudox.android.data.database.model.messages.ChatMessage
 import com.sudox.android.data.database.model.User
 
 class DialogsDiffUtil(val oldDialogs: List<Pair<User, ChatMessage>>,

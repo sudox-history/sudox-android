@@ -1,11 +1,14 @@
 package com.sudox.android.data.repositories.messages
 
-import com.sudox.android.data.database.dao.ChatMessagesDao
-import com.sudox.android.data.database.model.ChatMessage
+import com.sudox.android.common.helpers.formatMessage
+import com.sudox.android.data.database.dao.messages.ChatMessagesDao
+import com.sudox.android.data.database.model.messages.ChatMessage
 import com.sudox.android.data.models.Errors
-import com.sudox.android.data.models.chats.ChatLoadingType
-import com.sudox.android.data.models.chats.dto.ChatHistoryDTO
-import com.sudox.android.data.models.chats.dto.NewChatMessageNotifyDTO
+import com.sudox.android.data.models.messages.MessageDirection
+import com.sudox.android.data.models.messages.chats.ChatLoadingType
+import com.sudox.android.data.models.messages.chats.dto.ChatHistoryDTO
+import com.sudox.android.data.models.messages.chats.dto.NewChatMessageNotifyDTO
+import com.sudox.android.data.models.messages.chats.dto.SendChatMessageDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
@@ -16,9 +19,6 @@ import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
-
-const val MESSAGE_TO = 0
-const val MESSAGE_FROM = 1
 
 @Singleton
 class ChatMessagesRepository @Inject constructor(private val protocolClient: ProtocolClient,
@@ -61,9 +61,9 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
             val accountId = accountRepository.cachedAccount?.id ?: return@listenMessage
             val recipientId = if (it.peer == accountId) it.sender else it.peer
             val message = ChatMessage(it.id, it.sender, it.peer, it.message, it.date, if (it.peer != accountId) {
-                MESSAGE_TO
+                MessageDirection.TO
             } else {
-                MESSAGE_FROM
+                MessageDirection.FROM
             })
 
             // Insert into database
@@ -73,7 +73,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
             globalNewMessagesChannel.sendBlocking(message)
 
             // If current dialog active notify subscribers
-            if (openedChatRecipientId != null && openedChatRecipientId == recipientId) {
+            if (openedChatRecipientId == recipientId) {
                 chatDialogNewMessageChannel?.sendBlocking(message)
             }
         }
@@ -172,6 +172,30 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         }
     }
 
+    fun sendTextMessage(recipientId: String, text: String) {
+        protocolClient.makeRequest<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
+            this.peerId = recipientId
+            this.message = formatMessage(text)
+        }) {
+            if (it.containsError()) return@makeRequest
+
+            // Map to the database format
+            val accountId = accountRepository.cachedAccount?.id ?: return@makeRequest
+            val message = ChatMessage(it.id, accountId, recipientId, text, it.date, MessageDirection.TO)
+
+            // Save to database
+            chatMessagesDao.insertOne(message)
+
+            // Notify global subscribers (dialogs, notifications, etc ...)
+            globalNewMessagesChannel.sendBlocking(message)
+
+            // Notify dialog subscriber
+            if (openedChatRecipientId == recipientId) {
+                chatDialogNewMessageChannel?.sendBlocking(message)
+            }
+        }
+    }
+
     private fun updateCachedOffset(recipientId: String, offset: Int) {
         loadedRecipientChatsIds[recipientId] = offset // Allow load from this offset
     }
@@ -186,9 +210,9 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     private fun toStorableMessages(chatHistoryDTO: ChatHistoryDTO): List<ChatMessage> {
         return chatHistoryDTO.messages.map {
             ChatMessage(it.id, it.sender, it.peer, it.message, it.date, if (it.peer != accountRepository.cachedAccount?.id) {
-                MESSAGE_TO
+                MessageDirection.TO
             } else {
-                MESSAGE_FROM
+                MessageDirection.FROM
             })
         }
     }

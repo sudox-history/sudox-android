@@ -1,4 +1,4 @@
-package com.sudox.android.data.models.chats.dto
+package com.sudox.android.data.models.messages.chats.dto
 
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONObject
@@ -9,7 +9,7 @@ class SendChatMessageDTO : JsonModel() {
     lateinit var message: String
 
     // For reading
-    lateinit var messageId: String
+    lateinit var id: String
     var date: Long = 0
 
     override fun toJSON(): JSONObject {
@@ -20,7 +20,7 @@ class SendChatMessageDTO : JsonModel() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        messageId = jsonObject.optString("id")
+        id = jsonObject.optString("id")
         date = jsonObject.optLong("date")
     }
 }

@@ -1,7 +1,7 @@
-package com.sudox.android.data.database.dao
+package com.sudox.android.data.database.dao.messages
 
 import android.arch.persistence.room.*
-import com.sudox.android.data.database.model.ChatMessage
+import com.sudox.android.data.database.model.messages.ChatMessage
 
 @Dao
 interface ChatMessagesDao {
