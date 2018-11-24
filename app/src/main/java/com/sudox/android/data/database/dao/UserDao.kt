@@ -1,20 +1,10 @@
 package com.sudox.android.data.database.dao
 
-import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
+import android.arch.persistence.room.*
 import com.sudox.android.data.database.model.User
 
 @Dao
 interface UserDao {
-
-    @Query("DELETE FROM users")
-    fun removeAll()
-
-    @Query("DELETE FROM users WHERE uid = :id")
-    fun removeOne(id: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(users: List<User>)
@@ -22,20 +12,15 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOne(user: User)
 
-    @Query("UPDATE users SET name=:name, type = 3 where uid=:id")
-    fun removeUserFromContacts(id: String, name: String)
+    @Query("DELETE FROM users WHERE uid in (:ids)")
+    fun removeAll(ids: List<String>)
 
-    @Query("SELECT * FROM users")
-    fun loadAll(): LiveData<List<User>>
+    @Query("DELETE FROM users WHERE uid = :id")
+    fun removeOne(id: String)
 
-    /**
-     * 1 - Профиль
-     * 2 - Контакт
-     * 3 - Неизвестный
-     */
-    @Query("SELECT * FROM users WHERE type = 2 ORDER BY name")
-    fun getContacts(): LiveData<List<User>>
+    @Query("SELECT * FROM users WHERE uid in (:ids)")
+    fun loadByIds(ids: List<String>): List<User>
 
-    @Query("SELECT * FROM users WHERE uid IN (:ids)")
-    fun getUsers(ids: List<String>): List<User>
+    @Query("SELECT * FROM users WHERE uid = :id")
+    fun loadById(id: String)
 }

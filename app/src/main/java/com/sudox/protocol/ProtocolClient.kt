@@ -11,6 +11,7 @@ import com.sudox.protocol.models.SingleLiveEvent
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.actor
 import org.json.JSONObject
 import java.io.IOException
 import java.net.InetSocketAddress
