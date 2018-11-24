@@ -7,8 +7,8 @@ import com.sudox.android.data.models.messages.MessageDirection
 
 @Entity(tableName = "chat_messages")
 data class ChatMessage(@PrimaryKey var mid: String,
-                       @ColumnInfo var sender: String,
-                       @ColumnInfo var peer: String,
+                       @ColumnInfo(index = true) var sender: String,
+                       @ColumnInfo(index = true) var peer: String,
                        @ColumnInfo var message: String,
                        @ColumnInfo var date: Long,
                        @ColumnInfo var type: MessageDirection)
