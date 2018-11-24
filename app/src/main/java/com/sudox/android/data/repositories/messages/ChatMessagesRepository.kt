@@ -147,11 +147,19 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
             if (it.containsError()) {
                 if (offset == 0) {
                     removeSavedMessages(recipientId)
+
+                    // Unblock sending ...
+                    chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.INITIAL, arrayListOf()))
                 } else if (it.error == Errors.INVALID_USER) {
                     isChatHistoryEnded = true
                 }
             } else if (it.messages.isEmpty()) {
-                if (offset == 0) removeSavedMessages(recipientId)
+                if (offset == 0) {
+                    removeSavedMessages(recipientId)
+
+                    // Unblock sending ...
+                    chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.INITIAL, arrayListOf()))
+                }
             } else {
                 // Message for storing
                 val messages = toStorableMessages(it)
