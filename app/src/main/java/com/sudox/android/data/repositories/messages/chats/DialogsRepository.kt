@@ -33,9 +33,16 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     // Dialogs loaded from server (if value negative - last messages not loaded)
     private var lastMessagesLoadedOffset: Int = -1
     private var lastMessagesEnded: Boolean = false
+    private var isWorking: Boolean = false
 
-    init {
-        listenConnectionStatus()
+    /**
+     * Запускает слушателей событий ...
+     */
+    fun startWork() {
+        if (!isWorking) listenConnectionStatus()
+
+        // Защита от двух и более запусков слушателей
+        isWorking = true
     }
 
     private fun listenConnectionStatus() = authRepository.accountSessionLiveData.observeForever {
