@@ -6,8 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.data.models.messages.chats.ChatType
-import com.sudox.android.data.models.messages.chats.UserChatRecipient
+import com.sudox.android.data.database.model.User
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.enums.MainActivityAction
@@ -120,10 +119,9 @@ class MainActivity : DaggerAppCompatActivity() {
         finish()
     }
 
-    fun showChatWithUser(userChatRecipient: UserChatRecipient) {
+    fun showChatWithUser(user: User) {
         startActivity(Intent(this, MessagesInnerActivity::class.java).apply {
-            putExtra(MessagesInnerActivity.CONVERSATION_TYPE_KEY, ChatType.CHAT.ordinal)
-            putExtra(MessagesInnerActivity.CONVERSATION_RECIPIENT_KEY, userChatRecipient)
+            putExtra(MessagesInnerActivity.RECIPIENT_USER_EXTRA, user)
         })
     }
 }

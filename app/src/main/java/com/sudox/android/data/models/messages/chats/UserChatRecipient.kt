@@ -3,6 +3,7 @@ package com.sudox.android.data.models.messages.chats
 import android.os.Parcel
 import android.os.Parcelable
 
+@Deprecated("will replaced by User")
 class UserChatRecipient() : Parcelable {
 
     lateinit var uid: String

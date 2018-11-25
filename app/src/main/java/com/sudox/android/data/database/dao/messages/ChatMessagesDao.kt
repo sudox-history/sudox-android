@@ -15,6 +15,12 @@ interface ChatMessagesDao {
     @Query("DELETE FROM chat_messages WHERE peer = :recipientId OR sender = :recipientId")
     fun removeAll(recipientId: String)
 
+    @Query("DELETE FROM chat_messages")
+    fun removeAll()
+
     @Query("SELECT * FROM chat_messages WHERE peer = :recipientId OR sender = :recipientId ORDER BY date DESC LIMIT :offset, :limit")
     fun loadAll(recipientId: String, offset: Int, limit: Int): List<ChatMessage>
+
+    @Query("SELECT * FROM chat_messages c WHERE date=(SELECT max(date) FROM chat_messages WHERE sender=c.sender AND peer=c.peer OR sender=c.peer AND peer=c.sender ORDER BY date DESC LIMIT :offset, :limit) ORDER BY date DESC")
+    fun loadAll(offset: Int, limit: Int): List<ChatMessage>
 }

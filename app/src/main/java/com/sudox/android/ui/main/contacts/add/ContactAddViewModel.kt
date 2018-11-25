@@ -18,16 +18,16 @@ class ContactAddViewModel @Inject constructor(val contactsRepository: ContactsRe
     val contactAddErrorsLiveData = SingleLiveEvent<Int>()
 
     fun addContact(name: String, phone: String) {
-        contactsRepository.addContact(name, phone, {
-            GlobalScope.async(Dispatchers.Main) { contactAddRegexErrorsCallback?.invoke(it) }
-        }, {
-            if (it == Errors.INVALID_USER) {
-                contactAddActionLiveData.postValue(ContactAddAction.SHOW_USER_NOT_FOUND_ERROR)
-            } else {
-                contactAddErrorsLiveData.postValue(it)
-            }
-        }, {
-            contactAddActionLiveData.postValue(ContactAddAction.POP_BACKSTACK)
-        })
+//        contactsRepository.addContact(name, phone, {
+//            GlobalScope.async(Dispatchers.Main) { contactAddRegexErrorsCallback?.invoke(it) }
+//        }, {
+//            if (it == Errors.INVALID_USER) {
+//                contactAddActionLiveData.postValue(ContactAddAction.SHOW_USER_NOT_FOUND_ERROR)
+//            } else {
+//                contactAddErrorsLiveData.postValue(it)
+//            }
+//        }, {
+//            contactAddActionLiveData.postValue(ContactAddAction.POP_BACKSTACK)
+//        })
     }
 }

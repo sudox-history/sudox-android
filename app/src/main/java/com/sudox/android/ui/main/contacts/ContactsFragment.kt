@@ -23,8 +23,8 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var contactsAdapter: ContactsAdapter
+//    @Inject
+//    lateinit var contactsAdapter: ContactsAdapter
 
     private lateinit var contactsViewModel: ContactsViewModel
     private lateinit var mainActivity: MainActivity
@@ -67,35 +67,35 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
     }
 
     private fun initContactsList() {
-        contactsAdapter.menuInflater = mainActivity.menuInflater
-        contactsAdapter.clickCallback = {
-            mainActivity.showChatWithUser(User.TRANSFORMATION_TO_USER_CHAT_RECIPIENT(it))
-        }
-
-        contactsList.layoutManager = LinearLayoutManager(context)
-        contactsList.addItemDecoration(SecondColumnItemDecorator(context!!, false, false))
-        contactsList.adapter = contactsAdapter
-
-        contactsViewModel
-                .contactsRepository
-                .contactsGetLiveData
-                .observe(this, Observer {
-                    val diffUtil = ContactsDiffUtil(it!!, contactsAdapter.items)
-                    val diffResult = DiffUtil.calculateDiff(diffUtil)
-
-                    // Update data
-                    contactsAdapter.items = it
-
-                    // Notify about updates
-                    diffResult.dispatchUpdatesTo(contactsAdapter)
-                })
+//        contactsAdapter.menuInflater = mainActivity.menuInflater
+//        contactsAdapter.clickCallback = {
+//            mainActivity.showChatWithUser(User.TRANSFORMATION_TO_USER_CHAT_RECIPIENT(it))
+//        }
+//
+//        contactsList.layoutManager = LinearLayoutManager(context)
+//        contactsList.addItemDecoration(SecondColumnItemDecorator(context!!, false, false))
+//        contactsList.adapter = contactsAdapter
+//
+//        contactsViewModel
+//                .contactsRepository
+//                .contactsGetLiveData
+//                .observe(this, Observer {
+//                    val diffUtil = ContactsDiffUtil(it!!, contactsAdapter.items)
+//                    val diffResult = DiffUtil.calculateDiff(diffUtil)
+//
+//                    // Update data
+//                    contactsAdapter.items = it
+//
+//                    // Notify about updates
+//                    diffResult.dispatchUpdatesTo(contactsAdapter)
+//                })
     }
 
     private fun showContactAddFragment() {
-        mainActivity.supportFragmentManager.beginTransaction()
-//                .setCustomAnimations(R.animator.animator_fragment_change, 0)
-                .addToBackStack(null)
-                .replace(R.id.fragmentMainContainer, ContactAddFragment())
-                .commit()
+//        mainActivity.supportFragmentManager.beginTransaction()
+////                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+//                .addToBackStack(null)
+//                .replace(R.id.fragmentMainContainer, ContactAddFragment())
+//                .commit()
     }
 }

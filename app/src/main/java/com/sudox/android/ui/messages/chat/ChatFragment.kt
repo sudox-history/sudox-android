@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.formatMessage
+import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.messages.chats.UserChatRecipient
@@ -31,12 +32,12 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
     lateinit var chatAdapter: ChatAdapter
 
     private lateinit var messagesInnerActivity: MessagesInnerActivity
-    private lateinit var userChatRecipient: UserChatRecipient
+    private lateinit var recipientUser: User
     private lateinit var chatViewModel: ChatViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         messagesInnerActivity = activity as MessagesInnerActivity
-        userChatRecipient = arguments!!.getParcelable(MessagesInnerActivity.CONVERSATION_RECIPIENT_KEY)!!
+        recipientUser = (arguments!!.getSerializable(MessagesInnerActivity.RECIPIENT_USER_EXTRA) as User?)!!
         chatViewModel = getViewModel(viewModelFactory)
 
         return inflater.inflate(R.layout.fragment_messages_chat_user, container, false)
@@ -52,7 +53,7 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
     }
 
     private fun configureMessagesList() {
-        val linearLayoutManager = LinearLayoutManager(messagesInnerActivity).apply { stackFromEnd = true }
+        val linearLayoutManager = LinearLayoutManager(context!!).apply { stackFromEnd = true }
 
         // Configure
         chatMessagesList.layoutManager = linearLayoutManager
@@ -65,7 +66,7 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
                 val updatePosition = linearLayoutManager.itemCount - 1
 
                 if (position == 0 && linearLayoutManager.itemCount >= 20) {
-                    chatViewModel.loadPartOfMessages(userChatRecipient.uid, updatePosition + 1)
+                    chatViewModel.loadPartOfMessages(recipientUser.uid, updatePosition + 1)
                 }
             }
         })
@@ -97,7 +98,7 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
         })
 
         // Start business logic work
-        chatViewModel.start(userChatRecipient.uid)
+        chatViewModel.start(recipientUser.uid)
     }
 
     private fun listenMessagesSendingRequests() = chatSendMessageButton.setOnClickListener {
@@ -105,7 +106,7 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
 
         // Filter empty text
         if (text.isNotEmpty()) {
-            chatViewModel.sendTextMessage(userChatRecipient.uid, text)
+            chatViewModel.sendTextMessage(recipientUser.uid, text)
 
             // Clear sent text
             chatMessageTextField.text = null
@@ -121,11 +122,11 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
         }
 
         // Get avatar type
-        val avatarInfo = AvatarInfo.parse(userChatRecipient.photo)
+        val avatarInfo = AvatarInfo.parse(recipientUser.photo)
 
         if (avatarInfo is ColorAvatarInfo) {
             drawCircleBitmap(context!!,
-                    drawAvatar(text = userChatRecipient.name.getTwoFirstLetters(),
+                    drawAvatar(text = recipientUser.name.getTwoFirstLetters(),
                             firstColor = avatarInfo.firstColor,
                             secondColor = avatarInfo.secondColor),
                     chatRecipientAvatar)
@@ -134,13 +135,13 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
         }
 
         // Bind data
-        chatRecipientName.text = userChatRecipient.name
-        chatRecipientLastJoin.text = userChatRecipient.nickname
+        chatRecipientName.text = recipientUser.name
+        chatRecipientLastJoin.text = recipientUser.nickname
     }
 
     override fun showConnectionStatus(isConnect: Boolean) {
         if (isConnect) {
-            chatRecipientLastJoin.text = userChatRecipient.nickname
+            chatRecipientLastJoin.text = recipientUser.nickname
         } else {
             chatRecipientLastJoin.text = getString(R.string.wait_for_connect)
         }

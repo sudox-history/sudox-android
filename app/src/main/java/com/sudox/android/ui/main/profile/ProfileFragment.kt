@@ -46,19 +46,19 @@ class ProfileFragment @Inject constructor() : BaseReconnectFragment() {
 
     private fun initTopLayer() {
 
-        val user = User().apply {
-            avatar = "col.f093fb.f5576c"
-            name = "Максим Митюшкин"
-        }
-
-        val avatarInfo = AvatarInfo.parse(user.avatar)
-
-        if (avatarInfo is ColorAvatarInfo) {
-            drawCircleBitmap(context!!, drawAvatar(
-                    text = user.name.getTwoFirstLetters(),
-                    firstColor = avatarInfo.firstColor,
-                    secondColor = avatarInfo.secondColor), profileAvatar)
-        }
+//        val user = User().apply {
+//            avatar = "col.f093fb.f5576c"
+//            name = "Максим Митюшкин"
+//        }
+//
+//        val avatarInfo = AvatarInfo.parse(user.avatar)
+//
+//        if (avatarInfo is ColorAvatarInfo) {
+//            drawCircleBitmap(context!!, drawAvatar(
+//                    text = user.name.getTwoFirstLetters(),
+//                    firstColor = avatarInfo.firstColor,
+//                    secondColor = avatarInfo.secondColor), profileAvatar)
+//        }
     }
 
     private fun initViewPager() {

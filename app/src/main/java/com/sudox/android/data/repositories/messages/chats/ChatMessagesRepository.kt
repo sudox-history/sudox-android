@@ -1,12 +1,13 @@
-package com.sudox.android.data.repositories.messages
+package com.sudox.android.data.repositories.messages.chats
 
 import com.sudox.android.common.helpers.formatMessage
 import com.sudox.android.data.database.dao.messages.ChatMessagesDao
 import com.sudox.android.data.database.model.messages.ChatMessage
 import com.sudox.android.data.models.Errors
 import com.sudox.android.data.models.messages.MessageDirection
-import com.sudox.android.data.models.messages.chats.ChatLoadingType
+import com.sudox.android.data.models.LoadingType
 import com.sudox.android.data.models.messages.chats.dto.ChatHistoryDTO
+import com.sudox.android.data.models.messages.chats.dto.ChatMessageDTO
 import com.sudox.android.data.models.messages.chats.dto.NewChatMessageNotifyDTO
 import com.sudox.android.data.models.messages.chats.dto.SendChatMessageDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
@@ -32,11 +33,11 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     // PublishSubject для доставки новых сообщений.
     val globalNewMessagesChannel: BroadcastChannel<ChatMessage> = ConflatedBroadcastChannel()
     var chatDialogNewMessageChannel: BroadcastChannel<ChatMessage>? = null
-    var chatDialogHistoryChannel: BroadcastChannel<Pair<ChatLoadingType, List<ChatMessage>>>? = null
+    var chatDialogHistoryChannel: BroadcastChannel<Pair<LoadingType, List<ChatMessage>>>? = null
     var openedChatRecipientId: String? = null
 
     // Защита от десинхронизации данных при скролле (от двух одновременных запросов)
-    private var isChatHistoryEnded: Boolean = false
+    private var chatHistoryEnded: Boolean = false
 
     init {
         listenNewMessages()
@@ -46,6 +47,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     private fun listenConnectionStatus() {
         authRepository.accountSessionLiveData.observeForever {
             if (it!!.lived) {
+                chatHistoryEnded = false
                 loadedRecipientChatsIds.clear() // Clean initial cache.
 
                 // Reload initial copy
@@ -87,7 +89,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
     fun endChatDialog() {
         openedChatRecipientId = null
-        isChatHistoryEnded = false
+        chatHistoryEnded = false
 
         // Close old channel
         if (chatDialogNewMessageChannel != null && !chatDialogNewMessageChannel!!.isClosedForSend) {
@@ -100,7 +102,6 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     }
 
     fun loadInitialMessages(recipientId: String) {
-        // Initial copy not load from database
         if (!loadedRecipientChatsIds.contains(recipientId) && protocolClient.isValid()) {
             loadMessagesFromNetwork(recipientId)
         } else {
@@ -109,7 +110,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     }
 
     fun loadPagedMessages(recipientId: String, offset: Int) {
-        if (offset <= 0 || isChatHistoryEnded) return
+        if (offset <= 0 || chatHistoryEnded) return
 
         // Get offset cache
         val cachedOffset = loadedRecipientChatsIds[recipientId]
@@ -127,12 +128,15 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
         // Remove from cache
         if (messages.isEmpty()) {
-            if (offset == 0) removeSavedMessages(recipientId, false)
+            if (offset == 0) {
+                removeSavedMessages(recipientId, false)
+                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
+            }
         } else {
             if (offset == 0) {
-                chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.INITIAL, messages))
+                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
             } else {
-                chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.PAGING, messages))
+                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.PAGING, messages))
             }
         }
     }
@@ -148,38 +152,30 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                 if (offset == 0) {
                     removeSavedMessages(recipientId)
 
-                    // Unblock sending ...
-                    chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.INITIAL, arrayListOf()))
+                    // offset == 0 => first initializing
+                    chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, arrayListOf()))
                 } else if (it.error == Errors.INVALID_USER) {
-                    isChatHistoryEnded = true
-                }
-            } else if (it.messages.isEmpty()) {
-                if (offset == 0) {
-                    removeSavedMessages(recipientId)
-
-                    // Unblock sending ...
-                    chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.INITIAL, arrayListOf()))
+                    chatHistoryEnded = true
                 }
             } else {
                 // Message for storing
-                val messages = toStorableMessages(it)
+                val messages = toStorableMessages(it.messages)
 
-                // Save messages into database (for offline mode supporting)
+                // Save messages into database & update offset cache (for offline mode supporting)
                 chatMessagesDao.insertAll(messages)
-
-                // Cache offset
                 updateCachedOffset(recipientId, offset)
 
                 // offset == 0 => first initializing
                 if (offset == 0) {
-                    chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.INITIAL, messages))
+                    chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
                 } else {
-                    chatDialogHistoryChannel?.sendBlocking(Pair(ChatLoadingType.PAGING, messages))
+                    chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.PAGING, messages))
                 }
             }
         }
     }
 
+    // TODO: Переместить отправку сообщения в отдельный канал!
     fun sendTextMessage(recipientId: String, text: String) {
         protocolClient.makeRequest<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
             this.peerId = recipientId
@@ -215,8 +211,15 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         if (removeFromDb) chatMessagesDao.removeAll(recipientId)
     }
 
-    private fun toStorableMessages(chatHistoryDTO: ChatHistoryDTO): List<ChatMessage> {
-        return chatHistoryDTO.messages.map {
+    internal fun removeAllSavedMessages(removeFromDb: Boolean = true) {
+        loadedRecipientChatsIds.clear()
+
+        // Экономим на запросах к БД.
+        if (removeFromDb) chatMessagesDao.removeAll()
+    }
+
+    internal fun toStorableMessages(messages: ArrayList<ChatMessageDTO>): List<ChatMessage> {
+        return messages.map {
             ChatMessage(it.id, it.sender, it.peer, it.message, it.date, if (it.peer != accountRepository.cachedAccount?.id) {
                 MessageDirection.TO
             } else {

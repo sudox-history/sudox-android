@@ -31,7 +31,8 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
 
     fun loadUsers(ids: List<String>) = GlobalScope.async {
         if (protocolClient.isValid()) {
-            val usersFromNetwork = loadUsersFromNetwork(ids.filter { !loadedUsersIds.contains(it) })
+            val notLoadedUsers = ids.filter { !loadedUsersIds.contains(it) }
+            val usersFromNetwork = if (notLoadedUsers.isNotEmpty()) loadUsersFromNetwork(notLoadedUsers) else arrayListOf()
             val usersFromNetworkIds = usersFromNetwork.map { it.uid }
             val usersFromDatabase = userDao.loadByIds(ids.filter { !usersFromNetworkIds.contains(it) })
 

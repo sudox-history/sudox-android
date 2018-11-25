@@ -3,7 +3,7 @@ package com.sudox.android.ui.messages
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
-import com.sudox.android.data.repositories.messages.ChatMessagesRepository
+import com.sudox.android.data.repositories.messages.chats.ChatMessagesRepository
 import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject
 

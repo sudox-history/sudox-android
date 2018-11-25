@@ -1,18 +1,17 @@
-package com.sudox.android.data.models.messages.dto
+package com.sudox.android.data.models.messages.chats.dto
 
-import com.sudox.android.data.models.messages.chats.dto.ChatMessageDTO
 import com.sudox.protocol.helpers.forEachObject
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONArray
 import org.json.JSONObject
 
-class LastMessagesDTO : JsonModel() {
+class ChatsLastMessagesDTO : JsonModel() {
 
-    // To send
-    var limit = 10
+    // For sending
+    var limit = 0
     var offset = 0
 
-    // To read
+    // For receiving
     lateinit var messages: ArrayList<ChatMessageDTO>
 
     override fun toJSON(): JSONObject {
@@ -32,7 +31,7 @@ class LastMessagesDTO : JsonModel() {
             })
         }
 
-        // Sort by date
+        // Sort by date (TODO: Sort by id after update server!)
         messages.sortByDescending { it.date }
     }
 }

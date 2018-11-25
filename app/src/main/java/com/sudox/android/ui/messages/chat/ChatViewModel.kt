@@ -3,9 +3,9 @@ package com.sudox.android.ui.messages.chat
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.database.model.messages.ChatMessage
-import com.sudox.android.data.models.messages.chats.ChatLoadingType
+import com.sudox.android.data.models.LoadingType
 import com.sudox.android.data.repositories.auth.AuthRepository
-import com.sudox.android.data.repositories.messages.ChatMessagesRepository
+import com.sudox.android.data.repositories.messages.chats.ChatMessagesRepository
 import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -23,7 +23,7 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
 
     // Subscriptions
     private var newMessagesSubscription: ReceiveChannel<ChatMessage>? = null
-    private var messagesHistorySubscription: ReceiveChannel<Pair<ChatLoadingType, List<ChatMessage>>>? = null
+    private var messagesHistorySubscription: ReceiveChannel<Pair<LoadingType, List<ChatMessage>>>? = null
 
     fun start(recipientId: String) = GlobalScope.launch {
         chatMessagesRepository.openChatDialog(recipientId)
@@ -39,18 +39,18 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
                 .openSubscription()
 
         // Set callback for new messages receiving
-        GlobalScope.async {
+        GlobalScope.launch {
             newMessagesSubscription!!.consumeEach { newChatMessageLiveData.postValue(it) }
         }
 
-        GlobalScope.async {
+        GlobalScope.launch {
             messagesHistorySubscription!!.consumeEach {
                 val loadingType = it.first
                 val messages = it.second
 
-                if (loadingType == ChatLoadingType.INITIAL) {
+                if (loadingType == LoadingType.INITIAL) {
                     initialChatHistoryLiveData.postValue(messages)
-                } else if (loadingType == ChatLoadingType.PAGING) {
+                } else if (loadingType == LoadingType.PAGING) {
                     pagingChatHistoryLiveData.postValue(messages)
                 }
             }
@@ -68,7 +68,6 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
     }
 
     override fun onCleared() {
-        // Kill subscriptions
         newMessagesSubscription?.cancel()
         messagesHistorySubscription?.cancel()
 

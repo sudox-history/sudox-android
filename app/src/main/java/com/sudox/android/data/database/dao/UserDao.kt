@@ -22,5 +22,5 @@ interface UserDao {
     fun loadByIds(ids: List<String>): List<User>
 
     @Query("SELECT * FROM users WHERE uid = :id")
-    fun loadById(id: String)
+    fun loadById(id: String): User
 }

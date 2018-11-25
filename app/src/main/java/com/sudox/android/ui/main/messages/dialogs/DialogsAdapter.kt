@@ -1,5 +1,6 @@
 package com.sudox.android.ui.main.messages.dialogs
 
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateFormat
@@ -7,70 +8,60 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
-import com.sudox.android.data.database.model.messages.ChatMessage
-import com.sudox.android.data.database.model.User
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
-import com.sudox.android.data.repositories.auth.AccountRepository
+import com.sudox.android.data.models.messages.MessageDirection
+import com.sudox.android.data.models.messages.chats.Dialog
 import com.sudox.design.helpers.drawAvatar
 import com.sudox.design.helpers.drawCircleBitmap
 import com.sudox.design.helpers.formatHtml
 import com.sudox.design.helpers.getTwoFirstLetters
+import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.android.synthetic.main.item_dialog.view.*
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
-class DialogsAdapter @Inject constructor(val context: Context,
-                                         val accountRepository: AccountRepository) : RecyclerView.Adapter<DialogsAdapter.Holder>() {
+class DialogsAdapter @Inject constructor(val context: Context) : RecyclerView.Adapter<DialogsAdapter.Holder>() {
 
-    var items: ArrayList<Pair<User, ChatMessage>> = arrayListOf()
+    internal var dialogs: ArrayList<Dialog> = ArrayList()
+    internal var clickedDialogLiveData: MutableLiveData<Dialog> = SingleLiveEvent()
 
-    lateinit var clickCallback: (User) -> (Unit)
-    val accountId = accountRepository.cachedAccount?.id
-
-    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): Holder {
-        return Holder(LayoutInflater
-                .from(context)
-                .inflate(R.layout.item_dialog, parent, false))
+    override fun getItemCount() = dialogs.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+        return Holder(LayoutInflater.from(context).inflate(R.layout.item_dialog, parent, false))
     }
 
-    override fun getItemCount(): Int = items.size
-
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.itemView.setOnClickListener { clickCallback(items[position].first) }
-        holder.bindData(items[position])
+        holder.bindData(dialogs[position])
     }
 
     inner class Holder(val view: View) : RecyclerView.ViewHolder(view) {
-        val avatar = view.dialogRecipientAvatar!!
-        val name = view.dialogRecipientName!!
-        val lastMessage = view.dialogLastMessage!!
-        val lastMessageDate = view.dialogLastMessageDate!!
 
-        fun bindData(dialog: Pair<User, ChatMessage>) {
-            val user = dialog.first
-            val message = dialog.second
+        fun bindData(dialog: Dialog) {
+            bindAvatar(dialog)
 
-            bindAvatar(user)
-
-            // Bind others data ...
-            name.text = user.name
-            lastMessageDate.text = DateFormat.format("HH:mm", Date(message.date)).toString()
-            lastMessage.text = if (message.sender == accountId) {
-                formatHtml("<font color='#FFFFFF'>${context.resources.getString(R.string.you)}:</font> ${message.message}")
+            // Bind data ...
+            view.dialogRecipientName.text = dialog.user.name
+            view.dialogLastMessageDate.text = DateFormat.format("HH:mm", Date(dialog.message.date)).toString()
+            view.dialogLastMessage.text = if (dialog.message.type == MessageDirection.TO) {
+                formatHtml("<font color='#FFFFFF'>${context.resources.getString(R.string.you)}:</font> ${dialog.message.message}")
             } else {
-                message.message
+                dialog.message.message
             }
+
+            // Bind click listener
+            view.setOnClickListener { clickedDialogLiveData.postValue(dialog) }
         }
 
-        private fun bindAvatar(user: User) {
-            val avatarInfo = AvatarInfo.parse(user.avatar)
+        private fun bindAvatar(dialog: Dialog) {
+            val avatarInfo = AvatarInfo.parse(dialog.user.photo)
 
             if (avatarInfo is ColorAvatarInfo) {
                 drawCircleBitmap(view.context, drawAvatar(
-                        text = user.name.getTwoFirstLetters(),
+                        text = dialog.user.name.getTwoFirstLetters(),
                         firstColor = avatarInfo.firstColor,
-                        secondColor = avatarInfo.secondColor), avatar)
+                        secondColor = avatarInfo.secondColor), view.dialogRecipientAvatar)
             }
         }
     }
