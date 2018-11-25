@@ -42,9 +42,6 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
                 }
             }
         }
-
-        // Start loading ...
-        dialogsRepository.loadInitialDialogs()
     }
 
     override fun onCleared() {
