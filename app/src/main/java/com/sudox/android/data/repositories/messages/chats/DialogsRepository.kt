@@ -39,6 +39,8 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     }
 
     private fun listenConnectionStatus() = authRepository.accountSessionLiveData.observeForever {
+        if (!it!!.lived) return@observeForever
+
         resetLoadedOffset()
         loadInitialDialogs()
     }
