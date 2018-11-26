@@ -62,12 +62,12 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     }
 
     fun loadPagedDialogs(offset: Int) {
-        if (offset <= 0 || lastMessagesEnded) return
+        if (offset <= 0) return
 
         // Initial copy loaded from database
         if (!protocolClient.isValid() || lastMessagesLoadedOffset >= offset) {
             loadDialogsFromDatabase(offset)
-        } else {
+        } else if (!lastMessagesEnded) {
             loadDialogsFromNetwork(offset)
         }
     }
