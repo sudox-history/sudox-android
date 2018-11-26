@@ -51,6 +51,9 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
         dialogsList.layoutManager = linearLayoutManager
         dialogsList.adapter = dialogsAdapter
 
+        // Disable recycling for better performance
+        dialogsList.recycledViewPool.setMaxRecycledViews(0, 0)
+
         // Configure click listener
         dialogsAdapter.clickedDialogLiveData.observe(this, Observer {
             mainActivity.showChatWithUser(it!!.user)
@@ -59,7 +62,12 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
         // Paging ...
         dialogsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                // TODO: Paging
+                val position = linearLayoutManager.findLastCompletelyVisibleItemPosition()
+                val updatePosition = linearLayoutManager.itemCount - 1
+
+                if (position == updatePosition && linearLayoutManager.itemCount >= 10) {
+                    dialogsViewModel.loadPartOfDialogs(updatePosition + 1)
+                }
             }
         })
     }
@@ -67,7 +75,8 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
     private fun listenData() {
         // Bind paging dialogs listener
         dialogsViewModel.pagingDialogsLiveData.observe(this, Observer {
-            // TODO: Need DiffUtil
+            dialogsAdapter.dialogs.addAll(it!!)
+            dialogsAdapter.notifyItemRangeInserted(dialogsAdapter.itemCount - 1, it.size)
         })
 
         // Bind initial messages listener

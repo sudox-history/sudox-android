@@ -74,7 +74,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
 
     private fun loadDialogsFromNetwork(offset: Int = 0) {
         protocolClient.makeRequest<ChatsLastMessagesDTO>("chats.getChats", ChatsLastMessagesDTO().apply {
-            this.limit = 20
+            this.limit = 10
             this.offset = offset
         }) {
             if (it.containsError()) {
@@ -104,7 +104,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     }
 
     private fun loadDialogsFromDatabase(offset: Int = 0) {
-        val messages = chatMessagesDao.loadAll(offset, 20)
+        val messages = chatMessagesDao.loadAll(offset, 10)
 
         // Сообщения могут отсутствовать в БД
         if (messages.isEmpty()) {

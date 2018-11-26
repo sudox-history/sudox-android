@@ -47,6 +47,10 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
         dialogsRepository.loadInitialDialogs()
     }
 
+    fun loadPartOfDialogs(offset: Int) = GlobalScope.launch {
+        dialogsRepository.loadPagedDialogs(offset)
+    }
+
     override fun onCleared() {
         dialogsSubscription?.cancel()
     }
