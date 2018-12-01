@@ -7,8 +7,7 @@ import android.os.Build
 import com.sudox.android.data.auth.KEY_ACCOUNT_ID
 import com.sudox.android.data.auth.SudoxAccount
 import com.sudox.android.data.database.SudoxDatabase
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,7 +15,7 @@ import javax.inject.Singleton
 class AccountRepository @Inject constructor(private val accountManager: AccountManager,
                                             private val sudoxDatabase: SudoxDatabase) {
 
-    // Account type
+    // Account direction
     private val accountType = "com.sudox"
 
     // Cached account
@@ -61,7 +60,7 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
         }
     }
 
-    fun getAccount() = GlobalScope.async {
+    fun getAccount() = GlobalScope.async(Dispatchers.IO) {
         val accounts = accountManager.getAccountsByType(accountType)
 
         if (accounts.isNotEmpty()) {

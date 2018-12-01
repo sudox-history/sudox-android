@@ -1,7 +1,7 @@
-package com.sudox.android.data.database.dao
+package com.sudox.android.data.database.dao.user
 
 import android.arch.persistence.room.*
-import com.sudox.android.data.database.model.User
+import com.sudox.android.data.database.model.user.User
 
 @Dao
 interface UserDao {

@@ -16,7 +16,7 @@ val NEW_LINE_ON_START_REMOVE_REGEX = " .n".toRegex(RegexOption.DOT_MATCHES_ALL)
 val NEW_LINE_ON_END_REMOVE_REGEX = ".n ".toRegex(RegexOption.DOT_MATCHES_ALL)
 val NEW_LINE_MULTIPLE_REMOVE_REGEX = "(.n){3,}".toRegex(RegexOption.DOT_MATCHES_ALL)
 
-fun formatMessage(message: String): String {
+fun formatMessageText(message: String): String {
     // TODO. In future need be move to the AbstractMessagesRepository
 
     return message.trim()

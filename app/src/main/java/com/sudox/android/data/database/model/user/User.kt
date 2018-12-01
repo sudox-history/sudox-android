@@ -1,4 +1,4 @@
-package com.sudox.android.data.database.model
+package com.sudox.android.data.database.model.user
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity

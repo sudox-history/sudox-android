@@ -41,8 +41,6 @@ class MessagesFragment @Inject constructor() : BaseReconnectFragment() {
         dialogsViewModel = getViewModel(viewModelFactory)
         mainActivity = activity as MainActivity
 
-        listenForConnection()
-
         return inflater.inflate(R.layout.fragment_main_messages, container, false)
     }
 

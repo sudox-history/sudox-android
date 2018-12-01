@@ -1,14 +1,8 @@
 package com.sudox.android.ui.main.contacts.add
 
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.data.models.Errors
 import com.sudox.android.data.repositories.main.ContactsRepository
-import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
 import com.sudox.protocol.models.SingleLiveEvent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.android.Main
-import kotlinx.coroutines.async
 import javax.inject.Inject
 
 class ContactAddViewModel @Inject constructor(val contactsRepository: ContactsRepository) : ViewModel() {

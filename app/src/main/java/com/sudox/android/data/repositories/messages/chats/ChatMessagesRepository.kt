@@ -1,11 +1,12 @@
 package com.sudox.android.data.repositories.messages.chats
 
-import com.sudox.android.common.helpers.formatMessage
+import com.sudox.android.common.helpers.formatMessageText
 import com.sudox.android.data.database.dao.messages.ChatMessagesDao
 import com.sudox.android.data.database.model.messages.ChatMessage
-import com.sudox.android.data.models.Errors
+import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.messages.MessageDirection
-import com.sudox.android.data.models.LoadingType
+import com.sudox.android.data.models.common.LoadingType
+import com.sudox.android.data.models.messages.MessageStatus
 import com.sudox.android.data.models.messages.chats.dto.ChatHistoryDTO
 import com.sudox.android.data.models.messages.chats.dto.ChatMessageDTO
 import com.sudox.android.data.models.messages.chats.dto.NewChatMessageNotifyDTO
@@ -13,11 +14,8 @@ import com.sudox.android.data.models.messages.chats.dto.SendChatMessageDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.channels.sendBlocking
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -29,11 +27,14 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
     // ID загруженных чатов ...
     private val loadedRecipientChatsIds = hashMapOf<String, Int>()
+    private val messagesSendingThreadContext = newSingleThreadContext("Sudox Messages Sending Queue")
 
     // PublishSubject для доставки новых сообщений.
     val globalNewMessagesChannel: BroadcastChannel<ChatMessage> = ConflatedBroadcastChannel()
+    var globalSentMessageChannel: BroadcastChannel<ChatMessage> = ConflatedBroadcastChannel()
     var chatDialogNewMessageChannel: BroadcastChannel<ChatMessage>? = null
     var chatDialogHistoryChannel: BroadcastChannel<Pair<LoadingType, List<ChatMessage>>>? = null
+    var chatDialogSentMessageChannel: BroadcastChannel<ChatMessage>? = null
     var openedChatRecipientId: String? = null
 
     // Защита от десинхронизации данных при скролле (от двух одновременных запросов)
@@ -44,29 +45,43 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         listenConnectionStatus()
     }
 
-    private fun listenConnectionStatus() {
-        authRepository.accountSessionLiveData.observeForever {
-            if (it!!.lived) {
-                chatHistoryEnded = false
-                loadedRecipientChatsIds.clear() // Clean initial cache.
+    private fun listenConnectionStatus() = GlobalScope.launch(Dispatchers.IO) {
+        authRepository
+                .accountSessionStateChannel
+                .openSubscription()
+                .filter { it }
+                .consumeEach {
+                    chatHistoryEnded = false
+                    loadedRecipientChatsIds.clear() // Clean initial cache.
 
-                // Reload initial copy
-                if (openedChatRecipientId != null) {
-                    loadInitialMessages(openedChatRecipientId!!)
+                    // Reload initial copy
+                    if (openedChatRecipientId != null)
+                        loadInitialMessages(openedChatRecipientId!!)
+
+                    // Send delivering messages ...
+                    sendDeliveringMessages()
                 }
-            }
-        }
+    }
+
+    private fun sendDeliveringMessages() {
+        chatMessagesDao
+                .loadDeliveringMessages()
+                .forEach { sendTextMessage(it.peer) }
     }
 
     private fun listenNewMessages() {
         protocolClient.listenMessage<NewChatMessageNotifyDTO>("updates.newMessage") {
             val accountId = accountRepository.cachedAccount?.id ?: return@listenMessage
             val recipientId = if (it.peer == accountId) it.sender else it.peer
-            val message = ChatMessage(it.id, it.sender, it.peer, it.message, it.date, if (it.peer != accountId) {
-                MessageDirection.TO
-            } else {
-                MessageDirection.FROM
-            })
+            val direction = if (it.peer != accountId) MessageDirection.TO else MessageDirection.FROM
+            val message = ChatMessage(
+                    mid = it.id,
+                    sender = it.sender,
+                    peer = it.peer,
+                    message = it.message,
+                    date = it.date,
+                    direction = direction,
+                    status = MessageStatus.DELIVERED)
 
             // Insert into database
             chatMessagesDao.insertOne(message)
@@ -84,6 +99,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     fun openChatDialog(recipientId: String) {
         openedChatRecipientId = recipientId
         chatDialogHistoryChannel = ConflatedBroadcastChannel()
+        chatDialogSentMessageChannel = ConflatedBroadcastChannel()
         chatDialogNewMessageChannel = ConflatedBroadcastChannel()
     }
 
@@ -98,6 +114,10 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
         if (chatDialogHistoryChannel != null && !chatDialogHistoryChannel!!.isClosedForSend) {
             chatDialogHistoryChannel!!.close()
+        }
+
+        if (chatDialogSentMessageChannel != null && !chatDialogSentMessageChannel!!.isClosedForSend) {
+            chatDialogSentMessageChannel!!.close()
         }
     }
 
@@ -153,7 +173,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                     removeSavedMessages(recipientId)
 
                     // offset == 0 => first initializing
-                    chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, arrayListOf()))
+                    chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, chatMessagesDao.loadDeliveringMessages()))
                 } else if (it.error == Errors.INVALID_USER) {
                     chatHistoryEnded = true
                 }
@@ -167,6 +187,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
                 // offset == 0 => first initializing
                 if (offset == 0) {
+                    chatMessagesDao.loadDeliveringMessages().apply { messages.plusAssign(this) }
                     chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
                 } else {
                     chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.PAGING, messages))
@@ -176,28 +197,56 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     }
 
     // TODO: Переместить отправку сообщения в отдельный канал!
-    fun sendTextMessage(recipientId: String, text: String) {
-        protocolClient.makeRequest<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
+    @Suppress("NAME_SHADOWING")
+    fun sendTextMessage(recipientId: String, text: String) = GlobalScope.launch(messagesSendingThreadContext) {
+        val accountId = accountRepository.cachedAccount?.id ?: return@launch
+        val text = formatMessageText(text)
+
+        // Запрет отправки пустого поля.
+        if (text.isEmpty()) return@launch
+
+        val message = ChatMessage(
+                sender = accountId,
+                peer = recipientId,
+                message = text,
+                date = System.currentTimeMillis(),
+                direction = MessageDirection.TO,
+                status = MessageStatus.IN_DELIVERY)
+
+        // Save to database
+        message.lid = chatMessagesDao.insertOne(message).toInt()
+
+        // Notify subscribers, that message status was changed
+        notifyMessageStatus(message, recipientId)
+
+        // Sending ...
+        val sendChatMessageDTO = protocolClient.makeRequest<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
             this.peerId = recipientId
-            this.message = formatMessage(text)
-        }) {
-            if (it.containsError()) return@makeRequest
+            this.message = text
+        }).await()
 
-            // Map to the database format
-            val accountId = accountRepository.cachedAccount?.id ?: return@makeRequest
-            val message = ChatMessage(it.id, accountId, recipientId, text, it.date, MessageDirection.TO)
-
-            // Save to database
-            chatMessagesDao.insertOne(message)
-
-            // Notify global subscribers (dialogs, notifications, etc ...)
-            globalNewMessagesChannel.sendBlocking(message)
-
-            // Notify dialog subscriber
-            if (openedChatRecipientId == recipientId) {
-                chatDialogNewMessageChannel?.sendBlocking(message)
-            }
+        if (sendChatMessageDTO.isSuccess()) {
+            message.mid = sendChatMessageDTO.id
+            message.date = sendChatMessageDTO.date
+            message.status = MessageStatus.DELIVERED
+        } else {
+            message.status = MessageStatus.NOT_DELIVERED
         }
+
+        // Update data ...
+        chatMessagesDao.updateOne(message)
+
+        // Notify subscribers, that message status was changed
+        notifyMessageStatus(message, recipientId)
+    }
+
+    private suspend fun notifyMessageStatus(message: ChatMessage, recipientId: String) {
+        // Notify subscribers, that message in delivery
+        globalSentMessageChannel.send(message)
+
+        // For current dialog
+        if (openedChatRecipientId == recipientId)
+            chatDialogSentMessageChannel?.send(message)
     }
 
     private fun updateCachedOffset(recipientId: String, offset: Int) {
@@ -218,13 +267,20 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         if (removeFromDb) chatMessagesDao.removeAll()
     }
 
-    internal fun toStorableMessages(messages: ArrayList<ChatMessageDTO>): List<ChatMessage> {
-        return messages.map {
-            ChatMessage(it.id, it.sender, it.peer, it.message, it.date, if (it.peer != accountRepository.cachedAccount?.id) {
-                MessageDirection.TO
-            } else {
-                MessageDirection.FROM
-            })
-        }
+    internal fun toStorableMessages(messages: ArrayList<ChatMessageDTO>): ArrayList<ChatMessage> {
+        val accountId = accountRepository.cachedAccount?.id ?: return arrayListOf()
+
+        return ArrayList(messages.map {
+            val direction = if (it.peer != accountId) MessageDirection.TO else MessageDirection.FROM
+
+            ChatMessage(
+                    mid = it.id,
+                    sender = it.sender,
+                    peer = it.peer,
+                    message = it.message,
+                    date = it.date,
+                    direction = direction,
+                    status = MessageStatus.DELIVERED)
+        })
     }
 }

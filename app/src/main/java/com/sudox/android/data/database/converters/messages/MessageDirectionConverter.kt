@@ -1,4 +1,4 @@
-package com.sudox.android.data.database.converters
+package com.sudox.android.data.database.converters.messages
 
 import android.arch.persistence.room.TypeConverter
 import com.sudox.android.data.models.messages.MessageDirection

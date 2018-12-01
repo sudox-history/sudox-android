@@ -7,11 +7,12 @@ import com.sudox.protocol.helpers.randomBase64String
 import com.sudox.protocol.helpers.toJsonArray
 import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.ReadCallback
-import com.sudox.protocol.models.SingleLiveEvent
 import com.sudox.protocol.models.enums.ConnectionState
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.channels.actor
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.channels.sendBlocking
 import org.json.JSONObject
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -20,6 +21,8 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.LinkedBlockingQueue
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.reflect.KClass
 
 @Singleton
@@ -31,7 +34,7 @@ class ProtocolClient @Inject constructor() {
     private var writer: ProtocolWriter? = null
     private val readCallbacks = ConcurrentLinkedQueue<ReadCallback<*>>()
     private val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
-    val connectionStateLiveData = SingleLiveEvent<ConnectionState>()
+    val connectionStateChannel by lazy { ConflatedBroadcastChannel<ConnectionState>() }
 
     /**
      * Метод для установки соединения с сервером.
@@ -60,7 +63,10 @@ class ProtocolClient @Inject constructor() {
                 // Рукопожатие.
                 controller!!.onStart()
             } catch (e: IOException) {
-                if (notifyAboutError) connectionStateLiveData.postValue(ConnectionState.CONNECT_ERRORED)
+                // Костыль, но должно работать
+                if (notifyAboutError) GlobalScope.launch {
+                    connectionStateChannel.send(ConnectionState.CONNECT_ERRORED)
+                }
 
                 if (controller != null && controller!!.handler != null) {
                     controller!!.handler!!.removeCallbacksAndMessages(null)
@@ -158,7 +164,9 @@ class ProtocolClient @Inject constructor() {
 
     fun sendMessage(event: String, message: JsonModel? = null) {
         if (!isValid()) {
-            connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
+            GlobalScope.launch {
+                connectionStateChannel.send(ConnectionState.CONNECTION_CLOSED)
+            }
         } else {
             controller!!.handler!!.post(object : Runnable {
                 override fun run() {
@@ -190,7 +198,7 @@ class ProtocolClient @Inject constructor() {
                             controller!!.handler?.postDelayed(this, 1000)
                         }
                     } else {
-                        connectionStateLiveData.postValue(ConnectionState.CONNECTION_CLOSED)
+                        GlobalScope.launch { connectionStateChannel.send(ConnectionState.CONNECTION_CLOSED) }
                     }
                 }
             })
@@ -240,11 +248,18 @@ class ProtocolClient @Inject constructor() {
         sendMessage(event, message)
     }
 
+    inline fun <reified T : JsonModel> makeRequest(event: String, message: JsonModel? = null) = GlobalScope.async(Dispatchers.IO) {
+        return@async suspendCoroutine<T> { coroutine ->
+            listenMessageOnce<T>(event) { coroutine.resume(it) }
+            sendMessage(event, message)
+        }
+    }
+
     /**
      * Метод, передающий в callback'и указанного эвента пришедшую информацию с сервера.
      * Предварительно выполняет чтение и парсинг JSON.
      */
-    internal fun notifyCallbacks(event: String, json: String) {
+    internal fun notifyCallbacks(event: String, json: String) = GlobalScope.launch(Dispatchers.IO) {
         val iterator = readCallbacks.iterator()
 
         /* Тут будет выгоднее использовать Iterator, т.к. при его использовании мы можем удалить
@@ -263,7 +278,7 @@ class ProtocolClient @Inject constructor() {
 
             // Крикнем в окно (для IDEA: не ори на отсуствие проверку типов)
             @Suppress("UNCHECKED_CAST")
-            GlobalScope.async { (next.resultFunction as (JsonModel) -> (Unit))(instance) }
+            (next.resultFunction as (JsonModel) -> (Unit))(instance)
         }
     }
 }

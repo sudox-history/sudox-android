@@ -2,7 +2,7 @@ package com.sudox.android.ui.main.messages.dialogs
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.data.models.LoadingType
+import com.sudox.android.data.models.common.LoadingType
 import com.sudox.android.data.models.messages.chats.Dialog
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.messages.chats.DialogsRepository

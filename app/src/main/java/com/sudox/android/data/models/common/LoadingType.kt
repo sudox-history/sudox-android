@@ -1,4 +1,4 @@
-package com.sudox.android.data.models
+package com.sudox.android.data.models.common
 
 enum class LoadingType {
     INITIAL,

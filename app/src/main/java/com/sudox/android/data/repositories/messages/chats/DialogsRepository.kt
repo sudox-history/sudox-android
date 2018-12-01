@@ -2,20 +2,16 @@ package com.sudox.android.data.repositories.messages.chats
 
 import com.sudox.android.data.database.dao.messages.ChatMessagesDao
 import com.sudox.android.data.database.model.messages.ChatMessage
-import com.sudox.android.data.models.Errors
-import com.sudox.android.data.models.LoadingType
+import com.sudox.android.data.models.common.Errors
+import com.sudox.android.data.models.common.LoadingType
 import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.messages.chats.Dialog
 import com.sudox.android.data.models.messages.chats.dto.ChatsLastMessagesDTO
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.main.UsersRepository
 import com.sudox.protocol.ProtocolClient
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.channels.sendBlocking
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -45,11 +41,15 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
         isWorking = true
     }
 
-    private fun listenConnectionStatus() = authRepository.accountSessionLiveData.observeForever {
-        if (!it!!.lived) return@observeForever
-
-        resetLoadedOffset()
-        loadInitialDialogs()
+    private fun listenConnectionStatus() = GlobalScope.launch(Dispatchers.IO) {
+        authRepository
+                .accountSessionStateChannel
+                .openSubscription()
+                .filter { it }
+                .consumeEach {
+                    resetLoadedOffset()
+                    loadInitialDialogs()
+                }
     }
 
     fun loadInitialDialogs() = GlobalScope.launch {
@@ -131,13 +131,13 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
      * Если собеседник не будет найден, то сообщение не будет отражено в результатах вызова данной функции.
      */
     private fun toDialogs(messages: List<ChatMessage>) = runBlocking {
-        val userIdsForLoading = messages.map { if (it.type == MessageDirection.TO) it.peer else it.sender }
+        val userIdsForLoading = messages.map { if (it.direction == MessageDirection.TO) it.peer else it.sender }
         val users = usersRepository.loadUsers(userIdsForLoading).await()
         val dialogs = arrayListOf<Dialog>()
 
         // Mapping
         messages.forEach {
-            val recipientId = if (it.type == MessageDirection.TO) it.peer else it.sender
+            val recipientId = if (it.direction == MessageDirection.TO) it.peer else it.sender
             val recipient = users.find { it.uid == recipientId }
 
             // Recipient was loaded

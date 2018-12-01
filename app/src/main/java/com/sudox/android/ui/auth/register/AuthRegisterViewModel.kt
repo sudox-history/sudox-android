@@ -1,14 +1,16 @@
 package com.sudox.android.ui.auth.register
 
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.data.models.Errors
+import com.sudox.android.data.RequestException
+import com.sudox.android.data.RequestRegexException
+import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
 import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.android.Main
-import kotlinx.coroutines.async
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AuthRegisterViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
@@ -17,27 +19,29 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
      * Шина для уведомления View об нужных для выполнения ему действий
      * **/
     val authRegisterActionLiveData = SingleLiveEvent<AuthRegisterAction>()
-    var authRegisterRegexErrorsCallback: ((List<Int>) -> Unit)? = null
+    val authRegisterRegexErrorsLiveData = SingleLiveEvent<List<Int>>()
     val authRegisterErrorsLiveData = SingleLiveEvent<Int>()
 
     /**
      * Отправляет запрос регистрации на сервер.
      * Заказывает действия у View через LiveData в качестве результата
      */
-    fun signUp(phoneNumber: String, code: String, hash: String, name: String, nickname: String) {
+    fun signUp(phoneNumber: String, code: String, hash: String, name: String, nickname: String) = GlobalScope.launch(Dispatchers.IO)  {
         authRegisterActionLiveData.postValue(AuthRegisterAction.FREEZE)
 
         // Регистрируемся ...
-        authRepository.signUp(phoneNumber, code, hash, name, nickname, {
-            GlobalScope.async(Dispatchers.Main) { authRegisterRegexErrorsCallback?.invoke(it) }
-        }, {}, {
-            if (it == Errors.CODE_EXPIRED || it == Errors.WRONG_CODE) {
+        try {
+            authRepository.signUp(phoneNumber, code, hash, name, nickname).await()
+        } catch (e: RequestRegexException) {
+            authRegisterRegexErrorsLiveData.postValue(e.fields)
+        } catch (e: RequestException) {
+            if (e.errorCode == Errors.CODE_EXPIRED || e.errorCode == Errors.WRONG_CODE) {
                 authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
-            } else if (it == Errors.INVALID_ACCOUNT) {
+            } else if (e.errorCode == Errors.INVALID_ACCOUNT) {
                 authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_INVALID_ACCOUNT_ERROR)
             } else {
-                authRegisterErrorsLiveData.postValue(it)
+                authRegisterErrorsLiveData.postValue(e.errorCode)
             }
-        })
+        }
     }
 }

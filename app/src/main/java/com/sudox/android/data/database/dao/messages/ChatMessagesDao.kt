@@ -7,7 +7,7 @@ import com.sudox.android.data.database.model.messages.ChatMessage
 interface ChatMessagesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOne(chatMessage: ChatMessage)
+    fun insertOne(chatMessage: ChatMessage): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(chatMessages: List<ChatMessage>)
@@ -23,4 +23,10 @@ interface ChatMessagesDao {
 
     @Query("SELECT * FROM chat_messages c WHERE date=(SELECT max(date) FROM chat_messages WHERE sender=c.sender AND peer=c.peer OR sender=c.peer AND peer=c.sender ORDER BY date DESC) ORDER BY date DESC LIMIT :offset, :limit")
     fun loadAll(offset: Int, limit: Int): List<ChatMessage>
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun updateOne(message: ChatMessage)
+
+    @Query("SELECT * FROM chat_messages WHERE status != 'DELIVERED' AND status != 'READ' ORDER BY lid")
+    fun loadDeliveringMessages(): List<ChatMessage>
 }

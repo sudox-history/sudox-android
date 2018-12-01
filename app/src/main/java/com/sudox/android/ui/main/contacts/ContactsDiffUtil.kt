@@ -1,7 +1,7 @@
 package com.sudox.android.ui.main.contacts
 
 import android.support.v7.util.DiffUtil
-import com.sudox.android.data.database.model.User
+import com.sudox.android.data.database.model.user.User
 
 class ContactsDiffUtil(private val newContactsList: List<User>,
                        private val oldContactsList: List<User>) : DiffUtil.Callback() {

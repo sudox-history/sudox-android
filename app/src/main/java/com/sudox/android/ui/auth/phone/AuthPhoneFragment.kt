@@ -13,7 +13,7 @@ import android.view.ViewGroup
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.data.models.Errors
+import com.sudox.android.data.models.common.Errors
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.common.BaseAuthFragment
 import com.sudox.android.ui.auth.phone.enums.AuthEmailAction

@@ -1,13 +1,15 @@
 package com.sudox.android.data.repositories.main
 
-import com.sudox.android.data.database.dao.UserDao
-import com.sudox.android.data.database.model.User
-import com.sudox.android.data.models.Errors
+import com.sudox.android.data.database.dao.user.UserDao
+import com.sudox.android.data.database.model.user.User
+import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.users.UserType
 import com.sudox.android.data.models.users.dto.UserInfoDTO
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.filter
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
@@ -25,8 +27,12 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         listenConnectionStatus()
     }
 
-    private fun listenConnectionStatus() = authRepository.accountSessionLiveData.observeForever {
-        if (it!!.lived) loadedUsersIds.clear()
+    private fun listenConnectionStatus() = GlobalScope.launch(Dispatchers.IO) {
+        authRepository
+                .accountSessionStateChannel
+                .openSubscription()
+                .filter { it }
+                .consumeEach { loadedUsersIds.clear() }
     }
 
     fun loadUsers(ids: List<String>) = GlobalScope.async {

@@ -12,10 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.bumptech.glide.TransitionOptions
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
@@ -23,7 +21,7 @@ import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.WHITESPACES_REMOVE_REGEX
-import com.sudox.android.data.models.Errors
+import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.repositories.main.CONTACTS_NAME_REGEX_ERROR
 import com.sudox.android.data.repositories.main.CONTACTS_PHONE_REGEX_ERROR
 import com.sudox.android.ui.main.common.BaseReconnectFragment
@@ -90,9 +88,6 @@ class ContactAddFragment @Inject constructor() : BaseReconnectFragment() {
         initToolbarListeners()
         initEditTexts()
         setupDefaultAvatar()
-
-        // Listen connection status
-        listenForConnection()
     }
 
     private fun setupDefaultAvatar() {

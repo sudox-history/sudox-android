@@ -1,20 +1,14 @@
 package com.sudox.android.ui.main.contacts
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.data.database.model.User
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.common.BaseReconnectFragment
-import com.sudox.android.ui.main.contacts.add.ContactAddFragment
-import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import kotlinx.android.synthetic.main.fragment_main_contacts.*
 import javax.inject.Inject
 
@@ -40,8 +34,8 @@ class ContactsFragment @Inject constructor() : BaseReconnectFragment() {
         initToolbar()
         initContactsList()
 
-        // Start listen connection status
-        listenForConnection()
+//        // Start listen connection status
+//        listenForConnection()
 
         // Start showing ...
         super.onViewCreated(view, savedInstanceState)

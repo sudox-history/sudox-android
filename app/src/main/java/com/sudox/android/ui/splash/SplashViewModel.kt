@@ -2,17 +2,12 @@ package com.sudox.android.ui.splash
 
 import android.arch.lifecycle.*
 import com.sudox.android.data.repositories.auth.AccountRepository
-import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.ui.splash.enums.SplashAction
-import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class SplashViewModel @Inject constructor(private val protocolClient: ProtocolClient,
-                                          private val accountRepository: AccountRepository,
-                                          private val authRepository: AuthRepository) : ViewModel(), LifecycleObserver {
+class SplashViewModel @Inject constructor(private val accountRepository: AccountRepository) : ViewModel(), LifecycleObserver {
 
     val splashActionLiveData: SingleLiveEvent<SplashAction> = SingleLiveEvent()
 
@@ -20,7 +15,7 @@ class SplashViewModel @Inject constructor(private val protocolClient: ProtocolCl
      * Метод для инициализации соединения и сессии с сервером .
      * Решает на какую Activity переключиться.
      * **/
-    fun initSession() = GlobalScope.async {
+    fun initSession() = GlobalScope.launch(Dispatchers.IO) {
         val account = accountRepository.getAccount().await()
 
         // Выполняем нужные действия

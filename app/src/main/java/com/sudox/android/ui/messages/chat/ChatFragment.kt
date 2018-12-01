@@ -10,11 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.common.helpers.formatMessage
-import com.sudox.android.data.database.model.User
+import com.sudox.android.common.helpers.formatMessageText
+import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
-import com.sudox.android.data.models.messages.chats.UserChatRecipient
+import com.sudox.android.data.models.messages.MessageStatus
 import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import com.sudox.design.helpers.drawAvatar
@@ -48,7 +48,6 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
         configureMessagesList()
 
         // Data-logic
-        listenForConnection()
         listenData()
     }
 
@@ -88,13 +87,25 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
             chatViewModel.newChatMessageLiveData.observe(this, Observer {
                 chatAdapter.messages.add(it!!)
                 chatAdapter.notifyItemInserted(chatAdapter.messages.size - 1)
-
-                // Scroll to bottom
-                chatMessagesList.scrollToPosition(chatAdapter.messages.size - 1)
             })
 
             // Listen messages sending requests
             listenMessagesSendingRequests()
+        })
+
+        // Bind messages sending status listener
+        chatViewModel.sentMessageLiveData.observe(this, Observer { message ->
+            val position = chatAdapter.messages.indexOfFirst { it.lid == message!!.lid }
+
+            // Message already saved :)
+            if (position >= 0) {
+                chatAdapter.messages[position] = message!!
+                chatAdapter.notifyItemChanged(position)
+            } else {
+                chatAdapter.messages.add(message!!)
+                chatAdapter.notifyItemInserted(chatAdapter.messages.size - 1)
+                chatMessagesList.scrollToPosition(chatAdapter.messages.size - 1)
+            }
         })
 
         // Start business logic work
@@ -102,7 +113,7 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
     }
 
     private fun listenMessagesSendingRequests() = chatSendMessageButton.setOnClickListener {
-        val text = formatMessage(chatMessageTextField.text.toString())
+        val text = formatMessageText(chatMessageTextField.text.toString())
 
         // Filter empty text
         if (text.isNotEmpty()) {
@@ -121,7 +132,7 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
             return@setOnMenuItemClickListener true
         }
 
-        // Get avatar type
+        // Get avatar direction
         val avatarInfo = AvatarInfo.parse(recipientUser.photo)
 
         if (avatarInfo is ColorAvatarInfo) {

@@ -6,6 +6,7 @@ class AuthSession(val phoneNumber: String, val hash: String, val status: Int = -
 
     // А может в будущем будут ещё переменные с таким названием, а? :)
     companion object {
+        const val AUTH_STATUS_UNDEFINED = -1
         const val AUTH_STATUS_NOT_REGISTERED = 0
         const val AUTH_STATUS_REGISTERED = 1
     }

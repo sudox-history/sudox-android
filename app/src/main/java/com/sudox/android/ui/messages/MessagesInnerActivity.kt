@@ -18,7 +18,7 @@ class MessagesInnerActivity : DaggerAppCompatActivity() {
         setContentView(R.layout.activity_messages_inner)
 
         // TODO: Get talks, channels ...
-        var user = intent.getSerializableExtra(RECIPIENT_USER_EXTRA)
+        val user = intent.getSerializableExtra(RECIPIENT_USER_EXTRA)
 
         // TODO: Check talks, channels != null
         if (user != null) {
@@ -29,7 +29,8 @@ class MessagesInnerActivity : DaggerAppCompatActivity() {
     }
 
     private fun showChatFragment() {
-        supportFragmentManager.beginTransaction()
+        supportFragmentManager
+                .beginTransaction()
                 .replace(R.id.fragmentChatContainer, ChatFragment().apply { arguments = intent.extras })
                 .commit()
     }

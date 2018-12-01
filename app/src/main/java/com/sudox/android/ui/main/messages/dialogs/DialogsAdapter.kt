@@ -44,7 +44,7 @@ class DialogsAdapter @Inject constructor(val context: Context) : RecyclerView.Ad
             // Bind data ...
             view.dialogRecipientName.text = dialog.user.name
             view.dialogLastMessageDate.text = DateFormat.format("HH:mm", Date(dialog.message.date)).toString()
-            view.dialogLastMessage.text = if (dialog.message.type == MessageDirection.TO) {
+            view.dialogLastMessage.text = if (dialog.message.direction == MessageDirection.TO) {
                 formatHtml("<font color='#FFFFFF'>${context.resources.getString(R.string.you)}:</font> ${dialog.message.message}")
             } else {
                 dialog.message.message

@@ -14,7 +14,6 @@ import com.sudox.android.ui.auth.phone.AuthPhoneFragment
 import com.sudox.android.ui.auth.register.AuthRegisterFragment
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.models.enums.ConnectionState
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.view_navigation_bar.view.*
@@ -27,7 +26,6 @@ class AuthActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var protocolClient: ProtocolClient
-
     lateinit var authViewModel: AuthViewModel
     var authSession: AuthSession? = null
 
@@ -37,31 +35,31 @@ class AuthActivity : DaggerAppCompatActivity() {
 
         // Get view model
         authViewModel = getViewModel(viewModelFactory)
-        authViewModel.connectionStateLiveData.observe(this, Observer {
-            if (it == ConnectionState.CONNECTION_CLOSED) {
+        authViewModel.authActivityEventsLiveData.observe(this, Observer {
+            if (it == AuthActivityEvent.CONNECTION_CLOSED) {
                 showWaitForConnectStatus()
                 unfreezeCurrent()
-            } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
+            } else if (it == AuthActivityEvent.HANDSHAKE_SUCCEED) {
                 val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentAuthContainer)
 
                 if (currentFragment is BaseAuthFragment) {
                     currentFragment.onConnectionRecovered()
                 }
+            } else if (it == AuthActivityEvent.ACCOUNT_SESSION_STARTED) {
+                showMainActivity()
             }
         })
 
-        authViewModel.authSessionStateLiveData.observe(this, Observer {
-            if (it?.status != -1) {
-                authSession = it!!
-                showAuthConfirmFragment()
-            }
-        })
-
-        authViewModel.accountSessionLiveData.observe(this, Observer {
-            if (it?.lived!!) showMainActivity()
+        // Listen auth session ...
+        authViewModel.authActivitySessionLiveData.observe(this, Observer {
+            authSession = it!!
+            showAuthConfirmFragment()
         })
 
         showAuthPhoneFragment()
+
+        // Start business logic
+        authViewModel.start()
     }
 
     private fun unfreezeCurrent() {

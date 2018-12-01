@@ -21,7 +21,7 @@ import com.sudox.android.common.SMS_RECEIVED
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.SMS_CODE_REGEX
 import com.sudox.android.common.helpers.formatPhoneByMask
-import com.sudox.android.data.models.Errors
+import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.common.BaseAuthFragment
@@ -66,9 +66,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
             when (it) {
                 AuthConfirmAction.FREEZE -> freeze()
                 AuthConfirmAction.SHOW_REGISTER_FRAGMENT -> authActivity.showAuthRegisterFragment()
-                AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
-                    authActivity.showAuthPhoneFragment(authSession.phoneNumber, getString(R.string.code_expired))
-                }
+                AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> authActivity.showAuthPhoneFragment(authSession.phoneNumber, getString(R.string.code_expired))
                 AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_TOO_MANY_REQUESTS -> {
                     codeEditTextContainer.error = getString(R.string.too_many_requests)
                     unfreeze()

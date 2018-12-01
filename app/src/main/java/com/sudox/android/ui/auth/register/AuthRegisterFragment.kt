@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.data.models.Errors
+import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.data.repositories.auth.AUTH_NAME_REGEX_ERROR
 import com.sudox.android.data.repositories.auth.AUTH_NICKNAME_REGEX_ERROR
@@ -40,12 +40,12 @@ class AuthRegisterFragment @Inject constructor() : BaseAuthFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Слушаем заказанные ViewModel действия ...
-        authRegisterViewModel.authRegisterRegexErrorsCallback = {
+        authRegisterViewModel.authRegisterRegexErrorsLiveData.observe(this, Observer {
             nameEditTextContainer.error = null
             nicknameEditTextContainer.error = null
 
-            it.forEach {
-                if (it == AUTH_NAME_REGEX_ERROR)  {
+            it!!.forEach {
+                if (it == AUTH_NAME_REGEX_ERROR) {
                     nameEditTextContainer.error = getString(R.string.wrong_name_format)
                 } else if (it == AUTH_NICKNAME_REGEX_ERROR) {
                     nicknameEditTextContainer.error = getString(R.string.wrong_nickname_format)
@@ -53,7 +53,7 @@ class AuthRegisterFragment @Inject constructor() : BaseAuthFragment() {
             }
 
             unfreeze()
-        }
+        })
 
         authRegisterViewModel.authRegisterErrorsLiveData.observe(this, Observer {
             if (it == Errors.INVALID_PARAMETERS) {

@@ -1,10 +1,15 @@
 package com.sudox.android.ui.auth.phone
 
 import android.arch.lifecycle.ViewModel
+import com.sudox.android.data.RequestException
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.ui.auth.phone.enums.AuthEmailAction
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AuthPhoneViewModel @Inject constructor(private val authRepository: AuthRepository,
@@ -22,8 +27,13 @@ class AuthPhoneViewModel @Inject constructor(private val authRepository: AuthRep
      * Во ViewModel обрабатывает только ошибки, состояние сессии передается по LiveData до AuthActivity,
      * там уже и происходит переключение на AuthConfirmFragment.
      * */
-    fun requestCode(phoneNumber: String) {
+    fun requestCode(phoneNumber: String) = GlobalScope.launch(Dispatchers.IO) {
         authEmailActionLiveData.postValue(AuthEmailAction.FREEZE)
-        authRepository.requestCode(phoneNumber, {}, { authErrorsLiveData.postValue(it) })
+
+        try {
+            authRepository.requestCode(phoneNumber).await()
+        } catch (e: RequestException) {
+            authErrorsLiveData.postValue(e.errorCode)
+        }
     }
 }
