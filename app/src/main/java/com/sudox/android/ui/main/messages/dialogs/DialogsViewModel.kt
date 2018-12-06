@@ -63,6 +63,6 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
     }
 
     override fun onCleared() {
-//        subscriptionsContainer.unsubscribeAll()
+        subscriptionsContainer.unsubscribeAll()
     }
 }
