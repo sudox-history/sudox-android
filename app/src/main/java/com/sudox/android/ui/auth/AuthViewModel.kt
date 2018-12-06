@@ -19,8 +19,8 @@ class AuthViewModel @Inject constructor(val protocolClient: ProtocolClient,
     val authActivityEventsLiveData = SingleLiveEvent<AuthActivityEvent>()
     val authActivitySessionLiveData = SingleLiveEvent<AuthSession>()
 
-    fun start() {
-        GlobalScope.launch(Dispatchers.IO) {
+    fun start() = GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch {
             subscriptions.addSubscription(protocolClient
                     .connectionStateChannel
                     .openSubscription())
@@ -33,7 +33,7 @@ class AuthViewModel @Inject constructor(val protocolClient: ProtocolClient,
                     }
         }
 
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch {
             subscriptions.addSubscription(authRepository
                     .authSessionChannel
                     .openSubscription())
@@ -41,7 +41,7 @@ class AuthViewModel @Inject constructor(val protocolClient: ProtocolClient,
                     .consumeEach { authActivitySessionLiveData.postValue(it) }
         }
 
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch {
             subscriptions.addSubscription(authRepository
                     .accountSessionStateChannel
                     .openSubscription())

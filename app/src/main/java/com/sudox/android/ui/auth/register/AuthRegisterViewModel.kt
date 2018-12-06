@@ -26,7 +26,7 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
      * Отправляет запрос регистрации на сервер.
      * Заказывает действия у View через LiveData в качестве результата
      */
-    fun signUp(phoneNumber: String, code: String, hash: String, name: String, nickname: String) = GlobalScope.launch(Dispatchers.IO)  {
+    fun signUp(phoneNumber: String, code: String, hash: String, name: String, nickname: String) = GlobalScope.launch(Dispatchers.IO) {
         authRegisterActionLiveData.postValue(AuthRegisterAction.FREEZE)
 
         // Регистрируемся ...

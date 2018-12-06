@@ -12,7 +12,7 @@ class UserInfoDTO : JsonModel() {
     var ids: List<String>? = null
 
     // For reading
-    lateinit var users: ArrayList<UserInfoDTO>
+    var users: ArrayList<UserInfoDTO>? = null
     lateinit var name: String
     lateinit var nickname: String
     lateinit var photo: String
@@ -50,7 +50,7 @@ class UserInfoDTO : JsonModel() {
 
         // Mapping
         jsonArray.forEachObject {
-            users.plusAssign(UserInfoDTO().apply { fromJSON(it) })
+            users!!.plusAssign(UserInfoDTO().apply { fromJSON(it) })
         }
     }
 }

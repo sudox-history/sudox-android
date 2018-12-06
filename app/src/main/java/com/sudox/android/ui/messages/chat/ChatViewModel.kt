@@ -31,7 +31,7 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
         chatMessagesRepository.openChatDialog(recipientId)
 
         // Set callback for new messages receiving
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch {
             subscriptionsContainer.addSubscription(chatMessagesRepository
                     .chatDialogNewMessageChannel!!
                     .openSubscription())
@@ -39,7 +39,7 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
         }
 
         // Set callback for chat history loading
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch {
             subscriptionsContainer.addSubscription(chatMessagesRepository
                     .chatDialogHistoryChannel!!
                     .openSubscription())
@@ -56,7 +56,7 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
         }
 
         // Set callback for messages sending
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch {
             subscriptionsContainer.addSubscription(chatMessagesRepository
                     .chatDialogSentMessageChannel!!
                     .openSubscription())
@@ -66,7 +66,7 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
         chatMessagesRepository.loadInitialMessages(recipientId)
     }
 
-    fun loadPartOfMessages(recipientId: String, offset: Int) = GlobalScope.launch {
+    fun loadPartOfMessages(recipientId: String, offset: Int) = GlobalScope.launch(Dispatchers.IO) {
         chatMessagesRepository.loadPagedMessages(recipientId, offset)
     }
 

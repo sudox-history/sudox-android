@@ -29,4 +29,7 @@ interface ChatMessagesDao {
 
     @Query("SELECT * FROM chat_messages WHERE status != 'DELIVERED' AND status != 'READ' ORDER BY lid")
     fun loadDeliveringMessages(): List<ChatMessage>
+
+    @Query("SELECT * FROM chat_messages WHERE peer = :recipientId AND status != 'DELIVERED' AND status != 'READ' ORDER BY lid")
+    fun loadDeliveringMessages(recipientId: String): List<ChatMessage>
 }

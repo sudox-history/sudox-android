@@ -191,7 +191,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
     }
 
     override fun interrupt() {
-        handler!!.removeCallbacksAndMessages(null)
+        handler?.removeCallbacksAndMessages(null)
 
         // Super!
         super.interrupt()

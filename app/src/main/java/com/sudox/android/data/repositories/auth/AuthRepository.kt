@@ -26,6 +26,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     // Шины
     val authSessionChannel: ConflatedBroadcastChannel<AuthSession> = ConflatedBroadcastChannel()
     val accountSessionStateChannel: ConflatedBroadcastChannel<Boolean> = ConflatedBroadcastChannel()
+    var sessionIsValid: Boolean = false
 
     init {
         // Для отслеживания "смерти сессии" (прилетит первым, ибо AuthRepository - первый репозиторий, который инициализируется)
@@ -47,7 +48,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
                     // Если нет аккаунта, то нет и сессии ...
                     if (account == null) {
-                        accountSessionStateChannel.send(false)
+                        notifyAccountSessionInvalid()
                     } else {
                         importAuth(account.id, account.secret).await()
                     }
@@ -59,7 +60,17 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      **/
     private fun killAccountSession() = GlobalScope.launch(Dispatchers.IO) {
         accountRepository.removeAccounts().await()
+        notifyAccountSessionInvalid()
+    }
+
+    private suspend fun notifyAccountSessionInvalid() {
         accountSessionStateChannel.send(false)
+        sessionIsValid = false
+    }
+
+    private suspend fun notifyAccountSessionValid() {
+        accountSessionStateChannel.send(true)
+        sessionIsValid = true
     }
 
     /**
@@ -131,7 +142,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
         if (authSignInDTO.isSuccess()) {
             accountRepository.saveAccount(SudoxAccount(authSignInDTO.id, phoneNumber, authSignInDTO.secret)).await()
-            accountSessionStateChannel.send(true)
+            notifyAccountSessionValid()
         } else {
             throw RequestException(authSignInDTO.error)
         }
@@ -167,7 +178,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
         if (authSignUpDTO.isSuccess()) {
             accountRepository.saveAccount(SudoxAccount(authSignUpDTO.id, phoneNumber, authSignUpDTO.secret)).await()
-            accountSessionStateChannel.send(true)
+            notifyAccountSessionValid()
         } else {
             throw RequestException(authSignUpDTO.error)
         }
@@ -188,6 +199,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
         if (authImportDTO.isSuccess()) {
             accountSessionStateChannel.send(true)
+            notifyAccountSessionValid()
         } else {
             killAccountSession()
         }

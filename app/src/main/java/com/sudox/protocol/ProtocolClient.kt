@@ -6,13 +6,11 @@ import com.sudox.protocol.helpers.getHmac
 import com.sudox.protocol.helpers.randomBase64String
 import com.sudox.protocol.helpers.toJsonArray
 import com.sudox.protocol.models.JsonModel
+import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.ReadCallback
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.channels.sendBlocking
 import org.json.JSONObject
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -21,7 +19,9 @@ import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.LinkedBlockingQueue
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 import kotlin.reflect.KClass
 
@@ -32,7 +32,7 @@ class ProtocolClient @Inject constructor() {
     internal var controller: ProtocolController? = null
     private var reader: ProtocolReader? = null
     private var writer: ProtocolWriter? = null
-    private val readCallbacks = ConcurrentLinkedQueue<ReadCallback<*>>()
+    val readCallbacks = ConcurrentLinkedQueue<ReadCallback<*>>()
     private val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
     val connectionStateChannel by lazy { ConflatedBroadcastChannel<ConnectionState>() }
 
@@ -125,6 +125,7 @@ class ProtocolClient @Inject constructor() {
             reader!!.interrupt()
             reader = null
         }
+
         if (controller != null && (!controller!!.isInterrupted || controller!!.isAlive) && killController) {
             controller!!.interrupt()
             controller = null
@@ -139,6 +140,9 @@ class ProtocolClient @Inject constructor() {
 
         // Убираем ключ.
         if (controller != null) controller!!.key = null
+
+        // "Убиваем" корутины (Если по-культурному, то снимаем блокировки и возвращаем NetworkException)
+        notifyConnectionDestroyed()
     }
 
     /**
@@ -215,7 +219,12 @@ class ProtocolClient @Inject constructor() {
      * а как вы знаете, я против любых операций, кроме операций с дизайном в UI потоке...
      */
     fun <T : JsonModel> addToCallbacks(event: String?, clazz: KClass<T>, resultFunction: (T) -> (Unit), once: Boolean) {
-        readCallbacks.plusAssign(ReadCallback(resultFunction, clazz, event, once))
+        readCallbacks.plusAssign(ReadCallback(
+                resultFunction = resultFunction,
+                clazz = clazz,
+                event = event,
+                once = once
+        ))
     }
 
     /**
@@ -250,7 +259,28 @@ class ProtocolClient @Inject constructor() {
 
     inline fun <reified T : JsonModel> makeRequest(event: String, message: JsonModel? = null) = GlobalScope.async(Dispatchers.IO) {
         return@async suspendCoroutine<T> { coroutine ->
-            listenMessageOnce<T>(event) { coroutine.resume(it) }
+            readCallbacks.plusAssign(ReadCallback(
+                    coroutine = coroutine,
+                    clazz = T::class,
+                    event = event,
+                    once = true,
+                    notifyAboutConnectionDestroyed = false
+            ))
+
+            sendMessage(event, message)
+        }
+    }
+
+    inline fun <reified T : JsonModel> makeRequestWithControl(event: String, message: JsonModel? = null) = GlobalScope.async(Dispatchers.IO) {
+        return@async suspendCoroutine<T> { coroutine ->
+            readCallbacks.plusAssign(ReadCallback(
+                    coroutine = coroutine,
+                    clazz = T::class,
+                    event = event,
+                    once = true,
+                    notifyAboutConnectionDestroyed = true
+            ))
+
             sendMessage(event, message)
         }
     }
@@ -274,11 +304,35 @@ class ProtocolClient @Inject constructor() {
             // Оперируем с кэллбэком
             if (instance.containsError()) errorsMessagesCallbacks.forEach { it(instance.error) }
             if (next.event != event) continue
-            if (next.once) iterator.remove()
+            if (next.coroutine != null || next.once) iterator.remove()
 
             // Крикнем в окно (для IDEA: не ори на отсуствие проверку типов)
             @Suppress("UNCHECKED_CAST")
-            (next.resultFunction as (JsonModel) -> (Unit))(instance)
+            (if (next.coroutine != null) {
+                (next.coroutine as Continuation<JsonModel>).resume(instance)
+            } else {
+                (next.resultFunction as (JsonModel) -> (Unit))(instance)
+            })
+        }
+    }
+
+    /**
+     * Метод, разблокирующий корутины при обрыве соединения.
+     * Возвращает NetworkException в корутины.
+     */
+    private fun notifyConnectionDestroyed() {
+        val iterator = readCallbacks.iterator()
+
+        /* Тут будет выгоднее использовать Iterator, т.к. при его использовании мы можем удалить
+           обьект из списка в цикле, не боясь ConcurrentModificationException. */
+        while (iterator.hasNext()) {
+            val next = iterator.next()
+
+            // Пока и всегда только корутины ;)
+            if (next.coroutine != null && next.notifyAboutConnectionDestroyed) {
+                next.coroutine.resumeWithException(NetworkException())
+                iterator.remove()
+            }
         }
     }
 }

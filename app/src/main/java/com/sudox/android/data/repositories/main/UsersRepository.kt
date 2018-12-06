@@ -1,5 +1,6 @@
 package com.sudox.android.data.repositories.main
 
+import android.provider.ContactsContract
 import com.sudox.android.data.database.dao.user.UserDao
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.Errors
@@ -36,7 +37,11 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
     }
 
     fun loadUsers(ids: List<String>) = GlobalScope.async {
-        if (protocolClient.isValid()) {
+        if (ids.isEmpty()) {
+            return@async arrayListOf<User>()
+        } else if (ids.size == 1) {
+            return@async arrayListOf(loadUser(ids[0]).await())
+        } else if (protocolClient.isValid() && authRepository.sessionIsValid) {
             val notLoadedUsers = ids.filter { !loadedUsersIds.contains(it) }
             val usersFromNetwork = if (notLoadedUsers.isNotEmpty()) loadUsersFromNetwork(notLoadedUsers) else arrayListOf()
             val usersFromNetworkIds = usersFromNetwork.map { it.uid }
@@ -49,7 +54,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    fun loadUser(id: String) = GlobalScope.async {
+    suspend fun loadUser(id: String) = GlobalScope.async {
         if (protocolClient.isValid() && !loadedUsersIds.contains(id)) {
             return@async loadUserFromNetwork(id)
         } else {
@@ -61,7 +66,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         protocolClient.makeRequest<UserInfoDTO>("users.getUsers", UserInfoDTO().apply {
             this.ids = ids
         }) {
-            if (!it.users.isEmpty() && !(it.containsError())) {
+            if (it.users != null && !it.users!!.isEmpty() && !(it.containsError())) {
                 // Map users to database format
                 val users = toStorableUsers(it)
 
@@ -106,7 +111,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
     }
 
     private fun toStorableUsers(userInfoDTO: UserInfoDTO): List<User> {
-        return userInfoDTO.users.map { toStorableUser(it) }
+        return userInfoDTO.users!!.map { toStorableUser(it) }
     }
 
     private fun toStorableUser(userInfoDTO: UserInfoDTO): User {

@@ -28,6 +28,7 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
 
     // Parent activity ...
     private lateinit var mainActivity: MainActivity
+    private lateinit var linearLayoutManager: LinearLayoutManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         dialogsViewModel = getViewModel(viewModelFactory)
@@ -45,14 +46,11 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
     }
 
     private fun initDialogsList() {
-        val linearLayoutManager = LinearLayoutManager(context!!)
+        linearLayoutManager = LinearLayoutManager(context!!)
 
         // Configure
         dialogsList.layoutManager = linearLayoutManager
         dialogsList.adapter = dialogsAdapter
-
-        // Disable recycling for better performance
-        dialogsList.recycledViewPool.setMaxRecycledViews(0, 0)
 
         // Configure click listener
         dialogsAdapter.clickedDialogLiveData.observe(this, Observer {

@@ -4,8 +4,8 @@ import com.sudox.android.common.helpers.formatMessageText
 import com.sudox.android.data.database.dao.messages.ChatMessagesDao
 import com.sudox.android.data.database.model.messages.ChatMessage
 import com.sudox.android.data.models.common.Errors
-import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.common.LoadingType
+import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.messages.MessageStatus
 import com.sudox.android.data.models.messages.chats.dto.ChatHistoryDTO
 import com.sudox.android.data.models.messages.chats.dto.ChatMessageDTO
@@ -14,6 +14,7 @@ import com.sudox.android.data.models.messages.chats.dto.SendChatMessageDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
+import com.sudox.protocol.models.NetworkException
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
 import javax.inject.Inject
@@ -42,10 +43,10 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
     init {
         listenNewMessages()
-        listenConnectionStatus()
+        listenSessionStatus()
     }
 
-    private fun listenConnectionStatus() = GlobalScope.launch(Dispatchers.IO) {
+    private fun listenSessionStatus() = GlobalScope.launch {
         authRepository
                 .accountSessionStateChannel
                 .openSubscription()
@@ -59,14 +60,10 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                         loadInitialMessages(openedChatRecipientId!!)
 
                     // Send delivering messages ...
-                    sendDeliveringMessages()
+                    chatMessagesDao
+                            .loadDeliveringMessages()
+                            .forEach { sendMessage(it).await() }
                 }
-    }
-
-    private fun sendDeliveringMessages() {
-        chatMessagesDao
-                .loadDeliveringMessages()
-                .forEach { sendTextMessage(it.peer) }
     }
 
     private fun listenNewMessages() {
@@ -121,7 +118,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         }
     }
 
-    fun loadInitialMessages(recipientId: String) {
+    fun loadInitialMessages(recipientId: String) = GlobalScope.launch {
         if (!loadedRecipientChatsIds.contains(recipientId) && protocolClient.isValid()) {
             loadMessagesFromNetwork(recipientId)
         } else {
@@ -129,8 +126,8 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         }
     }
 
-    fun loadPagedMessages(recipientId: String, offset: Int) {
-        if (offset <= 0 || chatHistoryEnded) return
+    fun loadPagedMessages(recipientId: String, offset: Int) = GlobalScope.launch {
+        if (offset <= 0 || chatHistoryEnded) return@launch
 
         // Get offset cache
         val cachedOffset = loadedRecipientChatsIds[recipientId]
@@ -143,7 +140,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         }
     }
 
-    private fun loadMessagesFromDatabase(recipientId: String, offset: Int = 0) = GlobalScope.launch {
+    private fun loadMessagesFromDatabase(recipientId: String, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
         val messages = chatMessagesDao.loadAll(recipientId, offset, 20).sortedBy { it.date }
 
         // Remove from cache
@@ -161,25 +158,16 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         }
     }
 
-    private fun loadMessagesFromNetwork(recipientId: String, offset: Int = 0) {
-        // Execute request!
-        protocolClient.makeRequest<ChatHistoryDTO>("chats.getHistory", ChatHistoryDTO().apply {
-            this.id = recipientId
-            this.limit = 20
-            this.offset = offset
-        }) {
-            if (it.containsError()) {
-                if (offset == 0) {
-                    removeSavedMessages(recipientId)
+    private fun loadMessagesFromNetwork(recipientId: String, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
+        try {
+            val chatHistoryDTO = protocolClient.makeRequestWithControl<ChatHistoryDTO>("chats.getHistory", ChatHistoryDTO().apply {
+                this.id = recipientId
+                this.limit = 20
+                this.offset = offset
+            }).await()
 
-                    // offset == 0 => first initializing
-                    chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, chatMessagesDao.loadDeliveringMessages()))
-                } else if (it.error == Errors.INVALID_USER) {
-                    chatHistoryEnded = true
-                }
-            } else {
-                // Message for storing
-                val messages = toStorableMessages(it.messages)
+            if (chatHistoryDTO.isSuccess()) {
+                val messages = toStorableMessages(chatHistoryDTO.messages)
 
                 // Save messages into database & update offset cache (for offline mode supporting)
                 chatMessagesDao.insertAll(messages)
@@ -187,49 +175,72 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
                 // offset == 0 => first initializing
                 if (offset == 0) {
-                    chatMessagesDao.loadDeliveringMessages().apply { messages.plusAssign(this) }
+                    chatMessagesDao.loadDeliveringMessages(recipientId).apply { messages.plusAssign(this) }
                     chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
                 } else {
                     chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.PAGING, messages))
                 }
+            } else {
+                if (offset == 0) {
+                    removeSavedMessages(recipientId)
+
+                    // offset == 0 => first initializing
+                    chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, chatMessagesDao.loadDeliveringMessages(recipientId)))
+                } else if (chatHistoryDTO.error == Errors.INVALID_USER) {
+                    chatHistoryEnded = true
+                }
             }
+        } catch (e: NetworkException) {
+            // Nothing ...
         }
     }
 
     // TODO: Переместить отправку сообщения в отдельный канал!
     @Suppress("NAME_SHADOWING")
-    fun sendTextMessage(recipientId: String, text: String) = GlobalScope.launch(messagesSendingThreadContext) {
+    fun sendTextMessage(recipientId: String, text: String) = GlobalScope.launch(Dispatchers.IO) {
         val accountId = accountRepository.cachedAccount?.id ?: return@launch
         val text = formatMessageText(text)
 
         // Запрет отправки пустого поля.
         if (text.isEmpty()) return@launch
 
-        val message = ChatMessage(
+        // Отправка ...
+        sendMessage(ChatMessage(
                 sender = accountId,
                 peer = recipientId,
                 message = text,
                 date = System.currentTimeMillis(),
                 direction = MessageDirection.TO,
-                status = MessageStatus.IN_DELIVERY)
+                status = MessageStatus.IN_DELIVERY)).await()
+    }
 
-        // Save to database
-        message.lid = chatMessagesDao.insertOne(message).toInt()
+    private suspend fun sendMessage(message: ChatMessage) = GlobalScope.async(messagesSendingThreadContext) {
+        // It's new message
+        if (message.lid == 0) {
+            message.lid = chatMessagesDao.insertOne(message).toInt()
+        }
+
+        // Change status of message
+        message.status = MessageStatus.IN_DELIVERY
 
         // Notify subscribers, that message status was changed
-        notifyMessageStatus(message, recipientId)
+        notifyMessageStatus(message, message.peer)
 
         // Sending ...
-        val sendChatMessageDTO = protocolClient.makeRequest<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
-            this.peerId = recipientId
-            this.message = text
-        }).await()
+        try {
+            val sendChatMessageDTO = protocolClient.makeRequestWithControl<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
+                this.peerId = message.peer
+                this.message = message.message
+            }).await()
 
-        if (sendChatMessageDTO.isSuccess()) {
-            message.mid = sendChatMessageDTO.id
-            message.date = sendChatMessageDTO.date
-            message.status = MessageStatus.DELIVERED
-        } else {
+            if (sendChatMessageDTO.isSuccess()) {
+                message.mid = sendChatMessageDTO.id
+                message.date = sendChatMessageDTO.date
+                message.status = MessageStatus.DELIVERED
+            } else {
+                message.status = MessageStatus.NOT_DELIVERED
+            }
+        } catch (e: NetworkException) {
             message.status = MessageStatus.NOT_DELIVERED
         }
 
@@ -237,7 +248,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         chatMessagesDao.updateOne(message)
 
         // Notify subscribers, that message status was changed
-        notifyMessageStatus(message, recipientId)
+        notifyMessageStatus(message, message.peer)
     }
 
     private suspend fun notifyMessageStatus(message: ChatMessage, recipientId: String) {

@@ -10,6 +10,7 @@ import com.sudox.android.data.models.messages.chats.dto.ChatsLastMessagesDTO
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.main.UsersRepository
 import com.sudox.protocol.ProtocolClient
+import com.sudox.protocol.models.NetworkException
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
 import javax.inject.Inject
@@ -35,13 +36,38 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
      * Запускает слушателей событий ...
      */
     fun startWork() {
-        if (!isWorking) listenConnectionStatus()
+        if (!isWorking) {
+            listenConnectionStatus()
+            listenNewMessages()
+            listenSendingMessages()
+        }
 
         // Защита от двух и более запусков слушателей
         isWorking = true
     }
 
-    private fun listenConnectionStatus() = GlobalScope.launch(Dispatchers.IO) {
+    private fun listenNewMessages() = GlobalScope.launch {
+        chatMessagesRepository
+                .globalNewMessagesChannel
+                .openSubscription()
+                .consumeEach { updateDialog(it) }
+    }
+
+    private fun listenSendingMessages() = GlobalScope.launch {
+        chatMessagesRepository
+                .globalSentMessageChannel
+                .openSubscription()
+                .consumeEach { updateDialog(it) }
+    }
+
+    private suspend fun updateDialog(message: ChatMessage) {
+        val dialog = getDialog(message) ?: return
+
+        // Notify ...
+        dialogsUpdatesChannel.send(dialog)
+    }
+
+    private fun listenConnectionStatus() = GlobalScope.launch {
         authRepository
                 .accountSessionStateChannel
                 .openSubscription()
@@ -53,9 +79,9 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     }
 
     fun loadInitialDialogs() = GlobalScope.launch {
-        if (lastMessagesLoadedOffset < 0 && protocolClient.isValid()) {
-            loadDialogsFromDatabase()
-            loadDialogsFromNetwork()
+        if (lastMessagesLoadedOffset < 0 && authRepository.sessionIsValid && protocolClient.isValid()) {
+            loadDialogsFromDatabase().await()
+            loadDialogsFromNetwork().await()
         } else {
             loadDialogsFromDatabase()
         }
@@ -72,22 +98,16 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
         }
     }
 
-    private fun loadDialogsFromNetwork(offset: Int = 0) {
-        protocolClient.makeRequest<ChatsLastMessagesDTO>("chats.getChats", ChatsLastMessagesDTO().apply {
-            this.limit = 10
-            this.offset = offset
-        }) {
-            if (it.containsError()) {
-                if (offset == 0) {
-                    resetLoadedOffset()
-                    chatMessagesRepository.removeAllSavedMessages()
-                    dialogsChannel.sendBlocking(Pair(LoadingType.INITIAL, arrayListOf()))
-                } else if (it.error == Errors.EMPTY_CHATS) {
-                    lastMessagesEnded = true
-                }
-            } else {
-                val messages = chatMessagesRepository.toStorableMessages(it.messages)
-                val dialogs = toDialogs(messages)
+    private fun loadDialogsFromNetwork(offset: Int = 0) = GlobalScope.async(Dispatchers.IO) {
+        try {
+            val chatsLastMessagesDTO = protocolClient.makeRequestWithControl<ChatsLastMessagesDTO>("chats.getChats", ChatsLastMessagesDTO().apply {
+                this.limit = 10
+                this.offset = offset
+            }).await()
+
+            if (chatsLastMessagesDTO.isSuccess()) {
+                val messages = chatMessagesRepository.toStorableMessages(chatsLastMessagesDTO.messages)
+                val dialogs = getDialogs(messages)
 
                 // Cache ...
                 chatMessagesDao.insertAll(messages)
@@ -95,15 +115,25 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
 
                 // offset == 0 => first initializing
                 if (offset == 0) {
-                    dialogsChannel.sendBlocking(Pair(LoadingType.INITIAL, dialogs))
+                    dialogsChannel.send(Pair(LoadingType.INITIAL, dialogs))
                 } else if (dialogs.isNotEmpty()) {
-                    dialogsChannel.sendBlocking(Pair(LoadingType.PAGING, dialogs))
+                    dialogsChannel.send(Pair(LoadingType.PAGING, dialogs))
+                }
+            } else {
+                if (offset == 0) {
+                    resetLoadedOffset()
+                    chatMessagesRepository.removeAllSavedMessages()
+                    dialogsChannel.send(Pair(LoadingType.INITIAL, arrayListOf()))
+                } else if (chatsLastMessagesDTO.error == Errors.EMPTY_CHATS) {
+                    lastMessagesEnded = true
                 }
             }
+        } catch (e: NetworkException) {
+            // TODO: Обрыв соединения.
         }
     }
 
-    private fun loadDialogsFromDatabase(offset: Int = 0) {
+    private fun loadDialogsFromDatabase(offset: Int = 0) = GlobalScope.async(Dispatchers.IO) {
         val messages = chatMessagesDao.loadAll(offset, 10)
 
         // Сообщения могут отсутствовать в БД
@@ -112,25 +142,25 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
                 resetLoadedOffset()
 
                 // offset == 0 => first initializing
-                dialogsChannel.sendBlocking(Pair(LoadingType.INITIAL, arrayListOf()))
+                dialogsChannel.send(Pair(LoadingType.INITIAL, arrayListOf()))
             }
         } else {
-            val dialogs = toDialogs(messages)
+            val dialogs = getDialogs(messages)
 
             // offset == 0 => first initializing
             if (offset == 0) {
-                dialogsChannel.sendBlocking(Pair(LoadingType.INITIAL, dialogs))
+                dialogsChannel.send(Pair(LoadingType.INITIAL, dialogs))
             } else if (dialogs.isNotEmpty()) {
-                dialogsChannel.sendBlocking(Pair(LoadingType.PAGING, dialogs))
+                dialogsChannel.send(Pair(LoadingType.PAGING, dialogs))
             }
         }
     }
 
     /**
-     * Ищет собеседника к сообщению
+     * Ищет собеседника к сообщению.
      * Если собеседник не будет найден, то сообщение не будет отражено в результатах вызова данной функции.
      */
-    private fun toDialogs(messages: List<ChatMessage>) = runBlocking {
+    private suspend fun getDialogs(messages: List<ChatMessage>): ArrayList<Dialog> {
         val userIdsForLoading = messages.map { if (it.direction == MessageDirection.TO) it.peer else it.sender }
         val users = usersRepository.loadUsers(userIdsForLoading).await()
         val dialogs = arrayListOf<Dialog>()
@@ -144,7 +174,19 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
             if (recipient != null) dialogs.plusAssign(Dialog(recipient, it))
         }
 
-        return@runBlocking dialogs
+        return dialogs
+    }
+
+    /**
+     * Ищет собеседника к сообщению
+     * Если собеседник не будет найден, то сообщение не будет отражено в результатах вызова данной функции.
+     */
+    private fun getDialog(message: ChatMessage): Dialog? = runBlocking {
+        val userId = if (message.direction == MessageDirection.TO) message.peer else message.sender
+        val user = usersRepository.loadUser(userId).await() ?: return@runBlocking null
+
+        // Create dialog
+        return@runBlocking Dialog(user, message)
     }
 
     private fun resetLoadedOffset() {

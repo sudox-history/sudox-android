@@ -54,6 +54,8 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:4.8.0"
     kapt "com.github.bumptech.glide:compiler:4.8.0"
 
+    // No Paginate
+    implementation 'ru.alexbykov:nopaginate:0.9.9'
 
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.redmadrobot:inputmask:3.4.4'

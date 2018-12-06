@@ -42,7 +42,7 @@ abstract class BaseReconnectFragment : DaggerFragment() {
         listenForConnection()
     }
 
-    fun listenForConnection() = GlobalScope.launch(Dispatchers.IO) {
+    fun listenForConnection() = GlobalScope.launch {
         connectionStateSubscription = protocolClient
                 .connectionStateChannel
                 .openSubscription()
