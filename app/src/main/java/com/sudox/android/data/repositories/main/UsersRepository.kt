@@ -22,7 +22,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                                           private val userDao: UserDao) {
 
     // ID загруженных пользователей (для экономии трафика)
-    private val loadedUsersIds: HashSet<String> = HashSet()
+    private val loadedUsersIds: HashSet<Long> = HashSet()
 
     init {
         listenConnectionStatus()
@@ -36,7 +36,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                 .consumeEach { loadedUsersIds.clear() }
     }
 
-    fun loadUsers(ids: List<String>) = GlobalScope.async {
+    fun loadUsers(ids: List<Long>) = GlobalScope.async {
         if (ids.isEmpty()) {
             return@async arrayListOf<User>()
         } else if (ids.size == 1) {
@@ -54,7 +54,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    suspend fun loadUser(id: String) = GlobalScope.async {
+    suspend fun loadUser(id: Long) = GlobalScope.async {
         if (protocolClient.isValid() && !loadedUsersIds.contains(id)) {
             return@async loadUserFromNetwork(id)
         } else {
@@ -62,7 +62,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    private suspend fun loadUsersFromNetwork(ids: List<String>): List<User> = suspendCoroutine { continuation ->
+    private suspend fun loadUsersFromNetwork(ids: List<Long>): List<User> = suspendCoroutine { continuation ->
         protocolClient.makeRequest<UserInfoDTO>("users.getUsers", UserInfoDTO().apply {
             this.ids = ids
         }) {
@@ -86,7 +86,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    private suspend fun loadUserFromNetwork(id: String): User? = suspendCoroutine { continuation ->
+    private suspend fun loadUserFromNetwork(id: Long): User? = suspendCoroutine { continuation ->
         protocolClient.makeRequest<UserInfoDTO>("users.getUser", UserInfoDTO().apply {
             this.id = id
         }) {

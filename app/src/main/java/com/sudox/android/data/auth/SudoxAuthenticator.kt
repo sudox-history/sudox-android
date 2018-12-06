@@ -8,10 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.sudox.android.ui.splash.SplashActivity
 
-internal const val AUTH_ACCOUNT_MANAGER_START = 0
-internal const val AUTH_KEY = "auth"
-
-class SudoxAuthenticator(private val serviceContext: SudoxAuthenticatorService) : AbstractAccountAuthenticator(serviceContext) {
+class SudoxAuthenticator(serviceContext: SudoxAuthenticatorService) : AbstractAccountAuthenticator(serviceContext) {
 
     override fun getAuthTokenLabel(p0: String?) = null
     override fun confirmCredentials(p0: AccountAuthenticatorResponse?, p1: Account?, p2: Bundle?) = null

@@ -27,7 +27,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                                                  private val chatMessagesDao: ChatMessagesDao) {
 
     // ID загруженных чатов ...
-    private val loadedRecipientChatsIds = hashMapOf<String, Int>()
+    private val loadedRecipientChatsIds = hashMapOf<Long, Int>()
     private val messagesSendingThreadContext = newSingleThreadContext("Sudox Messages Sending Queue")
 
     // PublishSubject для доставки новых сообщений.
@@ -36,7 +36,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     var chatDialogNewMessageChannel: BroadcastChannel<ChatMessage>? = null
     var chatDialogHistoryChannel: BroadcastChannel<Pair<LoadingType, List<ChatMessage>>>? = null
     var chatDialogSentMessageChannel: BroadcastChannel<ChatMessage>? = null
-    var openedChatRecipientId: String? = null
+    var openedChatRecipientId: Long = 0
 
     // Защита от десинхронизации данных при скролле (от двух одновременных запросов)
     private var chatHistoryEnded: Boolean = false
@@ -56,8 +56,8 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                     loadedRecipientChatsIds.clear() // Clean initial cache.
 
                     // Reload initial copy
-                    if (openedChatRecipientId != null)
-                        loadInitialMessages(openedChatRecipientId!!)
+                    if (openedChatRecipientId != 0L)
+                        loadInitialMessages(openedChatRecipientId)
 
                     // Send delivering messages ...
                     chatMessagesDao
@@ -93,7 +93,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         }
     }
 
-    fun openChatDialog(recipientId: String) {
+    fun openChatDialog(recipientId: Long) {
         openedChatRecipientId = recipientId
         chatDialogHistoryChannel = ConflatedBroadcastChannel()
         chatDialogSentMessageChannel = ConflatedBroadcastChannel()
@@ -101,7 +101,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     }
 
     fun endChatDialog() {
-        openedChatRecipientId = null
+        openedChatRecipientId = 0
         chatHistoryEnded = false
 
         // Close old channel
@@ -118,7 +118,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         }
     }
 
-    fun loadInitialMessages(recipientId: String) = GlobalScope.launch {
+    fun loadInitialMessages(recipientId: Long) = GlobalScope.launch {
         if (!loadedRecipientChatsIds.contains(recipientId) && protocolClient.isValid()) {
             loadMessagesFromNetwork(recipientId)
         } else {
@@ -126,7 +126,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         }
     }
 
-    fun loadPagedMessages(recipientId: String, offset: Int) = GlobalScope.launch {
+    fun loadPagedMessages(recipientId: Long, offset: Int) = GlobalScope.launch {
         if (offset <= 0 || chatHistoryEnded) return@launch
 
         // Get offset cache
@@ -140,7 +140,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         }
     }
 
-    private fun loadMessagesFromDatabase(recipientId: String, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
+    private fun loadMessagesFromDatabase(recipientId: Long, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
         val messages = chatMessagesDao.loadAll(recipientId, offset, 20).sortedBy { it.date }
 
         // Remove from cache
@@ -158,7 +158,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         }
     }
 
-    private fun loadMessagesFromNetwork(recipientId: String, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
+    private fun loadMessagesFromNetwork(recipientId: Long, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
         try {
             val chatHistoryDTO = protocolClient.makeRequestWithControl<ChatHistoryDTO>("chats.getHistory", ChatHistoryDTO().apply {
                 this.id = recipientId
@@ -197,7 +197,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
     // TODO: Переместить отправку сообщения в отдельный канал!
     @Suppress("NAME_SHADOWING")
-    fun sendTextMessage(recipientId: String, text: String) = GlobalScope.launch(Dispatchers.IO) {
+    fun sendTextMessage(recipientId: Long, text: String) = GlobalScope.launch(Dispatchers.IO) {
         val accountId = accountRepository.cachedAccount?.id ?: return@launch
         val text = formatMessageText(text)
 
@@ -251,7 +251,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         notifyMessageStatus(message, message.peer)
     }
 
-    private suspend fun notifyMessageStatus(message: ChatMessage, recipientId: String) {
+    private suspend fun notifyMessageStatus(message: ChatMessage, recipientId: Long) {
         // Notify subscribers, that message in delivery
         globalSentMessageChannel.send(message)
 
@@ -260,11 +260,11 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
             chatDialogSentMessageChannel?.send(message)
     }
 
-    private fun updateCachedOffset(recipientId: String, offset: Int) {
+    private fun updateCachedOffset(recipientId: Long, offset: Int) {
         loadedRecipientChatsIds[recipientId] = offset // Allow load from this offset
     }
 
-    private fun removeSavedMessages(recipientId: String, removeFromDb: Boolean = true) {
+    private fun removeSavedMessages(recipientId: Long, removeFromDb: Boolean = true) {
         loadedRecipientChatsIds.minusAssign(recipientId)
 
         // Экономим на запросах к БД.

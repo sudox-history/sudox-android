@@ -1,18 +1,16 @@
 package com.sudox.android.data.repositories.auth
 
 import com.sudox.android.common.helpers.*
-import com.sudox.android.data.auth.SudoxAccount
-import com.sudox.android.data.models.common.Errors
-import com.sudox.android.data.models.auth.dto.*
-import com.sudox.android.data.models.auth.state.AuthSession
-import com.sudox.protocol.ProtocolClient
 import com.sudox.android.data.RequestException
 import com.sudox.android.data.RequestRegexException
+import com.sudox.android.data.auth.SudoxAccount
+import com.sudox.android.data.models.auth.dto.*
+import com.sudox.android.data.models.auth.state.AuthSession
+import com.sudox.android.data.models.common.Errors
+import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.filter
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -39,20 +37,18 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     }
 
     private fun listenConnectionState() = GlobalScope.launch(Dispatchers.IO) {
-        protocolClient
-                .connectionStateChannel
-                .openSubscription()
-                .filter { it == ConnectionState.HANDSHAKE_SUCCEED }
-                .consumeEach {
-                    val account = accountRepository.getAccount().await()
+        for (state in protocolClient.connectionStateChannel.openSubscription()) {
+            if (state == ConnectionState.HANDSHAKE_SUCCEED) {
+                val account = accountRepository.getAccount().await()
 
-                    // Если нет аккаунта, то нет и сессии ...
-                    if (account == null) {
-                        notifyAccountSessionInvalid()
-                    } else {
-                        importAuth(account.id, account.secret).await()
-                    }
+                // Если нет аккаунта, то нет и сессии ...
+                if (account == null) {
+                    notifyAccountSessionInvalid()
+                } else {
+                    importAuth(account.id, account.secret)
                 }
+            }
+        }
     }
 
     /**
@@ -63,13 +59,13 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         notifyAccountSessionInvalid()
     }
 
-    private suspend fun notifyAccountSessionInvalid() {
-        accountSessionStateChannel.send(false)
+    private fun notifyAccountSessionInvalid() {
+        accountSessionStateChannel.offer(false)
         sessionIsValid = false
     }
 
-    private suspend fun notifyAccountSessionValid() {
-        accountSessionStateChannel.send(true)
+    private fun notifyAccountSessionValid() {
+        accountSessionStateChannel.offer(true)
         sessionIsValid = true
     }
 
@@ -91,7 +87,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
         // Началась сессия авторизации ...
         if (authCodeDTO.isSuccess())
-            authSessionChannel.send(AuthSession(phoneNumber, authCodeDTO.hash, authCodeDTO.status))
+            authSessionChannel.offer(AuthSession(phoneNumber, authCodeDTO.hash, authCodeDTO.status))
         else
             throw RequestException(authCodeDTO.error)
 
@@ -188,17 +184,16 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
      * Импортирует сессию в соединение. Результат возвращает в LiveData.
      **/
     @Suppress("NAME_SHADOWING")
-    fun importAuth(id: String, secret: String) = GlobalScope.async(Dispatchers.IO) {
-        val id = id.trim()
+    fun importAuth(id: Long, secret: String) = GlobalScope.launch(Dispatchers.IO) {
         val secret = secret.trim()
 
-        val authImportDTO = protocolClient.makeRequest<AuthImportDTO>("auth.importAuth", AuthImportDTO().apply {
+        val authImportDTO = protocolClient.makeRequest<AuthImportDTO>("auth.quickSignIn", AuthImportDTO().apply {
             this.id = id
             this.secret = secret
         }).await()
 
         if (authImportDTO.isSuccess()) {
-            accountSessionStateChannel.send(true)
+            accountSessionStateChannel.offer(true)
             notifyAccountSessionValid()
         } else {
             killAccountSession()

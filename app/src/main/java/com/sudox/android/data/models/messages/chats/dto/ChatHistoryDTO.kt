@@ -8,7 +8,7 @@ import org.json.JSONObject
 class ChatHistoryDTO : JsonModel() {
 
     // For send
-    lateinit var id: String
+    var id: Long = 0
     var limit: Int = 0
     var offset: Int = 0
 

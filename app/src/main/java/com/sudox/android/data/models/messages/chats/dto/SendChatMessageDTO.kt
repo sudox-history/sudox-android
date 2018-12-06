@@ -5,11 +5,11 @@ import org.json.JSONObject
 
 class SendChatMessageDTO : JsonModel() {
 
-    lateinit var peerId: String
+    var peerId: Long = 0
     lateinit var message: String
 
     // For reading
-    lateinit var id: String
+    var id: Long = 0
     var date: Long = 0
 
     override fun toJSON(): JSONObject {
@@ -20,7 +20,7 @@ class SendChatMessageDTO : JsonModel() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        id = jsonObject.optString("id")
+        id = jsonObject.optLong("id")
         date = jsonObject.optLong("date")
     }
 }

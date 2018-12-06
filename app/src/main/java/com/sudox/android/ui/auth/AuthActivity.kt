@@ -109,12 +109,13 @@ class AuthActivity : DaggerAppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        // For guarantee that navbar button status is actual
         if (!authViewModel.protocolClient.isValid()) {
             showWaitForConnectStatus()
         }
     }
 
-    internal fun showWaitForConnectStatus() {
+    private fun showWaitForConnectStatus() {
         authNavigationBar.setClickable(authNavigationBar.buttonNavbarNext, false)
         authNavigationBar.buttonNavbarNext.visibility = View.VISIBLE
         authNavigationBar.buttonNavbarNext.isClickable = false

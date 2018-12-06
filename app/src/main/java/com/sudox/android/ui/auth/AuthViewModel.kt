@@ -1,52 +1,69 @@
 package com.sudox.android.ui.auth
 
+import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.models.SingleLiveEvent
 import com.sudox.protocol.models.enums.ConnectionState
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.filter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class AuthViewModel @Inject constructor(val protocolClient: ProtocolClient,
                                         val authRepository: AuthRepository) : ViewModel() {
 
     private val subscriptions = SubscriptionsContainer()
-    val authActivityEventsLiveData = SingleLiveEvent<AuthActivityEvent>()
-    val authActivitySessionLiveData = SingleLiveEvent<AuthSession>()
+    val authActivityEventsLiveData = MutableLiveData<AuthActivityEvent>()
+    val authActivitySessionLiveData = MutableLiveData<AuthSession>()
 
-    fun start() = GlobalScope.launch(Dispatchers.IO) {
-        GlobalScope.launch {
-            subscriptions.addSubscription(protocolClient
-                    .connectionStateChannel
-                    .openSubscription())
-                    .consumeEach {
-                        if (it == ConnectionState.CONNECTION_CLOSED) {
-                            authActivityEventsLiveData.postValue(AuthActivityEvent.CONNECTION_CLOSED)
-                        } else if (it == ConnectionState.HANDSHAKE_SUCCEED) {
-                            authActivityEventsLiveData.postValue(AuthActivityEvent.HANDSHAKE_SUCCEED)
-                        }
-                    }
+    fun start() {
+        listenConnectionStatus()
+        listenAuthSession()
+        listenAccountSessionState()
+    }
+
+    private fun listenAccountSessionState() = GlobalScope.launch(Dispatchers.IO) {
+        for (state in authRepository
+                .accountSessionStateChannel
+                .openSubscription()) {
+
+            if (state) {
+                authActivityEventsLiveData.postValue(AuthActivityEvent.ACCOUNT_SESSION_STARTED)
+            }
         }
+    }
 
-        GlobalScope.launch {
-            subscriptions.addSubscription(authRepository
-                    .authSessionChannel
-                    .openSubscription())
-                    .filter { it.status != AuthSession.AUTH_STATUS_UNDEFINED }
-                    .consumeEach { authActivitySessionLiveData.postValue(it) }
+    private fun listenAuthSession() = GlobalScope.launch(Dispatchers.IO) {
+        for (status in authRepository
+                .authSessionChannel
+                .openSubscription()) {
+
+            if (status.status != AuthSession.AUTH_STATUS_UNDEFINED) {
+                authActivitySessionLiveData.postValue(status)
+            }
         }
+    }
 
-        GlobalScope.launch {
-            subscriptions.addSubscription(authRepository
-                    .accountSessionStateChannel
-                    .openSubscription())
-                    .filter { it }
-                    .consumeEach { authActivityEventsLiveData.postValue(AuthActivityEvent.ACCOUNT_SESSION_STARTED) }
+    private fun listenConnectionStatus() = GlobalScope.launch(Dispatchers.IO) {
+        authActivityEventsLiveData.postValue(if (protocolClient.isValid()) {
+            AuthActivityEvent.HANDSHAKE_SUCCEED
+        } else {
+            AuthActivityEvent.CONNECTION_CLOSED
+        })
+
+        for (state in subscriptions.addSubscription(protocolClient
+                .connectionStateChannel
+                .openSubscription())) {
+
+            if (state == ConnectionState.CONNECTION_CLOSED) {
+                authActivityEventsLiveData.postValue(AuthActivityEvent.CONNECTION_CLOSED)
+            } else if (state == ConnectionState.HANDSHAKE_SUCCEED) {
+                authActivityEventsLiveData.postValue(AuthActivityEvent.HANDSHAKE_SUCCEED)
+            }
         }
     }
 

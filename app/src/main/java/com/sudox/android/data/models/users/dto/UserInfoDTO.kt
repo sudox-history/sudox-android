@@ -8,8 +8,8 @@ import org.json.JSONObject
 class UserInfoDTO : JsonModel() {
 
     // For sending & reading
-    lateinit var id: String
-    var ids: List<String>? = null
+    var id: Long = 0
+    var ids: List<Long>? = null
 
     // For reading
     var users: ArrayList<UserInfoDTO>? = null
@@ -32,7 +32,7 @@ class UserInfoDTO : JsonModel() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        id = jsonObject.optString("id")
+        id = jsonObject.optLong("id")
         name = jsonObject.optString("name")
         nickname = jsonObject.optString("nickname")
         photo = jsonObject.optString("photo")

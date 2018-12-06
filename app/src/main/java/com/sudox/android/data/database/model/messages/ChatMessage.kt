@@ -9,9 +9,9 @@ import com.sudox.android.data.models.messages.MessageStatus
 
 @Entity(tableName = "chat_messages", indices = [Index("mid", unique = true)])
 data class ChatMessage(@PrimaryKey(autoGenerate = true) var lid: Int = 0,
-                       @ColumnInfo var mid: String? = null,
-                       @ColumnInfo(index = true) var sender: String,
-                       @ColumnInfo(index = true) var peer: String,
+                       @ColumnInfo var mid: Long = 0,
+                       @ColumnInfo(index = true) var sender: Long,
+                       @ColumnInfo(index = true) var peer: Long,
                        @ColumnInfo var message: String,
                        @ColumnInfo var date: Long,
                        @ColumnInfo var direction: MessageDirection,

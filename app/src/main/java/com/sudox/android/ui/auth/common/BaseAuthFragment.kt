@@ -15,29 +15,14 @@ import javax.inject.Inject
  * **/
 abstract class BaseAuthFragment : DaggerFragment() {
 
-    @Inject
-    lateinit var protocolClient: ProtocolClient
-
     abstract fun freeze()
     abstract fun unfreeze()
     abstract fun onConnectionRecovered()
-
-    init {
-        ApplicationLoader.component.inject(this)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // Мы утилизируем фрагменты, поэтому при запуске нужна разморозка
         unfreeze()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        if (!protocolClient.isValid()) {
-            (activity as? AuthActivity)!!.showWaitForConnectStatus()
-        }
     }
 }

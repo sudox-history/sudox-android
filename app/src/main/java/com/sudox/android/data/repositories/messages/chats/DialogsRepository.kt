@@ -46,25 +46,31 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
         isWorking = true
     }
 
-    private fun listenNewMessages() = GlobalScope.launch {
-        chatMessagesRepository
+    private fun listenNewMessages() = GlobalScope.launch(Dispatchers.IO) {
+        for (dialog in chatMessagesRepository
                 .globalNewMessagesChannel
-                .openSubscription()
-                .consumeEach { updateDialog(it) }
+                .openSubscription()) {
+
+            // Notify that dialog was updated
+            updateDialog(dialog)
+        }
     }
 
-    private fun listenSendingMessages() = GlobalScope.launch {
-        chatMessagesRepository
+    private fun listenSendingMessages() = GlobalScope.launch(Dispatchers.IO) {
+        for (dialog in chatMessagesRepository
                 .globalSentMessageChannel
-                .openSubscription()
-                .consumeEach { updateDialog(it) }
+                .openSubscription()) {
+
+            // Notify that dialog was updated
+            updateDialog(dialog)
+        }
     }
 
-    private suspend fun updateDialog(message: ChatMessage) {
+    private fun updateDialog(message: ChatMessage) {
         val dialog = getDialog(message) ?: return
 
         // Notify ...
-        dialogsUpdatesChannel.send(dialog)
+        dialogsUpdatesChannel.offer(dialog)
     }
 
     private fun listenConnectionStatus() = GlobalScope.launch {
@@ -80,8 +86,10 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
 
     fun loadInitialDialogs() = GlobalScope.launch {
         if (lastMessagesLoadedOffset < 0 && authRepository.sessionIsValid && protocolClient.isValid()) {
-            loadDialogsFromDatabase().await()
-            loadDialogsFromNetwork().await()
+            runBlocking {
+                loadDialogsFromDatabase()
+                loadDialogsFromNetwork()
+            }
         } else {
             loadDialogsFromDatabase()
         }
@@ -98,7 +106,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
         }
     }
 
-    private fun loadDialogsFromNetwork(offset: Int = 0) = GlobalScope.async(Dispatchers.IO) {
+    private fun loadDialogsFromNetwork(offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
         try {
             val chatsLastMessagesDTO = protocolClient.makeRequestWithControl<ChatsLastMessagesDTO>("chats.getChats", ChatsLastMessagesDTO().apply {
                 this.limit = 10
@@ -115,15 +123,15 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
 
                 // offset == 0 => first initializing
                 if (offset == 0) {
-                    dialogsChannel.send(Pair(LoadingType.INITIAL, dialogs))
+                    dialogsChannel.offer(Pair(LoadingType.INITIAL, dialogs))
                 } else if (dialogs.isNotEmpty()) {
-                    dialogsChannel.send(Pair(LoadingType.PAGING, dialogs))
+                    dialogsChannel.offer(Pair(LoadingType.PAGING, dialogs))
                 }
             } else {
                 if (offset == 0) {
                     resetLoadedOffset()
                     chatMessagesRepository.removeAllSavedMessages()
-                    dialogsChannel.send(Pair(LoadingType.INITIAL, arrayListOf()))
+                    dialogsChannel.offer(Pair(LoadingType.INITIAL, arrayListOf()))
                 } else if (chatsLastMessagesDTO.error == Errors.EMPTY_CHATS) {
                     lastMessagesEnded = true
                 }
@@ -133,7 +141,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
         }
     }
 
-    private fun loadDialogsFromDatabase(offset: Int = 0) = GlobalScope.async(Dispatchers.IO) {
+    private fun loadDialogsFromDatabase(offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
         val messages = chatMessagesDao.loadAll(offset, 10)
 
         // Сообщения могут отсутствовать в БД
@@ -142,16 +150,16 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
                 resetLoadedOffset()
 
                 // offset == 0 => first initializing
-                dialogsChannel.send(Pair(LoadingType.INITIAL, arrayListOf()))
+                dialogsChannel.offer(Pair(LoadingType.INITIAL, arrayListOf()))
             }
         } else {
             val dialogs = getDialogs(messages)
 
             // offset == 0 => first initializing
             if (offset == 0) {
-                dialogsChannel.send(Pair(LoadingType.INITIAL, dialogs))
+                dialogsChannel.offer(Pair(LoadingType.INITIAL, dialogs))
             } else if (dialogs.isNotEmpty()) {
-                dialogsChannel.send(Pair(LoadingType.PAGING, dialogs))
+                dialogsChannel.offer(Pair(LoadingType.PAGING, dialogs))
             }
         }
     }

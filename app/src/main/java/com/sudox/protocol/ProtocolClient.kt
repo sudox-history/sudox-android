@@ -65,7 +65,7 @@ class ProtocolClient @Inject constructor() {
             } catch (e: IOException) {
                 // Костыль, но должно работать
                 if (notifyAboutError) GlobalScope.launch {
-                    connectionStateChannel.send(ConnectionState.CONNECT_ERRORED)
+                    connectionStateChannel.offer(ConnectionState.CONNECT_ERRORED)
                 }
 
                 if (controller != null && controller!!.handler != null) {
@@ -169,7 +169,7 @@ class ProtocolClient @Inject constructor() {
     fun sendMessage(event: String, message: JsonModel? = null) {
         if (!isValid()) {
             GlobalScope.launch {
-                connectionStateChannel.send(ConnectionState.CONNECTION_CLOSED)
+                connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
             }
         } else {
             controller!!.handler!!.post(object : Runnable {
@@ -202,7 +202,7 @@ class ProtocolClient @Inject constructor() {
                             controller!!.handler?.postDelayed(this, 1000)
                         }
                     } else {
-                        GlobalScope.launch { connectionStateChannel.send(ConnectionState.CONNECTION_CLOSED) }
+                        GlobalScope.launch { connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED) }
                     }
                 }
             })

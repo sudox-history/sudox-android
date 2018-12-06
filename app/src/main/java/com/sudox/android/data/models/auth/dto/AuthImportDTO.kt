@@ -5,13 +5,13 @@ import org.json.JSONObject
 
 class AuthImportDTO : JsonModel() {
 
-    lateinit var id: String
+    var id: Long = 0
     lateinit var secret: String
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
             put("id", id)
-            put("secret", secret)
+            put("bytes", secret)
         }
     }
 

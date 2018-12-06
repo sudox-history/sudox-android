@@ -33,7 +33,7 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
         accountManager.addAccountExplicitly(accountInstance, null, null)
 
         // Write account data
-        accountManager.setUserData(accountInstance, KEY_ACCOUNT_ID, account.id)
+        accountManager.setUserData(accountInstance, KEY_ACCOUNT_ID, account.id.toString())
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_NAME, account.name)
         accountManager.setPassword(accountInstance, account.secret)
 
@@ -65,7 +65,7 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
 
         if (accounts.isNotEmpty()) {
             val account = accounts[accounts.size - 1]
-            val accountId = accountManager.getUserData(account, KEY_ACCOUNT_ID)
+            val accountId = accountManager.getUserData(account, KEY_ACCOUNT_ID).toLong()
             val accountName = accountManager.getUserData(account, KEY_ACCOUNT_NAME)
             val accountSecret = accountManager.getPassword(account)
             val sudoxAccount = SudoxAccount(accountId, accountName, accountSecret)

@@ -13,14 +13,14 @@ interface UserDao {
     fun insertOne(user: User)
 
     @Query("DELETE FROM users WHERE uid in (:ids)")
-    fun removeAll(ids: List<String>)
+    fun removeAll(ids: List<Long>)
 
     @Query("DELETE FROM users WHERE uid = :id")
-    fun removeOne(id: String)
+    fun removeOne(id: Long)
 
     @Query("SELECT * FROM users WHERE uid in (:ids)")
-    fun loadByIds(ids: List<String>): List<User>
+    fun loadByIds(ids: List<Long>): List<User>
 
     @Query("SELECT * FROM users WHERE uid = :id")
-    fun loadById(id: String): User
+    fun loadById(id: Long): User
 }

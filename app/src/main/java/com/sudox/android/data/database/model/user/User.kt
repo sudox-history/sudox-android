@@ -7,7 +7,7 @@ import com.sudox.android.data.models.users.UserType
 import java.io.Serializable
 
 @Entity(tableName = "users")
-data class User(@PrimaryKey var uid: String,
+data class User(@PrimaryKey var uid: Long,
                 @ColumnInfo var name: String,
                 @ColumnInfo var nickname: String,
                 @ColumnInfo var photo: String,

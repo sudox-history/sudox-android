@@ -27,7 +27,7 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
     // Subscriptions
     private val subscriptionsContainer: SubscriptionsContainer = SubscriptionsContainer()
 
-    fun start(recipientId: String) = GlobalScope.launch {
+    fun start(recipientId: Long) = GlobalScope.launch {
         chatMessagesRepository.openChatDialog(recipientId)
 
         // Set callback for new messages receiving
@@ -66,11 +66,11 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
         chatMessagesRepository.loadInitialMessages(recipientId)
     }
 
-    fun loadPartOfMessages(recipientId: String, offset: Int) = GlobalScope.launch(Dispatchers.IO) {
+    fun loadPartOfMessages(recipientId: Long, offset: Int) = GlobalScope.launch(Dispatchers.IO) {
         chatMessagesRepository.loadPagedMessages(recipientId, offset)
     }
 
-    fun sendTextMessage(recipientId: String, text: String) {
+    fun sendTextMessage(recipientId: Long, text: String) {
         chatMessagesRepository.sendTextMessage(recipientId, text)
     }
 

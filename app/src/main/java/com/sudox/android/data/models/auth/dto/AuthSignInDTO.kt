@@ -11,7 +11,7 @@ class AuthSignInDTO : JsonModel() {
     lateinit var phoneNumber: String
 
     // For receiving ...
-    lateinit var id: String
+    var id: Long = 0
     lateinit var secret: String
 
     override fun toJSON(): JSONObject {
@@ -23,7 +23,7 @@ class AuthSignInDTO : JsonModel() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        id = jsonObject.optString("id")
-        secret = jsonObject.optString("secret")
+        id = jsonObject.optLong("id")
+        secret = jsonObject.optString("bytes")
     }
 }

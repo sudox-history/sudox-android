@@ -7,7 +7,6 @@ import android.util.Base64
 import com.sudox.protocol.helpers.*
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
@@ -133,7 +132,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
      **/
     private fun handleUpgrade(packet: JSONArray) {
         if (packet.length() >= 2 && packet.optInt(1) == 1) {
-            client.connectionStateChannel.sendBlocking(ConnectionState.HANDSHAKE_SUCCEED)
+            client.connectionStateChannel.offer(ConnectionState.HANDSHAKE_SUCCEED)
         } else {
             client.close()
         }
@@ -184,7 +183,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
         client.kill(false)
 
         // Для слушателей состояния.
-        client.connectionStateChannel.sendBlocking(ConnectionState.CONNECTION_CLOSED)
+        client.connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
 
         // TODO: В будущем реализовать определение статуса приложения (в фоне увеличивать интервал между попытками)
         handler!!.postDelayed({ client.connect(false) }, 1000)
