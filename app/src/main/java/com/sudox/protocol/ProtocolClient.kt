@@ -180,10 +180,8 @@ class ProtocolClient @Inject constructor() {
                         if (key != null) {
                             val iv = randomBase64String(16)
                             val salt = randomBase64String(32)
-                            val json = message?.toJSON() ?: JSONObject()
-                            val msg = json
-                                    .toString()
-                                    .replace("\\/", "/")
+                            val json = message?.writeRequest() ?: "{}"
+                            val msg = json.replace("\\/", "/")
 
                             val hmac = Base64.encodeToString(
                                     getHmac(controller!!.key!!, event + msg + salt),

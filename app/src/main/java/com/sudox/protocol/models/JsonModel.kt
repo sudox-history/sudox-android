@@ -9,7 +9,8 @@ abstract class JsonModel {
     var error = -1
     var response = 0
 
-    open fun toJSON(): JSONObject { throw UnsupportedOperationException() }
+    open fun toJSON(): JSONObject? { return null }
+    open fun toJSONArray(): JSONArray? { return null }
     open fun fromJSON(jsonObject: JSONObject) {}
     open fun fromJSONArray(jsonArray: JSONArray) {}
 
@@ -26,6 +27,16 @@ abstract class JsonModel {
                 is JSONArray -> fromJSONArray(value)
             }
         }
+    }
+
+    fun writeRequest(): String {
+        val jsonObject = toJSON()
+
+        // First is object
+        if (jsonObject != null) return jsonObject.toString()
+
+        // First is array
+        return toJSONArray()!!.toString()
     }
 
     fun containsError(): Boolean {

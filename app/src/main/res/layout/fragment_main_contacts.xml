@@ -5,19 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <com.sudox.design.navigation.toolbar.SudoxToolbar
         android:id="@+id/contactsToolbar"
-        style="@style/ToolbarTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/contacts" />
 
-
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/contactsList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingTop="5dp"
-        android:paddingBottom="10dp"/>
+        android:paddingTop="3dp" />
+
 </LinearLayout>

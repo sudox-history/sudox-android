@@ -1,8 +1,23 @@
 package com.sudox.android.data.repositories.main
 
+import android.content.Context
+import android.provider.ContactsContract
+import com.sudox.android.common.helpers.NAME_REGEX
+import com.sudox.android.common.helpers.PHONE_REGEX
+import com.sudox.android.common.helpers.WHITESPACES_REMOVE_REGEX
+import com.sudox.android.common.helpers.findAndRemoveIf
 import com.sudox.android.data.database.dao.user.UserDao
+import com.sudox.android.data.database.model.user.User
+import com.sudox.android.data.exceptions.RequestException
+import com.sudox.android.data.exceptions.RequestRegexException
+import com.sudox.android.data.models.common.Errors
+import com.sudox.android.data.models.contacts.dto.*
+import com.sudox.android.data.models.users.UserType
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
+import com.sudox.protocol.models.NetworkException
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,129 +28,181 @@ const val CONTACTS_PHONE_REGEX_ERROR = 1
 class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                              private val authRepository: AuthRepository,
                                              private val usersRepository: UsersRepository,
-                                             private val userDao: UserDao) {
+                                             private val userDao: UserDao,
+                                             private val context: Context) {
 
-//    val contactsGetLiveData: LiveData<List<User>> = userDao.getContacts()
-//
-//    init {
-//        // Обновим данные когда будет установлена сессия ...
-//        authRepository.accountSessionLiveData.observeForever {
-//            if (it?.lived!!) requestContacts()
-//        }
-//
-//        // Добавление контактов.
-//        protocolClient.listenMessage<ContactAddDTO>("updates.importContact") {
-//            saveNotifyContact(it)
-//        }
-//
-//        // Удаление контактов.
-//        protocolClient.listenMessage<ContactRemoveDTO>("updates.removeContact") {
-//            removeNotifyContact(it)
-//        }
-//    }
-//
-//    /**
-//     * Получает пользователя по ID, пришедшему в уведомлении, маппит его до объекта контакта и сохраняет в БД
-//     **/
-//    private fun saveNotifyContact(contactNotifyDTO: ContactAddDTO) {
-//        GlobalScope.async {
-//            userDao.insertOne(User.TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(contactNotifyDTO))
-//        }
-//    }
-//
-//    /**
-//     * Удаляет пользователя с указанным ID из БД.
-//     * Если контакт с таким ID в БД не будет найден - ничего не произойдет.
-//     **/
-//    private fun removeNotifyContact(contactNotifyDTO: ContactRemoveDTO) {
-//        GlobalScope.async {
-//            userDao.removeUserFromContacts(contactNotifyDTO.id, contactNotifyDTO.name)
-//        }
-//    }
-//
-//    /**
-//     * Обновляет копию контактов в БД до актуального состояния.
-//     * Если нет соединения с сервером, то контакты грузятся с локальной БД
-//     *
-//     * Последняя актуальная копия из БД всегда в LiveData.
-//     **/
-//    fun requestContacts() {
-//        // Получаем данные ...
-//        protocolClient.makeRequest<ContactsListDTO>("contacts.getContacts") {
-//            // Если будет UNAUTHORIZED, то выполнится перехват на глобальном уровне и произойдет сброс сессии
-//            if (it.isSuccess()) {
-//                updateContactsInDatabase(it.contacts.map(User.TRANSFORMATION_FROM_CONTACT_INFO_DTO))
-//            } else if (it.error == Errors.EMPTY_CONTACTS_LIST) {
-//                updateContactsInDatabase(emptyList())
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Добавляет контакт по ID, в случае ошибки на любом этапе возвращает errorCallback
-//     */
-//    fun addContact(name: String,
-//                   phone: String,
-//                   regexCallback: (List<Int>) -> (Unit),
-//                   errorCallback: (Int) -> (Unit),
-//                   successCallback: () -> (Unit)) = GlobalScope.async {
-//
-//        val filteredName = name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
-//        val regexErrors = arrayListOf<Int>()
-//
-//        // Валидация
-//        if (filteredName.isNotEmpty() && !NAME_REGEX.matches(filteredName)) {
-//            regexErrors.plusAssign(CONTACTS_NAME_REGEX_ERROR)
-//        }
-//
-//        if (!PHONE_REGEX.matches(phone)) {
-//            regexErrors.plusAssign(CONTACTS_PHONE_REGEX_ERROR)
-//        }
-//
-//        // Fix bug with single validation
-//        if (regexErrors.isNotEmpty()) {
-//            regexCallback(regexErrors)
-//            return@async
-//        }
-//
-//        protocolClient.makeRequest<ContactAddDTO>("contacts.importContact", ContactAddDTO().apply {
-//            this.name = filteredName
-//            this.phone = phone
-//        }) {
-//            if (it.isSuccess()) {
-//                userDao.insertOne(User.TRANSFORMATION_FROM_CONTACT_CHANGE_DTO.invoke(it))
-//                successCallback()
-//            } else {
-//                errorCallback(it.error)
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Удаляет контакт. Если нет соединения с сервером - ничего не произойдет.
-//     **/
-//    fun removeContact(id: String) {
-//        protocolClient.makeRequest<ContactRemoveDTO>("contacts.removeContact", ContactRemoveDTO().apply {
-//            this.id = id
-//        }) {
-//            if (it.isSuccess() || it.error == Errors.INVALID_USER) {
-//                userDao.removeUserFromContacts(id, it.name)
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Обновляет контакты в БД на основе переданного в аргументах списка.
-//     *
-//     * После обновления актуальная копия прилетит в LiveData.
-//     */
-//    private fun updateContactsInDatabase(users: List<User>) {
-//        GlobalScope.async {
-//            userDao.removeAll()
-//
-//            // Сохраним контакты в БД
-//            if (users.isNotEmpty()) userDao.insertAll(users)
-//        }
-//    }
+    val contactsChannel: ConflatedBroadcastChannel<ArrayList<User>> = ConflatedBroadcastChannel()
+    val newContactChannel: ConflatedBroadcastChannel<User> = ConflatedBroadcastChannel()
+    val removedContactIdChannel: ConflatedBroadcastChannel<Long> = ConflatedBroadcastChannel()
+
+    init {
+        GlobalScope.launch(Dispatchers.IO) {
+            // Загрузим начальную копию с БД
+            contactsChannel.offer(ArrayList(userDao.loadByType(UserType.CONTACT)))
+
+            // Слушаем сессию ...
+            for (state in authRepository
+                    .accountSessionStateChannel
+                    .openSubscription()) {
+
+                // Only when session was installed
+                if (!state) return@launch
+
+                // Update contacts ...
+                requestContacts()
+            }
+        }
+
+        // Добавление контактов.
+        protocolClient.listenMessage<ContactAddDTO>("updates.contacts.new") {
+            saveNotifyContact(it)
+        }
+
+        // Удаление контактов.
+        protocolClient.listenMessage<ContactRemoveDTO>("updates.contacts.remove") {
+            removeNotifyContact(it)
+        }
+    }
+
+    private fun saveNotifyContact(contactNotifyDTO: ContactAddDTO) = GlobalScope.launch(Dispatchers.IO) {
+        // P.S.: Либо выполнится запрос к серверу и юзер будет сохран как контакт, либо в БД данный юзер просто будет помечен как контакт.
+        val user = usersRepository.loadUser(contactNotifyDTO.id, UserType.CONTACT).await()
+                ?: return@launch
+
+        // На отображение в UI ...
+        notifyContactAdded(user)
+    }
+
+    private fun removeNotifyContact(contactNotifyDTO: ContactRemoveDTO) = GlobalScope.launch(Dispatchers.IO) {
+        // Снимаем метку о том, что юзер есть в контактах.
+        userDao.setType(contactNotifyDTO.id, UserType.UNKNOWN)
+
+        // Апдейт ;)
+        notifyContactRemoved(contactNotifyDTO.id)
+    }
+
+    private fun requestContacts() = GlobalScope.launch(Dispatchers.IO) {
+        try {
+            val contactsIdsListDTO = protocolClient
+                    .makeRequest<ContactsIdsListDTO>("contacts.get")
+                    .await()
+
+            // Чистим список контактов
+            userDao.setUnknownByType(UserType.CONTACT) // Скроем все ...
+
+            // Контактов нет
+            if (contactsIdsListDTO.error == Errors.EMPTY_CONTACTS_LIST) {
+                contactsChannel.offer(arrayListOf()) // Обновим список в UI ...
+            } else if (contactsIdsListDTO.containsError()) {
+                contactsChannel.offer(arrayListOf())
+            } else {
+                contactsChannel.offer(ArrayList(usersRepository
+                        .loadUsers(contactsIdsListDTO.ids, UserType.CONTACT)
+                        .await()))
+            }
+        } catch (e: NetworkException) {
+            // Ignore
+        }
+    }
+
+    fun addContact(name: String, phone: String) = GlobalScope.launch(Dispatchers.IO) {
+        val filteredName = name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
+        val regexFields = arrayListOf<Int>()
+
+        if (filteredName.isNotEmpty() && !NAME_REGEX.matches(filteredName))
+            regexFields.plusAssign(CONTACTS_NAME_REGEX_ERROR)
+        if (!PHONE_REGEX.matches(phone)) regexFields.plusAssign(CONTACTS_PHONE_REGEX_ERROR)
+        if (regexFields.isNotEmpty()) throw RequestRegexException(regexFields)
+
+        try {
+            val contactAddDTO = protocolClient.makeRequestWithControl<ContactAddDTO>("contacts.add", ContactAddDTO().apply {
+                this.name = filteredName
+                this.phone = phone
+            }).await()
+
+            if (contactAddDTO.isSuccess()) {
+                // При загрузке пользователь будет отмечен и сохранен в БД как контакт.
+                val user = usersRepository
+                        .loadUser(contactAddDTO.id, UserType.CONTACT)
+                        .await() ?: return@launch
+
+                // Обновление в UI
+                notifyContactAdded(user)
+            } else {
+                throw RequestException(contactAddDTO.error)
+            }
+        } catch (e: NetworkException) {
+            // Ignore
+        }
+    }
+
+    fun removeContact(id: Long) = GlobalScope.launch(Dispatchers.IO) {
+        try {
+            val contactRemoveDTO = protocolClient
+                    .makeRequestWithControl<ContactRemoveDTO>("contacts.remove", ContactRemoveDTO().apply {
+                        this.id = id
+                    }).await()
+
+            if (!(contactRemoveDTO.isSuccess() || contactRemoveDTO.error == Errors.INVALID_USER))
+                return@launch
+
+            // Removing ...
+            userDao.setType(id, UserType.UNKNOWN)
+            notifyContactRemoved(id)
+        } catch (e: NetworkException) {
+            // Ignore
+        }
+    }
+
+    fun syncContacts() = GlobalScope.launch(Dispatchers.IO) {
+        val phoneContacts = loadContactsFromPhone()
+
+        // Nothing to sync ...
+        if (phoneContacts.isEmpty()) return@launch
+
+        // Will be remove all contacts & save the new
+        try {
+            val contactsSyncDTO = protocolClient.makeRequestWithControl<ContactsSyncDTO>("contacts.sync", ContactsSyncDTO().apply {
+                items = phoneContacts
+            }).await()
+
+            // Load new contacts ...
+            if (contactsSyncDTO.isSuccess()) requestContacts()
+        } catch (e: NetworkException) {
+            // Ignore
+        }
+    }
+
+    fun loadContactsFromPhone(): ArrayList<ContactPairDTO> {
+        context
+                .contentResolver
+                .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)
+                .use {
+                    val nameColumnIndex = it!!.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+                    val hasPhoneNumberIndex = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.HAS_PHONE_NUMBER)
+                    val phoneColumnIndex = it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                    val pairs = arrayListOf<ContactPairDTO>()
+
+                    while (it.moveToNext()) {
+                        if (it.getInt(hasPhoneNumberIndex) == 0) continue
+
+                        pairs.plusAssign(ContactPairDTO().apply {
+                            phone = it.getString(phoneColumnIndex)
+                            name = it.getString(nameColumnIndex)
+                        })
+                    }
+
+                    return pairs
+                }
+    }
+
+    private suspend fun notifyContactAdded(user: User) {
+        contactsChannel.valueOrNull?.plusAssign(user)
+        newContactChannel.send(user)
+    }
+
+    private suspend fun notifyContactRemoved(id: Long) {
+        contactsChannel.valueOrNull?.findAndRemoveIf { it.uid == id }
+        removedContactIdChannel.send(id)
+    }
 }
-

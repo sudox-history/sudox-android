@@ -92,6 +92,9 @@
     <string name="invite_friend_sms">Hi! I want to talk with you in Sudox! https://vk.com/sudox_messenger</string>
     <string name="you">You</string>
 
+    <!-- Formats -->
+    <string name="nickname_format" translatable="false"><![CDATA[\%1$s<br><font color="#BDBDBD">\n%2$s</font></br>]]></string>
+
     <plurals name="contacts_amount">
         <item quantity="one">%1$d contact</item>
         <item quantity="few">%1$d contacts</item>

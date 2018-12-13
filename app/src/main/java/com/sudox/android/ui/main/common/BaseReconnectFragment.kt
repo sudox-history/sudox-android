@@ -42,17 +42,17 @@ abstract class BaseReconnectFragment : DaggerFragment() {
         listenForConnection()
     }
 
-    fun listenForConnection() = GlobalScope.launch {
+    private fun listenForConnection() = GlobalScope.launch(Dispatchers.IO) {
         connectionStateSubscription = protocolClient
                 .connectionStateChannel
                 .openSubscription()
 
-        connectionStateSubscription!!.consumeEach {
-            val state: Boolean = if (it == ConnectionState.CONNECTION_CLOSED) {
+        for (state in connectionStateSubscription!!) {
+            val status: Boolean = if (state == ConnectionState.CONNECTION_CLOSED) {
                 false
-            } else it == ConnectionState.HANDSHAKE_SUCCEED
+            } else state == ConnectionState.HANDSHAKE_SUCCEED
 
-            GlobalScope.launch(Dispatchers.Main) { showConnectionStatus(state) }
+            GlobalScope.launch(Dispatchers.Main) { showConnectionStatus(status) }
         }
     }
 

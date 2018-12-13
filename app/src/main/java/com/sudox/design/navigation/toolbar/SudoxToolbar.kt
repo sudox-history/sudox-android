@@ -2,8 +2,10 @@ package com.sudox.design.navigation.toolbar
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewCompat
+import android.support.v7.view.menu.ActionMenuItemView
 import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
@@ -12,8 +14,18 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
 import com.sudox.design.helpers.FontsHelper.Companion.SANS_SERIF_LIGHT
+import com.sudox.protocol.ProtocolClient
+import com.sudox.protocol.models.enums.ConnectionState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.android.Main
+import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class SudoxToolbar : Toolbar {
 
@@ -22,28 +34,25 @@ class SudoxToolbar : Toolbar {
     private var navigationButtonView: ImageButton? = null
     private var featureTextButton: TextView? = null
     private var featureButtonText: String? = null
+    private var normalTitleText: String? = null
+    private var connectionStateSubscription: ReceiveChannel<ConnectionState>? = null
 
-    constructor(context: Context) : super(context) {
-        init()
-    }
+    @Inject
+    @JvmField
+    var protocolClient: ProtocolClient? = null
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        readAttrs(attrs)
-        init()
-    }
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        if (attrs != null) readAttrs(attrs)
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        readAttrs(attrs)
-        init()
-    }
-
-    private fun init() {
+        // Initialization
         resetInsets()
 
         // Configuring toolbar
-        configureMenu()
-        configureNavigationButton()
         configureBasic()
+        configureNavigationButton()
+        configureMenu()
     }
 
     private fun readAttrs(attrs: AttributeSet) {
@@ -60,7 +69,7 @@ class SudoxToolbar : Toolbar {
         navigationButtonView = Toolbar::class.java
                 .getDeclaredField("mNavButtonView")
                 .apply { isAccessible = true }
-                .get(this) as ImageButton
+                .get(this) as? ImageButton
 
         if (navigationButtonView != null) {
             navigationButtonView?.setImageResource(R.drawable.ic_arrow_back)
@@ -71,9 +80,9 @@ class SudoxToolbar : Toolbar {
             featureTextButton!!.text = featureButtonText
             featureTextButton!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
             featureTextButton!!.setTextColor(Color.WHITE)
-            featureTextButton!!.gravity = Gravity.CENTER
+            featureTextButton!!.gravity = Gravity.END
             featureTextButton!!.layoutParams = generateDefaultLayoutParams().apply {
-                gravity = GravityCompat.END or (getButtonGravity() and Gravity.VERTICAL_GRAVITY_MASK);
+                gravity = GravityCompat.END or Gravity.CENTER_VERTICAL;
             }
 
             addSystemView(featureTextButton!!, false)
@@ -102,14 +111,15 @@ class SudoxToolbar : Toolbar {
     }
 
     private fun configureMenu() {
-        if (featureButtonText == null) return
+        if (featureButtonText != null) return
 
+        // Initialize the menu view
         Toolbar::class.java
                 .getDeclaredMethod("ensureMenuView")
                 .apply { isAccessible = true }
                 .invoke(this)
 
-        // Cache menu for better performance
+        // Reflection is the single way to get & change mMenuView field
         actionMenuView = Toolbar::class.java
                 .getDeclaredField("mMenuView")
                 .apply { isAccessible = true }
@@ -136,11 +146,15 @@ class SudoxToolbar : Toolbar {
 
     private fun calculateEndPadding(menuItemsCount: Int, initialEndPadding: Int): Int {
         if (menuItemsCount > 0) {
-            val lastItem = actionMenuView!!.getChildAt(menuItemsCount - 1)
+            val lastItem = actionMenuView!!.getChildAt(menuItemsCount - 1) as ActionMenuItemView
             val lastItemEndPadding = if (lastItem.paddingEnd > 0) lastItem.paddingEnd else lastItem.paddingRight
+            val iconWidth = (ActionMenuItemView::class.java
+                    .getDeclaredField("mIcon")
+                    .apply { isAccessible = true }
+                    .get(lastItem) as Drawable).intrinsicWidth
 
             // Recalculate end padding
-            return initialEndPadding - lastItemEndPadding
+            return initialEndPadding - lastItemEndPadding - (iconWidth / 2)
         }
 
         return initialEndPadding
@@ -162,6 +176,32 @@ class SudoxToolbar : Toolbar {
         titleTextView?.setPadding(0, 0, 0, 0)
         titleTextView?.setPaddingRelative(0, 0, 0, 0)
         titleTextView?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19F)
+        normalTitleText = title.toString()
+
+        listenConnectionState()
+    }
+
+    private fun listenConnectionState() {
+        // Listen ...
+        GlobalScope.launch(Dispatchers.IO) {
+            // Async inject for better fps
+            if (protocolClient == null) ApplicationLoader.component.inject(this@SudoxToolbar)
+            if (!protocolClient!!.isValid()) titleTextView?.setText(resources.getString(R.string.wait_for_connect))
+            if (connectionStateSubscription != null) return@launch
+
+            // Open subscription
+            connectionStateSubscription = protocolClient!!
+                    .connectionStateChannel
+                    .openSubscription()
+
+            for (state in connectionStateSubscription!!) {
+                if (state == ConnectionState.CONNECTION_CLOSED) {
+                    GlobalScope.launch(Dispatchers.Main) { titleTextView!!.setText(resources.getString(R.string.wait_for_connect)) }
+                } else if (state == ConnectionState.HANDSHAKE_SUCCEED) {
+                    GlobalScope.launch(Dispatchers.Main) { titleTextView!!.setText(normalTitleText) }
+                }
+            }
+        }
     }
 
     fun setFeatureButtonOnClickListener(listener: View.OnClickListener) {
@@ -191,9 +231,6 @@ class SudoxToolbar : Toolbar {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        // Configure paddings
-        configurePaddings()
-
         // Calculate new sizes
         val width = measuredWidthAndState
         val height = MeasureSpec.makeMeasureSpec(resources.getDimension(R.dimen.toolbar_height).toInt(), MeasureSpec.EXACTLY)
@@ -211,7 +248,7 @@ class SudoxToolbar : Toolbar {
                         .get(this)
 
                 Toolbar::class.java
-                        .getDeclaredMethod("measureChildConstrained", View::class.java, Int::class.java, Int::class.java, Int::class.java, Int::class.java,  Int::class.java)
+                        .getDeclaredMethod("measureChildConstrained", View::class.java, Int::class.java, Int::class.java, Int::class.java, Int::class.java, Int::class.java)
                         .apply { isAccessible = true }
                         .invoke(this, featureTextButton, widthMeasureSpec, 0, heightMeasureSpec, 0, maxHeight)
             }
@@ -219,6 +256,9 @@ class SudoxToolbar : Toolbar {
 
         // Set new size
         setMeasuredDimension(width, height)
+
+        // Configure paddings
+        configurePaddings()
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -252,5 +292,12 @@ class SudoxToolbar : Toolbar {
                     .apply { isAccessible = true }
                     .invoke(this, featureTextButton, width - paddingRight, collapsingMargins, alignmentHeight)
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+
+        // Unsubscribe!
+        connectionStateSubscription?.cancel()
     }
 }

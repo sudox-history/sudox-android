@@ -5,16 +5,11 @@ import org.json.JSONObject
 
 class ContactAddDTO : JsonModel() {
 
-    // For read ...
     lateinit var name: String
     lateinit var phone: String
 
-    lateinit var id: String
-    lateinit var nameS: String
-    lateinit var nickname: String
-    lateinit var photo: String
-    var status: String? = null
-    var bio: String? = null
+    // For read/send ...
+    var id: Long = 0
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
@@ -24,14 +19,6 @@ class ContactAddDTO : JsonModel() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        id = jsonObject.optString("id")
-        nameS = jsonObject.optString("name")
-        nickname = jsonObject.optString("nickname")
-        photo = jsonObject.optString("photo")
-
-        if(jsonObject.has("status"))
-            status = jsonObject.optString("status")
-        if(jsonObject.has("bio"))
-            bio = jsonObject.optString("bio")
+        id = jsonObject.optLong("id")
     }
 }

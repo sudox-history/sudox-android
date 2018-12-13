@@ -2,48 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackgroundBorderless"
     android:clickable="true"
     android:focusable="true"
-    android:orientation="horizontal"
-    android:paddingEnd="26dp"
-    android:paddingStart="26dp"
-    android:background="@drawable/ripple_effect">
+    android:paddingStart="25dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="25dp"
+    android:paddingBottom="6dp">
 
-    <ImageView
-        android:id="@+id/dialogRecipientAvatar"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginTop="6dp"
-        android:src="@color/colorAccent" />
+    <com.sudox.design.avatar.UserAvatarView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="#FFFFFF" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="15dp"
-        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/dialogRecipientName"
             style="@style/TextViewWithoutPaddings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Антон Янкин"
-            android:textColor="@color/colorAccent"
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/nickname"
             style="@style/TextViewWithoutPaddings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:fontFamily="sans-serif-light"
-            android:text="kerjen01"
-            android:textColor="@color/colorHint"
-            android:textSize="14sp" />
+            android:text="@string/nickname_format"
+            android:textSize="13sp" />
 
     </LinearLayout>
 </LinearLayout>

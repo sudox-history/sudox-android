@@ -46,21 +46,6 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
 
         Fabric.with(this, Crashlytics())
 
-        // Strict-mode
-        StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectAll()
-                .penaltyLog()
-                .build())
-
-        StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .penaltyLog()
-                .penaltyDeath()
-                .build())
-
         // Запуск статистики и т.п.
         val sharedPreferences = getSharedPreferences("com.sudox.android", Context.MODE_PRIVATE)
         val isFirstLaunch = sharedPreferences.getBoolean("firstRun", true)

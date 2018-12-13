@@ -10,7 +10,9 @@ import com.sudox.android.common.di.module.activities.ActivityModule
 import com.sudox.android.ui.auth.common.BaseAuthFragment
 import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.main.contacts.view.FoundedContactAddExpandedView
+import com.sudox.design.navigation.toolbar.SudoxToolbar
 import com.sudox.design.navigation.toolbar.expanded.StatusExpandedView
+import com.sudox.protocol.ProtocolClient
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -33,10 +35,10 @@ interface AppComponent : AndroidInjector<DaggerApplication> {
     fun inject(foundedContactAddExpandedView: FoundedContactAddExpandedView)
     fun inject(baseAuthFragment: BaseAuthFragment)
     fun inject(baseReconnectFragment: BaseReconnectFragment)
+    fun inject(sudoxToolbar: SudoxToolbar)
 
-    // Не ебу зачем это здесь написали, но без него не работает
+    // Не знаю зачем это здесь написали, но без него не работает
     override fun inject(instance: DaggerApplication?)
-
 
     @Component.Builder
     interface Builder {

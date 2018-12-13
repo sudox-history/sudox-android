@@ -41,7 +41,7 @@ class InviteFriendDialogFragment @Inject constructor() : DaggerAppCompatDialogFr
     private fun sendMessage() {
         val smsIntent = Intent(Intent.ACTION_VIEW)
         smsIntent.type = "vnd.android-dir/mms-sms"
-        smsIntent.putExtra("address", "+7${contactAddFragment.phoneNumber}")
+//        smsIntent.putExtra("address", "+7${contactAddFragment.phoneNumber}")
         smsIntent.putExtra("sms_body", getString(R.string.invite_friend_sms))
         startActivity(smsIntent)
     }

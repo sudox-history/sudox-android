@@ -6,80 +6,10 @@
     android:orientation="vertical">
 
     <com.sudox.design.navigation.toolbar.SudoxToolbar
-        android:id="@+id/contactAddToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:featureButtonText="@string/add"
         app:navigationIcon="@drawable/ic_arrow_back"
         app:title="@string/new_contact" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="25dp"
-        android:paddingStart="25dp"
-        android:paddingEnd="25dp"
-        android:paddingBottom="15dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/contactAddAvatar"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@color/colorAccent" />
-
-            <com.sudox.design.edittext.SudoxTextInputLayout
-                android:id="@+id/nameEditTextContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="15dp">
-
-                <EditText
-                    android:id="@+id/nameEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:hint="@string/name_not_necessary"
-                    android:inputType="textPersonName|textNoSuggestions"
-                    android:maxLength="@integer/length_name"
-                    android:maxLines="1"
-                    android:textColorHint="#9f9f9f"
-                    android:textSize="15sp" />
-
-            </com.sudox.design.edittext.SudoxTextInputLayout>
-        </LinearLayout>
-
-        <com.sudox.design.edittext.SudoxTextInputLayout
-            android:id="@+id/phoneEditTextContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp">
-
-            <EditText
-                android:id="@+id/phoneEditText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/phone_number"
-                android:inputType="phone"
-                android:maxLines="1"
-                android:textColorHint="#9f9f9f"
-                android:textSize="15sp" />
-
-        </com.sudox.design.edittext.SudoxTextInputLayout>
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:textColor="@color/colorHint"
-        android:text="@string/hint_phone_wil_not_be_found"/>
 </LinearLayout>

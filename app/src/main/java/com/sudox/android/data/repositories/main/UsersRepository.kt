@@ -1,6 +1,5 @@
 package com.sudox.android.data.repositories.main
 
-import android.provider.ContactsContract
 import com.sudox.android.data.database.dao.user.UserDao
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.Errors
@@ -36,39 +35,57 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                 .consumeEach { loadedUsersIds.clear() }
     }
 
-    fun loadUsers(ids: List<Long>) = GlobalScope.async {
+    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN) = GlobalScope.async {
         if (ids.isEmpty()) {
             return@async arrayListOf<User>()
         } else if (ids.size == 1) {
-            return@async arrayListOf(loadUser(ids[0]).await())
+            return@async arrayListOf(loadUser(ids[0], loadAs).await())
         } else if (protocolClient.isValid() && authRepository.sessionIsValid) {
             val notLoadedUsers = ids.filter { !loadedUsersIds.contains(it) }
-            val usersFromNetwork = if (notLoadedUsers.isNotEmpty()) loadUsersFromNetwork(notLoadedUsers) else arrayListOf()
+            val usersFromNetwork = if (notLoadedUsers.isNotEmpty()) loadUsersFromNetwork(notLoadedUsers, loadAs) else arrayListOf()
             val usersFromNetworkIds = usersFromNetwork.map { it.uid }
             val usersFromDatabase = userDao.loadByIds(ids.filter { !usersFromNetworkIds.contains(it) })
+
+            // Update the type
+            usersFromDatabase.forEach {
+                it.type = if (it.type != UserType.UNKNOWN) it.type else loadAs
+            }
 
             // Combine network & database founded contacts
             return@async usersFromNetwork.plus(usersFromDatabase)
         } else {
-            return@async userDao.loadByIds(ids)
+            val users = userDao.loadByIds(ids)
+
+            // Update the type
+            users.forEach {
+                it.type = if (it.type != UserType.UNKNOWN) it.type else loadAs
+            }
+
+            return@async users
         }
     }
 
-    suspend fun loadUser(id: Long) = GlobalScope.async {
+    fun loadUser(id: Long, loadAs: UserType = UserType.UNKNOWN) = GlobalScope.async {
         if (protocolClient.isValid() && !loadedUsersIds.contains(id)) {
-            return@async loadUserFromNetwork(id)
+            return@async loadUserFromNetwork(id, loadAs)
         } else {
-            return@async userDao.loadById(id)
+            val user = userDao.loadById(id)
+
+            // Update the type
+            if (user != null && user.type == UserType.UNKNOWN) {
+                user.type = loadAs
+            }
+
+            return@async user
         }
     }
 
-    private suspend fun loadUsersFromNetwork(ids: List<Long>): List<User> = suspendCoroutine { continuation ->
+    private suspend fun loadUsersFromNetwork(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN): List<User> = suspendCoroutine { continuation ->
         protocolClient.makeRequest<UserInfoDTO>("users.getUsers", UserInfoDTO().apply {
             this.ids = ids
         }) {
             if (it.users != null && !it.users!!.isEmpty() && !(it.containsError())) {
-                // Map users to database format
-                val users = toStorableUsers(it)
+                val users = toStorableUsers(it, loadAs)
 
                 // Cache users, mark as loaded
                 userDao.insertAll(users)
@@ -86,12 +103,12 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    private suspend fun loadUserFromNetwork(id: Long): User? = suspendCoroutine { continuation ->
+    private suspend fun loadUserFromNetwork(id: Long, loadAs: UserType = UserType.UNKNOWN): User? = suspendCoroutine { continuation ->
         protocolClient.makeRequest<UserInfoDTO>("users.getUser", UserInfoDTO().apply {
             this.id = id
         }) {
             if (!it.containsError()) {
-                val user = toStorableUser(it)
+                val user = toStorableUser(it, loadAs)
 
                 // Cache user
                 userDao.insertOne(user)
@@ -110,11 +127,27 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    private fun toStorableUsers(userInfoDTO: UserInfoDTO): List<User> {
-        return userInfoDTO.users!!.map { toStorableUser(it) }
+    private fun toStorableUsers(userInfoDTO: UserInfoDTO, loadAs: UserType = UserType.UNKNOWN): List<User> {
+        val usersIds = userInfoDTO.users!!.map { it.id }
+        val storedUsers = userDao.loadByIds(usersIds)
+
+        return userInfoDTO.users!!.map { dto ->
+            val storedUser = storedUsers.find { it.uid == dto.id }
+            val type = if (storedUser != null && storedUser.type != UserType.UNKNOWN) storedUser.type else loadAs
+
+            // Convert to user ...
+            toStorableUser(dto, type, false)
+        }
     }
 
-    private fun toStorableUser(userInfoDTO: UserInfoDTO): User {
+    private fun toStorableUser(userInfoDTO: UserInfoDTO, loadAs: UserType = UserType.UNKNOWN, checkType: Boolean = true): User {
+        val type: UserType = if (checkType) {
+            val storedUser = userDao.loadById(userInfoDTO.id)
+
+            // Check ...
+            if (storedUser != null && storedUser.type != UserType.UNKNOWN) storedUser.type else loadAs
+        } else loadAs
+
         return User(userInfoDTO.id,
                 userInfoDTO.name,
                 userInfoDTO.nickname,
@@ -122,6 +155,6 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                 userInfoDTO.phone,
                 userInfoDTO.status,
                 userInfoDTO.bio,
-                UserType.UNKNOWN)
+                type)
     }
 }

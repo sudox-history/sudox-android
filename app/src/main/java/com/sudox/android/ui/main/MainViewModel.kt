@@ -2,6 +2,7 @@ package com.sudox.android.ui.main
 
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.main.ContactsRepository
 import com.sudox.android.data.repositories.messages.chats.DialogsRepository
 import com.sudox.android.ui.main.enums.MainActivityAction
 import com.sudox.protocol.models.SingleLiveEvent
@@ -12,7 +13,8 @@ import kotlinx.coroutines.channels.filter
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(private val authRepository: AuthRepository,
-                                        private val dialogsRepository: DialogsRepository) : ViewModel() {
+                                        private val dialogsRepository: DialogsRepository,
+                                        private val contactsRepository: ContactsRepository) : ViewModel() {
 
     var accountSessionStateSubscription: ReceiveChannel<Boolean>? = null
     val mainActivityActionsLiveData = SingleLiveEvent<MainActivityAction>()
@@ -22,16 +24,17 @@ class MainViewModel @Inject constructor(private val authRepository: AuthReposito
      */
     fun listenSessionChanges() = GlobalScope.launch(Dispatchers.IO) {
         dialogsRepository.startWork()
+        contactsRepository.startWork()
+        listenAccountSessionState()
+    }
 
-        // Слушатель сессии
-        GlobalScope.launch {
-            accountSessionStateSubscription = authRepository
-                    .accountSessionStateChannel
-                    .openSubscription()
+    private fun listenAccountSessionState() = GlobalScope.launch(Dispatchers.IO) {
+        accountSessionStateSubscription = authRepository
+                .accountSessionStateChannel
+                .openSubscription()
 
-            accountSessionStateSubscription!!
-                    .filter { !it }
-                    .consumeEach { mainActivityActionsLiveData.postValue(MainActivityAction.SHOW_AUTH_ACTIVITY) }
+        for (state in accountSessionStateSubscription!!) {
+            if (!state) mainActivityActionsLiveData.postValue(MainActivityAction.SHOW_AUTH_ACTIVITY)
         }
     }
 

@@ -30,7 +30,6 @@
         <!-- Calculation of toolbar right padding:
              right padding of the design in the design - padding of the menu item - half of icon width = 34dp - 16dp - 8dp = 10dp -->
         <item name="android:paddingRight">10dp</item>
-        <item name="android:paddingEnd">18dp</item>
         <item name="android:elevation">0dp</item>
         <item name="android:layout_height">@dimen/navbar_height</item>
         <item name="android:background">?attr/colorPrimary</item>

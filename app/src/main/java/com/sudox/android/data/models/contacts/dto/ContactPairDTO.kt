@@ -3,18 +3,20 @@ package com.sudox.android.data.models.contacts.dto
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONObject
 
-class ContactRemoveDTO: JsonModel() {
+class ContactPairDTO : JsonModel() {
 
-    // For read/send ...
-    var id: Long = 0
+    var phone: String? = null
+    var name: String? = null
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
-            putOpt("id", id)
+            put("phone", phone)
+            put("name", name)
         }
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        id = jsonObject.optLong("id")
+        phone = jsonObject.optString("phone")
+        name = jsonObject.optString("name")
     }
 }

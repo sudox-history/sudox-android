@@ -23,7 +23,6 @@ class ProfileFragment @Inject constructor() : BaseReconnectFragment() {
     @Inject
     lateinit var profileDecorationsFragment: ProfileDecorationsFragment
 
-
     private lateinit var mainActivity: MainActivity
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

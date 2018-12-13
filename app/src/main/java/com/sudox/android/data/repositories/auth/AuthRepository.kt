@@ -1,8 +1,8 @@
 package com.sudox.android.data.repositories.auth
 
 import com.sudox.android.common.helpers.*
-import com.sudox.android.data.RequestException
-import com.sudox.android.data.RequestRegexException
+import com.sudox.android.data.exceptions.RequestException
+import com.sudox.android.data.exceptions.RequestRegexException
 import com.sudox.android.data.auth.SudoxAccount
 import com.sudox.android.data.models.auth.dto.*
 import com.sudox.android.data.models.auth.state.AuthSession
@@ -193,7 +193,6 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         }).await()
 
         if (authImportDTO.isSuccess()) {
-            accountSessionStateChannel.offer(true)
             notifyAccountSessionValid()
         } else {
             killAccountSession()
