@@ -2,6 +2,7 @@ package com.sudox.android.ui.main.contacts
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
@@ -46,7 +47,18 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == ContactsViewModel.CONTACT_SYNC_PERMISSION_REQUEST
+                && grantResults.isNotEmpty()
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+            // Есть права - есть синхронизация
+            contactsViewModel.syncContacts(activity!!, true)
+        }
+    }
+
     private fun initContactsList() {
+        contactsAdapter.menuInflater = activity!!.menuInflater
         contactsRecyclerViewContainer
                 .recyclerView
                 .apply {
@@ -59,14 +71,17 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
         contactsViewModel
                 .contactsLiveData
                 .observe(this, Observer {
-                    val diffResult = DiffUtil.calculateDiff(ContactsDiffUtil(it!!, contactsAdapter.contacts))
+                    val diffUtil = ContactsDiffUtil(it!!, contactsAdapter.contacts)
+                    val diffResult = DiffUtil.calculateDiff(diffUtil)
 
-                    // Update data
+                    // Update
                     contactsAdapter.contacts = it
-                    diffResult.dispatchUpdatesTo(contactsAdapter)
 
                     // Loaded!
                     contactsRecyclerViewContainer.notifyInitialLoadingDone()
+
+                    // Update
+                    diffResult.dispatchUpdatesTo(contactsAdapter)
                 })
     }
 
@@ -77,6 +92,8 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
                 R.id.add_contact_menu_item -> mainActivity
                         .fragmentNavigator
                         .showChildFragment(ContactAddFragment())
+
+                // Синхронизация (на Android M метод может вызвать ещё из onRequestPermissionsResult)
                 R.id.contacts_sync_item -> contactsViewModel.syncContacts(activity!!)
             }
 

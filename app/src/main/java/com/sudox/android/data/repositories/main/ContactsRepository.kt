@@ -15,7 +15,6 @@ import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.models.contacts.dto.*
 import com.sudox.android.data.models.users.UserType
-import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.NetworkException
@@ -35,8 +34,6 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                              private val context: Context) {
 
     val contactsChannel: ConflatedBroadcastChannel<ArrayList<User>> = ConflatedBroadcastChannel()
-    val newContactChannel: ConflatedBroadcastChannel<User> = ConflatedBroadcastChannel()
-    val removedContactIdChannel: ConflatedBroadcastChannel<Long> = ConflatedBroadcastChannel()
 
     init {
         GlobalScope.launch(Dispatchers.IO) {
@@ -164,7 +161,8 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                 return@launch
 
             // Removing ...
-            userDao.setType(id, UserType.UNKNOWN)
+            usersRepository.removeUser(id)
+
             notifyContactRemoved(id)
         } catch (e: NetworkException) {
             // Ignore
@@ -190,7 +188,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         }
     }
 
-    fun loadContactsFromPhone(): ArrayList<ContactPairDTO> {
+    private fun loadContactsFromPhone(): ArrayList<ContactPairDTO> {
         context
                 .contentResolver
                 .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null)
@@ -203,9 +201,25 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                     while (it.moveToNext()) {
                         if (it.getInt(hasPhoneNumberIndex) == 0) continue
 
+                        val name = it.getString(nameColumnIndex)
+                        var phone = it.getString(phoneColumnIndex)
+                                .replace(")", "")
+                                .replace("(", "")
+                                .replace(" ", "")
+                                .replace("+", "")
+                                .replace("-", "")
+
+                        // 89674788147 -> 79674788147
+                        if (phone.startsWith("8"))
+                            phone = "7${phone.substring(1)}"
+
+                        // Валидация
+                        if (!NAME_REGEX.matches(name) || !PHONE_REGEX.matches(phone))
+                            continue
+
                         pairs.plusAssign(ContactPairDTO().apply {
-                            phone = it.getString(phoneColumnIndex)
-                            name = it.getString(nameColumnIndex)
+                            this.name = name
+                            this.phone = phone
                         })
                     }
 
@@ -213,13 +227,13 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                 }
     }
 
-    private suspend fun notifyContactAdded(user: User) {
-        contactsChannel.valueOrNull?.plusAssign(user)
-        newContactChannel.send(user)
+    private fun notifyContactAdded(user: User) {
+        contactsChannel.value.plusAssign(user)
+        contactsChannel.offer(contactsChannel.value)
     }
 
-    private suspend fun notifyContactRemoved(id: Long) {
-        contactsChannel.valueOrNull?.findAndRemoveIf { it.uid == id }
-        removedContactIdChannel.send(id)
+    private fun notifyContactRemoved(id: Long) {
+        contactsChannel.value.findAndRemoveIf { it.uid == id }
+        contactsChannel.offer(contactsChannel.value)
     }
 }

@@ -15,32 +15,39 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:paddingBottom="20dp">
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp">
 
         <com.sudox.design.avatar.AvatarView
-            android:layout_width="92dp"
-            android:layout_height="92dp"
-            android:background="#FFFFFF" />
+            android:id="@+id/profileAvatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="#FFF" />
 
-        <TextView
-            style="@style/TextViewWithoutPaddings"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:fontFamily="sans-serif-light"
-            android:text="Максим Митюшкин"
-            android:textSize="20sp" />
+            android:layout_gravity="center"
+            android:layout_marginStart="15dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Тут должен быть статус ..."
-            android:textColor="#BDBDBD"
-            android:textSize="13sp" />
+            <TextView
+                android:id="@+id/profileName"
+                style="@style/TextViewWithoutPaddings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp" />
 
+            <TextView
+                android:id="@+id/profileDescription"
+                style="@style/TextViewWithoutPaddings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="sans-serif-light"
+                android:textSize="14sp" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <android.support.design.widget.TabLayout
@@ -48,5 +55,4 @@
         style="@style/AppTheme.TabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    
 </LinearLayout>

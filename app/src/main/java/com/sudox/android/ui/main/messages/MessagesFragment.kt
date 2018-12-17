@@ -17,10 +17,11 @@ import com.sudox.android.ui.main.contacts.ContactsViewModel
 import com.sudox.android.ui.main.messages.channels.ChannelsFragment
 import com.sudox.android.ui.main.messages.dialogs.DialogsFragment
 import com.sudox.android.ui.main.messages.talks.TalksFragment
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_main_messages.*
 import javax.inject.Inject
 
-class MessagesFragment @Inject constructor() : BaseReconnectFragment() {
+class MessagesFragment @Inject constructor() : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -51,27 +52,18 @@ class MessagesFragment @Inject constructor() : BaseReconnectFragment() {
         initViewPager()
     }
 
-    override fun showConnectionStatus(isConnect: Boolean) {
-        if (isConnect) {
-            messagesToolbar.title = getString(R.string.messages)
-        } else {
-            messagesToolbar.title = getString(R.string.wait_for_connect)
-        }
-    }
-
     private fun initToolbar() {
-        messagesToolbar.inflateMenu(R.menu.menu_messages)
-        messagesToolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-            }
-
-            return@setOnMenuItemClickListener true
-        }
+//        messagesToolbar.inflateMenu(R.menu.menu_messages)
+//        messagesToolbar.setOnMenuItemClickListener {
+//            when (it.itemId) {
+//            }
+//
+//            return@setOnMenuItemClickListener true
+//        }
     }
 
     private fun initViewPager() {
         messagesPager.adapter = MessagesAdapter(childFragmentManager)
-
         messagesPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(position: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}

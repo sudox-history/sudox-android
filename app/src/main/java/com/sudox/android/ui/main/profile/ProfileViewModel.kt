@@ -1,3 +1,7 @@
 package com.sudox.android.ui.main.profile
 
-class ProfileViewModel
+import android.arch.lifecycle.ViewModel
+
+class ProfileViewModel : ViewModel() {
+
+}

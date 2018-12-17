@@ -14,9 +14,9 @@ import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.repositories.main.CONTACTS_NAME_REGEX_ERROR
 import com.sudox.android.data.repositories.main.CONTACTS_PHONE_REGEX_ERROR
+import com.sudox.android.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_add_contact.*
-import kotlinx.android.synthetic.main.fragment_auth_phone.*
 import javax.inject.Inject
 
 class ContactAddFragment : DaggerFragment() {
@@ -24,6 +24,7 @@ class ContactAddFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     lateinit var contactAddViewModel: ContactAddViewModel
+    lateinit var mainActivity: MainActivity
 
     // Data
     private var phoneNumber: String = ""
@@ -31,6 +32,7 @@ class ContactAddFragment : DaggerFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         contactAddViewModel = getViewModel(viewModelFactory)
+        mainActivity = activity as MainActivity
 
         return inflater.inflate(R.layout.fragment_add_contact, container, false)
     }

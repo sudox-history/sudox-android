@@ -9,6 +9,7 @@ import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.filter
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                 .consumeEach { loadedUsersIds.clear() }
     }
 
-    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN) = GlobalScope.async {
+    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN) = GlobalScope.async(Dispatchers.IO) {
         if (ids.isEmpty()) {
             return@async arrayListOf<User>()
         } else if (ids.size == 1) {
@@ -48,7 +49,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
             val usersFromNetworkIds = usersFromNetwork.map { it.uid }
             val usersFromDatabase = userDao.loadByIds(ids
                     .filter { !usersFromNetworkIds.contains(it) }
-                    .map { it.toLong() })
+                    .map { it })
 
             // Update the type
             usersFromDatabase.forEach {
@@ -69,7 +70,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    fun loadUser(id: Long, loadAs: UserType = UserType.UNKNOWN) = GlobalScope.async {
+    fun loadUser(id: Long, loadAs: UserType = UserType.UNKNOWN) = GlobalScope.async(Dispatchers.IO) {
         if (protocolClient.isValid() && !loadedUsersIds.contains(id)) {
             return@async loadUserFromNetwork(id, loadAs)
         } else {
@@ -82,6 +83,11 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
 
             return@async user
         }
+    }
+
+    fun removeUser(id: Long) = GlobalScope.launch(Dispatchers.IO) {
+        loadedUsersIds.remove(id)
+        userDao.removeOne(id)
     }
 
     private suspend fun loadUsersFromNetwork(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN): List<User> = suspendCoroutine { continuation ->
@@ -107,8 +113,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    private suspend fun loadUserFromNetwork(id: Long, loadAs: UserType = UserType.UNKNOWN): User?
-            = loadUsersFromNetwork(listOf(id), loadAs)[0]
+    private suspend fun loadUserFromNetwork(id: Long, loadAs: UserType = UserType.UNKNOWN): User? = loadUsersFromNetwork(listOf(id), loadAs)[0]
 
     private fun toStorableUsers(userInfoDTO: UserInfoDTO, loadAs: UserType = UserType.UNKNOWN): List<User> {
         val usersIds = userInfoDTO.users!!.map { it.id }

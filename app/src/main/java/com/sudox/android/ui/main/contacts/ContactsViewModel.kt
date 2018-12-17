@@ -5,9 +5,7 @@ import android.app.Activity
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.pm.PackageManager
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import com.sudox.android.common.helpers.findAndRemoveIf
+import android.os.Build
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.repositories.main.ContactsRepository
@@ -22,10 +20,12 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
     var contactsLiveData: MutableLiveData<ArrayList<User>> = MutableLiveData()
     var subscriptionContainer = SubscriptionsContainer()
 
+    companion object {
+        const val CONTACT_SYNC_PERMISSION_REQUEST = 1
+    }
+
     fun start() {
         listenContacts()
-        listenNewContacts()
-        listenRemovedContacts()
     }
 
     private fun listenContacts() = GlobalScope.launch(Dispatchers.IO) {
@@ -35,67 +35,22 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
                         .openSubscription())) {
 
             // Сортируем по имени (от А до Я, от A до Z и т.п.)
-            contacts.sortBy { it.name }
-
-            // To show new contacts
-            contactsLiveData.postValue(contacts)
+            contactsLiveData.postValue(ArrayList(contacts.sortedBy { it.name }))
         }
     }
 
-    private fun listenNewContacts() = GlobalScope.launch(Dispatchers.IO) {
-        for (contact in subscriptionContainer
-                .addSubscription(contactsRepository
-                        .newContactChannel
-                        .openSubscription())) {
-
-            // Заново сортируем ;(
-            // TODO: Написать алгоритм для расчета места вставки, ибо этот код повторно сортирует весь массив
-            contactsLiveData.postValue(contactsRepository
-                    .contactsChannel
-                    .value
-                    .apply {
-                        add(contact)
-                        sortBy { it.name }
-                    })
-        }
-    }
-
-    private fun listenRemovedContacts() = GlobalScope.launch(Dispatchers.IO) {
-        for (contactId in subscriptionContainer
-                .addSubscription(contactsRepository
-                        .removedContactIdChannel
-                        .openSubscription())) {
-
-            // Заново сортируем ;(
-            // TODO: Написать алгоритм для расчета места вставки, ибо этот код повторно сортирует весь массив
-            contactsLiveData.postValue(contactsRepository
-                    .contactsChannel
-                    .value
-                    .apply {
-                        findAndRemoveIf { it.uid == contactId }
-                        sortBy { it.name }
-                    })
-        }
-    }
-
-    fun syncContacts(activity: Activity) {
-        var grant = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS)
-
-        // Request
-        if (grant != PackageManager.PERMISSION_GRANTED) {
-            val permissions = arrayOfNulls<String>(1)
-            permissions[0] = Manifest.permission.READ_CONTACTS
-
-            // Request
-            ActivityCompat.requestPermissions(activity, permissions, 1)
-
-            // Retry
-            grant = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_CONTACTS)
-        }
-
-        // Start syncing ...
-        if (grant == PackageManager.PERMISSION_GRANTED) {
+    fun syncContacts(activity: Activity, permissionGranted: Boolean = false) {
+        if (permissionGranted || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             contactsRepository.syncContacts()
+        } else {
+            val grant = activity.checkSelfPermission(Manifest.permission.READ_CONTACTS)
+
+            // Есть право на доступ к контактам.
+            if (grant == PackageManager.PERMISSION_GRANTED) {
+                contactsRepository.syncContacts()
+            } else {
+                activity.requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_SYNC_PERMISSION_REQUEST)
+            }
         }
     }
 }

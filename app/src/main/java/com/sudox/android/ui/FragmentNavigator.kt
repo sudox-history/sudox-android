@@ -1,9 +1,9 @@
 package com.sudox.android.ui
 
 import android.app.Activity
-import android.content.Context
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import com.sudox.android.R
 import com.sudox.design.helpers.hideKeyboard
 import java.util.*
 
@@ -36,6 +36,9 @@ class FragmentNavigator(val activity: Activity,
         // Чистим Backstack
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
+        // Анимация
+        transaction.setCustomAnimations(R.animator.animator_fragment_change, 0)
+
         // Родительские фрагменты скрываются, дочерние - удаляются из ОЗУ
         fragmentManager
                 .fragments
@@ -61,6 +64,9 @@ class FragmentNavigator(val activity: Activity,
     fun showChildFragment(fragment: Fragment) {
         val transaction = fragmentManager.beginTransaction()
 
+        // Анимация
+        transaction.setCustomAnimations(R.animator.animator_fragment_change, 0)
+
         // Скрываем все фрагменты, кроме нужного (бывают и такие случаи) ...
         fragmentManager
                 .fragments
@@ -81,6 +87,7 @@ class FragmentNavigator(val activity: Activity,
         // Текущий фрагмент - последний в списке, значит он дочерний и его можно, а то и нужно убрать из ОЗУ и отображения
         fragmentManager
                 .beginTransaction()
+                .setCustomAnimations(0, R.animator.animator_fragment_back)
                 .remove(fragmentsPath[fragmentsPath.size - 1])
                 .show(fragmentsPath[fragmentsPath.size - 2])
                 .runOnCommit { hideKeyboard(activity, activity.currentFocus) }

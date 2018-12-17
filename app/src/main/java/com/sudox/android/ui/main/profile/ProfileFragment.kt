@@ -1,5 +1,6 @@
 package com.sudox.android.ui.main.profile
 
+import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
+import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.main.profile.decorations.ProfileDecorationsFragment
@@ -18,7 +20,13 @@ import javax.inject.Inject
 
 class ProfileFragment @Inject constructor() : DaggerFragment() {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var profileViewModel: ProfileViewModel
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+//        profileViewModel = getViewModel(viewModelFactory)
+
         return inflater.inflate(R.layout.fragment_main_profile, container, false)
     }
 
