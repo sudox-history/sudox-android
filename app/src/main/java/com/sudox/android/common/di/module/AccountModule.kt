@@ -11,7 +11,6 @@ class AccountModule {
 
     @Provides
     @Singleton
-    fun provideAccountManager(context: Context): AccountManager {
-        return AccountManager.get(context)
-    }
+    fun provideAccountManager(context: Context)
+            = AccountManager.get(context)
 }

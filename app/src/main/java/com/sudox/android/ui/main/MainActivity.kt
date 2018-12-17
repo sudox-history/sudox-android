@@ -4,9 +4,11 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.database.model.user.User
+import com.sudox.android.ui.FragmentNavigator
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.main.contacts.ContactsFragment
 import com.sudox.android.ui.main.enums.MainActivityAction
@@ -25,16 +27,14 @@ class MainActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var protocolClient: ProtocolClient
-
     lateinit var mainViewModel: MainViewModel
+    lateinit var fragmentNavigator: FragmentNavigator
 
     // Fragments
     @Inject
     lateinit var profileFragment: ProfileFragment
-
     @Inject
     lateinit var contactsFragment: ContactsFragment
-
     @Inject
     lateinit var messagesFragment: MessagesFragment
 
@@ -44,15 +44,20 @@ class MainActivity : DaggerAppCompatActivity() {
 
         // Get view model ...
         mainViewModel = getViewModel(viewModelFactory)
-
-        // Listen actions ...
         mainViewModel.mainActivityActionsLiveData.observe(this, Observer {
             if (it == MainActivityAction.SHOW_AUTH_ACTIVITY) {
                 showAuthActivity()
             }
         })
 
-        // Listen session state ...
+        // All root fragments - reusable
+        fragmentNavigator = FragmentNavigator(
+                this,
+                supportFragmentManager,
+                arrayListOf(profileFragment, contactsFragment, messagesFragment),
+                R.id.fragmentMainContainer)
+
+        // Listen changes
         mainViewModel.listenSessionChanges()
 
         // Настраиваем BottomNavigationView
@@ -62,9 +67,9 @@ class MainActivity : DaggerAppCompatActivity() {
     private fun initBottomNavigationView() {
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when {
-                it.itemId == R.id.contacts_item -> showContactsFragment()
-                it.itemId == R.id.messages_item -> showMessagesFragment()
-                it.itemId == R.id.profile_item -> showProfileFragment()
+                it.itemId == R.id.contacts_item -> fragmentNavigator.showRootFragment(contactsFragment)
+                it.itemId == R.id.messages_item -> fragmentNavigator.showRootFragment(messagesFragment)
+                it.itemId == R.id.profile_item -> fragmentNavigator.showRootFragment(profileFragment)
                 else -> return@setOnNavigationItemSelectedListener false
             }
 
@@ -73,45 +78,6 @@ class MainActivity : DaggerAppCompatActivity() {
 
         // Set default fragment
         bottomNavigationView.selectedItemId = R.id.messages_item
-    }
-
-    private fun showMessagesFragment() {
-        var fragment = supportFragmentManager.findFragmentByTag("messages")
-
-        if (fragment == null) {
-            fragment = MessagesFragment()
-        }
-
-        supportFragmentManager.beginTransaction()
-//                .setCustomAnimations(R.animator.animator_fragment_change, 0)
-                .replace(R.id.fragmentMainContainer, fragment, "messages")
-                .commit()
-    }
-
-    private fun showContactsFragment() {
-        var fragment = supportFragmentManager.findFragmentByTag("contacts")
-
-        if (fragment == null) {
-            fragment = ContactsFragment()
-        }
-
-        supportFragmentManager.beginTransaction()
-//                .setCustomAnimations(R.animator.animator_fragment_change, 0)
-                .replace(R.id.fragmentMainContainer, fragment, "contacts")
-                .commit()
-    }
-
-    private fun showProfileFragment() {
-        var fragment = supportFragmentManager.findFragmentByTag("profile")
-
-        if (fragment == null) {
-            fragment = profileFragment
-        }
-
-        supportFragmentManager.beginTransaction()
-//                .setCustomAnimations(R.animator.animator_fragment_change, 0)
-                .replace(R.id.fragmentMainContainer, fragment, "profile")
-                .commit()
     }
 
     private fun showAuthActivity() {
@@ -123,5 +89,10 @@ class MainActivity : DaggerAppCompatActivity() {
         startActivity(Intent(this, MessagesInnerActivity::class.java).apply {
             putExtra(MessagesInnerActivity.RECIPIENT_USER_EXTRA, user)
         })
+    }
+
+    override fun onBackPressed() {
+        // Выход из приложения, т.к. фрагментов больше нет
+        if (!fragmentNavigator.popBackstack()) super.onBackPressed()
     }
 }

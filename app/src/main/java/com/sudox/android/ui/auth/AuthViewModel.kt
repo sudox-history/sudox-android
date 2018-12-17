@@ -27,9 +27,9 @@ class AuthViewModel @Inject constructor(val protocolClient: ProtocolClient,
     }
 
     private fun listenAccountSessionState() = GlobalScope.launch(Dispatchers.IO) {
-        for (state in authRepository
+        for (state in subscriptions.addSubscription(authRepository
                 .accountSessionStateChannel
-                .openSubscription()) {
+                .openSubscription())) {
 
             if (state) {
                 authActivityEventsLiveData.postValue(AuthActivityEvent.ACCOUNT_SESSION_STARTED)
@@ -38,9 +38,9 @@ class AuthViewModel @Inject constructor(val protocolClient: ProtocolClient,
     }
 
     private fun listenAuthSession() = GlobalScope.launch(Dispatchers.IO) {
-        for (status in authRepository
+        for (status in subscriptions.addSubscription(authRepository
                 .authSessionChannel
-                .openSubscription()) {
+                .openSubscription())) {
 
             if (status.status != AuthSession.AUTH_STATUS_UNDEFINED) {
                 authActivitySessionLiveData.postValue(status)

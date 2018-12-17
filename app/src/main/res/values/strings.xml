@@ -91,9 +91,10 @@
     <string name="title_oops">Oops! Fail!</string>
     <string name="invite_friend_sms">Hi! I want to talk with you in Sudox! https://vk.com/sudox_messenger</string>
     <string name="you">You</string>
+    <string name="sync_contacts">Sync contacts</string>
 
     <!-- Formats -->
-    <string name="nickname_format" translatable="false"><![CDATA[\%1$s<br><font color="#BDBDBD">\n%2$s</font></br>]]></string>
+    <string name="nickname_format" translatable="false"><![CDATA[<font color="#FFFFFF">@%1$s</font><font color="#BDBDBD">#%2$s</font>]]></string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d contact</item>

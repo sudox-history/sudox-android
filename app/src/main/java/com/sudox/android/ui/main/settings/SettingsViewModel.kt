@@ -6,7 +6,4 @@ import com.sudox.protocol.ProtocolClient
 import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(private val protocolClient: ProtocolClient,
-                                            private val accountRepository: AccountRepository) : ViewModel() {
-
-
-}
+                                            private val accountRepository: AccountRepository) : ViewModel()

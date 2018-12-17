@@ -194,6 +194,4 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
         codeEditText.isEnabled = true
         authActivity.authNavigationBar.unfreeze()
     }
-
-
 }

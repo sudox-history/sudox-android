@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/add_contact_menu_item"
@@ -10,8 +10,14 @@
 
     <item
         android:id="@+id/contacts_item"
-        android:icon="@drawable/ic_search_white"
+        android:icon="@drawable/ic_search"
         android:title="@string/search"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/contacts_sync_item"
+        android:icon="@drawable/ic_sync"
+        android:title="@string/sync_contacts"
         app:showAsAction="ifRoom" />
 
 </menu>

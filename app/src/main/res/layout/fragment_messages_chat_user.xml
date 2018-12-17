@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:includeFontPadding="false"
-                    android:textSize="@dimen/font_size_increased_tiny" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/chatRecipientLastJoin"
@@ -47,7 +47,7 @@
                     android:includeFontPadding="false"
                     android:text="Был в сети 15 минут назад"
                     android:textColor="@color/colorHint"
-                    android:textSize="@dimen/font_size_extra_tiny" />
+                    android:textSize="12sp" />
 
             </LinearLayout>
         </RelativeLayout>
@@ -66,10 +66,10 @@
         android:id="@+id/edit_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
-        android:minHeight="@dimen/editfield_height"
+        android:minHeight="48dp"
         android:orientation="horizontal">
 
         <ImageButton
@@ -87,16 +87,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="1dp"
-            android:layout_marginEnd="18dp"
             android:layout_marginStart="18dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="1dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:hint="@string/enter_message"
             android:inputType="textMultiLine|textCapSentences"
             android:maxHeight="100dp"
-            android:paddingBottom="12dp"
             android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:textSize="14sp"
             tools:ignore="Autofill" />
 

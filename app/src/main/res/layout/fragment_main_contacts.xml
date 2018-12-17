@@ -11,9 +11,8 @@
         android:layout_height="wrap_content"
         app:title="@string/contacts" />
 
-    <android.support.v7.widget.RecyclerView
+    <com.sudox.design.recyclerview.RecyclerViewContainer
+        android:id="@+id/contactsRecyclerViewContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="3dp" />
-
+        android:layout_height="match_parent" />
 </LinearLayout>

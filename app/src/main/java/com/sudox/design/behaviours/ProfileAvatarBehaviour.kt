@@ -10,7 +10,4 @@ class ProfileAvatarBehaviour<V: View>: CoordinatorLayout.Behavior<V>() {
         return dependency is Toolbar
     }
 
-    override fun onDependentViewChanged(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
-        return super.onDependentViewChanged(parent, child, dependency)
-    }
 }

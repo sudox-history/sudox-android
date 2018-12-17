@@ -10,5 +10,4 @@ import javax.inject.Inject
 class MessagesInnerViewModel @Inject constructor(val chatMessagesRepository: ChatMessagesRepository,
                                                  private val protocolClient: ProtocolClient,
                                                  private val accountRepository: AccountRepository,
-                                                 private val authRepository: AuthRepository): ViewModel() {
-}
+                                                 private val authRepository: AuthRepository): ViewModel()

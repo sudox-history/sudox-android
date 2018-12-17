@@ -13,7 +13,7 @@ class ContactAddDTO : JsonModel() {
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
-            putOpt("name", name)
+            if (name.isNotEmpty()) putOpt("name", name)
             putOpt("phone", phone)
         }
     }

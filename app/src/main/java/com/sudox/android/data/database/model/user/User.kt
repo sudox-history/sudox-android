@@ -14,4 +14,7 @@ data class User(@PrimaryKey var uid: Long,
                 @ColumnInfo var phone: String? = null,
                 @ColumnInfo var status: String? = null,
                 @ColumnInfo var bio: String? = null,
-                @ColumnInfo(index = true) var type: UserType) : Serializable
+                @ColumnInfo(index = true) var type: UserType) : Serializable {
+
+    fun separateNickname() = nickname.split("#")
+}

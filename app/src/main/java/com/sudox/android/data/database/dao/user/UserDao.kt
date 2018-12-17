@@ -36,4 +36,7 @@ interface UserDao {
 
     @Query("UPDATE users SET type = :type WHERE uid = :id")
     fun setType(id: Long,  type: UserType)
+
+    @Query("SELECT * FROM users WHERE phone = :phone AND type = :type LIMIT 1")
+    fun loadByTypeAndPhone(phone: String, type: UserType): User?
 }

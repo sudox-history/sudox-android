@@ -4,5 +4,5 @@ package com.sudox.android.data.auth
 const val KEY_ACCOUNT_ID = "ACCOUNT_ID"
 
 data class SudoxAccount(var id: Long,
-                        var name: String,
+                        var phoneNumber: String,
                         var secret: String)

@@ -9,10 +9,10 @@ class ContactsIdsListDTO : JsonModel() {
     var ids: ArrayList<Long> = arrayListOf()
 
     override fun fromJSON(jsonObject: JSONObject) {
-        ids = jsonObject.optJSONArray("ids")
+        ids = jsonObject
+                .optJSONArray("ids")
                 .asSequence()
                 .filter { it is Long || it is Int }
-                .map { it as Long }
                 .toMutableList() as ArrayList<Long>
     }
 }

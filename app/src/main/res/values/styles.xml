@@ -31,7 +31,7 @@
              right padding of the design in the design - padding of the menu item - half of icon width = 34dp - 16dp - 8dp = 10dp -->
         <item name="android:paddingRight">10dp</item>
         <item name="android:elevation">0dp</item>
-        <item name="android:layout_height">@dimen/navbar_height</item>
+        <item name="android:layout_height">60dp</item>
         <item name="android:background">?attr/colorPrimary</item>
         <item name="titleTextAppearance">@style/ToolbarTheme.Title</item>
     </style>
@@ -50,48 +50,11 @@
 
     <style name="ToolbarTheme.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textSize">@dimen/font_size_increased_medium</item>
+        <item name="android:textSize">19sp</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:paddingStart">0dp</item>
         <item name="android:paddingLeft">0dp</item>
     </style>
-
-    <style name="ToolbarTheme.ChatToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:background">@color/colorPrimary</item>
-    </style>
-
-    <style name="EditFieldTheme">
-        <item name="android:background">@color/colorPrimary</item>
-    </style>
-
-    <style name="ToolbarTheme.ExpandedView">
-        <item name="android:paddingLeft">26dp</item>
-        <!-- In design - 1/2 of menu icon in the toolbar = 34dp - 8dp = 26dp -->
-        <item name="android:paddingRight">26dp</item>
-        <item name="android:paddingBottom">20dp</item>
-    </style>
-
-    <style name="ToolbarTheme.ExpandedView.EditText">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:background">@drawable/edit_text_navbar_addition</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:paddingStart">15dp</item>
-        <item name="android:paddingEnd">15dp</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">15dp</item>
-        <item name="android:textSize">@dimen/font_size_extra_tiny</item>
-        <item name="android:textColorHint">#9f9f9f</item> <!--TODO: name color-->
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="ToolbarTheme.ExpandedView.NameTextView">
-        <item name="android:textColor">@color/colorAccent</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-    <!-- Toolbar styles end -->
 
     <!-- Bottom navigation view styles start -->
     <style name="BottomNavigationView">

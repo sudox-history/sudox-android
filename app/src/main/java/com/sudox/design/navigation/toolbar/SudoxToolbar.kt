@@ -182,14 +182,12 @@ class SudoxToolbar : Toolbar {
     }
 
     private fun listenConnectionState() {
+        if (connectionStateSubscription != null) return
+        if (protocolClient == null) ApplicationLoader.component.inject(this@SudoxToolbar)
+        if (!protocolClient!!.isValid()) titleTextView?.setText(resources.getString(R.string.wait_for_connect))
+
         // Listen ...
         GlobalScope.launch(Dispatchers.IO) {
-            // Async inject for better fps
-            if (protocolClient == null) ApplicationLoader.component.inject(this@SudoxToolbar)
-            if (!protocolClient!!.isValid()) titleTextView?.setText(resources.getString(R.string.wait_for_connect))
-            if (connectionStateSubscription != null) return@launch
-
-            // Open subscription
             connectionStateSubscription = protocolClient!!
                     .connectionStateChannel
                     .openSubscription()
@@ -233,7 +231,9 @@ class SudoxToolbar : Toolbar {
 
         // Calculate new sizes
         val width = measuredWidthAndState
-        val height = MeasureSpec.makeMeasureSpec(resources.getDimension(R.dimen.toolbar_height).toInt(), MeasureSpec.EXACTLY)
+        val height = MeasureSpec.makeMeasureSpec(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56F, resources.displayMetrics).toInt(),
+                MeasureSpec.EXACTLY)
 
         if (featureTextButton != null) {
             val shouldLayout = Toolbar::class.java
@@ -264,11 +264,19 @@ class SudoxToolbar : Toolbar {
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
 
-        actionMenuView?.layoutParams = (actionMenuView?.layoutParams as Toolbar.LayoutParams)
-                .apply { gravity = Gravity.CENTER_VERTICAL }
+        if (actionMenuView != null
+                && (actionMenuView!!.layoutParams as Toolbar.LayoutParams).gravity != Gravity.CENTER_VERTICAL) {
 
-        navigationButtonView?.layoutParams = (navigationButtonView?.layoutParams as Toolbar.LayoutParams)
-                .apply { gravity = Gravity.CENTER_VERTICAL }
+            actionMenuView?.layoutParams = (actionMenuView?.layoutParams as Toolbar.LayoutParams)
+                    .apply { gravity = Gravity.CENTER_VERTICAL }
+        }
+
+        if (navigationButtonView != null
+                && (navigationButtonView!!.layoutParams as Toolbar.LayoutParams).gravity != Gravity.CENTER_VERTICAL) {
+
+            navigationButtonView?.layoutParams = (navigationButtonView?.layoutParams as Toolbar.LayoutParams)
+                    .apply { gravity = Gravity.CENTER_VERTICAL }
+        }
 
         val shouldLayout = Toolbar::class.java
                 .getDeclaredMethod("shouldLayout", View::class.java)

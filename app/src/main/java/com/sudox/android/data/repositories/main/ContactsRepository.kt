@@ -8,11 +8,14 @@ import com.sudox.android.common.helpers.WHITESPACES_REMOVE_REGEX
 import com.sudox.android.common.helpers.findAndRemoveIf
 import com.sudox.android.data.database.dao.user.UserDao
 import com.sudox.android.data.database.model.user.User
+import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.exceptions.RequestException
 import com.sudox.android.data.exceptions.RequestRegexException
 import com.sudox.android.data.models.common.Errors
+import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.models.contacts.dto.*
 import com.sudox.android.data.models.users.UserType
+import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.NetworkException
@@ -45,11 +48,11 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                     .accountSessionStateChannel
                     .openSubscription()) {
 
-                // Only when session was installed
-                if (!state) return@launch
-
-                // Update contacts ...
-                requestContacts()
+                if (state) {
+                    requestContacts() // Load new contacts
+                } else {
+                    contactsChannel.offer(ArrayList()) // Clean RAM cache
+                }
             }
         }
 
@@ -105,7 +108,8 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         }
     }
 
-    fun addContact(name: String, phone: String) = GlobalScope.launch(Dispatchers.IO) {
+    @Throws(RequestRegexException::class, RequestException::class, InternalRequestException::class)
+    fun addContact(name: String, phone: String) = GlobalScope.async(Dispatchers.IO) {
         val filteredName = name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
         val regexFields = arrayListOf<Int>()
 
@@ -124,10 +128,23 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                 // При загрузке пользователь будет отмечен и сохранен в БД как контакт.
                 val user = usersRepository
                         .loadUser(contactAddDTO.id, UserType.CONTACT)
-                        .await() ?: return@launch
+                        .await() ?: return@async
 
                 // Обновление в UI
                 notifyContactAdded(user)
+            } else if (contactAddDTO.error == Errors.INVALID_USER) {
+                val accountUser = usersRepository
+                        .getAccountUser()
+                        .await() ?: return@async
+
+                // Попытка добавить самого себя ;(
+                if (accountUser.phone == phone) {
+                    throw InternalRequestException(InternalErrors.ATTEMPT_TO_ADDING_MYSELF)
+                } else if (userDao.loadByTypeAndPhone(phone, UserType.CONTACT) != null) {
+                    throw InternalRequestException(InternalErrors.USER_ALREADY_ADDED)
+                } else {
+                    throw InternalRequestException(InternalErrors.USER_NOT_FOUND)
+                }
             } else {
                 throw RequestException(contactAddDTO.error)
             }

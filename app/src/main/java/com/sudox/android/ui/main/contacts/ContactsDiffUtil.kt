@@ -3,23 +3,17 @@ package com.sudox.android.ui.main.contacts
 import android.support.v7.util.DiffUtil
 import com.sudox.android.data.database.model.user.User
 
-class ContactsDiffUtil(private val newContactsList: List<User>,
-                       private val oldContactsList: List<User>) : DiffUtil.Callback() {
+class ContactsDiffUtil(val newContacts: ArrayList<User>,
+                       val oldContacts: ArrayList<User>) : DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val newContact = newContactsList[newItemPosition]
-        val oldContact = oldContactsList[oldItemPosition]
-
-        return newContact.uid == oldContact.uid
+        return newContacts[newItemPosition].uid == oldContacts[oldItemPosition].uid
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val newContact = newContactsList[newItemPosition]
-        val oldContact = oldContactsList[oldItemPosition]
-
-        return newContact == oldContact
+        return newContacts[newItemPosition] == oldContacts[oldItemPosition]
     }
 
-    override fun getOldListSize() = oldContactsList.size
-    override fun getNewListSize() = newContactsList.size
+    override fun getOldListSize(): Int = oldContacts.size
+    override fun getNewListSize(): Int = newContacts.size
 }

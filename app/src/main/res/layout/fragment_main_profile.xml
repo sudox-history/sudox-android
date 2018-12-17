@@ -2,81 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.sudox.design.navigation.toolbar.SudoxToolbar
+        android:id="@+id/profileToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:title="@string/profile" />
 
-        <android.support.design.widget.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/profileToolbar"
-                style="@style/ToolbarTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:title="@string/profile" />
-
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <ImageView
-                        android:id="@+id/profileAvatar"
-                        android:layout_width="92dp"
-                        android:layout_height="92dp"
-                        android:src="#FFFFFF" />
-
-                    <TextView
-                        android:id="@+id/profileName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="14dp"
-                        android:fontFamily="sans-serif-light"
-                        android:text="Максим Митюшкин"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/profileStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Hello World!"
-                        android:textColor="@color/colorHint"
-                        android:textSize="13sp" />
-
-                </LinearLayout>
-            </android.support.design.widget.CollapsingToolbarLayout>
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/profileTabLayout"
-                style="@style/AppTheme.TabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp" />
-
-        </android.support.design.widget.AppBarLayout>
-    </android.support.design.widget.CoordinatorLayout>
-
-    <android.support.v4.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="20dp">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/profilePager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <com.sudox.design.avatar.AvatarView
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:background="#FFFFFF" />
 
-    </android.support.v4.widget.NestedScrollView>
+        <TextView
+            style="@style/TextViewWithoutPaddings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="sans-serif-light"
+            android:text="Максим Митюшкин"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Тут должен быть статус ..."
+            android:textColor="#BDBDBD"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/profileTabLayout"
+        style="@style/AppTheme.TabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    
 </LinearLayout>

@@ -23,7 +23,10 @@ fun formatHtml(string: String): Spanned {
     }
 }
 
-fun hideKeyboard(context: Context, view: View) {
+fun hideKeyboard(context: Context, view: View?) {
+    if (view == null) return
+
+    // Input manager
     val inputMethodManager = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
 
     // Hide keyboard & remove focus
@@ -83,8 +86,8 @@ fun String.getTwoFirstLetters(): String {
     val names = split(" ")
 
     // Билдим имя
-    if (names.isNotEmpty()) builder.append(names[0][0])
-    if (names.size >= 2) builder.append(names[1][0])
+    if (names.isNotEmpty() && names[0].isNotEmpty()) builder.append(names[0][0])
+    if (names.size >= 2 && names[1].isNotEmpty()) builder.append(names[1][0])
 
-    return builder.toString()
+    return builder.toString().toUpperCase()
 }

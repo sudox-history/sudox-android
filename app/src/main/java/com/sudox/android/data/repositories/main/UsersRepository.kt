@@ -5,6 +5,7 @@ import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.users.UserType
 import com.sudox.android.data.models.users.dto.UserInfoDTO
+import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.*
@@ -17,6 +18,7 @@ import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class UsersRepository @Inject constructor(private val authRepository: AuthRepository,
+                                          private val accountRepository: AccountRepository,
                                           private val protocolClient: ProtocolClient,
                                           private val userDao: UserDao) {
 
@@ -44,7 +46,9 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
             val notLoadedUsers = ids.filter { !loadedUsersIds.contains(it) }
             val usersFromNetwork = if (notLoadedUsers.isNotEmpty()) loadUsersFromNetwork(notLoadedUsers, loadAs) else arrayListOf()
             val usersFromNetworkIds = usersFromNetwork.map { it.uid }
-            val usersFromDatabase = userDao.loadByIds(ids.filter { !usersFromNetworkIds.contains(it) })
+            val usersFromDatabase = userDao.loadByIds(ids
+                    .filter { !usersFromNetworkIds.contains(it) }
+                    .map { it.toLong() })
 
             // Update the type
             usersFromDatabase.forEach {
@@ -81,7 +85,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
     }
 
     private suspend fun loadUsersFromNetwork(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN): List<User> = suspendCoroutine { continuation ->
-        protocolClient.makeRequest<UserInfoDTO>("users.getUsers", UserInfoDTO().apply {
+        protocolClient.makeRequest<UserInfoDTO>("users.get", UserInfoDTO().apply {
             this.ids = ids
         }) {
             if (it.users != null && !it.users!!.isEmpty() && !(it.containsError())) {
@@ -103,29 +107,8 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    private suspend fun loadUserFromNetwork(id: Long, loadAs: UserType = UserType.UNKNOWN): User? = suspendCoroutine { continuation ->
-        protocolClient.makeRequest<UserInfoDTO>("users.getUser", UserInfoDTO().apply {
-            this.id = id
-        }) {
-            if (!it.containsError()) {
-                val user = toStorableUser(it, loadAs)
-
-                // Cache user
-                userDao.insertOne(user)
-                loadedUsersIds.plusAssign(user.uid)
-
-                // Return result
-                continuation.resume(user)
-            } else if (it.error == Errors.INVALID_USER) {
-                userDao.removeOne(id)
-
-                // null is optional result!
-                continuation.resume(null)
-            } else {
-                continuation.resume(null)
-            }
-        }
-    }
+    private suspend fun loadUserFromNetwork(id: Long, loadAs: UserType = UserType.UNKNOWN): User?
+            = loadUsersFromNetwork(listOf(id), loadAs)[0]
 
     private fun toStorableUsers(userInfoDTO: UserInfoDTO, loadAs: UserType = UserType.UNKNOWN): List<User> {
         val usersIds = userInfoDTO.users!!.map { it.id }
@@ -156,5 +139,13 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                 userInfoDTO.status,
                 userInfoDTO.bio,
                 type)
+    }
+
+    fun getAccountUser() = GlobalScope.async(Dispatchers.IO) {
+        if (accountRepository.cachedAccount != null) {
+            return@async loadUser(accountRepository.cachedAccount!!.id).await()
+        } else {
+            return@async null
+        }
     }
 }

@@ -14,6 +14,6 @@ import com.sudox.android.data.database.model.messages.ChatMessage
 @Database(entities = [User::class, ChatMessage::class], version = 3, exportSchema = false)
 @TypeConverters((MessageDirectionConverter::class), (MessageStatusConverter::class), (UserTypeConverter::class))
 abstract class SudoxDatabase : RoomDatabase() {
-    abstract fun contactsDao(): UserDao
+    abstract fun userDao(): UserDao
     abstract fun messagesDao(): ChatMessagesDao
 }

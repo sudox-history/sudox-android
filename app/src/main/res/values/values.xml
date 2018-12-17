@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="font_size_extra_small_tiny">10sp</dimen>
-    <dimen name="font_size_small_tiny">11sp</dimen>
-    <dimen name="font_size_extra_tiny">12sp</dimen>
-    <dimen name="font_size_tiny">13sp</dimen>
-    <dimen name="font_size_increased_tiny">14sp</dimen>
-    <dimen name="font_size_medium">16sp</dimen>
-    <dimen name="font_size_large">25sp</dimen>
-    <dimen name="font_size_increased_medium">19sp</dimen>
-    <!-- Navigation bar -->
-    <dimen name="navbar_height">60dp</dimen>
-    <dimen name="navbar_button_drawable_padding">8dp</dimen>
-    <!-- Main bar -->
-    <dimen name="editfield_height">48dp</dimen>
-    <!-- Authorization -->
     <integer name="length_email_code">5</integer>
     <integer name="length_name">20</integer>
     <integer name="length_nickname">20</integer>
-    <!-- Toolbar -->
-    <dimen name="toolbar_height">56dp</dimen>
 </resources>

@@ -24,7 +24,6 @@ class MainViewModel @Inject constructor(private val authRepository: AuthReposito
      */
     fun listenSessionChanges() = GlobalScope.launch(Dispatchers.IO) {
         dialogsRepository.startWork()
-        contactsRepository.startWork()
         listenAccountSessionState()
     }
 

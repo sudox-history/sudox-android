@@ -3,6 +3,7 @@ package com.sudox.android.data.models.avatar
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.avatar.impl.PhotoAvatarInfo
 
+@Deprecated(message = "Создана отдельная View для таких задач по отображение")
 abstract class AvatarInfo(val string: String) {
 
     /**

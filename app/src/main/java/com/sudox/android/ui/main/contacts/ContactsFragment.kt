@@ -3,6 +3,8 @@ package com.sudox.android.ui.main.contacts
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.support.v7.util.DiffUtil
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.contacts.add.ContactAddFragment
+import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_main_contacts.*
 import javax.inject.Inject
@@ -18,6 +21,9 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var contactsAdapter: ContactsAdapter
 
     private lateinit var contactsViewModel: ContactsViewModel
     private lateinit var mainActivity: MainActivity
@@ -31,28 +37,50 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initToolbar()
+        initContactsList()
+
+        // Listen data updates
+        contactsViewModel.start()
 
         // Start showing ...
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    private fun initContactsList() {
+        contactsRecyclerViewContainer
+                .recyclerView
+                .apply {
+                    layoutManager = LinearLayoutManager(context)
+                    adapter = contactsAdapter
+                    itemAnimator = null
+                    addItemDecoration(SecondColumnItemDecorator(context, false, true))
+                }
+
+        contactsViewModel
+                .contactsLiveData
+                .observe(this, Observer {
+                    val diffResult = DiffUtil.calculateDiff(ContactsDiffUtil(it!!, contactsAdapter.contacts))
+
+                    // Update data
+                    contactsAdapter.contacts = it
+                    diffResult.dispatchUpdatesTo(contactsAdapter)
+
+                    // Loaded!
+                    contactsRecyclerViewContainer.notifyInitialLoadingDone()
+                })
     }
 
     private fun initToolbar() {
         contactsToolbar.inflateMenu(R.menu.menu_contacts)
         contactsToolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.add_contact_menu_item -> showContactAddFragment()
+                R.id.add_contact_menu_item -> mainActivity
+                        .fragmentNavigator
+                        .showChildFragment(ContactAddFragment())
+                R.id.contacts_sync_item -> contactsViewModel.syncContacts(activity!!)
             }
 
             return@setOnMenuItemClickListener true
         }
-    }
-
-    private fun showContactAddFragment() {
-        mainActivity
-                .supportFragmentManager
-                .beginTransaction()
-                .addToBackStack(null)
-                .replace(R.id.fragmentMainContainer, ContactAddFragment())
-                .commit()
     }
 }

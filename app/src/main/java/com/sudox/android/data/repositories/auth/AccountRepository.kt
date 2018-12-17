@@ -4,6 +4,7 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AccountManager.KEY_ACCOUNT_NAME
 import android.os.Build
+import com.sudox.android.common.helpers.formatPhoneByMask
 import com.sudox.android.data.auth.KEY_ACCOUNT_ID
 import com.sudox.android.data.auth.SudoxAccount
 import com.sudox.android.data.database.SudoxDatabase
@@ -21,27 +22,28 @@ class AccountRepository @Inject constructor(private val accountManager: AccountM
     // Cached account
     var cachedAccount: SudoxAccount? = null
 
-    fun saveAccount(account: SudoxAccount) = GlobalScope.async {
-        val accountInstance = Account(account.name, accountType)
+    fun saveAccount(account: SudoxAccount) = GlobalScope.async(Dispatchers.IO) {
+        val accountInstance = Account(account.phoneNumber, accountType)
 
         // Remove accounts
         removeAccounts().await()
 
-        // TODO: Clear database
+        // Clear database before old account
+        sudoxDatabase.clearAllTables()
 
         // Add account
         accountManager.addAccountExplicitly(accountInstance, null, null)
 
         // Write account data
         accountManager.setUserData(accountInstance, KEY_ACCOUNT_ID, account.id.toString())
-        accountManager.setUserData(accountInstance, KEY_ACCOUNT_NAME, account.name)
+        accountManager.setUserData(accountInstance, KEY_ACCOUNT_NAME, formatPhoneByMask(account.phoneNumber))
         accountManager.setPassword(accountInstance, account.secret)
 
         // Update cache
         cachedAccount = account
     }
 
-    fun removeAccounts() = GlobalScope.async {
+    fun removeAccounts() = GlobalScope.async(Dispatchers.IO) {
         val accounts = accountManager.getAccountsByType(accountType)
 
         if (accounts.isNotEmpty()) {

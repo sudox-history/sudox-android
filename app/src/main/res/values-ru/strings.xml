@@ -91,6 +91,7 @@
     <string name="title_oops">Упс! Не получилось!</string>
     <string name="invite_friend_sms">Привет! Я хочу с тобой пообщаться в Sudox! https://vk.com/sudox_messenger</string>
     <string name="you">Вы</string>
+    <string name="sync_contacts">Синхронизировать контакты</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>
