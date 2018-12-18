@@ -31,11 +31,13 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
     }
 
     private fun listenConnectionStatus() = GlobalScope.launch(Dispatchers.IO) {
-        authRepository
+        for (state in authRepository
                 .accountSessionStateChannel
-                .openSubscription()
-                .filter { it }
-                .consumeEach { loadedUsersIds.clear() }
+                .openSubscription()) {
+
+            // Session is valid
+            if (state) loadedUsersIds.clear()
+        }
     }
 
     fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN) = GlobalScope.async(Dispatchers.IO) {

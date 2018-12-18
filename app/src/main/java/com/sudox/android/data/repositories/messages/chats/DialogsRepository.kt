@@ -30,20 +30,11 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     // Dialogs loaded from server (if value negative - last messages not loaded)
     private var lastMessagesLoadedOffset: Int = -1
     private var lastMessagesEnded: Boolean = false
-    private var isWorking: Boolean = false
 
-    /**
-     * Запускает слушателей событий ...
-     */
-    fun startWork() {
-        if (!isWorking) {
-            listenConnectionStatus()
-            listenNewMessages()
-            listenSendingMessages()
-        }
-
-        // Защита от двух и более запусков слушателей
-        isWorking = true
+    init {
+        listenConnectionStatus()
+        listenNewMessages()
+        listenSendingMessages()
     }
 
     private fun listenNewMessages() = GlobalScope.launch(Dispatchers.IO) {
