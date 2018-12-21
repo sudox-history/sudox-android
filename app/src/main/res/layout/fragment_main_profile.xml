@@ -1,58 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
-    <com.sudox.design.navigation.toolbar.SudoxToolbar
-        android:id="@+id/profileToolbar"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/profileAppbarLayout"
+        style="@style/ToolbarTheme.AppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/profile" />
+        app:layout_behavior="com.sudox.design.behaviours.DisableViewPagerTouchOnScrollBehaviour">
+
+        <com.sudox.design.navigation.toolbar.SudoxToolbar
+            android:id="@+id/profileToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/profile" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:paddingStart="25dp"
-        android:paddingEnd="25dp">
+        android:background="?attr/colorPrimary"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_behavior="com.sudox.design.behaviours.CollapsingProfileAdditionalBehaviour">
 
         <com.sudox.design.avatar.AvatarView
-            android:id="@+id/profileAvatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
             android:background="#FFF" />
 
-        <LinearLayout
+        <TextView
+            style="@style/TextViewWithoutPaddings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="15dp"
-            android:orientation="vertical">
+            android:layout_marginTop="15dp"
+            android:fontFamily="sans-serif-light"
+            android:text="Максим Митюшкин"
+            android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/profileName"
-                style="@style/TextViewWithoutPaddings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
+        <TextView
+            style="@style/TextViewWithoutPaddings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="sans-serif-light"
+            android:text="///M значит валит ;)"
+            android:textAlignment="center"
+            android:textColor="#BDBDBD"
+            android:textSize="13sp" />
 
-            <TextView
-                android:id="@+id/profileDescription"
-                style="@style/TextViewWithoutPaddings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:fontFamily="sans-serif-light"
-                android:textSize="14sp" />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/profileTabLayout"
+            style="@style/AppTheme.TabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp" />
 
-        </LinearLayout>
     </LinearLayout>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/profileTabLayout"
-        style="@style/AppTheme.TabLayout"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/profileViewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        app:layout_behavior="com.sudox.design.behaviours.ScrollingProfileViewPagerBehaviour" />
+
+</android.support.design.widget.CoordinatorLayout>

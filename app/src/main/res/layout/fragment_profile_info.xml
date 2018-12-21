@@ -11,9 +11,14 @@
         android:layout_marginTop="10dp"
         android:background="?attr/colorPrimary"
         android:elevation="0dp"
+        android:overScrollMode="never"
         android:paddingStart="25dp"
         android:paddingEnd="25dp"
-        android:overScrollMode="never"
         android:paddingBottom="5dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:background="#FFF" />
 
 </LinearLayout>
