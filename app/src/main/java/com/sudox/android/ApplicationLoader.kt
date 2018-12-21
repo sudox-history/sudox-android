@@ -17,8 +17,7 @@ import com.yandex.metrica.YandexMetricaConfig
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import io.fabric.sdk.android.Fabric
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -36,6 +35,7 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
 
     @Inject
     lateinit var repositoriesContainer: RepositoriesContainer
+    // Репозитории начнут слушать события после создания этого обьекта.
 
     override fun onCreate() {
         component = DaggerAppComponent
@@ -81,10 +81,9 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
     override fun onActivityPaused(p0: Activity?) {}
 
     override fun onActivityResumed(activity: Activity) {
-        GlobalScope.async {
-            if (!protocolClient.isWorking()) {
+        GlobalScope.launch(Dispatchers.IO) {
+            if (!protocolClient.isWorking())
                 protocolClient.connect()
-            }
         }
     }
 
