@@ -1,10 +1,9 @@
 package com.sudox.android.data.models.contacts.dto
 
-import com.sudox.protocol.models.JsonModel
 import org.json.JSONArray
 import org.json.JSONObject
 
-class ContactsSyncDTO : JsonModel() {
+class ContactsSyncDTO : ContactsIdsListDTO() {
 
     var items: ArrayList<ContactPairDTO> = arrayListOf()
 

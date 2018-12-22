@@ -169,16 +169,16 @@ class SudoxToolbar : Toolbar {
                     .getDeclaredField("mTitleTextView")
                     .apply { isAccessible = true }
                     .get(this) as TextView
+
+            titleTextView!!.includeFontPadding = false
+            titleTextView!!.typeface = SANS_SERIF_LIGHT
+            titleTextView!!.setPadding(0, 0, 0, 0)
+            titleTextView!!.setPaddingRelative(0, 0, 0, 0)
+            titleTextView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19F)
+            normalTitleText = title.toString()
+
+            listenConnectionState()
         }
-
-        titleTextView?.includeFontPadding = false
-        titleTextView?.typeface = SANS_SERIF_LIGHT
-        titleTextView?.setPadding(0, 0, 0, 0)
-        titleTextView?.setPaddingRelative(0, 0, 0, 0)
-        titleTextView?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19F)
-        normalTitleText = title.toString()
-
-        listenConnectionState()
     }
 
     private fun listenConnectionState() {

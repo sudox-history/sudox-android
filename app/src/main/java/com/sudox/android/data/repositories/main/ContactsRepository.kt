@@ -105,6 +105,26 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         }
     }
 
+    private fun loadContactsBeforeSync(contactsSyncDTO: ContactsSyncDTO) = GlobalScope.launch(Dispatchers.IO) {
+        try {
+            // Чистим список контактов
+            userDao.setUnknownByType(UserType.CONTACT) // Скроем все ...
+
+            // Контактов нет
+            if (contactsSyncDTO.error == Errors.INVALID_USERS) {
+                contactsChannel.offer(arrayListOf()) // Обновим список в UI ...
+            } else if (contactsSyncDTO.containsError()) {
+                contactsChannel.offer(arrayListOf())
+            } else {
+                contactsChannel.offer(ArrayList(usersRepository
+                        .loadUsers(contactsSyncDTO.ids, UserType.CONTACT)
+                        .await()))
+            }
+        } catch (e: NetworkException) {
+            // Ignore
+        }
+    }
+
     @Throws(RequestRegexException::class, RequestException::class, InternalRequestException::class)
     fun addContact(name: String, phone: String) = GlobalScope.async(Dispatchers.IO) {
         val filteredName = name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
@@ -182,7 +202,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
             }).await()
 
             // Load new contacts ...
-            if (contactsSyncDTO.isSuccess()) requestContacts()
+            loadContactsBeforeSync(contactsSyncDTO)
         } catch (e: NetworkException) {
             // Ignore
         }

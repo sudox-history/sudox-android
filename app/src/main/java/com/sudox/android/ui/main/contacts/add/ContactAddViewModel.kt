@@ -30,12 +30,13 @@ class ContactAddViewModel @Inject constructor(val contactsRepository: ContactsRe
         } catch (e: RequestException) {
             contactAddErrorsLiveData.postValue(e.errorCode)
         } catch (e: InternalRequestException) {
-            if (e.errorCode == InternalErrors.ATTEMPT_TO_ADDING_MYSELF) {
-                contactAddActionsLiveData.postValue(ContactAddAction.SHOW_ATTEMPT_TO_ADDING_MYSELF_ERROR)
-            } else if (e.errorCode == InternalErrors.USER_ALREADY_ADDED) {
-                contactAddActionsLiveData.postValue(ContactAddAction.SHOW_USER_ALREADY_ADDED_ERROR)
-            } else if (e.errorCode == InternalErrors.USER_NOT_FOUND) {
-                contactAddActionsLiveData.postValue(ContactAddAction.SHOW_USER_NOT_FOUND_ERROR)
+            when {
+                e.errorCode == InternalErrors.ATTEMPT_TO_ADDING_MYSELF ->
+                    contactAddActionsLiveData.postValue(ContactAddAction.SHOW_ATTEMPT_TO_ADDING_MYSELF_ERROR)
+                e.errorCode == InternalErrors.USER_ALREADY_ADDED ->
+                    contactAddActionsLiveData.postValue(ContactAddAction.SHOW_USER_ALREADY_ADDED_ERROR)
+                e.errorCode == InternalErrors.USER_NOT_FOUND ->
+                    contactAddActionsLiveData.postValue(ContactAddAction.SHOW_USER_NOT_FOUND_ERROR)
             }
         }
     }

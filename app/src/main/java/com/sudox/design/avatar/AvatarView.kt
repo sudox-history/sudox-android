@@ -26,7 +26,7 @@ class AvatarView : AppCompatImageView {
         if (type == "col") {
             drawGradientAvatar(data, user)
         } else {
-            TODO("Unsupported avatar type ...")
+//            TODO("Unsupported avatar type ...")
         }
     }
 

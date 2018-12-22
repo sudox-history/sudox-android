@@ -4,7 +4,7 @@ import com.sudox.protocol.helpers.asSequence
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONObject
 
-class ContactsIdsListDTO : JsonModel() {
+open class ContactsIdsListDTO : JsonModel() {
 
     var ids: ArrayList<Long> = arrayListOf()
 
