@@ -26,25 +26,21 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
     @Inject
     lateinit var contactsAdapter: ContactsAdapter
 
-    private lateinit var contactsViewModel: ContactsViewModel
-    private lateinit var mainActivity: MainActivity
+    private val contactsViewModel by lazy { getViewModel<ContactsViewModel>(viewModelFactory) }
+    private val mainActivity by lazy { activity as MainActivity }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        contactsViewModel = getViewModel(viewModelFactory)
-        mainActivity = activity as MainActivity
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-        return inflater.inflate(R.layout.fragment_main_contacts, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initToolbar()
         initContactsList()
 
         // Listen data updates
         contactsViewModel.start()
+    }
 
-        // Start showing ...
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_main_contacts, container, false)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

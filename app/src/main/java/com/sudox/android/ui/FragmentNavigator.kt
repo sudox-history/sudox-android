@@ -3,6 +3,7 @@ package com.sudox.android.ui
 import android.app.Activity
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import com.sudox.android.R
 import com.sudox.design.helpers.hideKeyboard
 import java.util.*
@@ -12,6 +13,7 @@ class FragmentNavigator(val activity: Activity,
                         val rootFragments: List<Fragment>,
                         val containerId: Int) {
 
+    private var isFirstStart: Boolean = false
     private val fragmentsPath: LinkedList<Fragment> = LinkedList()
 
     init {
@@ -37,7 +39,14 @@ class FragmentNavigator(val activity: Activity,
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         // Анимация
-        transaction.setCustomAnimations(R.animator.animator_fragment_change, 0)
+        if (isFirstStart) {
+            isFirstStart = false
+
+            // Просто Fade эффект
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        } else {
+            transaction.setCustomAnimations(R.animator.animator_fragment_change, 0)
+        }
 
         // Родительские фрагменты скрываются, дочерние - удаляются из ОЗУ
         fragmentManager

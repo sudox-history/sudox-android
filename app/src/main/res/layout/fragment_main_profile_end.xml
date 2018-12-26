@@ -2,9 +2,7 @@
 <android.support.constraint.motion.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layoutDescription="@xml/scene_profile"
-    app:showPaths="true">
+    android:layout_height="match_parent">
 
     <com.sudox.design.navigation.toolbar.SudoxToolbar
         android:id="@+id/profileToolbar"
@@ -25,10 +23,10 @@
 
     <com.sudox.design.avatar.AvatarView
         android:id="@+id/profileAvatarView"
-        android:layout_width="92dp"
-        android:layout_height="92dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="25dp"
         android:background="#FFF"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profileToolbar" />
 
@@ -37,32 +35,32 @@
         style="@style/TextViewWithoutPaddings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:fontFamily="sans-serif-light"
+        android:layout_marginStart="15dp"
+        android:textSize="14sp"
         android:text="Митюшкин Максим"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileAvatarView" />
+        app:layout_constraintBottom_toTopOf="@+id/profileStatusText"
+        app:layout_constraintStart_toEndOf="@+id/profileAvatarView"
+        app:layout_constraintTop_toTopOf="@+id/profileAvatarView"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
         android:id="@+id/profileStatusText"
         style="@style/TextViewWithoutPaddings"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="2dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="sans-serif-light"
         android:text="Undefined status"
-        android:textAlignment="center"
         android:textColor="#BDBDBD"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileNameText" />
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/profileAvatarView"
+        app:layout_constraintStart_toEndOf="@+id/profileAvatarView"
+        app:layout_constraintTop_toBottomOf="@id/profileNameText" />
 
     <Space
         android:id="@+id/profileInfoBlockBottomSpace"
         android:layout_width="1dp"
-        android:layout_height="20dp"
+        android:layout_height="15dp"
         app:layout_constraintEnd_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profileStatusText" />
 

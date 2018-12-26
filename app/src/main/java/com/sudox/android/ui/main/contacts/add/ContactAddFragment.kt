@@ -14,7 +14,6 @@ import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.repositories.main.CONTACTS_NAME_REGEX_ERROR
 import com.sudox.android.data.repositories.main.CONTACTS_PHONE_REGEX_ERROR
-import com.sudox.android.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_add_contact.*
 import javax.inject.Inject
@@ -23,28 +22,23 @@ class ContactAddFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var contactAddViewModel: ContactAddViewModel
-    lateinit var mainActivity: MainActivity
+    val contactAddViewModel by lazy { getViewModel<ContactAddViewModel>(viewModelFactory) }
 
     // Data
     private var phoneNumber: String = ""
     private var isMaskFilled: Boolean = false
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        contactAddViewModel = getViewModel(viewModelFactory)
-        mainActivity = activity as MainActivity
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-        return inflater.inflate(R.layout.fragment_add_contact, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initToolbar()
         initAvatar()
         initPhoneEditText()
         initDataListeners()
+    }
 
-        // Super!
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_add_contact, container, false)
     }
 
     private fun initDataListeners() {

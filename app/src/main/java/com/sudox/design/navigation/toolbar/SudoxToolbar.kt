@@ -3,11 +3,15 @@ package com.sudox.design.navigation.toolbar
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.support.v4.text.PrecomputedTextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewCompat
+import android.support.v4.widget.TextViewCompat
 import android.support.v7.view.menu.ActionMenuItemView
 import android.support.v7.widget.ActionMenuView
+import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
+import android.text.PrecomputedText
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -32,14 +36,98 @@ class SudoxToolbar : Toolbar {
     private var titleTextView: TextView? = null
     private var actionMenuView: ActionMenuView? = null
     private var navigationButtonView: ImageButton? = null
-    private var featureTextButton: TextView? = null
+    private var featureTextButton: AppCompatTextView? = null
     private var featureButtonText: String? = null
     private var normalTitleText: String? = null
     private var connectionStateSubscription: ReceiveChannel<ConnectionState>? = null
+    private val maxButtonHeight by lazy {
+        Toolbar::class.java
+                .getDeclaredField("mMaxButtonHeight")
+                .apply { isAccessible = true }
+                .get(this)
+    }
+
+    private val toolbarMeasuredHeight by lazy {
+        View.MeasureSpec.makeMeasureSpec(
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56F, resources.displayMetrics).toInt(),
+                View.MeasureSpec.EXACTLY)
+    }
 
     @Inject
     @JvmField
     var protocolClient: ProtocolClient? = null
+
+    companion object {
+        @JvmStatic
+        val NAV_BUTTON_VIEW_FIELD by lazy {
+            Toolbar::class.java
+                    .getDeclaredField("mNavButtonView")
+                    .apply { isAccessible = true }
+        }
+
+        @JvmStatic
+        val ADD_SYSTEM_VIEW_METHOD by lazy {
+            Toolbar::class.java
+                    .getDeclaredMethod("addSystemView", View::class.java, Boolean::class.java)
+                    .apply { isAccessible = true }
+        }
+
+        @JvmStatic
+        val ENSURE_MENU_VIEW_METHOD by lazy {
+            Toolbar::class.java
+                    .getDeclaredMethod("ensureMenuView")
+                    .apply { isAccessible = true }
+        }
+
+        @JvmStatic
+        val MENU_VIEW_FIELD by lazy {
+            Toolbar::class.java
+                    .getDeclaredField("mMenuView")
+                    .apply { isAccessible = true }
+        }
+
+        @JvmStatic
+        val ACTION_MENU_ITEM_ICON_FIELD by lazy {
+            ActionMenuItemView::class.java
+                    .getDeclaredField("mIcon")
+                    .apply { isAccessible = true }
+        }
+
+        @JvmStatic
+        val TITLE_TEXT_VIEW_FIELD by lazy {
+            Toolbar::class.java
+                    .getDeclaredField("mTitleTextView")
+                    .apply { isAccessible = true }
+        }
+
+        @JvmStatic
+        val SHOULD_LAYOUT_FIELD by lazy {
+            Toolbar::class.java
+                    .getDeclaredMethod("shouldLayout", View::class.java)
+                    .apply { isAccessible = true }
+        }
+
+        @JvmStatic
+        val MEASURE_CHILD_CONTRAINED by lazy {
+            Toolbar::class.java
+                    .getDeclaredMethod("measureChildConstrained", View::class.java, Int::class.java, Int::class.java, Int::class.java, Int::class.java, Int::class.java)
+                    .apply { isAccessible = true }
+        }
+
+        @JvmStatic
+        val TEMP_MARGINS_FIELD by lazy {
+            Toolbar::class.java
+                    .getDeclaredField("mTempMargins")
+                    .apply { isAccessible = true }
+        }
+
+        @JvmStatic
+        val LAYOUT_CHILD_RIGHT_METHOD by lazy {
+            Toolbar::class.java
+                    .getDeclaredMethod("layoutChildRight", View::class.java, Int::class.java, IntArray::class.java, Int::class.java)
+                    .apply { isAccessible = true }
+        }
+    }
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -66,41 +154,39 @@ class SudoxToolbar : Toolbar {
     }
 
     private fun configureNavigationButton() {
-        navigationButtonView = Toolbar::class.java
-                .getDeclaredField("mNavButtonView")
-                .apply { isAccessible = true }
-                .get(this) as? ImageButton
+        navigationButtonView = NAV_BUTTON_VIEW_FIELD.get(this) as? ImageButton
 
         if (navigationButtonView != null) {
             navigationButtonView?.setImageResource(R.drawable.ic_arrow_back)
         }
 
         if (featureButtonText != null) {
-            featureTextButton = TextView(context)
-            featureTextButton!!.text = featureButtonText
-            featureTextButton!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
-            featureTextButton!!.setTextColor(Color.WHITE)
-            featureTextButton!!.gravity = Gravity.END
-            featureTextButton!!.layoutParams = generateDefaultLayoutParams().apply {
-                gravity = GravityCompat.END or Gravity.CENTER_VERTICAL;
-            }
+            featureTextButton = AppCompatTextView(context)
+                    .apply {
+                        setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
+                        setTextColor(Color.WHITE)
+                        layoutParams = generateDefaultLayoutParams()
+                                .apply {
+                                    gravity = GravityCompat.END or Gravity.CENTER_VERTICAL;
+                                }
 
+                        gravity = Gravity.END
+                        isClickable = true
+                        isFocusable = true
+                    }
+
+            // Precomputate text
+            val params = TextViewCompat.getTextMetricsParams(featureTextButton!!)
+            val precomputedText = PrecomputedTextCompat.create(featureButtonText!!, params)
+
+            // Draw text button
+            TextViewCompat.setPrecomputedText(featureTextButton!!, precomputedText)
             addSystemView(featureTextButton!!, false)
         }
     }
 
     private fun addSystemView(view: View, allowHide: Boolean) {
-        Toolbar::class.java
-                .getDeclaredMethod("addSystemView", View::class.java, Boolean::class.java)
-                .apply { isAccessible = true }
-                .invoke(this, view, allowHide)
-    }
-
-    private fun getButtonGravity(): Int {
-        return Toolbar::class.java
-                .getDeclaredField("mButtonGravity")
-                .apply { isAccessible = true }
-                .get(this) as Int
+        ADD_SYSTEM_VIEW_METHOD.invoke(this, view, allowHide)
     }
 
     private fun configureBasic() {
@@ -114,16 +200,8 @@ class SudoxToolbar : Toolbar {
         if (featureButtonText != null) return
 
         // Initialize the menu view
-        Toolbar::class.java
-                .getDeclaredMethod("ensureMenuView")
-                .apply { isAccessible = true }
-                .invoke(this)
-
-        // Reflection is the single way to get & change mMenuView field
-        actionMenuView = Toolbar::class.java
-                .getDeclaredField("mMenuView")
-                .apply { isAccessible = true }
-                .get(this) as ActionMenuView
+        ENSURE_MENU_VIEW_METHOD.invoke(this)
+        actionMenuView = MENU_VIEW_FIELD.get(this) as ActionMenuView
     }
 
     private fun configurePaddings() {
@@ -148,10 +226,7 @@ class SudoxToolbar : Toolbar {
         if (menuItemsCount > 0) {
             val lastItem = actionMenuView!!.getChildAt(menuItemsCount - 1) as ActionMenuItemView
             val lastItemEndPadding = if (lastItem.paddingEnd > 0) lastItem.paddingEnd else lastItem.paddingRight
-            val iconWidth = (ActionMenuItemView::class.java
-                    .getDeclaredField("mIcon")
-                    .apply { isAccessible = true }
-                    .get(lastItem) as Drawable).intrinsicWidth
+            val iconWidth = (ACTION_MENU_ITEM_ICON_FIELD.get(lastItem) as Drawable).intrinsicWidth
 
             // Recalculate end padding
             return initialEndPadding - lastItemEndPadding - (iconWidth / 2)
@@ -165,11 +240,7 @@ class SudoxToolbar : Toolbar {
 
         // Get title text view
         if (titleTextView == null) {
-            titleTextView = Toolbar::class.java
-                    .getDeclaredField("mTitleTextView")
-                    .apply { isAccessible = true }
-                    .get(this) as TextView
-
+            titleTextView = TITLE_TEXT_VIEW_FIELD.get(this) as TextView
             titleTextView!!.includeFontPadding = false
             titleTextView!!.typeface = SANS_SERIF_LIGHT
             titleTextView!!.setPadding(0, 0, 0, 0)
@@ -203,59 +274,28 @@ class SudoxToolbar : Toolbar {
     }
 
     fun setFeatureButtonOnClickListener(listener: View.OnClickListener) {
-        if (featureTextButton == null) return
-
-        // Bind listener
-        featureTextButton!!.isClickable = true
-        featureTextButton!!.isFocusable = true
-        featureTextButton!!.setOnClickListener(listener)
+        featureTextButton?.setOnClickListener(listener)
     }
 
     private fun resetInsets() {
         setContentInsetsAbsolute(0, 0)
         setContentInsetsRelative(0, 0)
-
-        Toolbar::class.java
-                .getDeclaredField("mContentInsetStartWithNavigation")
-                .apply { isAccessible = true }
-                .set(this, 0)
-
-        Toolbar::class.java
-                .getDeclaredField("mContentInsetEndWithActions")
-                .apply { isAccessible = true }
-                .set(this, 0)
+        contentInsetStartWithNavigation = 0
+        contentInsetEndWithActions = 0
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        // Calculate new sizes
-        val width = measuredWidthAndState
-        val height = MeasureSpec.makeMeasureSpec(
-                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56F, resources.displayMetrics).toInt(),
-                MeasureSpec.EXACTLY)
+        if (featureTextButton != null
+                && SHOULD_LAYOUT_FIELD.invoke(this, featureTextButton) as Boolean) {
 
-        if (featureTextButton != null) {
-            val shouldLayout = Toolbar::class.java
-                    .getDeclaredMethod("shouldLayout", View::class.java)
-                    .apply { isAccessible = true }
-                    .invoke(this, featureTextButton) as Boolean
-
-            if (shouldLayout) {
-                val maxHeight = Toolbar::class.java
-                        .getDeclaredField("mMaxButtonHeight")
-                        .apply { isAccessible = true }
-                        .get(this)
-
-                Toolbar::class.java
-                        .getDeclaredMethod("measureChildConstrained", View::class.java, Int::class.java, Int::class.java, Int::class.java, Int::class.java, Int::class.java)
-                        .apply { isAccessible = true }
-                        .invoke(this, featureTextButton, widthMeasureSpec, 0, heightMeasureSpec, 0, maxHeight)
-            }
+            MEASURE_CHILD_CONTRAINED
+                    .invoke(this, featureTextButton, widthMeasureSpec, 0, heightMeasureSpec, 0, maxButtonHeight)
         }
 
         // Set new size
-        setMeasuredDimension(width, height)
+        setMeasuredDimension(measuredWidthAndState, toolbarMeasuredHeight)
 
         // Configure paddings
         configurePaddings()
@@ -278,27 +318,15 @@ class SudoxToolbar : Toolbar {
                     .apply { gravity = Gravity.CENTER_VERTICAL }
         }
 
-        val shouldLayout = Toolbar::class.java
-                .getDeclaredMethod("shouldLayout", View::class.java)
-                .apply { isAccessible = true }
-                .invoke(this, featureTextButton) as Boolean
-
-        if (shouldLayout) {
+        if (SHOULD_LAYOUT_FIELD.invoke(this, featureTextButton) as Boolean) {
             val minHeight = ViewCompat.getMinimumHeight(this)
             val alignmentHeight = if (minHeight >= 0) Math.min(minHeight, b - t) else 0
-
-            val collapsingMargins = Toolbar::class.java
-                    .getDeclaredField("mTempMargins")
-                    .apply { isAccessible = true }
-                    .get(this) as IntArray
+            val collapsingMargins = TEMP_MARGINS_FIELD.get(this) as IntArray
 
             collapsingMargins[1] = 0
             collapsingMargins[0] = 0
 
-            Toolbar::class.java
-                    .getDeclaredMethod("layoutChildRight", View::class.java, Int::class.java, IntArray::class.java, Int::class.java)
-                    .apply { isAccessible = true }
-                    .invoke(this, featureTextButton, width - paddingRight, collapsingMargins, alignmentHeight)
+            LAYOUT_CHILD_RIGHT_METHOD.invoke(this, featureTextButton, width - paddingRight, collapsingMargins, alignmentHeight)
         }
     }
 

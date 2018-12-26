@@ -58,6 +58,7 @@ dependencies {
     // No Paginate
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.redmadrobot:inputmask:3.4.4'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha3'
 
 //    testImplementation "junit:junit:$junitVersion"
 //    testImplementation "org.mockito:mockito-core:$mockitoVersion"
@@ -75,6 +76,10 @@ android {
         splits.abi.enable = false
         splits.density.enable = false
         aaptOptions.cruncherEnabled = false
+    }
+
+    lintOptions {
+        disable 'RestrictedApi'
     }
 
     defaultConfig {
