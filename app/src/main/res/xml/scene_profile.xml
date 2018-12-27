@@ -1,29 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:motion="http://schemas.android.com/apk/res-auto">
+<MotionScene xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        app:constraintSetEnd="@layout/fragment_main_profile_end"
-        app:constraintSetStart="@layout/fragment_main_profile"
-        app:duration="1000"
-        motion:interpolator="linear">
+        motion:constraintSetEnd="@layout/fragment_main_profile_end"
+        motion:constraintSetStart="@layout/fragment_main_profile">
 
         <OnSwipe
-            app:dragDirection="dragUp"
-            app:touchAnchorId="@id/profileViewPager"
-            app:touchAnchorSide="top" />
+            motion:dragDirection="dragUp"
+            motion:touchAnchorId="@id/profileViewPager"
+            motion:touchAnchorSide="top" />
 
     </Transition>
-
-    <ConstraintSet android:id="@+id/scene_profile_start">
-        <Constraint
-            android:id="@+id/profileAvatarView"
-            android:layout_width="92dp"
-            android:layout_height="92dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profileToolbar" />
-
-    </ConstraintSet>
 </MotionScene>

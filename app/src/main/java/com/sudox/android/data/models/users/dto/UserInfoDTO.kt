@@ -32,25 +32,25 @@ class UserInfoDTO : JsonModel() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        id = jsonObject.optLong("id")
-        name = jsonObject.optString("name")
-        nickname = jsonObject.optString("nickname")
-        photo = jsonObject.optString("photo")
-
-        if (jsonObject.has("phone"))
-            phone = jsonObject.optString("phone")
-        if (jsonObject.has("status"))
-            status = jsonObject.optString("status")
-        if (jsonObject.has("bio"))
-            bio = jsonObject.optString("bio")
-    }
-
-    override fun fromJSONArray(jsonArray: JSONArray) {
         users = arrayListOf()
 
         // Mapping
-        jsonArray.forEachObject {
-            users!!.plusAssign(UserInfoDTO().apply { fromJSON(it) })
-        }
+        jsonObject
+                .optJSONArray("users")
+                .forEachObject {
+                    users!!.plusAssign(UserInfoDTO().apply {
+                        id = it.optLong("id")
+                        name = it.optString("name")
+                        nickname = it.optString("nickname")
+                        photo = it.optString("photo")
+
+                        if (it.has("phone"))
+                            phone = it.optString("phone")
+                        if (it.has("status"))
+                            status = it.optString("status")
+                        if (it.has("bio"))
+                            bio = it.optString("bio")
+                    })
+                }
     }
 }

@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
+import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.profile.decorations.ProfileDecorationsFragment
 import com.sudox.android.ui.main.profile.info.ProfileInfoFragment
 import com.sudox.design.adapters.TabLayoutAdapter
@@ -18,7 +20,6 @@ class ProfileFragment @Inject constructor() : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var profileViewModel: ProfileViewModel
 
     @Inject
     lateinit var profileInfoFragment: ProfileInfoFragment
@@ -26,18 +27,19 @@ class ProfileFragment @Inject constructor() : DaggerFragment() {
     @Inject
     lateinit var profileDecorationsFragment: ProfileDecorationsFragment
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-//        profileViewModel = getViewModel(viewModelFactory)
+    private val profileViewModel by lazy { getViewModel<ProfileViewModel>(viewModelFactory) }
+    private val mainActivity by lazy { activity as MainActivity }
 
-        return inflater.inflate(R.layout.fragment_main_profile, container, false)
-    }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // Configure view
         initToolbar()
         initViewPager()
+    }
 
-        // Super!
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.fragment_main_profile, container, false)
     }
 
     private fun initViewPager() {

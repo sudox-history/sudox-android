@@ -16,9 +16,4 @@
         android:paddingEnd="25dp"
         android:paddingBottom="5dp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:background="#FFF" />
-
 </LinearLayout>
