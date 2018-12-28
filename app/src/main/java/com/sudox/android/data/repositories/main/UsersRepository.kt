@@ -9,9 +9,6 @@ import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.filter
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
@@ -72,10 +69,8 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    fun loadUser(id: Long, loadAs: UserType = UserType.UNKNOWN) = GlobalScope.async(Dispatchers.IO) {
-        if (protocolClient.isValid() && !loadedUsersIds.contains(id)) {
-            return@async loadUserFromNetwork(id, loadAs)
-        } else {
+    fun loadUser(id: Long, loadAs: UserType = UserType.UNKNOWN, onlyFromDatabase: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+        if (onlyFromDatabase || !protocolClient.isValid() || loadedUsersIds.contains(id)) {
             val user = userDao.loadById(id)
 
             // Update the type
@@ -84,6 +79,8 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
             }
 
             return@async user
+        } else {
+            return@async loadUserFromNetwork(id, loadAs)
         }
     }
 

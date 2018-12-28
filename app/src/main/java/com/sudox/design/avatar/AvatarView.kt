@@ -12,8 +12,6 @@ import com.sudox.design.helpers.getTwoFirstLetters
 
 class AvatarView : AppCompatImageView {
 
-    private val oldLetters: String? = null
-
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
@@ -40,17 +38,25 @@ class AvatarView : AppCompatImageView {
         val height = layoutParams.height
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val paint = Paint().apply {
+            isAntiAlias = true
+            isDither = true
+        }
+
         val textRect = Rect()
+        val paintWidth = width.toFloat()
+        val paintHeight = height.toFloat()
+        val xRadius = paintWidth / 2
+        val yRadius = paintHeight / 2
 
         // Set shader for background
-        paint.shader = LinearGradient(0F, 0F, width.toFloat(), height.toFloat(), firstColor, secondColor, Shader.TileMode.REPEAT)
-        canvas.drawRect(0F, 0F, width.toFloat(), height.toFloat(), paint)
+        paint.shader = LinearGradient(0F, 0F, paintWidth, paintHeight, firstColor, secondColor, Shader.TileMode.REPEAT)
+        canvas.drawRoundRect(0F, 0F, paintWidth, paintHeight, xRadius, yRadius, paint)
 
         // Configure paint for text
         paint.shader = null
         paint.color = Color.WHITE
-        paint.textSize = width * 0.3F
+        paint.textSize = paintWidth * 0.3F
         paint.getTextBounds(text, 0, text.length, textRect)
 
         // Draw text
@@ -58,12 +64,5 @@ class AvatarView : AppCompatImageView {
 
         // Set bitmap
         setImageBitmap(bitmap)
-    }
-
-    override fun setImageBitmap(bitmap: Bitmap) {
-        Glide.with(context)
-                .load(bitmap)
-                .apply(RequestOptions.circleCropTransform())
-                .into(this@AvatarView)
     }
 }

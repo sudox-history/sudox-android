@@ -23,12 +23,9 @@ import com.sudox.android.R
 import com.sudox.design.helpers.FontsHelper.Companion.SANS_SERIF_LIGHT
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.enums.ConnectionState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.IO
+import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SudoxToolbar : Toolbar {
@@ -265,9 +262,9 @@ class SudoxToolbar : Toolbar {
 
             for (state in connectionStateSubscription!!) {
                 if (state == ConnectionState.CONNECTION_CLOSED) {
-                    GlobalScope.launch(Dispatchers.Main) { titleTextView!!.setText(resources.getString(R.string.wait_for_connect)) }
+                    withContext(Dispatchers.Main, { titleTextView!!.setText(resources.getString(R.string.wait_for_connect)) })
                 } else if (state == ConnectionState.HANDSHAKE_SUCCEED) {
-                    GlobalScope.launch(Dispatchers.Main) { titleTextView!!.setText(normalTitleText) }
+                    withContext(Dispatchers.Main, { titleTextView!!.setText(normalTitleText) })
                 }
             }
         }

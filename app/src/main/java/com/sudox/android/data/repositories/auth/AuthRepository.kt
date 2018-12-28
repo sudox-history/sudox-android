@@ -1,12 +1,15 @@
 package com.sudox.android.data.repositories.auth
 
+import com.sudox.android.ApplicationLoader
 import com.sudox.android.common.helpers.*
 import com.sudox.android.data.exceptions.RequestException
 import com.sudox.android.data.exceptions.RequestRegexException
 import com.sudox.android.data.auth.SudoxAccount
+import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.auth.dto.*
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.data.models.common.Errors
+import com.sudox.android.data.repositories.main.UsersRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.*
@@ -24,10 +27,45 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     // Шины
     val authSessionChannel: ConflatedBroadcastChannel<AuthSession> = ConflatedBroadcastChannel()
     val accountSessionStateChannel: ConflatedBroadcastChannel<Boolean> = ConflatedBroadcastChannel()
+    var currentUserChannel: ConflatedBroadcastChannel<User?> = ConflatedBroadcastChannel()
     var sessionIsValid: Boolean = false
 
-    init {
-        // Для отслеживания "смерти сессии" (прилетит первым, ибо AuthRepository - первый репозиторий, который инициализируется)
+    // Начало костыля для избежания циклического инжекта
+    lateinit var usersRepository: UsersRepository
+
+    /**
+     * /x/x/x/x/x/
+     * /x/x/x/x/x/
+     * /x/x/x/x/x/
+     * /x/x/x/x/x/ x/x/x/x/x/
+     * /x/x/x/x/x/ x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x
+     * /x/x/x/x/x/ x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x
+     * /x/x/x/x/x/ x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x
+     * /x/x/x/x/x                            /x/x/x                                  /x/x/x/x/x/x/x/x/x/x
+     * /x/x/x/x/x                            /x/x/x                                                  /x/x/x/x/x/x/x/x/x/x                                                              /x/x/x/x/x/x
+     * /x/x/x/x/x                            /x/x/x                                                             /x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x     /x/x/x/x/x/x
+     * /x/x/x/x/x                            /x/x/x                                                                   /x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x     /x/x/x/x/x/x
+     * /x/x/x/x/x                            /x/x/x                                                                   /x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x     /x/x/x/x/x/x
+     * /x/x/x/x/x                            /x/x/x                                                             /x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x     /x/x/x/x/x/x
+     * /x/x/x/x/x                            /x/x/x                                                  /x/x/x/x/x/x/x/x/x/x                                                              /x/x/x/x/x/x
+     * /x/x/x/x/x                            /x/x/x                                 /x/x/x/x/x/x/x/x/x/x
+     * /x/x/x/x/x/ x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x
+     * /x/x/x/x/x/ x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x
+     * /x/x/x/x/x/ x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x
+     * /x/x/x/x/x/ x/x/x/x/x/
+     * /x/x/x/x/x/
+     * /x/x/x/x/x/
+     * /x/x/x/x/x/
+     *
+     * Комментарий от TheMax: пришлось вынести в отдельный метод, ибо бывали случаи,
+     * что usersRepository не успевал инициализироваться и в итоге вылетал NullPointerException.
+     *
+     * 29.12.2018, 02:24
+     */
+    fun init(usersRepository: UsersRepository) {
+        this.usersRepository = usersRepository
+
+        // Начинаем работу ...
         listenConnectionState()
 
         // Отслеживаем ошибку unauthorized
@@ -36,7 +74,19 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         }
     }
 
+    // Конец костыля для избежания циклического инжекта
+
     private fun listenConnectionState() = GlobalScope.launch(Dispatchers.IO) {
+        val initialAccount = accountRepository
+                .getAccount()
+                .await()
+
+        if (initialAccount != null) {
+            currentUserChannel.offer(usersRepository
+                    .loadUser(initialAccount.id, onlyFromDatabase = true)
+                    .await())
+        }
+
         for (state in protocolClient.connectionStateChannel.openSubscription()) {
             if (state == ConnectionState.HANDSHAKE_SUCCEED) {
                 val account = accountRepository.getAccount().await()
@@ -61,6 +111,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
     private fun notifyAccountSessionInvalid() {
         accountSessionStateChannel.offer(false)
+        currentUserChannel.offer(null)
         sessionIsValid = false
     }
 
@@ -137,11 +188,29 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         }).await()
 
         if (authSignInDTO.isSuccess()) {
-            accountRepository.saveAccount(SudoxAccount(authSignInDTO.id, phoneNumber, authSignInDTO.secret)).await()
+            val user = loadCurrentUser(authSignInDTO.id)
+
+            // Save current account ...
+            accountRepository.saveAccount(SudoxAccount(authSignInDTO.id, phoneNumber, authSignInDTO.secret))
+                    .await()
+
             notifyAccountSessionValid()
         } else {
             throw RequestException(authSignInDTO.error)
         }
+    }
+
+    @Throws(RequestException::class)
+    private suspend fun loadCurrentUser(userId: Long): User {
+        val user = usersRepository
+                .loadUser(userId)
+                .await() ?: throw RequestException(Errors.UNKNOWN)
+
+        // Notify subscribers ...
+        currentUserChannel.offer(user)
+
+        // Return as result
+        return user
     }
 
     /**
@@ -173,7 +242,12 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         }).await()
 
         if (authSignUpDTO.isSuccess()) {
-            accountRepository.saveAccount(SudoxAccount(authSignUpDTO.id, phoneNumber, authSignUpDTO.secret)).await()
+            val user = loadCurrentUser(authSignUpDTO.id)
+
+            // Save current account ...
+            accountRepository.saveAccount(SudoxAccount(authSignUpDTO.id, phoneNumber, authSignUpDTO.secret))
+                    .await()
+
             notifyAccountSessionValid()
         } else {
             throw RequestException(authSignUpDTO.error)
@@ -193,6 +267,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         }).await()
 
         if (authImportDTO.isSuccess()) {
+            loadCurrentUser(id)
             notifyAccountSessionValid()
         } else {
             killAccountSession()

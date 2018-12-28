@@ -17,6 +17,10 @@ class RepositoriesContainer @Inject constructor(val accountRepository: AccountRe
                                                 val chatMessagesRepository: ChatMessagesRepository,
                                                 val dialogsRepository: DialogsRepository) {
 
-    init { // Репозитории начнут слушать события после создания этого обьекта.
+    init {
+        // Репозитории начнут слушать события после создания этого обьекта.
+
+        // Запуск костыля для избежания циклического инжекта
+        authRepository.init(usersRepository)
     }
 }

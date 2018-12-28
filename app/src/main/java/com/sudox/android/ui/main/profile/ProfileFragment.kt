@@ -1,5 +1,6 @@
 package com.sudox.android.ui.main.profile
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v4.view.ViewPager
@@ -36,6 +37,8 @@ class ProfileFragment @Inject constructor() : DaggerFragment() {
         // Configure view
         initToolbar()
         initViewPager()
+
+        profileViewModel.start()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -56,5 +59,12 @@ class ProfileFragment @Inject constructor() : DaggerFragment() {
 
     private fun initToolbar() {
         profileToolbar.inflateMenu(R.menu.menu_profile)
+
+        // Listen data
+        profileViewModel.userLiveData.observe(this, Observer {
+            profileAvatarView.bindUser(it!!)
+            profileNameText.text = it.name
+            profileStatusText.text = it.status
+        })
     }
 }

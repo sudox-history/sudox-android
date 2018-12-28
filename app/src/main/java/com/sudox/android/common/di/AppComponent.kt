@@ -35,6 +35,7 @@ interface AppComponent : AndroidInjector<DaggerApplication> {
     // Не знаю зачем это здесь написали, но без него не работает
     override fun inject(instance: DaggerApplication?)
 
+
     @Component.Builder
     interface Builder {
         @BindsInstance

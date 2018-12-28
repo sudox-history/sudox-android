@@ -298,13 +298,15 @@ class ProtocolClient @Inject constructor() {
             val next = iterator.next()
             val instance = next.clazz.java.newInstance()
 
+            // Оперируем с кэллбэком
+            if (next.event != event) continue
+            if (next.coroutine != null || next.once) iterator.remove()
+
             // Загоним в него данные
             instance.readResponse(JSONObject(json))
 
-            // Оперируем с кэллбэком
+            // Ошибка...
             if (instance.containsError()) errorsMessagesCallbacks.forEach { it(instance.error) }
-            if (next.event != event) continue
-            if (next.coroutine != null || next.once) iterator.remove()
 
             // Крикнем в окно (для IDEA: не ори на отсуствие проверку типов)
             @Suppress("UNCHECKED_CAST")

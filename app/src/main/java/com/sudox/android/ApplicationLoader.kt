@@ -35,6 +35,7 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
 
     @Inject
     lateinit var repositoriesContainer: RepositoriesContainer
+
     // Репозитории начнут слушать события после создания этого обьекта.
 
     override fun onCreate() {

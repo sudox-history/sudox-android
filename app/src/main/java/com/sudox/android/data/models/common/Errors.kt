@@ -13,5 +13,6 @@ class Errors {
         const val INVALID_IMPORT_DATA = 104
         const val EMPTY_CHATS = 200
         const val EMPTY_CONTACTS_LIST = 300
+        const val UNKNOWN = -1
     }
 }
