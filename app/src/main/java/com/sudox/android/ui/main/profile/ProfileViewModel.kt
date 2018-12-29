@@ -16,14 +16,12 @@ class ProfileViewModel @Inject constructor(private val authRepository: AuthRepos
 
     // LiveData с текущим пользователем (могут и обновления кстати прилетать)
     val userLiveData: MutableLiveData<User> = MutableLiveData()
-    val userSubscription: ReceiveChannel<User?> by lazy {
-        authRepository
-                .currentUserChannel
-                .openSubscription()
-    }
 
     fun start() = GlobalScope.launch(Dispatchers.IO) {
-        for (user in userSubscription) {
+        for (user in authRepository
+                .currentUserChannel
+                .openSubscription()) {
+
             if (user == null) {
                 // Данных больше не будет, ибо аккаунт был удален из системы => можно освободить поток
                 return@launch
@@ -31,9 +29,11 @@ class ProfileViewModel @Inject constructor(private val authRepository: AuthRepos
 
             userLiveData.postValue(user)
         }
+
+        println()
     }
 
     override fun onCleared() {
-        userSubscription.cancel()
+//        userSubscription.cancel()
     }
 }

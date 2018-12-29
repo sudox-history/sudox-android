@@ -27,7 +27,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     // Шины
     val authSessionChannel: ConflatedBroadcastChannel<AuthSession> = ConflatedBroadcastChannel()
     val accountSessionStateChannel: ConflatedBroadcastChannel<Boolean> = ConflatedBroadcastChannel()
-    var currentUserChannel: ConflatedBroadcastChannel<User?> = ConflatedBroadcastChannel()
+    var currentUserChannel: ConflatedBroadcastChannel<User> = ConflatedBroadcastChannel()
     var sessionIsValid: Boolean = false
 
     // Начало костыля для избежания циклического инжекта
@@ -82,9 +82,11 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
                 .await()
 
         if (initialAccount != null) {
-            currentUserChannel.offer(usersRepository
+            val user = usersRepository
                     .loadUser(initialAccount.id, onlyFromDatabase = true)
-                    .await())
+                    .await()
+
+            if (user != null) currentUserChannel.offer(user)
         }
 
         for (state in protocolClient.connectionStateChannel.openSubscription()) {
@@ -111,7 +113,6 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
     private fun notifyAccountSessionInvalid() {
         accountSessionStateChannel.offer(false)
-        currentUserChannel.offer(null)
         sessionIsValid = false
     }
 
@@ -201,16 +202,13 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     }
 
     @Throws(RequestException::class)
-    private suspend fun loadCurrentUser(userId: Long): User {
+    private suspend fun loadCurrentUser(userId: Long) {
         val user = usersRepository
                 .loadUser(userId)
-                .await() ?: throw RequestException(Errors.UNKNOWN)
+                .await() ?: return
 
         // Notify subscribers ...
         currentUserChannel.offer(user)
-
-        // Return as result
-        return user
     }
 
     /**

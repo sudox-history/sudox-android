@@ -28,6 +28,7 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
     private fun initProfileParametersList() {
         profileParameters.layoutManager = LinearLayoutManager(context)
         profileParameters.addItemDecoration(SecondColumnItemDecorator(context!!, false))
+
         profileParametersAdapter.parameters = arrayListOf(
                 ProfileParametersAdapter.ProfileParameter(R.drawable.ic_emoticon, getString(R.string.nickname), "@themax"),
                 ProfileParametersAdapter.ProfileParameter(R.drawable.ic_alternate_email, getString(R.string.email), "maksim182003mit@gmail.com"),

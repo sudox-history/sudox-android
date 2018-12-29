@@ -17,11 +17,12 @@ import com.sudox.android.ui.main.contacts.ContactsViewModel
 import com.sudox.android.ui.main.messages.channels.ChannelsFragment
 import com.sudox.android.ui.main.messages.dialogs.DialogsFragment
 import com.sudox.android.ui.main.messages.talks.TalksFragment
+import com.sudox.design.navigation.NavigationRootFragment
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_main_messages.*
 import javax.inject.Inject
 
-class MessagesFragment @Inject constructor() : DaggerFragment() {
+class MessagesFragment @Inject constructor() : NavigationRootFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -89,6 +90,12 @@ class MessagesFragment @Inject constructor() : DaggerFragment() {
         } else {
             messagesAddFABButton.hide(true)
         }
+    }
+
+    override fun onFragmentOpened() {
+    }
+
+    override fun onFragmentClosed() {
     }
 
     private inner class MessagesAdapter(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {

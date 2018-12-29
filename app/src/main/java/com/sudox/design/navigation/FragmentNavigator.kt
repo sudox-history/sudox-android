@@ -1,4 +1,4 @@
-package com.sudox.android.ui
+package com.sudox.design.navigation
 
 import android.app.Activity
 import android.support.v4.app.Fragment
@@ -10,7 +10,7 @@ import java.util.*
 
 class FragmentNavigator(val activity: Activity,
                         val fragmentManager: FragmentManager,
-                        val rootFragments: List<Fragment>,
+                        val rootFragments: List<NavigationRootFragment>,
                         val containerId: Int) {
 
     private var isFirstStart: Boolean = false
@@ -32,7 +32,7 @@ class FragmentNavigator(val activity: Activity,
     }
 
     // Показывает основной фрагмент, постоянно держит его в памяти для более быстрой отрисовки
-    fun showRootFragment(fragment: Fragment) {
+    fun showRootFragment(fragment: NavigationRootFragment) {
         val transaction = fragmentManager.beginTransaction()
 
         // Чистим Backstack
@@ -64,9 +64,16 @@ class FragmentNavigator(val activity: Activity,
         transaction.show(fragment)
         transaction.commit()
 
+        // Старый фрагмент
+        val oldRootFragment = fragmentsPath.firstOrNull()
+
         // Ставим начальную точку маршрута )
         fragmentsPath.clear()
         fragmentsPath.add(fragment)
+
+        // Эвенты ...
+        (oldRootFragment as? NavigationRootFragment)?.onFragmentClosed()
+        fragment.onFragmentOpened()
     }
 
     // Показывает дочерний фрагмент

@@ -26,7 +26,6 @@ class ProfileParametersAdapter @Inject constructor(private val context: Context)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-
         fun bind(profileParameter: ProfileParameter) {
             view.profileParameterIcon.setBackgroundResource(profileParameter.iconRes)
             view.profileParameterName.text = profileParameter.name

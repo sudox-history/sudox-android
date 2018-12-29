@@ -13,12 +13,13 @@ import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.contacts.add.ContactAddFragment
+import com.sudox.design.navigation.NavigationRootFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_main_contacts.*
 import javax.inject.Inject
 
-class ContactsFragment @Inject constructor() : DaggerFragment() {
+class ContactsFragment @Inject constructor() : NavigationRootFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -95,5 +96,11 @@ class ContactsFragment @Inject constructor() : DaggerFragment() {
 
             return@setOnMenuItemClickListener true
         }
+    }
+
+    override fun onFragmentOpened() {
+    }
+
+    override fun onFragmentClosed() {
     }
 }
