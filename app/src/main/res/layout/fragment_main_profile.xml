@@ -32,32 +32,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profileToolbar" />
 
-    <TextView
+    <com.sudox.design.textview.PrecomputedTextView
         android:id="@+id/profileNameText"
         style="@style/TextViewWithoutPaddings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:fontFamily="sans-serif-light"
-        android:text="Митюшкин Максим"
+        android:maxLines="1"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileAvatarView" />
+        app:layout_constraintTop_toBottomOf="@+id/profileAvatarView"
+        app:text="Митюшкин Максим" />
 
-    <TextView
+    <com.sudox.design.textview.PrecomputedTextView
         android:id="@+id/profileStatusText"
         style="@style/TextViewWithoutPaddings"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="2dp"
-        android:text="Undefined status"
         android:textAlignment="center"
         android:textColor="#BDBDBD"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileNameText" />
+        app:layout_constraintTop_toBottomOf="@+id/profileNameText"
+        app:text="Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsu" />
 
     <Space
         android:id="@+id/profileInfoBlockBottomSpace"

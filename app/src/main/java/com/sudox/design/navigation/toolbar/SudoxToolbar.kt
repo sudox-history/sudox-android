@@ -12,6 +12,7 @@ import android.support.v7.widget.ActionMenuView
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
 import android.text.PrecomputedText
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -21,6 +22,7 @@ import android.widget.TextView
 import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
 import com.sudox.design.helpers.FontsHelper.Companion.SANS_SERIF_LIGHT
+import com.sudox.design.textview.PrecomputedTextView
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.*
@@ -30,10 +32,11 @@ import javax.inject.Inject
 
 class SudoxToolbar : Toolbar {
 
-    private var titleTextView: TextView? = null
+    // Mark for better performance
+    private var titleTextView: PrecomputedTextView? = null
     private var actionMenuView: ActionMenuView? = null
     private var navigationButtonView: ImageButton? = null
-    private var featureTextButton: AppCompatTextView? = null
+    private var featureTextButton: PrecomputedTextView? = null
     private var featureButtonText: String? = null
     private var normalTitleText: String? = null
     private var connectionStateSubscription: ReceiveChannel<ConnectionState>? = null
@@ -158,7 +161,7 @@ class SudoxToolbar : Toolbar {
         }
 
         if (featureButtonText != null) {
-            featureTextButton = AppCompatTextView(context)
+            featureTextButton = PrecomputedTextView(context)
                     .apply {
                         setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
                         setTextColor(Color.WHITE)
@@ -172,12 +175,8 @@ class SudoxToolbar : Toolbar {
                         isFocusable = true
                     }
 
-            // Precomputate text
-            val params = TextViewCompat.getTextMetricsParams(featureTextButton!!)
-            val precomputedText = PrecomputedTextCompat.create(featureButtonText!!, params)
-
             // Draw text button
-            TextViewCompat.setPrecomputedText(featureTextButton!!, precomputedText)
+            featureTextButton!!.installText(featureButtonText!!)
             addSystemView(featureTextButton!!, false)
         }
     }
@@ -232,27 +231,47 @@ class SudoxToolbar : Toolbar {
         return initialEndPadding
     }
 
-    override fun setTitle(title: CharSequence) {
-        super.setTitle(title)
+    override fun setTitle(title: CharSequence?) {
+        val isFirstInstalling = titleTextView == null
 
-        // Get title text view
         if (titleTextView == null) {
-            titleTextView = TITLE_TEXT_VIEW_FIELD.get(this) as TextView
-            titleTextView!!.includeFontPadding = false
-            titleTextView!!.typeface = SANS_SERIF_LIGHT
-            titleTextView!!.setPadding(0, 0, 0, 0)
-            titleTextView!!.setPaddingRelative(0, 0, 0, 0)
-            titleTextView!!.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19F)
+            titleTextView = PrecomputedTextView(context).apply {
+                includeFontPadding = false
+                typeface = SANS_SERIF_LIGHT
+                setPaddingRelative(0, 0, 0, 0)
+                setTextSize(TypedValue.COMPLEX_UNIT_SP, 19F)
+                setSingleLine()
+                setEllipsize(TextUtils.TruncateAt.END)
+            }
+
+            // Для сброса ожидания соединения ...
             normalTitleText = title.toString()
 
-            listenConnectionState()
+            // Отправляем на отрисовку единожды, дальше будем работать только с видимостью
+            // Кстати, одна из оптимизаций гугловского тулбара
+            TITLE_TEXT_VIEW_FIELD.set(this, titleTextView)
+            ADD_SYSTEM_VIEW_METHOD.invoke(this, titleTextView, false)
+        }
+
+        if (!TextUtils.isEmpty(title)) {
+            if (titleTextView!!.visibility != View.VISIBLE) {
+                titleTextView!!.visibility = View.VISIBLE
+            }
+
+            titleTextView!!.installText(title!!)
+
+            // Слушаем статус соединения
+            if (isFirstInstalling) listenConnectionState()
+        } else if (titleTextView!!.visibility != View.GONE) {
+            titleTextView!!.visibility = View.GONE
         }
     }
 
     private fun listenConnectionState() {
         if (connectionStateSubscription != null) return
         if (protocolClient == null) ApplicationLoader.component.inject(this@SudoxToolbar)
-        if (!protocolClient!!.isValid()) titleTextView?.setText(resources.getString(R.string.wait_for_connect))
+        if (!protocolClient!!.isValid())
+            titleTextView!!.setText(resources.getString(R.string.wait_for_connect))
 
         // Listen ...
         GlobalScope.launch(Dispatchers.IO) {

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MotionScene xmlns:motion="http://schemas.android.com/apk/res-auto">
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
 
     <Transition
-        motion:constraintSetEnd="@layout/fragment_main_profile_end"
-        motion:constraintSetStart="@layout/fragment_main_profile">
+        motion:constraintSetEnd="@id/scene_profile_end"
+        motion:constraintSetStart="@id/scene_profile_start">
 
         <OnSwipe
             motion:dragDirection="dragUp"
@@ -11,4 +13,97 @@
             motion:touchAnchorSide="top" />
 
     </Transition>
+
+    <ConstraintSet android:id="@+id/scene_profile_start">
+        <Constraint
+            android:id="@+id/profileAvatarView"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:translationZ="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileToolbar" />
+
+        <Constraint
+            android:id="@+id/profileNameText"
+            style="@style/TextViewWithoutPaddings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="sans-serif-light"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@+id/profileStatusText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileAvatarView"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:text="Митюшкин Максим" />
+
+        <Constraint
+            android:id="@+id/profileStatusText"
+            style="@style/TextViewWithoutPaddings"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:textAlignment="center"
+            android:textColor="#BDBDBD"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileNameText"
+            app:text="Undefined status" />
+
+        <Constraint
+            android:id="@+id/profileInfoBlockBottomSpace"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileStatusText" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/scene_profile_end">
+        <Constraint
+            android:id="@+id/profileAvatarView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="25dp"
+            android:background="#FFF"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileToolbar" />
+
+        <Constraint
+            android:id="@+id/profileNameText"
+            style="@style/TextViewWithoutPaddings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:fontFamily="sans-serif-light"
+            android:text="Митюшкин Максим"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@+id/profileStatusText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/profileAvatarView"
+            app:layout_constraintTop_toTopOf="@+id/profileAvatarView"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Constraint
+            android:id="@+id/profileStatusText"
+            style="@style/TextViewWithoutPaddings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="Undefined status"
+            android:textColor="#BDBDBD"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/profileAvatarView"
+            app:layout_constraintStart_toStartOf="@+id/profileNameText"
+            app:layout_constraintTop_toBottomOf="@id/profileNameText" />
+
+        <Constraint
+            android:id="@+id/profileInfoBlockBottomSpace"
+            android:layout_width="1dp"
+            android:layout_height="15dp"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileStatusText" />
+    </ConstraintSet>
 </MotionScene>

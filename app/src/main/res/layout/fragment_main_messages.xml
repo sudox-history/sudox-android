@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
+    <com.sudox.design.navigation.toolbar.SudoxToolbar
         android:id="@+id/messagesToolbar"
         style="@style/ToolbarTheme"
         android:layout_width="match_parent"

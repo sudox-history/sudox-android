@@ -13,4 +13,8 @@
     <declare-styleable name="SudoxToolbar">
         <attr name="featureButtonText" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="PrecomputedTextView">
+        <attr name="text" format="string" />
+    </declare-styleable>
 </resources>
