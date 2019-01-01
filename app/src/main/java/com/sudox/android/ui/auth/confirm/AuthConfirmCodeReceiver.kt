@@ -14,7 +14,7 @@ class AuthConfirmCodeReceiver @Inject constructor() : BroadcastReceiver() {
     var codeLiveData: MutableLiveData<String> = MutableLiveData()
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == SMS_RECEIVED) return
+        if (intent.action != SMS_RECEIVED) return
 
         val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
         val founded = messages.findLast { it.messageBody.matches(SMS_CODE_REGEX) } ?: return
