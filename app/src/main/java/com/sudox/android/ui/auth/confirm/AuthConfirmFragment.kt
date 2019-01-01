@@ -36,6 +36,8 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var authConfirmCodeReceiver: AuthConfirmCodeReceiver
     lateinit var authConfirmViewModel: AuthConfirmViewModel
     lateinit var authActivity: AuthActivity
     lateinit var authSession: AuthSession
@@ -84,37 +86,13 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
     override fun onResume() {
         super.onResume()
 
-        // Активируем слушатель sms-сообщений для автоматического ввода кода
-        val permission = Manifest.permission.RECEIVE_SMS
-        val grant = ContextCompat.checkSelfPermission(activity!!, permission)
-        if (grant == PackageManager.PERMISSION_GRANTED)
-            registerReceiver()
-    }
+        // Запрос прав на прослушивание СМС-сообщений ...
+        val grant = ContextCompat.checkSelfPermission(activity!!, Manifest.permission.RECEIVE_SMS)
 
-    private lateinit var smsBroadcastReceiver: BroadcastReceiver
-
-    private fun registerReceiver() {
-        smsBroadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context, intent: Intent) {
-                if (intent.action == SMS_RECEIVED) {
-                    val bundle = intent.extras
-
-                    if (bundle != null) {
-                        val messages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
-
-                        for (sms in messages) {
-                            val message = sms.messageBody
-                            if (sms.messageBody.matches(SMS_CODE_REGEX)) {
-                                authActivity.runOnUiThread {
-                                    codeEditText.setText(message.replace("Sudox: ", ""))
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        // Есть права - активируем слушатель
+        if (grant == PackageManager.PERMISSION_GRANTED) {
+            authActivity.registerReceiver(authConfirmCodeReceiver, IntentFilter(SMS_RECEIVED))
         }
-        authActivity.registerReceiver(smsBroadcastReceiver, IntentFilter(SMS_RECEIVED))
     }
 
     private fun initWelcomeText() {
@@ -143,6 +121,13 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
                 }
             }
         })
+
+        // Автоввод кода ...
+        authConfirmCodeReceiver
+                .codeLiveData
+                .observe(this, Observer {
+                    codeEditText.setText(it!!)
+                })
     }
 
     private fun sendCode() {
@@ -182,7 +167,12 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
 
     override fun onPause() {
         super.onPause()
-        activity!!.unregisterReceiver(smsBroadcastReceiver)
+
+        try {
+            authActivity.unregisterReceiver(authConfirmCodeReceiver)
+        } catch (e: IllegalArgumentException) {
+            // Ignore
+        }
     }
 
     override fun freeze() {
