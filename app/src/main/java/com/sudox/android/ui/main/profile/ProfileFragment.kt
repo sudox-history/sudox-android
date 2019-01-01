@@ -23,10 +23,8 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
     @Inject
     lateinit var profileInfoFragment: ProfileInfoFragment
-
     @Inject
     lateinit var profileDecorationsFragment: ProfileDecorationsFragment
 
@@ -36,8 +34,8 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
     // Для анимации в блоке информации о профиле.
     private val startProfileNameTextSize = 20F
     private val endProfileNameTextSize = 15F
-    private val startProfileBlockHeight by lazy { 184F * mainActivity.resources.displayMetrics.density }
-    private val endProfileBlockHeight by lazy { 72F * mainActivity.resources.displayMetrics.density }
+    private val startProfileBlockHeight by lazy { 172F * mainActivity.resources.displayMetrics.density }
+    private val endProfileBlockHeight by lazy { 65F * mainActivity.resources.displayMetrics.density }
     private val profileBlockHeightsDiff by lazy { Math.max(startProfileBlockHeight, endProfileBlockHeight) - Math.min(startProfileBlockHeight, endProfileBlockHeight) }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -61,9 +59,11 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
         profileViewModel.userLiveData.observe(this, Observer {
             profileAvatarView.bindUser(it!!)
             profileNameText.installText(it.name)
-
-            // Show status only if it installed
-            if (it.status != null) profileStatusText.text = it.status
+            profileStatusText.installText(if (it.status != null) {
+                it.status!!
+            } else {
+                getString(R.string.im_using_sudox)
+            })
         })
 
         // Animation will be configured before fragment will be drawen
@@ -85,7 +85,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
             profileNameText.pivotX = 0F
             profileNameText.pivotY = profileNameText
                     .measuredHeight
-                    .toFloat()
+                    .toFloat() / 2
         }
 
         profileMotionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
@@ -110,6 +110,15 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
                 }
             }
         })
+
+        // Прокрутка текстов
+        profileNameText.isSelected = true
+        profileStatusText.isSelected = true
+
+        // Ставим в начальное положение
+        profileMotionLayout.layoutParams = profileMotionLayout
+                .layoutParams
+                .apply { height = startProfileBlockHeight.toInt() }
     }
 
     private fun initViewPager() {

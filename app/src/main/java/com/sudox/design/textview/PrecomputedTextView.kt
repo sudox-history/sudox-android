@@ -20,7 +20,7 @@ class PrecomputedTextView : TextView {
         val text = array.getText(R.styleable.PrecomputedTextView_text)
 
         // Set for showing
-        installText(text)
+        if (text != null) installText(text)
 
         // Clean memory
         array.recycle()
