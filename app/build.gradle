@@ -59,13 +59,6 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.redmadrobot:inputmask:3.4.4'
     implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha3'
-
-//    testImplementation "junit:junit:$junitVersion"
-//    testImplementation "org.mockito:mockito-core:$mockitoVersion"
-//    androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
-//    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-//    androidTestImplementation 'com.android.support.test:rules:1.0.2'
-//    androidTestImplementation "org.mockito:mockito-android:$mockitoVersion"
 }
 
 android {
@@ -89,12 +82,27 @@ android {
         versionCode versionMajor * 1000 + versionMinor * 100 + versionUpdate * 10 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionUpdate}.${versionPatch}"
         multiDexEnabled false
+    }
 
-        // Runner for instrumental tests
-//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    flavorDimensions "dev"
+
+    productFlavors {
+        dev {
+            resConfigs("ru", "xhdpi")
+        }
+    }
+
+    dexOptions {
+        preDexLibraries true
     }
 
     buildTypes {
+        debug {
+            shrinkResources false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
         release {
             shrinkResources false
             minifyEnabled false

@@ -36,8 +36,9 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
     // Для анимации в блоке информации о профиле.
     private val startProfileNameTextSize = 20F
     private val endProfileNameTextSize = 15F
-    private var closedProfileNameMeasuredHeight = 0
-    private var closedProfileNameMeasuredWidth = 0
+    private val startProfileBlockHeight by lazy { 184F * mainActivity.resources.displayMetrics.density }
+    private val endProfileBlockHeight by lazy { 72F * mainActivity.resources.displayMetrics.density }
+    private val profileBlockHeightsDiff by lazy { Math.max(startProfileBlockHeight, endProfileBlockHeight) - Math.min(startProfileBlockHeight, endProfileBlockHeight) }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -86,6 +87,34 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
                     .measuredHeight
                     .toFloat()
         }
+
+        profileMotionLayout.pivotX = 0F
+        profileMotionLayout.pivotY = profileNameText
+                .measuredHeight
+                .toFloat()
+
+        profileMotionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
+            override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {}
+            override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {}
+            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {}
+            override fun onTransitionChange(p0: MotionLayout, p1: Int, p2: Int, p3: Float) {
+                if (p2 == R.id.scene_profile_end) {
+                    val newHeight = (startProfileBlockHeight - (profileBlockHeightsDiff * p3)).toInt()
+
+                    // Уменьшение
+                    if (newHeight != p0.layoutParams.height) {
+                        p0.layoutParams = p0.layoutParams.apply { height = newHeight }
+                    }
+                } else if (p2 == R.id.scene_profile_start) {
+                    val newHeight = (endProfileBlockHeight + (profileBlockHeightsDiff * p3)).toInt()
+
+                    // Увеличение
+                    if (newHeight != p0.layoutParams.height) {
+                        p0.layoutParams = p0.layoutParams.apply { height = newHeight }
+                    }
+                }
+            }
+        })
     }
 
     private fun initViewPager() {

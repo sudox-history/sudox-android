@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.motion.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/profileMotionLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layoutDescription="@xml/scene_profile">
+    android:layout_height="match_parent">
 
     <com.sudox.design.navigation.toolbar.SudoxToolbar
         android:id="@+id/profileToolbar"
@@ -15,56 +13,68 @@
 
     <!-- Profile info block start -->
 
+    <android.support.constraint.motion.MotionLayout
+        android:id="@+id/profileMotionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:translationZ="1dp"
+        app:layoutDescription="@xml/scene_profile"
+        app:layout_constraintTop_toBottomOf="@id/profileToolbar">
+
+        <com.sudox.design.avatar.AvatarView
+            android:id="@+id/profileAvatarView"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:translationZ="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileToolbar" />
+
+        <com.sudox.design.textview.PrecomputedTextView
+            android:id="@+id/profileNameText"
+            style="@style/TextViewWithoutPaddings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="sans-serif-light"
+            android:maxLines="1"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileAvatarView"
+            app:text="Митюшкин Максим" />
+
+        <com.sudox.design.textview.PrecomputedTextView
+            android:id="@+id/profileStatusText"
+            style="@style/TextViewWithoutPaddings"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="2dp"
+            android:textAlignment="center"
+            android:textColor="#BDBDBD"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileNameText"
+            app:text="Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsu" />
+
+        <Space
+            android:id="@+id/profileInfoBlockBottomSpace"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            app:layout_constraintEnd_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileStatusText" />
+
+    </android.support.constraint.motion.MotionLayout>
+
     <View
-        android:id="@+id/profileInfoBlockCover"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="?attr/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/profileInfoBlockBottomSpace"
-        app:layout_constraintTop_toTopOf="@+id/profileAvatarView" />
-
-    <com.sudox.design.avatar.AvatarView
-        android:id="@+id/profileAvatarView"
-        android:layout_width="92dp"
-        android:layout_height="92dp"
-        android:translationZ="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileToolbar" />
-
-    <com.sudox.design.textview.PrecomputedTextView
-        android:id="@+id/profileNameText"
-        style="@style/TextViewWithoutPaddings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:fontFamily="sans-serif-light"
-        android:maxLines="1"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileAvatarView"
-        app:text="Митюшкин Максим" />
-
-    <com.sudox.design.textview.PrecomputedTextView
-        android:id="@+id/profileStatusText"
-        style="@style/TextViewWithoutPaddings"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="2dp"
-        android:textAlignment="center"
-        android:textColor="#BDBDBD"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profileNameText"
-        app:text="Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsu" />
-
-    <Space
-        android:id="@+id/profileInfoBlockBottomSpace"
-        android:layout_width="1dp"
-        android:layout_height="20dp"
-        app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileStatusText" />
+        android:translationZ="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/profileMotionLayout"
+        app:layout_constraintTop_toTopOf="@id/profileMotionLayout" />
 
     <!-- Profile info block end -->
 
@@ -73,7 +83,7 @@
         style="@style/AppTheme.TabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/profileInfoBlockCover" />
+        app:layout_constraintTop_toBottomOf="@+id/profileMotionLayout" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/profileViewPager"
@@ -82,4 +92,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileTabLayout" />
 
-</android.support.constraint.motion.MotionLayout>
+</android.support.constraint.ConstraintLayout>
