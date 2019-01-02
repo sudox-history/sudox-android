@@ -61,8 +61,8 @@
             android:id="@+id/profileStatusText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/profileAvatarView"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/profileNameText"
             app:layout_constraintTop_toBottomOf="@id/profileNameText" />
     </ConstraintSet>

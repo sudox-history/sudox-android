@@ -84,14 +84,6 @@ android {
         multiDexEnabled false
     }
 
-    flavorDimensions "dev"
-
-    productFlavors {
-        dev {
-            resConfigs("ru", "xhdpi")
-        }
-    }
-
     dexOptions {
         preDexLibraries true
     }

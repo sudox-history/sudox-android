@@ -22,7 +22,7 @@
         android:text="@string/enter_your_name_and_nickname"
         android:textSize="16sp" />
 
-    <com.sudox.design.edittext.SudoxTextInputLayout
+    <com.sudox.design.widgets.SudoxTextInputLayout
         android:id="@+id/nameEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,9 +43,9 @@
             android:textColorHint="#9f9f9f"
             android:textSize="15sp" />
 
-    </com.sudox.design.edittext.SudoxTextInputLayout>
+    </com.sudox.design.widgets.SudoxTextInputLayout>
 
-    <com.sudox.design.edittext.SudoxTextInputLayout
+    <com.sudox.design.widgets.SudoxTextInputLayout
         android:id="@+id/nicknameEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             android:textColorHint="#9f9f9f"
             android:textSize="15sp" />
 
-    </com.sudox.design.edittext.SudoxTextInputLayout>
+    </com.sudox.design.widgets.SudoxTextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

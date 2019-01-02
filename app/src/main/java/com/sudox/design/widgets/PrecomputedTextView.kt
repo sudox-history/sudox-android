@@ -1,4 +1,4 @@
-package com.sudox.design.textview
+package com.sudox.design.widgets
 
 import android.content.Context
 import android.support.v4.text.PrecomputedTextCompat

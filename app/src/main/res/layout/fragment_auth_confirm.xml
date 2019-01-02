@@ -23,7 +23,7 @@
         android:text="@string/we_glad_to_see_you"
         android:textSize="16sp" />
 
-    <com.sudox.design.edittext.SudoxTextInputLayout
+    <com.sudox.design.widgets.SudoxTextInputLayout
         android:id="@+id/codeEditTextContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:textColorHint="#9f9f9f"
             android:textSize="15sp" />
 
-    </com.sudox.design.edittext.SudoxTextInputLayout>
+    </com.sudox.design.widgets.SudoxTextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

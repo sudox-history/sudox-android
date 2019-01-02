@@ -1,4 +1,4 @@
-package com.sudox.design.edittext
+package com.sudox.design.widgets
 
 import android.content.Context
 import android.support.design.widget.TextInputLayout

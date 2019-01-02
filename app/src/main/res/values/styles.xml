@@ -98,4 +98,10 @@
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="textAllCaps">false</item>
     </style>
+
+    <style name="ParametersRecyclerView">
+        <item name="android:background">#1A1E28</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+    </style>
 </resources>

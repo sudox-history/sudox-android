@@ -7,8 +7,10 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.os.Bundle
 import android.support.constraint.motion.MotionLayout
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
@@ -30,6 +32,14 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
 
     private val profileViewModel by lazy { getViewModel<ProfileViewModel>(viewModelFactory) }
     private val mainActivity by lazy { activity as MainActivity }
+
+    // Для скрола
+    private var accelerateInterpolator = AccelerateInterpolator(2.0F)
+    private var totalScrolledY = 0F
+    private var downX = 0F
+    private var downY = 0F
+    private var upX = 0F
+    private var upY = 0F
 
     // Для анимации в блоке информации о профиле.
     private val startProfileNameTextSize = 20F
@@ -119,6 +129,10 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
         profileMotionLayout.layoutParams = profileMotionLayout
                 .layoutParams
                 .apply { height = startProfileBlockHeight.toInt() }
+
+        // Связываем верстку с анимацией
+        profileConstraintLayout.motionLayout = profileMotionLayout
+        profileConstraintLayout.maxScrollY = startProfileBlockHeight.toInt()
     }
 
     private fun initViewPager() {
