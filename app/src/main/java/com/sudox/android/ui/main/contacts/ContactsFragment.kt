@@ -1,5 +1,6 @@
 package com.sudox.android.ui.main.contacts
 
+import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.content.pm.PackageManager
@@ -15,7 +16,6 @@ import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.contacts.add.ContactAddFragment
 import com.sudox.design.navigation.NavigationRootFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_main_contacts.*
 import javax.inject.Inject
 
@@ -29,6 +29,7 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment() {
 
     private val contactsViewModel by lazy { getViewModel<ContactsViewModel>(viewModelFactory) }
     private val mainActivity by lazy { activity as MainActivity }
+    private var syncConfirmationDialog: AlertDialog? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -91,7 +92,16 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment() {
                         .showChildFragment(ContactAddFragment())
 
                 // Синхронизация (на Android M метод может вызвать ещё из onRequestPermissionsResult)
-                R.id.contacts_sync_item -> contactsViewModel.syncContacts(activity!!)
+                R.id.contacts_sync_item -> {
+                    syncConfirmationDialog = AlertDialog.Builder(context!!)
+                            .setTitle(R.string.sync_contacts)
+                            .setMessage(R.string.contacts_sync_confirmation_text)
+                            .setPositiveButton(R.string.yes_confirmation) { _, _ -> contactsViewModel.syncContacts(activity!!) }
+                            .setNegativeButton(R.string.no_confirmation) { _, _ -> }
+                            .create()
+
+                    syncConfirmationDialog!!.show()
+                }
             }
 
             return@setOnMenuItemClickListener true
@@ -102,5 +112,8 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment() {
     }
 
     override fun onFragmentClosed() {
+        if (syncConfirmationDialog != null && syncConfirmationDialog!!.isShowing) {
+            syncConfirmationDialog!!.dismiss()
+        }
     }
 }
