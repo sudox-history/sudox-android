@@ -96,7 +96,7 @@
     <string name="share_profile">Share profile</string>
     <string name="add_contact_by_qr">Add contact by QR</string>
     <string name="contacts_sync">Contacts sync</string>
-    <string name="contacts_sync_confirmation_text">All your Sudox contacts will be remove and will sync with contacts book of this device. Continue?</string>
+    <string name="contacts_sync_confirmation_text">All your Sudox contacts will be deleted and synced with contacts list from this device. Continue?</string>
     <string name="yes_confirmation">Yes</string>
     <string name="no_confirmation">No</string>
 
