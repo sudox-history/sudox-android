@@ -85,8 +85,8 @@
     <string name="name_not_necessary">Имя (необязательно)</string>
     <string name="add">Добавить</string>
     <string name="hint_phone_wil_not_be_found">Если номер не будет найден, вы сможете пригласить вашего друга в Sudox</string>
-    <string name="invite_button">ПРИГЛАСИТЬ</string>
-    <string name="cancelButton">ОТМЕНА</string>
+    <string name="invite">Пригласить</string>
+    <string name="cancel">Отмена</string>
     <string name="hint_no_contact_in_sudox">Контакта еще нет в Sudox, хотите пригласить его с вами пообщаться?</string>
     <string name="title_oops">Упс! Не получилось!</string>
     <string name="invite_friend_sms">Привет! Я хочу с тобой пообщаться в Sudox! https://vk.com/sudox_messenger</string>

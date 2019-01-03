@@ -1,5 +1,6 @@
 package com.sudox.android.ui.main.contacts.add
 
+import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.common.helpers.sendSmsMessage
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.repositories.main.CONTACTS_NAME_REGEX_ERROR
 import com.sudox.android.data.repositories.main.CONTACTS_PHONE_REGEX_ERROR
@@ -50,6 +52,14 @@ class ContactAddFragment : DaggerFragment() {
                 activity!!.onBackPressed()
             } else if (it == ContactAddAction.SHOW_USER_NOT_FOUND_ERROR) {
                 contactPhoneEditTextContainer.error = getString(R.string.contact_has_not_find)
+
+                // Show invite alert
+                AlertDialog.Builder(context!!)
+                        .setTitle(R.string.title_oops)
+                        .setMessage(R.string.hint_no_contact_in_sudox)
+                        .setPositiveButton(R.string.invite) { _, _ -> context!!.sendSmsMessage("+7$phoneNumber", getString(R.string.invite_friend_sms)) }
+                        .setNegativeButton(R.string.no_confirmation) { _, _ -> }
+                        .show()
             } else if (it == ContactAddAction.SHOW_ATTEMPT_TO_ADDING_MYSELF_ERROR) {
                 contactPhoneEditTextContainer.error = getString(R.string.contact_add_yourself)
             } else if (it == ContactAddAction.SHOW_USER_ALREADY_ADDED_ERROR) {

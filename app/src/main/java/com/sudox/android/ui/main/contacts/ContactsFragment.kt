@@ -96,9 +96,7 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment() {
                     syncConfirmationDialog = AlertDialog.Builder(context!!)
                             .setTitle(R.string.sync_contacts)
                             .setMessage(R.string.contacts_sync_confirmation_text)
-                            .setPositiveButton(R.string.yes_confirmation) { _, _ ->
-                                contactsViewModel.syncContacts(activity!!)
-                            }
+                            .setPositiveButton(R.string.yes_confirmation) { _, _ -> contactsViewModel.syncContacts(activity!!) }
                             .setNegativeButton(R.string.no_confirmation) { _, _ -> }
                             .create()
 
