@@ -50,15 +50,19 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
         // Listen data
         profileViewModel
                 .userLiveData
-                .observe(this, Observer {
-                    val parameters = buildParameters(it!!)
-                    val diffUtil = ParametersDiffUtil(parameters, parametersAdapter.parameters)
-                    val diffResult = DiffUtil.calculateDiff(diffUtil)
+                .observe(this, Observer { updateParameters(it!!) })
+    }
 
-                    // Update
-                    parametersAdapter.parameters = parameters
-                    diffResult.dispatchUpdatesTo(parametersAdapter)
-                })
+    private fun updateParameters(user: User) {
+        val parameters = buildParameters(user)
+        val diffUtil = ParametersDiffUtil(parameters, parametersAdapter.parameters)
+        val diffResult = DiffUtil.calculateDiff(diffUtil)
+
+        // Update
+        parametersAdapter.parameters = parameters
+
+        // Notify adapter about updates
+        diffResult.dispatchUpdatesTo(parametersAdapter)
     }
 
     private fun buildParameters(user: User): ArrayList<ParametersAdapter.Parameter> {

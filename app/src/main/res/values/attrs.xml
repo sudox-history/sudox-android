@@ -17,4 +17,9 @@
     <declare-styleable name="PrecomputedTextView">
         <attr name="text" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="SheetButton">
+        <attr name="buttonIcon" format="integer" />
+        <attr name="buttonText" format="string" />
+    </declare-styleable>
 </resources>

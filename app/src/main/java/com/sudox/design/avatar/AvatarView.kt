@@ -9,6 +9,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sudox.android.data.database.model.user.User
 import com.sudox.design.helpers.getTwoFirstLetters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.android.Main
+import kotlinx.coroutines.launch
 
 class AvatarView : AppCompatImageView {
 
@@ -28,7 +33,7 @@ class AvatarView : AppCompatImageView {
         }
     }
 
-    private fun drawGradientAvatar(data: List<String>, user: User) {
+    private fun drawGradientAvatar(data: List<String>, user: User) = GlobalScope.launch(Dispatchers.IO) {
         val firstColor = Color.parseColor("#${data[1]}")
         val secondColor = Color.parseColor("#${data[2]}")
         val text = user.name.getTwoFirstLetters()
@@ -63,6 +68,6 @@ class AvatarView : AppCompatImageView {
         canvas.drawText(text, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
 
         // Set bitmap
-        setImageBitmap(bitmap)
+        GlobalScope.launch(Dispatchers.Main) { setImageBitmap(bitmap) }
     }
 }
