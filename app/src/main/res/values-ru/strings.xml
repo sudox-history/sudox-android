@@ -93,6 +93,8 @@
     <string name="you">Вы</string>
     <string name="sync_contacts">Синхронизировать контакты</string>
     <string name="im_using_sudox">Я использую Sudox!</string>
+    <string name="share_profile">Поделиться профилем</string>
+    <string name="add_contact_by_qr">Добавить контакт по QR-коду</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>

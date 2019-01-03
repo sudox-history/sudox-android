@@ -1,15 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/profileInfoParametersList"
-        style="@style/ParametersRecyclerView"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content">
 
-</android.support.constraint.ConstraintLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/profileInfoParametersList"
+            style="@style/ParametersRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Buttons start -->
+
+        <com.sudox.design.widgets.SheetButton
+            android:id="@+id/profileShareProfileButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:buttonIcon="@drawable/ic_share"
+            app:buttonText="@string/share_profile"
+            app:layout_constraintTop_toBottomOf="@id/profileInfoParametersList" />
+
+        <com.sudox.design.widgets.SheetButton
+            android:id="@+id/profileAddContactByQR"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:buttonIcon="@drawable/ic_add_contact"
+            app:buttonText="@string/add_contact_by_qr"
+            app:layout_constraintTop_toBottomOf="@id/profileShareProfileButton" />
+
+        <!-- Buttons end -->
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v4.widget.NestedScrollView>

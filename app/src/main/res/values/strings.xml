@@ -93,6 +93,8 @@
     <string name="you">You</string>
     <string name="sync_contacts">Sync contacts</string>
     <string name="im_using_sudox">I\'m using Sudox!</string>
+    <string name="share_profile">Share profile</string>
+    <string name="add_contact_by_qr">Add contact by QR</string>
 
     <!-- Formats -->
     <string name="nickname_format" translatable="false"><![CDATA[<font color="#FFFFFF">@%1$s</font><font color="#BDBDBD">#%2$s</font>]]></string>

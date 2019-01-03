@@ -7,10 +7,8 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.os.Bundle
 import android.support.constraint.motion.MotionLayout
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
@@ -32,14 +30,6 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
 
     private val profileViewModel by lazy { getViewModel<ProfileViewModel>(viewModelFactory) }
     private val mainActivity by lazy { activity as MainActivity }
-
-    // Для скрола
-    private var accelerateInterpolator = AccelerateInterpolator(2.0F)
-    private var totalScrolledY = 0F
-    private var downX = 0F
-    private var downY = 0F
-    private var upX = 0F
-    private var upY = 0F
 
     // Для анимации в блоке информации о профиле.
     private val startProfileNameTextSize = 20F
@@ -82,13 +72,13 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
 
     private fun initProfileAnimation() {
         val fontSizesRatio = Math.min(startProfileNameTextSize, endProfileNameTextSize) / Math.max(startProfileNameTextSize, endProfileNameTextSize)
-        val startContraintSet = profileMotionLayout.getConstraintSet(R.id.scene_profile_start)
-        val endContraintSet = profileMotionLayout.getConstraintSet(R.id.scene_profile_end)
+        val startConstraintSet = profileMotionLayout.getConstraintSet(R.id.scene_profile_start)
+        val endConstraintSet = profileMotionLayout.getConstraintSet(R.id.scene_profile_end)
 
-        startContraintSet.setScaleX(R.id.profileNameText, 1F)
-        startContraintSet.setScaleY(R.id.profileNameText, 1F)
-        endContraintSet.setScaleX(R.id.profileNameText, fontSizesRatio)
-        endContraintSet.setScaleY(R.id.profileNameText, fontSizesRatio)
+        startConstraintSet.setScaleX(R.id.profileNameText, 1F)
+        startConstraintSet.setScaleY(R.id.profileNameText, 1F)
+        endConstraintSet.setScaleX(R.id.profileNameText, fontSizesRatio)
+        endConstraintSet.setScaleY(R.id.profileNameText, fontSizesRatio)
 
         // Pivot, текст должен сжиматься налево, а не в центр
         profileNameText.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
@@ -136,14 +126,10 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
     }
 
     private fun initViewPager() {
-        profileViewPager.adapter = TabLayoutAdapter(
-                arrayOf(profileInfoFragment, profileDecorationsFragment),
-                arrayOf(getString(R.string.profile_info), getString(R.string.decorations_label)),
-                profileViewPager,
-                childFragmentManager
-        )
+        val fragments = arrayOf(profileInfoFragment, profileDecorationsFragment)
+        val titles = arrayOf(getString(R.string.profile_info), getString(R.string.decorations_label))
 
-        // Connect with adapter
+        profileViewPager.adapter = TabLayoutAdapter(fragments, titles, profileViewPager, childFragmentManager)
         profileTabLayout.setupWithViewPager(profileViewPager)
     }
 
