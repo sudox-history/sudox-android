@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/contact_edit_item"
+        android:title="@string/edit_contact" />
+
+    <item
         android:id="@+id/contact_remove_item"
         android:title="@string/remove_contact" />
 </menu>

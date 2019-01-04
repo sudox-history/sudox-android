@@ -182,8 +182,44 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
             // Removing ...
             usersRepository.removeUser(id)
-
             notifyContactRemoved(id)
+        } catch (e: NetworkException) {
+            // Ignore
+        }
+    }
+
+    @Throws(InternalRequestException::class, RequestRegexException::class, RequestException::class)
+    fun editContact(user: User) = GlobalScope.async(Dispatchers.IO) {
+        val filteredName = user.name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
+        val regexFields = arrayListOf<Int>()
+
+        if (filteredName.isNotEmpty() && !NAME_REGEX.matches(filteredName))
+            regexFields.plusAssign(CONTACTS_NAME_REGEX_ERROR)
+        if (regexFields.isNotEmpty()) throw RequestRegexException(regexFields)
+
+        try {
+            val contactEditDTO = protocolClient.makeRequestWithControl<ContactEditDTO>("contacts.edit", ContactEditDTO().apply {
+                id = user.uid
+                name = user.name
+            }).await()
+
+            if (contactEditDTO.isSuccess()) {
+                usersRepository
+                        .saveOrUpdateUser(user)
+                        .await()
+
+                // Обновление в UI
+                notifyContactUpdated(user)
+            } else if (contactEditDTO.error == Errors.INVALID_USER) {
+                // Юзера больше нет в контактах/в Sudox. Удаляем из БД
+                usersRepository.removeUser(user.uid)
+                notifyContactRemoved(user.uid)
+
+                // Возвращаем ошибку
+                throw InternalRequestException(InternalErrors.USER_NOT_FOUND)
+            } else {
+                throw RequestException(contactEditDTO.error)
+            }
         } catch (e: NetworkException) {
             // Ignore
         }
@@ -249,6 +285,17 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
     private fun notifyContactAdded(user: User) {
         contactsChannel.value.plusAssign(user)
+        contactsChannel.offer(contactsChannel.value)
+    }
+
+    private fun notifyContactUpdated(user: User) {
+        val index = contactsChannel.value.indexOfFirst { it.uid == user.uid }
+
+        // Пользователь не найден в загруженном списке
+        if (index == -1) return
+
+        // Заменяем объект пользователя и уведомляем слушателей
+        contactsChannel.value[index] = user
         contactsChannel.offer(contactsChannel.value)
     }
 

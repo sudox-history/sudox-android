@@ -2,6 +2,7 @@ package com.sudox.android.ui.main.contacts.add
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.exceptions.RequestException
 import com.sudox.android.data.exceptions.RequestRegexException
@@ -37,6 +38,33 @@ class ContactAddViewModel @Inject constructor(val contactsRepository: ContactsRe
                     contactAddActionsLiveData.postValue(ContactAddAction.SHOW_USER_ALREADY_ADDED_ERROR)
                 e.errorCode == InternalErrors.USER_NOT_FOUND ->
                     contactAddActionsLiveData.postValue(ContactAddAction.SHOW_USER_NOT_FOUND_ERROR)
+            }
+        }
+    }
+
+    fun editContact(initialUser: User, editableUser: User) = GlobalScope.launch {
+        // Save network, CPU and user time
+        if (initialUser == editableUser) {
+            contactAddActionsLiveData.postValue(ContactAddAction.POP_BACKSTACK)
+            return@launch
+        }
+
+        // Обновляем
+        try {
+            contactsRepository
+                    .editContact(editableUser)
+                    .await()
+
+            // Все ок! Возвращаемся обратно
+            contactAddActionsLiveData.postValue(ContactAddAction.POP_BACKSTACK)
+        } catch (e: RequestRegexException) {
+            contactAddRegexErrorsLiveData.postValue(e.fields)
+        } catch (e: RequestException) {
+            contactAddErrorsLiveData.postValue(e.errorCode)
+        } catch (e: InternalRequestException) {
+            when {
+                e.errorCode == InternalErrors.USER_NOT_FOUND ->
+                    contactAddActionsLiveData.postValue(ContactAddAction.POP_BACKSTACK)
             }
         }
     }

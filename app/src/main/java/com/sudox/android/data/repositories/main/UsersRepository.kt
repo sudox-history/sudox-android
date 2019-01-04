@@ -89,6 +89,10 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         userDao.removeOne(id)
     }
 
+    fun saveOrUpdateUser(user: User) = GlobalScope.async(Dispatchers.IO) {
+        userDao.insertOne(user)
+    }
+
     private suspend fun loadUsersFromNetwork(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN): List<User> = suspendCoroutine { continuation ->
         protocolClient.makeRequest<UserInfoDTO>("users.get", UserInfoDTO().apply {
             this.ids = ids

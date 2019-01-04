@@ -81,6 +81,18 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment() {
                     // Update
                     diffResult.dispatchUpdatesTo(contactsAdapter)
                 })
+
+        contactsAdapter
+                .editableContactsLiveData
+                .observe(this, Observer {
+                    mainActivity
+                            .fragmentNavigator
+                            .showChildFragment(ContactAddFragment()
+                                    .apply {
+                                        inEditMode = true
+                                        editableUser = it!!
+                                    })
+                })
     }
 
     private fun initToolbar() {

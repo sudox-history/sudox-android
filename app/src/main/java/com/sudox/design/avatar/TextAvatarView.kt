@@ -1,20 +1,23 @@
 package com.sudox.design.avatar
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.Rect
+import android.graphics.*
 import android.graphics.drawable.ShapeDrawable
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.TextView
 import android.graphics.drawable.shapes.OvalShape
 import android.support.v7.widget.AppCompatTextView
 import android.util.TypedValue
+import com.sudox.android.data.database.model.user.User
 import com.sudox.design.helpers.getTwoFirstLetters
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.android.Main
+import kotlinx.coroutines.launch
 
 class TextAvatarView : FrameLayout {
 
@@ -68,5 +71,46 @@ class TextAvatarView : FrameLayout {
         if (text.text.toString() != letters) {
             text.text = letters
         }
+    }
+
+    fun bindUser(user: User) {
+        val data = user.photo.split(".")
+        val type = data[0]
+
+        // Render ...
+        if (type == "col") {
+            drawGradientAvatar(data)
+
+            // Bind letters
+            text.setTextColor(Color.WHITE)
+            bindLetters(user.name)
+        }
+    }
+
+    private fun drawGradientAvatar(data: List<String>) = GlobalScope.launch(Dispatchers.IO) {
+        val firstColor = Color.parseColor("#${data[1]}")
+        val secondColor = Color.parseColor("#${data[2]}")
+
+        // Preparings ...
+        val width = layoutParams.width
+        val height = layoutParams.height
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        val paint = Paint().apply {
+            isAntiAlias = true
+            isDither = true
+        }
+
+        val paintWidth = width.toFloat()
+        val paintHeight = height.toFloat()
+        val xRadius = paintWidth / 2
+        val yRadius = paintHeight / 2
+
+        // Set shader for background
+        paint.shader = LinearGradient(0F, 0F, paintWidth, paintHeight, firstColor, secondColor, Shader.TileMode.REPEAT)
+        canvas.drawRoundRect(0F, 0F, paintWidth, paintHeight, xRadius, yRadius, paint)
+
+        // Set bitmap
+        GlobalScope.launch(Dispatchers.Main) { background.setImageBitmap(bitmap) }
     }
 }

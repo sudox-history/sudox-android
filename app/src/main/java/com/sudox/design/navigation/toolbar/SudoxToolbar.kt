@@ -156,24 +156,42 @@ class SudoxToolbar : Toolbar {
         }
 
         if (featureButtonText != null) {
-            featureTextButton = PrecomputedTextView(context)
-                    .apply {
-                        setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
-                        setTextColor(Color.WHITE)
-                        layoutParams = generateDefaultLayoutParams()
-                                .apply {
-                                    gravity = GravityCompat.END or Gravity.CENTER_VERTICAL;
-                                }
-
-                        gravity = Gravity.END
-                        isClickable = true
-                        isFocusable = true
-                    }
-
-            // Draw text button
-            featureTextButton!!.installText(featureButtonText!!)
-            addSystemView(featureTextButton!!, false)
+            setFeatureText(featureButtonText!!)
         }
+    }
+
+    fun setFeatureText(resId: Int) {
+        setFeatureText(context.getString(resId))
+    }
+
+    fun setFeatureText(text: String) {
+        featureButtonText = text
+
+        if (featureTextButton == null) {
+            configureFeatureButton()
+        } else {
+            featureTextButton!!.installText(text)
+        }
+    }
+
+    private fun configureFeatureButton() {
+        featureTextButton = PrecomputedTextView(context)
+                .apply {
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP, 15F)
+                    setTextColor(Color.WHITE)
+                    layoutParams = generateDefaultLayoutParams()
+                            .apply {
+                                gravity = GravityCompat.END or Gravity.CENTER_VERTICAL
+                            }
+
+                    gravity = Gravity.END
+                    isClickable = true
+                    isFocusable = true
+                }
+
+        // Draw text button
+        featureTextButton!!.installText(featureButtonText!!)
+        addSystemView(featureTextButton!!, false)
     }
 
     private fun addSystemView(view: View, allowHide: Boolean) {
