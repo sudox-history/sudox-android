@@ -62,6 +62,29 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         protocolClient.listenMessage<ContactRemoveDTO>("updates.contacts.remove") {
             removeNotifyContact(it)
         }
+
+        // Синхронизация контактов
+        protocolClient.listenMessage<ContactsIdsListDTO>("updates.contacts.sync") {
+            loadContactsBeforeSync(it)
+        }
+
+        // Редактирование контакта
+        protocolClient.listenMessage<ContactEditDTO>("updates.contacts.edit") {
+            editNotifyContact(it)
+        }
+    }
+
+    private fun editNotifyContact(contactEditDTO: ContactEditDTO) = GlobalScope.launch(Dispatchers.IO) {
+        // P.S.: Либо выполнится запрос к серверу и юзер будет сохран как контакт, либо в БД данный юзер просто будет помечен как контакт.
+        val user = usersRepository.loadUser(contactEditDTO.id, UserType.CONTACT, onlyFromNetwork = true).await()
+                ?: return@launch
+
+        usersRepository
+                .saveOrUpdateUser(user)
+                .await()
+
+        // Обновление в UI
+        notifyContactUpdated(user)
     }
 
     private fun saveNotifyContact(contactNotifyDTO: ContactAddDTO) = GlobalScope.launch(Dispatchers.IO) {
@@ -105,7 +128,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         }
     }
 
-    private fun loadContactsBeforeSync(contactsSyncDTO: ContactsSyncDTO) = GlobalScope.launch(Dispatchers.IO) {
+    private fun loadContactsBeforeSync(contactsSyncDTO: ContactsIdsListDTO) = GlobalScope.launch(Dispatchers.IO) {
         try {
             // Чистим список контактов
             userDao.setUnknownByType(UserType.CONTACT) // Скроем все ...

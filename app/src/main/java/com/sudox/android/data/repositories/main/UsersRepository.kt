@@ -69,8 +69,8 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    fun loadUser(id: Long, loadAs: UserType = UserType.UNKNOWN, onlyFromDatabase: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
-        if (onlyFromDatabase || !protocolClient.isValid() || loadedUsersIds.contains(id)) {
+    fun loadUser(id: Long, loadAs: UserType = UserType.UNKNOWN, onlyFromDatabase: Boolean = false, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+        if ((onlyFromDatabase || !protocolClient.isValid() || loadedUsersIds.contains(id)) && !onlyFromNetwork) {
             val user = userDao.loadById(id)
 
             // Update the type

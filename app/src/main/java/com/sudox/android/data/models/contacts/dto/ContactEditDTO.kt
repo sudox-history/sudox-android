@@ -16,6 +16,6 @@ class ContactEditDTO : JsonModel() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        super.fromJSON(jsonObject)
+        id = jsonObject.optLong("id")
     }
 }
