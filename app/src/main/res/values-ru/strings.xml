@@ -99,6 +99,9 @@
     <string name="contacts_sync_confirmation_text">Все ваши контакты Sudox будут удалены и синхронизированы с контактной книгой данного устройства. Продолжить?</string>
     <string name="yes_confirmation">Да</string>
     <string name="no_confirmation">Нет</string>
+    <string name="edit_contact">Редактировать контакт</string>
+    <string name="contact_edit">Редактирование</string>
+    <string name="edit_save">Сохранить</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>

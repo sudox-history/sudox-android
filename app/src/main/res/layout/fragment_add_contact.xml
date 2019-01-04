@@ -8,10 +8,8 @@
         android:id="@+id/contactAddToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:featureButtonText="@string/add"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/new_contact" />
+        app:navigationIcon="@drawable/ic_arrow_back" />
 
     <com.sudox.design.avatar.TextAvatarView
         android:id="@+id/contactAvatar"
@@ -69,6 +67,7 @@
     </com.sudox.design.widgets.SudoxTextInputLayout>
 
     <TextView
+        android:id="@+id/contactAddHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

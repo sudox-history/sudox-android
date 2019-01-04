@@ -1,7 +1,7 @@
 package com.sudox.android.ui.main.contacts
 
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
-import android.support.design.widget.BottomSheetDialog
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MenuInflater
@@ -20,6 +20,7 @@ class ContactsAdapter @Inject constructor(val context: Context,
 
     // Contacts for showing
     var contacts: ArrayList<User> = arrayListOf()
+    val editableContactsLiveData: MutableLiveData<User> = MutableLiveData()
 
     // Menu inflater for context menu (must be initialized in onViewCreated())
     lateinit var menuInflater: MenuInflater
@@ -48,6 +49,7 @@ class ContactsAdapter @Inject constructor(val context: Context,
             menu.setOnItemClickListener {
                 when (it.itemId) {
                     R.id.contact_remove_item -> contactsRepository.removeContact(contact.uid)
+                    R.id.contact_edit_item -> editableContactsLiveData.postValue(contact)
                 }
 
                 return@setOnItemClickListener true

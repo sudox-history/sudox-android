@@ -99,9 +99,12 @@
     <string name="contacts_sync_confirmation_text">All your Sudox contacts will be deleted and synced with contacts list from this device. Continue?</string>
     <string name="yes_confirmation">Yes</string>
     <string name="no_confirmation">No</string>
+    <string name="edit_save">Save</string>
 
     <!-- Formats -->
     <string name="nickname_format" translatable="false"><![CDATA[<font color="#FFFFFF">@%1$s</font><font color="#BDBDBD">#%2$s</font>]]></string>
+    <string name="edit_contact">Edit contact</string>
+    <string name="contact_edit">Edit contact</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d contact</item>

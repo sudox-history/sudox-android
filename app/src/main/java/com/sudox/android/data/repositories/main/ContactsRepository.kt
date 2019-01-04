@@ -62,6 +62,29 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         protocolClient.listenMessage<ContactRemoveDTO>("updates.contacts.remove") {
             removeNotifyContact(it)
         }
+
+        // Синхронизация контактов
+        protocolClient.listenMessage<ContactsIdsListDTO>("updates.contacts.sync") {
+            loadContactsBeforeSync(it)
+        }
+
+        // Редактирование контакта
+        protocolClient.listenMessage<ContactEditDTO>("updates.contacts.edit") {
+            editNotifyContact(it)
+        }
+    }
+
+    private fun editNotifyContact(contactEditDTO: ContactEditDTO) = GlobalScope.launch(Dispatchers.IO) {
+        // P.S.: Либо выполнится запрос к серверу и юзер будет сохран как контакт, либо в БД данный юзер просто будет помечен как контакт.
+        val user = usersRepository.loadUser(contactEditDTO.id, UserType.CONTACT, onlyFromNetwork = true).await()
+                ?: return@launch
+
+        usersRepository
+                .saveOrUpdateUser(user)
+                .await()
+
+        // Обновление в UI
+        notifyContactUpdated(user)
     }
 
     private fun saveNotifyContact(contactNotifyDTO: ContactAddDTO) = GlobalScope.launch(Dispatchers.IO) {
@@ -105,7 +128,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         }
     }
 
-    private fun loadContactsBeforeSync(contactsSyncDTO: ContactsSyncDTO) = GlobalScope.launch(Dispatchers.IO) {
+    private fun loadContactsBeforeSync(contactsSyncDTO: ContactsIdsListDTO) = GlobalScope.launch(Dispatchers.IO) {
         try {
             // Чистим список контактов
             userDao.setUnknownByType(UserType.CONTACT) // Скроем все ...
@@ -182,8 +205,44 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
             // Removing ...
             usersRepository.removeUser(id)
-
             notifyContactRemoved(id)
+        } catch (e: NetworkException) {
+            // Ignore
+        }
+    }
+
+    @Throws(InternalRequestException::class, RequestRegexException::class, RequestException::class)
+    fun editContact(user: User) = GlobalScope.async(Dispatchers.IO) {
+        val filteredName = user.name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
+        val regexFields = arrayListOf<Int>()
+
+        if (filteredName.isNotEmpty() && !NAME_REGEX.matches(filteredName))
+            regexFields.plusAssign(CONTACTS_NAME_REGEX_ERROR)
+        if (regexFields.isNotEmpty()) throw RequestRegexException(regexFields)
+
+        try {
+            val contactEditDTO = protocolClient.makeRequestWithControl<ContactEditDTO>("contacts.edit", ContactEditDTO().apply {
+                id = user.uid
+                name = user.name
+            }).await()
+
+            if (contactEditDTO.isSuccess()) {
+                usersRepository
+                        .saveOrUpdateUser(user)
+                        .await()
+
+                // Обновление в UI
+                notifyContactUpdated(user)
+            } else if (contactEditDTO.error == Errors.INVALID_USER) {
+                // Юзера больше нет в контактах/в Sudox. Удаляем из БД
+                usersRepository.removeUser(user.uid)
+                notifyContactRemoved(user.uid)
+
+                // Возвращаем ошибку
+                throw InternalRequestException(InternalErrors.USER_NOT_FOUND)
+            } else {
+                throw RequestException(contactEditDTO.error)
+            }
         } catch (e: NetworkException) {
             // Ignore
         }
@@ -249,6 +308,17 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
     private fun notifyContactAdded(user: User) {
         contactsChannel.value.plusAssign(user)
+        contactsChannel.offer(contactsChannel.value)
+    }
+
+    private fun notifyContactUpdated(user: User) {
+        val index = contactsChannel.value.indexOfFirst { it.uid == user.uid }
+
+        // Пользователь не найден в загруженном списке
+        if (index == -1) return
+
+        // Заменяем объект пользователя и уведомляем слушателей
+        contactsChannel.value[index] = user
         contactsChannel.offer(contactsChannel.value)
     }
 
