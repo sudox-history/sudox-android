@@ -19,7 +19,9 @@ import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.repositories.main.CONTACTS_NAME_REGEX_ERROR
 import com.sudox.android.data.repositories.main.CONTACTS_PHONE_REGEX_ERROR
+import com.sudox.android.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_add_contact.*
 import javax.inject.Inject
 
@@ -30,6 +32,7 @@ class ContactAddFragment : DaggerFragment() {
     val contactAddViewModel by lazy { getViewModel<ContactAddViewModel>(viewModelFactory) }
 
     // Data
+    private val mainActivity by lazy { activity as MainActivity }
     private var phoneNumber: String = ""
     private var isMaskFilled: Boolean = false
     var inEditMode: Boolean = false
@@ -142,18 +145,19 @@ class ContactAddFragment : DaggerFragment() {
     }
 
     private fun initToolbar() {
-        contactAddToolbar.setNavigationOnClickListener { activity!!.onBackPressed() }
+        mainActivity.mainToolbar.reset()
+        mainActivity.mainToolbar.setNavigationOnClickListener { activity!!.onBackPressed() }
 
         // Texts
         if (inEditMode) {
-            contactAddToolbar.setTitle(R.string.contact_edit)
-            contactAddToolbar.setFeatureText(R.string.edit_save)
+            mainActivity.mainToolbar.setTitle(R.string.contact_edit)
+            mainActivity.mainToolbar.setFeatureText(R.string.edit_save)
         } else {
-            contactAddToolbar.setTitle(R.string.new_contact)
-            contactAddToolbar.setFeatureText(R.string.add)
+            mainActivity.mainToolbar.setTitle(R.string.new_contact)
+            mainActivity.mainToolbar.setFeatureText(R.string.add)
         }
 
-        contactAddToolbar.setFeatureButtonOnClickListener(View.OnClickListener {
+        mainActivity.mainToolbar.setFeatureButtonOnClickListener(View.OnClickListener {
             if (!inEditMode) {
                 contactAddViewModel.addContact(contactNameEditText.text.toString(), "7$phoneNumber")
             } else {

@@ -100,6 +100,9 @@ class FragmentNavigator(val activity: Activity,
     fun popBackstack(): Boolean {
         if (fragmentsPath.size <= 1) return false
 
+        // Previous fragment
+        val fragment = fragmentsPath[fragmentsPath.size - 2]
+
         // Текущий фрагмент - последний в списке, значит он дочерний и его можно, а то и нужно убрать из ОЗУ и отображения
         fragmentManager
                 .beginTransaction()
@@ -111,6 +114,10 @@ class FragmentNavigator(val activity: Activity,
 
         // Удалим последний фрагмент из ОЗУ.
         fragmentsPath.removeAt(fragmentsPath.size - 1)
+
+        if (fragment is NavigationRootFragment) {
+            fragment.onFragmentOpened()
+        }
 
         return true
     }

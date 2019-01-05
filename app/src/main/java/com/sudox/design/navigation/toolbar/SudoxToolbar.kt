@@ -148,16 +148,22 @@ class SudoxToolbar : Toolbar {
         array.recycle()
     }
 
+    override fun setNavigationOnClickListener(listener: OnClickListener) {
+        super.setNavigationOnClickListener(listener)
+
+        if (navigationButtonView == null) configureNavigationButton()
+        if (navigationButtonView!!.visibility != View.VISIBLE) {
+            navigationButtonView!!.visibility = View.VISIBLE
+        }
+    }
+
     private fun configureNavigationButton() {
+        if (navigationButtonView == null) {
+            setNavigationIcon(R.drawable.ic_arrow_back)
+        }
+
         navigationButtonView = NAV_BUTTON_VIEW_FIELD.get(this) as? ImageButton
-
-        if (navigationButtonView != null) {
-            navigationButtonView?.setImageResource(R.drawable.ic_arrow_back)
-        }
-
-        if (featureButtonText != null) {
-            setFeatureText(featureButtonText!!)
-        }
+        navigationButtonView?.visibility = View.GONE
     }
 
     fun setFeatureText(resId: Int) {
@@ -169,8 +175,16 @@ class SudoxToolbar : Toolbar {
 
         if (featureTextButton == null) {
             configureFeatureButton()
-        } else {
+        }
+
+        if (!TextUtils.isEmpty(text)) {
+            if (featureTextButton!!.visibility != View.VISIBLE) {
+                featureTextButton!!.visibility = View.VISIBLE
+            }
+
             featureTextButton!!.installText(text)
+        } else if (featureTextButton!!.visibility != View.GONE) {
+            featureTextButton!!.visibility = View.GONE
         }
     }
 
@@ -224,7 +238,7 @@ class SudoxToolbar : Toolbar {
     }
 
     private fun calculateStartPadding(initialStartPadding: Float): Int {
-        if (navigationButtonView != null) {
+        if (navigationButtonView != null && navigationButtonView!!.visibility == View.VISIBLE) {
             return (initialStartPadding - navigationButtonView!!.drawable.intrinsicWidth).toInt()
         }
 
@@ -244,6 +258,17 @@ class SudoxToolbar : Toolbar {
         return initialEndPadding
     }
 
+    override fun inflateMenu(resId: Int) {
+        menu.clear()
+
+        // Super!
+        super.inflateMenu(resId)
+    }
+
+    override fun setTitle(resId: Int) {
+        title = context.getString(resId)
+    }
+
     override fun setTitle(title: CharSequence?) {
         val isFirstInstalling = titleTextView == null
 
@@ -254,7 +279,7 @@ class SudoxToolbar : Toolbar {
                 setPaddingRelative(0, 0, 0, 0)
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 19F)
                 setSingleLine()
-                setEllipsize(TextUtils.TruncateAt.END)
+                ellipsize = TextUtils.TruncateAt.END
             }
 
             // Для сброса ожидания соединения ...
@@ -266,12 +291,18 @@ class SudoxToolbar : Toolbar {
             ADD_SYSTEM_VIEW_METHOD.invoke(this, titleTextView, false)
         }
 
+        // Update normal text
+        normalTitleText = title.toString()
+
         if (!TextUtils.isEmpty(title)) {
             if (titleTextView!!.visibility != View.VISIBLE) {
                 titleTextView!!.visibility = View.VISIBLE
             }
 
-            titleTextView!!.installText(title!!)
+            if (protocolClient == null) ApplicationLoader.component.inject(this@SudoxToolbar)
+            if (protocolClient!!.isValid()) {
+                titleTextView!!.installText(title!!)
+            }
 
             // Слушаем статус соединения
             if (isFirstInstalling) listenConnectionState()
@@ -282,7 +313,6 @@ class SudoxToolbar : Toolbar {
 
     private fun listenConnectionState() {
         if (connectionStateSubscription != null) return
-        if (protocolClient == null) ApplicationLoader.component.inject(this@SudoxToolbar)
         if (!protocolClient!!.isValid())
             titleTextView!!.setText(resources.getString(R.string.wait_for_connect))
 
@@ -311,6 +341,13 @@ class SudoxToolbar : Toolbar {
         setContentInsetsRelative(0, 0)
         contentInsetStartWithNavigation = 0
         contentInsetEndWithActions = 0
+    }
+
+    fun reset() {
+        navigationButtonView?.visibility = View.GONE
+        featureTextButton?.visibility = View.GONE
+        titleTextView?.visibility = View.GONE
+        actionMenuView?.removeAllViews()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

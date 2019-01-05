@@ -7,7 +7,9 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
@@ -16,10 +18,11 @@ import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.contacts.add.ContactAddFragment
 import com.sudox.design.navigation.NavigationRootFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_contacts.*
 import javax.inject.Inject
 
-class ContactsFragment @Inject constructor() : NavigationRootFragment() {
+class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar.OnMenuItemClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -33,8 +36,6 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        initToolbar()
         initContactsList()
 
         // Listen data updates
@@ -96,31 +97,36 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment() {
     }
 
     private fun initToolbar() {
-        contactsToolbar.inflateMenu(R.menu.menu_contacts)
-        contactsToolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.add_contact_menu_item -> mainActivity
-                        .fragmentNavigator
-                        .showChildFragment(ContactAddFragment())
+        mainActivity.mainToolbar.reset()
+        mainActivity.mainToolbar.setTitle(R.string.contacts)
+        mainActivity.mainToolbar.inflateMenu(R.menu.menu_contacts)
+        mainActivity.mainToolbar.setOnMenuItemClickListener(this)
+    }
 
-                // Синхронизация (на Android M метод может вызвать ещё из onRequestPermissionsResult)
-                R.id.contacts_sync_item -> {
-                    syncConfirmationDialog = AlertDialog.Builder(context!!)
-                            .setTitle(R.string.sync_contacts)
-                            .setMessage(R.string.contacts_sync_confirmation_text)
-                            .setPositiveButton(R.string.yes_confirmation) { _, _ -> contactsViewModel.syncContacts(activity!!) }
-                            .setNegativeButton(R.string.no_confirmation) { _, _ -> }
-                            .create()
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.add_contact_menu_item -> mainActivity
+                    .fragmentNavigator
+                    .showChildFragment(ContactAddFragment())
 
-                    syncConfirmationDialog!!.show()
-                }
+            // Синхронизация (на Android M метод может вызвать ещё из onRequestPermissionsResult)
+            R.id.contacts_sync_item -> {
+                syncConfirmationDialog = AlertDialog.Builder(context!!)
+                        .setTitle(R.string.sync_contacts)
+                        .setMessage(R.string.contacts_sync_confirmation_text)
+                        .setPositiveButton(R.string.yes_confirmation) { _, _ -> contactsViewModel.syncContacts(activity!!) }
+                        .setNegativeButton(R.string.no_confirmation) { _, _ -> }
+                        .create()
+
+                syncConfirmationDialog!!.show()
             }
-
-            return@setOnMenuItemClickListener true
         }
+
+        return true
     }
 
     override fun onFragmentOpened() {
+        initToolbar()
     }
 
     override fun onFragmentClosed() {

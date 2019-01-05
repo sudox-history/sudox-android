@@ -5,19 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.sudox.design.navigation.toolbar.SudoxToolbar
-        android:id="@+id/messagesToolbar"
-        style="@style/ToolbarTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/messages" />
-
     <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"
         style="@style/AppTheme.TabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/messagesToolbar"
         app:tabGravity="fill"
         app:tabMode="fixed" />
 

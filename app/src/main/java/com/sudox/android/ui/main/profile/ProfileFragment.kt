@@ -16,6 +16,7 @@ import com.sudox.android.ui.main.profile.decorations.ProfileDecorationsFragment
 import com.sudox.android.ui.main.profile.info.ProfileInfoFragment
 import com.sudox.design.adapters.TabLayoutAdapter
 import com.sudox.design.navigation.NavigationRootFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_profile.*
 import javax.inject.Inject
 
@@ -42,7 +43,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
         super.onActivityCreated(savedInstanceState)
 
         // Configure view
-        initToolbar()
+        initProfileBlock()
         initViewPager()
 
         profileViewModel.start()
@@ -52,10 +53,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
         return inflater.inflate(R.layout.fragment_main_profile, container, false)
     }
 
-    private fun initToolbar() {
-        profileToolbar.inflateMenu(R.menu.menu_profile)
-
-        // Listen data
+    private fun initProfileBlock() {
         profileViewModel.userLiveData.observe(this, Observer {
             profileAvatarView.bindUser(it!!)
             profileNameText.installText(it.name)
@@ -68,6 +66,12 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
 
         // Animation will be configured before fragment will be drawen
         initProfileAnimation()
+    }
+
+    private fun initToolbar() {
+        mainActivity.mainToolbar.reset()
+        mainActivity.mainToolbar.setTitle(R.string.profile)
+        mainActivity.mainToolbar.inflateMenu(R.menu.menu_profile)
     }
 
     private fun initProfileAnimation() {
@@ -138,6 +142,8 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
         if (mainActivity.requestedOrientation != SCREEN_ORIENTATION_PORTRAIT) {
             mainActivity.requestedOrientation = SCREEN_ORIENTATION_PORTRAIT
         }
+
+        initToolbar()
     }
 
     override fun onFragmentClosed() {

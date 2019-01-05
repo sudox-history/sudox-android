@@ -6,11 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainActivity">
 
+    <com.sudox.design.navigation.toolbar.SudoxToolbar
+        android:id="@+id/mainToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <FrameLayout
         android:id="@+id/fragmentMainContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomNavigationView" />
+        android:layout_above="@+id/bottomNavigationView"
+        android:layout_below="@id/mainToolbar" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigationView"

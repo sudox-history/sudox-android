@@ -6,43 +6,37 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
-import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.main.contacts.ContactsViewModel
 import com.sudox.android.ui.main.messages.channels.ChannelsFragment
 import com.sudox.android.ui.main.messages.dialogs.DialogsFragment
 import com.sudox.android.ui.main.messages.talks.TalksFragment
 import com.sudox.design.navigation.NavigationRootFragment
-import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_messages.*
 import javax.inject.Inject
 
-class MessagesFragment @Inject constructor() : NavigationRootFragment() {
+class MessagesFragment @Inject constructor() : NavigationRootFragment(), Toolbar.OnMenuItemClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
     @Inject
     lateinit var dialogsFragment: DialogsFragment
-
     @Inject
     lateinit var talksFragment: TalksFragment
-
     @Inject
     lateinit var channelsFragment: ChannelsFragment
 
-    private lateinit var dialogsViewModel: ContactsViewModel
-    private lateinit var mainActivity: MainActivity
+    private val mainActivity by lazy { activity as MainActivity }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        dialogsViewModel = getViewModel(viewModelFactory)
-        mainActivity = activity as MainActivity
-
         return inflater.inflate(R.layout.fragment_main_messages, container, false)
     }
 
@@ -54,13 +48,13 @@ class MessagesFragment @Inject constructor() : NavigationRootFragment() {
     }
 
     private fun initToolbar() {
-//        messagesToolbar.inflateMenu(R.menu.menu_messages)
-//        messagesToolbar.setOnMenuItemClickListener {
-//            when (it.itemId) {
-//            }
-//
-//            return@setOnMenuItemClickListener true
-//        }
+        mainActivity.mainToolbar.reset()
+        mainActivity.mainToolbar.setTitle(R.string.messages)
+        mainActivity.mainToolbar.inflateMenu(R.menu.menu_messages)
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        return true
     }
 
     private fun initViewPager() {
@@ -93,6 +87,7 @@ class MessagesFragment @Inject constructor() : NavigationRootFragment() {
     }
 
     override fun onFragmentOpened() {
+        if (activity != null) initToolbar()
     }
 
     override fun onFragmentClosed() {
