@@ -61,7 +61,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     }
 
     private fun listenNewMessages() {
-        protocolClient.listenMessage<ChatMessageDTO>("updates.newMessage") {
+        protocolClient.listenMessage<ChatMessageDTO>("updates.dialogs.new") {
             val accountId = accountRepository.cachedAccount?.id ?: return@listenMessage
             val recipientId = if (it.peer == accountId) it.sender else it.peer
             val direction = if (it.peer != accountId) MessageDirection.TO else MessageDirection.FROM
