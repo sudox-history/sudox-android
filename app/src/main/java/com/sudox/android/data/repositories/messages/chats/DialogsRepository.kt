@@ -32,9 +32,9 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     private var lastMessagesEnded: Boolean = false
 
     init {
-        listenConnectionStatus()
-        listenNewMessages()
-        listenSendingMessages()
+//        listenConnectionStatus()
+//        listenNewMessages()
+//        listenSendingMessages()
     }
 
     private fun listenNewMessages() = GlobalScope.launch(Dispatchers.IO) {
@@ -76,25 +76,25 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     }
 
     fun loadInitialDialogs() = GlobalScope.launch {
-        if (lastMessagesLoadedOffset < 0 && authRepository.sessionIsValid && protocolClient.isValid()) {
-            runBlocking {
-                loadDialogsFromDatabase()
-                loadDialogsFromNetwork()
-            }
-        } else {
-            loadDialogsFromDatabase()
-        }
+//        if (lastMessagesLoadedOffset < 0 && authRepository.sessionIsValid && protocolClient.isValid()) {
+//            runBlocking {
+//                loadDialogsFromDatabase()
+//                loadDialogsFromNetwork()
+//            }
+//        } else {
+//            loadDialogsFromDatabase()
+//        }
     }
 
     fun loadPagedDialogs(offset: Int) {
-        if (offset <= 0) return
-
-        // Initial copy loaded from database
-        if (!protocolClient.isValid() || lastMessagesLoadedOffset >= offset) {
-            loadDialogsFromDatabase(offset)
-        } else if (!lastMessagesEnded) {
-            loadDialogsFromNetwork(offset)
-        }
+//        if (offset <= 0) return
+//
+//        // Initial copy loaded from database
+//        if (!protocolClient.isValid() || lastMessagesLoadedOffset >= offset) {
+//            loadDialogsFromDatabase(offset)
+//        } else if (!lastMessagesEnded) {
+//            loadDialogsFromNetwork(offset)
+//        }
     }
 
     private fun loadDialogsFromNetwork(offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {

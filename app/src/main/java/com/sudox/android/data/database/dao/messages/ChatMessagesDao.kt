@@ -18,10 +18,10 @@ interface ChatMessagesDao {
     @Query("DELETE FROM chat_messages")
     fun removeAll()
 
-    @Query("SELECT * FROM chat_messages WHERE peer = :recipientId OR sender = :recipientId ORDER BY date DESC LIMIT :offset, :limit")
+    @Query("SELECT * FROM chat_messages WHERE peer = :recipientId OR sender = :recipientId ORDER BY lid DESC LIMIT :offset, :limit")
     fun loadAll(recipientId: Long, offset: Int, limit: Int): List<ChatMessage>
 
-    @Query("SELECT * FROM chat_messages c WHERE date=(SELECT max(date) FROM chat_messages WHERE sender=c.sender AND peer=c.peer OR sender=c.peer AND peer=c.sender ORDER BY date DESC) ORDER BY date DESC LIMIT :offset, :limit")
+    @Query("SELECT * FROM chat_messages c WHERE lid=(SELECT max(lid) FROM chat_messages WHERE sender=c.sender AND peer=c.peer OR sender=c.peer AND peer=c.sender ORDER BY lid DESC) ORDER BY lid DESC LIMIT :offset, :limit")
     fun loadAll(offset: Int, limit: Int): List<ChatMessage>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

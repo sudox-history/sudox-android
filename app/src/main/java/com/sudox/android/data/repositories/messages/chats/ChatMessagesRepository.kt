@@ -135,19 +135,21 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     }
 
     private fun loadMessagesFromDatabase(recipientId: Long, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
-        val messages = chatMessagesDao.loadAll(recipientId, offset, 20).sortedBy { it.date }
+        val messages = ArrayList(chatMessagesDao.loadAll(recipientId, offset, 20).sortedBy { it.lid })
+        val deliveringMessages = chatMessagesDao.loadDeliveringMessages(recipientId)
+        val input = messages.apply { plusAssign(deliveringMessages) }
 
         // Remove from cache
-        if (messages.isEmpty()) {
+        if (input.isEmpty()) {
             if (offset == 0) {
                 removeSavedMessages(recipientId, false)
-                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
+                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, input))
             }
         } else {
             if (offset == 0) {
-                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
+                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, input))
             } else {
-                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.PAGING, messages))
+                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.PAGING, input))
             }
         }
     }
