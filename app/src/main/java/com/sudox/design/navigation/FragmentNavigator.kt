@@ -44,8 +44,6 @@ class FragmentNavigator(val activity: Activity,
 
             // Просто Fade эффект
             transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        } else {
-            transaction.setCustomAnimations(R.animator.animator_fragment_change, 0)
         }
 
         // Родительские фрагменты скрываются, дочерние - удаляются из ОЗУ
