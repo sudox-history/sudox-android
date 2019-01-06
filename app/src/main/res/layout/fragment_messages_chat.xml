@@ -5,60 +5,48 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/userChatToolbar"
-        style="@style/ToolbarTheme.Child"
+    <com.sudox.design.navigation.toolbar.SudoxToolbar
+        android:id="@+id/chatToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
-            style="@style/ToolbarTheme.Child.Container"
+        <com.sudox.design.avatar.AvatarView
+            android:id="@+id/chatPeerAvatar"
+            android:layout_width="36dp"
+            android:layout_height="36dp" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/chatRecipientAvatar"
-                android:layout_width="36dp"
-                android:layout_height="36dp" />
-
-            <!-- Other information -->
-
-            <LinearLayout
+            <com.sudox.design.widgets.PrecomputedTextView
+                android:id="@+id/chatPeerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
-                android:layout_toEndOf="@id/chatRecipientAvatar"
-                android:orientation="vertical">
+                android:text="Максим Митюшкин"
+                android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/chatRecipientName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:includeFontPadding="false"
-                    android:textSize="14sp" />
+            <com.sudox.design.widgets.PrecomputedTextView
+                android:id="@+id/chatPeerStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="Online!"
+                android:textColor="#BDBDBD"
+                android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/chatRecipientLastJoin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:fontFamily="sans-serif-light"
-                    android:includeFontPadding="false"
-                    android:text="Был в сети 15 минут назад"
-                    android:textColor="@color/colorHint"
-                    android:textSize="12sp" />
+        </LinearLayout>
+    </com.sudox.design.navigation.toolbar.SudoxToolbar>
 
-            </LinearLayout>
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/chatMessagesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/edit_message_layout"
-        android:layout_below="@id/userChatToolbar"
+        android:layout_below="@id/chatToolbar"
         android:clipToPadding="false"
         android:padding="10dp" />
 
@@ -66,7 +54,6 @@
         android:id="@+id/edit_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
         android:minHeight="48dp"

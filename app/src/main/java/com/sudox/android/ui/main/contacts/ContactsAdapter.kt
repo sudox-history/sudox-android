@@ -10,8 +10,10 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.repositories.main.ContactsRepository
+import com.sudox.design.avatar.AvatarView
 import com.sudox.design.helpers.formatHtml
 import com.sudox.design.helpers.setOnItemClickListener
+import com.sudox.design.widgets.PrecomputedTextView
 import kotlinx.android.synthetic.main.item_contact.view.*
 import javax.inject.Inject
 
@@ -21,6 +23,7 @@ class ContactsAdapter @Inject constructor(val context: Context,
     // Contacts for showing
     var contacts: ArrayList<User> = arrayListOf()
     val editableContactsLiveData: MutableLiveData<User> = MutableLiveData()
+    val clickedContactLiveData: MutableLiveData<User> = MutableLiveData()
 
     // Menu inflater for context menu (must be initialized in onViewCreated())
     lateinit var menuInflater: MenuInflater
@@ -37,11 +40,10 @@ class ContactsAdapter @Inject constructor(val context: Context,
 
         // Bind data
         viewHolder.avatar.bindUser(contact)
-        viewHolder.name.text = contact.name
-        viewHolder.nickname.text = formatHtml(context.getString(R.string.nickname_format, nicknameParts[0], nicknameParts[1]))
-
-        // Context menu
+        viewHolder.name.installText(contact.name)
+        viewHolder.nickname.installText(formatHtml(context.getString(R.string.nickname_format, nicknameParts[0], nicknameParts[1])))
         viewHolder.itemView.setOnLongClickListener { it.showContextMenu() }
+        viewHolder.itemView.setOnClickListener { clickedContactLiveData.postValue(contact) }
         viewHolder.itemView.setOnCreateContextMenuListener { menu, _, _ ->
             menuInflater.inflate(R.menu.menu_contact_context, menu)
 
@@ -60,8 +62,8 @@ class ContactsAdapter @Inject constructor(val context: Context,
     override fun getItemCount(): Int = contacts.size
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var avatar = itemView.contactAvatar
-        var name = itemView.contactName
-        var nickname = itemView.contactNickname
+        var avatar: AvatarView = itemView.contactAvatar
+        var name: PrecomputedTextView = itemView.contactName
+        var nickname: PrecomputedTextView = itemView.contactNickname
     }
 }

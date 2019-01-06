@@ -22,7 +22,7 @@
         android:layout_marginStart="15dp"
         android:orientation="vertical">
 
-        <TextView
+        <com.sudox.design.widgets.PrecomputedTextView
             android:id="@+id/contactName"
             style="@style/TextViewWithoutPaddings"
             android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
             android:textColor="@color/colorAccent"
             android:textSize="14sp" />
 
-        <TextView
+        <com.sudox.design.widgets.PrecomputedTextView
             android:id="@+id/contactNickname"
             style="@style/TextViewWithoutPaddings"
             android:layout_width="wrap_content"

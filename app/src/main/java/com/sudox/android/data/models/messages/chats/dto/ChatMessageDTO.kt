@@ -13,8 +13,8 @@ class ChatMessageDTO : JsonModel() {
 
     override fun fromJSON(jsonObject: JSONObject) {
         id = jsonObject.optLong("id")
-        sender = jsonObject.optLong("sender")
-        peer = jsonObject.optLong("peer")
+        sender = jsonObject.optLong("fid")
+        peer = jsonObject.optLong("tid")
         message = jsonObject.optString("msg")
         date = jsonObject.optLong("date")
     }

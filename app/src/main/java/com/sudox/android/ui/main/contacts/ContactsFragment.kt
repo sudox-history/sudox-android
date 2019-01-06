@@ -94,6 +94,12 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
                                         editableUser = it!!
                                     })
                 })
+
+        contactsAdapter
+                .clickedContactLiveData
+                .observe(this, Observer {
+                    mainActivity.showChatWithUser(it!!)
+                })
     }
 
     private fun initToolbar() {

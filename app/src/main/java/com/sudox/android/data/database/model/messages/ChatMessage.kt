@@ -7,11 +7,11 @@ import android.arch.persistence.room.PrimaryKey
 import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.messages.MessageStatus
 
-@Entity(tableName = "chat_messages", indices = [Index("mid", unique = true)])
+@Entity(tableName = "chat_messages")
 data class ChatMessage(@PrimaryKey(autoGenerate = true) var lid: Int = 0,
                        @ColumnInfo var mid: Long = 0,
-                       @ColumnInfo(index = true) var sender: Long,
-                       @ColumnInfo(index = true) var peer: Long,
+                       @ColumnInfo var sender: Long,
+                       @ColumnInfo var peer: Long,
                        @ColumnInfo var message: String,
                        @ColumnInfo var date: Long,
                        @ColumnInfo var direction: MessageDirection,

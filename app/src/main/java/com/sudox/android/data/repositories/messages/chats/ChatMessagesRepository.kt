@@ -9,7 +9,6 @@ import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.messages.MessageStatus
 import com.sudox.android.data.models.messages.chats.dto.ChatHistoryDTO
 import com.sudox.android.data.models.messages.chats.dto.ChatMessageDTO
-import com.sudox.android.data.models.messages.chats.dto.NewChatMessageNotifyDTO
 import com.sudox.android.data.models.messages.chats.dto.SendChatMessageDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
@@ -58,16 +57,11 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                     // Reload initial copy
                     if (openedChatRecipientId != 0L)
                         loadInitialMessages(openedChatRecipientId)
-
-                    // Send delivering messages ...
-                    chatMessagesDao
-                            .loadDeliveringMessages()
-                            .forEach { sendMessage(it).await() }
                 }
     }
 
     private fun listenNewMessages() {
-        protocolClient.listenMessage<NewChatMessageNotifyDTO>("updates.newMessage") {
+        protocolClient.listenMessage<ChatMessageDTO>("updates.newMessage") {
             val accountId = accountRepository.cachedAccount?.id ?: return@listenMessage
             val recipientId = if (it.peer == accountId) it.sender else it.peer
             val direction = if (it.peer != accountId) MessageDirection.TO else MessageDirection.FROM
@@ -160,7 +154,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
     private fun loadMessagesFromNetwork(recipientId: Long, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
         try {
-            val chatHistoryDTO = protocolClient.makeRequestWithControl<ChatHistoryDTO>("chats.getHistory", ChatHistoryDTO().apply {
+            val chatHistoryDTO = protocolClient.makeRequestWithControl<ChatHistoryDTO>("dialogs.getHistory", ChatHistoryDTO().apply {
                 this.id = recipientId
                 this.limit = 20
                 this.offset = offset
@@ -228,7 +222,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
         // Sending ...
         try {
-            val sendChatMessageDTO = protocolClient.makeRequestWithControl<SendChatMessageDTO>("chats.sendMessage", SendChatMessageDTO().apply {
+            val sendChatMessageDTO = protocolClient.makeRequestWithControl<SendChatMessageDTO>("dialogs.send", SendChatMessageDTO().apply {
                 this.peerId = message.peer
                 this.message = message.message
             }).await()

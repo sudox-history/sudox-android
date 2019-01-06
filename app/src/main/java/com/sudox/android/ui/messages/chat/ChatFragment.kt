@@ -12,18 +12,12 @@ import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.formatMessageText
 import com.sudox.android.data.database.model.user.User
-import com.sudox.android.data.models.avatar.AvatarInfo
-import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
-import com.sudox.android.data.models.messages.MessageStatus
-import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.android.ui.messages.MessagesInnerActivity
-import com.sudox.design.helpers.drawAvatar
-import com.sudox.design.helpers.drawCircleBitmap
-import com.sudox.design.helpers.getTwoFirstLetters
-import kotlinx.android.synthetic.main.fragment_messages_chat_user.*
+import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.fragment_messages_chat.*
 import javax.inject.Inject
 
-class ChatFragment @Inject constructor() : BaseReconnectFragment() {
+class ChatFragment @Inject constructor() : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -40,7 +34,7 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
         recipientUser = (arguments!!.getSerializable(MessagesInnerActivity.RECIPIENT_USER_EXTRA) as User?)!!
         chatViewModel = getViewModel(viewModelFactory)
 
-        return inflater.inflate(R.layout.fragment_messages_chat_user, container, false)
+        return inflater.inflate(R.layout.fragment_messages_chat, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -125,36 +119,12 @@ class ChatFragment @Inject constructor() : BaseReconnectFragment() {
     }
 
     private fun configureToolbar() {
-        // Inflating the menu ...
-        userChatToolbar.inflateMenu(R.menu.menu_messages_chat_user)
-        userChatToolbar.setNavigationOnClickListener { activity!!.onBackPressed() }
-        userChatToolbar.setOnMenuItemClickListener {
-            return@setOnMenuItemClickListener true
-        }
-
-        // Get avatar direction
-        val avatarInfo = AvatarInfo.parse(recipientUser.photo)
-
-        if (avatarInfo is ColorAvatarInfo) {
-            drawCircleBitmap(context!!,
-                    drawAvatar(text = recipientUser.name.getTwoFirstLetters(),
-                            firstColor = avatarInfo.firstColor,
-                            secondColor = avatarInfo.secondColor),
-                    chatRecipientAvatar)
-        } else {
-            // TODO: Implement
-        }
+        chatToolbar.setNavigationOnClickListener { activity!!.onBackPressed() }
+        chatToolbar.inflateMenu(R.menu.menu_messages_chat_user)
 
         // Bind data
-        chatRecipientName.text = recipientUser.name
-        chatRecipientLastJoin.text = recipientUser.nickname
-    }
-
-    override fun showConnectionStatus(isConnect: Boolean) {
-        if (isConnect) {
-            chatRecipientLastJoin.text = recipientUser.nickname
-        } else {
-            chatRecipientLastJoin.text = getString(R.string.wait_for_connect)
-        }
+        chatPeerAvatar.bindUser(recipientUser)
+        chatPeerName.installText(recipientUser.name)
+        chatPeerStatus.installText(recipientUser.nickname)
     }
 }

@@ -3,6 +3,7 @@ package com.sudox.design.navigation.toolbar
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.RippleDrawable
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.view.menu.ActionMenuItemView
