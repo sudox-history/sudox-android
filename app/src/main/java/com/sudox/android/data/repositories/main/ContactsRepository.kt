@@ -16,6 +16,7 @@ import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.models.contacts.dto.*
 import com.sudox.android.data.models.users.UserType
 import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.messages.chats.ChatMessagesRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.NetworkException
 import kotlinx.coroutines.*
@@ -30,6 +31,7 @@ const val CONTACTS_PHONE_REGEX_ERROR = 1
 class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                              private val authRepository: AuthRepository,
                                              private val usersRepository: UsersRepository,
+                                             private val chatMessagesRepository: ChatMessagesRepository,
                                              private val userDao: UserDao,
                                              private val context: Context) {
 
@@ -89,7 +91,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
     private fun saveNotifyContact(contactNotifyDTO: ContactAddDTO) = GlobalScope.launch(Dispatchers.IO) {
         // P.S.: Либо выполнится запрос к серверу и юзер будет сохран как контакт, либо в БД данный юзер просто будет помечен как контакт.
-        val user = usersRepository.loadUser(contactNotifyDTO.id, UserType.CONTACT).await()
+        val user = usersRepository.loadUser(contactNotifyDTO.id, UserType.CONTACT, onlyFromNetwork = true).await()
                 ?: return@launch
 
         // На отображение в UI ...
@@ -139,9 +141,24 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
             } else if (contactsSyncDTO.containsError()) {
                 contactsChannel.offer(arrayListOf())
             } else {
-                contactsChannel.offer(ArrayList(usersRepository
-                        .loadUsers(contactsSyncDTO.ids, UserType.CONTACT)
-                        .await()))
+                val users = usersRepository
+                        .loadUsers(contactsSyncDTO.ids, UserType.CONTACT, true)
+                        .await()
+
+                // Обновим контакт в чате
+                if (chatMessagesRepository.openedChatRecipientId != 0L) {
+                    val user = users.find { it.uid == chatMessagesRepository.openedChatRecipientId }
+
+                    if (user == null) {
+                        chatMessagesRepository.chatDialogRecipientUpdateChannel?.offer(usersRepository
+                                .loadUser(chatMessagesRepository.openedChatRecipientId)
+                                .await() ?: return@launch)
+                    } else {
+                        chatMessagesRepository.chatDialogRecipientUpdateChannel?.offer(user)
+                    }
+                }
+
+                contactsChannel.offer(ArrayList(users))
             }
         } catch (e: NetworkException) {
             // Ignore
@@ -167,7 +184,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
             if (contactAddDTO.isSuccess()) {
                 // При загрузке пользователь будет отмечен и сохранен в БД как контакт.
                 val user = usersRepository
-                        .loadUser(contactAddDTO.id, UserType.CONTACT)
+                        .loadUser(contactAddDTO.id, UserType.CONTACT, onlyFromNetwork = true)
                         .await() ?: return@async
 
                 // Обновление в UI
@@ -309,6 +326,11 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
     private fun notifyContactAdded(user: User) {
         contactsChannel.value.plusAssign(user)
         contactsChannel.offer(contactsChannel.value)
+
+        // Обновим юзера в чате
+        if (chatMessagesRepository.openedChatRecipientId == user.uid) {
+            chatMessagesRepository.chatDialogRecipientUpdateChannel?.offer(user)
+        }
     }
 
     private fun notifyContactUpdated(user: User) {
@@ -320,10 +342,24 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         // Заменяем объект пользователя и уведомляем слушателей
         contactsChannel.value[index] = user
         contactsChannel.offer(contactsChannel.value)
+
+        // Обновим юзера в чате
+        if (chatMessagesRepository.openedChatRecipientId == user.uid) {
+            chatMessagesRepository.chatDialogRecipientUpdateChannel?.offer(user)
+        }
     }
 
-    private fun notifyContactRemoved(id: Long) {
+    private suspend fun notifyContactRemoved(id: Long) {
         contactsChannel.value.findAndRemoveIf { it.uid == id }
         contactsChannel.offer(contactsChannel.value)
+
+        // Грузим юзера для апдейта ...
+        if (chatMessagesRepository.openedChatRecipientId == id) {
+            val user = usersRepository
+                    .loadUser(chatMessagesRepository.openedChatRecipientId, onlyFromNetwork = true)
+                    .await() ?: return
+
+            chatMessagesRepository.chatDialogRecipientUpdateChannel?.offer(user)
+        }
     }
 }

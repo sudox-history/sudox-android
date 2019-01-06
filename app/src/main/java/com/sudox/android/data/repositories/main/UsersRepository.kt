@@ -37,11 +37,13 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN) = GlobalScope.async(Dispatchers.IO) {
+    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
         if (ids.isEmpty()) {
             return@async arrayListOf<User>()
         } else if (ids.size == 1) {
-            return@async arrayListOf(loadUser(ids[0], loadAs).await())
+            return@async arrayListOf(loadUser(ids[0], loadAs, onlyFromNetwork = onlyFromNetwork).await())
+        } else if (onlyFromNetwork) {
+            return@async loadUsersFromNetwork(ids, loadAs)
         } else if (protocolClient.isValid() && authRepository.sessionIsValid) {
             val notLoadedUsers = ids.filter { !loadedUsersIds.contains(it) }
             val usersFromNetwork = if (notLoadedUsers.isNotEmpty()) loadUsersFromNetwork(notLoadedUsers, loadAs) else arrayListOf()

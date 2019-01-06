@@ -3,6 +3,7 @@ package com.sudox.android.data.repositories.messages.chats
 import com.sudox.android.common.helpers.formatMessageText
 import com.sudox.android.data.database.dao.messages.ChatMessagesDao
 import com.sudox.android.data.database.model.messages.ChatMessage
+import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.common.LoadingType
 import com.sudox.android.data.models.messages.MessageDirection
@@ -12,6 +13,7 @@ import com.sudox.android.data.models.messages.chats.dto.ChatMessageDTO
 import com.sudox.android.data.models.messages.chats.dto.SendChatMessageDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.main.UsersRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.NetworkException
 import kotlinx.coroutines.*
@@ -23,6 +25,7 @@ import javax.inject.Singleton
 class ChatMessagesRepository @Inject constructor(private val protocolClient: ProtocolClient,
                                                  private val authRepository: AuthRepository,
                                                  private val accountRepository: AccountRepository,
+                                                 private val usersRepository: UsersRepository,
                                                  private val chatMessagesDao: ChatMessagesDao) {
 
     // ID загруженных чатов ...
@@ -35,6 +38,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     var chatDialogNewMessageChannel: BroadcastChannel<ChatMessage>? = null
     var chatDialogHistoryChannel: BroadcastChannel<Pair<LoadingType, List<ChatMessage>>>? = null
     var chatDialogSentMessageChannel: BroadcastChannel<ChatMessage>? = null
+    var chatDialogRecipientUpdateChannel: BroadcastChannel<User>? = null
     var openedChatRecipientId: Long = 0
 
     // Защита от десинхронизации данных при скролле (от двух одновременных запросов)
@@ -55,8 +59,16 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
                     loadedRecipientChatsIds.clear() // Clean initial cache.
 
                     // Reload initial copy
-                    if (openedChatRecipientId != 0L)
+                    if (openedChatRecipientId != 0L) {
                         loadInitialMessages(openedChatRecipientId)
+
+                        // Грузим юзера для апдейта ...
+                        val user = usersRepository
+                                .loadUser(openedChatRecipientId)
+                                .await()
+
+                        if (user != null) chatDialogRecipientUpdateChannel?.send(user)
+                    }
                 }
     }
 
@@ -92,6 +104,7 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         chatDialogHistoryChannel = ConflatedBroadcastChannel()
         chatDialogSentMessageChannel = ConflatedBroadcastChannel()
         chatDialogNewMessageChannel = ConflatedBroadcastChannel()
+        chatDialogRecipientUpdateChannel = ConflatedBroadcastChannel()
     }
 
     fun endChatDialog() {
@@ -109,6 +122,10 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
 
         if (chatDialogSentMessageChannel != null && !chatDialogSentMessageChannel!!.isClosedForSend) {
             chatDialogSentMessageChannel!!.close()
+        }
+
+        if (chatDialogRecipientUpdateChannel != null && !chatDialogRecipientUpdateChannel!!.isClosedForSend) {
+            chatDialogRecipientUpdateChannel!!.close()
         }
     }
 

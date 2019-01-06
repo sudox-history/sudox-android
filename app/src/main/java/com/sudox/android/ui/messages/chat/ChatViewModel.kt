@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.messages.ChatMessage
+import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.LoadingType
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.messages.chats.ChatMessagesRepository
@@ -23,6 +24,7 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
     val newChatMessageLiveData: MutableLiveData<ChatMessage> = SingleLiveEvent()
     val initialChatHistoryLiveData: MutableLiveData<List<ChatMessage>> = SingleLiveEvent()
     val pagingChatHistoryLiveData: MutableLiveData<List<ChatMessage>> = SingleLiveEvent()
+    val recipientUpdatesLiveData: MutableLiveData<User> = SingleLiveEvent()
 
     // Subscriptions
     private val subscriptionsContainer: SubscriptionsContainer = SubscriptionsContainer()
@@ -61,6 +63,14 @@ class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessages
                     .chatDialogSentMessageChannel!!
                     .openSubscription())
                     .consumeEach { sentMessageLiveData.postValue(it) }
+        }
+
+        // Set callback for recipient updates
+        GlobalScope.launch {
+            subscriptionsContainer.addSubscription(chatMessagesRepository
+                    .chatDialogRecipientUpdateChannel!!
+                    .openSubscription())
+                    .consumeEach { recipientUpdatesLiveData.postValue(it) }
         }
 
         chatMessagesRepository.loadInitialMessages(recipientId)
