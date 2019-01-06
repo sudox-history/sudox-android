@@ -102,6 +102,14 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
             }
         })
 
+        // Bind recipient updates
+        chatViewModel.recipientUpdatesLiveData.observe(this, Observer {
+            recipientUser = it!!
+
+            // Update
+            bindRecipient()
+        })
+
         // Start business logic work
         chatViewModel.start(recipientUser.uid)
     }
@@ -123,6 +131,10 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
         chatToolbar.inflateMenu(R.menu.menu_messages_chat_user)
 
         // Bind data
+        bindRecipient()
+    }
+
+    private fun bindRecipient() {
         chatPeerAvatar.bindUser(recipientUser)
         chatPeerName.installText(recipientUser.name)
         chatPeerStatus.installText(recipientUser.nickname)
