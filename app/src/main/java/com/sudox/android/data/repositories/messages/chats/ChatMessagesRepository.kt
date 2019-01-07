@@ -152,52 +152,63 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
     }
 
     private fun loadMessagesFromDatabase(recipientId: Long, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
-        val messages = ArrayList(chatMessagesDao.loadAll(recipientId, offset, 20).sortedBy { it.lid })
-        val deliveringMessages = chatMessagesDao.loadDeliveringMessages(recipientId)
-        val input = messages.apply { plusAssign(deliveringMessages) }
+        //        val messages = ArrayList(chatMessagesDao.loadAll(recipientId, offset, 20).sortedBy { it.lid })
+////        val input = if (offset == 0) {
+////            val deliveringMessages = chatMessagesDao.loadDeliveringMessages(recipientId)
+////
+////            // Add delivering messages to end of list
+////            messages.apply { plusAssign(deliveringMessages) }
+////        } else messages
+
+//        val messages = chatMessagesDao.loadDeliveredMessages(recipientId, offset, 20)
+//                .sortedBy { it.mid }
+
+        val messages = chatMessagesDao.loadMessages(recipientId, offset, 20)
 
         // Remove from cache
-        if (input.isEmpty()) {
+        if (messages.isEmpty()) {
             if (offset == 0) {
                 removeSavedMessages(recipientId, false)
-                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, input))
+                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
             }
         } else {
             if (offset == 0) {
-                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, input))
+                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
             } else {
-                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.PAGING, input))
+                chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.PAGING, messages))
             }
         }
     }
 
     private fun loadMessagesFromNetwork(recipientId: Long, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
+        val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
+
         try {
             val chatHistoryDTO = protocolClient.makeRequestWithControl<ChatHistoryDTO>("dialogs.getHistory", ChatHistoryDTO().apply {
                 this.id = recipientId
                 this.limit = 20
-                this.offset = offset
+                this.offset = newOffset
             }).await()
 
             if (chatHistoryDTO.isSuccess()) {
                 val messages = toStorableMessages(chatHistoryDTO.messages)
 
                 // Save messages into database & update offset cache (for offline mode supporting)
-                chatMessagesDao.insertAll(messages)
-                updateCachedOffset(recipientId, offset)
+                chatMessagesDao.updateOrInsertMessages(messages)
+                updateCachedOffset(recipientId, newOffset)
 
                 // offset == 0 => first initializing
-                if (offset == 0) {
-                    chatMessagesDao.loadDeliveringMessages(recipientId).apply { messages.plusAssign(this) }
-                    chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
+                if (newOffset == 0) {
+                    chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL,
+                            chatMessagesDao.buildInitialCopy(recipientId, messages)))
                 } else {
                     chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.PAGING, messages))
                 }
             } else {
-                if (offset == 0) {
+                if (newOffset == 0) {
                     removeSavedMessages(recipientId)
 
-                    // offset == 0 => first initializing
+                    // newOffset == 0 => first initializing
                     chatDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, chatMessagesDao.loadDeliveringMessages(recipientId)))
                 } else if (chatHistoryDTO.error == Errors.INVALID_USER) {
                     chatHistoryEnded = true
@@ -271,6 +282,10 @@ class ChatMessagesRepository @Inject constructor(private val protocolClient: Pro
         // For current dialog
         if (openedChatRecipientId == recipientId)
             chatDialogSentMessageChannel?.send(message)
+    }
+
+    fun recalculateNetworkOffset(recipientId: Long, initialOffset: Int): Int {
+        return Math.max(initialOffset - chatMessagesDao.countDeliveringMessages(recipientId), 0)
     }
 
     private fun updateCachedOffset(recipientId: Long, offset: Int) {
