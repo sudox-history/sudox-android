@@ -16,7 +16,7 @@ import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.models.contacts.dto.*
 import com.sudox.android.data.models.users.UserType
 import com.sudox.android.data.repositories.auth.AuthRepository
-import com.sudox.android.data.repositories.messages.chats.ChatMessagesRepository
+import com.sudox.android.data.repositories.messages.dialogs.DialogsMessagesRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.NetworkException
 import kotlinx.coroutines.*
@@ -31,7 +31,7 @@ const val CONTACTS_PHONE_REGEX_ERROR = 1
 class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                              private val authRepository: AuthRepository,
                                              private val usersRepository: UsersRepository,
-                                             private val chatMessagesRepository: ChatMessagesRepository,
+                                             private val dialogsMessagesRepository: DialogsMessagesRepository,
                                              private val userDao: UserDao,
                                              private val context: Context) {
 
@@ -146,15 +146,15 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                         .await()
 
                 // Обновим контакт в чате
-                if (chatMessagesRepository.openedChatRecipientId != 0L) {
-                    val user = users.find { it.uid == chatMessagesRepository.openedChatRecipientId }
+                if (dialogsMessagesRepository.openedDialogRecipientId != 0L) {
+                    val user = users.find { it.uid == dialogsMessagesRepository.openedDialogRecipientId }
 
                     if (user == null) {
-                        chatMessagesRepository.chatDialogRecipientUpdateChannel?.offer(usersRepository
-                                .loadUser(chatMessagesRepository.openedChatRecipientId)
+                        dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(usersRepository
+                                .loadUser(dialogsMessagesRepository.openedDialogRecipientId)
                                 .await() ?: return@launch)
                     } else {
-                        chatMessagesRepository.chatDialogRecipientUpdateChannel?.offer(user)
+                        dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
                     }
                 }
 
@@ -328,8 +328,8 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         contactsChannel.offer(contactsChannel.value)
 
         // Обновим юзера в чате
-        if (chatMessagesRepository.openedChatRecipientId == user.uid) {
-            chatMessagesRepository.chatDialogRecipientUpdateChannel?.offer(user)
+        if (dialogsMessagesRepository.openedDialogRecipientId == user.uid) {
+            dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
         }
     }
 
@@ -344,8 +344,8 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         contactsChannel.offer(contactsChannel.value)
 
         // Обновим юзера в чате
-        if (chatMessagesRepository.openedChatRecipientId == user.uid) {
-            chatMessagesRepository.chatDialogRecipientUpdateChannel?.offer(user)
+        if (dialogsMessagesRepository.openedDialogRecipientId == user.uid) {
+            dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
         }
     }
 
@@ -354,12 +354,12 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         contactsChannel.offer(contactsChannel.value)
 
         // Грузим юзера для апдейта ...
-        if (chatMessagesRepository.openedChatRecipientId == id) {
+        if (dialogsMessagesRepository.openedDialogRecipientId == id) {
             val user = usersRepository
-                    .loadUser(chatMessagesRepository.openedChatRecipientId, onlyFromNetwork = true)
+                    .loadUser(dialogsMessagesRepository.openedDialogRecipientId, onlyFromNetwork = true)
                     .await() ?: return
 
-            chatMessagesRepository.chatDialogRecipientUpdateChannel?.offer(user)
+            dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
         }
     }
 }

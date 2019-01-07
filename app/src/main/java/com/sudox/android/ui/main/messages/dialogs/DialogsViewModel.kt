@@ -4,15 +4,14 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.models.common.LoadingType
-import com.sudox.android.data.models.messages.chats.Dialog
+import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.data.repositories.auth.AuthRepository
-import com.sudox.android.data.repositories.messages.chats.DialogsRepository
+import com.sudox.android.data.repositories.messages.dialogs.DialogsRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject

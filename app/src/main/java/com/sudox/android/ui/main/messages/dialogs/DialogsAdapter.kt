@@ -11,7 +11,7 @@ import com.sudox.android.R
 import com.sudox.android.data.models.avatar.AvatarInfo
 import com.sudox.android.data.models.avatar.impl.ColorAvatarInfo
 import com.sudox.android.data.models.messages.MessageDirection
-import com.sudox.android.data.models.messages.chats.Dialog
+import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.design.helpers.drawAvatar
 import com.sudox.design.helpers.drawCircleBitmap
 import com.sudox.design.helpers.formatHtml

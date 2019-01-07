@@ -1,12 +1,12 @@
-package com.sudox.android.data.repositories.messages.chats
+package com.sudox.android.data.repositories.messages.dialogs
 
-import com.sudox.android.data.database.dao.messages.ChatMessagesDao
-import com.sudox.android.data.database.model.messages.ChatMessage
+import com.sudox.android.data.database.dao.messages.DialogMessagesDao
+import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.common.LoadingType
 import com.sudox.android.data.models.messages.MessageDirection
-import com.sudox.android.data.models.messages.chats.Dialog
-import com.sudox.android.data.models.messages.chats.dto.ChatsLastMessagesDTO
+import com.sudox.android.data.models.messages.dialogs.Dialog
+import com.sudox.android.data.models.messages.dialogs.dto.DialogLastMessagesDTO
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.main.UsersRepository
 import com.sudox.protocol.ProtocolClient
@@ -18,10 +18,10 @@ import javax.inject.Singleton
 
 @Singleton
 class DialogsRepository @Inject constructor(private val protocolClient: ProtocolClient,
-                                            private val chatMessagesRepository: ChatMessagesRepository,
+                                            private val dialogsMessagesRepository: DialogsMessagesRepository,
                                             private val usersRepository: UsersRepository,
                                             private val authRepository: AuthRepository,
-                                            private val chatMessagesDao: ChatMessagesDao) {
+                                            private val dialogMessagesDao: DialogMessagesDao) {
 
     // Initial & paging copies of chats
     var dialogsChannel: BroadcastChannel<Pair<LoadingType, List<Dialog>>> = ConflatedBroadcastChannel()
@@ -38,7 +38,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     }
 
     private fun listenNewMessages() = GlobalScope.launch(Dispatchers.IO) {
-        for (dialog in chatMessagesRepository
+        for (dialog in dialogsMessagesRepository
                 .globalNewMessagesChannel
                 .openSubscription()) {
 
@@ -48,7 +48,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     }
 
     private fun listenSendingMessages() = GlobalScope.launch(Dispatchers.IO) {
-        for (dialog in chatMessagesRepository
+        for (dialog in dialogsMessagesRepository
                 .globalSentMessageChannel
                 .openSubscription()) {
 
@@ -57,7 +57,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
         }
     }
 
-    private fun updateDialog(message: ChatMessage) {
+    private fun updateDialog(message: DialogMessage) {
         val dialog = getDialog(message) ?: return
 
         // Notify ...
@@ -99,17 +99,17 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
 
     private fun loadDialogsFromNetwork(offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
         try {
-            val chatsLastMessagesDTO = protocolClient.makeRequestWithControl<ChatsLastMessagesDTO>("chats.getChats", ChatsLastMessagesDTO().apply {
+            val chatsLastMessagesDTO = protocolClient.makeRequestWithControl<DialogLastMessagesDTO>("chats.getChats", DialogLastMessagesDTO().apply {
                 this.limit = 10
                 this.offset = offset
             }).await()
 
             if (chatsLastMessagesDTO.isSuccess()) {
-                val messages = chatMessagesRepository.toStorableMessages(chatsLastMessagesDTO.messages)
+                val messages = dialogsMessagesRepository.toStorableMessages(chatsLastMessagesDTO.messages)
                 val dialogs = getDialogs(messages)
 
                 // Cache ...
-                chatMessagesDao.insertAll(messages)
+                dialogMessagesDao.insertAll(messages)
                 lastMessagesLoadedOffset = offset
 
                 // offset == 0 => first initializing
@@ -121,7 +121,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
             } else {
                 if (offset == 0) {
                     resetLoadedOffset()
-                    chatMessagesRepository.removeAllSavedMessages()
+                    dialogsMessagesRepository.removeAllSavedMessages()
                     dialogsChannel.offer(Pair(LoadingType.INITIAL, arrayListOf()))
                 } else if (chatsLastMessagesDTO.error == Errors.EMPTY_CHATS) {
                     lastMessagesEnded = true
@@ -133,7 +133,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     }
 
     private fun loadDialogsFromDatabase(offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
-        val messages = chatMessagesDao.loadAll(offset, 10)
+        val messages = dialogMessagesDao.loadAll(offset, 10)
 
         // Сообщения могут отсутствовать в БД
         if (messages.isEmpty()) {
@@ -159,7 +159,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
      * Ищет собеседника к сообщению.
      * Если собеседник не будет найден, то сообщение не будет отражено в результатах вызова данной функции.
      */
-    private suspend fun getDialogs(messages: List<ChatMessage>): ArrayList<Dialog> {
+    private suspend fun getDialogs(messages: List<DialogMessage>): ArrayList<Dialog> {
         val userIdsForLoading = messages.map { if (it.direction == MessageDirection.TO) it.peer else it.sender }
         val users = usersRepository.loadUsers(userIdsForLoading).await()
         val dialogs = arrayListOf<Dialog>()
@@ -180,7 +180,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
      * Ищет собеседника к сообщению
      * Если собеседник не будет найден, то сообщение не будет отражено в результатах вызова данной функции.
      */
-    private fun getDialog(message: ChatMessage): Dialog? = runBlocking {
+    private fun getDialog(message: DialogMessage): Dialog? = runBlocking {
         val userId = if (message.direction == MessageDirection.TO) message.peer else message.sender
         val user = usersRepository.loadUser(userId).await() ?: return@runBlocking null
 

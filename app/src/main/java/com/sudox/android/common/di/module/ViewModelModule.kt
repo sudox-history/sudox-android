@@ -16,7 +16,7 @@ import com.sudox.android.ui.main.messages.dialogs.DialogsViewModel
 import com.sudox.android.ui.main.profile.ProfileViewModel
 import com.sudox.android.ui.main.settings.SettingsViewModel
 import com.sudox.android.ui.messages.MessagesInnerViewModel
-import com.sudox.android.ui.messages.chat.ChatViewModel
+import com.sudox.android.ui.messages.dialog.DialogViewModel
 import com.sudox.android.ui.splash.SplashViewModel
 import dagger.Binds
 import dagger.Module
@@ -30,8 +30,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ChatViewModel::class)
-    internal abstract fun userChatViewModel(viewModel: ChatViewModel): ViewModel
+    @ViewModelKey(DialogViewModel::class)
+    internal abstract fun userChatViewModel(viewModel: DialogViewModel): ViewModel
 
     @Binds
     @IntoMap

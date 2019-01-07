@@ -1,4 +1,4 @@
-package com.sudox.android.ui.messages.chat
+package com.sudox.android.ui.messages.dialog
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
@@ -14,27 +14,27 @@ import com.sudox.android.common.helpers.formatMessageText
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_messages_chat.*
+import kotlinx.android.synthetic.main.fragment_messages_dialog.*
 import javax.inject.Inject
 
-class ChatFragment @Inject constructor() : DaggerFragment() {
+class DialogFragment @Inject constructor() : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    lateinit var chatAdapter: ChatAdapter
+    lateinit var dialogAdapter: DialogAdapter
 
     private lateinit var messagesInnerActivity: MessagesInnerActivity
     private lateinit var recipientUser: User
-    private lateinit var chatViewModel: ChatViewModel
+    private lateinit var dialogViewModel: DialogViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         messagesInnerActivity = activity as MessagesInnerActivity
         recipientUser = (arguments!!.getSerializable(MessagesInnerActivity.RECIPIENT_USER_EXTRA) as User?)!!
-        chatViewModel = getViewModel(viewModelFactory)
+        dialogViewModel = getViewModel(viewModelFactory)
 
-        return inflater.inflate(R.layout.fragment_messages_chat, container, false)
+        return inflater.inflate(R.layout.fragment_messages_dialog, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,7 +50,7 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
 
         // Configure
         chatMessagesList.layoutManager = linearLayoutManager
-        chatMessagesList.adapter = chatAdapter
+        chatMessagesList.adapter = dialogAdapter
 
         // Paging ...
         chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -59,7 +59,7 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
                 val updatePosition = linearLayoutManager.itemCount - 1
 
                 if (position == 0 && linearLayoutManager.itemCount >= 20) {
-                    chatViewModel.loadPartOfMessages(recipientUser.uid, updatePosition + 1)
+                    dialogViewModel.loadPartOfMessages(recipientUser.uid, updatePosition + 1)
                 }
             }
         })
@@ -67,20 +67,20 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
 
     private fun listenData() {
         // Bind paging messages listener
-        chatViewModel.pagingChatHistoryLiveData.observe(this, Observer {
-            chatAdapter.messages.addAll(0, it!!)
-            chatAdapter.notifyItemRangeInserted(0, it.size)
+        dialogViewModel.pagingDialogHistoryLiveData.observe(this, Observer {
+            dialogAdapter.messages.addAll(0, it!!)
+            dialogAdapter.notifyItemRangeInserted(0, it.size)
         })
 
         // Bind initial messages listener
-        chatViewModel.initialChatHistoryLiveData.observe(this, Observer {
-            chatAdapter.messages = ArrayList(it!!)
-            chatAdapter.notifyDataSetChanged()
+        dialogViewModel.initialDialogHistoryLiveData.observe(this, Observer {
+            dialogAdapter.messages = ArrayList(it!!)
+            dialogAdapter.notifyDataSetChanged()
 
             // Start listen to new messages
-            chatViewModel.newChatMessageLiveData.observe(this, Observer {
-                chatAdapter.messages.add(it!!)
-                chatAdapter.notifyItemInserted(chatAdapter.messages.size - 1)
+            dialogViewModel.newDialogMessageLiveData.observe(this, Observer {
+                dialogAdapter.messages.add(it!!)
+                dialogAdapter.notifyItemInserted(dialogAdapter.messages.size - 1)
             })
 
             // Listen messages sending requests
@@ -88,22 +88,22 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
         })
 
         // Bind messages sending status listener
-        chatViewModel.sentMessageLiveData.observe(this, Observer { message ->
-            val position = chatAdapter.messages.indexOfFirst { it.lid == message!!.lid }
+        dialogViewModel.sentMessageLiveData.observe(this, Observer { message ->
+            val position = dialogAdapter.messages.indexOfFirst { it.lid == message!!.lid }
 
             // Message already saved :)
             if (position >= 0) {
-                chatAdapter.messages[position] = message!!
-                chatAdapter.notifyItemChanged(position)
+                dialogAdapter.messages[position] = message!!
+                dialogAdapter.notifyItemChanged(position)
             } else {
-                chatAdapter.messages.add(message!!)
-                chatAdapter.notifyItemInserted(chatAdapter.messages.size - 1)
-                chatMessagesList.scrollToPosition(chatAdapter.messages.size - 1)
+                dialogAdapter.messages.add(message!!)
+                dialogAdapter.notifyItemInserted(dialogAdapter.messages.size - 1)
+                chatMessagesList.scrollToPosition(dialogAdapter.messages.size - 1)
             }
         })
 
         // Bind recipient updates
-        chatViewModel.recipientUpdatesLiveData.observe(this, Observer {
+        dialogViewModel.recipientUpdatesLiveData.observe(this, Observer {
             recipientUser = it!!
 
             // Update
@@ -111,7 +111,7 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
         })
 
         // Start business logic work
-        chatViewModel.start(recipientUser.uid)
+        dialogViewModel.start(recipientUser.uid)
     }
 
     private fun listenMessagesSendingRequests() = chatSendMessageButton.setOnClickListener {
@@ -119,7 +119,7 @@ class ChatFragment @Inject constructor() : DaggerFragment() {
 
         // Filter empty text
         if (text.isNotEmpty()) {
-            chatViewModel.sendTextMessage(recipientUser.uid, text)
+            dialogViewModel.sendTextMessage(recipientUser.uid, text)
 
             // Clear sent text
             chatMessageTextField.text = null

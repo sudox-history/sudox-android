@@ -1,18 +1,18 @@
-package com.sudox.android.data.models.messages.chats.dto
+package com.sudox.android.data.models.messages.dialogs.dto
 
 import com.sudox.protocol.helpers.forEachObject
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONArray
 import org.json.JSONObject
 
-class ChatsLastMessagesDTO : JsonModel() {
+class DialogLastMessagesDTO : JsonModel() {
 
     // For sending
     var limit = 0
     var offset = 0
 
     // For receiving
-    lateinit var messages: ArrayList<ChatMessageDTO>
+    lateinit var messages: ArrayList<DialogMessageDTO>
 
     override fun toJSON(): JSONObject {
         return with(JSONObject()) {
@@ -26,7 +26,7 @@ class ChatsLastMessagesDTO : JsonModel() {
 
         // Read data
         jsonArray.forEachObject {
-            messages.plusAssign(ChatMessageDTO().apply {
+            messages.plusAssign(DialogMessageDTO().apply {
                 fromJSON(it)
             })
         }

@@ -1,4 +1,4 @@
-package com.sudox.android.ui.messages.chat
+package com.sudox.android.ui.messages.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
-import com.sudox.android.data.database.model.messages.ChatMessage
+import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.messages.MessageStatus
 import kotlinx.android.synthetic.main.textview_message_to.view.*
@@ -17,9 +17,9 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
-class ChatAdapter @Inject constructor(val context: Context) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+class DialogAdapter @Inject constructor(val context: Context) : RecyclerView.Adapter<DialogAdapter.ViewHolder>() {
 
-    internal var messages: ArrayList<ChatMessage> = ArrayList()
+    internal var messages: ArrayList<DialogMessage> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return if (viewType == MessageDirection.TO.ordinal) {

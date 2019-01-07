@@ -1,91 +1,90 @@
-package com.sudox.android.ui.messages.chat
+package com.sudox.android.ui.messages.dialog
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.SubscriptionsContainer
-import com.sudox.android.data.database.model.messages.ChatMessage
+import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.LoadingType
 import com.sudox.android.data.repositories.auth.AuthRepository
-import com.sudox.android.data.repositories.messages.chats.ChatMessagesRepository
+import com.sudox.android.data.repositories.messages.dialogs.DialogsMessagesRepository
 import com.sudox.protocol.models.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.IO
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ChatViewModel @Inject constructor(val chatMessagesRepository: ChatMessagesRepository,
-                                        val authRepository: AuthRepository) : ViewModel() {
+class DialogViewModel @Inject constructor(val dialogsMessagesRepository: DialogsMessagesRepository,
+                                          val authRepository: AuthRepository) : ViewModel() {
 
-    val sentMessageLiveData: MutableLiveData<ChatMessage> = SingleLiveEvent()
-    val newChatMessageLiveData: MutableLiveData<ChatMessage> = SingleLiveEvent()
-    val initialChatHistoryLiveData: MutableLiveData<List<ChatMessage>> = SingleLiveEvent()
-    val pagingChatHistoryLiveData: MutableLiveData<List<ChatMessage>> = SingleLiveEvent()
+    val sentMessageLiveData: MutableLiveData<DialogMessage> = SingleLiveEvent()
+    val newDialogMessageLiveData: MutableLiveData<DialogMessage> = SingleLiveEvent()
+    val initialDialogHistoryLiveData: MutableLiveData<List<DialogMessage>> = SingleLiveEvent()
+    val pagingDialogHistoryLiveData: MutableLiveData<List<DialogMessage>> = SingleLiveEvent()
     val recipientUpdatesLiveData: MutableLiveData<User> = SingleLiveEvent()
 
     // Subscriptions
     private val subscriptionsContainer: SubscriptionsContainer = SubscriptionsContainer()
 
     fun start(recipientId: Long) = GlobalScope.launch {
-        chatMessagesRepository.openChatDialog(recipientId)
+        dialogsMessagesRepository.openDialog(recipientId)
 
         // Set callback for new messages receiving
         GlobalScope.launch {
-            subscriptionsContainer.addSubscription(chatMessagesRepository
-                    .chatDialogNewMessageChannel!!
+            subscriptionsContainer.addSubscription(dialogsMessagesRepository
+                    .dialogDialogNewMessageChannel!!
                     .openSubscription())
-                    .consumeEach { newChatMessageLiveData.postValue(it) }
+                    .consumeEach { newDialogMessageLiveData.postValue(it) }
         }
 
         // Set callback for chat history loading
         GlobalScope.launch {
-            subscriptionsContainer.addSubscription(chatMessagesRepository
-                    .chatDialogHistoryChannel!!
+            subscriptionsContainer.addSubscription(dialogsMessagesRepository
+                    .dialogDialogHistoryChannel!!
                     .openSubscription())
                     .consumeEach {
                         val loadingType = it.first
                         val messages = it.second
 
                         if (loadingType == LoadingType.INITIAL) {
-                            initialChatHistoryLiveData.postValue(messages)
+                            initialDialogHistoryLiveData.postValue(messages)
                         } else if (loadingType == LoadingType.PAGING) {
-                            pagingChatHistoryLiveData.postValue(messages)
+                            pagingDialogHistoryLiveData.postValue(messages)
                         }
                     }
         }
 
         // Set callback for messages sending
         GlobalScope.launch {
-            subscriptionsContainer.addSubscription(chatMessagesRepository
-                    .chatDialogSentMessageChannel!!
+            subscriptionsContainer.addSubscription(dialogsMessagesRepository
+                    .dialogDialogSentMessageChannel!!
                     .openSubscription())
                     .consumeEach { sentMessageLiveData.postValue(it) }
         }
 
         // Set callback for recipient updates
         GlobalScope.launch {
-            subscriptionsContainer.addSubscription(chatMessagesRepository
-                    .chatDialogRecipientUpdateChannel!!
+            subscriptionsContainer.addSubscription(dialogsMessagesRepository
+                    .dialogRecipientUpdateChannel!!
                     .openSubscription())
                     .consumeEach { recipientUpdatesLiveData.postValue(it) }
         }
 
-        chatMessagesRepository.loadInitialMessages(recipientId)
+        dialogsMessagesRepository.loadInitialMessages(recipientId)
     }
 
     fun loadPartOfMessages(recipientId: Long, offset: Int) = GlobalScope.launch(Dispatchers.IO) {
-        chatMessagesRepository.loadPagedMessages(recipientId, offset)
+        dialogsMessagesRepository.loadPagedMessages(recipientId, offset)
     }
 
     fun sendTextMessage(recipientId: Long, text: String) {
-        chatMessagesRepository.sendTextMessage(recipientId, text)
+        dialogsMessagesRepository.sendTextMessage(recipientId, text)
     }
 
     override fun onCleared() {
         subscriptionsContainer.unsubscribeAll()
-        chatMessagesRepository.endChatDialog()
+        dialogsMessagesRepository.endDialog()
     }
 }

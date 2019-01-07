@@ -3,8 +3,7 @@ package com.sudox.android.ui.messages
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import com.sudox.android.R
-import com.sudox.android.data.models.messages.chats.enums.ChatType
-import com.sudox.android.ui.messages.chat.ChatFragment
+import com.sudox.android.ui.messages.dialog.DialogFragment
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -22,16 +21,16 @@ class MessagesInnerActivity : DaggerAppCompatActivity() {
 
         // TODO: Check talks, channels != null
         if (user != null) {
-            showChatFragment()
+            showDialogFragment()
         } else {
 
         }
     }
 
-    private fun showChatFragment() {
+    private fun showDialogFragment() {
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragmentChatContainer, ChatFragment().apply { arguments = intent.extras })
+                .replace(R.id.fragmentChatContainer, DialogFragment().apply { arguments = intent.extras })
                 .commit()
     }
 

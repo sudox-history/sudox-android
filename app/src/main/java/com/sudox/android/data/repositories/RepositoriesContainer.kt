@@ -4,8 +4,8 @@ import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.main.ContactsRepository
 import com.sudox.android.data.repositories.main.UsersRepository
-import com.sudox.android.data.repositories.messages.chats.ChatMessagesRepository
-import com.sudox.android.data.repositories.messages.chats.DialogsRepository
+import com.sudox.android.data.repositories.messages.dialogs.DialogsMessagesRepository
+import com.sudox.android.data.repositories.messages.dialogs.DialogsRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,7 +14,7 @@ class RepositoriesContainer @Inject constructor(val accountRepository: AccountRe
                                                 val authRepository: AuthRepository,
                                                 val contactsRepository: ContactsRepository,
                                                 val usersRepository: UsersRepository,
-                                                val chatMessagesRepository: ChatMessagesRepository,
+                                                val dialogsMessagesRepository: DialogsMessagesRepository,
                                                 val dialogsRepository: DialogsRepository) {
 
     init {

@@ -1,9 +1,9 @@
-package com.sudox.android.data.models.messages.chats.dto
+package com.sudox.android.data.models.messages.dialogs.dto
 
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONObject
 
-class ChatMessageDTO : JsonModel() {
+class DialogMessageDTO : JsonModel() {
 
     var id: Long = 0
     var sender: Long = 0

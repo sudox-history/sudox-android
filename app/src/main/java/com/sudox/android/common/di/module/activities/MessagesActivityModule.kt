@@ -1,6 +1,6 @@
 package com.sudox.android.common.di.module.activities
 
-import com.sudox.android.ui.messages.chat.ChatFragment
+import com.sudox.android.ui.messages.dialog.DialogFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -8,5 +8,5 @@ import dagger.android.ContributesAndroidInjector
 abstract class MessagesActivityModule {
 
     @ContributesAndroidInjector
-    abstract fun provideUserChatFragment(): ChatFragment
+    abstract fun provideUserChatFragment(): DialogFragment
 }
