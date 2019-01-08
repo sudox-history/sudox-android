@@ -29,10 +29,10 @@ class DialogAdapter(val context: Context) : RecyclerView.Adapter<DialogAdapter.V
 
     override fun onBindViewHolder(holder: DialogAdapter.ViewHolder, position: Int) {
         val message = messages[position]
-        var bottomMargin = 2F * context.resources.displayMetrics.density
+        var bottomMargin = 4F * context.resources.displayMetrics.density
 
         if (position < messages.lastIndex && message.direction != messages[position + 1].direction) {
-            bottomMargin = 6 * context.resources.displayMetrics.density
+            bottomMargin = 12 * context.resources.displayMetrics.density
             holder.dialogMessageEndOfGroupMark.visibility = View.VISIBLE
             holder.dialogMessageContaienr.background = if (message.direction == MessageDirection.TO) {
                 ContextCompat.getDrawable(context, R.drawable.shape_message_to_end)

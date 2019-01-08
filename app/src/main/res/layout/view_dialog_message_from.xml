@@ -27,7 +27,7 @@
             android:layout_marginTop="6dp"
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="6dp"
-            android:textSize="14sp"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/dialogMessageSendTime"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
             android:textColor="#BDBDBD"
-            android:textSize="12sp"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:ignore="SmallSp" />
