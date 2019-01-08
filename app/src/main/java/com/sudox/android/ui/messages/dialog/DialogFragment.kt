@@ -22,8 +22,9 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var dialogAdapter: DialogAdapter
+    // Список сообщений
+    private val linearLayoutManager by lazy { LinearLayoutManager(context!!).apply { stackFromEnd = true } }
+    private val dialogAdapter by lazy { DialogAdapter(context!!) }
 
     private lateinit var messagesInnerActivity: MessagesInnerActivity
     private lateinit var recipientUser: User
@@ -46,11 +47,9 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
     }
 
     private fun configureMessagesList() {
-        val linearLayoutManager = LinearLayoutManager(context!!).apply { stackFromEnd = true }
-
-        // Configure
         chatMessagesList.layoutManager = linearLayoutManager
         chatMessagesList.adapter = dialogAdapter
+        chatMessagesList.itemAnimator = null
 
         // Paging ...
         chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -81,6 +80,7 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
             dialogViewModel.newDialogMessageLiveData.observe(this, Observer {
                 dialogAdapter.messages.add(it!!)
                 dialogAdapter.notifyItemInserted(dialogAdapter.messages.size - 1)
+                dialogAdapter.notifyItemChanged(dialogAdapter.messages.size - 2)
             })
 
             // Listen messages sending requests
@@ -98,6 +98,7 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
             } else {
                 dialogAdapter.messages.add(message!!)
                 dialogAdapter.notifyItemInserted(dialogAdapter.messages.size - 1)
+                dialogAdapter.notifyItemChanged(dialogAdapter.messages.size - 2)
                 chatMessagesList.scrollToPosition(dialogAdapter.messages.size - 1)
             }
         })

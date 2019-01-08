@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="false">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/dialogMessageContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="false"
+        android:background="@drawable/shape_message_to_end"
+        android:paddingStart="10dp"
+        android:paddingEnd="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/dialogMessageEndOfGroupMark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintWidth_percent="0.8">
+
+        <com.sudox.design.widgets.PrecomputedTextView
+            android:id="@+id/dialogMessageText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="6dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dialogMessageSendTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_default="wrap"
+            tools:ignore="SmallSp" />
+
+        <com.sudox.design.widgets.PrecomputedTextView
+            android:id="@+id/dialogMessageSendTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="3dp"
+            android:textColor="#BDBDBD"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/dialogMessageSendStatus"
+            tools:ignore="SmallSp" />
+
+        <ImageView
+            android:id="@+id/dialogMessageSendStatus"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:scaleType="center"
+            app:layout_constraintBottom_toBottomOf="@+id/dialogMessageSendTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dialogMessageSendTime" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:id="@+id/dialogMessageEndOfGroupMark"
+        android:layout_width="7dp"
+        android:layout_height="6dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/triangle_bottom_left"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</android.support.constraint.ConstraintLayout>
