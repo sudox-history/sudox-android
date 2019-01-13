@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.widget.TextView
 import com.sudox.android.R
 
-class PrecomputedTextView : TextView {
+open class PrecomputedTextView : TextView {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)

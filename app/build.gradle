@@ -59,6 +59,9 @@ dependencies {
     implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.redmadrobot:inputmask:3.4.4'
     implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha3'
+
+    // Flow layout
+    implementation 'com.google.android:flexbox:1.0.0'
 }
 
 android {
@@ -92,6 +95,7 @@ android {
         debug {
             shrinkResources false
             minifyEnabled false
+            crunchPngs false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
