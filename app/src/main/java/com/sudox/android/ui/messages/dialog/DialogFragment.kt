@@ -47,6 +47,10 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
     }
 
     private fun configureMessagesList() {
+        val chatMessagesList = chatMessagesContainer.recyclerView
+        val chatMessagesPadding = (10 * resources.displayMetrics.density).toInt()
+
+        chatMessagesList.setPadding(chatMessagesPadding, chatMessagesPadding, chatMessagesPadding, chatMessagesPadding)
         chatMessagesList.layoutManager = linearLayoutManager
         chatMessagesList.adapter = dialogAdapter
         chatMessagesList.itemAnimator = null
@@ -65,6 +69,8 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
     }
 
     private fun listenData() {
+        val chatMessagesList = chatMessagesContainer.recyclerView
+
         // Bind paging messages listener
         dialogViewModel.pagingDialogHistoryLiveData.observe(this, Observer {
             dialogAdapter.messages.addAll(0, it!!)
@@ -75,12 +81,14 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
         dialogViewModel.initialDialogHistoryLiveData.observe(this, Observer {
             dialogAdapter.messages = ArrayList(it!!)
             dialogAdapter.notifyDataSetChanged()
+            chatMessagesContainer.notifyInitialLoadingDone()
 
             // Start listen to new messages
             dialogViewModel.newDialogMessageLiveData.observe(this, Observer {
                 dialogAdapter.messages.add(it!!)
                 dialogAdapter.notifyItemInserted(dialogAdapter.messages.size - 1)
                 dialogAdapter.notifyItemChanged(dialogAdapter.messages.size - 2)
+                chatMessagesList.scrollToPosition(dialogAdapter.messages.size - 1)
             })
 
             // Listen messages sending requests

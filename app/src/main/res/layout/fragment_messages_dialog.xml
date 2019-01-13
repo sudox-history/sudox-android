@@ -40,15 +40,13 @@
         </LinearLayout>
     </com.sudox.design.navigation.toolbar.SudoxToolbar>
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/chatMessagesList"
+    <com.sudox.design.recyclerview.RecyclerViewContainer
+        android:id="@+id/chatMessagesContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/edit_message_layout"
         android:layout_below="@id/chatToolbar"
-        android:clipToPadding="false"
-        android:padding="10dp" />
+        android:clipToPadding="false" />
 
     <LinearLayout
         android:id="@+id/edit_message_layout"

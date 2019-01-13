@@ -60,7 +60,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 
                     // Reload initial copy
                     if (openedDialogRecipientId != 0L) {
-                        loadInitialMessages(openedDialogRecipientId)
+                        loadMessagesFromNetwork(openedDialogRecipientId)
 
                         // Грузим юзера для апдейта ...
                         val user = usersRepository
@@ -130,10 +130,10 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
     }
 
     fun loadInitialMessages(recipientId: Long) = GlobalScope.launch {
+        loadMessagesFromDatabase(recipientId).await()
+
         if (!loadedDialogsRecipientIds.contains(recipientId) && protocolClient.isValid()) {
             loadMessagesFromNetwork(recipientId)
-        } else {
-            loadMessagesFromDatabase(recipientId)
         }
     }
 
@@ -151,7 +151,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         }
     }
 
-    private fun loadMessagesFromDatabase(recipientId: Long, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
+    private fun loadMessagesFromDatabase(recipientId: Long, offset: Int = 0): Deferred<Unit?> = GlobalScope.async(Dispatchers.IO) {
         val messages = dialogMessagesDao.loadMessages(recipientId, offset, 20)
 
         // Remove from cache
@@ -159,7 +159,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             if (offset == 0) {
                 removeSavedMessages(recipientId, false)
                 dialogDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
-            }
+            } else null
         } else {
             if (offset == 0) {
                 dialogDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
