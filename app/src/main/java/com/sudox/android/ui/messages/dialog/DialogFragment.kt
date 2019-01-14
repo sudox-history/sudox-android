@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.formatMessageText
+import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import dagger.android.support.DaggerFragment
@@ -25,6 +26,9 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
     // Список сообщений
     private val linearLayoutManager by lazy { LinearLayoutManager(context!!).apply { stackFromEnd = true } }
     private val dialogAdapter by lazy { DialogAdapter(context!!) }
+    private var isInitialized: Boolean = false
+    private var isPagingLoading: Boolean = false
+    private var lastIsInitial: Boolean = false
 
     private lateinit var messagesInnerActivity: MessagesInnerActivity
     private lateinit var recipientUser: User
@@ -54,15 +58,22 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
         chatMessagesList.layoutManager = linearLayoutManager
         chatMessagesList.adapter = dialogAdapter
         chatMessagesList.itemAnimator = null
+        chatMessagesList.clipToPadding = false
 
         // Paging ...
         chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                val updatePosition = linearLayoutManager.itemCount - 1
+                val updatePosition = dialogAdapter.messages.size - 1
 
-                if (position == 0 && linearLayoutManager.itemCount >= 20) {
+                if (lastIsInitial && isPagingLoading) {
+                    isPagingLoading = false
+                    lastIsInitial = false
+                }
+
+                if (position <= 10 && dialogAdapter.messages.size >= 20 && !isPagingLoading) {
                     dialogViewModel.loadPartOfMessages(recipientUser.uid, updatePosition + 1)
+                    isPagingLoading = true
                 }
             }
         })
@@ -75,6 +86,9 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
         dialogViewModel.pagingDialogHistoryLiveData.observe(this, Observer {
             dialogAdapter.messages.addAll(0, it!!)
             dialogAdapter.notifyItemRangeInserted(0, it.size)
+
+            isPagingLoading = false
+            lastIsInitial = false
         })
 
         // Bind initial messages listener
@@ -83,16 +97,22 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
             dialogAdapter.notifyDataSetChanged()
             chatMessagesContainer.notifyInitialLoadingDone()
 
-            // Start listen to new messages
-            dialogViewModel.newDialogMessageLiveData.observe(this, Observer {
-                dialogAdapter.messages.add(it!!)
-                dialogAdapter.notifyItemInserted(dialogAdapter.messages.size - 1)
-                dialogAdapter.notifyItemChanged(dialogAdapter.messages.size - 2)
-                chatMessagesList.scrollToPosition(dialogAdapter.messages.size - 1)
-            })
-
             // Listen messages sending requests
-            listenMessagesSendingRequests()
+            if (!isInitialized) {
+                dialogViewModel.newDialogMessageLiveData.observe(this, Observer {
+                    dialogAdapter.messages.add(it!!)
+                    dialogAdapter.notifyItemInserted(dialogAdapter.messages.size - 1)
+                    dialogAdapter.notifyItemChanged(dialogAdapter.messages.size - 2)
+                    chatMessagesList.scrollToPosition(dialogAdapter.messages.size - 1)
+                })
+
+                // Start listen to new messages
+                listenMessagesSendingRequests()
+                isInitialized = true
+            }
+
+            isPagingLoading = false
+            lastIsInitial = true
         })
 
         // Bind messages sending status listener

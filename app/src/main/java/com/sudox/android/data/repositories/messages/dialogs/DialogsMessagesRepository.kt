@@ -30,7 +30,8 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 
     // ID загруженных чатов ...
     private val loadedDialogsRecipientIds = hashMapOf<Long, Int>()
-    private val messagesSendingThreadContext = newSingleThreadContext("Sudox Dialogs Sending Queue")
+    private val messagesSendingThreadContext = newSingleThreadContext("Sudox Dialogs Messages Sending Queue")
+    private val messagesLoadingThreadContext = newFixedThreadPoolContext(1, "Sudox Dialogs Messages Loading Queue")
 
     // PublishSubject для доставки новых сообщений.
     val globalNewMessagesChannel: BroadcastChannel<DialogMessage> = ConflatedBroadcastChannel()
@@ -49,27 +50,30 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         listenSessionStatus()
     }
 
-    private fun listenSessionStatus() = GlobalScope.launch {
-        authRepository
+    private fun listenSessionStatus() = GlobalScope.launch(Dispatchers.IO) {
+        for (status in authRepository
                 .accountSessionStateChannel
-                .openSubscription()
-                .filter { it }
-                .consumeEach {
-                    dialogHistoryEnded = false
-                    loadedDialogsRecipientIds.clear() // Clean initial cache.
+                .openSubscription()) {
 
-                    // Reload initial copy
-                    if (openedDialogRecipientId != 0L) {
-                        loadMessagesFromNetwork(openedDialogRecipientId)
+            if (status) {
+                dialogHistoryEnded = false
+                loadedDialogsRecipientIds.clear() // Clean initial cache.
 
-                        // Грузим юзера для апдейта ...
-                        val user = usersRepository
-                                .loadUser(openedDialogRecipientId)
-                                .await()
+                // Reload initial copy
+                if (openedDialogRecipientId != 0L) {
+                    loadMessagesFromNetwork(openedDialogRecipientId).await()
 
-                        if (user != null) dialogRecipientUpdateChannel?.send(user)
-                    }
+                    // Грузим юзера для апдейта ...
+                    val user = usersRepository
+                            .loadUser(openedDialogRecipientId)
+                            .await()
+
+                    if (user != null) dialogRecipientUpdateChannel?.send(user)
                 }
+            } else {
+                endDialog()
+            }
+        }
     }
 
     private fun listenNewMessages() {
@@ -129,29 +133,29 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         }
     }
 
-    fun loadInitialMessages(recipientId: Long) = GlobalScope.launch {
-        loadMessagesFromDatabase(recipientId).await()
+    fun loadInitialMessages(recipientId: Long) {
+        loadMessagesFromDatabase(recipientId)
 
         if (!loadedDialogsRecipientIds.contains(recipientId) && protocolClient.isValid()) {
             loadMessagesFromNetwork(recipientId)
         }
     }
 
-    fun loadPagedMessages(recipientId: Long, offset: Int) = GlobalScope.launch {
-        if (offset <= 0 || dialogHistoryEnded) return@launch
+    fun loadPagedMessages(recipientId: Long, offset: Int) {
+        if (offset <= 0 || dialogHistoryEnded) return
 
         // Get offset cache
-        val cachedOffset = loadedDialogsRecipientIds[recipientId]
+        val cachedOffset = loadedDialogsRecipientIds[recipientId] ?: -1
 
         // Initial copy loaded from database
-        if (!protocolClient.isValid() || cachedOffset != null && cachedOffset >= offset) {
+        if (!protocolClient.isValid() || cachedOffset != -1 && cachedOffset >= offset) {
             loadMessagesFromDatabase(recipientId, offset)
-        } else {
+        } else if (cachedOffset == -1 && offset == 0 || offset - cachedOffset >= 20) {
             loadMessagesFromNetwork(recipientId, offset)
         }
     }
 
-    private fun loadMessagesFromDatabase(recipientId: Long, offset: Int = 0): Deferred<Unit?> = GlobalScope.async(Dispatchers.IO) {
+    private fun loadMessagesFromDatabase(recipientId: Long, offset: Int = 0): Deferred<Unit?> = GlobalScope.async(messagesLoadingThreadContext) {
         val messages = dialogMessagesDao.loadMessages(recipientId, offset, 20)
 
         // Remove from cache
@@ -159,7 +163,9 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             if (offset == 0) {
                 removeSavedMessages(recipientId, false)
                 dialogDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
-            } else null
+            } else {
+                dialogHistoryEnded = true
+            }
         } else {
             if (offset == 0) {
                 dialogDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, messages))
@@ -169,7 +175,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         }
     }
 
-    private fun loadMessagesFromNetwork(recipientId: Long, offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
+    private fun loadMessagesFromNetwork(recipientId: Long, offset: Int = 0) = GlobalScope.async(messagesLoadingThreadContext) {
         val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
 
         try {
@@ -201,10 +207,10 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                     dialogDialogHistoryChannel?.sendBlocking(Pair(LoadingType.INITIAL, dialogMessagesDao.loadDeliveringMessages(recipientId)))
                 } else if (dialogHistoryDTO.error == Errors.INVALID_USER) {
                     dialogHistoryEnded = true
-                }
+                } else null
             }
         } catch (e: NetworkException) {
-            // Nothing ...
+            // Ignore
         }
     }
 
