@@ -20,48 +20,39 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
                                            val authRepository: AuthRepository,
                                            val dialogsRepository: DialogsRepository) : ViewModel() {
 
-    var initialDialogsLiveData: MutableLiveData<List<Dialog>> = SingleLiveEvent()
+    var initialDialogsLiveData: MutableLiveData<ArrayList<Dialog>> = SingleLiveEvent()
     var pagingDialogsLiveData: MutableLiveData<List<Dialog>> = SingleLiveEvent()
+    var subscriptionsContainer: SubscriptionsContainer = SubscriptionsContainer()
+    var isListNotEmpty: Boolean = false
 
-    // Subscriptions
-    private val subscriptionsContainer = SubscriptionsContainer()
-
-    fun start() = GlobalScope.launch(Dispatchers.IO) {
-        GlobalScope.launch {
-            subscriptionsContainer.addSubscription(dialogsRepository
-                    .dialogsChannel
-                    .openSubscription())
-                    .consumeEach {
-                        val loadingType = it.first
-                        val dialogs = it.second
-
-                        if (loadingType == LoadingType.INITIAL) {
-                            initialDialogsLiveData.postValue(dialogs)
-                        } else if (loadingType == LoadingType.PAGING) {
-                            pagingDialogsLiveData.postValue(dialogs)
-                        }
-                    }
-        }
-
-        // Set callback to dialogs updating
-        GlobalScope.launch {
-            subscriptionsContainer.addSubscription(dialogsRepository
-                    .dialogsUpdatesChannel
-                    .openSubscription())
-                    .consumeEach {
-                        println("Sudox dialog update! ${it.user.name}")
-                    }
-        }
-
-        // Start loading ...
-        dialogsRepository.loadInitialDialogs()
+    init {
+        listenAuthSession()
     }
 
-    fun loadPartOfDialogs(offset: Int) = GlobalScope.launch(Dispatchers.IO) {
-        dialogsRepository.loadPagedDialogs(offset)
+    private fun listenAuthSession() = GlobalScope.launch(Dispatchers.IO) {
+        for (state in subscriptionsContainer.addSubscription(authRepository
+                .accountSessionStateChannel
+                .openSubscription())) {
+
+            if (state && !isListNotEmpty) loadDialogs()
+        }
     }
 
-    override fun onCleared() {
-        subscriptionsContainer.unsubscribeAll()
+    fun loadDialogs(offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
+        if (protocolClient.isValid() && !authRepository.sessionIsValid) {
+            // Авторизация ещё не прошла. Подгрузка будет вызвана, когда произойдет авторизация
+            // Если список не пустой, обновление будет выполнено путем "вставок"
+            return@launch
+        }
+
+        val dialogs = dialogsRepository
+                .loadDialogs(offset)
+                .await()
+
+        if (offset == 0) {
+            initialDialogsLiveData.postValue(dialogs)
+        } else {
+            pagingDialogsLiveData.postValue(dialogs)
+        }
     }
 }

@@ -15,49 +15,8 @@
         <item name="android:windowBackground">@drawable/screen_splash</item>
     </style>
 
-    <!-- Toolbar styles start -->
-    <style name="ToolbarTheme.AppBarLayout">
-        <item name="android:elevation">0dp</item>
-        <item name="android:paddingRight">0dp</item>
-        <item name="android:paddingEnd">0dp</item>
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingStart">0dp</item>
-        <item name="elevation">0dp</item>
-    </style>
-
-    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="contentInsetStart">25dp</item>
-        <!-- Calculation of toolbar right padding:
-             right padding of the design in the design - padding of the menu item - half of icon width = 34dp - 16dp - 8dp = 10dp -->
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:elevation">0dp</item>
-        <item name="android:layout_height">60dp</item>
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="titleTextAppearance">@style/ToolbarTheme.Title</item>
-    </style>
-
-    <style name="ToolbarTheme.Child" parent="ToolbarTheme">
-        <item name="navigationIcon">@drawable/ic_arrow_back</item>
-        <!-- Calculation of toolbar left padding:
-             left padding of the design in the design - padding of the icon - half of icon width = 27dp - 16dp - 8dp = 3dp -->
-        <item name="android:paddingStart">3dp</item>
-        <item name="android:paddingLeft">3dp</item>
-    </style>
-
-    <style name="ToolbarTheme.Child.Container">
-        <item name="android:translationX">-15dp</item>
-    </style>
-
-    <style name="ToolbarTheme.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:fontFamily">sans-serif-light</item>
-        <item name="android:textSize">19sp</item>
-        <item name="android:includeFontPadding">false</item>
-        <item name="android:paddingStart">0dp</item>
-        <item name="android:paddingLeft">0dp</item>
-    </style>
-
     <!-- Bottom navigation view styles start -->
-    <style name="BottomNavigationView">
+    <style name="AppTheme.BottomNavigationView">
         <item name="android:layout_height">48dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_alignParentBottom">true</item>
@@ -70,12 +29,6 @@
         <item name="elevation">0dp</item>
     </style>
     <!-- Bottom navigation view styles end -->
-
-    <!-- No padding text view -->
-    <style name="TextViewWithoutPaddings">
-        <item name="android:includeFontPadding">false</item>
-        <item name="android:lineSpacingExtra">0dp</item>
-    </style>
 
     <style name="AppTheme.TabLayout" parent="Base.Widget.Design.TabLayout">
         <item name="tabIndicatorColor">?attr/colorAccent</item>
@@ -99,13 +52,16 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <!-- No padding text view -->
+    <style name="TextViewWithoutPaddings">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">0dp</item>
+    </style>
+
     <style name="ParametersRecyclerView">
         <item name="android:background">#1A1E28</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
     </style>
-
-    <!-- Chats -->
-
 
 </resources>

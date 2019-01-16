@@ -1,18 +1,13 @@
 package com.sudox.android.data.repositories.messages.dialogs
 
-import com.sudox.android.data.database.dao.messages.DialogMessagesDao
-import com.sudox.android.data.database.model.messages.DialogMessage
-import com.sudox.android.data.models.common.Errors
-import com.sudox.android.data.models.common.LoadingType
-import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.messages.dialogs.Dialog
-import com.sudox.android.data.models.messages.dialogs.dto.DialogLastMessagesDTO
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.main.UsersRepository
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.models.NetworkException
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.async
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,176 +15,30 @@ import javax.inject.Singleton
 class DialogsRepository @Inject constructor(private val protocolClient: ProtocolClient,
                                             private val dialogsMessagesRepository: DialogsMessagesRepository,
                                             private val usersRepository: UsersRepository,
-                                            private val authRepository: AuthRepository,
-                                            private val dialogMessagesDao: DialogMessagesDao) {
+                                            private val authRepository: AuthRepository) {
 
-    // Initial & paging copies of chats
-    var dialogsChannel: BroadcastChannel<Pair<LoadingType, List<Dialog>>> = ConflatedBroadcastChannel()
-    var dialogsUpdatesChannel: BroadcastChannel<Dialog> = ConflatedBroadcastChannel()
+    fun loadDialogs(offset: Int = 0, limit: Int = 20) = GlobalScope.async(Dispatchers.IO) {
+        val lastMessages = dialogsMessagesRepository
+                .loadLastMessages(offset, limit)
+                .await()
 
-    // Dialogs loaded from server (if value negative - last messages not loaded)
-    private var lastMessagesLoadedOffset: Int = -1
-    private var lastMessagesEnded: Boolean = false
-
-    init {
-//        listenConnectionStatus()
-//        listenNewMessages()
-//        listenSendingMessages()
-    }
-
-    private fun listenNewMessages() = GlobalScope.launch(Dispatchers.IO) {
-        for (dialog in dialogsMessagesRepository
-                .globalNewMessagesChannel
-                .openSubscription()) {
-
-            // Notify that dialog was updated
-            updateDialog(dialog)
-        }
-    }
-
-    private fun listenSendingMessages() = GlobalScope.launch(Dispatchers.IO) {
-        for (dialog in dialogsMessagesRepository
-                .globalSentMessageChannel
-                .openSubscription()) {
-
-            // Notify that dialog was updated
-            updateDialog(dialog)
-        }
-    }
-
-    private fun updateDialog(message: DialogMessage) {
-        val dialog = getDialog(message) ?: return
-
-        // Notify ...
-        dialogsUpdatesChannel.offer(dialog)
-    }
-
-    private fun listenConnectionStatus() = GlobalScope.launch {
-        authRepository
-                .accountSessionStateChannel
-                .openSubscription()
-                .filter { it }
-                .consumeEach {
-                    resetLoadedOffset()
-                    loadInitialDialogs()
-                }
-    }
-
-    fun loadInitialDialogs() = GlobalScope.launch {
-//        if (lastMessagesLoadedOffset < 0 && authRepository.sessionIsValid && protocolClient.isValid()) {
-//            runBlocking {
-//                loadDialogsFromDatabase()
-//                loadDialogsFromNetwork()
-//            }
-//        } else {
-//            loadDialogsFromDatabase()
-//        }
-    }
-
-    fun loadPagedDialogs(offset: Int) {
-//        if (offset <= 0) return
-//
-//        // Initial copy loaded from database
-//        if (!protocolClient.isValid() || lastMessagesLoadedOffset >= offset) {
-//            loadDialogsFromDatabase(offset)
-//        } else if (!lastMessagesEnded) {
-//            loadDialogsFromNetwork(offset)
-//        }
-    }
-
-    private fun loadDialogsFromNetwork(offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
-        try {
-            val chatsLastMessagesDTO = protocolClient.makeRequestWithControl<DialogLastMessagesDTO>("chats.getChats", DialogLastMessagesDTO().apply {
-                this.limit = 10
-                this.offset = offset
-            }).await()
-
-            if (chatsLastMessagesDTO.isSuccess()) {
-                val messages = dialogsMessagesRepository.toStorableMessages(chatsLastMessagesDTO.messages)
-                val dialogs = getDialogs(messages)
-
-                // Cache ...
-                dialogMessagesDao.insertAll(messages)
-                lastMessagesLoadedOffset = offset
-
-                // offset == 0 => first initializing
-                if (offset == 0) {
-                    dialogsChannel.offer(Pair(LoadingType.INITIAL, dialogs))
-                } else if (dialogs.isNotEmpty()) {
-                    dialogsChannel.offer(Pair(LoadingType.PAGING, dialogs))
-                }
-            } else {
-                if (offset == 0) {
-                    resetLoadedOffset()
-                    dialogsMessagesRepository.removeAllSavedMessages()
-                    dialogsChannel.offer(Pair(LoadingType.INITIAL, arrayListOf()))
-                } else if (chatsLastMessagesDTO.error == Errors.EMPTY_CHATS) {
-                    lastMessagesEnded = true
-                }
-            }
-        } catch (e: NetworkException) {
-            // TODO: Обрыв соединения.
-        }
-    }
-
-    private fun loadDialogsFromDatabase(offset: Int = 0) = GlobalScope.launch(Dispatchers.IO) {
-        val messages = dialogMessagesDao.loadAll(offset, 10)
-
-        // Сообщения могут отсутствовать в БД
-        if (messages.isEmpty()) {
-            if (offset == 0) {
-                resetLoadedOffset()
-
-                // offset == 0 => first initializing
-                dialogsChannel.offer(Pair(LoadingType.INITIAL, arrayListOf()))
-            }
+        if (lastMessages.isEmpty()) {
+            return@async arrayListOf<Dialog>()
         } else {
-            val dialogs = getDialogs(messages)
+            val lastMessagesRecipientsIds = lastMessages.map { it.getRecipientId() }
+            val lastMessagesRecipients = usersRepository
+                    .loadUsers(lastMessagesRecipientsIds)
+                    .await()
+            val dialogs = ArrayList<Dialog>()
 
-            // offset == 0 => first initializing
-            if (offset == 0) {
-                dialogsChannel.offer(Pair(LoadingType.INITIAL, dialogs))
-            } else if (dialogs.isNotEmpty()) {
-                dialogsChannel.offer(Pair(LoadingType.PAGING, dialogs))
+            // Find pair & build dialog
+            lastMessages.forEach { message ->
+                val user = lastMessagesRecipients.find { it.uid == message.getRecipientId() }
+
+                if (user != null) dialogs.plusAssign(Dialog(user, message))
             }
+            
+            return@async dialogs
         }
-    }
-
-    /**
-     * Ищет собеседника к сообщению.
-     * Если собеседник не будет найден, то сообщение не будет отражено в результатах вызова данной функции.
-     */
-    private suspend fun getDialogs(messages: List<DialogMessage>): ArrayList<Dialog> {
-        val userIdsForLoading = messages.map { if (it.direction == MessageDirection.TO) it.peer else it.sender }
-        val users = usersRepository.loadUsers(userIdsForLoading).await()
-        val dialogs = arrayListOf<Dialog>()
-
-        // Mapping
-        messages.forEach {
-            val recipientId = if (it.direction == MessageDirection.TO) it.peer else it.sender
-            val recipient = users.find { it.uid == recipientId }
-
-            // Recipient was loaded
-            if (recipient != null) dialogs.plusAssign(Dialog(recipient, it))
-        }
-
-        return dialogs
-    }
-
-    /**
-     * Ищет собеседника к сообщению
-     * Если собеседник не будет найден, то сообщение не будет отражено в результатах вызова данной функции.
-     */
-    private fun getDialog(message: DialogMessage): Dialog? = runBlocking {
-        val userId = if (message.direction == MessageDirection.TO) message.peer else message.sender
-        val user = usersRepository.loadUser(userId).await() ?: return@runBlocking null
-
-        // Create dialog
-        return@runBlocking Dialog(user, message)
-    }
-
-    private fun resetLoadedOffset() {
-        lastMessagesEnded = false
-        lastMessagesLoadedOffset = -1
     }
 }

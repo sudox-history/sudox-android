@@ -12,6 +12,10 @@ class MessagesInnerActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    companion object {
+        const val RECIPIENT_USER_EXTRA = "user_recipient"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_messages_inner)
@@ -32,9 +36,5 @@ class MessagesInnerActivity : DaggerAppCompatActivity() {
                 .beginTransaction()
                 .replace(R.id.fragmentChatContainer, DialogFragment().apply { arguments = intent.extras })
                 .commit()
-    }
-
-    companion object {
-        const val RECIPIENT_USER_EXTRA = "user_recipient"
     }
 }

@@ -8,9 +8,11 @@ import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.common.LoadingType
 import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.messages.MessageStatus
+import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.data.models.messages.dialogs.dto.DialogHistoryDTO
 import com.sudox.android.data.models.messages.dialogs.dto.DialogMessageDTO
 import com.sudox.android.data.models.messages.dialogs.dto.DialogSendMessageDTO
+import com.sudox.android.data.models.messages.dialogs.dto.LastDialogsMessagesDTO
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.main.UsersRepository
@@ -214,6 +216,40 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         }
     }
 
+    fun loadLastMessages(offset: Int, limit: Int) = GlobalScope.async(Dispatchers.IO) {
+        if (protocolClient.isValid()) {
+            loadLastMessagesFromNetwork(offset, limit)
+        } else {
+            loadLastMessagesFromDatabase(offset, limit)
+        }
+    }
+
+    private suspend fun loadLastMessagesFromNetwork(offset: Int, limit: Int): ArrayList<DialogMessage> {
+        try {
+            val lastDialogsMessages = protocolClient.makeRequestWithControl<LastDialogsMessagesDTO>("dialogs.get", LastDialogsMessagesDTO().apply {
+                this.offset = offset
+                this.limit = limit
+            }).await()
+
+            if (lastDialogsMessages.containsError()) {
+                return arrayListOf()
+            } else if (lastDialogsMessages.messages.isEmpty()) {
+                return arrayListOf()
+            }
+
+            val storableMessages = toStorableMessages(lastDialogsMessages.messages)
+            val savedMessages = dialogMessagesDao.insertAll(storableMessages)
+
+            return loadLastMessagesFromDatabase(offset, limit)
+        } catch (e: NetworkException) {
+            return loadLastMessagesFromDatabase(offset, limit)
+        }
+    }
+
+    private fun loadLastMessagesFromDatabase(offset: Int, limit: Int): ArrayList<DialogMessage> {
+        return ArrayList(dialogMessagesDao.loadLastMessages(offset, limit))
+    }
+
     // TODO: Переместить отправку сообщения в отдельный канал!
     @Suppress("NAME_SHADOWING")
     fun sendTextMessage(recipientId: Long, text: String) = GlobalScope.launch(Dispatchers.IO) {
@@ -279,7 +315,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             dialogDialogSentMessageChannel?.send(message)
     }
 
-    fun recalculateNetworkOffset(recipientId: Long, initialOffset: Int): Int {
+    private fun recalculateNetworkOffset(recipientId: Long, initialOffset: Int): Int {
         return Math.max(initialOffset - dialogMessagesDao.countDeliveringMessages(recipientId), 0)
     }
 

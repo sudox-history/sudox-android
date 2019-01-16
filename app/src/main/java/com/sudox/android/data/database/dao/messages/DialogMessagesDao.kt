@@ -25,7 +25,7 @@ interface DialogMessagesDao {
     fun loadAll(recipientId: Long, offset: Int, limit: Int): List<DialogMessage>
 
     @Query("SELECT * FROM dialogs_messages c WHERE lid=(SELECT max(lid) FROM dialogs_messages WHERE sender=c.sender AND peer=c.peer OR sender=c.peer AND peer=c.sender ORDER BY lid DESC) ORDER BY lid DESC LIMIT :offset, :limit")
-    fun loadAll(offset: Int, limit: Int): List<DialogMessage>
+    fun loadLastMessages(offset: Int, limit: Int): List<DialogMessage>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateOne(message: DialogMessage)
@@ -83,9 +83,9 @@ interface DialogMessagesDao {
         val result = ArrayList<DialogMessage>()
 
         // Add to result
-        result.plusAssign(deliveredMessages)
-        result.plusAssign(deliveringMessages)
+        result.plusAssign(deliveredMessages.sortedBy { it.mid })
+        result.plusAssign(deliveringMessages.sortedBy { it.lid })
 
-        return result.sortedBy { it.lid }
+        return result
     }
 }

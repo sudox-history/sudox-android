@@ -63,11 +63,12 @@ class DialogAdapter(val context: Context) : RecyclerView.Adapter<DialogAdapter.V
         holder.dialogMessageSendTime.installText(DateFormat.format("HH:mm", Date(message.date)).toString())
 
         if (message.direction == MessageDirection.TO) {
-            holder.dialogMessageSendStatus.setBackgroundResource(when {
-                message.status ==  MessageStatus.IN_DELIVERY -> R.drawable.ic_clock
+            holder.dialogMessageSendTime.compoundDrawablePadding = (5 * context.resources.displayMetrics.density).toInt()
+            holder.dialogMessageSendTime.setCompoundDrawablesWithIntrinsicBounds(null, null, context.getDrawable(when {
+                message.status == MessageStatus.IN_DELIVERY -> R.drawable.ic_clock
                 message.status == MessageStatus.DELIVERED -> R.drawable.ic_check
                 else -> R.drawable.ic_error
-            })
+            }), null)
         }
     }
 
@@ -79,6 +80,5 @@ class DialogAdapter(val context: Context) : RecyclerView.Adapter<DialogAdapter.V
         val dialogMessageText = itemView.dialogMessageText
         val dialogMessageSendTime = itemView.dialogMessageSendTime
         val dialogMessageContaienr = itemView.dialogMessageContainer
-        val dialogMessageSendStatus = itemView.dialogMessageSendStatus
     }
 }

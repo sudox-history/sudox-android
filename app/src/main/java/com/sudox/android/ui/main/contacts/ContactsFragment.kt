@@ -98,7 +98,7 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
         contactsAdapter
                 .clickedContactLiveData
                 .observe(this, Observer {
-                    mainActivity.showChatWithUser(it!!)
+                    mainActivity.showDialogWithUser(it!!)
                 })
     }
 
