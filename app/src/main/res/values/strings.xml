@@ -45,9 +45,9 @@
     <string name="wrong_nickname_format">Wrong nickname format</string>
     <string name="info_label">Information</string>
     <string name="decoration_label">Decorations</string>
-    <string name="dialogs_label">Dialogs</string>
-    <string name="channels_label">Channels</string>
-    <string name="talks_label">Talks</string>
+    <string name="dialogs">Dialogs</string>
+    <string name="channels">Channels</string>
+    <string name="talks">Talks</string>
     <string name="decorations_label">Decorations</string>
     <string name="hello_world">Hello world</string>
     <string name="exit">Logout</string>
@@ -100,6 +100,7 @@
     <string name="yes_confirmation">Yes</string>
     <string name="no_confirmation">No</string>
     <string name="edit_save">Save</string>
+    <string name="yesterday">Yesterday</string>
 
     <!-- Formats -->
     <string name="nickname_format" translatable="false"><![CDATA[<font color="#FFFFFF">@%1$s</font><font color="#BDBDBD">#%2$s</font>]]></string>

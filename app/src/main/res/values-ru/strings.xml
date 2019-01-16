@@ -46,9 +46,9 @@
     <string name="wrong_nickname_format">Неверный формат никнейма</string>
     <string name="info_label">Информация</string>
     <string name="decoration_label">Украшения</string>
-    <string name="dialogs_label">Диалоги</string>
-    <string name="talks_label">Беседы</string>
-    <string name="channels_label">Каналы</string>
+    <string name="dialogs">Диалоги</string>
+    <string name="talks">Беседы</string>
+    <string name="channels">Каналы</string>
     <string name="decorations_label">Украшения</string>
     <string name="hello_world">Привет мир!</string>
     <string name="exit">Выйти</string>
@@ -102,6 +102,7 @@
     <string name="edit_contact">Редактировать контакт</string>
     <string name="contact_edit">Редактирование</string>
     <string name="edit_save">Сохранить</string>
+    <string name="yesterday">Вчера</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>

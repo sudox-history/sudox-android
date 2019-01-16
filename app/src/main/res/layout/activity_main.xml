@@ -20,7 +20,7 @@
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottomNavigationView"
-        style="@style/BottomNavigationView"
+        style="@style/AppTheme.BottomNavigationView"
         app:menu="@menu/menu_main" />
 
 </RelativeLayout>

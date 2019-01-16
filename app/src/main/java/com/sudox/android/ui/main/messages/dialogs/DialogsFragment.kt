@@ -3,7 +3,6 @@ package com.sudox.android.ui.main.messages.dialogs
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.messages.MessagesFragment
+import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_dialogs.*
 import javax.inject.Inject
@@ -21,69 +21,48 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    @Inject
-    lateinit var dialogsAdapter: DialogsAdapter
-    lateinit var dialogsViewModel: DialogsViewModel
-    lateinit var messagesFragment: MessagesFragment
-
     // Parent activity ...
-    private lateinit var mainActivity: MainActivity
-    private lateinit var linearLayoutManager: LinearLayoutManager
+    private val mainActivity by lazy { activity!! as MainActivity }
+    private val messagesFragment by lazy { parentFragment as MessagesFragment }
+    private val dialogsViewModel by lazy { getViewModel<DialogsViewModel>(viewModelFactory) }
+    private val dialogsAdapter by lazy { DialogsAdapter(context!!) }
+    private val linearLayoutManager by lazy { LinearLayoutManager(context!!) }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        initDialogsList()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        dialogsViewModel = getViewModel(viewModelFactory)
-        messagesFragment = parentFragment as MessagesFragment
-        mainActivity = activity!! as MainActivity
-
         return inflater.inflate(R.layout.fragment_dialogs, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        initDialogsList()
-
-        // Data-logic
-        listenData()
-    }
-
     private fun initDialogsList() {
-        linearLayoutManager = LinearLayoutManager(context!!)
+        val recyclerView = dialogsListContainer.recyclerView
 
-        // Configure
-        dialogsList.layoutManager = linearLayoutManager
-        dialogsList.adapter = dialogsAdapter
+        recyclerView.layoutAnimation = null
+        recyclerView.itemAnimator = null
+        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.adapter = dialogsAdapter
+        recyclerView.addItemDecoration(SecondColumnItemDecorator(context!!, false, true))
 
-        // Configure click listener
-        dialogsAdapter.clickedDialogLiveData.observe(this, Observer {
-            mainActivity.showChatWithUser(it!!.user)
-        })
-
-        // Paging ...
-        dialogsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val position = linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                val updatePosition = linearLayoutManager.itemCount - 1
-
-                if (position == updatePosition && linearLayoutManager.itemCount >= 10) {
-                    dialogsViewModel.loadPartOfDialogs(updatePosition + 1)
-                }
-            }
-        })
-    }
-
-    private fun listenData() {
-        // Bind paging dialogs listener
-        dialogsViewModel.pagingDialogsLiveData.observe(this, Observer {
-            dialogsAdapter.dialogs.addAll(it!!)
-            dialogsAdapter.notifyItemRangeInserted(dialogsAdapter.itemCount - 1, it.size)
-        })
-
-        // Bind initial messages listener
+        // Listen data
         dialogsViewModel.initialDialogsLiveData.observe(this, Observer {
-            dialogsAdapter.dialogs = ArrayList(it!!)
+            dialogsAdapter.dialogs = it!!
+            dialogsViewModel.isListNotEmpty = it.isNotEmpty()
+
+            // Loaded!
             dialogsAdapter.notifyDataSetChanged()
+            dialogsListContainer.notifyInitialLoadingDone()
+        })
+
+        // Listen clicks
+        dialogsAdapter.clickedDialogLiveData.observe(this, Observer {
+            mainActivity.showDialogWithUser(it!!.recipient)
         })
 
         // Start business logic work
-        dialogsViewModel.start()
+        dialogsViewModel.loadDialogs()
     }
 }

@@ -84,7 +84,7 @@ class MainActivity : DaggerAppCompatActivity() {
         finish()
     }
 
-    fun showChatWithUser(user: User) {
+    fun showDialogWithUser(user: User) {
         startActivity(Intent(this, MessagesInnerActivity::class.java).apply {
             putExtra(MessagesInnerActivity.RECIPIENT_USER_EXTRA, user)
         })
