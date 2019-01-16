@@ -297,10 +297,11 @@ class ProtocolClient @Inject constructor() {
         while (iterator.hasNext()) {
             val next = iterator.next()
             val instance = next.clazz.java.newInstance()
+            val once = next.coroutine != null || next.once
 
             // Оперируем с кэллбэком
             if (next.event != event) continue
-            if (next.coroutine != null || next.once) iterator.remove()
+            if (once) iterator.remove()
 
             // Загоним в него данные
             instance.readResponse(JSONObject(json))
@@ -315,6 +316,8 @@ class ProtocolClient @Inject constructor() {
             } else {
                 (next.resultFunction as (JsonModel) -> (Unit))(instance)
             })
+
+            if (once) break
         }
     }
 
