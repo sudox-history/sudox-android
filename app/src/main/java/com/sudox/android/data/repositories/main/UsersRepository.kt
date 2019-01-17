@@ -22,6 +22,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
 
     // ID загруженных пользователей (для экономии трафика)
     private val loadedUsersIds: HashSet<Long> = HashSet()
+    private val usersLoadingThreadContent = newSingleThreadContext("Sudox Users Loading Thread")
 
     init {
         listenConnectionStatus()
@@ -37,7 +38,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN, onlyFromNetwork: Boolean = false) = GlobalScope.async(usersLoadingThreadContent) {
         if (ids.isEmpty()) {
             return@async arrayListOf<User>()
         } else if (ids.size == 1) {
@@ -48,9 +49,10 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
             val notLoadedUsers = ids.filter { !loadedUsersIds.contains(it) }
             val usersFromNetwork = if (notLoadedUsers.isNotEmpty()) loadUsersFromNetwork(notLoadedUsers, loadAs) else arrayListOf()
             val usersFromNetworkIds = usersFromNetwork.map { it.uid }
-            val usersFromDatabase = userDao.loadByIds(ids
+            val usersFromDatabaseIds = ids
                     .filter { !usersFromNetworkIds.contains(it) }
-                    .map { it })
+                    .map { it }
+            val usersFromDatabase = userDao.loadByIds(usersFromDatabaseIds)
 
             // Update the type
             usersFromDatabase.forEach {
