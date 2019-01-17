@@ -13,14 +13,12 @@ import android.support.v7.widget.AppCompatTextView
 import android.util.TypedValue
 import com.sudox.android.data.database.model.user.User
 import com.sudox.design.helpers.getTwoFirstLetters
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.IO
+import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
-import kotlinx.coroutines.launch
 
 class TextAvatarView : FrameLayout {
 
+    private var drawingJob: Job? = null
     private val text by lazy {
         AppCompatTextView(context).apply {
             layoutParams = LayoutParams(
@@ -79,7 +77,8 @@ class TextAvatarView : FrameLayout {
 
         // Render ...
         if (type == "col") {
-            drawGradientAvatar(data)
+            drawingJob?.cancel()
+            drawingJob = drawGradientAvatar(data)
 
             // Bind letters
             text.setTextColor(Color.WHITE)
@@ -112,5 +111,12 @@ class TextAvatarView : FrameLayout {
 
         // Set bitmap
         GlobalScope.launch(Dispatchers.Main) { background.setImageBitmap(bitmap) }
+    }
+
+    override fun onDetachedFromWindow() {
+        drawingJob?.cancel()
+
+        // Super!
+        super.onDetachedFromWindow()
     }
 }

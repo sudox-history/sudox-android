@@ -2,20 +2,16 @@ package com.sudox.design.avatar
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.ColorDrawable
 import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.sudox.android.data.database.model.user.User
 import com.sudox.design.helpers.getTwoFirstLetters
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.IO
+import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
-import kotlinx.coroutines.launch
 
 class AvatarView : AppCompatImageView {
+
+    private var drawingJob: Job? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -27,7 +23,8 @@ class AvatarView : AppCompatImageView {
 
         // Render ...
         if (type == "col") {
-            drawGradientAvatar(data, user)
+            drawingJob?.cancel()
+            drawingJob = drawGradientAvatar(data, user)
         } else {
 //            TODO("Unsupported avatar type ...")
         }
@@ -69,5 +66,12 @@ class AvatarView : AppCompatImageView {
 
         // Set bitmap
         GlobalScope.launch(Dispatchers.Main) { setImageBitmap(bitmap) }
+    }
+
+    override fun onDetachedFromWindow() {
+        drawingJob?.cancel()
+
+        // Super!
+        super.onDetachedFromWindow()
     }
 }
