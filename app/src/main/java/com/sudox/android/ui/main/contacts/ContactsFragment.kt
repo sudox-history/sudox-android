@@ -83,6 +83,18 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
                     diffResult.dispatchUpdatesTo(contactsAdapter)
                 })
 
+        contactsViewModel
+                .contactsActionLiveData
+                .observe(this, Observer {
+                    if (it == ContactsAction.SHOW_NO_CONTACTS_IN_BOOK_DIALOG) {
+                        AlertDialog.Builder(context!!)
+                                .setTitle(R.string.title_oops)
+                                .setMessage(R.string.empty_contacts_book)
+                                .setPositiveButton(R.string.ok, null)
+                                .show()
+                    }
+                })
+
         contactsAdapter
                 .editableContactsLiveData
                 .observe(this, Observer {

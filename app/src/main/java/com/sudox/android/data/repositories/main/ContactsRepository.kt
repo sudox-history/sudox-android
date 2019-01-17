@@ -265,11 +265,12 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         }
     }
 
-    fun syncContacts() = GlobalScope.launch(Dispatchers.IO) {
+    @Throws(InternalRequestException::class)
+    fun syncContacts() = GlobalScope.async(Dispatchers.IO) {
         val phoneContacts = loadContactsFromPhone()
 
         // Nothing to sync ...
-        if (phoneContacts.isEmpty()) return@launch
+        if (phoneContacts.isEmpty()) throw InternalRequestException(InternalErrors.CONTACT_BOOK_IS_EMPTY)
 
         // Will be remove all contacts & save the new
         try {

@@ -101,6 +101,7 @@
     <string name="no_confirmation">No</string>
     <string name="edit_save">Save</string>
     <string name="yesterday">Yesterday</string>
+    <string name="empty_contacts_book">Unfortunately, you have empty contacts book!</string>
 
     <!-- Formats -->
     <string name="nickname_format" translatable="false"><![CDATA[<font color="#FFFFFF">@%1$s</font><font color="#BDBDBD">#%2$s</font>]]></string>

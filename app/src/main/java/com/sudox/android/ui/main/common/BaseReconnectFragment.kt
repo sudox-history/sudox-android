@@ -18,6 +18,7 @@ import javax.inject.Inject
  *
  * @author KerJen
  * **/
+@Deprecated("")
 abstract class BaseReconnectFragment : DaggerFragment() {
 
     @Inject

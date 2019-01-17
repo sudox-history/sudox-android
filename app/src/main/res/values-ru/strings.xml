@@ -103,6 +103,7 @@
     <string name="contact_edit">Редактирование</string>
     <string name="edit_save">Сохранить</string>
     <string name="yesterday">Вчера</string>
+    <string name="empty_contacts_book">К сожалению, у вас пустая контактная книжка!</string>
 
     <plurals name="contacts_amount">
         <item quantity="one">%1$d контакт</item>
