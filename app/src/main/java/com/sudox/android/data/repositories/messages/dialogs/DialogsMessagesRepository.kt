@@ -269,10 +269,13 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                 status = MessageStatus.IN_DELIVERY)).await()
     }
 
+    @Suppress("NAME_SHADOWING")
     private suspend fun sendMessage(message: DialogMessage) = GlobalScope.async(messagesSendingThreadContext) {
+        var message = message
+
         // It's new message
-        if (message.lid == 0) {
-            message.lid = dialogMessagesDao.insertOne(message).toInt()
+        if (message.sequence == 0) {
+            message = dialogMessagesDao.saveDeliveringMessage(message)
         }
 
         // Change status of message
@@ -292,6 +295,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                 message.mid = sendDialogMessageDTO.id
                 message.date = sendDialogMessageDTO.date
                 message.status = MessageStatus.DELIVERED
+                message.sequence = 0
             } else {
                 message.status = MessageStatus.NOT_DELIVERED
             }

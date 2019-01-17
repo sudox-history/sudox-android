@@ -21,10 +21,10 @@ interface DialogMessagesDao {
     @Query("DELETE FROM dialogs_messages WHERE mid IN (:ids)")
     fun removeByIds(ids: List<Long>)
 
-    @Query("SELECT * FROM dialogs_messages WHERE peer = :recipientId OR sender = :recipientId ORDER BY lid DESC LIMIT :offset, :limit")
+    @Query("SELECT * FROM dialogs_messages WHERE peer = :recipientId OR sender = :recipientId ORDER BY sequence, mid DESC LIMIT :offset, :limit")
     fun loadAll(recipientId: Long, offset: Int, limit: Int): List<DialogMessage>
 
-    @Query("SELECT * FROM dialogs_messages c WHERE lid=(SELECT max(lid) FROM dialogs_messages WHERE sender=c.sender AND peer=c.peer OR sender=c.peer AND peer=c.sender ORDER BY lid DESC) ORDER BY lid DESC LIMIT :offset, :limit")
+    @Query("SELECT * FROM dialogs_messages c WHERE mid=(SELECT max(mid) FROM dialogs_messages WHERE sender=c.sender AND peer=c.peer OR sender=c.peer AND peer=c.sender ORDER BY mid DESC) ORDER BY mid DESC LIMIT :offset, :limit")
     fun loadLastMessages(offset: Int, limit: Int): List<DialogMessage>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
@@ -33,10 +33,10 @@ interface DialogMessagesDao {
     @Query("SELECT * FROM (SELECT * FROM dialogs_messages WHERE (peer = :recipientId OR sender = :recipientId) AND (status = 'DELIVERED' OR status = 'READ') ORDER by mid DESC LIMIT :offset, :limit) ORDER by mid")
     fun loadDeliveredMessages(recipientId: Long, offset: Int, limit: Int): List<DialogMessage>
 
-    @Query("SELECT * FROM dialogs_messages WHERE status != 'DELIVERED' AND status != 'READ' ORDER BY lid")
+    @Query("SELECT * FROM dialogs_messages WHERE status != 'DELIVERED' AND status != 'READ' ORDER BY sequence")
     fun loadDeliveringMessages(): List<DialogMessage>
 
-    @Query("SELECT * FROM dialogs_messages WHERE peer = :recipientId AND status != 'DELIVERED' AND status != 'READ' ORDER BY lid")
+    @Query("SELECT * FROM dialogs_messages WHERE peer = :recipientId AND status != 'DELIVERED' AND status != 'READ' ORDER BY sequence")
     fun loadDeliveringMessages(recipientId: Long): List<DialogMessage>
 
     @Query("SELECT * FROM dialogs_messages WHERE mid IN (:messagesIds)")
@@ -58,7 +58,7 @@ interface DialogMessagesDao {
             // Update if contains
             if (indexOfNew != -1) {
                 messages[indexOfNew].apply {
-                    lid = storedMessage.lid
+                    mid = storedMessage.mid
                 }
             }
         }
@@ -84,8 +84,21 @@ interface DialogMessagesDao {
 
         // Add to result
         result.plusAssign(deliveredMessages.sortedBy { it.mid })
-        result.plusAssign(deliveringMessages.sortedBy { it.lid })
+        result.plusAssign(deliveringMessages.sortedBy { it.sequence })
 
         return result
+    }
+
+    @Transaction
+    fun saveDeliveringMessage(message: DialogMessage): DialogMessage {
+        val count = countDeliveringMessages(message.peer)
+        val nextSequence = count + 1
+
+        // Применяем порядковый номер и сохраняем
+        message.sequence = nextSequence
+        message.lid = insertOne(message)
+
+        // Возвращаем порядковый номер
+        return message
     }
 }
