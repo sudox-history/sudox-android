@@ -160,7 +160,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
         authActivity.authNavigationBar.configureComponents()
 
         // Send code
-        if (codeEditText.text.length == resources.getInteger(R.integer.length_email_code)) {
+        if (codeEditText.text!!.length == resources.getInteger(R.integer.length_email_code)) {
             sendCode()
         }
     }
