@@ -3,6 +3,7 @@ package com.sudox.android.ui.main.messages.dialogs
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,9 +58,29 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
             dialogsListContainer.notifyInitialLoadingDone()
         })
 
+        // Listen paging data
+        dialogsViewModel.pagingDialogsLiveData.observe(this, Observer {
+            val startIndex = dialogsAdapter.dialogs.size - 1
+
+            dialogsAdapter.dialogs.addAll(it!!)
+            dialogsAdapter.notifyItemRangeInserted(startIndex, it.size)
+        })
+
         // Listen clicks
         dialogsAdapter.clickedDialogLiveData.observe(this, Observer {
             mainActivity.showDialogWithUser(it!!.recipient)
+        })
+
+        // Paging ...
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val position = linearLayoutManager.findLastCompletelyVisibleItemPosition()
+                val updatePosition = dialogsAdapter.dialogs.size - 1
+
+                if (updatePosition - position <= 10 && dialogsAdapter.dialogs.size >= 20) {
+                    dialogsViewModel.loadDialogs(updatePosition + 1)
+                }
+            }
         })
 
         // Start business logic work

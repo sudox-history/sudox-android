@@ -58,6 +58,7 @@ dependencies {
     // No Paginate
     implementation 'com.redmadrobot:inputmask:3.4.4'
     implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha3'
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 }
 
 android {

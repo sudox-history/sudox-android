@@ -6,9 +6,9 @@
     android:clickable="true"
     android:focusable="true"
     android:paddingStart="25dp"
-    android:paddingTop="9dp"
+    android:paddingTop="10dp"
     android:paddingEnd="25dp"
-    android:paddingBottom="9dp">
+    android:paddingBottom="10dp">
 
     <com.sudox.design.avatar.AvatarView
         android:id="@+id/dialogRecipientAvatar"
