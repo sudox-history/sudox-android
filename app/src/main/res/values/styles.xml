@@ -8,8 +8,14 @@
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:colorBackground">@color/colorBackground</item>
         <item name="android:overScrollMode">never</item>
-        <!-- Custom styles -->
+
+        <!-- Edit texts -->
+        <item name="android:editTextStyle">@style/AppTheme.EditText</item>
         <item name="editTextStyle">@style/AppTheme.EditText</item>
+
+        <!-- Alert dialogs -->
+        <item name="android:alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
+        <item name="alertDialogTheme">@style/AppTheme.Dialog.Alert</item>
     </style>
 
     <!-- Application launcher. -->
@@ -57,6 +63,17 @@
     <style name="AppTheme.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:textSize">15sp</item>
         <item name="android:textColorHint">#9F9F9F</item>
+    </style>
+
+    <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/background_alert_dialog</item>
+        <item name="android:background">#20242E</item>
+    </style>
+
+    <style name="AppTheme.Dialog.Alert.TitleAppearance">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
     <!-- No padding text view -->
