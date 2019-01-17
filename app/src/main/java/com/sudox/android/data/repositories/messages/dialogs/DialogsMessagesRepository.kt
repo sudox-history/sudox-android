@@ -238,7 +238,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             }
 
             val storableMessages = toStorableMessages(lastDialogsMessages.messages)
-            val savedMessages = dialogMessagesDao.insertAll(storableMessages)
+            val savedMessages = dialogMessagesDao.updateOrInsertMessages(storableMessages)
 
             return loadLastMessagesFromDatabase(offset, limit)
         } catch (e: NetworkException) {

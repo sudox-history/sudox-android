@@ -51,7 +51,6 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
         // Listen data
         dialogsViewModel.initialDialogsLiveData.observe(this, Observer {
             dialogsAdapter.dialogs = it!!
-            dialogsViewModel.isListNotEmpty = it.isNotEmpty()
 
             // Loaded!
             dialogsAdapter.notifyDataSetChanged()

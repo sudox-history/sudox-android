@@ -33,8 +33,8 @@ interface DialogMessagesDao {
     @Query("SELECT * FROM (SELECT * FROM dialogs_messages WHERE (peer = :recipientId OR sender = :recipientId) AND (status = 'DELIVERED' OR status = 'READ') ORDER by mid DESC LIMIT :offset, :limit) ORDER by mid")
     fun loadDeliveredMessages(recipientId: Long, offset: Int, limit: Int): List<DialogMessage>
 
-    @Query("SELECT * FROM dialogs_messages WHERE status != 'DELIVERED' AND status != 'READ' ORDER BY sequence")
-    fun loadDeliveringMessages(): List<DialogMessage>
+    @Query("SELECT * FROM dialogs_messages WHERE status != 'DELIVERED' AND status != 'READ' ORDER BY lid DESC LIMIT :offset, :limit")
+    fun loadLastDeliveringMessages(offset: Int, limit: Int): List<DialogMessage>
 
     @Query("SELECT * FROM dialogs_messages WHERE peer = :recipientId AND status != 'DELIVERED' AND status != 'READ' ORDER BY sequence")
     fun loadDeliveringMessages(recipientId: Long): List<DialogMessage>
@@ -49,6 +49,9 @@ interface DialogMessagesDao {
     fun updateOrInsertMessages(messages: List<DialogMessage>) {
         val messagesIds = messages.map { it.mid }
         val storedMessages = loadByIds(messagesIds)
+
+        // Remove all
+        removeByIds(messagesIds)
 
         // Update stored messages
         for (i in 0 until storedMessages.size) {
@@ -101,4 +104,12 @@ interface DialogMessagesDao {
         // Возвращаем порядковый номер
         return message
     }
+
+//    @Transaction
+//    fun loadLastMessages(offset: Int, limit: Int): List<DialogMessage> {
+//        val lastDeliveringMessages = loadLastDeliveringMessages(offset, limit)
+//        val lastDeliveredMessages = loadLastDeliveredMessages(offset, limit)
+//
+//
+//    }
 }
