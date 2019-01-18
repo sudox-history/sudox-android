@@ -15,8 +15,7 @@ data class DialogMessage(@PrimaryKey(autoGenerate = true) var lid: Long = 0,
                          @ColumnInfo var message: String,
                          @ColumnInfo var date: Long,
                          @ColumnInfo var direction: MessageDirection,
-                         @ColumnInfo var status: MessageStatus,
-                         @ColumnInfo var sequence: Int = 0) {
+                         @ColumnInfo var status: MessageStatus) {
 
     fun getRecipientId() = if (direction == MessageDirection.TO) peer else sender
 }

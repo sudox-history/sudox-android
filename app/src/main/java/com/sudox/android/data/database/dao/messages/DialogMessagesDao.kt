@@ -21,7 +21,7 @@ interface DialogMessagesDao {
     @Query("DELETE FROM dialogs_messages WHERE mid IN (:ids)")
     fun removeByIds(ids: List<Long>)
 
-    @Query("SELECT * FROM dialogs_messages WHERE peer = :recipientId OR sender = :recipientId ORDER BY sequence, mid DESC LIMIT :offset, :limit")
+    @Query("SELECT * FROM dialogs_messages WHERE peer = :recipientId OR sender = :recipientId ORDER BY mid DESC LIMIT :offset, :limit")
     fun loadAll(recipientId: Long, offset: Int, limit: Int): List<DialogMessage>
 
     @Query("SELECT * FROM dialogs_messages c WHERE date=(SELECT max(date) FROM dialogs_messages WHERE sender=c.sender AND peer=c.peer OR sender=c.peer AND peer=c.sender ORDER BY mid DESC) ORDER BY date DESC LIMIT :offset, :limit")
@@ -36,7 +36,7 @@ interface DialogMessagesDao {
     @Query("SELECT * FROM dialogs_messages WHERE status != 'DELIVERED' AND status != 'READ' ORDER BY lid DESC LIMIT :offset, :limit")
     fun loadLastDeliveringMessages(offset: Int, limit: Int): List<DialogMessage>
 
-    @Query("SELECT * FROM dialogs_messages WHERE peer = :recipientId AND status != 'DELIVERED' AND status != 'READ' ORDER BY sequence")
+    @Query("SELECT * FROM dialogs_messages WHERE peer = :recipientId AND status != 'DELIVERED' AND status != 'READ' ORDER BY date")
     fun loadDeliveringMessages(recipientId: Long): List<DialogMessage>
 
     @Query("SELECT * FROM dialogs_messages WHERE mid IN (:messagesIds)")
@@ -87,21 +87,8 @@ interface DialogMessagesDao {
 
         // Add to result
         result.plusAssign(deliveredMessages.sortedBy { it.mid })
-        result.plusAssign(deliveringMessages.sortedBy { it.sequence })
+        result.plusAssign(deliveringMessages.sortedBy { it.date })
 
         return result
-    }
-
-    @Transaction
-    fun saveDeliveringMessage(message: DialogMessage): DialogMessage {
-        val count = countDeliveringMessages(message.peer)
-        val nextSequence = count + 1
-
-        // Применяем порядковый номер и сохраняем
-        message.sequence = nextSequence
-        message.lid = insertOne(message)
-
-        // Возвращаем порядковый номер
-        return message
     }
 }
