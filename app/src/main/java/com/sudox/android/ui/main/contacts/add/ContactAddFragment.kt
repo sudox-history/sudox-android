@@ -29,7 +29,7 @@ class ContactAddFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    val contactAddViewModel by lazy { getViewModel<ContactAddViewModel>(viewModelFactory) }
+    private val contactAddViewModel by lazy { getViewModel<ContactAddViewModel>(viewModelFactory) }
 
     // Data
     private val mainActivity by lazy { activity as MainActivity }
@@ -89,6 +89,8 @@ class ContactAddFragment : DaggerFragment() {
             } else if (it == ContactAddAction.SHOW_USER_ALREADY_ADDED_ERROR) {
                 contactPhoneEditTextContainer.error = getString(R.string.contact_has_already_added)
             }
+
+            freezeUI(false)
         })
 
         contactAddViewModel.contactAddErrorsLiveData.observe(this, Observer {
@@ -99,6 +101,8 @@ class ContactAddFragment : DaggerFragment() {
                 contactNameEditTextContainer.error = getString(R.string.unknown_error)
                 if (!inEditMode) contactPhoneEditTextContainer.error = getString(R.string.unknown_error)
             }
+
+            freezeUI(false)
         })
 
         contactAddViewModel.contactAddRegexErrorsLiveData.observe(this, Observer {
@@ -112,6 +116,8 @@ class ContactAddFragment : DaggerFragment() {
                     contactPhoneEditTextContainer.error = getString(R.string.wrong_phone_format)
                 }
             }
+
+            freezeUI(false)
         })
     }
 
@@ -160,6 +166,7 @@ class ContactAddFragment : DaggerFragment() {
         mainActivity.mainToolbar.setFeatureButtonOnClickListener(View.OnClickListener {
             if (!inEditMode) {
                 contactAddViewModel.addContact(contactNameEditText.text.toString(), "7$phoneNumber")
+                freezeUI(true)
             } else {
                 editableUser!!.name = contactNameEditText.text.toString()
 
@@ -167,5 +174,11 @@ class ContactAddFragment : DaggerFragment() {
                 contactAddViewModel.editContact(initialEditableUser!!, editableUser!!)
             }
         })
+    }
+
+    private fun freezeUI(freezeState: Boolean) {
+        contactNameEditText.isEnabled = !freezeState
+        contactPhoneEditText.isEnabled = !freezeState
+        mainActivity.mainToolbar.setFeatureEnabled(!freezeState)
     }
 }

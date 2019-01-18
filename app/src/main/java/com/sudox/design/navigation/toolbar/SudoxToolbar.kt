@@ -171,6 +171,10 @@ class SudoxToolbar : Toolbar {
         setFeatureText(context.getString(resId))
     }
 
+    fun setFeatureEnabled(enabled: Boolean) {
+        featureTextButton!!.isEnabled = enabled
+    }
+
     fun setFeatureText(text: String) {
         featureButtonText = text
 
@@ -349,6 +353,7 @@ class SudoxToolbar : Toolbar {
         featureTextButton?.visibility = View.GONE
         titleTextView?.visibility = View.GONE
         actionMenuView?.removeAllViews()
+        featureTextButton?.isEnabled = true
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
