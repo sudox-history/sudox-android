@@ -24,7 +24,7 @@ interface DialogMessagesDao {
     @Query("SELECT * FROM dialogs_messages WHERE peer = :recipientId OR sender = :recipientId ORDER BY sequence, mid DESC LIMIT :offset, :limit")
     fun loadAll(recipientId: Long, offset: Int, limit: Int): List<DialogMessage>
 
-    @Query("SELECT * FROM dialogs_messages c WHERE mid=(SELECT max(mid) FROM dialogs_messages WHERE sender=c.sender AND peer=c.peer OR sender=c.peer AND peer=c.sender ORDER BY mid DESC) ORDER BY mid DESC LIMIT :offset, :limit")
+    @Query("SELECT * FROM dialogs_messages c WHERE date=(SELECT max(date) FROM dialogs_messages WHERE sender=c.sender AND peer=c.peer OR sender=c.peer AND peer=c.sender ORDER BY mid DESC) ORDER BY date DESC LIMIT :offset, :limit")
     fun loadLastMessages(offset: Int, limit: Int): List<DialogMessage>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
@@ -104,12 +104,4 @@ interface DialogMessagesDao {
         // Возвращаем порядковый номер
         return message
     }
-
-//    @Transaction
-//    fun loadLastMessages(offset: Int, limit: Int): List<DialogMessage> {
-//        val lastDeliveringMessages = loadLastDeliveringMessages(offset, limit)
-//        val lastDeliveredMessages = loadLastDeliveredMessages(offset, limit)
-//
-//
-//    }
 }
