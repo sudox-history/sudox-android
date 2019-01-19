@@ -46,7 +46,7 @@ class DialogsAdapter(val context: Context) : RecyclerView.Adapter<DialogsAdapter
         holder.dialogRecipientName.installText(recipient.name)
         holder.dialogLastMsgTime.installText(formatDate(context, lastMessage.date))
         holder.dialogLastMsgText.installText(if (lastMessage.direction == MessageDirection.TO) {
-            formatHtml("<font color='#FFFFFF'>${context.resources.getString(R.string.you)}:</font> ${lastMessage.message}")
+            formatHtml("<font color='#BDBDBD'>${context.resources.getString(R.string.you)}:</font> ${lastMessage.message}")
         } else {
             lastMessage.message
         })
