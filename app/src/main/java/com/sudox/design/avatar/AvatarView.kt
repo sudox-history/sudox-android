@@ -12,6 +12,8 @@ import kotlinx.coroutines.android.Main
 class AvatarView : AppCompatImageView {
 
     private var drawingJob: Job? = null
+    private var drawnPhoto: String? = null
+    private var drawnLetters: String? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -23,8 +25,10 @@ class AvatarView : AppCompatImageView {
 
         // Render ...
         if (type == "col") {
-            drawingJob?.cancel()
-            drawingJob = drawGradientAvatar(data, user)
+            if (drawnPhoto != user.photo || drawnLetters != user.name.getTwoFirstLetters()) {
+                drawingJob?.cancel()
+                drawingJob = drawGradientAvatar(data, user)
+            }
         } else {
 //            TODO("Unsupported avatar type ...")
         }
@@ -63,6 +67,10 @@ class AvatarView : AppCompatImageView {
 
         // Draw text
         canvas.drawText(text, canvas.width / 2 - textRect.exactCenterX(), canvas.height / 2 - textRect.exactCenterY(), paint)
+
+        // Prevent unused executions ...
+        drawnPhoto = user.photo
+        drawnLetters = text
 
         // Set bitmap
         GlobalScope.launch(Dispatchers.Main) { setImageBitmap(bitmap) }
