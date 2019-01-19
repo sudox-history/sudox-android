@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.helpers.formatDate
 import com.sudox.android.data.models.messages.MessageDirection
+import com.sudox.android.data.models.messages.MessageStatus
 import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.design.helpers.formatHtml
 import com.sudox.protocol.models.SingleLiveEvent
@@ -50,6 +51,18 @@ class DialogsAdapter(val context: Context) : RecyclerView.Adapter<DialogsAdapter
         } else {
             lastMessage.message
         })
+
+        if (lastMessage.direction == MessageDirection.TO) {
+            holder.dialogLastMsgTime.compoundDrawablePadding = (5 * context.resources.displayMetrics.density).toInt()
+            holder.dialogLastMsgTime.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(when {
+                lastMessage.status == MessageStatus.IN_DELIVERY -> R.drawable.ic_clock
+                lastMessage.status == MessageStatus.DELIVERED -> R.drawable.ic_check
+                else -> R.drawable.ic_error
+            }), null, null, null)
+        } else {
+            holder.dialogLastMsgTime.compoundDrawablePadding = 0
+            holder.dialogLastMsgTime.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        }
     }
 
     class Holder(val view: View) : RecyclerView.ViewHolder(view) {
