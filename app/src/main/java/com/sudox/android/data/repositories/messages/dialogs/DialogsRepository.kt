@@ -20,9 +20,9 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
                                             private val authRepository: AuthRepository) {
 
     @Throws(InternalRequestException::class)
-    fun loadDialogs(offset: Int = 0, limit: Int = 20) = GlobalScope.async(Dispatchers.IO) {
+    fun loadDialogs(offset: Int = 0, limit: Int = 20, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
         val lastMessages = dialogsMessagesRepository
-                .loadLastMessages(offset, limit)
+                .loadLastMessages(offset, limit, onlyFromNetwork)
                 .await()
 
         if (lastMessages.isEmpty()) {

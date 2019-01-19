@@ -216,8 +216,8 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         }
     }
 
-    fun loadLastMessages(offset: Int, limit: Int) = GlobalScope.async(Dispatchers.IO) {
-        if (protocolClient.isValid() && authRepository.sessionIsValid) {
+    fun loadLastMessages(offset: Int, limit: Int, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+        if (onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid)) {
             loadLastMessagesFromNetwork(offset, limit)
         } else {
             loadLastMessagesFromDatabase(offset, limit)
