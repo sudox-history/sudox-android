@@ -216,8 +216,8 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         }
     }
 
-    fun loadLastMessages(offset: Int, limit: Int) = GlobalScope.async(Dispatchers.IO) {
-        if (protocolClient.isValid() && authRepository.sessionIsValid) {
+    fun loadLastMessages(offset: Int, limit: Int, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+        if (onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid)) {
             loadLastMessagesFromNetwork(offset, limit)
         } else {
             loadLastMessagesFromDatabase(offset, limit)
@@ -238,7 +238,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             }
 
             val storableMessages = toStorableMessages(lastDialogsMessages.messages)
-            val savedMessages = dialogMessagesDao.insertAll(storableMessages)
+            val savedMessages = dialogMessagesDao.updateOrInsertMessages(storableMessages)
 
             return loadLastMessagesFromDatabase(offset, limit)
         } catch (e: NetworkException) {
@@ -269,10 +269,11 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                 status = MessageStatus.IN_DELIVERY)).await()
     }
 
+    @Suppress("NAME_SHADOWING")
     private suspend fun sendMessage(message: DialogMessage) = GlobalScope.async(messagesSendingThreadContext) {
         // It's new message
-        if (message.lid == 0) {
-            message.lid = dialogMessagesDao.insertOne(message).toInt()
+        if (message.lid == 0L) {
+            message.lid = dialogMessagesDao.insertOne(message)
         }
 
         // Change status of message

@@ -8,7 +8,7 @@ import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.messages.MessageStatus
 
 @Entity(tableName = "dialogs_messages")
-data class DialogMessage(@PrimaryKey(autoGenerate = true) var lid: Int = 0,
+data class DialogMessage(@PrimaryKey(autoGenerate = true) var lid: Long = 0,
                          @ColumnInfo var mid: Long = 0,
                          @ColumnInfo var sender: Long,
                          @ColumnInfo var peer: Long,
