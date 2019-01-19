@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.messages.MessagesFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
@@ -81,6 +82,49 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                 .clickedDialogLiveData
                 .observe(this, Observer {
                     mainActivity.showDialogWithUser(it!!.recipient)
+                })
+
+        // Listen new dialogs
+        dialogsViewModel
+                .movesToTopDialogsLiveData
+                .observe(this, Observer { dialog ->
+                    if (dialogsAdapter.dialogs.isEmpty()) {
+                        dialogsAdapter.dialogs.add(dialog!!)
+                        dialogsAdapter.notifyItemInserted(0)
+                    } else {
+                        // Try to find dialog with this recipient
+                        val indexOf = dialogsAdapter.dialogs.indexOfFirst { it.recipient.uid == dialog!!.recipient.uid }
+
+                        if (indexOf == -1) {
+                            dialogsAdapter.dialogs.add(0, dialog!!)
+                            dialogsAdapter.notifyItemInserted(0)
+                        } else {
+                            dialogsAdapter.dialogs.removeAt(indexOf)
+                            dialogsAdapter.dialogs.add(0, dialog!!)
+                            dialogsAdapter.notifyItemMoved(indexOf, 0)
+                            dialogsAdapter.notifyItemChanged(0)
+                        }
+                    }
+                })
+
+        // Listen new messages
+        dialogsViewModel
+                .movesToTopMessagesLiveData
+                .observe(this, Observer { message ->
+                    val indexOf = dialogsAdapter.dialogs.indexOfLast { it.recipient.uid == message!!.getRecipientId() }
+
+                    if (indexOf == -1) {
+                        dialogsViewModel.requestDialog(message!!)
+                    } else {
+                        val dialog = dialogsAdapter.dialogs[indexOf]
+
+                        // Update
+                        dialog.lastMessage = message!!
+                        dialogsAdapter.dialogs.removeAt(indexOf)
+                        dialogsAdapter.dialogs.add(0, dialog)
+                        dialogsAdapter.notifyItemMoved(indexOf, 0)
+                        dialogsAdapter.notifyItemChanged(0)
+                    }
                 })
 
         // Paging ...

@@ -3,6 +3,7 @@ package com.sudox.android.ui.main.messages.dialogs
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.SubscriptionsContainer
+import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.models.messages.dialogs.Dialog
@@ -19,6 +20,8 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
 
     var initialDialogsLiveData: MutableLiveData<ArrayList<Dialog>> = SingleLiveEvent()
     var pagingDialogsLiveData: MutableLiveData<List<Dialog>> = SingleLiveEvent()
+    var movesToTopMessagesLiveData: MutableLiveData<DialogMessage> = SingleLiveEvent()
+    var movesToTopDialogsLiveData: MutableLiveData<Dialog> = SingleLiveEvent()
 
     private var subscriptionsContainer: SubscriptionsContainer = SubscriptionsContainer()
     private var isLoading: Boolean = false
@@ -28,6 +31,7 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
 
     init {
         listenAccountSession()
+        listenMovesToTop()
     }
 
     private fun listenAccountSession() = GlobalScope.launch {
@@ -43,6 +47,30 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
                 } else {
                     updateDialogs()
                 }
+            }
+        }
+    }
+
+    private fun listenMovesToTop() = GlobalScope.launch {
+        for (message in subscriptionsContainer
+                .addSubscription(dialogsRepository
+                        .dialogMessageForMovingToTopChannel
+                        .openSubscription())) {
+
+            if (loadedDialogsCount == 0) {
+                val dialog = dialogsRepository.buildDialogWithLastMessage(message) ?: continue
+
+                // Обновим счетчики
+                loadedDialogsCount++
+                lastLoadedOffset = 0
+
+                // На отображение
+                movesToTopDialogsLiveData.postValue(dialog)
+            } else {
+                movesToTopMessagesLiveData.postValue(message)
+                /** TODO: Отправляем по LiveData, дальше ищем в списке Adapter'а наличие диалога с данным Peer'ом
+                 *  Если диалога нет, то запрашиваем его у ViewModel и уже грузим его (НЕ ЗАБЫТЬ ОБНОВИТЬ СЧЕТЧИКИ).
+                 */
             }
         }
     }
@@ -124,6 +152,16 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
             // Загрузка завершена, разблокируем дальнейшие действия.
             isLoading = false
         }
+    }
+
+    fun requestDialog(message: DialogMessage) = GlobalScope.launch {
+        val dialog = dialogsRepository.buildDialogWithLastMessage(message) ?: return@launch
+
+        // Обновим счетчики
+        loadedDialogsCount++
+
+        // На отображение
+        movesToTopDialogsLiveData.postValue(dialog)
     }
 
     override fun onCleared() {
