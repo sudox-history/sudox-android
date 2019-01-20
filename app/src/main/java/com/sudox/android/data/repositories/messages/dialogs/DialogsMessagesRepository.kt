@@ -123,8 +123,9 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 
     fun loadMessages(recipientId: Long, offset: Int, limit: Int, onlyFromNetwork: Boolean = false, excludeDelivering: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
         val cachedOffset = loadedDialogsRecipientIds[recipientId] ?: -1
+        val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
 
-        if (onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid && cachedOffset < offset)) {
+        if (onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid && cachedOffset < newOffset)) {
             loadMessagesFromNetwork(recipientId, offset, limit, excludeDelivering)
         } else {
             loadMessagesFromDatabase(recipientId, offset, limit)
