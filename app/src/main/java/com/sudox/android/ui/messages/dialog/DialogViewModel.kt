@@ -7,14 +7,10 @@ import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
-import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.messages.dialogs.DialogsMessagesRepository
 import com.sudox.protocol.models.SingleLiveEvent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.IO
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class DialogViewModel @Inject constructor(val dialogsMessagesRepository: DialogsMessagesRepository,
@@ -32,6 +28,8 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
     private var lastLoadedOffset: Int = 0
     private var loadedMessagesCount: Int = 0
     private var recipientId: Long = 0
+    private var firstDeliveredMessageId: Long = -1
+    private var updateJob: Job? = null
 
     fun start(recipientId: Long) = GlobalScope.launch {
         dialogsMessagesRepository.openDialog(recipientId)
@@ -90,55 +88,50 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
                 if (loadedMessagesCount == 0) {
                     loadMessages()
                 } else {
-                    updateMessages()
+                    updateJob = updateMessages()
                 }
             }
         }
     }
 
-    private fun updateMessages() = GlobalScope.launch(Dispatchers.IO) {
+    private fun updateMessages() = GlobalScope.async(Dispatchers.IO) {
         isLoading = true
-        isListEnded = false
 
-        if (loadedMessagesCount <= 20) {
-            val messages = dialogsMessagesRepository
-                    .loadMessages(recipientId, 0, loadedMessagesCount, onlyFromNetwork = true)
+        // Начинаем поиск новых сообщений с 0
+        var currentOffset = 0
+        val partSize = Math.min(100, loadedMessagesCount)
+        val newMessages = arrayListOf<DialogMessage>()
+
+        outer@ while (isActive) {
+            val part = dialogsMessagesRepository
+                    .loadMessages(recipientId, currentOffset, partSize, onlyFromNetwork = true, excludeDelivering = true)
                     .await()
 
-            lastLoadedOffset = 0
-            loadedMessagesCount = messages.size
-            initialDialogHistoryLiveData.postValue(messages)
-        } else {
-            var currentLoaded = 0
-            val messages = ArrayList<DialogMessage>()
-            val neededParts = Math.ceil(loadedMessagesCount / 100.0)
+            if (part.isEmpty()) break
 
-            for (i in 0 until neededParts.toInt()) {
-                try {
-                    val part = dialogsMessagesRepository
-                            .loadMessages(recipientId, currentLoaded, 100, onlyFromNetwork = true)
-                            .await()
+            // Увеличиваем offset для следующего прохода
+            currentOffset += part.size
 
-                    if (part.isNotEmpty()) {
-                        messages.plusAssign(part)
-                        currentLoaded += messages.size
+            // Ищем сходство, если за цикл не найдем
+            for (i in part.lastIndex downTo 0) {
+                val message = part[i]
 
-                        // Validate cache
-                        lastLoadedOffset = currentLoaded
-                        dialogsMessagesRepository.updateCachedOffset(recipientId, lastLoadedOffset)
-                    } else if (part.size < 20) {
-                        break
-                    }
-                } catch (e: InternalRequestException) {
-                    if (e.errorCode == InternalErrors.LIST_ENDED) {
-                        isListEnded = true
-                        break
-                    }
+                if (message.mid > firstDeliveredMessageId) {
+                    newMessages.add(message)
+                } else {
+                    break@outer
                 }
             }
+        }
 
-            loadedMessagesCount = messages.size
-            initialDialogHistoryLiveData.postValue(messages)
+        // Recalculate data
+        lastLoadedOffset += newMessages.size
+        loadedMessagesCount += newMessages.size
+        firstDeliveredMessageId = newMessages.find { it.mid != 0L }?.mid ?: firstDeliveredMessageId
+
+        // To showing
+        for (i in newMessages.lastIndex downTo 0) {
+            newDialogMessageLiveData.postValue(newMessages[i])
         }
 
         isLoading = false
@@ -154,16 +147,22 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
                 isLoading = true
 
                 // Запрашиваем список сообщений ...
-                val dialogs = dialogsMessagesRepository
+                val messages = dialogsMessagesRepository
                         .loadMessages(recipientId, offset, limit)
                         .await()
 
                 if (offset == 0) {
-                    initialDialogHistoryLiveData.postValue(dialogs)
-                    loadedMessagesCount = dialogs.size
+                    initialDialogHistoryLiveData.postValue(messages)
+                    loadedMessagesCount = messages.size
+
+                    if (loadedMessagesCount > 0) {
+                        firstDeliveredMessageId = messages.findLast { it.mid != 0L }?.mid ?: -1
+                    } else {
+                        firstDeliveredMessageId = -1
+                    }
                 } else {
-                    pagingDialogHistoryLiveData.postValue(dialogs)
-                    loadedMessagesCount += dialogs.size
+                    pagingDialogHistoryLiveData.postValue(messages)
+                    loadedMessagesCount += messages.size
                 }
 
                 lastLoadedOffset = offset
@@ -183,6 +182,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
     }
 
     override fun onCleared() {
+        updateJob?.cancel()
         subscriptionsContainer.unsubscribeAll()
         dialogsMessagesRepository.endDialog()
     }
