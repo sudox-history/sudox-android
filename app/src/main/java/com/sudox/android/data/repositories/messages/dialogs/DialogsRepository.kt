@@ -1,6 +1,7 @@
 package com.sudox.android.data.repositories.messages.dialogs
 
 import com.sudox.android.data.database.model.messages.DialogMessage
+import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.models.messages.dialogs.Dialog
@@ -23,6 +24,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
      * 2-й параметр - новое сообщение.
      */
     var dialogMessageForMovingToTopChannel: ConflatedBroadcastChannel<DialogMessage> = ConflatedBroadcastChannel()
+    var dialogRecipientUpdateChannel: ConflatedBroadcastChannel<User> = ConflatedBroadcastChannel()
 
     init {
         listenNewMessages()

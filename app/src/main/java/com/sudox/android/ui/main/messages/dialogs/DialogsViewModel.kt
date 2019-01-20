@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.messages.DialogMessage
+import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.models.messages.dialogs.Dialog
@@ -22,6 +23,7 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
     var pagingDialogsLiveData: MutableLiveData<List<Dialog>> = SingleLiveEvent()
     var movesToTopMessagesLiveData: MutableLiveData<DialogMessage> = SingleLiveEvent()
     var movesToTopDialogsLiveData: MutableLiveData<Dialog> = SingleLiveEvent()
+    var recipientUpdateLiveData: MutableLiveData<User> = SingleLiveEvent()
 
     private var subscriptionsContainer: SubscriptionsContainer = SubscriptionsContainer()
     private var isLoading: Boolean = false
@@ -32,6 +34,7 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
     init {
         listenAccountSession()
         listenMovesToTop()
+        listenRecipientUpdates()
     }
 
     private fun listenAccountSession() = GlobalScope.launch {
@@ -69,6 +72,16 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
             } else {
                 movesToTopMessagesLiveData.postValue(message)
             }
+        }
+    }
+
+    private fun listenRecipientUpdates() = GlobalScope.launch {
+        for (user in subscriptionsContainer
+                .addSubscription(dialogsRepository
+                        .dialogRecipientUpdateChannel
+                        .openSubscription())) {
+
+            recipientUpdateLiveData.postValue(user)
         }
     }
 

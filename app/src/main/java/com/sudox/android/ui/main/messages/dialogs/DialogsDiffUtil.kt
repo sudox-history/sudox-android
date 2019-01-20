@@ -11,7 +11,11 @@ class DialogsDiffUtil(val newDialogs: ArrayList<Dialog>,
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return newDialogs[newItemPosition].lastMessage.message == oldDialogs[oldItemPosition].lastMessage.message
+        val newDialog = newDialogs[newItemPosition]
+        val oldDialog = oldDialogs[oldItemPosition]
+
+        return newDialog.recipient == oldDialog.recipient
+                && newDialog.lastMessage.message == oldDialog.lastMessage.message
     }
 
     override fun getOldListSize(): Int = oldDialogs.size

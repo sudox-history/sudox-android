@@ -17,6 +17,7 @@ import com.sudox.android.data.models.contacts.dto.*
 import com.sudox.android.data.models.users.UserType
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.messages.dialogs.DialogsMessagesRepository
+import com.sudox.android.data.repositories.messages.dialogs.DialogsRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.NetworkException
 import kotlinx.coroutines.*
@@ -32,6 +33,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                              private val authRepository: AuthRepository,
                                              private val usersRepository: UsersRepository,
                                              private val dialogsMessagesRepository: DialogsMessagesRepository,
+                                             private val dialogsRepository: DialogsRepository,
                                              private val userDao: UserDao,
                                              private val context: Context) {
 
@@ -147,14 +149,18 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
 
                 // Обновим контакт в чате
                 if (dialogsMessagesRepository.openedDialogRecipientId != 0L) {
-                    val user = users.find { it.uid == dialogsMessagesRepository.openedDialogRecipientId }
+                    var user = users.find { it.uid == dialogsMessagesRepository.openedDialogRecipientId }
 
                     if (user == null) {
-                        dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(usersRepository
+                        user = usersRepository
                                 .loadUser(dialogsMessagesRepository.openedDialogRecipientId)
-                                .await() ?: return@launch)
+                                .await() ?: return@launch
+
+                        dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
+                        dialogsRepository.dialogRecipientUpdateChannel.offer(user)
                     } else {
                         dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
+                        dialogsRepository.dialogRecipientUpdateChannel.offer(user)
                     }
                 }
 
@@ -332,6 +338,8 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         if (dialogsMessagesRepository.openedDialogRecipientId == user.uid) {
             dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
         }
+
+        dialogsRepository.dialogRecipientUpdateChannel.offer(user)
     }
 
     private fun notifyContactUpdated(user: User) {
@@ -348,19 +356,23 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         if (dialogsMessagesRepository.openedDialogRecipientId == user.uid) {
             dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
         }
+
+        dialogsRepository.dialogRecipientUpdateChannel.offer(user)
     }
 
     private suspend fun notifyContactRemoved(id: Long) {
         contactsChannel.value.findAndRemoveIf { it.uid == id }
         contactsChannel.offer(contactsChannel.value)
 
+        val user = usersRepository
+                .loadUser(dialogsMessagesRepository.openedDialogRecipientId, onlyFromNetwork = true)
+                .await() ?: return
+
         // Грузим юзера для апдейта ...
         if (dialogsMessagesRepository.openedDialogRecipientId == id) {
-            val user = usersRepository
-                    .loadUser(dialogsMessagesRepository.openedDialogRecipientId, onlyFromNetwork = true)
-                    .await() ?: return
-
             dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
         }
+
+        dialogsRepository.dialogRecipientUpdateChannel.offer(user)
     }
 }

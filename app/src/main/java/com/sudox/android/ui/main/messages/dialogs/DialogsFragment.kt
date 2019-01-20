@@ -127,6 +127,20 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                     }
                 })
 
+        // Listen recipient updates
+        dialogsViewModel
+                .recipientUpdateLiveData
+                .observe(this, Observer { user ->
+                    val indexOf = dialogsAdapter.dialogs.indexOfLast { it.recipient.uid == user!!.uid }
+
+                    // Not found ...
+                    if (indexOf == -1) return@Observer
+
+                    // Update
+                    dialogsAdapter.dialogs[indexOf].recipient = user!!
+                    dialogsAdapter.notifyItemChanged(indexOf)
+                })
+
         // Paging ...
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
