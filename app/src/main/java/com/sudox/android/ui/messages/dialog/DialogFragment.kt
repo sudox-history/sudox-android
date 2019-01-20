@@ -133,10 +133,12 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
         // Paging ...
         chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+                val visibleItemCount = linearLayoutManager.childCount
+                val totalItemCount = linearLayoutManager.itemCount
+                val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
                 val updatePosition = dialogAdapter.messages.size - 1
 
-                if (updatePosition - position <= 10 && dialogAdapter.messages.size >= 20) {
+                if (visibleItemCount + (totalItemCount - firstVisibleItemPosition) >= totalItemCount && dialogAdapter.messages.size >= 20) {
                     dialogViewModel.loadMessages(updatePosition + 1)
                 }
             }
