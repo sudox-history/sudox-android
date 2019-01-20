@@ -3,6 +3,7 @@ package com.sudox.android.ui.messages.dialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,7 +12,6 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.formatMessageText
-import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import dagger.android.support.DaggerFragment
@@ -27,8 +27,6 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
     private val linearLayoutManager by lazy { LinearLayoutManager(context!!).apply { stackFromEnd = true } }
     private val dialogAdapter by lazy { DialogAdapter(context!!) }
     private var isInitialized: Boolean = false
-    private var isPagingLoading: Boolean = false
-    private var lastIsInitial: Boolean = false
 
     private lateinit var messagesInnerActivity: MessagesInnerActivity
     private lateinit var recipientUser: User
@@ -43,59 +41,57 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        configureToolbar()
-        configureMessagesList()
+        initToolbar()
+        initMessagesList()
 
-        // Data-logic
-        listenData()
+        // Start business logic work
+        dialogViewModel.start(recipientUser.uid)
     }
 
-    private fun configureMessagesList() {
-        val chatMessagesList = chatMessagesContainer.recyclerView
+    private fun initToolbar() {
+        chatToolbar.setNavigationOnClickListener { activity!!.onBackPressed() }
+        chatToolbar.inflateMenu(R.menu.menu_messages_chat_user)
+
+        // Bind data
+        bindRecipient()
+
+        // Bind recipient updates
+        dialogViewModel.recipientUpdatesLiveData.observe(this, Observer {
+            recipientUser = it!!
+
+            // Update
+            bindRecipient()
+        })
+    }
+
+    private fun initMessagesList() {
+        val chatMessagesList = dialogMessagesContainer.recyclerView
         val chatMessagesPadding = (10 * resources.displayMetrics.density).toInt()
 
         chatMessagesList.setPadding(chatMessagesPadding, chatMessagesPadding, chatMessagesPadding, chatMessagesPadding)
         chatMessagesList.layoutManager = linearLayoutManager
         chatMessagesList.adapter = dialogAdapter
         chatMessagesList.itemAnimator = null
+        chatMessagesList.layoutAnimation = null
         chatMessagesList.clipToPadding = false
-
-        // Paging ...
-        chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val position = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
-                val updatePosition = dialogAdapter.messages.size - 1
-
-                if (lastIsInitial && isPagingLoading) {
-                    isPagingLoading = false
-                    lastIsInitial = false
-                }
-
-                if (position <= 10 && dialogAdapter.messages.size >= 20 && !isPagingLoading) {
-                    dialogViewModel.loadPartOfMessages(recipientUser.uid, updatePosition + 1)
-                    isPagingLoading = true
-                }
-            }
-        })
-    }
-
-    private fun listenData() {
-        val chatMessagesList = chatMessagesContainer.recyclerView
-
-        // Bind paging messages listener
-        dialogViewModel.pagingDialogHistoryLiveData.observe(this, Observer {
-            dialogAdapter.messages.addAll(0, it!!)
-            dialogAdapter.notifyItemRangeInserted(0, it.size)
-
-            isPagingLoading = false
-            lastIsInitial = false
-        })
 
         // Bind initial messages listener
         dialogViewModel.initialDialogHistoryLiveData.observe(this, Observer {
-            dialogAdapter.messages = ArrayList(it!!)
-            dialogAdapter.notifyDataSetChanged()
-            chatMessagesContainer.notifyInitialLoadingDone()
+            val initialEndIndex = Math.min(
+                    Math.max(Math.max(dialogAdapter.messages.size, 20) - 1, 0),
+                    dialogAdapter.messages.size)
+
+            val initialStartIndex = Math.max(0, initialEndIndex - 20)
+            val initialSublist = ArrayList(dialogAdapter.messages.subList(initialStartIndex, initialEndIndex))
+            val diffUtil = DialogDiffUtil(it!!, initialSublist)
+            val diffResult = DiffUtil.calculateDiff(diffUtil)
+
+            // Update
+            dialogAdapter.messages = it
+
+            // Loaded!
+            dialogMessagesContainer.notifyInitialLoadingDone()
+            diffResult.dispatchUpdatesTo(dialogAdapter)
 
             // Listen messages sending requests
             if (!isInitialized) {
@@ -110,9 +106,12 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
                 listenMessagesSendingRequests()
                 isInitialized = true
             }
+        })
 
-            isPagingLoading = false
-            lastIsInitial = true
+        // Bind paging messages listener
+        dialogViewModel.pagingDialogHistoryLiveData.observe(this, Observer {
+            dialogAdapter.messages.addAll(0, it!!)
+            dialogAdapter.notifyItemRangeInserted(0, it.size)
         })
 
         // Bind messages sending status listener
@@ -131,16 +130,19 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
             }
         })
 
-        // Bind recipient updates
-        dialogViewModel.recipientUpdatesLiveData.observe(this, Observer {
-            recipientUser = it!!
+        // Paging ...
+        chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val visibleItemCount = linearLayoutManager.childCount
+                val totalItemCount = linearLayoutManager.itemCount
+                val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
+                val updatePosition = dialogAdapter.messages.size - 1
 
-            // Update
-            bindRecipient()
+                if (visibleItemCount + (totalItemCount - firstVisibleItemPosition) >= totalItemCount && dialogAdapter.messages.size >= 20) {
+                    dialogViewModel.loadMessages(updatePosition + 1)
+                }
+            }
         })
-
-        // Start business logic work
-        dialogViewModel.start(recipientUser.uid)
     }
 
     private fun listenMessagesSendingRequests() = chatSendMessageButton.setOnClickListener {
@@ -153,14 +155,6 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
             // Clear sent text
             chatMessageTextField.text = null
         }
-    }
-
-    private fun configureToolbar() {
-        chatToolbar.setNavigationOnClickListener { activity!!.onBackPressed() }
-        chatToolbar.inflateMenu(R.menu.menu_messages_chat_user)
-
-        // Bind data
-        bindRecipient()
     }
 
     private fun bindRecipient() {
