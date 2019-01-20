@@ -7,6 +7,7 @@ import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
+import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.messages.dialogs.DialogsMessagesRepository
 import com.sudox.protocol.models.SingleLiveEvent
@@ -89,10 +90,58 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
                 if (loadedMessagesCount == 0) {
                     loadMessages()
                 } else {
-//                    updateDialogs()
+                    updateMessages()
                 }
             }
         }
+    }
+
+    private fun updateMessages() = GlobalScope.launch(Dispatchers.IO) {
+        isLoading = true
+        isListEnded = false
+
+        if (loadedMessagesCount <= 20) {
+            val messages = dialogsMessagesRepository
+                    .loadMessages(recipientId, 0, loadedMessagesCount, onlyFromNetwork = true)
+                    .await()
+
+            lastLoadedOffset = 0
+            loadedMessagesCount = messages.size
+            initialDialogHistoryLiveData.postValue(messages)
+        } else {
+            var currentLoaded = 0
+            val messages = ArrayList<DialogMessage>()
+            val neededParts = Math.ceil(loadedMessagesCount / 100.0)
+
+            for (i in 0 until neededParts.toInt()) {
+                try {
+                    val part = dialogsMessagesRepository
+                            .loadMessages(recipientId, currentLoaded, 100, onlyFromNetwork = true)
+                            .await()
+
+                    if (part.isNotEmpty()) {
+                        messages.plusAssign(part)
+                        currentLoaded += messages.size
+
+                        // Validate cache
+                        lastLoadedOffset = currentLoaded
+                        dialogsMessagesRepository.updateCachedOffset(recipientId, lastLoadedOffset)
+                    } else if (part.size < 20) {
+                        break
+                    }
+                } catch (e: InternalRequestException) {
+                    if (e.errorCode == InternalErrors.LIST_ENDED) {
+                        isListEnded = true
+                        break
+                    }
+                }
+            }
+
+            loadedMessagesCount = messages.size
+            initialDialogHistoryLiveData.postValue(messages)
+        }
+
+        isLoading = false
     }
 
     fun loadMessages(offset: Int = 0, limit: Int = 20) {

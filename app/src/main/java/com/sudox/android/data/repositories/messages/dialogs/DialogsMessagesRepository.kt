@@ -297,7 +297,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         return Math.max(initialOffset - dialogMessagesDao.countDeliveringMessages(recipientId), 0)
     }
 
-    private fun updateCachedOffset(recipientId: Long, offset: Int) {
+    fun updateCachedOffset(recipientId: Long, offset: Int) {
         loadedDialogsRecipientIds[recipientId] = offset // Allow load from this offset
     }
 
