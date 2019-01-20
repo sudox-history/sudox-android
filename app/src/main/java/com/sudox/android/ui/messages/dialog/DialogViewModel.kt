@@ -17,7 +17,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
                                           val authRepository: AuthRepository) : ViewModel() {
 
     val sentMessageLiveData: MutableLiveData<DialogMessage> = SingleLiveEvent()
-    val newDialogMessageLiveData: MutableLiveData<DialogMessage> = SingleLiveEvent()
+    val newDialogMessagesLiveData: MutableLiveData<List<DialogMessage>> = SingleLiveEvent()
     val initialDialogHistoryLiveData: MutableLiveData<ArrayList<DialogMessage>> = SingleLiveEvent()
     val pagingDialogHistoryLiveData: MutableLiveData<ArrayList<DialogMessage>> = SingleLiveEvent()
     val recipientUpdatesLiveData: MutableLiveData<User> = SingleLiveEvent()
@@ -53,7 +53,14 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
                         .dialogDialogNewMessageChannel!!
                         .openSubscription())) {
 
-            newDialogMessageLiveData.postValue(message)
+            // Only delivered messages
+            if (message.mid > 0L) {
+                firstDeliveredMessageId = message.mid
+                loadedMessagesCount++
+                lastLoadedOffset++
+            }
+
+            newDialogMessagesLiveData.postValue(listOf(message))
         }
     }
 
@@ -62,6 +69,13 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
                 .addSubscription(dialogsMessagesRepository
                         .dialogDialogSentMessageChannel!!
                         .openSubscription())) {
+
+            // Only delivered messages
+            if (message.mid > 0L) {
+                firstDeliveredMessageId = message.mid
+                loadedMessagesCount++
+                lastLoadedOffset++
+            }
 
             sentMessageLiveData.postValue(message)
         }
@@ -117,7 +131,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
                 val message = part[i]
 
                 if (message.mid > firstDeliveredMessageId) {
-                    newMessages.add(message)
+                    newMessages.add(0, message)
                 } else {
                     break@outer
                 }
@@ -130,10 +144,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
         firstDeliveredMessageId = newMessages.find { it.mid != 0L }?.mid ?: firstDeliveredMessageId
 
         // To showing
-        for (i in newMessages.lastIndex downTo 0) {
-            newDialogMessageLiveData.postValue(newMessages[i])
-        }
-
+        newDialogMessagesLiveData.postValue(newMessages)
         isLoading = false
     }
 

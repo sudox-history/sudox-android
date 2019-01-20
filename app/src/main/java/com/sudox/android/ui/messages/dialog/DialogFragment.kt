@@ -95,11 +95,11 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
 
             // Listen messages sending requests
             if (!isInitialized) {
-                dialogViewModel.newDialogMessageLiveData.observe(this, Observer {
-                    dialogAdapter.messages.add(it!!)
-                    dialogAdapter.notifyItemInserted(dialogAdapter.messages.size - 1)
-                    dialogAdapter.notifyItemChanged(dialogAdapter.messages.size - 2)
-                    chatMessagesList.scrollToPosition(dialogAdapter.messages.size - 1)
+                dialogViewModel.newDialogMessagesLiveData.observe(this, Observer {
+                    dialogAdapter.messages.addAll(it!!)
+                    dialogAdapter.notifyItemRangeInserted(dialogAdapter.messages.size - it.size, it.size)
+                    dialogAdapter.notifyItemChanged(dialogAdapter.messages.size - it.size - 1)
+                    chatMessagesList.scrollToPosition(dialogAdapter.messages.size - it.size)
                 })
 
                 // Start listen to new messages
