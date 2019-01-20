@@ -7,10 +7,8 @@ import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.common.InternalErrors
-import com.sudox.android.data.models.common.LoadingType
 import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.messages.MessageStatus
-import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.data.models.messages.dialogs.dto.DialogHistoryDTO
 import com.sudox.android.data.models.messages.dialogs.dto.DialogMessageDTO
 import com.sudox.android.data.models.messages.dialogs.dto.DialogSendMessageDTO
@@ -123,18 +121,18 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         }
     }
 
-    fun loadMessages(recipientId: Long, offset: Int, limit: Int, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+    fun loadMessages(recipientId: Long, offset: Int, limit: Int, onlyFromNetwork: Boolean = false, excludeDelivering: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
         val cachedOffset = loadedDialogsRecipientIds[recipientId] ?: -1
 
         if (onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid && cachedOffset < offset)) {
-            loadMessagesFromNetwork(recipientId, offset, limit)
+            loadMessagesFromNetwork(recipientId, offset, limit, excludeDelivering)
         } else {
             loadMessagesFromDatabase(recipientId, offset, limit)
         }
     }
 
     @Throws(InternalRequestException::class)
-    private suspend fun loadMessagesFromNetwork(recipientId: Long, offset: Int = 0, limit: Int = 20): ArrayList<DialogMessage> {
+    private suspend fun loadMessagesFromNetwork(recipientId: Long, offset: Int = 0, limit: Int = 20, excludeDelivering: Boolean): ArrayList<DialogMessage> {
         val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
 
         try {
@@ -152,17 +150,25 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                 updateCachedOffset(recipientId, newOffset)
 
                 // offset == 0 => first initializing
-                if (newOffset == 0) {
-                    return dialogMessagesDao.buildInitialCopy(recipientId, messages)
+                return if (newOffset == 0) {
+                    if (excludeDelivering) {
+                        ArrayList(messages)
+                    } else {
+                        dialogMessagesDao.buildInitialCopy(recipientId, messages)
+                    }
                 } else {
-                    return ArrayList(messages)
+                    ArrayList(messages)
                 }
             } else {
                 if (newOffset == 0) {
                     removeSavedMessages(recipientId)
 
                     // newOffset == 0 => first initializing
-                    return ArrayList(dialogMessagesDao.loadDeliveringMessages(recipientId))
+                    return if (excludeDelivering) {
+                        ArrayList()
+                    } else {
+                        ArrayList(dialogMessagesDao.loadDeliveringMessages(recipientId))
+                    }
                 } else if (dialogHistoryDTO.error == Errors.INVALID_USER) {
                     throw InternalRequestException(InternalErrors.LIST_ENDED)
                 }
@@ -171,7 +177,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             // Ignore
         }
 
-        return arrayListOf<DialogMessage>()
+        return arrayListOf()
     }
 
     @Throws(InternalRequestException::class)

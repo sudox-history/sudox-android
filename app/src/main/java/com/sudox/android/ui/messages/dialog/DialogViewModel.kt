@@ -104,7 +104,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
 
         outer@ while (isActive) {
             val part = dialogsMessagesRepository
-                    .loadMessages(recipientId, currentOffset, partSize, onlyFromNetwork = true)
+                    .loadMessages(recipientId, currentOffset, partSize, onlyFromNetwork = true, excludeDelivering = true)
                     .await()
 
             if (part.isEmpty()) break
