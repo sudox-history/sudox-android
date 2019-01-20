@@ -41,7 +41,7 @@
     </com.sudox.design.navigation.toolbar.SudoxToolbar>
 
     <com.sudox.design.recyclerview.RecyclerViewContainer
-        android:id="@+id/chatMessagesContainer"
+        android:id="@+id/dialogMessagesContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/edit_message_layout"

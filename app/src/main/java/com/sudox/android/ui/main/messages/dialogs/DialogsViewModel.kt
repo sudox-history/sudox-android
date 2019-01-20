@@ -68,9 +68,6 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
                 movesToTopDialogsLiveData.postValue(dialog)
             } else {
                 movesToTopMessagesLiveData.postValue(message)
-                /** TODO: Отправляем по LiveData, дальше ищем в списке Adapter'а наличие диалога с данным Peer'ом
-                 *  Если диалога нет, то запрашиваем его у ViewModel и уже грузим его (НЕ ЗАБЫТЬ ОБНОВИТЬ СЧЕТЧИКИ).
-                 */
             }
         }
     }

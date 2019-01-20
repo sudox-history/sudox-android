@@ -81,7 +81,7 @@ interface DialogMessagesDao {
     }
 
     @Transaction
-    fun buildInitialCopy(recipientId: Long, deliveredMessages: List<DialogMessage>): List<DialogMessage> {
+    fun buildInitialCopy(recipientId: Long, deliveredMessages: List<DialogMessage>): ArrayList<DialogMessage> {
         val deliveringMessages = loadDeliveringMessages(recipientId)
         val result = ArrayList<DialogMessage>()
 
