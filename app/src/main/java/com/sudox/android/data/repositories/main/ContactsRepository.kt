@@ -365,7 +365,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         contactsChannel.offer(contactsChannel.value)
 
         val user = usersRepository
-                .loadUser(dialogsMessagesRepository.openedDialogRecipientId, onlyFromNetwork = true)
+                .loadUser(id, onlyFromNetwork = true)
                 .await() ?: return
 
         // Грузим юзера для апдейта ...
