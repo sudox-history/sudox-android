@@ -6,7 +6,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.pm.PackageManager
 import android.os.Build
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.user.User
@@ -14,7 +13,6 @@ import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.repositories.main.ContactsRepository
 import kotlinx.coroutines.*
-import java.lang.Error
 import javax.inject.Inject
 
 class ContactsViewModel @Inject constructor(private val contactsRepository: ContactsRepository) : ViewModel() {
@@ -44,7 +42,9 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
 
     private fun requestSyncContacts() = GlobalScope.launch {
         try {
+            contactsActionLiveData.postValue(ContactsAction.INIT_SYNC)
             contactsRepository.syncContacts().await()
+            contactsActionLiveData.postValue(ContactsAction.STOP_SYNC)
         } catch (e: InternalRequestException) {
             if (e.errorCode == InternalErrors.CONTACT_BOOK_IS_EMPTY) {
                 contactsActionLiveData.postValue(ContactsAction.SHOW_NO_CONTACTS_IN_BOOK_DIALOG)

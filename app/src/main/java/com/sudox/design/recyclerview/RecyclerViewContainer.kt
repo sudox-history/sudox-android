@@ -23,6 +23,10 @@ class RecyclerViewContainer : FrameLayout {
         addView(recyclerView, LayoutParams(MATCH_PARENT, MATCH_PARENT))
         addView(loadingSpinner, LayoutParams(WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER))
 
+        notifyInitialLoadingStart()
+    }
+
+    fun notifyInitialLoadingStart(){
         recyclerView.visibility = View.INVISIBLE
         loadingSpinner.visibility = View.VISIBLE
     }

@@ -92,6 +92,10 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
                                 .setMessage(R.string.empty_contacts_book)
                                 .setPositiveButton(R.string.ok, null)
                                 .show()
+                    } else if(it == ContactsAction.INIT_SYNC){
+                        contactsRecyclerViewContainer.notifyInitialLoadingStart()
+                    } else if(it == ContactsAction.STOP_SYNC){
+                        contactsRecyclerViewContainer.notifyInitialLoadingDone()
                     }
                 })
 
