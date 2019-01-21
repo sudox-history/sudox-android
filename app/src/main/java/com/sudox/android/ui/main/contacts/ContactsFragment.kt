@@ -52,7 +52,7 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
             // Есть права - есть синхронизация
-            contactsViewModel.syncContacts(activity!!, true)
+            contactsViewModel.syncContacts(activity!!, this,true)
         }
     }
 
@@ -112,6 +112,8 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
                 .observe(this, Observer {
                     mainActivity.showDialogWithUser(it!!)
                 })
+
+
     }
 
     private fun initToolbar() {
@@ -132,7 +134,7 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
                 syncConfirmationDialog = AlertDialog.Builder(context!!)
                         .setTitle(R.string.sync_contacts)
                         .setMessage(R.string.contacts_sync_confirmation_text)
-                        .setPositiveButton(R.string.yes_confirmation) { _, _ -> contactsViewModel.syncContacts(activity!!) }
+                        .setPositiveButton(R.string.yes_confirmation) { _, _ -> contactsViewModel.syncContacts(activity!!, this) }
                         .setNegativeButton(R.string.no_confirmation) { _, _ -> }
                         .create()
 

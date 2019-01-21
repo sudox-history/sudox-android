@@ -6,6 +6,8 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.pm.PackageManager
 import android.os.Build
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
@@ -50,18 +52,20 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
         }
     }
 
-    fun syncContacts(activity: Activity, permissionGranted: Boolean = false) {
-        if (permissionGranted || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            requestSyncContacts()
-        } else {
+    fun syncContacts(activity: Activity, fragment: Fragment, permissionGranted: Boolean = false) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val grant = activity.checkSelfPermission(Manifest.permission.READ_CONTACTS)
 
             // Есть право на доступ к контактам.
             if (grant == PackageManager.PERMISSION_GRANTED) {
                 requestSyncContacts()
             } else {
-                activity.requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_SYNC_PERMISSION_REQUEST)
+               fragment.requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_SYNC_PERMISSION_REQUEST)
             }
+        }
+
+        if (permissionGranted) {
+            requestSyncContacts()
         }
     }
 }
