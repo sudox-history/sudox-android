@@ -3,6 +3,7 @@ package com.sudox.android.ui.main.contacts
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.NO_POSITION
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
@@ -29,9 +30,38 @@ class ContactsAdapter @Inject constructor(val context: Context,
     lateinit var menuInflater: MenuInflater
 
     override fun onCreateViewHolder(root: ViewGroup, type: Int): ViewHolder {
-        return ViewHolder(LayoutInflater
+        val view = LayoutInflater
                 .from(context)
-                .inflate(R.layout.item_contact, root, false))
+                .inflate(R.layout.item_contact, root, false)
+
+        val holder = ViewHolder(view)
+
+        // Bind listeners
+        view.setOnLongClickListener { it.showContextMenu() }
+        view.setOnClickListener {
+            if (holder.adapterPosition != NO_POSITION)
+                clickedContactLiveData.postValue(contacts[holder.adapterPosition])
+        }
+
+        view.setOnCreateContextMenuListener { menu, _, _ ->
+            menuInflater.inflate(R.menu.menu_contact_context, menu)
+
+            // Слушаем события
+            menu.setOnItemClickListener {
+                if (holder.adapterPosition != NO_POSITION) {
+                    when (it.itemId) {
+                        R.id.contact_remove_item -> contactsRepository.removeContact(contacts[holder.adapterPosition].uid)
+                        R.id.contact_edit_item -> editableContactsLiveData.postValue(contacts[holder.adapterPosition])
+                    }
+
+                    return@setOnItemClickListener true
+                }
+
+                return@setOnItemClickListener false
+            }
+        }
+
+        return holder
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
@@ -42,21 +72,6 @@ class ContactsAdapter @Inject constructor(val context: Context,
         viewHolder.avatar.bindUser(contact)
         viewHolder.name.installText(contact.name)
         viewHolder.nickname.installText(formatHtml(context.getString(R.string.nickname_format, nicknameParts[0], nicknameParts[1])))
-        viewHolder.itemView.setOnLongClickListener { it.showContextMenu() }
-        viewHolder.itemView.setOnClickListener { clickedContactLiveData.postValue(contact) }
-        viewHolder.itemView.setOnCreateContextMenuListener { menu, _, _ ->
-            menuInflater.inflate(R.menu.menu_contact_context, menu)
-
-            // Слушаем события
-            menu.setOnItemClickListener {
-                when (it.itemId) {
-                    R.id.contact_remove_item -> contactsRepository.removeContact(contact.uid)
-                    R.id.contact_edit_item -> editableContactsLiveData.postValue(contact)
-                }
-
-                return@setOnItemClickListener true
-            }
-        }
     }
 
     override fun getItemCount(): Int = contacts.size
