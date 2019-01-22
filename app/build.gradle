@@ -7,9 +7,9 @@ apply plugin: 'io.fabric'
 
 // App version
 def versionMajor = 0
-def versionMinor = 3
-def versionUpdate = 3
-def versionPatch = 3
+def versionMinor = 5
+def versionUpdate = 0
+def versionPatch = 0
 
 // App build params
 def compileSdkProjectVersion = 28
