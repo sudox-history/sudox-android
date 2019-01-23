@@ -130,7 +130,7 @@
     <string name="nickname_format" translatable="false"><![CDATA[<font color="#FFFFFF">@%1$s</font><font color="#BDBDBD">#%2$s</font>]]></string>
 
 
-    <plurals name="contacts_amount">
+    <plurals name="contacts_count">
         <item quantity="one">%1$d contact</item>
         <item quantity="few">%1$d contacts</item>
         <item quantity="many">%1$d contacts</item>

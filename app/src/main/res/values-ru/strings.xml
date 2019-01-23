@@ -126,7 +126,7 @@
     <string name="edit_save">Сохранить</string>
 
 
-    <plurals name="contacts_amount">
+    <plurals name="contacts_count">
         <item quantity="one">%1$d контакт</item>
         <item quantity="few">%1$d контакта</item>
         <item quantity="many">%1$d контактов</item>
