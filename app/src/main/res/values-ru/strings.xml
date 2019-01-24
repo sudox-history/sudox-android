@@ -86,6 +86,7 @@
     <string name="im_using_sudox">Я использую Sudox!</string>
     <string name="share_profile">Поделиться профилем</string>
     <string name="add_contact_by_qr">Добавить контакт по QR-коду</string>
+    <string name="bio">Информация</string>
 
 
     <!--Cloud-->

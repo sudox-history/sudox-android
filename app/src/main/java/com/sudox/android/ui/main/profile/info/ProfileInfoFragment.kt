@@ -94,7 +94,7 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
         if (user.bio != null) {
             parameters.plusAssign(ParametersAdapter.Parameter(
                     iconRes = R.drawable.ic_info,
-                    name = getString(R.string.phone_number),
+                    name = getString(R.string.bio),
                     value = user.bio!!))
         }
 
