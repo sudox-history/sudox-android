@@ -67,12 +67,10 @@
 
     <style name="AppTheme.Dialog.Alert" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/background_alert_dialog</item>
-        <item name="android:background">#20242E</item>
+        <item name="buttonBarButtonStyle">@style/AppTheme.Dialog.Alert.Button</item>
     </style>
 
-    <style name="AppTheme.Dialog.Alert.TitleAppearance">
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textSize">16sp</item>
+    <style name="AppTheme.Dialog.Alert.Button" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
