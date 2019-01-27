@@ -17,14 +17,7 @@ class MessageLinearLayout : LinearLayout {
 
     @Suppress("UNUSED_VARIABLE")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        if (measuredWidth > MAX_WIDTH) {
-            val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(MAX_WIDTH, View.MeasureSpec.EXACTLY)
-
-            // Re-measuring
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        }
+        super.onMeasure(View.MeasureSpec.makeMeasureSpec(MAX_WIDTH, View.MeasureSpec.AT_MOST), heightMeasureSpec)
 
         if (dialogMessageText.layout.lineCount >= 1) {
             val lastLineWidth = dialogMessageText.layout.getLineWidth(dialogMessageText.layout.lineCount - 1)
