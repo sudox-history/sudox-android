@@ -35,7 +35,21 @@ class MessageLinearLayout : LinearLayout {
                 // Remove parasitic bottom padding
                 setMeasuredDimension(measuredWidth + neededSpace, measuredHeight - dialogMessageSendTime.measuredHeight)
             } else {
-                dialogMessageSendTime.translationY = 0F
+                if (measuredWidth < neededSpace) {
+                    dialogMessageSendTime.translationY = (-dialogMessageSendTime.measuredHeight).toFloat()
+
+                    // Remove parasitic bottom padding and add needed width
+                    setMeasuredDimension(measuredWidth + neededSpace, measuredHeight - dialogMessageSendTime.measuredHeight)
+                } else {
+                    if (lastLineWidth + neededSpace <= MAX_WIDTH) {
+                        dialogMessageSendTime.translationY = (-dialogMessageSendTime.measuredHeight).toFloat()
+
+                        // Remove parasitic bottom padding and add needed width
+                        setMeasuredDimension(measuredWidth + neededSpace, measuredHeight - dialogMessageSendTime.measuredHeight)
+                    } else {
+                        dialogMessageSendTime.translationY = 0F
+                    }
+                }
             }
         }
     }
