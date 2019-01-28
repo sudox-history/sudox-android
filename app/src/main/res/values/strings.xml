@@ -86,6 +86,7 @@
     <string name="im_using_sudox">I\'m using Sudox!</string>
     <string name="share_profile">Share profile</string>
     <string name="website">Website</string>
+    <string name="bio">Bio</string>
 
 
     <!--Settings-->
@@ -130,7 +131,7 @@
     <string name="nickname_format" translatable="false"><![CDATA[<font color="#FFFFFF">@%1$s</font><font color="#BDBDBD">#%2$s</font>]]></string>
 
 
-    <plurals name="contacts_amount">
+    <plurals name="contacts_count">
         <item quantity="one">%1$d contact</item>
         <item quantity="few">%1$d contacts</item>
         <item quantity="many">%1$d contacts</item>

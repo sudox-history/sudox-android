@@ -20,7 +20,7 @@ class TouchConstraintLayout : ConstraintLayout, NestedScrollingParent2 {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun onStartNestedScroll(child: View, target: View, axis: Int, type: Int): Boolean {
-        return axis == ViewCompat.SCROLL_AXIS_VERTICAL
+        return axis == ViewCompat.SCROLL_AXIS_VERTICAL && motionLayout != null
     }
 
     override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {}

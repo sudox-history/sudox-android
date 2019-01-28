@@ -3,6 +3,7 @@ package com.sudox.android.ui.main.profile.info
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -28,6 +29,7 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
     private val parametersAdapter by lazy { ParametersAdapter(mainActivity) }
     private val profileViewModel by lazy { getViewModel<ProfileViewModel>(viewModelFactory) }
     private val mainActivity by lazy { activity as MainActivity }
+    private val handler = Handler()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -35,6 +37,7 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
         // Configure views
         initParametersList()
 
+        // Start business-logic
         profileViewModel.start()
     }
 
@@ -46,6 +49,7 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
         profileInfoParametersList.adapter = parametersAdapter
         profileInfoParametersList.layoutManager = LinearLayoutManager(context!!)
         profileInfoParametersList.itemAnimator = null
+        profileInfoParametersList.layoutAnimation = null
 
         // Listen data
         profileViewModel
@@ -63,6 +67,12 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
 
         // Notify adapter about updates
         diffResult.dispatchUpdatesTo(parametersAdapter)
+
+        // Remove spinner
+        handler.postDelayed({
+            profileInfoLoadingSpinner.visibility = View.GONE
+            profileInfoContentGroup.visibility = View.VISIBLE
+        }, 100L)
     }
 
     private fun buildParameters(user: User): ArrayList<ParametersAdapter.Parameter> {
@@ -84,7 +94,7 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
         if (user.bio != null) {
             parameters.plusAssign(ParametersAdapter.Parameter(
                     iconRes = R.drawable.ic_info,
-                    name = getString(R.string.phone_number),
+                    name = getString(R.string.bio),
                     value = user.bio!!))
         }
 

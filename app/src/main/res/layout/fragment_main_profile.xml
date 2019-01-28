@@ -8,6 +8,16 @@
 
     <!-- Profile info block start -->
 
+    <ProgressBar
+        android:id="@+id/profileLoadingSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:translationZ="2dp"
+        app:layout_constraintBottom_toBottomOf="@id/profileMotionLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/profileMotionLayout" />
+
     <android.support.constraint.motion.MotionLayout
         android:id="@+id/profileMotionLayout"
         android:layout_width="match_parent"

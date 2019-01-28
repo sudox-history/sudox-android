@@ -33,6 +33,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
     private val mainActivity by lazy { activity as MainActivity }
 
     // Для анимации в блоке информации о профиле.
+    private var initialized: Boolean = false
     private val startProfileNameTextSize = 20F
     private val endProfileNameTextSize = 15F
     private val startProfileBlockHeight by lazy { 172F * mainActivity.resources.displayMetrics.density }
@@ -46,6 +47,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
         initProfileBlock()
         initViewPager()
 
+        // Start business-logic
         profileViewModel.start()
     }
 
@@ -55,6 +57,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
 
     private fun initProfileBlock() {
         profileViewModel.userLiveData.observe(this, Observer {
+            profileLoadingSpinner.visibility = View.GONE
             profileAvatarView.bindUser(it!!)
             profileNameText.installText(it.name)
             profileStatusText.installText(if (it.status != null) {
@@ -62,10 +65,10 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
             } else {
                 getString(R.string.im_using_sudox)
             })
-        })
 
-        // Animation will be configured before fragment will be drawen
-        initProfileAnimation()
+            // Init animation
+            initProfileAnimation()
+        })
     }
 
     private fun initToolbar() {
@@ -75,6 +78,8 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
     }
 
     private fun initProfileAnimation() {
+        if (initialized) return
+
         val fontSizesRatio = Math.min(startProfileNameTextSize, endProfileNameTextSize) / Math.max(startProfileNameTextSize, endProfileNameTextSize)
         val startConstraintSet = profileMotionLayout.getConstraintSet(R.id.scene_profile_start)
         val endConstraintSet = profileMotionLayout.getConstraintSet(R.id.scene_profile_end)
@@ -127,6 +132,9 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
         // Связываем верстку с анимацией
         profileConstraintLayout.motionLayout = profileMotionLayout
         profileConstraintLayout.maxScrollY = startProfileBlockHeight.toInt()
+
+        // Loaded
+        initialized = true
     }
 
     private fun initViewPager() {

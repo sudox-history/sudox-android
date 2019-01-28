@@ -79,8 +79,11 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
                     // Loaded!
                     contactsRecyclerViewContainer.notifyInitialLoadingDone()
 
-                    // Update
+                    // Update data
                     diffResult.dispatchUpdatesTo(contactsAdapter)
+
+                    // Update count ...
+                    contactsAdapter.notifyItemChanged(it.lastIndex + 1)
                 })
 
         contactsViewModel
