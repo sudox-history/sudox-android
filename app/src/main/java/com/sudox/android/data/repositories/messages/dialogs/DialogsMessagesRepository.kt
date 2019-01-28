@@ -146,9 +146,17 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             if (dialogHistoryDTO.isSuccess()) {
                 val messages = toStorableMessages(dialogHistoryDTO.messages)
 
-                // Save messages into database & update offset cache (for offline mode supporting)
-                dialogMessagesDao.updateOrInsertMessages(messages)
-                updateCachedOffset(recipientId, newOffset)
+                // Remove old messages ...
+                if (newOffset == 0) removeSavedMessages(recipientId)
+
+                // Save messages into database
+                // Offset = count of loaded messages in database
+                if (newOffset < 1000) {
+                    dialogMessagesDao.updateOrInsertMessages(messages)
+
+                    // Update offset cache (for offline mode supporting)
+                    updateCachedOffset(recipientId, newOffset)
+                }
 
                 // offset == 0 => first initializing
                 return if (newOffset == 0) {
@@ -215,14 +223,15 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                 this.limit = limit
             }).await()
 
-            if (lastDialogsMessages.containsError()) {
-                return arrayListOf()
-            } else if (lastDialogsMessages.messages.isEmpty()) {
+            if (lastDialogsMessages.containsError() || lastDialogsMessages.messages.isEmpty()) {
+                removeAllSavedMessages() // Invalidate all messages
+
+                // No dialogs, sorry ;(
                 return arrayListOf()
             }
 
             val storableMessages = toStorableMessages(lastDialogsMessages.messages)
-            val savedMessages = dialogMessagesDao.updateOrInsertMessages(storableMessages)
+            dialogMessagesDao.updateOrInsertMessages(storableMessages)
 
             return loadLastMessagesFromDatabase(offset, limit)
         } catch (e: NetworkException) {
@@ -234,7 +243,6 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         return ArrayList(dialogMessagesDao.loadLastMessages(offset, limit))
     }
 
-    // TODO: Переместить отправку сообщения в отдельный канал!
     @Suppress("NAME_SHADOWING")
     fun sendTextMessage(recipientId: Long, text: String) = GlobalScope.launch(Dispatchers.IO) {
         val accountId = accountRepository.cachedAccount?.id ?: return@launch
@@ -304,7 +312,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         return Math.max(initialOffset - dialogMessagesDao.countDeliveringMessages(recipientId), 0)
     }
 
-    fun updateCachedOffset(recipientId: Long, offset: Int) {
+    private fun updateCachedOffset(recipientId: Long, offset: Int) {
         loadedDialogsRecipientIds[recipientId] = offset // Allow load from this offset
     }
 
@@ -312,17 +320,17 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         loadedDialogsRecipientIds.minusAssign(recipientId)
 
         // Экономим на запросах к БД.
-        if (removeFromDb) dialogMessagesDao.removeAll(recipientId)
+        if (removeFromDb) dialogMessagesDao.removeAllDeliveredMessages(recipientId)
     }
 
-    internal fun removeAllSavedMessages(removeFromDb: Boolean = true) {
+    private fun removeAllSavedMessages(removeFromDb: Boolean = true) {
         loadedDialogsRecipientIds.clear()
 
         // Экономим на запросах к БД.
-        if (removeFromDb) dialogMessagesDao.removeAll()
+        if (removeFromDb) dialogMessagesDao.removeAllDeliveredMessages()
     }
 
-    internal fun toStorableMessages(messages: ArrayList<DialogMessageDTO>): ArrayList<DialogMessage> {
+    private fun toStorableMessages(messages: ArrayList<DialogMessageDTO>): ArrayList<DialogMessage> {
         val accountId = accountRepository.cachedAccount?.id ?: return arrayListOf()
 
         return ArrayList(messages.map {
