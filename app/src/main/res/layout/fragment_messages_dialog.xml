@@ -59,10 +59,9 @@
 
         <ImageButton
             android:id="@+id/attach_file"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="18dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/attach_file"
             android:src="@drawable/ic_attach_file" />
@@ -71,13 +70,14 @@
             android:id="@+id/chatMessageTextField"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="1dp"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
+            android:gravity="start|center"
             android:hint="@string/enter_message"
+            android:imeOptions="actionSend"
             android:inputType="textMultiLine|textCapSentences"
             android:maxHeight="100dp"
             android:paddingTop="12dp"
@@ -87,11 +87,10 @@
 
         <ImageButton
             android:id="@+id/chatSendMessageButton"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="center"
-            android:layout_marginEnd="18dp"
-            android:background="?selectableItemBackgroundBorderless"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/send_message"
             android:src="@drawable/ic_send" />
     </LinearLayout>

@@ -17,14 +17,7 @@ class MessageLinearLayout : LinearLayout {
 
     @Suppress("UNUSED_VARIABLE")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
-        if (measuredWidth > MAX_WIDTH) {
-            val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(MAX_WIDTH, View.MeasureSpec.EXACTLY)
-
-            // Re-measuring
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        }
+        super.onMeasure(View.MeasureSpec.makeMeasureSpec(MAX_WIDTH, View.MeasureSpec.AT_MOST), heightMeasureSpec)
 
         if (dialogMessageText.layout.lineCount >= 1) {
             val lastLineWidth = dialogMessageText.layout.getLineWidth(dialogMessageText.layout.lineCount - 1)
@@ -32,17 +25,33 @@ class MessageLinearLayout : LinearLayout {
             val neededSpace = dialogMessageSendTime.measuredWidth + TIME_MARGIN
 
             if (freeSpace >= neededSpace) {
-                dialogMessageSendTime.translationY = (-dialogMessageSendTime.measuredHeight).toFloat()
+                dialogMessageSendTime.translationY = (-dialogMessageSendTime.measuredHeight / 1.25F)
 
                 // Remove parasitic bottom padding
-                setMeasuredDimension(measuredWidth, measuredHeight - dialogMessageSendTime.measuredHeight)
+                setMeasuredDimension(measuredWidth, (measuredHeight - (dialogMessageSendTime.measuredHeight)).toInt())
             } else if (dialogMessageText.layout.lineCount == 1 && measuredWidth + neededSpace <= MAX_WIDTH) {
-                dialogMessageSendTime.translationY = (-dialogMessageSendTime.measuredHeight).toFloat()
+                dialogMessageSendTime.translationY = (-dialogMessageSendTime.measuredHeight / 1.25F)
 
                 // Remove parasitic bottom padding
-                setMeasuredDimension(measuredWidth + neededSpace, measuredHeight - dialogMessageSendTime.measuredHeight)
+                setMeasuredDimension(measuredWidth + neededSpace, (measuredHeight - (dialogMessageSendTime.measuredHeight)).toInt())
             } else {
-                dialogMessageSendTime.translationY = 0F
+                if (measuredWidth < neededSpace) {
+                    dialogMessageSendTime.translationY = (-dialogMessageSendTime.measuredHeight / 1.25F)
+
+                    // Remove parasitic bottom padding and add needed width
+                    setMeasuredDimension(measuredWidth + neededSpace, (measuredHeight - (dialogMessageSendTime.measuredHeight)))
+                } else {
+                    if (lastLineWidth + neededSpace <= MAX_WIDTH) {
+                        dialogMessageSendTime.translationY = (-dialogMessageSendTime.measuredHeight / 1.25F)
+
+                        // Remove parasitic bottom padding and add needed width
+                        setMeasuredDimension(measuredWidth + neededSpace, (measuredHeight - (dialogMessageSendTime.measuredHeight)))
+                    } else {
+                        dialogMessageSendTime.translationY = 0F
+
+                        setMeasuredDimension(measuredWidth, ((measuredHeight - (dialogMessageSendTime.measuredHeight  * 0.20F)).toInt()))
+                    }
+                }
             }
         }
     }
