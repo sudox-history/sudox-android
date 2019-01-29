@@ -25,17 +25,36 @@ class TouchConstraintLayout : ConstraintLayout, NestedScrollingParent2 {
 
     override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {}
     override fun onNestedScroll(target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, type: Int) {
-        totalScrollY = Math.min(Math.max(totalScrollY + dyUnconsumed, 0), maxScrollY)
+        val dy = Math.abs(dyUnconsumed)
 
+        if (dyUnconsumed < 0) {
+            // Scroll to down
+            totalScrollY = Math.min(totalScrollY + dy, maxScrollY)
+
+            // Update animation progress
+            updateProgress()
+
+            // If scroll ended
+            if (totalScrollY == maxScrollY) {
+                stopNestedScroll()
+            }
+        } else if (dyUnconsumed > 0) {
+            // Scroll to up
+            totalScrollY = Math.max(totalScrollY - dy, 0)
+
+            // Update animation progress
+            updateProgress()
+
+            // If scroll ended
+            if (totalScrollY == 0) {
+                stopNestedScroll()
+            }
+        }
+    }
+
+    private fun updateProgress() {
         // Calculate the animation progress
         val progress = totalScrollY.toFloat() / maxScrollY.toFloat()
-
-        // Exclude freezes
-        if (dyUnconsumed > 0 && progress < motionLayout!!.progress)
-            return
-
-        if (dyUnconsumed < 0 && progress > motionLayout!!.progress)
-            return
 
         // Update the animation progress
         if (motionLayout!!.progress != progress) {
