@@ -41,8 +41,6 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
     fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN, onlyFromNetwork: Boolean = false) = GlobalScope.async(usersLoadingThreadContent) {
         if (ids.isEmpty()) {
             return@async arrayListOf<User>()
-        } else if (ids.size == 1) {
-            return@async arrayListOf(loadUser(ids[0], loadAs, onlyFromNetwork = onlyFromNetwork).await())
         } else if (onlyFromNetwork) {
             return@async loadUsersFromNetwork(ids, loadAs)
         } else if (protocolClient.isValid() && authRepository.sessionIsValid) {
@@ -84,7 +82,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
 
             return@async user
         } else {
-            return@async loadUserFromNetwork(id, loadAs)
+            return@async loadUsersFromNetwork(listOf(id), loadAs).firstOrNull()
         }
     }
 
