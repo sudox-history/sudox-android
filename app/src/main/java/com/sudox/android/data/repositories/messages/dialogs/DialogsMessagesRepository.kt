@@ -228,6 +228,9 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             }
 
             val storableMessages = toStorableMessages(lastDialogsMessages.messages)
+            val peers = storableMessages.map { it.getRecipientId() }
+
+            dialogMessagesDao.removeAllDeliveredMessages(peers)
             dialogMessagesDao.updateOrInsertMessages(storableMessages)
 
             return loadLastMessagesFromDatabase(offset, limit)
@@ -318,6 +321,13 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 
         // Экономим на запросах к БД.
         if (removeFromDb) dialogMessagesDao.removeAllDeliveredMessages(recipientId)
+    }
+
+    private fun removeSavedMessages(recipientsIds: List<Long>, removeFromDb: Boolean = true) {
+        loadedDialogsRecipientIds.minusAssign(recipientsIds)
+
+        // Экономим на запросах к БД.
+        if (removeFromDb) dialogMessagesDao.removeAllDeliveredMessages(recipientsIds)
     }
 
     private fun removeAllSavedMessages(removeFromDb: Boolean = true) {

@@ -18,6 +18,9 @@ interface DialogMessagesDao {
     @Query("DELETE FROM dialogs_messages WHERE (peer = :recipientId OR sender = :recipientId) AND (status = 'DELIVERED' OR status = 'READ')")
     fun removeAllDeliveredMessages(recipientId: Long)
 
+    @Query("DELETE FROM dialogs_messages WHERE (peer IN (:recipientsIds) OR sender IN (:recipientsIds)) AND (status = 'DELIVERED' OR status = 'READ')")
+    fun removeAllDeliveredMessages(recipientsIds: List<Long>)
+
     @Query("DELETE FROM dialogs_messages WHERE (status = 'DELIVERED' OR status = 'READ')")
     fun removeAllDeliveredMessages()
 
