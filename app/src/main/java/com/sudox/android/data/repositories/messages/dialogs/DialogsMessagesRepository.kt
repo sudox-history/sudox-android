@@ -146,9 +146,6 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             if (dialogHistoryDTO.isSuccess()) {
                 val messages = toStorableMessages(dialogHistoryDTO.messages)
 
-                // Remove old messages ...
-                if (newOffset == 0) removeSavedMessages(recipientId)
-
                 // Save messages into database
                 // Offset = count of loaded messages in database
                 if (newOffset < 1000) {
