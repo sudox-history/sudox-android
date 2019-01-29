@@ -48,9 +48,6 @@ dependencies {
     // Crashlytics
     implementation "com.crashlytics.sdk.android:crashlytics:2.9.7"
 
-    // Timber
-    implementation "com.jakewharton.timber:timber:4.7.1"
-
     // Fresco
     implementation "com.github.bumptech.glide:glide:4.8.0"
     kapt "com.github.bumptech.glide:compiler:4.8.0"

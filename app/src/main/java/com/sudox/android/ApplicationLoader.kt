@@ -5,7 +5,6 @@ import android.app.Application
 import android.content.ComponentCallbacks2
 import android.content.Context
 import android.os.Bundle
-import android.os.StrictMode
 import com.crashlytics.android.Crashlytics
 import com.sudox.android.common.API_KEY
 import com.sudox.android.common.di.AppComponent
@@ -17,8 +16,10 @@ import com.yandex.metrica.YandexMetricaConfig
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import io.fabric.sdk.android.Fabric
-import kotlinx.coroutines.*
-import timber.log.Timber
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCallbacks {
@@ -66,9 +67,6 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
 
         YandexMetrica.activate(applicationContext, config)
         YandexMetrica.enableActivityAutoTracking(this)
-
-        // Enable Timber
-        if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
     }
 
     override fun onTrimMemory(level: Int) {
