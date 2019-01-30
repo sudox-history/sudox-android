@@ -101,7 +101,18 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
         profileMotionLayout.setTransitionListener(object : MotionLayout.TransitionListener {
             override fun onTransitionTrigger(p0: MotionLayout?, p1: Int, p2: Boolean, p3: Float) {}
             override fun onTransitionStarted(p0: MotionLayout?, p1: Int, p2: Int) {}
-            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {}
+            override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {
+                if (p1 == R.id.scene_profile_end) {
+                    profileMotionLayoutCover.translationY = -profileBlockHeightsDiff
+                    profileTabLayout.translationY = -profileBlockHeightsDiff
+                    profileViewPager.translationY = -profileBlockHeightsDiff
+                } else if (p1 == R.id.scene_profile_start) {
+                    profileMotionLayoutCover.translationY = 0F
+                    profileTabLayout.translationY = 0F
+                    profileViewPager.translationY = 0F
+                }
+            }
+
             override fun onTransitionChange(p0: MotionLayout, p1: Int, p2: Int, p3: Float) {
                 if (p2 == R.id.scene_profile_end) {
                     val translationY = profileBlockHeightsDiff * p3
