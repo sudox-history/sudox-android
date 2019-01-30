@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.os.Bundle
 import android.support.constraint.motion.MotionLayout
-import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +39,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
     private val startProfileBlockHeight by lazy { 172F * mainActivity.resources.displayMetrics.density }
     private val endProfileBlockHeight by lazy { 65F * mainActivity.resources.displayMetrics.density }
     private val profileBlockHeightsDiff by lazy { Math.max(startProfileBlockHeight, endProfileBlockHeight) - Math.min(startProfileBlockHeight, endProfileBlockHeight) }
+    private val fragments by lazy { arrayOf(profileInfoFragment, profileDecorationsFragment) }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -126,7 +126,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
                 } else if (p2 == R.id.scene_profile_start) {
                     val translationY = profileBlockHeightsDiff * (1 - p3)
 
-                    // Уменьшение
+                    // Увеличение
                     if (translationY != p0.translationY) {
                         profileMotionLayoutCover.translationY = -translationY
                         profileTabLayout.translationY = -translationY
@@ -154,9 +154,9 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
     }
 
     private fun initViewPager() {
-        val fragments = arrayOf(profileInfoFragment, profileDecorationsFragment)
         val titles = arrayOf(getString(R.string.profile_info), getString(R.string.decorations_label))
 
+        // Link ViewPager and TabLayout
         profileViewPager.adapter = TabLayoutAdapter(fragments, titles, profileViewPager, childFragmentManager)
         profileTabLayout.setupWithViewPager(profileViewPager)
     }
