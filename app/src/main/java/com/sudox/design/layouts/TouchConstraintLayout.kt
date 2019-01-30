@@ -7,6 +7,7 @@ import android.support.v4.view.NestedScrollingParent2
 import android.support.v4.view.ViewCompat
 import android.util.AttributeSet
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 
 class TouchConstraintLayout : ConstraintLayout, NestedScrollingParent2 {
 
@@ -23,11 +24,10 @@ class TouchConstraintLayout : ConstraintLayout, NestedScrollingParent2 {
         return axis == ViewCompat.SCROLL_AXIS_VERTICAL && motionLayout != null
     }
 
-    override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {}
     override fun onNestedScroll(target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, type: Int) {
         val dy = Math.abs(dyUnconsumed)
 
-        if (dyUnconsumed < 0) {
+        if (dyUnconsumed > 0) {
             // Scroll to down
             totalScrollY = Math.min(totalScrollY + dy, maxScrollY)
 
@@ -35,10 +35,10 @@ class TouchConstraintLayout : ConstraintLayout, NestedScrollingParent2 {
             updateProgress()
 
             // If scroll ended
-            if (totalScrollY == maxScrollY) {
-                stopNestedScroll()
+            if (totalScrollY >= maxScrollY) {
+                ViewCompat.stopNestedScroll(target, ViewCompat.TYPE_NON_TOUCH)
             }
-        } else if (dyUnconsumed > 0) {
+        } else if (dyUnconsumed < 0) {
             // Scroll to up
             totalScrollY = Math.max(totalScrollY - dy, 0)
 
@@ -46,8 +46,8 @@ class TouchConstraintLayout : ConstraintLayout, NestedScrollingParent2 {
             updateProgress()
 
             // If scroll ended
-            if (totalScrollY == 0) {
-                stopNestedScroll()
+            if (totalScrollY <= 0) {
+                ViewCompat.stopNestedScroll(target, ViewCompat.TYPE_NON_TOUCH)
             }
         }
     }
@@ -63,5 +63,6 @@ class TouchConstraintLayout : ConstraintLayout, NestedScrollingParent2 {
     }
 
     override fun onStopNestedScroll(target: View, type: Int) {}
+    override fun onNestedPreScroll(target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {}
     override fun onNestedScrollAccepted(child: View, target: View, axis: Int, type: Int) {}
 }

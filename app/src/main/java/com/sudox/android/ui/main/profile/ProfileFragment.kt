@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.os.Bundle
 import android.support.constraint.motion.MotionLayout
+import android.support.v4.view.ViewCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -103,18 +104,22 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
             override fun onTransitionCompleted(p0: MotionLayout?, p1: Int) {}
             override fun onTransitionChange(p0: MotionLayout, p1: Int, p2: Int, p3: Float) {
                 if (p2 == R.id.scene_profile_end) {
-                    val newHeight = (startProfileBlockHeight - (profileBlockHeightsDiff * p3)).toInt()
+                    val translationY = profileBlockHeightsDiff * p3
 
                     // Уменьшение
-                    if (newHeight != p0.layoutParams.height) {
-                        p0.layoutParams = p0.layoutParams.apply { height = newHeight }
+                    if (translationY != p0.translationY) {
+                        profileMotionLayoutCover.translationY = -translationY
+                        profileTabLayout.translationY = -translationY
+                        profileViewPager.translationY = -translationY
                     }
                 } else if (p2 == R.id.scene_profile_start) {
-                    val newHeight = (endProfileBlockHeight + (profileBlockHeightsDiff * p3)).toInt()
+                    val translationY = profileBlockHeightsDiff * (1 - p3)
 
-                    // Увеличение
-                    if (newHeight != p0.layoutParams.height) {
-                        p0.layoutParams = p0.layoutParams.apply { height = newHeight }
+                    // Уменьшение
+                    if (translationY != p0.translationY) {
+                        profileMotionLayoutCover.translationY = -translationY
+                        profileTabLayout.translationY = -translationY
+                        profileViewPager.translationY = -translationY
                     }
                 }
             }
