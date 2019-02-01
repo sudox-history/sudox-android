@@ -35,7 +35,7 @@
         <!--Third-->
         <string name="what_is_your_name">What\'s your name?</string>
         <string name="enter_your_name_and_nickname">Enter your name and nickname</string>
-        <string name="name">Name</string>
+        <string name="name_and_surname">Name &amp; surname</string>
         <string name="nickname">Nickname</string>
         <string name="about_name">Don\'t worry, it\'s the last step</string>
 
