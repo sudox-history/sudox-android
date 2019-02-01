@@ -6,6 +6,6 @@
         android:id="@+id/ring_user"
         android:icon="@drawable/ic_phone"
         android:title="@string/call_user"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>
