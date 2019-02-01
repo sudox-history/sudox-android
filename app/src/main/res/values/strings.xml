@@ -9,6 +9,7 @@
     <string name="tag">Tag</string>
     <string name="hello_world">Hello world</string>
     <string name="function_in_development">The function in development! Wait for update :)</string>
+    <string name="oops_old_version">Oops! It seems you have old version of Sudox. Update to continue use it. </string>
 
     <!--Registration and authorisation-->
     <string name="next">Next</string>

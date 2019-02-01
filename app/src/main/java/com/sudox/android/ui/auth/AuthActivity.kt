@@ -1,5 +1,6 @@
 package com.sudox.android.ui.auth
 
+import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
@@ -47,6 +48,12 @@ class AuthActivity : DaggerAppCompatActivity() {
                 }
             } else if (it == AuthActivityEvent.ACCOUNT_SESSION_STARTED) {
                 showMainActivity()
+            } else if(it == AuthActivityEvent.SHOW_OLD_VERSION) {
+                AlertDialog.Builder(this)
+                        .setTitle(R.string.title_oops)
+                        .setMessage(R.string.oops_old_version)
+                        .setPositiveButton(R.string.ok) { _, _ -> System.exit(0)}
+                        .show()
             }
         })
 

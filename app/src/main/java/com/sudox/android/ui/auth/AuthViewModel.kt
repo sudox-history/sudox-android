@@ -63,7 +63,11 @@ class AuthViewModel @Inject constructor(val protocolClient: ProtocolClient,
                 authActivityEventsLiveData.postValue(AuthActivityEvent.CONNECTION_CLOSED)
             } else if (state == ConnectionState.HANDSHAKE_SUCCEED) {
                 authActivityEventsLiveData.postValue(AuthActivityEvent.HANDSHAKE_SUCCEED)
+            } else if (state == ConnectionState.OLD_PROTOCOL_VERSION) {
+                authActivityEventsLiveData.postValue(AuthActivityEvent.SHOW_OLD_VERSION)
+                break
             }
+
         }
     }
 

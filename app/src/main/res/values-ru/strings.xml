@@ -8,6 +8,7 @@
     <string name="tag">Надпись</string>
     <string name="hello_world">Привет мир!</string>
     <string name="function_in_development">Эта функция еще в разработке! Ждите обновления :)</string>
+    <string name="oops_old_version">Упс! Кажется у вас старая версия Sudox. Обновите, чтобы продолжить пользоваться!</string>
 
     <!--Registration and authorisation-->
     <string name="next">Далее</string>
