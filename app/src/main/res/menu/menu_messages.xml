@@ -6,6 +6,6 @@
         android:id="@+id/messages_search"
         android:icon="@drawable/ic_search"
         android:title="@string/search"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>
