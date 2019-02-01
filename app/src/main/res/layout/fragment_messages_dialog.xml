@@ -58,7 +58,7 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/attach_file"
+            android:id="@+id/attachFileButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="bottom"

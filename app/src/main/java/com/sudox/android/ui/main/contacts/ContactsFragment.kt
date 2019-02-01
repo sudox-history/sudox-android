@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
@@ -147,6 +148,8 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
 
                 syncConfirmationDialog!!.show()
             }
+
+            R.id.contacts_search_item -> Toast.makeText(mainActivity, R.string.function_in_development, Toast.LENGTH_LONG).show()
         }
 
         return true

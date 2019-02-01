@@ -6,9 +6,12 @@ import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.os.Bundle
 import android.support.constraint.motion.MotionLayout
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
@@ -20,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_profile.*
 import javax.inject.Inject
 
-class ProfileFragment @Inject constructor() : NavigationRootFragment() {
+class ProfileFragment @Inject constructor() : NavigationRootFragment(), Toolbar.OnMenuItemClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -76,6 +79,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
         mainActivity.mainToolbar.reset()
         mainActivity.mainToolbar.setTitle(R.string.profile)
         mainActivity.mainToolbar.inflateMenu(R.menu.menu_profile)
+        mainActivity.mainToolbar.setOnMenuItemClickListener(this)
     }
 
     private fun initProfileAnimation() {
@@ -159,6 +163,15 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment() {
         // Link ViewPager and TabLayout
         profileViewPager.adapter = TabLayoutAdapter(fragments, titles, profileViewPager, childFragmentManager)
         profileTabLayout.setupWithViewPager(profileViewPager)
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.profile_edit_item -> Toast.makeText(mainActivity, R.string.function_in_development, Toast.LENGTH_LONG).show()
+            else -> return false
+        }
+
+        return true
     }
 
     override fun onFragmentOpened() {

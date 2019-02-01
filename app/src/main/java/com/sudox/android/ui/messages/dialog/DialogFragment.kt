@@ -6,19 +6,23 @@ import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.formatMessageText
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_messages_dialog.*
 import javax.inject.Inject
 
-class DialogFragment @Inject constructor() : DaggerFragment() {
+class DialogFragment @Inject constructor() : DaggerFragment(), Toolbar.OnMenuItemClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -51,6 +55,7 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
     private fun initToolbar() {
         chatToolbar.setNavigationOnClickListener { activity!!.onBackPressed() }
         chatToolbar.inflateMenu(R.menu.menu_messages_chat_user)
+        chatToolbar.setOnMenuItemClickListener(this)
 
         // Bind data
         bindRecipient()
@@ -62,6 +67,7 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
             // Update
             bindRecipient()
         })
+
     }
 
     private fun initMessagesList() {
@@ -145,16 +151,32 @@ class DialogFragment @Inject constructor() : DaggerFragment() {
         })
     }
 
-    private fun listenMessagesSendingRequests() = chatSendMessageButton.setOnClickListener {
-        val text = formatMessageText(chatMessageTextField.text.toString())
+    private fun listenMessagesSendingRequests() {
+        chatSendMessageButton.setOnClickListener {
+            val text = formatMessageText(chatMessageTextField.text.toString())
 
-        // Filter empty text
-        if (text.isNotEmpty()) {
-            dialogViewModel.sendTextMessage(recipientUser.uid, text)
+            // Filter empty text
+            if (text.isNotEmpty()) {
+                dialogViewModel.sendTextMessage(recipientUser.uid, text)
 
-            // Clear sent text
-            chatMessageTextField.text = null
+                // Clear sent text
+                chatMessageTextField.text = null
+            }
         }
+
+        attachFileButton.setOnClickListener {
+            Toast.makeText(messagesInnerActivity, R.string.function_in_development, Toast.LENGTH_LONG).show()
+        }
+
+    }
+
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.ring_user -> Toast.makeText(messagesInnerActivity, R.string.function_in_development, Toast.LENGTH_LONG).show()
+            else -> return false
+        }
+        return true
     }
 
     private fun bindRecipient() {

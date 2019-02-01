@@ -5,6 +5,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Каналы"
+        android:text="@string/function_in_development"
         android:gravity="center"/>
 </LinearLayout>

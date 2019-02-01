@@ -3,9 +3,9 @@ package com.sudox.android.ui.main.messages
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.support.v7.widget.Toolbar
+import android.view.*
+import android.widget.Toast
 import com.sudox.android.R
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.messages.channels.ChannelsFragment
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_messages.*
 import javax.inject.Inject
 
-class MessagesFragment @Inject constructor() : NavigationRootFragment() {
+class MessagesFragment @Inject constructor() : NavigationRootFragment(), Toolbar.OnMenuItemClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -45,6 +45,7 @@ class MessagesFragment @Inject constructor() : NavigationRootFragment() {
         mainActivity.mainToolbar.reset()
         mainActivity.mainToolbar.setTitle(R.string.messages)
         mainActivity.mainToolbar.inflateMenu(R.menu.menu_messages)
+        mainActivity.mainToolbar.setOnMenuItemClickListener(this)
     }
 
     private fun initViewPager() {
@@ -54,6 +55,17 @@ class MessagesFragment @Inject constructor() : NavigationRootFragment() {
 
         messagesViewPager.adapter = adapter
         messagesTabLayout.setupWithViewPager(messagesViewPager)
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+
+        when(item.itemId) {
+            R.id.messages_search -> Toast.makeText(mainActivity, R.string.function_in_development, Toast.LENGTH_LONG).show()
+            else -> return false
+        }
+
+
+        return true
     }
 
     override fun onFragmentOpened() {
