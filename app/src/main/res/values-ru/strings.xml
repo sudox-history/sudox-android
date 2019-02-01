@@ -33,7 +33,7 @@
         <!--Third-->
         <string name="what_is_your_name">Как вас зовут?</string>
         <string name="enter_your_name_and_nickname">Введите ваше имя и никнейм ниже</string>
-        <string name="name">Имя</string>
+        <string name="name_and_surname">Имя и фамилия</string>
         <string name="nickname">Никнейм</string>
         <string name="about_name">Не волнуйтесь, это последний шаг</string>
 
