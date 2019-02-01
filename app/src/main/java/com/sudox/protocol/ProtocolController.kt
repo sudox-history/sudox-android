@@ -1,13 +1,19 @@
 package com.sudox.protocol
 
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import android.util.Base64
+import com.sudox.android.ApplicationLoader
+import com.sudox.android.data.models.core.CoreVersionDTO
 import com.sudox.protocol.helpers.*
+import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONException
 import java.security.spec.InvalidKeySpecException
@@ -132,7 +138,24 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
      **/
     private fun handleUpgrade(packet: JSONArray) {
         if (packet.length() >= 2 && packet.optInt(1) == 1) {
-            client.connectionStateChannel.offer(ConnectionState.HANDSHAKE_SUCCEED)
+            // Проверка версии ...
+            GlobalScope.launch {
+                try {
+                    val coreVersionDTO = client
+                            .makeRequestWithControl<CoreVersionDTO>("core.getVersion")
+                            .await()
+
+                    if (coreVersionDTO.version == ApplicationLoader.version) {
+                        client.connectionStateChannel.offer(ConnectionState.HANDSHAKE_SUCCEED)
+                    } else {
+                        client.connectionStateChannel.offer(ConnectionState.OLD_PROTOCOL_VERSION)
+                        client.close()
+                        client.kill()
+                    }
+                } catch (e: NetworkException) {
+                    // Ignore
+                }
+            }
         } else {
             client.close()
         }
