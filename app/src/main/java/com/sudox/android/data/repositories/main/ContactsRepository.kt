@@ -320,10 +320,14 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                         if (!NAME_REGEX.matches(name) || !PHONE_REGEX.matches(phone))
                             continue
 
-                        pairs.plusAssign(ContactPairDTO().apply {
+                        val contact = ContactPairDTO().apply {
                             this.name = name
                             this.phone = phone
-                        })
+                        }
+
+                        if(pairs.find { contact.phone == it.phone } != null)
+                            continue
+                        else pairs.plusAssign(contact)
                     }
 
                     return pairs
