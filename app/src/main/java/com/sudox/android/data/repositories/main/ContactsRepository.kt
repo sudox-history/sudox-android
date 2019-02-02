@@ -154,16 +154,17 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                     if (user == null) {
                         user = usersRepository
                                 .loadUser(dialogsMessagesRepository.openedDialogRecipientId)
-                                .await() ?: return@launch
+                                .await()
 
-                        dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
-                        dialogsRepository.dialogRecipientUpdateChannel.offer(user)
+                        if (user != null) {
+                            dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
+                        }
                     } else {
                         dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
-                        dialogsRepository.dialogRecipientUpdateChannel.offer(user)
                     }
                 }
 
+                dialogsRepository.dialogRecipientsUpdatesChannel.offer(ArrayList(users))
                 contactsChannel.offer(ArrayList(users))
             }
         } catch (e: NetworkException) {
@@ -343,7 +344,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
             dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
         }
 
-        dialogsRepository.dialogRecipientUpdateChannel.offer(user)
+        dialogsRepository.dialogRecipientsUpdatesChannel.offer(listOf(user))
     }
 
     private fun notifyContactUpdated(user: User) {
@@ -361,7 +362,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
             dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
         }
 
-        dialogsRepository.dialogRecipientUpdateChannel.offer(user)
+        dialogsRepository.dialogRecipientsUpdatesChannel.offer(listOf(user))
     }
 
     private suspend fun notifyContactRemoved(id: Long) {
@@ -377,6 +378,6 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
             dialogsMessagesRepository.dialogRecipientUpdateChannel?.offer(user)
         }
 
-        dialogsRepository.dialogRecipientUpdateChannel.offer(user)
+        dialogsRepository.dialogRecipientsUpdatesChannel.offer(listOf(user))
     }
 }

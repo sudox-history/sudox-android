@@ -221,14 +221,18 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             }).await()
 
             if (lastDialogsMessages.containsError() || lastDialogsMessages.messages.isEmpty()) {
-                removeAllSavedMessages() // Invalidate all messages
+                if ((lastDialogsMessages.error == Errors.EMPTY_DIALOGS || lastDialogsMessages.messages.isEmpty()) && offset == 0) {
+                    removeAllSavedMessages() // Invalidate all messages
+                }
 
                 // No dialogs, sorry ;(
                 return arrayListOf()
             }
 
             val storableMessages = toStorableMessages(lastDialogsMessages.messages)
-            val peers = storableMessages.map { it.getRecipientId() }
+            val peers = storableMessages
+                    .filter { it.getRecipientId() != accountRepository.cachedAccount!!.id }
+                    .map { it.getRecipientId() }
 
             dialogMessagesDao.removeAllDeliveredMessages(peers)
             dialogMessagesDao.updateOrInsertMessages(storableMessages)

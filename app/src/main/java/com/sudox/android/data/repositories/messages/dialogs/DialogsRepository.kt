@@ -24,7 +24,7 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
      * 2-й параметр - новое сообщение.
      */
     var dialogMessageForMovingToTopChannel: ConflatedBroadcastChannel<DialogMessage> = ConflatedBroadcastChannel()
-    var dialogRecipientUpdateChannel: ConflatedBroadcastChannel<User> = ConflatedBroadcastChannel()
+    var dialogRecipientsUpdatesChannel: ConflatedBroadcastChannel<List<User>> = ConflatedBroadcastChannel()
 
     init {
         listenNewMessages()

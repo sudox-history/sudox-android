@@ -11,7 +11,7 @@ class Errors {
         const val WRONG_CODE = 102
         const val INVALID_ACCOUNT = 103
         const val INVALID_IMPORT_DATA = 104
-        const val EMPTY_CHATS = 200
+        const val EMPTY_DIALOGS = 200
         const val EMPTY_CONTACTS_LIST = 300
         const val UNKNOWN = -1
     }
