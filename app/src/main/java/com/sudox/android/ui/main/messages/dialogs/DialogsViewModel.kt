@@ -23,7 +23,7 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
     var pagingDialogsLiveData: MutableLiveData<List<Dialog>> = SingleLiveEvent()
     var movesToTopMessagesLiveData: MutableLiveData<DialogMessage> = SingleLiveEvent()
     var movesToTopDialogsLiveData: MutableLiveData<Dialog> = SingleLiveEvent()
-    var recipientUpdateLiveData: MutableLiveData<User> = SingleLiveEvent()
+    var recipientsUpdatesLiveData: MutableLiveData<List<User>> = SingleLiveEvent()
 
     private var subscriptionsContainer: SubscriptionsContainer = SubscriptionsContainer()
     private var isLoading: Boolean = false
@@ -78,10 +78,10 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
     private fun listenRecipientUpdates() = GlobalScope.launch {
         for (user in subscriptionsContainer
                 .addSubscription(dialogsRepository
-                        .dialogRecipientUpdateChannel
+                        .dialogRecipientsUpdatesChannel
                         .openSubscription())) {
 
-            recipientUpdateLiveData.postValue(user)
+            recipientsUpdatesLiveData.postValue(user)
         }
     }
 
@@ -101,8 +101,8 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
 
                 if (part.isNotEmpty()) {
                     dialogs.plusAssign(part)
-                    currentLoaded += dialogs.size
                     lastLoadedOffset = currentLoaded
+                    currentLoaded += dialogs.size
                 } else if (part.size < 20) {
                     break
                 }
@@ -120,7 +120,9 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
     }
 
     fun loadDialogs(offset: Int = 0, limit: Int = 20) {
-        if (isLoading || isListEnded || offset in 1..lastLoadedOffset) return
+        if (isLoading || isListEnded || offset in 1..lastLoadedOffset) {
+            return
+        }
 
         // Загрузим диалоги ...
         GlobalScope.launch(Dispatchers.IO) {

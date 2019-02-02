@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.messages.MessagesFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
@@ -129,16 +128,18 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
 
         // Listen recipient updates
         dialogsViewModel
-                .recipientUpdateLiveData
-                .observe(this, Observer { user ->
-                    val indexOf = dialogsAdapter.dialogs.indexOfLast { it.recipient.uid == user!!.uid }
+                .recipientsUpdatesLiveData
+                .observe(this, Observer { users ->
+                    val dialogs = dialogsAdapter.dialogs
+                    val size = dialogs.size
 
-                    // Not found ...
-                    if (indexOf == -1) return@Observer
+                    for (i in 0 until size) {
+                        val dialog = dialogs[i]
+                        val user = users!!.find { dialog.recipient.uid == it.uid } ?: continue
 
-                    // Update
-                    dialogsAdapter.dialogs[indexOf].recipient = user!!
-                    dialogsAdapter.notifyItemChanged(indexOf)
+                        dialogsAdapter.dialogs[i].recipient = user
+                        dialogsAdapter.notifyItemChanged(i)
+                    }
                 })
 
         // Paging ...
