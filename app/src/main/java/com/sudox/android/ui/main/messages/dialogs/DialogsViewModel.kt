@@ -44,7 +44,7 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
                         .openSubscription())) {
 
             // Если не успеем подгрузить с сети во время загрузки фрагмента.
-            if (state) {
+            if (state && !isLoading) {
                 if (loadedDialogsCount == 0) {
                     loadDialogs()
                 } else {
@@ -89,44 +89,33 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
         isLoading = true
         isListEnded = false
 
-        if (loadedDialogsCount <= 20) {
-            val dialogs = dialogsRepository
-                    .loadDialogs(0, loadedDialogsCount, onlyFromNetwork = true)
-                    .await()
+        var currentLoaded = 0
+        val dialogs = ArrayList<Dialog>()
+        val neededParts = Math.ceil(loadedDialogsCount / 20.0)
 
-            lastLoadedOffset = 0
-            loadedDialogsCount = dialogs.size
-            initialDialogsLiveData.postValue(dialogs)
-        } else {
-            var currentLoaded = 0
-            val dialogs = ArrayList<Dialog>()
-            val neededParts = Math.ceil(loadedDialogsCount / 20.0)
+        for (i in 0 until neededParts.toInt()) {
+            try {
+                val part = dialogsRepository
+                        .loadDialogs(currentLoaded, 20, onlyFromNetwork = true)
+                        .await()
 
-            for (i in 0 until neededParts.toInt()) {
-                try {
-                    val part = dialogsRepository
-                            .loadDialogs(currentLoaded, 20, onlyFromNetwork = true)
-                            .await()
-
-                    if (part.isNotEmpty()) {
-                        dialogs.plusAssign(part)
-                        currentLoaded += dialogs.size
-                        lastLoadedOffset = currentLoaded
-                    } else if (part.size < 20) {
-                        break
-                    }
-                } catch (e: InternalRequestException) {
-                    if (e.errorCode == InternalErrors.LIST_ENDED) {
-                        isListEnded = true
-                        break
-                    }
+                if (part.isNotEmpty()) {
+                    dialogs.plusAssign(part)
+                    currentLoaded += dialogs.size
+                    lastLoadedOffset = currentLoaded
+                } else if (part.size < 20) {
+                    break
+                }
+            } catch (e: InternalRequestException) {
+                if (e.errorCode == InternalErrors.LIST_ENDED) {
+                    isListEnded = true
+                    break
                 }
             }
-
-            loadedDialogsCount = dialogs.size
-            initialDialogsLiveData.postValue(dialogs)
         }
 
+        loadedDialogsCount = dialogs.size
+        initialDialogsLiveData.postValue(dialogs)
         isLoading = false
     }
 
