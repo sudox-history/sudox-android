@@ -18,7 +18,6 @@ import com.sudox.android.common.helpers.formatMessageText
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_messages_dialog.*
 import javax.inject.Inject
 
@@ -67,7 +66,6 @@ class DialogFragment @Inject constructor() : DaggerFragment(), Toolbar.OnMenuIte
             // Update
             bindRecipient()
         })
-
     }
 
     private fun initMessagesList() {
@@ -102,10 +100,16 @@ class DialogFragment @Inject constructor() : DaggerFragment(), Toolbar.OnMenuIte
             // Listen messages sending requests
             if (!isInitialized) {
                 dialogViewModel.newDialogMessagesLiveData.observe(this, Observer {
-                    dialogAdapter.messages.addAll(it!!)
-                    dialogAdapter.notifyItemRangeInserted(dialogAdapter.messages.size - it.size, it.size)
-                    dialogAdapter.notifyItemChanged(dialogAdapter.messages.size - it.size - 1)
-                    chatMessagesList.scrollToPosition(dialogAdapter.messages.size - it.size)
+                    val messages = it!!.first
+                    val scrollToDown = it.second
+
+                    dialogAdapter.messages.addAll(messages)
+                    dialogAdapter.notifyItemRangeInserted(dialogAdapter.messages.size - messages.size, messages.size)
+                    dialogAdapter.notifyItemChanged(dialogAdapter.messages.size - messages.size - 1)
+
+                    if (scrollToDown) {
+                        chatMessagesList.scrollToPosition(dialogAdapter.messages.size - messages.size)
+                    }
                 })
 
                 // Start listen to new messages
