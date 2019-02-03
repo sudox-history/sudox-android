@@ -2,6 +2,7 @@ package com.sudox.android.ui.main.messages.dialogs
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.sudox.android.common.livedata.ActiveSingleLiveEvent
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
@@ -21,9 +22,9 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
 
     var initialDialogsLiveData: MutableLiveData<ArrayList<Dialog>> = SingleLiveEvent()
     var pagingDialogsLiveData: MutableLiveData<List<Dialog>> = SingleLiveEvent()
-    var movesToTopMessagesLiveData: MutableLiveData<DialogMessage> = SingleLiveEvent()
-    var movesToTopDialogsLiveData: MutableLiveData<Dialog> = SingleLiveEvent()
-    var recipientsUpdatesLiveData: MutableLiveData<List<User>> = SingleLiveEvent()
+    var movesToTopMessagesLiveData: ActiveSingleLiveEvent<DialogMessage> = ActiveSingleLiveEvent()
+    var movesToTopDialogsLiveData: ActiveSingleLiveEvent<Dialog> = ActiveSingleLiveEvent()
+    var recipientsUpdatesLiveData: ActiveSingleLiveEvent<List<User>> = ActiveSingleLiveEvent()
 
     private var subscriptionsContainer: SubscriptionsContainer = SubscriptionsContainer()
     private var isLoading: Boolean = false
@@ -32,6 +33,16 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
     private var loadedDialogsCount: Int = 0
 
     init {
+        // Фильтр для сообщений (в очереди на обновление, может находится только одно сообщение из каждого диалога!)
+        movesToTopMessagesLiveData.queueFilter = { current, new ->
+            current.getRecipientId() == new!!.getRecipientId() && new.date >= current.date
+        }
+
+        // Фильтр для сообщений диалогов
+        movesToTopDialogsLiveData.queueFilter = { current, new ->
+            current.recipient.uid == new!!.recipient.uid && new.lastMessage.date >= current.lastMessage.date
+        }
+
         listenAccountSession()
         listenMovesToTop()
         listenRecipientUpdates()

@@ -29,7 +29,6 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="40dp"
-        android:hint="@string/name_and_surname"
         app:counterEnabled="true"
         app:counterMaxLength="@integer/length_name">
 
@@ -37,6 +36,7 @@
             android:id="@+id/nameEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:hint="@string/name_and_surname"
             android:inputType="textPersonName|textNoSuggestions"
             android:maxLength="@integer/length_name"
             android:maxLines="1" />
@@ -49,7 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
-        android:hint="@string/nickname"
         app:counterEnabled="true"
         app:counterMaxLength="@integer/length_nickname">
 
@@ -57,6 +56,7 @@
             android:id="@+id/nicknameEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:hint="@string/nickname"
             android:inputType="textVisiblePassword|textNoSuggestions"
             android:maxLength="@integer/length_nickname"
             android:maxLines="1" />

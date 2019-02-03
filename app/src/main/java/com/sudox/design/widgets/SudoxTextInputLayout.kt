@@ -1,11 +1,13 @@
 package com.sudox.design.widgets
 
 import android.content.Context
+import android.os.Build
 import android.support.design.widget.TextInputLayout
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 
 class SudoxTextInputLayout : TextInputLayout {
 
@@ -38,6 +40,16 @@ class SudoxTextInputLayout : TextInputLayout {
 
         // Reset color of line
         editText?.background?.clearColorFilter()
+    }
+
+    override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams?) {
+        // Fix SA-47 issue (https://sudox.myjetbrains.com/youtrack/issue/SA-47)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && child is EditText) {
+            editText?.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+        }
+
+        // Super!
+        super.addView(child, index, params)
     }
 
     override fun drawableStateChanged() {
