@@ -20,7 +20,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:hint="@string/name_not_necessary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/contactAvatar"
         app:layout_constraintTop_toTopOf="@+id/contactAvatar">
@@ -29,6 +28,7 @@
             android:id="@+id/contactNameEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:hint="@string/name_not_necessary"
             android:inputType="textPersonName|textNoSuggestions"
             android:maxLength="@integer/length_name"
             android:maxLines="1" />
@@ -42,7 +42,6 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="25dp"
-        android:hint="@string/phone_number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/contactAvatar">
 
@@ -50,6 +49,7 @@
             android:id="@+id/contactPhoneEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:hint="@string/phone_number"
             android:inputType="phone"
             android:maxLines="1" />
 
