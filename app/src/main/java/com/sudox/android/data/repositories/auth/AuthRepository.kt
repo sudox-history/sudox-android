@@ -1,11 +1,10 @@
 package com.sudox.android.data.repositories.auth
 
-import com.sudox.android.ApplicationLoader
 import com.sudox.android.common.helpers.*
-import com.sudox.android.data.exceptions.RequestException
-import com.sudox.android.data.exceptions.RequestRegexException
 import com.sudox.android.data.auth.SudoxAccount
 import com.sudox.android.data.database.model.user.User
+import com.sudox.android.data.exceptions.RequestException
+import com.sudox.android.data.exceptions.RequestRegexException
 import com.sudox.android.data.models.auth.dto.*
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.data.models.common.Errors
@@ -113,11 +112,13 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
 
     private fun notifyAccountSessionInvalid() {
         accountSessionStateChannel.offer(false)
+        accountSessionStateChannel.clear()
         sessionIsValid = false
     }
 
     private fun notifyAccountSessionValid() {
         accountSessionStateChannel.offer(true)
+        accountSessionStateChannel.clear()
         sessionIsValid = true
     }
 

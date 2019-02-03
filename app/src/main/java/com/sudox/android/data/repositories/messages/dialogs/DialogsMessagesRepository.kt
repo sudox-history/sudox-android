@@ -126,22 +126,26 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
 
         if (onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid && cachedOffset < newOffset)) {
-            loadMessagesFromNetwork(recipientId, offset, limit, excludeDelivering)
+            loadMessagesFromNetwork(onlyFromNetwork, recipientId, offset, limit, excludeDelivering)
         } else {
             loadMessagesFromDatabase(recipientId, offset, limit)
         }
     }
 
     @Throws(InternalRequestException::class)
-    private suspend fun loadMessagesFromNetwork(recipientId: Long, offset: Int = 0, limit: Int = 20, excludeDelivering: Boolean): ArrayList<DialogMessage> {
+    private suspend fun loadMessagesFromNetwork(onlyFromNetwork: Boolean, recipientId: Long, offset: Int = 0, limit: Int = 20, excludeDelivering: Boolean): ArrayList<DialogMessage> {
         val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
 
         try {
+            println("dialogs.get -> server: {offset: $offset, limit: $limit} onlyFromNetwork: $onlyFromNetwork")
+
             val dialogHistoryDTO = protocolClient.makeRequestWithControl<DialogHistoryDTO>("dialogs.getHistory", DialogHistoryDTO().apply {
                 this.id = recipientId
                 this.limit = limit
                 this.offset = newOffset
             }).await()
+
+            println("dialogs.get <- server: {${dialogHistoryDTO.messages.size}}")
 
             if (dialogHistoryDTO.isSuccess()) {
                 val messages = toStorableMessages(dialogHistoryDTO.messages)
@@ -152,7 +156,11 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                     dialogMessagesDao.updateOrInsertMessages(messages)
 
                     // Update offset cache (for offline mode supporting)
-                    updateCachedOffset(recipientId, newOffset)
+                    if (offset == 0 && limit > 20) {
+                        updateCachedOffset(recipientId, messages.size)
+                    } else {
+                        updateCachedOffset(recipientId, newOffset)
+                    }
                 }
 
                 // offset == 0 => first initializing
@@ -231,7 +239,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 
             val storableMessages = toStorableMessages(lastDialogsMessages.messages)
             val peers = storableMessages
-                    .filter { it.getRecipientId() != accountRepository.cachedAccount!!.id }
+                    .filter { it.getRecipientId() != accountRepository.cachedAccount!!.id && it.getRecipientId() != openedDialogRecipientId }
                     .map { it.getRecipientId() }
 
             dialogMessagesDao.removeAllDeliveredMessages(peers)

@@ -47,7 +47,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
             val notLoadedUsers = ids.filter { !loadedUsersIds.contains(it) }
             val usersFromNetwork = if (notLoadedUsers.isNotEmpty()) loadUsersFromNetwork(notLoadedUsers, loadAs) else arrayListOf()
             val usersFromNetworkIds = usersFromNetwork.map { it.uid }
-            val usersFromDatabaseIds = ids
+            val usersFromDatabaseIds: List<Long> = ids
                     .filter { !usersFromNetworkIds.contains(it) }
                     .map { it }
             val usersFromDatabase = userDao.loadByIds(usersFromDatabaseIds)

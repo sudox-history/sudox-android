@@ -31,20 +31,20 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
     private var firstDeliveredMessageId: Long = -1
     private var updateJob: Job? = null
 
-    fun start(recipientId: Long) = GlobalScope.launch {
+    fun start(recipientId: Long) {
         dialogsMessagesRepository.openDialog(recipientId)
 
         // Listen updates
         listenNewMessages()
         listenSentMessages()
         listenRecipientUpdates()
-        listenAccountSession()
 
         // Save recipient
         this@DialogViewModel.recipientId = recipientId
 
         // Start loading ...
         loadMessages()
+        listenAccountSession()
     }
 
     private fun listenNewMessages() = GlobalScope.launch {
@@ -98,7 +98,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
                         .openSubscription())) {
 
             // Если не успеем подгрузить с сети во время загрузки фрагмента.
-            if (state) {
+            if (state && !isLoading) {
                 if (loadedMessagesCount == 0) {
                     loadMessages()
                 } else {
@@ -156,6 +156,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
             try {
                 // Блокируем дальнейшие действия
                 isLoading = true
+                isListEnded = false
 
                 // Запрашиваем список сообщений ...
                 val messages = dialogsMessagesRepository
