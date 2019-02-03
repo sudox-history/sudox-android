@@ -240,8 +240,10 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         val filteredName = user.name.trim().replace(WHITESPACES_REMOVE_REGEX, " ")
         val regexFields = arrayListOf<Int>()
 
-        if (filteredName.isNotEmpty() && !NAME_REGEX.matches(filteredName))
+        if (filteredName.isNotEmpty() && !NAME_REGEX.matches(filteredName)) {
             regexFields.plusAssign(CONTACTS_NAME_REGEX_ERROR)
+        }
+
         if (regexFields.isNotEmpty()) throw RequestRegexException(regexFields)
 
         try {
@@ -251,12 +253,20 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
             }).await()
 
             if (contactEditDTO.isSuccess()) {
+                var updatedUser = user
+
+                // Имя может быть сброшено, в таком случае нам нужно запросить пользователя заново
+                if (user.name.isEmpty()) {
+                    updatedUser = usersRepository
+                            .loadUser(user.uid, onlyFromNetwork = true)
+                            .await() ?: return@async
+                }
+
                 usersRepository
-                        .saveOrUpdateUser(user)
+                        .saveOrUpdateUser(updatedUser)
                         .await()
 
-                // Обновление в UI
-                notifyContactUpdated(user)
+                notifyContactUpdated(updatedUser)
             } else if (contactEditDTO.error == Errors.INVALID_USER) {
                 // Юзера больше нет в контактах/в Sudox. Удаляем из БД
                 usersRepository.removeUser(user.uid)

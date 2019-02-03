@@ -178,7 +178,7 @@ class ContactAddFragment : DaggerFragment() {
 
     private fun freezeUI(freezeState: Boolean) {
         contactNameEditText.isEnabled = !freezeState
-        contactPhoneEditText.isEnabled = !freezeState
+        if (!inEditMode) contactPhoneEditText.isEnabled = !freezeState
         mainActivity.mainToolbar.setFeatureEnabled(!freezeState)
     }
 }

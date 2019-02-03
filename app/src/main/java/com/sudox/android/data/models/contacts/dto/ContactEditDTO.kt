@@ -11,7 +11,7 @@ class ContactEditDTO : JsonModel() {
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
             putOpt("id", id)
-            putOpt("name", name)
+            if (name.isNotEmpty()) putOpt("name", name)
         }
     }
 
