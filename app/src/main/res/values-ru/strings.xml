@@ -7,7 +7,7 @@
     <string name="search">Поиск</string>
     <string name="tag">Надпись</string>
     <string name="hello_world">Привет мир!</string>
-    <string name="function_in_development">Эта функция еще в разработке! Ждите обновления :)</string>
+    <string name="function_in_development">Эта функция еще в разработке!</string>
     <string name="oops_old_version">Упс! Кажется у вас старая версия Sudox. Обновите, чтобы продолжить пользоваться!</string>
 
     <!--Registration and authorisation-->
@@ -71,6 +71,7 @@
     <string name="empty_contacts_book">К сожалению, у вас пустая контактная книжка!</string>
     <string name="share_with_contact">Поделиться контактом</string>
     <string name="find_new_friends">Найдите себе новых друзей</string>
+    <string name="no_contacts_in_sudox">Нет контактов, которые зарегистрированы в Sudox</string>
 
 
     <!--Settings-->

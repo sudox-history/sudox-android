@@ -53,7 +53,7 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
             // Есть права - есть синхронизация
-            contactsViewModel.syncContacts(activity!!, this,true)
+            contactsViewModel.syncContacts(activity!!, this, true)
         }
     }
 
@@ -85,6 +85,7 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
 
                     // Update count ...
                     contactsAdapter.notifyItemChanged(it.lastIndex + 1)
+
                 })
 
         contactsViewModel
@@ -96,9 +97,9 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
                                 .setMessage(R.string.empty_contacts_book)
                                 .setPositiveButton(R.string.ok, null)
                                 .show()
-                    } else if(it == ContactsAction.INIT_SYNC){
+                    } else if (it == ContactsAction.INIT_SYNC) {
                         contactsRecyclerViewContainer.notifyInitialLoadingStart()
-                    } else if(it == ContactsAction.STOP_SYNC){
+                    } else if (it == ContactsAction.STOP_SYNC) {
                         contactsRecyclerViewContainer.notifyInitialLoadingDone()
                     }
                 })

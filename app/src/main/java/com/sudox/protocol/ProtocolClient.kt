@@ -55,6 +55,7 @@ class ProtocolClient @Inject constructor() {
 
             // Устанавливаем соединение
             try {
+
                 socket!!.connect(InetSocketAddress("api.sudox.ru", 5000), 5000)
 
                 // Запускаем потоки чтения/записи.

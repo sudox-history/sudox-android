@@ -9,7 +9,7 @@ apply plugin: 'io.fabric'
 def versionMajor = 0
 def versionMinor = 5
 def versionUpdate = 0
-def versionPatch = 0
+def versionPatch = 1
 
 // App build params
 def compileSdkProjectVersion = 28
@@ -69,6 +69,8 @@ android {
 
     lintOptions {
         disable 'RestrictedApi'
+        checkReleaseBuilds false
+        abortOnError false
     }
 
     defaultConfig {
