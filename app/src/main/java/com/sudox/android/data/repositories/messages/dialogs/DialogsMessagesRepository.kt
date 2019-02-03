@@ -137,15 +137,11 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
 
         try {
-            println("dialogs.get -> server: {offset: $offset, limit: $limit} onlyFromNetwork: $onlyFromNetwork")
-
             val dialogHistoryDTO = protocolClient.makeRequestWithControl<DialogHistoryDTO>("dialogs.getHistory", DialogHistoryDTO().apply {
                 this.id = recipientId
                 this.limit = limit
                 this.offset = newOffset
             }).await()
-
-            println("dialogs.get <- server: {${dialogHistoryDTO.messages.size}}")
 
             if (dialogHistoryDTO.isSuccess()) {
                 val messages = toStorableMessages(dialogHistoryDTO.messages)
