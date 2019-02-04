@@ -126,17 +126,19 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
 
         if (onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid && cachedOffset < newOffset)) {
-            loadMessagesFromNetwork(onlyFromNetwork, recipientId, offset, limit, excludeDelivering)
+            loadMessagesFromNetwork(recipientId, offset, limit, excludeDelivering)
         } else {
             loadMessagesFromDatabase(recipientId, offset, limit)
         }
     }
 
     @Throws(InternalRequestException::class)
-    private suspend fun loadMessagesFromNetwork(onlyFromNetwork: Boolean, recipientId: Long, offset: Int = 0, limit: Int = 20, excludeDelivering: Boolean): ArrayList<DialogMessage> {
+    private suspend fun loadMessagesFromNetwork(recipientId: Long, offset: Int = 0, limit: Int = 20, excludeDelivering: Boolean): ArrayList<DialogMessage> {
+        // Exclude delivering messages from offset
         val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
 
         try {
+            // Try to get messages from server
             val dialogHistoryDTO = protocolClient.makeRequestWithControl<DialogHistoryDTO>("dialogs.getHistory", DialogHistoryDTO().apply {
                 this.id = recipientId
                 this.limit = limit
@@ -146,8 +148,15 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
             if (dialogHistoryDTO.isSuccess()) {
                 val messages = toStorableMessages(dialogHistoryDTO.messages)
 
-                // Save messages into database
-                // Offset = count of loaded messages in database
+                // Remove old messages if dialog loaded firstly in connection
+                if (!loadedDialogsRecipientIds.containsKey(recipientId)) {
+                    removeSavedMessages(recipientId)
+                }
+
+                /**
+                 * More than 1000 messages will never be saved in the dialog,
+                 * because we delete old messages when we first request to the network and do not save messages when
+                 * the offset is more than 1000 **/
                 if (newOffset < 1000) {
                     dialogMessagesDao.updateOrInsertMessages(messages)
 
@@ -159,7 +168,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                     }
                 }
 
-                // offset == 0 => first initializing
+                // This is start of a dialog if offset equals 0
                 return if (newOffset == 0) {
                     if (excludeDelivering) {
                         ArrayList(messages)
@@ -184,7 +193,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                 }
             }
         } catch (e: NetworkException) {
-            // Ignore
+            loadMessagesFromDatabase(recipientId, offset, limit)
         }
 
         return arrayListOf()
@@ -233,14 +242,8 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                 return arrayListOf()
             }
 
-            val storableMessages = toStorableMessages(lastDialogsMessages.messages)
-            val peers = storableMessages
-                    .filter { it.getRecipientId() != accountRepository.cachedAccount!!.id && it.getRecipientId() != openedDialogRecipientId }
-                    .map { it.getRecipientId() }
-
-            dialogMessagesDao.removeAllDeliveredMessages(peers)
-            dialogMessagesDao.updateOrInsertMessages(storableMessages)
-
+            // Save last messages
+            dialogMessagesDao.updateOrInsertMessages(toStorableMessages(lastDialogsMessages.messages))
             return loadLastMessagesFromDatabase(offset, limit)
         } catch (e: NetworkException) {
             return loadLastMessagesFromDatabase(offset, limit)
@@ -329,13 +332,6 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 
         // Экономим на запросах к БД.
         if (removeFromDb) dialogMessagesDao.removeAllDeliveredMessages(recipientId)
-    }
-
-    private fun removeSavedMessages(recipientsIds: List<Long>, removeFromDb: Boolean = true) {
-        loadedDialogsRecipientIds.minusAssign(recipientsIds)
-
-        // Экономим на запросах к БД.
-        if (removeFromDb) dialogMessagesDao.removeAllDeliveredMessages(recipientsIds)
     }
 
     private fun removeAllSavedMessages(removeFromDb: Boolean = true) {
