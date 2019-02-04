@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
+import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.messages.MessagesFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
@@ -88,20 +89,17 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                 .movesToTopDialogsLiveData
                 .observe(this, Observer { dialog ->
                     if (dialogsAdapter.dialogs.isEmpty()) {
-                        dialogsAdapter.dialogs.add(dialog!!)
-                        dialogsAdapter.notifyItemInserted(0)
+                        addDialog(dialog!!)
                     } else {
                         // Try to find dialog with this recipient
-                        val indexOf = dialogsAdapter.dialogs.indexOfFirst { it.recipient.uid == dialog!!.recipient.uid }
+                        val indexOf = dialogsAdapter
+                                .dialogs
+                                .indexOfFirst { it.recipient.uid == dialog!!.recipient.uid }
 
                         if (indexOf == -1) {
-                            dialogsAdapter.dialogs.add(0, dialog!!)
-                            dialogsAdapter.notifyItemInserted(0)
+                            addDialog(dialog!!)
                         } else {
-                            dialogsAdapter.dialogs.removeAt(indexOf)
-                            dialogsAdapter.dialogs.add(0, dialog!!)
-                            dialogsAdapter.notifyItemMoved(indexOf, 0)
-                            dialogsAdapter.notifyItemChanged(0)
+                            moveDialogToTop(indexOf, dialog!!)
                         }
                     }
                 })
@@ -110,19 +108,19 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
         dialogsViewModel
                 .movesToTopMessagesLiveData
                 .observe(this, Observer { message ->
-                    val indexOf = dialogsAdapter.dialogs.indexOfLast { it.recipient.uid == message!!.getRecipientId() }
+                    val indexOf = dialogsAdapter
+                            .dialogs
+                            .indexOfLast { it.recipient.uid == message!!.getRecipientId() }
 
                     if (indexOf == -1) {
                         dialogsViewModel.requestDialog(message!!)
                     } else {
-                        val dialog = dialogsAdapter.dialogs[indexOf]
+                        val dialog = dialogsAdapter
+                                .dialogs[indexOf]
+                                .apply { lastMessage = message!! }
 
                         // Update
-                        dialog.lastMessage = message!!
-                        dialogsAdapter.dialogs.removeAt(indexOf)
-                        dialogsAdapter.dialogs.add(0, dialog)
-                        dialogsAdapter.notifyItemMoved(indexOf, 0)
-                        dialogsAdapter.notifyItemChanged(0)
+                        moveDialogToTop(indexOf, dialog)
                     }
                 })
 
@@ -156,5 +154,46 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
 
         // Start business logic work
         dialogsViewModel.loadDialogs()
+    }
+
+    private fun addDialog(dialog: Dialog) {
+        val firstPos = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+        val offsetTop = getListTopOffset(firstPos)
+
+        dialogsAdapter.dialogs.add(0, dialog)
+        dialogsAdapter.notifyItemInserted(0)
+
+        // Reapply the saved position
+        if (firstPos >= 0) {
+            linearLayoutManager.scrollToPositionWithOffset(firstPos, offsetTop)
+        }
+    }
+
+    private fun moveDialogToTop(indexOf: Int, dialog: Dialog) {
+        val firstPos = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+        val offsetTop = getListTopOffset(firstPos)
+
+        dialogsAdapter.dialogs.removeAt(indexOf)
+        dialogsAdapter.dialogs.add(0, dialog)
+        dialogsAdapter.notifyItemMoved(indexOf, 0)
+        dialogsAdapter.notifyItemChanged(0)
+
+        // Reapply the saved position
+        if (firstPos >= 0) {
+            linearLayoutManager.scrollToPositionWithOffset(firstPos, offsetTop)
+        }
+    }
+
+    private fun getListTopOffset(firstPos: Int): Int {
+        var offsetTop = 0
+
+        if (firstPos >= 0) {
+            val firstView = linearLayoutManager.findViewByPosition(firstPos)
+
+            // Y scroll
+            offsetTop = linearLayoutManager.getDecoratedTop(firstView!!) - linearLayoutManager.getTopDecorationHeight(firstView)
+        }
+
+        return offsetTop
     }
 }
