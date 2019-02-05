@@ -9,6 +9,7 @@ import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.*
+import java.util.concurrent.Semaphore
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
@@ -22,7 +23,7 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
 
     // ID загруженных пользователей (для экономии трафика)
     private val loadedUsersIds: HashSet<Long> = HashSet()
-    private val usersLoadingThreadContent = newSingleThreadContext("Sudox Users Loading Thread")
+    private val usersLoadingLock = Semaphore(1)
 
     init {
         listenConnectionStatus()
@@ -38,11 +39,21 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
-    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN, onlyFromNetwork: Boolean = false) = GlobalScope.async(usersLoadingThreadContent) {
+    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+        usersLoadingLock.acquire() // Add to queue
+
         if (ids.isEmpty()) {
-            return@async arrayListOf<User>()
+            val result = arrayListOf<User>()
+
+            // Free queue
+            usersLoadingLock.release()
+            return@async result
         } else if (onlyFromNetwork) {
-            return@async loadUsersFromNetwork(ids, loadAs)
+            val result = loadUsersFromNetwork(ids, loadAs)
+
+            // Free queue
+            usersLoadingLock.release()
+            return@async result
         } else if (protocolClient.isValid() && authRepository.sessionIsValid) {
             val notLoadedUsers = ids.filter { !loadedUsersIds.contains(it) }
             val usersFromNetwork = if (notLoadedUsers.isNotEmpty()) loadUsersFromNetwork(notLoadedUsers, loadAs) else arrayListOf()
@@ -51,6 +62,9 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                     .filter { !usersFromNetworkIds.contains(it) }
                     .map { it }
             val usersFromDatabase = userDao.loadByIds(usersFromDatabaseIds)
+
+            // Free queue
+            usersLoadingLock.release()
 
             // Update the type
             usersFromDatabase.forEach {
@@ -62,6 +76,9 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         } else {
             val users = userDao.loadByIds(ids)
 
+            // Free queue
+            usersLoadingLock.release()
+
             // Update the type
             users.forEach {
                 it.type = if (it.type != UserType.UNKNOWN) it.type else loadAs
@@ -72,8 +89,13 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
     }
 
     fun loadUser(id: Long, loadAs: UserType = UserType.UNKNOWN, onlyFromDatabase: Boolean = false, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+        usersLoadingLock.acquire()
+
         if ((onlyFromDatabase || !protocolClient.isValid() || loadedUsersIds.contains(id)) && !onlyFromNetwork) {
             val user = userDao.loadById(id)
+
+            // Free queue
+            usersLoadingLock.release()
 
             // Update the type
             if (user != null && user.type == UserType.UNKNOWN) {
@@ -82,7 +104,12 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
 
             return@async user
         } else {
-            return@async loadUsersFromNetwork(listOf(id), loadAs).firstOrNull()
+            val result = loadUsersFromNetwork(listOf(id), loadAs)
+                    .firstOrNull()
+
+            // Free queue
+            usersLoadingLock.release()
+            return@async result
         }
     }
 
