@@ -7,7 +7,7 @@ class SubscriptionsContainer {
     private val subscriptions by lazy { ArrayList<ReceiveChannel<*>?>() }
 
     fun <T> addSubscription(receiveChannel: ReceiveChannel<T>): ReceiveChannel<T> {
-        if (!subscriptions.contains(receiveChannel)) {
+        if (subscriptions.isEmpty() || !subscriptions.contains(receiveChannel)) {
             subscriptions.plusAssign(receiveChannel)
         }
 
