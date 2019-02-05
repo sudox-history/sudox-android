@@ -32,7 +32,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="40dp">
 
-        <android.support.design.widget.TextInputEditText
+        <android.support.v7.widget.AppCompatEditText
             android:id="@+id/phoneEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
