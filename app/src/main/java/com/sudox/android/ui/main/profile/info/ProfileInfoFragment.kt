@@ -3,12 +3,12 @@ package com.sudox.android.ui.main.profile.info
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.formatPhoneByMask
@@ -29,7 +29,7 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
     private val parametersAdapter by lazy { ParametersAdapter(mainActivity) }
     private val profileViewModel by lazy { getViewModel<ProfileViewModel>(viewModelFactory) }
     private val mainActivity by lazy { activity as MainActivity }
-    private val handler = Handler()
+    private var isLoaded: Boolean = false
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -64,15 +64,24 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
 
         // Update
         parametersAdapter.parameters = parameters
+        profileInfoParametersList
+                .viewTreeObserver
+                .addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                    override fun onGlobalLayout() {
+                        if (!isLoaded) {
+                            profileInfoContentGroup.visibility = View.VISIBLE
+                            isLoaded = false
+
+                            // Drawed!
+                            profileInfoParametersList
+                                    .viewTreeObserver
+                                    .removeOnGlobalLayoutListener(this)
+                        }
+                    }
+                })
 
         // Notify adapter about updates
         diffResult.dispatchUpdatesTo(parametersAdapter)
-
-        // Remove spinner
-        handler.postDelayed({
-            profileInfoLoadingSpinner.visibility = View.GONE
-            profileInfoContentGroup.visibility = View.VISIBLE
-        }, 100L)
     }
 
     private fun buildParameters(user: User): ArrayList<ParametersAdapter.Parameter> {
