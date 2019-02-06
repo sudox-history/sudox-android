@@ -27,11 +27,6 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
     // Бывают случаи, что компонент Dagger'а нужен в Custom View
     companion object {
         lateinit var component: AppComponent
-
-        /**
-         * НЕ ЗАБЫВАТЬ ОБНОВЛЯТЬ ЭТУ КОНСТАНТУ!
-         */
-        var version: String = "0.5.0"
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> = component

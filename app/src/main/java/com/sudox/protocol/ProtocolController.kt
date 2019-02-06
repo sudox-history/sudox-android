@@ -145,7 +145,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                             .makeRequestWithControl<CoreVersionDTO>("core.getVersion")
                             .await()
 
-                    if (coreVersionDTO.version == ApplicationLoader.version) {
+                    if (coreVersionDTO.version == ProtocolClient.VERSION) {
                         client.connectionStateChannel.offer(ConnectionState.HANDSHAKE_SUCCEED)
                     } else {
                         client.connectionStateChannel.offer(ConnectionState.OLD_PROTOCOL_VERSION)

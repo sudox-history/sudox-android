@@ -36,6 +36,10 @@ class ProtocolClient @Inject constructor() {
     private val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
     val connectionStateChannel by lazy { ConflatedBroadcastChannel<ConnectionState>() }
 
+    companion object {
+        var VERSION: String = "0.5.0"
+    }
+
     /**
      * Метод для установки соединения с сервером.
      *
