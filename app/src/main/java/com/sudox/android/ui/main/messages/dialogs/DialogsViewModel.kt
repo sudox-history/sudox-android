@@ -12,7 +12,7 @@ import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.messages.dialogs.DialogsRepository
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.models.SingleLiveEvent
+import com.sudox.android.common.livedata.SingleLiveEvent
 import kotlinx.coroutines.*
 import javax.inject.Inject
 

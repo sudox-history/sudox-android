@@ -9,7 +9,7 @@ import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.messages.dialogs.DialogsMessagesRepository
-import com.sudox.protocol.models.SingleLiveEvent
+import com.sudox.android.common.livedata.SingleLiveEvent
 import kotlinx.coroutines.*
 import javax.inject.Inject
 

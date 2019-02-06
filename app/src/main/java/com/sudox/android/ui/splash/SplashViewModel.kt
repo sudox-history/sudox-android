@@ -3,7 +3,7 @@ package com.sudox.android.ui.splash
 import android.arch.lifecycle.*
 import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.ui.splash.enums.SplashAction
-import com.sudox.protocol.models.SingleLiveEvent
+import com.sudox.android.common.livedata.SingleLiveEvent
 import kotlinx.coroutines.*
 import javax.inject.Inject
 

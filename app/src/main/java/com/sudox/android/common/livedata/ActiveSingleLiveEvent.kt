@@ -1,6 +1,5 @@
 package com.sudox.android.common.livedata
 
-import com.sudox.protocol.models.SingleLiveEvent
 import java.util.*
 
 class ActiveSingleLiveEvent<T> : SingleLiveEvent<T>() {
