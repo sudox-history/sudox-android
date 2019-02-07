@@ -1,12 +1,13 @@
 package com.sudox.android.data
 
 import kotlinx.coroutines.channels.ReceiveChannel
+import java.util.*
 
 class SubscriptionsContainer {
 
-    private val subscriptions by lazy { ArrayList<ReceiveChannel<*>?>() }
+    private val subscriptions by lazy { Collections.synchronizedList(ArrayList<ReceiveChannel<*>?>()) }
 
-    fun <T> addSubscription(receiveChannel: ReceiveChannel<T>): ReceiveChannel<T> {
+    fun <T> addSubscription(receiveChannel: ReceiveChannel<T>): ReceiveChannel<T> = synchronized(subscriptions) {
         if (subscriptions.isEmpty() || !subscriptions.contains(receiveChannel)) {
             subscriptions.plusAssign(receiveChannel)
         }
@@ -15,7 +16,7 @@ class SubscriptionsContainer {
         return receiveChannel
     }
 
-    fun unsubscribeAll() {
+    fun unsubscribeAll() = synchronized(subscriptions) {
         val iterator = subscriptions.iterator()
 
         // Prevent ConcurrentModificationException
