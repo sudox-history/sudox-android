@@ -353,6 +353,7 @@ class SudoxToolbar : Toolbar {
         featureTextButton?.visibility = View.GONE
         titleTextView?.visibility = View.GONE
         actionMenuView?.removeAllViews()
+        actionMenuView?.menu?.clear()
         featureTextButton?.isEnabled = true
     }
 
