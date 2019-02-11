@@ -7,7 +7,6 @@ import android.util.AttributeSet
 import com.sudox.android.data.database.model.user.User
 import com.sudox.design.helpers.getTwoFirstLetters
 import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
 
 class AvatarView : AppCompatImageView {
 

@@ -22,7 +22,6 @@ import com.sudox.design.widgets.PrecomputedTextView
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.*
-import kotlinx.coroutines.android.Main
 import kotlinx.coroutines.channels.ReceiveChannel
 import javax.inject.Inject
 

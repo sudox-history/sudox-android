@@ -3,6 +3,7 @@ package com.sudox.android.ui.main.messages.dialogs
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.common.livedata.ActiveSingleLiveEvent
+import com.sudox.android.common.livedata.SingleLiveEvent
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
@@ -12,7 +13,6 @@ import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.messages.dialogs.DialogsRepository
 import com.sudox.protocol.ProtocolClient
-import com.sudox.android.common.livedata.SingleLiveEvent
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -27,10 +27,13 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
     var recipientsUpdatesLiveData: ActiveSingleLiveEvent<List<User>> = ActiveSingleLiveEvent()
 
     private var subscriptionsContainer: SubscriptionsContainer = SubscriptionsContainer()
-    private var isLoading: Boolean = false
-    private var isListEnded: Boolean = false
-    private var lastLoadedOffset: Int = 0
-    private var loadedDialogsCount: Int = 0
+    private var dialogsCount: Int = 0
+    private var dialogsEnded: Boolean = false
+
+    // Jobs ...
+    private var initJob: Job? = null
+    private var updateJob: Job? = null
+    private var pagingJob: Job? = null
 
     init {
         // Фильтр для сообщений (в очереди на обновление, может находится только одно сообщение из каждого диалога!)
@@ -42,43 +45,76 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
         movesToTopDialogsLiveData.queueFilter = { current, new ->
             current.recipient.uid == new!!.recipient.uid && new.lastMessage.date >= current.lastMessage.date
         }
-
-        listenAccountSession()
-        listenMovesToTop()
-        listenRecipientUpdates()
     }
 
-    private fun listenAccountSession() = GlobalScope.launch {
-        for (state in subscriptionsContainer
-                .addSubscription(authRepository
-                        .accountSessionStateChannel
-                        .openSubscription())) {
+    fun start() {
+        // Сначала подгрузим начальные диалоги из БД ...
+        initJob = GlobalScope.launch {
+            if (isActive) {
+                var dialogs = dialogsRepository
+                        .loadDialogs(onlyFromDatabase = true)
+                        .await()
 
-            // Если не успеем подгрузить с сети во время загрузки фрагмента.
-            if (state && !isLoading) {
-                if (loadedDialogsCount == 0) {
-                    loadDialogs()
-                } else {
-                    updateDialogs()
+                if (isActive) {
+                    if (dialogs != null) {
+                        initialDialogsLiveData.postValue(dialogs)
+                        dialogsCount = dialogs.size
+                    }
+
+                    // Listen updates
+                    listenMovesToTop()
+                    listenRecipientUpdates()
+
+                    // If session active - load initial dialogs from network
+                    if (authRepository.sessionIsValid) {
+                        dialogs = dialogsRepository
+                                .loadDialogs(onlyFromNetwork = true)
+                                .await()
+
+                        initialDialogsLiveData.postValue(dialogs)
+                        dialogsCount = dialogs?.size ?: 0
+                    } else {
+                        // Dialogs will be loaded/updated when the session is initialized
+                    }
+
+                    // Listen updates ...
+                    listenAccountSession()
                 }
             }
         }
     }
 
-    private fun listenMovesToTop() = GlobalScope.launch {
+    private fun listenAccountSession() = GlobalScope.launch(Dispatchers.IO) {
+        for (state in subscriptionsContainer
+                .addSubscription(authRepository
+                        .accountSessionStateChannel
+                        .openSubscription())) {
+
+            if (!state) break
+            if (dialogsCount == 0) {
+                val dialogs = dialogsRepository
+                        .loadDialogs(onlyFromNetwork = true)
+                        .await()
+
+                initialDialogsLiveData.postValue(dialogs)
+                dialogsCount = dialogs?.size ?: 0
+            } else {
+                updateJob = updateDialogs()
+            }
+        }
+    }
+
+    private fun listenMovesToTop() = GlobalScope.launch(Dispatchers.IO) {
         for (message in subscriptionsContainer
                 .addSubscription(dialogsRepository
                         .dialogMessageForMovingToTopChannel
                         .openSubscription())) {
 
-            if (loadedDialogsCount == 0) {
+            if (dialogsCount == 0) {
                 val dialog = dialogsRepository.buildDialogWithLastMessage(message) ?: continue
 
                 // Обновим счетчики
-                loadedDialogsCount++
-                lastLoadedOffset = 0
-
-                // На отображение
+                dialogsCount++
                 movesToTopDialogsLiveData.postValue(dialog)
             } else {
                 movesToTopMessagesLiveData.postValue(message)
@@ -86,7 +122,7 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
         }
     }
 
-    private fun listenRecipientUpdates() = GlobalScope.launch {
+    private fun listenRecipientUpdates() = GlobalScope.launch(Dispatchers.IO) {
         for (user in subscriptionsContainer
                 .addSubscription(dialogsRepository
                         .dialogRecipientsUpdatesChannel
@@ -96,87 +132,88 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
         }
     }
 
-    private fun updateDialogs() = GlobalScope.launch(Dispatchers.IO) {
-        isLoading = true
-        isListEnded = false
+    private fun updateDialogs() = GlobalScope.async(Dispatchers.IO)  {
+        // Nothing to update
+        if (dialogsCount <= 0) return@async
 
-        var currentLoaded = 0
-        val dialogs = ArrayList<Dialog>()
-        val neededParts = Math.ceil(loadedDialogsCount / 20.0)
+        // Reset marker
+        dialogsEnded = false
 
-        for (i in 0 until neededParts.toInt()) {
+        val updatedDialogs = ArrayList<Dialog>()
+        val neededRequests = Math
+                .ceil(dialogsCount / DialogsRepository.MAX_LIMIT_SIZE.toDouble())
+                .toInt()
+
+        for (i in 0 until neededRequests) {
             try {
-                val part = dialogsRepository
-                        .loadDialogs(currentLoaded, 20, onlyFromNetwork = true)
-                        .await()
-
-                if (part.isNotEmpty()) {
-                    dialogs.plusAssign(part)
-                    lastLoadedOffset = currentLoaded
-                    currentLoaded += dialogs.size
-                } else if (part.size < 20) {
-                    break
-                }
-            } catch (e: InternalRequestException) {
-                if (e.errorCode == InternalErrors.LIST_ENDED) {
-                    isListEnded = true
-                    break
-                }
-            }
-        }
-
-        loadedDialogsCount = dialogs.size
-        initialDialogsLiveData.postValue(dialogs)
-        isLoading = false
-    }
-
-    fun loadDialogs(offset: Int = 0, limit: Int = 20) {
-        if (isLoading || isListEnded || offset in 1..lastLoadedOffset) {
-            return
-        }
-
-        // Загрузим диалоги ...
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                // Блокируем дальнейшие действия
-                isLoading = true
-
-                // Запрашиваем список диалогов ...
                 val dialogs = dialogsRepository
-                        .loadDialogs(offset, limit)
+                        .loadDialogs(offset = i * DialogsRepository.MAX_LIMIT_SIZE)
                         .await()
 
-                if (offset == 0) {
-                    initialDialogsLiveData.postValue(dialogs)
-                    loadedDialogsCount = dialogs.size
-                } else {
-                    pagingDialogsLiveData.postValue(dialogs)
-                    loadedDialogsCount += dialogs.size
+                if (!isActive) return@async
+                if (dialogs == null) {
+                    initialDialogsLiveData.postValue(ArrayList())
+                    dialogsCount = updatedDialogs.size
+                    return@async
                 }
 
-                lastLoadedOffset = offset
+                // Add to showing ...
+                updatedDialogs.plusAssign(dialogs)
             } catch (e: InternalRequestException) {
                 if (e.errorCode == InternalErrors.LIST_ENDED) {
-                    isListEnded = true
+                    dialogsEnded = true
                 }
             }
+        }
 
-            // Загрузка завершена, разблокируем дальнейшие действия.
-            isLoading = false
+        if (isActive) {
+            initialDialogsLiveData.postValue(updatedDialogs)
+            dialogsCount = updatedDialogs.size
         }
     }
 
-    fun requestDialog(message: DialogMessage) = GlobalScope.launch {
+    private fun loadNextDialogsAsync() = GlobalScope.async(Dispatchers.IO) {
+        if (initJob != null && initJob!!.isActive) initJob!!.join()
+        if (updateJob != null && updateJob!!.isActive) updateJob!!.join()
+
+        try {
+            val dialogs = dialogsRepository
+                    .loadDialogs(offset = dialogsCount)
+                    .await()
+
+            if (dialogsCount == 0) {
+                initialDialogsLiveData.postValue(dialogs)
+            } else {
+                pagingDialogsLiveData.postValue(dialogs)
+            }
+
+            // New dialogs count
+            dialogsCount += dialogs?.size ?: 0
+        } catch (e: InternalRequestException) {
+            if (e.errorCode == InternalErrors.LIST_ENDED) {
+                dialogsEnded = true
+            }
+        }
+    }
+
+    fun loadNextDialogs() {
+        if ((pagingJob == null || !pagingJob!!.isActive) && !dialogsEnded) {
+            pagingJob = loadNextDialogsAsync()
+        }
+    }
+
+    fun requestNewDialog(message: DialogMessage) = GlobalScope.launch(Dispatchers.IO) {
         val dialog = dialogsRepository.buildDialogWithLastMessage(message) ?: return@launch
 
         // Обновим счетчики
-        loadedDialogsCount++
-
-        // На отображение
+        dialogsCount++
         movesToTopDialogsLiveData.postValue(dialog)
     }
 
     override fun onCleared() {
         subscriptionsContainer.unsubscribeAll()
+        initJob?.cancel()
+        updateJob?.cancel()
+        pagingJob?.cancel()
     }
 }

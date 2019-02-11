@@ -38,9 +38,6 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initContactsList()
-
-        // Listen data updates
-        contactsViewModel.start()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -156,8 +153,12 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
         return true
     }
 
-    override fun onFragmentOpened() {
+    override fun onFragmentOpened(firstStart: Boolean) {
         initToolbar()
+
+        if (firstStart) {
+            contactsViewModel.start()
+        }
     }
 
     override fun onFragmentClosed() {

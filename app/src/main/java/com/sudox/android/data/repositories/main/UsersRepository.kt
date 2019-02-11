@@ -1,5 +1,6 @@
 package com.sudox.android.data.repositories.main
 
+import com.sudox.android.common.helpers.clear
 import com.sudox.android.data.database.dao.user.UserDao
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.Errors
@@ -9,6 +10,7 @@ import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import java.util.concurrent.Semaphore
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,21 +27,35 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
     private val loadedUsersIds: HashSet<Long> = HashSet()
     private val usersLoadingLock = Semaphore(1)
 
+    // Текущий пользователь
+    var currentUserChannel: ConflatedBroadcastChannel<User> = ConflatedBroadcastChannel()
+    var listenCurrentUserUpdates: Boolean = false
+
     init {
-        listenConnectionStatus()
+        listenSessionStatus()
     }
 
-    private fun listenConnectionStatus() = GlobalScope.launch(Dispatchers.IO) {
+    private fun listenSessionStatus() = GlobalScope.launch(Dispatchers.IO) {
         for (state in authRepository
                 .accountSessionStateChannel
                 .openSubscription()) {
 
             // Session is valid
-            if (state) loadedUsersIds.clear()
+            if (state) {
+                loadedUsersIds.clear()
+
+                // Update current user ..
+                if (listenCurrentUserUpdates) loadCurrentUser()
+            } else {
+                loadedUsersIds.clear()
+                currentUserChannel.clear()
+                listenCurrentUserUpdates = false
+                usersLoadingLock.release()
+            }
         }
     }
 
-    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+    fun loadUsers(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN, onlyFromNetwork: Boolean = false, onlyFromDatabase: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
         usersLoadingLock.acquire() // Add to queue
 
         if (ids.isEmpty()) {
@@ -48,13 +64,13 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
             // Free queue
             usersLoadingLock.release()
             return@async result
-        } else if (onlyFromNetwork) {
+        } else if (onlyFromNetwork && !onlyFromDatabase) {
             val result = loadUsersFromNetwork(ids, loadAs)
 
             // Free queue
             usersLoadingLock.release()
             return@async result
-        } else if (protocolClient.isValid() && authRepository.sessionIsValid) {
+        } else if (protocolClient.isValid() && authRepository.sessionIsValid && !onlyFromDatabase) {
             val notLoadedUsers = ids.filter { !loadedUsersIds.contains(it) }
             val usersFromNetwork = if (notLoadedUsers.isNotEmpty()) loadUsersFromNetwork(notLoadedUsers, loadAs) else arrayListOf()
             val usersFromNetworkIds = usersFromNetwork.map { it.uid }
@@ -123,6 +139,12 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
     }
 
     private suspend fun loadUsersFromNetwork(ids: List<Long>, loadAs: UserType = UserType.UNKNOWN): List<User> = suspendCoroutine { continuation ->
+        if (!authRepository.sessionIsValid) {
+            usersLoadingLock.release()
+            continuation.resume(arrayListOf())
+            return@suspendCoroutine
+        }
+
         protocolClient.makeRequest<UserInfoDTO>("users.get", UserInfoDTO().apply {
             this.ids = ids
         }) {
@@ -144,8 +166,6 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
             }
         }
     }
-
-    private suspend fun loadUserFromNetwork(id: Long, loadAs: UserType = UserType.UNKNOWN): User? = loadUsersFromNetwork(listOf(id), loadAs)[0]
 
     private fun toStorableUsers(userInfoDTO: UserInfoDTO, loadAs: UserType = UserType.UNKNOWN): List<User> {
         val usersIds = userInfoDTO.users!!.map { it.id }
@@ -178,10 +198,24 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                 type)
     }
 
-    fun getAccountUser() = GlobalScope.async(Dispatchers.IO) {
+    fun loadCurrentUser(listenFutureUpdates: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
         if (accountRepository.cachedAccount != null) {
-            return@async loadUser(accountRepository.cachedAccount!!.id).await()
+            // Listen updates ...
+            if (!listenCurrentUserUpdates) {
+                listenCurrentUserUpdates = listenFutureUpdates
+            }
+
+            val user = loadUser(accountRepository.cachedAccount!!.id).await()
+
+            if (user != null) {
+                currentUserChannel.offer(user)
+            } else {
+                currentUserChannel.clear()
+            }
+
+            return@async user
         } else {
+            currentUserChannel.clear()
             return@async null
         }
     }

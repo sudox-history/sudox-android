@@ -11,7 +11,7 @@ import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.messages.channels.ChannelsFragment
 import com.sudox.android.ui.main.messages.dialogs.DialogsFragment
 import com.sudox.android.ui.main.messages.talks.TalksFragment
-import com.sudox.design.adapters.TabLayoutAdapter
+import com.sudox.design.tablayout.TabLayoutAdapter
 import com.sudox.design.navigation.NavigationRootFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_messages.*
@@ -49,7 +49,7 @@ class MessagesFragment @Inject constructor() : NavigationRootFragment(), Toolbar
     }
 
     private fun initViewPager() {
-        val fragments = arrayOf<Fragment>(dialogsFragment, talksFragment, channelsFragment)
+        val fragments = arrayOf(dialogsFragment, talksFragment, channelsFragment)
         val titles = arrayOf(getString(R.string.dialogs), getString(R.string.talks), getString(R.string.channels))
         val adapter = TabLayoutAdapter(fragments, titles, messagesViewPager, childFragmentManager)
 
@@ -58,7 +58,6 @@ class MessagesFragment @Inject constructor() : NavigationRootFragment(), Toolbar
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
-
         when(item.itemId) {
             R.id.messages_search -> Toast.makeText(mainActivity, R.string.function_in_development, Toast.LENGTH_LONG).show()
             else -> return false
@@ -68,10 +67,9 @@ class MessagesFragment @Inject constructor() : NavigationRootFragment(), Toolbar
         return true
     }
 
-    override fun onFragmentOpened() {
+    override fun onFragmentOpened(firstStart: Boolean) {
         if (activity != null) initToolbar()
     }
 
-    override fun onFragmentClosed() {
-    }
+    override fun onFragmentClosed() {}
 }

@@ -13,13 +13,13 @@ import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.android.ui.main.MainActivity
+import com.sudox.design.tablayout.TabLayoutFragment
 import com.sudox.android.ui.main.messages.MessagesFragment
 import com.sudox.design.recyclerview.decorators.SecondColumnItemDecorator
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_dialogs.*
 import javax.inject.Inject
 
-class DialogsFragment @Inject constructor() : DaggerFragment() {
+class DialogsFragment @Inject constructor() : TabLayoutFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -41,6 +41,13 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
         return inflater.inflate(R.layout.fragment_dialogs, container, false)
     }
 
+    override fun onFirstVisible() {
+        super.onFirstVisible()
+
+        // Load data ...
+        dialogsViewModel.start()
+    }
+
     private fun initDialogsList() {
         val recyclerView = dialogsListContainer.recyclerView
 
@@ -54,17 +61,26 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
         dialogsViewModel
                 .initialDialogsLiveData
                 .observe(this, Observer {
-                    val initialEndIndex = Math.min(dialogsAdapter.dialogs.size, 20)
-                    val initialSublist = ArrayList(dialogsAdapter.dialogs.subList(0, initialEndIndex))
-                    val diffUtil = DialogsDiffUtil(it!!, initialSublist)
-                    val diffResult = DiffUtil.calculateDiff(diffUtil)
+                    if (it == null) return@Observer
 
-                    // Update
-                    dialogsAdapter.dialogs = it
+                    // If Paging disabled
+                    if (dialogsAdapter.dialogs.isNotEmpty()) {
+                        val initialEndIndex = dialogsAdapter.dialogs.lastIndex
+                        val initialSublist = ArrayList(dialogsAdapter.dialogs.subList(0, initialEndIndex))
+                        val diffUtil = DialogsDiffUtil(it, initialSublist)
+                        val diffResult = DiffUtil.calculateDiff(diffUtil)
 
-                    // Loaded!
-                    dialogsListContainer.notifyInitialLoadingDone()
-                    diffResult.dispatchUpdatesTo(dialogsAdapter)
+                        // Update
+                        dialogsAdapter.dialogs = it
+
+                        // Loaded!
+                        dialogsListContainer.notifyInitialLoadingDone()
+                        diffResult.dispatchUpdatesTo(dialogsAdapter)
+                    } else {
+                        dialogsAdapter.dialogs = it
+                        dialogsAdapter.notifyDataSetChanged()
+                        dialogsListContainer.notifyInitialLoadingDone()
+                    }
                 })
 
         // Listen paging data
@@ -113,7 +129,7 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                             .indexOfLast { it.recipient.uid == message!!.getRecipientId() }
 
                     if (indexOf == -1) {
-                        dialogsViewModel.requestDialog(message!!)
+                        dialogsViewModel.requestNewDialog(message!!)
                     } else {
                         val dialog = dialogsAdapter
                                 .dialogs[indexOf]
@@ -147,13 +163,10 @@ class DialogsFragment @Inject constructor() : DaggerFragment() {
                 val updatePosition = dialogsAdapter.dialogs.size - 1
 
                 if (updatePosition - position <= 10 && dialogsAdapter.dialogs.size >= 20) {
-                    dialogsViewModel.loadDialogs(updatePosition + 1)
+                    dialogsViewModel.loadNextDialogs()
                 }
             }
         })
-
-        // Start business logic work
-        dialogsViewModel.loadDialogs()
     }
 
     private fun addDialog(dialog: Dialog) {

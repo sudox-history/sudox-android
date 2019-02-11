@@ -2,6 +2,7 @@ package com.sudox.android.ui.messages.dialog
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.sudox.android.common.livedata.ActiveSingleLiveEvent
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
@@ -20,7 +21,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
     val newDialogMessagesLiveData: MutableLiveData<Pair<List<DialogMessage>, Boolean>> = SingleLiveEvent()
     val initialDialogHistoryLiveData: MutableLiveData<ArrayList<DialogMessage>> = SingleLiveEvent()
     val pagingDialogHistoryLiveData: MutableLiveData<ArrayList<DialogMessage>> = SingleLiveEvent()
-    val recipientUpdatesLiveData: MutableLiveData<User> = SingleLiveEvent()
+    val recipientUpdatesLiveData: MutableLiveData<User> = ActiveSingleLiveEvent()
 
     private val subscriptionsContainer: SubscriptionsContainer = SubscriptionsContainer()
     private var isLoading: Boolean = false
@@ -47,7 +48,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
         listenAccountSession()
     }
 
-    private fun listenNewMessages() = GlobalScope.launch {
+    private fun listenNewMessages() = GlobalScope.launch(Dispatchers.IO) {
         for (message in subscriptionsContainer
                 .addSubscription(dialogsMessagesRepository
                         .dialogDialogNewMessageChannel!!
@@ -64,7 +65,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
         }
     }
 
-    private fun listenSentMessages() = GlobalScope.launch {
+    private fun listenSentMessages() = GlobalScope.launch(Dispatchers.IO) {
         for (message in subscriptionsContainer
                 .addSubscription(dialogsMessagesRepository
                         .dialogDialogSentMessageChannel!!
@@ -81,7 +82,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
         }
     }
 
-    private fun listenRecipientUpdates() = GlobalScope.launch {
+    private fun listenRecipientUpdates() = GlobalScope.launch(Dispatchers.IO) {
         for (user in subscriptionsContainer
                 .addSubscription(dialogsMessagesRepository
                         .dialogRecipientUpdateChannel!!
@@ -91,7 +92,7 @@ class DialogViewModel @Inject constructor(val dialogsMessagesRepository: Dialogs
         }
     }
 
-    private fun listenAccountSession() = GlobalScope.launch {
+    private fun listenAccountSession() = GlobalScope.launch(Dispatchers.IO) {
         for (state in subscriptionsContainer
                 .addSubscription(authRepository
                         .accountSessionStateChannel

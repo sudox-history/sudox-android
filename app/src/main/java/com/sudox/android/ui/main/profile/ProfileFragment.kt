@@ -17,7 +17,7 @@ import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.profile.decorations.ProfileDecorationsFragment
 import com.sudox.android.ui.main.profile.info.ProfileInfoFragment
-import com.sudox.design.adapters.TabLayoutAdapter
+import com.sudox.design.tablayout.TabLayoutAdapter
 import com.sudox.design.navigation.NavigationRootFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_profile.*
@@ -32,7 +32,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment(), Toolbar.
     @Inject
     lateinit var profileDecorationsFragment: ProfileDecorationsFragment
 
-    private val profileViewModel by lazy { getViewModel<ProfileViewModel>(viewModelFactory) }
+    val profileViewModel by lazy { getViewModel<ProfileViewModel>(viewModelFactory) }
     private val mainActivity by lazy { activity as MainActivity }
 
     // Для анимации в блоке информации о профиле.
@@ -50,9 +50,6 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment(), Toolbar.
         // Configure view
         initProfileBlock()
         initViewPager()
-
-        // Start business-logic
-        profileViewModel.start()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -166,7 +163,7 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment(), Toolbar.
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.profile_edit_item -> Toast.makeText(mainActivity, R.string.function_in_development, Toast.LENGTH_LONG).show()
             else -> return false
         }
@@ -174,13 +171,18 @@ class ProfileFragment @Inject constructor() : NavigationRootFragment(), Toolbar.
         return true
     }
 
-    override fun onFragmentOpened() {
+    override fun onFragmentOpened(firstStart: Boolean) {
         // Переводим телефон в портретную ориентацию и блокируем автоповорот
         if (mainActivity.requestedOrientation != SCREEN_ORIENTATION_PORTRAIT) {
             mainActivity.requestedOrientation = SCREEN_ORIENTATION_PORTRAIT
         }
 
         initToolbar()
+
+        // Start business-logic
+        if (firstStart) {
+            profileViewModel.start()
+        }
     }
 
     override fun onFragmentClosed() {

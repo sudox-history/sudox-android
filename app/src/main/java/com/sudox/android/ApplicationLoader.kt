@@ -18,7 +18,6 @@ import dagger.android.DaggerApplication
 import io.fabric.sdk.android.Fabric
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

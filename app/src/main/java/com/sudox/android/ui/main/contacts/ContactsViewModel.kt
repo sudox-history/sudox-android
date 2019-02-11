@@ -27,6 +27,9 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
 
     fun start() {
         listenContacts()
+
+        // Load data ...
+        contactsRepository.requestContacts()
     }
 
     private fun listenContacts() = GlobalScope.launch(Dispatchers.IO) {

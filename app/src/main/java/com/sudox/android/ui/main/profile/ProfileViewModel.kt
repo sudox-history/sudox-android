@@ -2,33 +2,39 @@ package com.sudox.android.ui.main.profile
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import com.sudox.android.common.livedata.SingleLiveEvent
 import com.sudox.android.data.database.model.user.User
-import com.sudox.android.data.repositories.auth.AuthRepository
 import com.sudox.android.data.repositories.main.UsersRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ProfileViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
+class ProfileViewModel @Inject constructor(private val usersRepository: UsersRepository) : ViewModel() {
 
     // LiveData с текущим пользователем (могут и обновления кстати прилетать)
-    val userLiveData: MutableLiveData<User> = MutableLiveData()
-    val userSubscription by lazy {
-        authRepository
-                .currentUserChannel
-                .openSubscription()
+    var currentUserSubscription: ReceiveChannel<User>? = null
+    val userLiveData: MutableLiveData<User> = SingleLiveEvent()
+
+    fun start() {
+        listenUpdates()
+
+        // Load data
+        usersRepository.loadCurrentUser(true)
     }
 
-    fun start() = GlobalScope.launch(Dispatchers.IO) {
-        for (user in userSubscription) {
+    private fun listenUpdates() = GlobalScope.launch(Dispatchers.IO) {
+        currentUserSubscription = usersRepository
+                .currentUserChannel
+                .openSubscription()
+
+        for (user in currentUserSubscription!!) {
             userLiveData.postValue(user)
         }
     }
 
     override fun onCleared() {
-        userSubscription.cancel()
+        currentUserSubscription?.cancel()
     }
 }

@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction
 import com.sudox.android.R
 import com.sudox.design.helpers.hideKeyboard
 import java.util.*
+import kotlin.collections.HashSet
 
 class FragmentNavigator(val activity: Activity,
                         val fragmentManager: FragmentManager,
@@ -14,6 +15,7 @@ class FragmentNavigator(val activity: Activity,
                         val containerId: Int) {
 
     private var isFirstStart: Boolean = false
+    private val loadedRootFragments = HashSet<Int>()
     private val fragmentsPath: LinkedList<Fragment> = LinkedList()
 
     init {
@@ -64,6 +66,8 @@ class FragmentNavigator(val activity: Activity,
 
         // Старый фрагмент
         val oldRootFragment = fragmentsPath.firstOrNull()
+        val fragmentHashCode = fragment.hashCode()
+        val firstLaunch = !loadedRootFragments.contains(fragmentHashCode)
 
         // Ставим начальную точку маршрута )
         fragmentsPath.clear()
@@ -71,7 +75,9 @@ class FragmentNavigator(val activity: Activity,
 
         // Эвенты ...
         (oldRootFragment as? NavigationRootFragment)?.onFragmentClosed()
-        fragment.onFragmentOpened()
+
+        if (firstLaunch) loadedRootFragments.add(fragmentHashCode)
+        fragment.onFragmentOpened(firstLaunch)
     }
 
     // Показывает дочерний фрагмент
@@ -114,7 +120,7 @@ class FragmentNavigator(val activity: Activity,
         fragmentsPath.removeAt(fragmentsPath.size - 1)
 
         if (fragment is NavigationRootFragment) {
-            fragment.onFragmentOpened()
+            fragment.onFragmentOpened(false)
         }
 
         return true

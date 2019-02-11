@@ -8,7 +8,6 @@ import com.sudox.android.common.di.module.DatabaseModule
 import com.sudox.android.common.di.module.ViewModelModule
 import com.sudox.android.common.di.module.activities.ActivityModule
 import com.sudox.android.ui.auth.common.BaseAuthFragment
-import com.sudox.android.ui.main.common.BaseReconnectFragment
 import com.sudox.design.navigation.toolbar.SudoxToolbar
 import dagger.BindsInstance
 import dagger.Component
@@ -29,7 +28,6 @@ interface AppComponent : AndroidInjector<DaggerApplication> {
 
     fun inject(app: ApplicationLoader)
     fun inject(baseAuthFragment: BaseAuthFragment)
-    fun inject(baseReconnectFragment: BaseReconnectFragment)
     fun inject(sudoxToolbar: SudoxToolbar)
 
     // Не знаю зачем это здесь написали, но без него не работает

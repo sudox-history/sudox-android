@@ -4,6 +4,6 @@ import dagger.android.support.DaggerFragment
 
 abstract class NavigationRootFragment : DaggerFragment() {
 
-    abstract fun onFragmentOpened()
+    abstract fun onFragmentOpened(firstStart: Boolean)
     abstract fun onFragmentClosed()
 }

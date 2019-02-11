@@ -17,11 +17,12 @@ import com.sudox.android.ui.main.MainActivity
 import com.sudox.android.ui.main.profile.ProfileViewModel
 import com.sudox.design.recyclerview.adapters.ParametersAdapter
 import com.sudox.design.recyclerview.adapters.ParametersDiffUtil
+import com.sudox.design.tablayout.TabLayoutFragment
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_profile_info.*
 import javax.inject.Inject
 
-class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
+class ProfileInfoFragment @Inject constructor() : TabLayoutFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -36,13 +37,14 @@ class ProfileInfoFragment @Inject constructor() : DaggerFragment() {
 
         // Configure views
         initParametersList()
-
-        // Start business-logic
-        profileViewModel.start()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_profile_info, container, false)
+    }
+
+    override fun onFirstVisible() {
+        profileViewModel.start()
     }
 
     private fun initParametersList() {

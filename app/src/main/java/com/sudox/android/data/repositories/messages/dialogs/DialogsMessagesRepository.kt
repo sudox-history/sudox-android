@@ -1,5 +1,6 @@
 package com.sudox.android.data.repositories.messages.dialogs
 
+import com.sudox.android.common.helpers.clear
 import com.sudox.android.common.helpers.formatMessageText
 import com.sudox.android.data.database.dao.messages.DialogMessagesDao
 import com.sudox.android.data.database.model.messages.DialogMessage
@@ -35,11 +36,11 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
     private val messagesSendingThreadContext = newSingleThreadContext("Sudox Dialogs Messages Sending Queue")
 
     // PublishSubject для доставки новых сообщений.
-    val globalNewMessagesChannel: BroadcastChannel<DialogMessage> = ConflatedBroadcastChannel()
-    var globalSentMessageChannel: BroadcastChannel<DialogMessage> = ConflatedBroadcastChannel()
-    var dialogDialogNewMessageChannel: BroadcastChannel<DialogMessage>? = null
-    var dialogDialogSentMessageChannel: BroadcastChannel<DialogMessage>? = null
-    var dialogRecipientUpdateChannel: BroadcastChannel<User>? = null
+    val globalNewMessagesChannel: ConflatedBroadcastChannel<DialogMessage> = ConflatedBroadcastChannel()
+    var globalSentMessageChannel: ConflatedBroadcastChannel<DialogMessage> = ConflatedBroadcastChannel()
+    var dialogDialogNewMessageChannel: ConflatedBroadcastChannel<DialogMessage>? = null
+    var dialogDialogSentMessageChannel: ConflatedBroadcastChannel<DialogMessage>? = null
+    var dialogRecipientUpdateChannel: ConflatedBroadcastChannel<User>? = null
     var openedDialogRecipientId: Long = 0
 
     init {
@@ -62,10 +63,16 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                             .loadUser(openedDialogRecipientId)
                             .await()
 
-                    if (user != null) dialogRecipientUpdateChannel?.send(user)
+                    if (user != null) {
+                        dialogRecipientUpdateChannel?.offer(user)
+                    }
                 }
             } else {
                 endDialog()
+
+                // Remove old RAM-cached data
+                globalNewMessagesChannel.clear()
+                globalSentMessageChannel.clear()
             }
         }
     }
@@ -218,8 +225,8 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         }
     }
 
-    fun loadLastMessages(offset: Int, limit: Int, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
-        if (onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid)) {
+    fun loadLastMessages(offset: Int, limit: Int, onlyFromNetwork: Boolean = false, onlyFromDatabase: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+        if ((onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid)) && !onlyFromDatabase) {
             loadLastMessagesFromNetwork(offset, limit)
         } else {
             loadLastMessagesFromDatabase(offset, limit)

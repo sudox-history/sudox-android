@@ -1,5 +1,6 @@
 package com.sudox.android.data.repositories.messages.dialogs
 
+import com.sudox.android.common.helpers.clear
 import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
@@ -27,8 +28,23 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     var dialogRecipientsUpdatesChannel: ConflatedBroadcastChannel<List<User>> = ConflatedBroadcastChannel()
 
     init {
+        listenSessionState()
         listenNewMessages()
         listenSentMessages()
+    }
+
+    companion object {
+        const val LIMIT_SIZE = 20
+        const val MAX_LIMIT_SIZE = 20
+    }
+
+    private fun listenSessionState() = GlobalScope.launch(Dispatchers.IO) {
+        for (state in authRepository.accountSessionStateChannel.openSubscription()) {
+            if (!state) {
+                dialogMessageForMovingToTopChannel.clear()
+                dialogRecipientsUpdatesChannel.clear()
+            }
+        }
     }
 
     private fun listenNewMessages() = GlobalScope.launch(Dispatchers.IO) {
@@ -50,21 +66,21 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
     }
 
     @Throws(InternalRequestException::class)
-    fun loadDialogs(offset: Int = 0, limit: Int = 20, onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+    fun loadDialogs(offset: Int = 0, limit: Int = LIMIT_SIZE, onlyFromNetwork: Boolean = false, onlyFromDatabase: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
         val lastMessages = dialogsMessagesRepository
-                .loadLastMessages(offset, limit, onlyFromNetwork)
+                .loadLastMessages(offset, limit, onlyFromNetwork, onlyFromDatabase)
                 .await()
 
         if (lastMessages.isEmpty()) {
             if (offset == 0) {
-                return@async arrayListOf<Dialog>()
+                return@async null
             } else {
                 throw InternalRequestException(InternalErrors.LIST_ENDED)
             }
         } else {
             val lastMessagesRecipientsIds = lastMessages.map { it.getRecipientId() }
             val lastMessagesRecipients = usersRepository
-                    .loadUsers(lastMessagesRecipientsIds)
+                    .loadUsers(lastMessagesRecipientsIds, onlyFromDatabase = onlyFromDatabase)
                     .await()
             val dialogs = ArrayList<Dialog>()
 
@@ -77,7 +93,11 @@ class DialogsRepository @Inject constructor(private val protocolClient: Protocol
                 dialogs.plusAssign(Dialog(user, lastMessage))
             }
 
-            return@async dialogs
+            if (dialogs.isNotEmpty()) {
+                return@async dialogs
+            } else {
+                return@async null
+            }
         }
     }
 

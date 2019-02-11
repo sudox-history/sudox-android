@@ -26,7 +26,6 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     // Шины
     val authSessionChannel: ConflatedBroadcastChannel<AuthSession> = ConflatedBroadcastChannel()
     val accountSessionStateChannel: ConflatedBroadcastChannel<Boolean> = ConflatedBroadcastChannel()
-    var currentUserChannel: ConflatedBroadcastChannel<User> = ConflatedBroadcastChannel()
     var sessionIsValid: Boolean = false
 
     // Начало костыля для избежания циклического инжекта
@@ -76,18 +75,6 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     // Конец костыля для избежания циклического инжекта
 
     private fun listenConnectionState() = GlobalScope.launch(Dispatchers.IO) {
-        val initialAccount = accountRepository
-                .getAccount()
-                .await()
-
-        if (initialAccount != null) {
-            val user = usersRepository
-                    .loadUser(initialAccount.id, onlyFromDatabase = true)
-                    .await()
-
-            if (user != null) currentUserChannel.offer(user)
-        }
-
         for (state in protocolClient.connectionStateChannel.openSubscription()) {
             if (state == ConnectionState.HANDSHAKE_SUCCEED) {
                 val account = accountRepository.getAccount().await()
@@ -111,15 +98,17 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     }
 
     private fun notifyAccountSessionInvalid() {
+        sessionIsValid = false
         accountSessionStateChannel.offer(false)
         accountSessionStateChannel.clear()
-        sessionIsValid = false
+        authSessionChannel.clear()
     }
 
     private fun notifyAccountSessionValid() {
+        sessionIsValid = true
         accountSessionStateChannel.offer(true)
         accountSessionStateChannel.clear()
-        sessionIsValid = true
+        authSessionChannel.clear()
     }
 
     /**
@@ -190,9 +179,6 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         }).await()
 
         if (authSignInDTO.isSuccess()) {
-            val user = loadCurrentUser(authSignInDTO.id)
-
-            // Save current account ...
             accountRepository.saveAccount(SudoxAccount(authSignInDTO.id, phoneNumber, authSignInDTO.secret))
                     .await()
 
@@ -200,16 +186,6 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         } else {
             throw RequestException(authSignInDTO.error)
         }
-    }
-
-    @Throws(RequestException::class)
-    private suspend fun loadCurrentUser(userId: Long) {
-        val user = usersRepository
-                .loadUser(userId)
-                .await() ?: return
-
-        // Notify subscribers ...
-        currentUserChannel.offer(user)
     }
 
     /**
@@ -241,9 +217,6 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         }).await()
 
         if (authSignUpDTO.isSuccess()) {
-            val user = loadCurrentUser(authSignUpDTO.id)
-
-            // Save current account ...
             accountRepository.saveAccount(SudoxAccount(authSignUpDTO.id, phoneNumber, authSignUpDTO.secret))
                     .await()
 
@@ -266,7 +239,6 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
         }).await()
 
         if (authImportDTO.isSuccess()) {
-            loadCurrentUser(id)
             notifyAccountSessionValid()
         } else {
             killAccountSession()

@@ -2,10 +2,7 @@ package com.sudox.android.data.repositories.main
 
 import android.content.Context
 import android.provider.ContactsContract
-import com.sudox.android.common.helpers.NAME_REGEX
-import com.sudox.android.common.helpers.PHONE_REGEX
-import com.sudox.android.common.helpers.WHITESPACES_REMOVE_REGEX
-import com.sudox.android.common.helpers.findAndRemoveIf
+import com.sudox.android.common.helpers.*
 import com.sudox.android.data.database.dao.user.UserDao
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
@@ -38,21 +35,20 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                                              private val context: Context) {
 
     val contactsChannel: ConflatedBroadcastChannel<ArrayList<User>> = ConflatedBroadcastChannel()
+    var isInitialized: Boolean = false
 
     init {
         GlobalScope.launch(Dispatchers.IO) {
-            // Загрузим начальную копию с БД
-            contactsChannel.offer(ArrayList(userDao.loadByType(UserType.CONTACT)))
-
             // Слушаем сессию ...
             for (state in authRepository
                     .accountSessionStateChannel
                     .openSubscription()) {
 
                 if (state) {
-                    requestContacts() // Load new contacts
+                    if (isInitialized) requestContacts() // Load new contacts
                 } else {
-                    contactsChannel.offer(ArrayList()) // Clean RAM cache
+                    contactsChannel.clear() // Clean RAM cache
+                    isInitialized = false
                 }
             }
         }
@@ -108,7 +104,20 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
         notifyContactRemoved(contactNotifyDTO.id)
     }
 
-    private fun requestContacts() = GlobalScope.launch(Dispatchers.IO) {
+    fun requestContacts() = GlobalScope.launch(Dispatchers.IO) {
+        if (!isInitialized) {
+            isInitialized = true
+
+            // Offline mode ...
+            val contacts = userDao.loadByType(UserType.CONTACT)
+
+            // TO UI
+            if (contacts.isNotEmpty()) contactsChannel.offer(ArrayList(contacts))
+        }
+
+        // Exclude error 1
+        if (!authRepository.sessionIsValid) return@launch
+
         try {
             val contactsIdsListDTO = protocolClient
                     .makeRequest<ContactsIdsListDTO>("contacts.get")
@@ -198,7 +207,7 @@ class ContactsRepository @Inject constructor(val protocolClient: ProtocolClient,
                 notifyContactAdded(user)
             } else if (contactAddDTO.error == Errors.INVALID_USER) {
                 val accountUser = usersRepository
-                        .getAccountUser()
+                        .loadCurrentUser()
                         .await() ?: return@async
 
                 // Попытка добавить самого себя ;(
