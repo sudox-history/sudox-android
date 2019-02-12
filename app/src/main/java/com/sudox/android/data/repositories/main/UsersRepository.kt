@@ -203,8 +203,15 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
 
     fun loadCurrentUser(listenFutureUpdates: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
         if (accountRepository.cachedAccount != null) {
-            // Listen updates ...
             if (!listenCurrentUserUpdates) {
+                // Load initial data from database
+                val cached = loadUser(accountRepository.cachedAccount!!.id, onlyFromDatabase = true).await()
+
+                // To showing ...
+                if (cached != null)
+                    currentUserChannel.offer(cached)
+
+                // Update in future ...
                 listenCurrentUserUpdates = listenFutureUpdates
             }
 
