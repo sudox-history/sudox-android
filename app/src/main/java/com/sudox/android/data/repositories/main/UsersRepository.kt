@@ -79,26 +79,28 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                     .map { it }
             val usersFromDatabase = userDao.loadByIds(usersFromDatabaseIds)
 
+            // Update the type
+            if (usersFromDatabase.isNotEmpty()) {
+                usersFromDatabase.forEach { it.type = if (it.type != UserType.UNKNOWN) it.type else loadAs }
+                userDao.updateAll(usersFromDatabase)
+            }
+
             // Free queue
             usersLoadingLock.release()
-
-            // Update the type
-            usersFromDatabase.forEach {
-                it.type = if (it.type != UserType.UNKNOWN) it.type else loadAs
-            }
 
             // Combine network & database founded contacts
             return@async usersFromNetwork.plus(usersFromDatabase)
         } else {
             val users = userDao.loadByIds(ids)
 
+            // Update the type
+            if (users.isNotEmpty()) {
+                users.forEach { it.type = if (it.type != UserType.UNKNOWN) it.type else loadAs }
+                userDao.updateAll(users)
+            }
+
             // Free queue
             usersLoadingLock.release()
-
-            // Update the type
-            users.forEach {
-                it.type = if (it.type != UserType.UNKNOWN) it.type else loadAs
-            }
 
             return@async users
         }
@@ -110,13 +112,14 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         if ((onlyFromDatabase || !protocolClient.isValid() || loadedUsersIds.contains(id)) && !onlyFromNetwork) {
             val user = userDao.loadById(id)
 
-            // Free queue
-            usersLoadingLock.release()
-
             // Update the type
             if (user != null && user.type == UserType.UNKNOWN) {
                 user.type = loadAs
+                userDao.updateOne(user)
             }
+
+            // Free queue
+            usersLoadingLock.release()
 
             return@async user
         } else {

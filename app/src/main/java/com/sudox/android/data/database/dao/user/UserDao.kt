@@ -39,4 +39,10 @@ interface UserDao {
 
     @Query("SELECT * FROM users WHERE phone = :phone AND type = :type LIMIT 1")
     fun loadByTypeAndPhone(phone: String, type: UserType): User?
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun updateAll(users: List<User>)
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun updateOne(user: User)
 }
