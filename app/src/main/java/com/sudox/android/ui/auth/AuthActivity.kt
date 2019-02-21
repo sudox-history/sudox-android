@@ -80,9 +80,14 @@ class AuthActivity : DaggerAppCompatActivity() {
     }
 
     fun showAuthPhoneFragment(phoneNumber: String? = null, error: String? = null) {
-        supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentAuthContainer)
+        val transaction = supportFragmentManager.beginTransaction()
+
+        if (currentFragment is AuthPhoneFragment) {
+            transaction.setCustomAnimations(R.animator.animator_fragment_forward, R.animator.animator_fragment_back_right)
+        }
+
+        transaction
                 .replace(R.id.fragmentAuthContainer, AuthPhoneFragment().apply {
                     this.phoneNumber = phoneNumber
                     this.error = error
@@ -93,9 +98,14 @@ class AuthActivity : DaggerAppCompatActivity() {
     }
 
     private fun showAuthConfirmFragment() {
-        supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.animator.animator_fragment_change, 0)
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentAuthContainer)
+        val transaction = supportFragmentManager.beginTransaction()
+
+        if (currentFragment is AuthPhoneFragment) {
+            transaction.setCustomAnimations(R.animator.animator_fragment_forward, R.animator.animator_fragment_back_left)
+        }
+
+        transaction
                 .replace(R.id.fragmentAuthContainer, AuthConfirmFragment())
                 .commit()
     }

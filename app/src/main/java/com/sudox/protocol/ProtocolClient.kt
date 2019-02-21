@@ -11,6 +11,7 @@ import com.sudox.protocol.models.ReadCallback
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -188,18 +189,22 @@ class ProtocolClient @Inject constructor() {
                             val jsonArray = message?.toJSONArray()
                             val jsonObject = message?.toJSON() ?: JSONObject()
                             val json = (jsonArray ?: jsonObject)
-                            val msg = json.toString().replace("\\/", "/")
-
-                            val hmac = Base64.encodeToString(
-                                    getHmac(controller!!.key!!, event + msg + salt),
-                                    Base64.NO_WRAP)
-
-                            val payload = arrayOf(event, json, salt)
+                            val message = arrayOf(event, json)
+                            val payload = arrayOf(message, salt)
                                     .toJsonArray()
                                     .toString()
+                                    .replace("\\/", "/")
+
+                            val hmac = Base64.encodeToString(
+                                    getHmac(controller!!.key!!, payload),
+                                    Base64.NO_WRAP)
 
                             // Шифруем данные ...
                             val encryptedPayload = encryptAES(controller!!.key!!, iv, payload)
+
+                            println("Sudox ------------")
+                            println("Sudox Payload: $payload")
+                            println("Sudox Payload: $hmac")
 
                             // Отправим массив данных.
                             sendArray("msg", iv, encryptedPayload, hmac)
