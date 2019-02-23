@@ -48,10 +48,6 @@ dependencies {
     // Crashlytics
     implementation "com.crashlytics.sdk.android:crashlytics:2.9.7"
 
-    // Fresco
-    implementation "com.github.bumptech.glide:glide:4.8.0"
-    kapt "com.github.bumptech.glide:compiler:4.8.0"
-
     // No Paginate
     implementation 'com.redmadrobot:inputmask:3.4.4'
     implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha3'
