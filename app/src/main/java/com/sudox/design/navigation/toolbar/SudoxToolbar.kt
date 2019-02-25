@@ -3,7 +3,6 @@ package com.sudox.design.navigation.toolbar
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.RippleDrawable
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewCompat
 import android.support.v7.view.menu.ActionMenuItemView
@@ -14,6 +13,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
@@ -28,6 +28,8 @@ import javax.inject.Inject
 class SudoxToolbar : Toolbar {
 
     // Mark for better performance
+    private val navigationButtonSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 56F, resources.displayMetrics).toInt()
+    private val featureButtonHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 42F, resources.displayMetrics).toInt()
     private var titleTextView: PrecomputedTextView? = null
     private var actionMenuView: ActionMenuView? = null
     private var navigationButtonView: ImageButton? = null
@@ -35,6 +37,12 @@ class SudoxToolbar : Toolbar {
     private var featureButtonText: String? = null
     private var normalTitleText: String? = null
     private var connectionStateSubscription: ReceiveChannel<ConnectionState>? = null
+    private val selectableItemBackgroundRes by lazy {
+        TypedValue().apply {
+            context.theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, this, true)
+        }
+    }
+
     private val maxButtonHeight by lazy {
         Toolbar::class.java
                 .getDeclaredField("mMaxButtonHeight")
@@ -200,9 +208,11 @@ class SudoxToolbar : Toolbar {
                     layoutParams = generateDefaultLayoutParams()
                             .apply {
                                 gravity = GravityCompat.END or Gravity.CENTER_VERTICAL
+                                height = toolbarMeasuredHeight
                             }
 
-                    gravity = Gravity.END
+                    gravity = Gravity.CENTER_VERTICAL
+                    setBackgroundResource(selectableItemBackgroundRes.resourceId)
                     isClickable = true
                     isFocusable = true
                 }
@@ -376,18 +386,21 @@ class SudoxToolbar : Toolbar {
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
 
-        if (actionMenuView != null
-                && (actionMenuView!!.layoutParams as Toolbar.LayoutParams).gravity != Gravity.CENTER_VERTICAL) {
-
-            actionMenuView?.layoutParams = (actionMenuView?.layoutParams as Toolbar.LayoutParams)
-                    .apply { gravity = Gravity.CENTER_VERTICAL }
+        if (actionMenuView != null) {
+            if ((actionMenuView!!.layoutParams as Toolbar.LayoutParams).gravity != Gravity.CENTER_VERTICAL) {
+                actionMenuView!!.layoutParams = (actionMenuView!!.layoutParams as Toolbar.LayoutParams)
+                        .apply { gravity = Gravity.CENTER_VERTICAL }
+            }
         }
 
-        if (navigationButtonView != null
-                && (navigationButtonView!!.layoutParams as Toolbar.LayoutParams).gravity != Gravity.CENTER_VERTICAL) {
+        if (navigationButtonView != null) {
+            navigationButtonView!!.minimumHeight = navigationButtonSize
+            navigationButtonView!!.minimumWidth = navigationButtonSize
 
-            navigationButtonView?.layoutParams = (navigationButtonView?.layoutParams as Toolbar.LayoutParams)
-                    .apply { gravity = Gravity.CENTER_VERTICAL }
+            if ((navigationButtonView!!.layoutParams as Toolbar.LayoutParams).gravity != Gravity.CENTER_VERTICAL) {
+                navigationButtonView!!.layoutParams = (navigationButtonView!!.layoutParams as Toolbar.LayoutParams)
+                        .apply { gravity = Gravity.CENTER_VERTICAL }
+            }
         }
 
         if (SHOULD_LAYOUT_FIELD.invoke(this, featureTextButton) as Boolean) {

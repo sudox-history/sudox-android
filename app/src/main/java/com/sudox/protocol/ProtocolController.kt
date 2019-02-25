@@ -1,23 +1,19 @@
 package com.sudox.protocol
 
-import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import android.util.Base64
-import com.sudox.android.ApplicationLoader
 import com.sudox.android.data.models.core.CoreVersionDTO
 import com.sudox.protocol.helpers.*
 import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 import org.json.JSONException
+import java.security.interfaces.ECPublicKey
 import java.security.spec.InvalidKeySpecException
-import javax.crypto.interfaces.DHPublicKey
 
 /**
  * Контроллер протокола (соединения).
@@ -102,30 +98,31 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
      */
     private fun handleVerify(packet: JSONArray) {
         if (packet.length() >= 3) {
-            val serverPublicKey = packet.optString(1)
-            val serverSignature = packet.optString(2)
+            val serverEcdhPublicKey = packet.optString(1)
+            val serverEcdhPublicKeySignature = packet.optString(2)
 
-            if (serverPublicKey != null
-                    && serverSignature != null
-                    && serverPublicKey.matches(BASE64_REGEX)
-                    && serverSignature.matches(BASE64_REGEX)
-                    && verifyData(serverPublicKey, serverSignature)) {
+            if (serverEcdhPublicKey != null
+                    && serverEcdhPublicKeySignature != null
+                    && serverEcdhPublicKey.matches(BASE64_REGEX)
+                    && serverEcdhPublicKeySignature.matches(BASE64_REGEX)
+                    && verifyData(serverEcdhPublicKey, serverEcdhPublicKeySignature)) {
 
                 // Генерируем пару ключей (публичный и приватный)
-                val keyPair = generateDhPair()
+                val keyPair = generateECDHPair()
 
                 // Prepare public key
-                val publicKeyBytes = publicKeyToBytes(keyPair.public as DHPublicKey)
+                val publicKeyBytes = (keyPair.public as ECPublicKey).getPoint()
                 val encodedPublicKey = Base64.encodeToString(publicKeyBytes, Base64.NO_WRAP)
 
                 // Generate secret key
-                val serverPublicKeyInstance = readDhPublicKey(serverPublicKey)
-                val secretKey = generateDhSecretKey(keyPair.private, serverPublicKeyInstance)
-                val secretKeyHash = getHash(secretKey)
-                val secretHash = Base64.encodeToString(getHash(secretKeyHash.copyOf(16)), Base64.NO_WRAP)
+                val serverEcdhPublicKeyInstance = readECDHPublicKey(serverEcdhPublicKey)
+                val secretKey = generateECDHSecretKey(keyPair.private, serverEcdhPublicKeyInstance)
+                        .copyOf(24)
+
+                val secretHash = Base64.encodeToString(getHash(secretKey), Base64.NO_WRAP)
 
                 // Encrypt
-                key = secretKeyHash
+                key = secretKey
 
                 // Send data to the server ...
                 client.sendArray("upg", encodedPublicKey, secretHash)
@@ -177,7 +174,9 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                     && payload.matches(BASE64_REGEX)
                     && hmac.matches(BASE64_REGEX)) {
 
-                val decryptedPayload = JSONArray(decryptAES(key!!, iv, payload))
+                val decryptedPayloadString = decryptAES(key!!, iv, payload)
+                        .replace("\\/", "/")
+                val decryptedPayload = JSONArray(decryptedPayloadString)
 
                 // Check length
                 if (decryptedPayload.length() >= 3) {
@@ -186,8 +185,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                     val salt = decryptedPayload.optString(2)
 
                     if (event != null && message != null && salt != null && key != null) {
-                        val msg = message.toString().replace("\\/", "/")
-                        val hmacReaded = getHmac(key!!, event + msg + salt)
+                        val hmacReaded = getHmac(key!!, decryptedPayloadString)
                         val encodedHmac = Base64.encodeToString(hmacReaded, Base64.NO_WRAP)
 
                         // Проверим HMAC'ки ...

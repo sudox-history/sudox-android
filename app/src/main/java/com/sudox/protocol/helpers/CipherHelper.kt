@@ -1,87 +1,120 @@
 package com.sudox.protocol.helpers
 
 import android.util.Base64
-import java.math.BigInteger
-import java.nio.ByteBuffer
 import java.security.*
-import java.security.spec.InvalidKeySpecException
-import java.security.spec.X509EncodedKeySpec
-import java.util.*
+import java.security.interfaces.ECPublicKey
 import javax.crypto.Cipher
 import javax.crypto.IllegalBlockSizeException
 import javax.crypto.KeyAgreement
 import javax.crypto.Mac
-import javax.crypto.interfaces.DHPublicKey
-import javax.crypto.spec.DHParameterSpec
-import javax.crypto.spec.DHPublicKeySpec
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
+import java.math.BigInteger
+import java.security.spec.*
 
-private const val SIGN_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvR9FiI9iaw9oiTFCCGwQ" +
-        "Xej4Rmkg8w1pG2M+GdrtQC2pRxTFlEnO5iAHT7mqnQb29zAJbp0Jx8Z+UmypyCI9" +
-        "hn0EimQLvcBTynqI1aMPMJmzemdF5vnm3GCyuWvOKqE66Z9hj+ilVqOn0KKgVq2e" +
-        "j5DN1Iv9xv28+QRm70BFTowZ15ISazoGX3j7lUPFpDuiz4vfX/CbN4D8wnboqugm" +
-        "I2UEuF5uRs9IGDIWZZDmpSmlEZuqAHQQA+Mvzl3P0eqMfnhV0NlA1xPcVLNdwCbP" +
-        "lAI1W5zrwAG5Q5zzN+NlQeGxi92Q+NrQCTeZpL5fkRMfT0d21gNh6Qg4PjgBirSS" +
-        "TQIDAQAB"
 
 private val SIGN_PUBLIC_KEY_INSTANCE by lazy { readSignPublicKey(SIGN_PUBLIC_KEY) }
 
-private val G = BigInteger("02", 16)
-private val P = BigInteger("ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e" +
-        "088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d" +
-        "6d51c245e485b576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b" +
-        "1fe649286651ece45b3dc2007cb8a163bf0598da48361c55d39a69163fa8fd24cf5f83655d23dca3ad961c" +
-        "62f356208552bb9ed529077096966d670c354e4abc9804f1746c08ca18217c32905e462e36ce3be39e772c1" +
-        "80e86039b2783a2ec07a28fb5c55df06f4c52c9de2bcbf6955817183995497cea956ae515d2261898fa05101" +
-        "5728e5a8aacaa68ffffffffffffffff", 16)
+private const val SIGN_PUBLIC_KEY = "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEflkmgol1o7GFRjjB72BBbqhsRSI1SwHK" +
+        "/7357yJaEzwrBUt231AiPD2AG2MNaXr8SqDCUv3jbLzOB4+/bVkcimZVP2elvjsp" +
+        "/AdU1335LpuCufavSCrftkzD0MeiUBqc"
+
+private val COFACTOR = 1
+private val P384 = ECParameterSpec(
+        EllipticCurve(
+                // field the finite field that this elliptic curve is over.
+                ECFieldFp(BigInteger("39402006196394479212279040100143613805079739270465" +
+                        "44666794829340424572177149687032904726608825893800" +
+                        "1861606973112319")),
+                // a the first coefficient of this elliptic curve.
+                BigInteger("39402006196394479212279040100143613805079739270465" +
+                        "44666794829340424572177149687032904726608825893800" +
+                        "1861606973112316"),
+                // b the second coefficient of this elliptic curve.
+                BigInteger("27580193559959705877849011840389048093056905856361" +
+                        "56852142870730198868924130986086513626076488374510" +
+                        "7765439761230575")
+        ),
+        //g the generator which is also known as the base point.
+        ECPoint(
+                // gx
+                BigInteger("26247035095799689268623156744566981891852923491109" +
+                        "21338781561590092551885473805008902238805397571978" +
+                        "6650872476732087"),
+                // gy
+                BigInteger("83257109614890299855467512895201081792878530488613" +
+                        "15594709205902480503199884419224438643760392947333" +
+                        "078086511627871")
+        ),
+        // Order n
+        BigInteger("39402006196394479212279040100143613805079739270465446667946905279627" + "659399113263569398956308152294913554433653942643"),
+        COFACTOR)
 
 private fun readSignPublicKey(keyBody: String): PublicKey {
-    val keyFactory = KeyFactory.getInstance("RSA")
+    val keyFactory = KeyFactory.getInstance("EC")
     val decoded = Base64.decode(keyBody, Base64.NO_PADDING)
     val x509EncodedKeySpec = X509EncodedKeySpec(decoded)
 
     return keyFactory.generatePublic(x509EncodedKeySpec)
 }
 
-fun generateDhPair(): KeyPair {
-    val dhParameterSpec = DHParameterSpec(P, G)
+fun generateECDHPair(): KeyPair {
+    val ecGenParameterSpec = ECGenParameterSpec("secp384r1")
 
-    return with(KeyPairGenerator.getInstance("DH")) {
-        initialize(dhParameterSpec, SecureRandom())
+    return with(KeyPairGenerator.getInstance("EC")) {
+        initialize(ecGenParameterSpec, SecureRandom())
         generateKeyPair()
     }
 }
 
-@Throws(InvalidKeySpecException::class)
-fun readDhPublicKey(y: String): PublicKey {
-    val yBytes = Base64.decode(y, Base64.NO_WRAP)
-    val keyFactory = KeyFactory.getInstance("DH")
-    val keySpec = DHPublicKeySpec(bytesToBigInteger(yBytes), P, G)
-
-    return keyFactory.generatePublic(keySpec)
+fun ECPublicKey.getPoint(): ByteArray {
+    val affineXBytes = stripLeadingZeros(w.affineX.toByteArray())
+    val affineYBytes = stripLeadingZeros(w.affineY.toByteArray())
+    val encodedBytes = ByteArray(48 * 2 + 1)
+    encodedBytes[0] = 0x04 //uncompressed
+    System.arraycopy(affineXBytes, 0, encodedBytes, 48 - affineXBytes.size + 1, affineXBytes.size)
+    System.arraycopy(affineYBytes, 0, encodedBytes, encodedBytes.size - affineYBytes.size, affineYBytes.size)
+    return encodedBytes
 }
 
-fun bytesToBigInteger(bytes: ByteArray): BigInteger {
-    val key = ByteBuffer.allocate(bytes.size + 1)
-    key.put(0x00.toByte())
-    key.put(bytes)
+fun readECDHPublicKey(keyBody: String): ECPublicKey {
+    val decoded = Base64.decode(keyBody, Base64.NO_PADDING)
+    val keyFactory = KeyFactory.getInstance("EC")
 
-    return BigInteger(key.array())
+    val x = ByteArray(49)
+    val y = ByteArray(49)
+    System.arraycopy(decoded, 1, x, 1, 48)
+    System.arraycopy(decoded, 49, y, 1, 48)
+
+    // Get X & Y coords
+    val ecPublicKeySpec = ECPublicKeySpec(ECPoint(BigInteger(x), BigInteger(y)), P384)
+
+    // Generate key
+    return keyFactory.generatePublic(ecPublicKeySpec) as ECPublicKey
 }
 
-fun publicKeyToBytes(publicKey: DHPublicKey): ByteArray {
-    var bytes = publicKey.y.toByteArray()
+fun stripLeadingZeros(bytes: ByteArray): ByteArray {
+    var i = 0
 
-    if (bytes.size % 8 != 0 && bytes[0].toInt() == 0x00) {
-        bytes = Arrays.copyOfRange(bytes, 1, bytes.size)
+    while (i < bytes.size - 1) {
+        if (bytes[i].toInt() != 0) {
+            break
+        }
+
+        i++
     }
 
-    return bytes
+    return if (i == 0) {
+        bytes
+    } else {
+        val stripped = ByteArray(bytes.size - i)
+        System.arraycopy(bytes, i, stripped, 0, stripped.size)
+        stripped
+    }
 }
 
-fun generateDhSecretKey(privateKey: PrivateKey, publicKey: PublicKey): ByteArray {
-    val keyAgree = KeyAgreement.getInstance("DH").apply {
+fun generateECDHSecretKey(privateKey: PrivateKey, publicKey: PublicKey): ByteArray {
+    val keyAgree = KeyAgreement.getInstance("ECDH").apply {
         init(privateKey, SecureRandom())
         doPhase(publicKey, true)
     }
@@ -90,18 +123,19 @@ fun generateDhSecretKey(privateKey: PrivateKey, publicKey: PublicKey): ByteArray
 }
 
 fun getHash(input: ByteArray): ByteArray {
-    return MessageDigest.getInstance("SHA-256").digest(input)
+    return MessageDigest.getInstance("SHA-224").digest(input)
 }
 
 @Throws(IllegalArgumentException::class)
 fun verifyData(key: String, signature: String): Boolean {
-    val verifier = Signature.getInstance("SHA256withRSA")
+    val verifier = Signature.getInstance("SHA224withECDSA")
     val decodedSignature = Base64.decode(signature, Base64.NO_PADDING)
+    val decodedKey = Base64.decode(key, Base64.NO_PADDING)
 
     // Init verifier
     with(verifier) {
         initVerify(SIGN_PUBLIC_KEY_INSTANCE)
-        update(Base64.decode(key, Base64.NO_PADDING))
+        update(decodedKey)
     }
 
     return verifier.verify(decodedSignature)
@@ -141,8 +175,8 @@ fun encryptAES(key: ByteArray, iv: String, data: String): String {
 }
 
 fun getHmac(secretKey: ByteArray, message: String): ByteArray {
-    return with(Mac.getInstance("HmacSHA256")) {
-        init(SecretKeySpec(secretKey, "HmacSHA256"))
+    return with(Mac.getInstance("HmacSHA224")) {
+        init(SecretKeySpec(secretKey, "HmacSHA224"))
         doFinal(message.toByteArray())
     }
 }
