@@ -185,12 +185,12 @@ class ProtocolClient @Inject constructor() {
 
                         if (key != null) {
                             val iv = randomBase64String(16)
-                            val salt = randomBase64String(32)
+                            val salt = randomBase64String(8)
                             val jsonArray = message?.toJSONArray()
                             val jsonObject = message?.toJSON() ?: JSONObject()
                             val json = (jsonArray ?: jsonObject)
-                            val message = arrayOf(event, json)
-                            val payload = arrayOf(message, salt)
+                            val message = arrayOf(event, json, salt)
+                            val payload = message
                                     .toJsonArray()
                                     .toString()
                                     .replace("\\/", "/")
@@ -201,10 +201,6 @@ class ProtocolClient @Inject constructor() {
 
                             // Шифруем данные ...
                             val encryptedPayload = encryptAES(controller!!.key!!, iv, payload)
-
-                            println("Sudox ------------")
-                            println("Sudox Payload: $payload")
-                            println("Sudox Payload: $hmac")
 
                             // Отправим массив данных.
                             sendArray("msg", iv, encryptedPayload, hmac)

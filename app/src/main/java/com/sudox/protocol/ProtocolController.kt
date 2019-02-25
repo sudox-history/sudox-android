@@ -174,20 +174,22 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                     && payload.matches(BASE64_REGEX)
                     && hmac.matches(BASE64_REGEX)) {
 
-                val decryptedPayload = JSONArray(decryptAES(key!!, iv, payload))
+                val decryptedPayloadString = decryptAES(key!!, iv, payload)
+                        .replace("\\/", "/")
+                val decryptedPayload = JSONArray(decryptedPayloadString)
 
                 // Check length
-                if (decryptedPayload.length() >= 2) {
-                    val message = decryptedPayload.optJSONObject(0)
-                    val salt = decryptedPayload.optString(1)
+                if (decryptedPayload.length() >= 3) {
+                    val event = decryptedPayload.optString(0)
+                    val message = decryptedPayload.optJSONObject(1)
+                    val salt = decryptedPayload.optString(2)
 
-                    if (message != null && salt != null && key != null) {
-                        val msg = message.toString().replace("\\/", "/")
-                        val hmacReaded = getHmac(key!!, payload)
+                    if (event != null && message != null && salt != null && key != null) {
+                        val hmacReaded = getHmac(key!!, decryptedPayloadString)
                         val encodedHmac = Base64.encodeToString(hmacReaded, Base64.NO_WRAP)
 
                         // Проверим HMAC'ки ...
-//                        if (encodedHmac == hmac) client.notifyCallbacks(event, message.toString())
+                        if (encodedHmac == hmac) client.notifyCallbacks(event, message.toString())
                     }
                 }
             }
