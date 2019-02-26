@@ -178,38 +178,32 @@ class ProtocolClient @Inject constructor() {
                 connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
             }
         } else {
-            controller!!.handler!!.post(object : Runnable {
-                override fun run() {
-                    if (isValid()) {
-                        val key = controller!!.key
+            controller!!.handler!!.post(Runnable {
+                val key = controller!!.key
 
-                        if (key != null) {
-                            val iv = randomBase64String(16)
-                            val salt = randomBase64String(8)
-                            val jsonArray = message?.toJSONArray()
-                            val jsonObject = message?.toJSON() ?: JSONObject()
-                            val json = (jsonArray ?: jsonObject)
-                            val message = arrayOf(event, json, salt)
-                            val payload = message
-                                    .toJsonArray()
-                                    .toString()
-                                    .replace("\\/", "/")
+                if (isValid() && key != null) {
+                    val iv = randomBase64String(16)
+                    val salt = randomBase64String(8)
+                    val jsonArray = message?.toJSONArray()
+                    val jsonObject = message?.toJSON() ?: JSONObject()
+                    val json = (jsonArray ?: jsonObject)
+                    val message = arrayOf(event, json, salt)
+                    val payload = message
+                            .toJsonArray()
+                            .toString()
+                            .replace("\\/", "/")
 
-                            val hmac = Base64.encodeToString(
-                                    getHmac(controller!!.key!!, payload),
-                                    Base64.NO_WRAP)
+                    val hmac = Base64.encodeToString(
+                            getHmac(controller!!.key!!, payload),
+                            Base64.NO_WRAP)
 
-                            // Шифруем данные ...
-                            val encryptedPayload = encryptAES(controller!!.key!!, iv, payload)
+                    // Шифруем данные ...
+                    val encryptedPayload = encryptAES(controller!!.key!!, iv, payload)
 
-                            // Отправим массив данных.
-                            sendArray("msg", iv, encryptedPayload, hmac)
-                        } else {
-                            controller!!.handler?.postDelayed(this, 1000)
-                        }
-                    } else {
-                        GlobalScope.launch { connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED) }
-                    }
+                    // Отправим массив данных.
+                    sendArray("msg", iv, encryptedPayload, hmac)
+                } else {
+                    GlobalScope.launch { connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED) }
                 }
             })
         }
