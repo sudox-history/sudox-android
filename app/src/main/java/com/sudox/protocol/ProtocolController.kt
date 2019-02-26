@@ -8,8 +8,7 @@ import com.sudox.android.data.models.core.CoreVersionDTO
 import com.sudox.protocol.helpers.*
 import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.enums.ConnectionState
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONException
 import java.security.interfaces.ECPublicKey
@@ -31,6 +30,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
 
     // Looper prepared callback
     internal var looperPreparedCallback: (() -> (Unit))? = null
+    internal var getCoreVersionJob: Job? = null
 
     // Создаем обработчик.
     override fun onLooperPrepared() {
@@ -134,27 +134,45 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
      * Метод, вызываемый при приходе пакета ["upg"]
      **/
     private fun handleUpgrade(packet: JSONArray) {
-        if (packet.length() >= 2 && packet.optInt(1) == 1) {
-            // Проверка версии ...
-            GlobalScope.launch {
-                try {
-                    val coreVersionDTO = client
-                            .makeRequestWithControl<CoreVersionDTO>("core.getVersion")
-                            .await()
+        if (packet.length() >= 2) {
+            val status = packet.optInt(1) == 1
 
-                    if (coreVersionDTO.version == ProtocolClient.VERSION) {
-                        client.connectionStateChannel.offer(ConnectionState.HANDSHAKE_SUCCEED)
-                    } else {
-                        client.connectionStateChannel.offer(ConnectionState.OLD_PROTOCOL_VERSION)
-                        client.close()
-                        client.kill()
-                    }
-                } catch (e: NetworkException) {
-                    // Ignore
-                }
+            // Handshake failed!
+            if (!status) {
+                client.close()
+                return
             }
-        } else {
-            client.close()
+
+            // Check protocol version ...
+            getCoreVersionJob = compareVersions()
+        }
+    }
+
+    /**
+     * Сравнивает версии протоколов на сервере и в клиенте.
+     *
+     * Если все ОК, то отправляет в шину событий протокола - HANDSHAKE_SUCCEED
+     * В противном случае отправит в шину событий протокола - OLD_PROTOCOL_VERSION
+     */
+    private fun compareVersions() = GlobalScope.async(Dispatchers.IO) {
+        try {
+            val coreVersionDTO = client
+                    .makeRequestWithControl<CoreVersionDTO>("core.getVersion")
+                    .await()
+
+            // Task can be invalidated
+            if (!isActive) return@async
+
+            // Compare versions
+            if (coreVersionDTO.version == ProtocolClient.VERSION) {
+                client.connectionStateChannel.offer(ConnectionState.HANDSHAKE_SUCCEED)
+            } else {
+                client.connectionStateChannel.offer(ConnectionState.OLD_PROTOCOL_VERSION)
+                client.close()
+                client.kill()
+            }
+        } catch (e: NetworkException) {
+            // Ignore ...
         }
     }
 
@@ -201,12 +219,13 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
      **/
     fun onEnd() = handler!!.post {
         handler!!.removeCallbacksAndMessages(null)
-        client.kill(false)
 
-        // Для слушателей состояния.
+        // Close connection ...
+        getCoreVersionJob?.cancel()
+        client.kill(false)
         client.connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
 
-        // TODO: В будущем реализовать определение статуса приложения (в фоне увеличивать интервал между попытками)
+        // Post reconnect after 1000ms
         handler!!.postDelayed({ client.connect(false) }, 1000)
     }
 

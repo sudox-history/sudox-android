@@ -53,41 +53,41 @@ class ProtocolClient @Inject constructor() {
     fun connect(notifyAboutError: Boolean = true) {
         kill(notifyAboutError)
 
-        // Запускаем контроллер если он выключен.
-        if (controller == null) controller = ProtocolController(this)
+        // Init controller
+        if (controller == null) {
+            controller = ProtocolController(this)
 
-        // Подключение выполняем в потоке контроллера.
-        controller!!.looperPreparedCallback = {
-            socket = Socket()
-            socket!!.keepAlive = false // У нас есть свой Ping-pong.
-            socket!!.receiveBufferSize = 8192
-            socket!!.sendBufferSize = 8192
+            // Callback for looper
+            controller!!.looperPreparedCallback = {
+                try {
+                    socket = Socket()
+                    socket!!.keepAlive = false
+                    socket!!.receiveBufferSize = 8192
+                    socket!!.sendBufferSize = 8192
 
-            // Устанавливаем соединение
-            try {
-                socket!!.connect(InetSocketAddress("api.sudox.ru", 5000), 5000)
+                    // Connect ...
+                    socket!!.connect(InetSocketAddress("api.sudox.ru", 5000), 5000)
 
-                // Запускаем потоки чтения/записи.
-                startThreads()
+                    // Start controller & IO threads
+                    startThreads()
 
-                // Рукопожатие.
-                controller!!.onStart()
-            } catch (e: IOException) {
-                // Костыль, но должно работать
-                if (notifyAboutError) GlobalScope.launch {
-                    connectionStateChannel.offer(ConnectionState.CONNECT_ERRORED)
-                }
+                    // Start handshake ...
+                    controller!!.onStart()
+                } catch (e: IOException) {
+                    if (notifyAboutError) connectionStateChannel.offer(ConnectionState.CONNECT_ERRORED)
 
-                if (controller != null && controller!!.handler != null) {
-                    controller!!.handler!!.removeCallbacksAndMessages(null)
-                    controller!!.handler!!.postDelayed({ connect(false) }, 1000)
+                    // Removed delayed tasks & post connect task ...
+                    controller?.handler?.removeCallbacksAndMessages(null)
+                    controller?.handler?.postDelayed({ connect(false) }, 1000)
                 }
             }
         }
 
+        // First start ...
         if (!controller!!.isAlive) {
             controller!!.start()
         } else {
+            controller?.handler?.removeCallbacksAndMessages(null)
             controller?.handler?.post { controller!!.looperPreparedCallback?.let { it() } }
         }
     }
