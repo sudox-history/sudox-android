@@ -9,6 +9,7 @@ import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

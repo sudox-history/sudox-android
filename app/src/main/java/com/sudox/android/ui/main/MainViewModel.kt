@@ -8,6 +8,7 @@ import com.sudox.android.common.livedata.SingleLiveEvent
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -8,6 +8,7 @@ import com.sudox.protocol.ProtocolClient
 import com.sudox.android.common.livedata.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

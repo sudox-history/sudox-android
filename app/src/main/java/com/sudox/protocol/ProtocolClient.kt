@@ -11,12 +11,11 @@ import com.sudox.protocol.models.ReadCallback
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.net.InetSocketAddress
 import java.net.Socket
-import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.ConcurrentLinkedDeque
 import java.util.concurrent.LinkedBlockingQueue
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,14 +30,18 @@ class ProtocolClient @Inject constructor() {
 
     internal var socket: Socket? = null
     internal var controller: ProtocolController? = null
+
+    // Потоки ввода/вывода
     private var reader: ProtocolReader? = null
     private var writer: ProtocolWriter? = null
-    val readCallbacks = ConcurrentLinkedQueue<ReadCallback<*>>()
-    private val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
+
+    // Кэллбэки
+    val readCallbacks = ConcurrentLinkedDeque<ReadCallback<*>>()
+    val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
     val connectionStateChannel by lazy { ConflatedBroadcastChannel<ConnectionState>() }
 
     companion object {
-        var VERSION: String = "0.5.0"
+        var VERSION: String = "0.5.1"
     }
 
     /**
@@ -57,10 +60,11 @@ class ProtocolClient @Inject constructor() {
         controller!!.looperPreparedCallback = {
             socket = Socket()
             socket!!.keepAlive = false // У нас есть свой Ping-pong.
+            socket!!.receiveBufferSize = 8192
+            socket!!.sendBufferSize = 8192
 
             // Устанавливаем соединение
             try {
-
                 socket!!.connect(InetSocketAddress("api.sudox.ru", 5000), 5000)
 
                 // Запускаем потоки чтения/записи.
@@ -142,10 +146,14 @@ class ProtocolClient @Inject constructor() {
             writer = null
         }
 
-        if (socket != null && (socket!!.isConnected || !socket!!.isClosed)) socket!!.close()
+        if (socket != null && (socket!!.isConnected || !socket!!.isClosed)) {
+            socket!!.close()
+        }
 
         // Убираем ключ.
-        if (controller != null) controller!!.key = null
+        if (controller != null) {
+            controller!!.key = null
+        }
 
         // "Убиваем" корутины (Если по-культурному, то снимаем блокировки и возвращаем NetworkException)
         notifyConnectionDestroyed()
@@ -153,57 +161,64 @@ class ProtocolClient @Inject constructor() {
 
     /**
      * Закрывает соединение (сокет).
-     **/
+     */
     fun close() {
-        if (socket != null && socket!!.isConnected) socket!!.close()
-    }
-
-    fun sendArray(vararg params: Any) = sendString(params.toJsonArray().toString())
-
-    /**
-     * Методы для "внешней" отправки (на уровне сети, без шифрования)
-     **/
-    fun sendString(string: String) {
-        try {
-            writer!!.messagesQueue.put(string)
-        } catch (e: InterruptedException) {
-            writer!!.messagesQueue = LinkedBlockingQueue()
-            writer!!.messagesQueue.put(string)
+        if (socket != null && socket!!.isConnected) {
+            socket!!.close()
         }
     }
 
+    /**
+     * Отправляет массив данных в формате JSON по незащищенному каналу.
+     */
+    internal fun sendArray(vararg params: Any) = sendString(params.toJsonArray().toString())
+
+    /**
+     * Методы для "внешней" отправки (на уровне сети, без шифрования)
+     */
+    private fun sendString(string: String) {
+        val bytes = string.toByteArray()
+
+        try {
+            writer!!.queue.offer(bytes)
+        } catch (e: InterruptedException) {
+            writer!!.queue = LinkedBlockingQueue()
+            writer!!.queue.offer(bytes)
+        }
+    }
+
+    /**
+     * Отправляет сообщения в формате JSON по защищенному каналу.
+     */
     fun sendMessage(event: String, message: JsonModel? = null) {
-        if (!isValid()) {
-            GlobalScope.launch {
-                connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
-            }
+        if (!isValid() || controller!!.key == null) {
+            connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
         } else {
             controller!!.handler!!.post(Runnable {
                 val key = controller!!.key
 
-                if (isValid() && key != null) {
+                if (!isValid() || key == null) {
+                    connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
+                } else {
                     val iv = randomBase64String(16)
                     val salt = randomBase64String(8)
+
+                    // It's can be array/object
                     val jsonArray = message?.toJSONArray()
-                    val jsonObject = message?.toJSON() ?: JSONObject()
-                    val json = (jsonArray ?: jsonObject)
-                    val message = arrayOf(event, json, salt)
-                    val payload = message
+                    val jsonObject = message?.toJSON()
+                    val jsonMessage = (jsonArray ?: jsonObject) ?: JSONObject()
+
+                    // Serialize message
+                    val payload = arrayOf(event, jsonMessage, salt)
                             .toJsonArray()
                             .toString()
                             .replace("\\/", "/")
 
-                    val hmac = Base64.encodeToString(
-                            getHmac(controller!!.key!!, payload),
-                            Base64.NO_WRAP)
+                    val hmac = Base64.encodeToString(getHmac(key, payload), Base64.NO_WRAP)
+                    val encryptedPayload = encryptAES(key, iv, payload)
 
-                    // Шифруем данные ...
-                    val encryptedPayload = encryptAES(controller!!.key!!, iv, payload)
-
-                    // Отправим массив данных.
+                    // Send packet to server
                     sendArray("msg", iv, encryptedPayload, hmac)
-                } else {
-                    GlobalScope.launch { connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED) }
                 }
             })
         }

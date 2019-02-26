@@ -7,6 +7,7 @@ import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.repositories.main.UsersRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

@@ -1,36 +1,61 @@
 package com.sudox.protocol
 
-import com.sudox.protocol.impls.SeparatedBufferedReader
-import java.io.EOFException
-import java.net.SocketException
+import java.io.DataInputStream
+import java.lang.Exception
 
 class ProtocolReader(private val client: ProtocolClient) : Thread("SSTP Reader") {
 
     override fun run() {
-        try {
-            val reader = SeparatedBufferedReader(client.socket!!.getInputStream().reader(), ']')
+        val socket = client.socket!!
+        val controller = client.controller!!
+        val inputStream = socket.getInputStream()
+        val dataInputStream = DataInputStream(inputStream)
+        var dataBuffer = ByteArray(socket.receiveBufferSize)
+        val packetEndSeparator = ']'.toByte()
+        val packetStartSeparator = '['.toByte()
+        var packetBytesRead = 0
 
-            // Чтение ...
-            while (!isInterrupted && client.isValid()) {
-                try {
-                    val line = reader.readLine()
+        // Blocking ...
+        while (!isInterrupted && client.isValid()) {
+            try {
+                // End of packet
+                if (packetBytesRead > 0 && dataBuffer[packetBytesRead - 1] == packetEndSeparator) {
+                    controller.onPacket(String(dataBuffer))
+                    dataBuffer = ByteArray(socket.receiveBufferSize)
+                    packetBytesRead = 0
+                    continue
+                } else if (packetBytesRead > 0
+                        && dataBuffer.firstOrNull() == packetStartSeparator
+                        && dataBuffer[packetBytesRead - 1] == packetEndSeparator) {
 
-                    // reader.readLine() блокирует поток до получения сообщения ...
+                    dataBuffer = ByteArray(socket.receiveBufferSize)
+                    packetBytesRead = 0
+                }
 
-                    client.controller!!.onPacket(line)
-                } catch (e: EOFException) {
-                    break
-                } catch (e: SocketException) {
+                // Increase buffer size
+                if (dataBuffer.firstOrNull() != 0.toByte()) {
+                    val increasedBuffer = ByteArray(dataBuffer.size + socket.receiveBufferSize)
+
+                    // Copy all bytes & rebind buffer
+                    System.arraycopy(dataBuffer, 0, increasedBuffer, 0, dataBuffer.size)
+                    dataBuffer = increasedBuffer
+                }
+
+                // Read chunk ...
+                val bytesRead = dataInputStream.read(dataBuffer)
+
+                // Handle end of stream
+                if (bytesRead == -1) {
                     break
                 }
+
+                packetBytesRead += bytesRead
+            } catch (e: Exception) {
+                break
             }
-        } catch (e: Exception) {
-            // Ignore
         }
 
-        // Поток данных завершен.
-
         // Solving SA-6 problem
-        if (!isInterrupted) client.controller!!.onEnd()
+        if (!isInterrupted) controller.onEnd()
     }
 }

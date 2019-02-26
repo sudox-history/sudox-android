@@ -14,6 +14,7 @@ import android.util.TypedValue
 import com.sudox.android.data.database.model.user.User
 import com.sudox.design.helpers.getTwoFirstLetters
 import kotlinx.coroutines.*
+import kotlinx.coroutines.android.Main
 
 class TextAvatarView : FrameLayout {
 
