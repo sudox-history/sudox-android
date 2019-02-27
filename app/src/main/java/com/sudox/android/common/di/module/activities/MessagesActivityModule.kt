@@ -8,5 +8,5 @@ import dagger.android.ContributesAndroidInjector
 abstract class MessagesActivityModule {
 
     @ContributesAndroidInjector
-    abstract fun provideUserChatFragment(): DialogFragment
+    abstract fun provideDialogFragment(): DialogFragment
 }

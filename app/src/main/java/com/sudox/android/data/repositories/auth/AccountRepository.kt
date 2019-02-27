@@ -3,6 +3,7 @@ package com.sudox.android.data.repositories.auth
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.accounts.AccountManager.KEY_ACCOUNT_NAME
+import android.content.Context
 import android.os.Build
 import com.sudox.android.common.helpers.formatPhoneByMask
 import com.sudox.android.data.auth.KEY_ACCOUNT_ID
@@ -13,11 +14,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AccountRepository @Inject constructor(private val accountManager: AccountManager,
-                                            private val sudoxDatabase: SudoxDatabase) {
+class AccountRepository @Inject constructor(private val sudoxDatabase: SudoxDatabase,
+                                            private val appContext: Context) {
 
     // Account direction
     private val accountType = "com.sudox"
+    private val accountManager by lazy { AccountManager.get(appContext) }
 
     // Cached account
     var cachedAccount: SudoxAccount? = null

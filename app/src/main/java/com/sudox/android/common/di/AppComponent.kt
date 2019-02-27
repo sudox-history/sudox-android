@@ -2,7 +2,6 @@ package com.sudox.android.common.di
 
 import android.app.Application
 import com.sudox.android.ApplicationLoader
-import com.sudox.android.common.di.module.AccountModule
 import com.sudox.android.common.di.module.AppModule
 import com.sudox.android.common.di.module.DatabaseModule
 import com.sudox.android.common.di.module.ViewModelModule
@@ -21,7 +20,6 @@ import javax.inject.Singleton
     (AndroidSupportInjectionModule::class),
     (AppModule::class),
     (ActivityModule::class),
-    (AccountModule::class),
     (DatabaseModule::class),
     (ViewModelModule::class)])
 interface AppComponent : AndroidInjector<DaggerApplication> {
@@ -32,7 +30,6 @@ interface AppComponent : AndroidInjector<DaggerApplication> {
 
     // Не знаю зачем это здесь написали, но без него не работает
     override fun inject(instance: DaggerApplication?)
-
 
     @Component.Builder
     interface Builder {
