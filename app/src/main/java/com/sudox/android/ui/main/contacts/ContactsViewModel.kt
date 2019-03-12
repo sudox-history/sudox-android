@@ -11,7 +11,7 @@ import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
-import com.sudox.android.data.repositories.main.ContactsRepository
+import com.sudox.android.data.repositories.users.ContactsRepository
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -29,7 +29,7 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
         listenContacts()
 
         // Load data ...
-        contactsRepository.requestContacts()
+        contactsRepository.loadContacts()
     }
 
     private fun listenContacts() = GlobalScope.launch(Dispatchers.IO) {

@@ -13,7 +13,7 @@ import com.sudox.android.data.models.messages.MessageDirection
 import com.sudox.android.data.models.messages.MessageStatus
 import com.sudox.android.data.models.messages.dialogs.Dialog
 import com.sudox.design.helpers.formatHtml
-import com.sudox.android.common.livedata.SingleLiveEvent
+import com.sudox.android.common.helpers.livedata.SingleLiveEvent
 import kotlinx.android.synthetic.main.item_dialog.view.*
 
 class DialogsAdapter(val context: Context) : RecyclerView.Adapter<DialogsAdapter.Holder>() {

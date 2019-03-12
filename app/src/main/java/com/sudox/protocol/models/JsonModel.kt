@@ -1,49 +1,28 @@
 package com.sudox.protocol.models
 
-import org.json.JSONArray
 import org.json.JSONObject
 
 abstract class JsonModel {
 
-    // Error codeStatus & codeStatus status
-    var error = -1
-    var response = 0
+    var error: Int = -1
+    var response: Int = 0
 
-    open fun toJSON(): JSONObject? { return null }
-    open fun toJSONArray(): JSONArray? { return null }
+    open fun toJSON(): JSONObject? = null
     open fun fromJSON(jsonObject: JSONObject) {}
-    open fun fromJSONArray(jsonArray: JSONArray) {}
+    fun containsError(): Boolean = error != -1
+    fun isSuccess(): Boolean = error == -1 || response == 1
 
-    fun readResponse(jsonObject: JSONObject) {
+    internal fun readResponse(jsonObject: JSONObject) {
         if (jsonObject.has("error")) {
             error = jsonObject.optInt("error")
         } else {
             val value = jsonObject.opt("response")
 
+            // Parse ...
             when (value) {
                 null -> fromJSON(jsonObject)
                 is Int -> response = value
-                is JSONObject -> fromJSON(value)
-                is JSONArray -> fromJSONArray(value)
             }
         }
-    }
-
-    fun writeRequest(): String {
-        val jsonObject = toJSON()
-
-        // First is object
-        if (jsonObject != null) return jsonObject.toString()
-
-        // First is array
-        return toJSONArray()!!.toString()
-    }
-
-    fun containsError(): Boolean {
-        return error != -1
-    }
-
-    fun isSuccess(): Boolean {
-        return error == -1 || response == 1
     }
 }

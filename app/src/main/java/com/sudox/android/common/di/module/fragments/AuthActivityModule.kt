@@ -10,7 +10,7 @@ import dagger.android.ContributesAndroidInjector
 abstract class AuthActivityModule {
 
     @ContributesAndroidInjector
-    abstract fun provideAuthEmailFragment(): AuthPhoneFragment
+    abstract fun provideAuthPhoneFragment(): AuthPhoneFragment
 
     @ContributesAndroidInjector
     abstract fun provideAuthConfirmFragment(): AuthConfirmFragment

@@ -2,9 +2,9 @@ package com.sudox.android.ui.main.profile
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.common.livedata.SingleLiveEvent
+import com.sudox.android.common.helpers.livedata.SingleLiveEvent
 import com.sudox.android.data.database.model.user.User
-import com.sudox.android.data.repositories.main.UsersRepository
+import com.sudox.android.data.repositories.users.UsersRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.IO
@@ -22,17 +22,17 @@ class ProfileViewModel @Inject constructor(private val usersRepository: UsersRep
         listenUpdates()
 
         // Load data
-        usersRepository.loadCurrentUser(true)
+//        usersRepository.loadCurrentUser(true)
     }
 
     private fun listenUpdates() = GlobalScope.launch(Dispatchers.IO) {
-        currentUserSubscription = usersRepository
-                .currentUserChannel
-                .openSubscription()
-
-        for (user in currentUserSubscription!!) {
-            userLiveData.postValue(user)
-        }
+//        currentUserSubscription = usersRepository
+//                .currentUserChannel
+//                .openSubscription()
+//
+//        for (user in currentUserSubscription!!) {
+//            userLiveData.postValue(user)
+//        }
     }
 
     override fun onCleared() {

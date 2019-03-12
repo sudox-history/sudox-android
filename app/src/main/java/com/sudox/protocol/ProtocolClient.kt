@@ -2,15 +2,15 @@ package com.sudox.protocol
 
 import android.util.Base64
 import com.sudox.protocol.helpers.encryptAES
-import com.sudox.protocol.helpers.getHmac
+import com.sudox.protocol.helpers.calculateHMAC
 import com.sudox.protocol.helpers.randomBase64String
-import com.sudox.protocol.helpers.toJsonArray
 import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.ReadCallback
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
 import java.net.InetSocketAddress
@@ -36,7 +36,8 @@ class ProtocolClient @Inject constructor() {
     private var writer: ProtocolWriter? = null
 
     // Кэллбэки
-    val readCallbacks = ConcurrentLinkedDeque<ReadCallback<*>>()
+    @JvmField
+    var readCallbacks = ConcurrentLinkedDeque<ReadCallback<*>>()
     val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
     val connectionStateChannel by lazy { ConflatedBroadcastChannel<ConnectionState>() }
 
@@ -66,7 +67,7 @@ class ProtocolClient @Inject constructor() {
                     socket!!.sendBufferSize = 8192
 
                     // Connect ...
-                    socket!!.connect(InetSocketAddress("api.sudox.ru", 5000), 5000)
+                    socket!!.connect(InetSocketAddress("46.173.214.49", 5000), 5000)
 
                     // Start controller & IO threads
                     startThreads()
@@ -171,7 +172,7 @@ class ProtocolClient @Inject constructor() {
     /**
      * Отправляет массив данных в формате JSON по незащищенному каналу.
      */
-    internal fun sendArray(vararg params: Any) = sendString(params.toJsonArray().toString())
+    internal fun sendArray(vararg params: Any) = sendString(JSONArray(params).toString())
 
     /**
      * Методы для "внешней" отправки (на уровне сети, без шифрования)
@@ -203,18 +204,14 @@ class ProtocolClient @Inject constructor() {
                     val iv = randomBase64String(16)
                     val salt = randomBase64String(8)
 
-                    // It's can be array/object
-                    val jsonArray = message?.toJSONArray()
-                    val jsonObject = message?.toJSON()
-                    val jsonMessage = (jsonArray ?: jsonObject) ?: JSONObject()
-
                     // Serialize message
-                    val payload = arrayOf(event, jsonMessage, salt)
-                            .toJsonArray()
+                    val jsonObject = message?.toJSON()
+                    val jsonMessage = jsonObject ?: JSONObject()
+                    val payload = JSONArray(arrayOf(event, jsonMessage, salt))
                             .toString()
                             .replace("\\/", "/")
 
-                    val hmac = Base64.encodeToString(getHmac(key, payload), Base64.NO_WRAP)
+                    val hmac = Base64.encodeToString(calculateHMAC(key, payload), Base64.NO_WRAP)
                     val encryptedPayload = encryptAES(key, iv, payload)
 
                     // Send packet to server
@@ -230,23 +227,21 @@ class ProtocolClient @Inject constructor() {
      * Метод публичный, т.к. используется в inline-методах.
      * Ни в коем случае не использовать вне протокола!
      *
-     * Асинхронный, т.к. дурак может выполнить его в UI-потоке,
-     * а как вы знаете, я против любых операций, кроме операций с дизайном в UI потоке...
      */
-    fun <T : JsonModel> addToCallbacks(event: String?, clazz: KClass<T>, resultFunction: (T) -> (Unit), once: Boolean) {
-        readCallbacks.plusAssign(ReadCallback(
-                resultFunction = resultFunction,
-                clazz = clazz,
-                event = event,
-                once = once
-        ))
+    fun <T : JsonModel> addToCallbacks(readCallback: ReadCallback<T>?) {
+        readCallbacks.plusAssign(readCallback)
     }
 
     /**
      * Подписывает кэллбэк на постоянное получение данных. Не будет даже после разрыва/потери соединения.
      */
     inline fun <reified T : JsonModel> listenMessage(event: String, noinline resultFunction: (T) -> (Unit)) {
-        addToCallbacks(event, T::class, resultFunction, false)
+        addToCallbacks(ReadCallback(
+                resultFunction = resultFunction,
+                clazz = T::class,
+                event = event,
+                once = false
+        ))
     }
 
     /**
@@ -254,7 +249,12 @@ class ProtocolClient @Inject constructor() {
      * Все "одноразовые" кэллбэки, которые не получили данные, будут удалены после разрыва/потери соединения.
      */
     inline fun <reified T : JsonModel> listenMessageOnce(event: String, noinline resultFunction: (T) -> (Unit)) {
-        addToCallbacks(event, T::class, resultFunction, true)
+        addToCallbacks(ReadCallback(
+                resultFunction = resultFunction,
+                clazz = T::class,
+                event = event,
+                once = true
+        ))
     }
 
     /**
@@ -264,17 +264,9 @@ class ProtocolClient @Inject constructor() {
         errorsMessagesCallbacks.plusAssign(resultFunction)
     }
 
-    /**
-     * Подписывает кэллбэк на единственный ответ, шифрует и отправляет сообщение на сервер.
-     */
-    inline fun <reified T : JsonModel> makeRequest(event: String, message: JsonModel? = null, noinline resultFunction: (T) -> (Unit)) {
-        listenMessageOnce(event, resultFunction)
-        sendMessage(event, message)
-    }
-
     inline fun <reified T : JsonModel> makeRequest(event: String, message: JsonModel? = null) = GlobalScope.async(Dispatchers.IO) {
         return@async suspendCoroutine<T> { coroutine ->
-            readCallbacks.plusAssign(ReadCallback(
+            addToCallbacks(ReadCallback(
                     coroutine = coroutine,
                     clazz = T::class,
                     event = event,

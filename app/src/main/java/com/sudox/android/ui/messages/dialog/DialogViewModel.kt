@@ -2,15 +2,15 @@ package com.sudox.android.ui.messages.dialog
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.common.livedata.ActiveSingleLiveEvent
+import com.sudox.android.common.helpers.livedata.ActiveSingleLiveEvent
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
-import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.users.AuthRepository
 import com.sudox.android.data.repositories.messages.dialogs.DialogsMessagesRepository
-import com.sudox.android.common.livedata.SingleLiveEvent
+import com.sudox.android.common.helpers.livedata.SingleLiveEvent
 import kotlinx.coroutines.*
 import javax.inject.Inject
 

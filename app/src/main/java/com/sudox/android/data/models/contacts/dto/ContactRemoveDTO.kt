@@ -6,7 +6,7 @@ import org.json.JSONObject
 class ContactRemoveDTO: JsonModel() {
 
     // For read/send ...
-    var id: Long = 0
+    var id: Long = 0L
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {

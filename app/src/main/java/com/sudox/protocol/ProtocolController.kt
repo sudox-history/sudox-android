@@ -61,7 +61,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
      **/
     fun onPacket(string: String) = handler!!.post {
         try {
-            val packet = string.toJsonArray()
+            val packet = JSONArray(string)
             val type = packet.optString(0) ?: return@post
 
             // Ищем метод-обработчик
@@ -108,18 +108,18 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                     && verifyData(serverEcdhPublicKey, serverEcdhPublicKeySignature)) {
 
                 // Генерируем пару ключей (публичный и приватный)
-                val keyPair = generateECDHPair()
+                val keyPair = generateKeys()
 
                 // Prepare public key
                 val publicKeyBytes = (keyPair.public as ECPublicKey).getPoint()
                 val encodedPublicKey = Base64.encodeToString(publicKeyBytes, Base64.NO_WRAP)
 
                 // Generate secret key
-                val serverEcdhPublicKeyInstance = readECDHPublicKey(serverEcdhPublicKey)
-                val secretKey = generateECDHSecretKey(keyPair.private, serverEcdhPublicKeyInstance)
+                val serverEcdhPublicKeyInstance = readPublicKey(serverEcdhPublicKey)
+                val secretKey = calculateSecretKey(keyPair.private, serverEcdhPublicKeyInstance)
                         .copyOf(24)
 
-                val secretHash = Base64.encodeToString(getHash(secretKey), Base64.NO_WRAP)
+                val secretHash = Base64.encodeToString(calculateHash(secretKey), Base64.NO_WRAP)
 
                 // Encrypt
                 key = secretKey
@@ -203,7 +203,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                     val salt = decryptedPayload.optString(2)
 
                     if (event != null && message != null && salt != null && key != null) {
-                        val hmacReaded = getHmac(key!!, decryptedPayloadString)
+                        val hmacReaded = calculateHMAC(key!!, decryptedPayloadString)
                         val encodedHmac = Base64.encodeToString(hmacReaded, Base64.NO_WRAP)
 
                         // Проверим HMAC'ки ...

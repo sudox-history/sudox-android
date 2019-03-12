@@ -4,9 +4,9 @@ import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.exceptions.RequestException
 import com.sudox.android.data.exceptions.RequestRegexException
 import com.sudox.android.data.models.common.Errors
-import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.users.AuthRepository
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
-import com.sudox.android.common.livedata.SingleLiveEvent
+import com.sudox.android.common.helpers.livedata.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.IO

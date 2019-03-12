@@ -3,13 +3,9 @@ package com.sudox.android.ui.auth.confirm
 import android.Manifest
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.provider.Telephony
 import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,10 +15,9 @@ import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.common.SMS_RECEIVED
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.common.helpers.SMS_CODE_REGEX
 import com.sudox.android.common.helpers.formatPhoneByMask
-import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.auth.state.AuthSession
+import com.sudox.android.data.models.common.Errors
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.common.BaseAuthFragment
 import com.sudox.android.ui.auth.confirm.enums.AuthConfirmAction
@@ -68,7 +63,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
             when (it) {
                 AuthConfirmAction.FREEZE -> freeze()
                 AuthConfirmAction.SHOW_REGISTER_FRAGMENT -> authActivity.showAuthRegisterFragment()
-                AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> authActivity.showAuthPhoneFragment(authSession.phoneNumber, getString(R.string.code_expired))
+                AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> authActivity.showAuthPhoneFragment(authSession.phone, getString(R.string.code_expired))
                 AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_TOO_MANY_REQUESTS -> {
                     codeEditTextContainer.error = getString(R.string.too_many_requests)
                     unfreeze()
@@ -104,7 +99,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
     }
 
     private fun initFooterText() {
-        enterYourCodeText.text = formatHtml(getString(R.string.enter_code_from_messages, formatPhoneByMask(authSession.phoneNumber)))
+        enterYourCodeText.text = formatHtml(getString(R.string.enter_code_from_messages, formatPhoneByMask(authSession.phone)))
     }
 
     private fun initCodeEditText() {
@@ -135,9 +130,9 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
 
         // Начинаем отправку, блокируем ввод кода ...
         if (authSession.status == AuthSession.AUTH_STATUS_NOT_REGISTERED) {
-            authConfirmViewModel.checkCode(authSession.phoneNumber, code, authSession.hash)
+            authConfirmViewModel.checkCode(authSession.phone, code, authSession.hash)
         } else {
-            authConfirmViewModel.signIn(authSession.phoneNumber, code, authSession.hash)
+            authConfirmViewModel.signIn(authSession.phone, code, authSession.hash)
         }
 
         // Сохраним код ... (похер если вылезет ошибка, код в таких случаях перезапишется по-любому)
@@ -151,7 +146,7 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
         authActivity.authNavigationBar.navigationActionCallback = {
             if (it == NavigationAction.BACK) {
                 codeEditText.setText("")
-                authActivity.showAuthPhoneFragment(authSession.phoneNumber)
+                authActivity.showAuthPhoneFragment(authSession.phone)
             } else if (it == NavigationAction.SOME_FEATURE) {
                 // TODO: Try send code again
             }

@@ -1,6 +1,6 @@
 package com.sudox.android.data.models.messages.dialogs.dto
 
-import com.sudox.protocol.helpers.reversedForEachObject
+import com.sudox.protocol.helpers.asIterable
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONObject
 
@@ -11,7 +11,7 @@ class LastDialogsMessagesDTO : JsonModel() {
     var offset: Int = 0
 
     // For read
-    val messages by lazy { ArrayList<DialogMessageDTO>() }
+    lateinit var messages: ArrayList<DialogMessageDTO>
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
@@ -21,13 +21,10 @@ class LastDialogsMessagesDTO : JsonModel() {
     }
 
     override fun fromJSON(jsonObject: JSONObject) {
-        val messagesArray = jsonObject.optJSONArray("messages")
-
-        // Reverse! (sorted by id as default)
-        messagesArray.reversedForEachObject {
-            messages.plusAssign(DialogMessageDTO().apply {
-                fromJSON(it)
-            })
-        }
+        messages = jsonObject
+                .optJSONArray("messages")
+                .asIterable()
+                .reversed()  // Reversed forEach because messages was sorted by id as default
+                .map { DialogMessageDTO().apply { fromJSON(it as JSONObject) } } as ArrayList<DialogMessageDTO>
     }
 }

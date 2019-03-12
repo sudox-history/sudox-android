@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
-import com.sudox.android.common.helpers.formatMessageText
+import com.sudox.android.common.helpers.formatMessage
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.ui.messages.MessagesInnerActivity
 import dagger.android.support.DaggerFragment
@@ -157,7 +157,7 @@ class DialogFragment @Inject constructor() : DaggerFragment(), Toolbar.OnMenuIte
 
     private fun listenMessagesSendingRequests() {
         chatSendMessageButton.setOnClickListener {
-            val text = formatMessageText(chatMessageTextField.text.toString())
+            val text = formatMessage(chatMessageTextField.text.toString())
 
             // Filter empty text
             if (text.isNotEmpty()) {

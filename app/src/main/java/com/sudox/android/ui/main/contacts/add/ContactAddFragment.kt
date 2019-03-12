@@ -14,11 +14,11 @@ import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.formatPhoneByMask
-import com.sudox.android.common.helpers.sendSmsMessage
+import com.sudox.android.common.helpers.sendMessageViaSms
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.Errors
-import com.sudox.android.data.repositories.main.CONTACTS_NAME_REGEX_ERROR
-import com.sudox.android.data.repositories.main.CONTACTS_PHONE_REGEX_ERROR
+import com.sudox.android.data.repositories.users.CONTACTS_NAME_REGEX_ERROR
+import com.sudox.android.data.repositories.users.CONTACTS_PHONE_REGEX_ERROR
 import com.sudox.android.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -81,7 +81,7 @@ class ContactAddFragment : DaggerFragment() {
                 AlertDialog.Builder(context!!)
                         .setTitle(R.string.title_oops)
                         .setMessage(R.string.hint_no_contact_in_sudox)
-                        .setPositiveButton(R.string.invite) { _, _ -> context!!.sendSmsMessage("+7$phoneNumber", getString(R.string.invite_friend_sms)) }
+                        .setPositiveButton(R.string.invite) { _, _ -> context!!.sendMessageViaSms("+7$phoneNumber", getString(R.string.invite_friend_sms)) }
                         .setNegativeButton(R.string.no_confirmation) { _, _ -> }
                         .show()
             } else if (it == ContactAddAction.SHOW_ATTEMPT_TO_ADDING_MYSELF_ERROR) {

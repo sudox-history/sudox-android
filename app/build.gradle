@@ -51,6 +51,22 @@ dependencies {
 
     // Input masks
     implementation 'com.redmadrobot:inputmask:3.4.4'
+
+    // For testing
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.1.1'
+    testImplementation 'org.mockito:mockito-core:2.24.5'
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.0-RC.1'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.0'
+    androidTestImplementation 'org.mockito:mockito-core:2.24.5'
+    androidTestImplementation 'org.mockito:mockito-android:2.24.5'
+
+    // For UI-testing
+    androidTestImplementation 'com.android.support:support-annotations:28.0.0'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
 }
 
 android {
@@ -76,10 +92,15 @@ android {
         versionCode versionMajor * 1000 + versionMinor * 100 + versionUpdate * 10 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionUpdate}.${versionPatch}"
         multiDexEnabled false
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     dexOptions {
         preDexLibraries true
+    }
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
 
     buildTypes {
@@ -87,6 +108,7 @@ android {
             shrinkResources false
             minifyEnabled false
             crunchPngs false
+            testCoverageEnabled = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 

@@ -4,7 +4,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.models.auth.state.AuthSession
-import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.users.AuthRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.Dispatchers

@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.sudox.android.R
 import com.sudox.android.data.database.model.user.User
-import com.sudox.android.data.repositories.main.ContactsRepository
+import com.sudox.android.data.repositories.users.ContactsRepository
 import com.sudox.design.avatar.AvatarView
 import com.sudox.design.helpers.formatHtml
 import com.sudox.design.helpers.setOnItemClickListener

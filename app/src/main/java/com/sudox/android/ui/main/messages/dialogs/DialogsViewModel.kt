@@ -2,15 +2,15 @@ package com.sudox.android.ui.main.messages.dialogs
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.common.livedata.ActiveSingleLiveEvent
-import com.sudox.android.common.livedata.SingleLiveEvent
+import com.sudox.android.common.helpers.livedata.ActiveSingleLiveEvent
+import com.sudox.android.common.helpers.livedata.SingleLiveEvent
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.models.messages.dialogs.Dialog
-import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.users.AuthRepository
 import com.sudox.android.data.repositories.messages.dialogs.DialogsRepository
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.*
@@ -37,12 +37,12 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
 
     init {
         // Фильтр для сообщений (в очереди на обновление, может находится только одно сообщение из каждого диалога!)
-        movesToTopMessagesLiveData.queueFilter = { current, new ->
+        movesToTopMessagesLiveData.filter = { current, new ->
             current.getRecipientId() == new!!.getRecipientId() && new.date >= current.date
         }
 
         // Фильтр для сообщений диалогов
-        movesToTopDialogsLiveData.queueFilter = { current, new ->
+        movesToTopDialogsLiveData.filter = { current, new ->
             current.recipient.uid == new!!.recipient.uid && new.lastMessage.date >= current.lastMessage.date
         }
     }
@@ -66,7 +66,7 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
                     listenRecipientUpdates()
 
                     // If session active - load initial dialogs from network
-                    if (authRepository.sessionIsValid) {
+                    if (authRepository.isSessionInstalled) {
                         dialogs = dialogsRepository
                                 .loadDialogs(onlyFromNetwork = true)
                                 .await()

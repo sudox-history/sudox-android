@@ -5,6 +5,7 @@ import org.json.JSONObject
 
 class ContactsSyncDTO : ContactsIdsListDTO() {
 
+    // Contacts for sync ...
     var items: ArrayList<ContactPairDTO> = arrayListOf()
 
     override fun toJSON(): JSONObject {

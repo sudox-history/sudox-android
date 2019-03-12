@@ -6,8 +6,8 @@ import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.models.messages.dialogs.Dialog
-import com.sudox.android.data.repositories.auth.AuthRepository
-import com.sudox.android.data.repositories.main.UsersRepository
+import com.sudox.android.data.repositories.users.AuthRepository
+import com.sudox.android.data.repositories.users.UsersRepository
 import com.sudox.protocol.ProtocolClient
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel

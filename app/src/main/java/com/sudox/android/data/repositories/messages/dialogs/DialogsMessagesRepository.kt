@@ -1,7 +1,6 @@
 package com.sudox.android.data.repositories.messages.dialogs
 
 import com.sudox.android.common.helpers.clear
-import com.sudox.android.common.helpers.formatMessageText
 import com.sudox.android.data.database.dao.messages.DialogMessagesDao
 import com.sudox.android.data.database.model.messages.DialogMessage
 import com.sudox.android.data.database.model.user.User
@@ -14,9 +13,9 @@ import com.sudox.android.data.models.messages.dialogs.dto.DialogHistoryDTO
 import com.sudox.android.data.models.messages.dialogs.dto.DialogMessageDTO
 import com.sudox.android.data.models.messages.dialogs.dto.DialogSendMessageDTO
 import com.sudox.android.data.models.messages.dialogs.dto.LastDialogsMessagesDTO
-import com.sudox.android.data.repositories.auth.AccountRepository
-import com.sudox.android.data.repositories.auth.AuthRepository
-import com.sudox.android.data.repositories.main.UsersRepository
+import com.sudox.android.data.repositories.users.AccountRepository
+import com.sudox.android.data.repositories.users.AuthRepository
+import com.sudox.android.data.repositories.users.UsersRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.NetworkException
 import kotlinx.coroutines.*
@@ -78,30 +77,30 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
     }
 
     private fun listenNewMessages() {
-        protocolClient.listenMessage<DialogMessageDTO>("updates.dialogs.new") {
-            val accountId = accountRepository.cachedAccount?.id ?: return@listenMessage
-            val recipientId = if (it.peer == accountId) it.sender else it.peer
-            val direction = if (it.peer != accountId) MessageDirection.TO else MessageDirection.FROM
-            val message = DialogMessage(
-                    mid = it.id,
-                    sender = it.sender,
-                    peer = it.peer,
-                    message = it.message,
-                    date = it.date,
-                    direction = direction,
-                    status = MessageStatus.DELIVERED)
-
-            // Insert into database
-            dialogMessagesDao.insertOne(message)
-
-            // Notify listeners about new message
-            globalNewMessagesChannel.sendBlocking(message)
-
-            // If current dialog active notify subscribers
-            if (openedDialogRecipientId == recipientId) {
-                dialogDialogNewMessageChannel?.sendBlocking(message)
-            }
-        }
+//        protocolClient.listenMessage<DialogMessageDTO>("updates.dialogs.new") {
+//            val accountId = accountRepository.cachedAccount?.id ?: return@listenMessage
+//            val recipientId = if (it.peer == accountId) it.sender else it.peer
+//            val direction = if (it.peer != accountId) MessageDirection.TO else MessageDirection.FROM
+//            val message = DialogMessage(
+//                    mid = it.id,
+//                    sender = it.sender,
+//                    peer = it.peer,
+//                    message = it.message,
+//                    date = it.date,
+//                    direction = direction,
+//                    status = MessageStatus.DELIVERED)
+//
+//            // Insert into database
+//            dialogMessagesDao.insertOne(message)
+//
+//            // Notify listeners about new message
+//            globalNewMessagesChannel.sendBlocking(message)
+//
+//            // If current dialog active notify subscribers
+//            if (openedDialogRecipientId == recipientId) {
+//                dialogDialogNewMessageChannel?.sendBlocking(message)
+//            }
+//        }
     }
 
     fun openDialog(recipientId: Long) {
@@ -132,7 +131,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         val cachedOffset = loadedDialogsRecipientIds[recipientId] ?: -1
         val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
 
-        if (onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid && cachedOffset < newOffset)) {
+        if (onlyFromNetwork || (protocolClient.isValid() && authRepository.isSessionInstalled && cachedOffset < newOffset)) {
             loadMessagesFromNetwork(recipientId, offset, limit, excludeDelivering)
         } else {
             loadMessagesFromDatabase(recipientId, offset, limit)
@@ -226,7 +225,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
     }
 
     fun loadLastMessages(offset: Int, limit: Int, onlyFromNetwork: Boolean = false, onlyFromDatabase: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
-        if ((onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionIsValid)) && !onlyFromDatabase) {
+        if ((onlyFromNetwork || (protocolClient.isValid() && authRepository.isSessionInstalled)) && !onlyFromDatabase) {
             loadLastMessagesFromNetwork(offset, limit)
         } else {
             loadLastMessagesFromDatabase(offset, limit)
@@ -263,20 +262,20 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 
     @Suppress("NAME_SHADOWING")
     fun sendTextMessage(recipientId: Long, text: String) = GlobalScope.launch(Dispatchers.IO) {
-        val accountId = accountRepository.cachedAccount?.id ?: return@launch
-        val text = formatMessageText(text)
-
-        // Запрет отправки пустого поля.
-        if (text.isEmpty()) return@launch
-
-        // Отправка ...
-        sendMessage(DialogMessage(
-                sender = accountId,
-                peer = recipientId,
-                message = text,
-                date = System.currentTimeMillis(),
-                direction = MessageDirection.TO,
-                status = MessageStatus.IN_DELIVERY)).await()
+//        val accountId = accountRepository.cachedAccount?.id ?: return@launch
+//        val text = formatMessage(text)
+//
+//        // Запрет отправки пустого поля.
+//        if (text.isEmpty()) return@launch
+//
+//        // Отправка ...
+//        sendMessage(DialogMessage(
+//                sender = accountId,
+//                peer = recipientId,
+//                message = text,
+//                date = System.currentTimeMillis(),
+//                direction = MessageDirection.TO,
+//                status = MessageStatus.IN_DELIVERY)).await()
     }
 
     @Suppress("NAME_SHADOWING")
@@ -349,7 +348,8 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
     }
 
     private fun toStorableMessages(messages: ArrayList<DialogMessageDTO>): ArrayList<DialogMessage> {
-        val accountId = accountRepository.cachedAccount?.id ?: return arrayListOf()
+//        val accountId = accountRepository.cachedAccount?.id ?: return arrayListOf()
+        val accountId = 0L
 
         return ArrayList(messages.map {
             val direction = if (it.peer != accountId) MessageDirection.TO else MessageDirection.FROM

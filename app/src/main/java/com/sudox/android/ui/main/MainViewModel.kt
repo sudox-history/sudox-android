@@ -1,10 +1,10 @@
 package com.sudox.android.ui.main
 
 import android.arch.lifecycle.ViewModel
-import com.sudox.android.data.repositories.auth.AuthRepository
+import com.sudox.android.data.repositories.users.AuthRepository
 import com.sudox.android.ui.main.enums.MainActivityAction
 import com.sudox.protocol.ProtocolClient
-import com.sudox.android.common.livedata.SingleLiveEvent
+import com.sudox.android.common.helpers.livedata.SingleLiveEvent
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

@@ -9,11 +9,14 @@ class ContactAddDTO : JsonModel() {
     lateinit var phone: String
 
     // For read/send ...
-    var id: Long = 0
+    var id: Long = 0L
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
-            if (name.isNotEmpty()) putOpt("name", name)
+            if (name.isNotEmpty()) {
+                putOpt("name", name)
+            }
+
             putOpt("phone", phone)
         }
     }

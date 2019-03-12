@@ -1,48 +1,35 @@
 package com.sudox.android.data.database.dao.user
 
-import android.arch.persistence.room.*
+import android.arch.persistence.room.Dao
+import android.arch.persistence.room.Insert
+import android.arch.persistence.room.OnConflictStrategy
+import android.arch.persistence.room.Query
 import com.sudox.android.data.database.model.user.User
-import com.sudox.android.data.models.users.UserType
 
 @Dao
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(users: List<User>)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOne(user: User)
-
-    @Query("UPDATE users SET type = 'UNKNOWN' WHERE type = :type")
-    fun setUnknownByType(type: UserType)
+    fun insertAll(users: Array<out User>)
 
     @Query("DELETE FROM users WHERE uid in (:ids)")
     fun removeAll(ids: List<Long>)
 
-    @Query("DELETE FROM users WHERE uid = :id")
-    fun removeOne(id: Long)
-
     @Query("SELECT * FROM users WHERE uid in (:ids)")
     fun loadByIds(ids: List<Long>): List<User>
 
-    @Query("SELECT * FROM users WHERE uid = :id")
-    fun loadById(id: Long): User?
+    @Query("SELECT uid FROM users WHERE uid IN (:ids) AND isContact = 1")
+    fun filterContactsIds(ids: List<Long>): List<Long>
 
-    @Query("SELECT * FROM users WHERE type = :type")
-    fun loadByType(type: UserType): List<User>
+    @Query("SELECT uid FROM users WHERE uid IN (:ids)")
+    fun filterExists(ids: LongArray): List<Long>
 
-    @Query("UPDATE users SET type = :type WHERE uid IN (:ids)")
-    fun setTypeAll(ids: List<Long>, type: UserType)
+    @Query("SELECT * FROM users WHERE isContact = 1")
+    fun loadContacts(): List<User>
 
-    @Query("UPDATE users SET type = :type WHERE uid = :id")
-    fun setType(id: Long,  type: UserType)
+    @Query("SELECT uid FROM users WHERE isContact = 1")
+    fun loadContactsIds(): LongArray
 
-    @Query("SELECT * FROM users WHERE phone = :phone AND type = :type LIMIT 1")
-    fun loadByTypeAndPhone(phone: String, type: UserType): User?
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateAll(users: List<User>)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateOne(user: User)
+    @Query("SELECT isContact FROM users WHERE phone = :phone")
+    fun isContactByPhone(phone: String): Boolean
 }

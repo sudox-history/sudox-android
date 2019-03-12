@@ -5,13 +5,16 @@ import org.json.JSONObject
 
 class ContactEditDTO : JsonModel() {
 
-    var id: Long = 0
+    var id: Long = 0L
     lateinit var name: String
 
     override fun toJSON(): JSONObject {
         return JSONObject().apply {
             putOpt("id", id)
-            if (name.isNotEmpty()) putOpt("name", name)
+
+            if (name.isNotEmpty()) {
+                putOpt("name", name)
+            }
         }
     }
 

@@ -10,8 +10,8 @@ import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.auth.state.AuthSession
-import com.sudox.android.data.repositories.auth.AUTH_NAME_REGEX_ERROR
-import com.sudox.android.data.repositories.auth.AUTH_NICKNAME_REGEX_ERROR
+import com.sudox.android.data.repositories.users.AUTH_NAME_REGEX_ERROR
+import com.sudox.android.data.repositories.users.AUTH_NICKNAME_REGEX_ERROR
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.common.BaseAuthFragment
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
@@ -71,10 +71,10 @@ class AuthRegisterFragment @Inject constructor() : BaseAuthFragment() {
             when (it) {
                 AuthRegisterAction.FREEZE -> freeze()
                 AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
-                    authActivity.showAuthPhoneFragment(authSession.phoneNumber, getString(R.string.code_expired))
+                    authActivity.showAuthPhoneFragment(authSession.phone, getString(R.string.code_expired))
                 }
                 AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_INVALID_ACCOUNT_ERROR -> {
-                    authActivity.showAuthPhoneFragment(authSession.phoneNumber, getString(R.string.account_is_already_registered))
+                    authActivity.showAuthPhoneFragment(authSession.phone, getString(R.string.account_is_already_registered))
                 }
             }
         })
@@ -96,7 +96,7 @@ class AuthRegisterFragment @Inject constructor() : BaseAuthFragment() {
         authActivity.authNavigationBar.navigationActionCallback = {
             if (it == NavigationAction.NEXT) {
                 authRegisterViewModel.signUp(
-                        authSession.phoneNumber,
+                        authSession.phone,
                         authSession.code!!,
                         authSession.hash,
                         nameEditText.text.toString(),

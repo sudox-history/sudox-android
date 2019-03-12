@@ -4,13 +4,13 @@
     tools:ignore="GoogleAppIndexingWarning">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
 
-    <!--Runtime permissions-->
+    <!-- Runtime permissions -->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
@@ -23,22 +23,22 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:theme="@style/AppTheme">
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="1b52d7c00ea5730ee162bd375b807fc38f86e091" />
-
         <service
-            android:name="com.sudox.android.data.auth.SudoxAuthenticatorService"
+            android:name=".data.auth.AuthenticatorService"
             android:exported="true">
 
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
+                <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
+                android:resource="@xml/authenticator_sudox"/>
         </service>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="1b52d7c00ea5730ee162bd375b807fc38f86e091" />
 
         <activity
             android:name="com.sudox.android.ui.splash.SplashActivity"

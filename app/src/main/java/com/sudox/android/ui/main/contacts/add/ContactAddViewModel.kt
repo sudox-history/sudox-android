@@ -7,7 +7,7 @@ import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.exceptions.RequestException
 import com.sudox.android.data.exceptions.RequestRegexException
 import com.sudox.android.data.models.common.InternalErrors
-import com.sudox.android.data.repositories.main.ContactsRepository
+import com.sudox.android.data.repositories.users.ContactsRepository
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject

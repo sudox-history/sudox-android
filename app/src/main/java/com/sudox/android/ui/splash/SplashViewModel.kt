@@ -1,9 +1,9 @@
 package com.sudox.android.ui.splash
 
 import android.arch.lifecycle.*
-import com.sudox.android.data.repositories.auth.AccountRepository
 import com.sudox.android.ui.splash.enums.SplashAction
-import com.sudox.android.common.livedata.SingleLiveEvent
+import com.sudox.android.common.helpers.livedata.SingleLiveEvent
+import com.sudox.android.data.repositories.users.AccountRepository
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -16,7 +16,7 @@ class SplashViewModel @Inject constructor(private val accountRepository: Account
      * Решает на какую Activity переключиться.
      * **/
     fun initSession() = GlobalScope.launch(Dispatchers.IO) {
-        val account = accountRepository.getAccount().await()
+        val account = accountRepository.getAccount()
 
         // Выполняем нужные действия
         if (account != null) {
