@@ -66,13 +66,13 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     fun init(usersRepository: UsersRepository) {
         this.usersRepository = usersRepository
 
-        // Начинаем работу ...
-        listenConnectionState()
-
         // Отслеживаем ошибку unauthorized
         protocolClient.listenErrorCodes {
             if (it == Errors.UNAUTHORIZED) killAccountSession()
         }
+
+        // Начинаем работу ...
+        listenConnectionState()
     }
 
     // Конец костыля для избежания циклического инжекта

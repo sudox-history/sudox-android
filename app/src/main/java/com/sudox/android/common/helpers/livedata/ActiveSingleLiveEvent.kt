@@ -21,20 +21,24 @@ class ActiveSingleLiveEvent<T> : SingleLiveEvent<T>() {
     override fun setValue(t: T?) {
         // Методы onActive() и setValue() выполняются в одном потоке
         // => можно отбросить необходимость синхронизации данных
-        if (isActive) {
-            super.setValue(t)
-        } else if (valuesQueue.lastOrNull() != t) {
+        if (!isActive) {
             if (filter != null) {
                 valuesQueue.removeAll { filter!!(it, t) }
             }
 
-            valuesQueue.plusAssign(t)
+            // Исключаем дублирование данных в очереди => уменьшаем кол-во ненужных обновлений в UI
+            if (valuesQueue.find { it == t } == null) {
+                valuesQueue.plusAssign(t)
+            }
+        } else {
+            super.setValue(t)
         }
     }
 
     override fun onActive() {
         isActive = true
 
+        // Отправляем недоставленные значения.
         while (valuesQueue.isNotEmpty()) {
             value = valuesQueue.poll()
         }

@@ -73,9 +73,9 @@ class ActiveSingleLiveEventTest : Assert() {
     @Test
     fun testSetValue_without_filter_but_with_subscribers() {
         val liveData = PowerMockito.spy(ActiveSingleLiveEvent<Int>())
-        val testValue = Random.nextInt()
         val semaphore = Semaphore(1)
-        var observedValue = 0
+        val testValues = intArrayOf(1, 8, 8)
+        val observedValues = ArrayList<Int>()
 
         mockMainThreadHandler()
 
@@ -89,13 +89,24 @@ class ActiveSingleLiveEventTest : Assert() {
                 .apply { isAccessible = true }
                 .setBoolean(liveData, false)
 
-        liveData.value = testValue
+        testValues.forEach { liveData.value = it }
+
+        // Try to duplicate data
+        liveData.value = testValues.last()
+
+        // Bind listener ...
         liveData.observeForever {
-            observedValue = it!!
-            semaphore.release()
+            observedValues.plusAssign(it!!)
+
+            if (observedValues.size == testValues.size) {
+                semaphore.release()
+            }
         }
 
         semaphore.acquire()
+
+        // Try to duplicate latest data
+        liveData.value = testValues.last()
 
         // Verifying
         val valuesQueue = ActiveSingleLiveEvent::class.java
@@ -103,7 +114,60 @@ class ActiveSingleLiveEventTest : Assert() {
                 .apply { isAccessible = true }
                 .get(liveData) as Queue<Int>
 
-        assertEquals(testValue, observedValue)
+        assertArrayEquals(testValues, observedValues.toIntArray())
+        assertTrue(valuesQueue.isEmpty())
+    }
+
+    @Test
+    fun testSetValue_with_filter_and_subscribers() {
+        val liveData = PowerMockito.spy(ActiveSingleLiveEvent<Int>())
+        val semaphore = Semaphore(1)
+        val testValues = intArrayOf(1, 8, 9)
+        val validValues = intArrayOf(9, 9, 8)
+        val observedValues = ArrayList<Int>()
+
+        mockMainThreadHandler()
+
+        // Allow invoke setValue on main thread
+        PowerMockito.mockStatic(LiveData::class.java)
+        PowerMockito.doNothing().`when`(LiveData::class.java, "assertMainThread", any())
+
+        // Bind filter
+        liveData.filter = { old, new -> old < new!! }
+
+        // Testing ...
+        ActiveSingleLiveEvent::class.java
+                .getDeclaredField("isActive")
+                .apply { isAccessible = true }
+                .setBoolean(liveData, false)
+
+        testValues.forEach { liveData.value = it }
+
+        // Try to duplicate data
+        liveData.value = testValues.last()
+
+        // Bind listener ...
+        liveData.observeForever {
+            observedValues.plusAssign(it!!)
+
+            if (observedValues.size == testValues.size) {
+                semaphore.release()
+            }
+        }
+
+        semaphore.acquire()
+
+        // Try to duplicate latest data
+        liveData.value = testValues.last()
+        liveData.value = 8
+
+        // Verifying
+        val valuesQueue = ActiveSingleLiveEvent::class.java
+                .getDeclaredField("valuesQueue")
+                .apply { isAccessible = true }
+                .get(liveData) as Queue<Int>
+
+        assertArrayEquals(validValues, observedValues.toIntArray())
         assertTrue(valuesQueue.isEmpty())
     }
 }
