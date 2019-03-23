@@ -39,7 +39,6 @@ class AuthActivity : DaggerAppCompatActivity() {
         authViewModel.authActivityEventsLiveData.observe(this, Observer {
             if (it == AuthActivityEvent.CONNECTION_CLOSED) {
                 showWaitForConnectStatus()
-                unfreezeCurrent()
             } else if (it == AuthActivityEvent.HANDSHAKE_SUCCEED) {
                 val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentAuthContainer)
 
@@ -67,16 +66,6 @@ class AuthActivity : DaggerAppCompatActivity() {
 
         // Start business logic
         authViewModel.start()
-    }
-
-    private fun unfreezeCurrent() {
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentAuthContainer)
-                ?: return
-
-        // Разморозим текущий фрагмент
-        if (currentFragment is BaseAuthFragment) {
-            currentFragment.unfreeze()
-        }
     }
 
     fun showAuthPhoneFragment(phoneNumber: String? = null, error: String? = null) {

@@ -1,8 +1,8 @@
 package com.sudox.protocol
 
 import android.util.Base64
-import com.sudox.protocol.helpers.encryptAES
 import com.sudox.protocol.helpers.calculateHMAC
+import com.sudox.protocol.helpers.encryptAES
 import com.sudox.protocol.helpers.randomBase64String
 import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.NetworkException
@@ -23,7 +23,6 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-import kotlin.reflect.KClass
 
 @Singleton
 class ProtocolClient @Inject constructor() {
@@ -38,8 +37,10 @@ class ProtocolClient @Inject constructor() {
     // Кэллбэки
     @JvmField
     var readCallbacks = ConcurrentLinkedDeque<ReadCallback<*>>()
-    val errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
-    val connectionStateChannel by lazy { ConflatedBroadcastChannel<ConnectionState>() }
+    @JvmField
+    var errorsMessagesCallbacks = ArrayList<(Int) -> (Unit)>()
+    @JvmField
+    var connectionStateChannel = ConflatedBroadcastChannel<ConnectionState>()
 
     companion object {
         var VERSION: String = "0.5.1"
@@ -193,13 +194,13 @@ class ProtocolClient @Inject constructor() {
      */
     fun sendMessage(event: String, message: JsonModel? = null) {
         if (!isValid() || controller!!.key == null) {
-            connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
+            connectionStateChannel.offer(ConnectionState.NO_CONNECTION)
         } else {
             controller!!.handler!!.post(Runnable {
                 val key = controller!!.key
 
                 if (!isValid() || key == null) {
-                    connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
+                    connectionStateChannel.offer(ConnectionState.NO_CONNECTION)
                 } else {
                     val iv = randomBase64String(16)
                     val salt = randomBase64String(8)
@@ -264,21 +265,8 @@ class ProtocolClient @Inject constructor() {
         errorsMessagesCallbacks.plusAssign(resultFunction)
     }
 
+    @Throws(NetworkException::class)
     inline fun <reified T : JsonModel> makeRequest(event: String, message: JsonModel? = null) = GlobalScope.async(Dispatchers.IO) {
-        return@async suspendCoroutine<T> { coroutine ->
-            addToCallbacks(ReadCallback(
-                    coroutine = coroutine,
-                    clazz = T::class,
-                    event = event,
-                    once = true,
-                    notifyAboutConnectionDestroyed = false
-            ))
-
-            sendMessage(event, message)
-        }
-    }
-
-    inline fun <reified T : JsonModel> makeRequestWithControl(event: String, message: JsonModel? = null) = GlobalScope.async(Dispatchers.IO) {
         return@async suspendCoroutine<T> { coroutine ->
             readCallbacks.plusAssign(ReadCallback(
                     coroutine = coroutine,

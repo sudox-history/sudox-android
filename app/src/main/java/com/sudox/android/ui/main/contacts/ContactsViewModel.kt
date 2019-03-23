@@ -10,6 +10,8 @@ import android.support.v4.app.Fragment
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
+import com.sudox.android.data.exceptions.RequestException
+import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.repositories.users.ContactsRepository
 import kotlinx.coroutines.*
@@ -51,7 +53,11 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
         } catch (e: InternalRequestException) {
             if (e.errorCode == InternalErrors.CONTACT_BOOK_IS_EMPTY) {
                 contactsActionLiveData.postValue(ContactsAction.SHOW_NO_CONTACTS_IN_BOOK_DIALOG)
+            } else if (e.errorCode == InternalErrors.NO_SYNCED_CONTACTS) {
+                // TODO: Handle this error ...
             }
+        } catch (e: RequestException) {
+            // TODO: Handle unknown error ...
         }
     }
 
@@ -63,7 +69,7 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
             if (grant == PackageManager.PERMISSION_GRANTED) {
                 requestSyncContacts()
             } else {
-               fragment.requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_SYNC_PERMISSION_REQUEST)
+                fragment.requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), CONTACT_SYNC_PERMISSION_REQUEST)
             }
         }
 

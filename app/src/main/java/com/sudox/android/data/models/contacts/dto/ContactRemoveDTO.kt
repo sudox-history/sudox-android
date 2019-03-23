@@ -3,7 +3,7 @@ package com.sudox.android.data.models.contacts.dto
 import com.sudox.protocol.models.JsonModel
 import org.json.JSONObject
 
-class ContactRemoveDTO: JsonModel() {
+class ContactRemoveDTO : JsonModel() {
 
     // For read/send ...
     var id: Long = 0L

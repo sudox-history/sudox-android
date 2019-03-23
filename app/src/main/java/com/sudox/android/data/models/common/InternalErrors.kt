@@ -7,5 +7,6 @@ class InternalErrors {
         const val USER_NOT_FOUND = 3
         const val LIST_ENDED = 4
         const val CONTACT_BOOK_IS_EMPTY = 5
+        const val NO_SYNCED_CONTACTS = 6
     }
 }

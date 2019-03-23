@@ -73,7 +73,7 @@ class AccountRepositoryTest : Assert() {
                 photo = randomBase64String(32))
 
         // Testing (try duplicate data) ...
-        accountRepository.saveAccount(token, user)
+        accountRepository.saveOrUpdateAccount(token, user)
 
         // Verifying ...
         val accounts = accountManager
@@ -103,14 +103,14 @@ class AccountRepositoryTest : Assert() {
                 photo = randomBase64String(32))
 
         // Testing ...
-        accountRepository.saveAccount(randomBase64String(64), User(
+        accountRepository.saveOrUpdateAccount(randomBase64String(64), User(
                 uid = Random.nextLong(),
                 name = randomBase64String(32),
                 nickname = randomBase64String(8),
                 photo = randomBase64String(32)))
 
         Mockito.reset(database)
-        accountRepository.saveAccount(token, user)
+        accountRepository.saveOrUpdateAccount(token, user)
 
         // Verifying ...
         val accounts = accountManager
@@ -140,9 +140,9 @@ class AccountRepositoryTest : Assert() {
                 photo = randomBase64String(32))
 
         // Testing (try duplicate data) ...
-        accountRepository.saveAccount(randomBase64String(64), user)
+        accountRepository.saveOrUpdateAccount(randomBase64String(64), user)
         Mockito.reset(database)
-        accountRepository.saveAccount(token, user)
+        accountRepository.saveOrUpdateAccount(token, user)
 
         // Verifying ...
         val accounts = accountManager
@@ -224,7 +224,7 @@ class AccountRepositoryTest : Assert() {
 
     @Test
     fun testUpdateAccount() {
-        accountRepository.saveAccount(randomBase64String(64), User(
+        accountRepository.saveOrUpdateAccount(randomBase64String(64), User(
                 uid = Random.nextLong(),
                 name = randomBase64String(32),
                 nickname = randomBase64String(8),
@@ -274,7 +274,7 @@ class AccountRepositoryTest : Assert() {
         val id = Random.nextLong()
 
         // Testing ...
-        accountRepository.saveAccount(randomBase64String(64), User(
+        accountRepository.saveOrUpdateAccount(randomBase64String(64), User(
                 uid = id,
                 name = randomBase64String(32),
                 nickname = randomBase64String(8),
@@ -292,7 +292,7 @@ class AccountRepositoryTest : Assert() {
         val token = randomBase64String(64)
 
         // Testing ...
-        accountRepository.saveAccount(token, User(
+        accountRepository.saveOrUpdateAccount(token, User(
                 uid = Random.nextLong(),
                 name = randomBase64String(32),
                 nickname = randomBase64String(8),

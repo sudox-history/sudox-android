@@ -4,15 +4,13 @@ import com.redmadrobot.inputmask.helper.Mask
 import com.redmadrobot.inputmask.model.CaretString
 
 val PHONE_REGEX by lazy { "7([0-9]{10})".toRegex() }
+val CODE_REGEX by lazy { "^[0-9]+".toRegex() }
 val SMS_CODE_MESSAGE_REGEX by lazy { "^Sudox: [0-9]{5}$".toRegex() }
 val NICKNAME_REGEX by lazy { "^[-a-zA-Z0-9.]{1,15}$".toRegex() }
 val WHITESPACES_REGEX by lazy { "  +".toRegex() }
 val NEW_LINE_ON_START_REGEX by lazy { " \n".toRegex(RegexOption.DOT_MATCHES_ALL) }
 val NEW_LINE_ON_END_REGEX by lazy { "\n ".toRegex(RegexOption.DOT_MATCHES_ALL) }
 val NEW_LINE_MULTIPLE_REGEX by lazy { "(\n){3,}".toRegex(RegexOption.DOT_MATCHES_ALL) }
-
-@Deprecated("will be removed and replaced by PHONE_REGEX")
-val NUMBER_REGEX by lazy { "^[0-9]+".toRegex() }
 
 @Deprecated("will be removed")
 val NAME_REGEX by lazy { "^[-a-zA-Zа-яА-Я]{1,20}[ ]?[-a-zA-Zа-яА-Я]{1,20}$".toRegex() }

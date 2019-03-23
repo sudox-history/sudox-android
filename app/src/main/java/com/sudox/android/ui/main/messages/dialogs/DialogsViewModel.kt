@@ -66,7 +66,7 @@ class DialogsViewModel @Inject constructor(val protocolClient: ProtocolClient,
                     listenRecipientUpdates()
 
                     // If session active - load initial dialogs from network
-                    if (authRepository.isSessionInstalled) {
+                    if (authRepository.sessionInstalled) {
                         dialogs = dialogsRepository
                                 .loadDialogs(onlyFromNetwork = true)
                                 .await()

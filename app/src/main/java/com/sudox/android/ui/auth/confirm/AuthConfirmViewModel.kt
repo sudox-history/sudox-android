@@ -29,12 +29,15 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
         authConfirmActionLiveData.postValue(AuthConfirmAction.FREEZE)
 
         try {
-            authRepository.checkCode(phoneNumber, code, hash).await()
-            authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_REGISTER_FRAGMENT)
+            if (authRepository.checkCode(phoneNumber, code, hash).await()) {
+                authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_REGISTER_FRAGMENT)
+            } else {
+                authConfirmActionLiveData.postValue(AuthConfirmAction.UNFREEZE)
+            }
         } catch (e: RequestException) {
             when (e.errorCode) {
-                Errors.CODE_EXPIRED -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
-                Errors.TOO_MANY_REQUESTS -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_TOO_MANY_REQUESTS)
+                Errors.CODE_EXPIRED -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_PHONE_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
+                Errors.TOO_MANY_REQUESTS -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_PHONE_FRAGMENT_WITH_TOO_MANY_REQUESTS)
                 else -> authConfirmErrorsLiveData.postValue(e.errorCode)
             }
         }
@@ -48,13 +51,14 @@ class AuthConfirmViewModel @Inject constructor(private val authRepository: AuthR
     fun signIn(phoneNumber: String, code: String, hash: String) = GlobalScope.launch(Dispatchers.IO) {
         authConfirmActionLiveData.postValue(AuthConfirmAction.FREEZE)
 
-        // Запрос проверки кода и авторизации ...
         try {
-            authRepository.signIn(phoneNumber, code, hash).await()
+            if (!authRepository.signIn(phoneNumber, code, hash).await()) {
+                authConfirmActionLiveData.postValue(AuthConfirmAction.UNFREEZE)
+            }
         } catch (e: RequestException) {
             when (e.errorCode) {
-                Errors.CODE_EXPIRED -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
-                Errors.TOO_MANY_REQUESTS -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_TOO_MANY_REQUESTS)
+                Errors.CODE_EXPIRED -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_PHONE_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
+                Errors.TOO_MANY_REQUESTS -> authConfirmActionLiveData.postValue(AuthConfirmAction.SHOW_PHONE_FRAGMENT_WITH_TOO_MANY_REQUESTS)
                 else -> authConfirmErrorsLiveData.postValue(e.errorCode)
             }
         }

@@ -15,6 +15,18 @@ class RegexHelperTest : Assert() {
     }
 
     @Test
+    fun testCodeRegex() {
+        assertTrue(CODE_REGEX.matches("12345"))
+        assertTrue(CODE_REGEX.matches("123456"))
+        assertTrue(CODE_REGEX.matches("123"))
+        assertTrue(CODE_REGEX.matches("1"))
+        assertFalse(CODE_REGEX.matches("A"))
+        assertFalse(CODE_REGEX.matches("A123"))
+        assertFalse(CODE_REGEX.matches("123A"))
+        assertFalse(CODE_REGEX.matches("12F3A"))
+    }
+
+    @Test
     fun testSmsMessageCodeRegex() {
         assertTrue(SMS_CODE_MESSAGE_REGEX.matches("Sudox: 54789"))
         assertFalse(SMS_CODE_MESSAGE_REGEX.matches("Sudox: 123"))

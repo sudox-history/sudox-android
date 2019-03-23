@@ -20,12 +20,9 @@ class ContactAddViewModel @Inject constructor(val contactsRepository: ContactsRe
 
     fun addContact(name: String, phone: String) = GlobalScope.launch {
         try {
-            contactsRepository
-                    .addContact(name, phone)
-                    .await()
-
-            // Все ок! Возвращаемся обратно
-            contactAddActionsLiveData.postValue(ContactAddAction.POP_BACKSTACK)
+            if (contactsRepository.addContact(name, phone).await()) {
+                contactAddActionsLiveData.postValue(ContactAddAction.POP_BACKSTACK)
+            }
         } catch (e: RequestRegexException) {
             contactAddRegexErrorsLiveData.postValue(e.fields)
         } catch (e: RequestException) {

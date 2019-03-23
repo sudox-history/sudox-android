@@ -10,8 +10,7 @@ import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.auth.state.AuthSession
-import com.sudox.android.data.repositories.users.AUTH_NAME_REGEX_ERROR
-import com.sudox.android.data.repositories.users.AUTH_NICKNAME_REGEX_ERROR
+import com.sudox.android.data.repositories.users.AuthRepository
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.ui.auth.common.BaseAuthFragment
 import com.sudox.android.ui.auth.register.enums.AuthRegisterAction
@@ -45,9 +44,9 @@ class AuthRegisterFragment @Inject constructor() : BaseAuthFragment() {
             nicknameEditTextContainer.error = null
 
             it!!.forEach {
-                if (it == AUTH_NAME_REGEX_ERROR) {
+                if (it == AuthRepository.AUTH_NAME_REGEX_ERROR) {
                     nameEditTextContainer.error = getString(R.string.wrong_name_format)
-                } else if (it == AUTH_NICKNAME_REGEX_ERROR) {
+                } else if (it == AuthRepository.AUTH_NICKNAME_REGEX_ERROR) {
                     nicknameEditTextContainer.error = getString(R.string.wrong_nickname_format)
                 }
             }
@@ -70,10 +69,11 @@ class AuthRegisterFragment @Inject constructor() : BaseAuthFragment() {
         authRegisterViewModel.authRegisterActionLiveData.observe(this, Observer {
             when (it) {
                 AuthRegisterAction.FREEZE -> freeze()
-                AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
+                AuthRegisterAction.UNFREEZE -> unfreeze()
+                AuthRegisterAction.SHOW_PHONE_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> {
                     authActivity.showAuthPhoneFragment(authSession.phone, getString(R.string.code_expired))
                 }
-                AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_INVALID_ACCOUNT_ERROR -> {
+                AuthRegisterAction.SHOW_PHONE_FRAGMENT_WITH_INVALID_ACCOUNT_ERROR -> {
                     authActivity.showAuthPhoneFragment(authSession.phone, getString(R.string.account_is_already_registered))
                 }
             }

@@ -25,8 +25,8 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
 
     // Для взаимодействия с другими потоками.
     internal var handler: Handler? = null
-    internal var key: ByteArray? = null
     internal var alive: Boolean = false
+    var key: ByteArray? = null
 
     // Looper prepared callback
     internal var looperPreparedCallback: (() -> (Unit))? = null
@@ -157,7 +157,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
     private fun compareVersions() = GlobalScope.async(Dispatchers.IO) {
         try {
             val coreVersionDTO = client
-                    .makeRequestWithControl<CoreVersionDTO>("core.getVersion")
+                    .makeRequest<CoreVersionDTO>("core.getVersion")
                     .await()
 
             // Task can be invalidated

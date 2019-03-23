@@ -29,16 +29,17 @@ class AuthRegisterViewModel @Inject constructor(private val authRepository: Auth
     fun signUp(phoneNumber: String, code: String, hash: String, name: String, nickname: String) = GlobalScope.launch(Dispatchers.IO) {
         authRegisterActionLiveData.postValue(AuthRegisterAction.FREEZE)
 
-        // Регистрируемся ...
         try {
-            authRepository.signUp(phoneNumber, code, hash, name, nickname).await()
+            if (!authRepository.signUp(phoneNumber, code, hash, name, nickname).await()) {
+                authRegisterActionLiveData.postValue(AuthRegisterAction.UNFREEZE)
+            }
         } catch (e: RequestRegexException) {
             authRegisterRegexErrorsLiveData.postValue(e.fields)
         } catch (e: RequestException) {
             if (e.errorCode == Errors.CODE_EXPIRED || e.errorCode == Errors.WRONG_CODE) {
-                authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
+                authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_PHONE_FRAGMENT_WITH_CODE_EXPIRED_ERROR)
             } else if (e.errorCode == Errors.INVALID_ACCOUNT) {
-                authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_EMAIL_FRAGMENT_WITH_INVALID_ACCOUNT_ERROR)
+                authRegisterActionLiveData.postValue(AuthRegisterAction.SHOW_PHONE_FRAGMENT_WITH_INVALID_ACCOUNT_ERROR)
             } else {
                 authRegisterErrorsLiveData.postValue(e.errorCode)
             }

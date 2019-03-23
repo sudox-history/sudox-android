@@ -22,13 +22,13 @@ class AccountRepository @Inject constructor(private val database: SudoxDatabase,
     }
 
     /**
-     * Сохраняет аккаунт в защищенное хранилище.
+     * Сохраняет или обновляет аккаунт в защищенном хранилище.
      * Можно сохранить максимум 1 аккаунт, все предыдущие аккаунты будут удалены!
      *
      * @param token - токен доступа
      * @param user - пользователь, с которого выполнен вход (нужен для отображения некоторых данных)
      */
-    fun saveAccount(token: String, user: User) {
+    fun saveOrUpdateAccount(token: String, user: User) {
         var account = Account(user.name, ACCOUNT_TYPE)
 
         // Remove old accounts ...

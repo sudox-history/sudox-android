@@ -62,9 +62,10 @@ class AuthConfirmFragment @Inject constructor() : BaseAuthFragment() {
         authConfirmViewModel.authConfirmActionLiveData.observe(this, Observer {
             when (it) {
                 AuthConfirmAction.FREEZE -> freeze()
+                AuthConfirmAction.UNFREEZE -> unfreeze()
                 AuthConfirmAction.SHOW_REGISTER_FRAGMENT -> authActivity.showAuthRegisterFragment()
-                AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> authActivity.showAuthPhoneFragment(authSession.phone, getString(R.string.code_expired))
-                AuthConfirmAction.SHOW_EMAIL_FRAGMENT_WITH_TOO_MANY_REQUESTS -> {
+                AuthConfirmAction.SHOW_PHONE_FRAGMENT_WITH_CODE_EXPIRED_ERROR -> authActivity.showAuthPhoneFragment(authSession.phone, getString(R.string.code_expired))
+                AuthConfirmAction.SHOW_PHONE_FRAGMENT_WITH_TOO_MANY_REQUESTS -> {
                     codeEditTextContainer.error = getString(R.string.too_many_requests)
                     unfreeze()
                 }

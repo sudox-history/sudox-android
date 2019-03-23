@@ -17,8 +17,7 @@ import com.sudox.android.common.helpers.formatPhoneByMask
 import com.sudox.android.common.helpers.sendMessageViaSms
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.Errors
-import com.sudox.android.data.repositories.users.CONTACTS_NAME_REGEX_ERROR
-import com.sudox.android.data.repositories.users.CONTACTS_PHONE_REGEX_ERROR
+import com.sudox.android.data.repositories.users.ContactsRepository
 import com.sudox.android.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_main.*
@@ -110,9 +109,9 @@ class ContactAddFragment : DaggerFragment() {
             contactPhoneEditTextContainer.error = null
 
             it!!.forEach {
-                if (it == CONTACTS_NAME_REGEX_ERROR) {
+                if (it == ContactsRepository.CONTACTS_NAME_REGEX_ERROR) {
                     contactNameEditTextContainer.error = getString(R.string.wrong_name_format)
-                } else if (it == CONTACTS_PHONE_REGEX_ERROR) {
+                } else if (it == ContactsRepository.CONTACTS_PHONE_REGEX_ERROR) {
                     contactPhoneEditTextContainer.error = getString(R.string.wrong_phone_format)
                 }
             }

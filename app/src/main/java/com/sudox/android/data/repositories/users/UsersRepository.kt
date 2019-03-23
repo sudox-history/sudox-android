@@ -27,11 +27,16 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         listenSessionStatus()
     }
 
+    /**
+     * Начинает прослушку состояния сессии.
+     *
+     * Если сессия валидна, то происходит импорт токена.
+     * Если сессия невалидна, то происходит отключение всех кэллбеков.
+     *
+     * В обоих случаях будет очищен кэш и снята блокировка очереди.
+     */
     private fun listenSessionStatus() = GlobalScope.launch(Dispatchers.IO) {
-        for (state in authRepository
-                .accountSessionStateChannel
-                .openSubscription()) {
-
+        for (state in authRepository.accountSessionStateChannel.openSubscription()) {
             if (!state) {
                 usersUpdatesCallbacks.clear()
                 usersLoadingLock.release()
@@ -49,6 +54,13 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         }
     }
 
+    /**
+     * Находит правильную политику загрузки пользователей и загружает их в её соответствии.
+     *
+     * @param ids - ID пользователей
+     * @param onlyFromNetwork - грузить ли пользователей только из сети?
+     * @param onlyFromDatabase - грузить ли пользователей только из БД?
+     */
     fun loadUsers(ids: List<Long>,
                   onlyFromNetwork: Boolean = false,
                   onlyFromDatabase: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
@@ -93,6 +105,13 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
         return@async result as ArrayList<User>
     }
 
+    /**
+     * Находит правильную политику загрузки и загружает пользователя в её соответствии.
+     *
+     * @param id - ID пользователя
+     * @param onlyFromNetwork - грузить ли пользователей только из сети?
+     * @param onlyFromDatabase - грузить ли пользователей только из БД?
+     */
     fun loadUser(id: Long,
                  onlyFromDatabase: Boolean = false,
                  onlyFromNetwork: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
@@ -102,7 +121,64 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                 .firstOrNull()
     }
 
-    internal suspend fun fetchUsers(ids: List<Long>, loadFromDatabaseIfConnectionDropped: Boolean = true): ArrayList<User> {
+    /**
+     * Загружает актуальные данные об пользователях.
+     * Экономит трафик за счет ожидания и переиспользования подобных запросов.
+     *
+     * @param ids - ID пользователей
+     */
+    fun loadActualUsers(ids: List<Long>) = GlobalScope.async(Dispatchers.IO) {
+        if (ids.isEmpty() || !authRepository.canExecuteNetworkRequest()) {
+            return@async arrayListOf<User>()
+        }
+
+        loadedUsersIds.removeAll(ids)
+        usersLoadingLock.acquire()
+
+        // User could be loaded during the lock.
+        val storedUsersId = ids.filter { loadedUsersIds.contains(it) }
+
+        // Optimization: all actual users stored in database
+        val result = if (storedUsersId.size == ids.size) {
+            ArrayList(userDao.loadByIds(storedUsersId))
+        } else {
+            val notLoadedUsersIds = ids.filter { !storedUsersId.contains(it) }
+            val networkUsers = fetchUsers(notLoadedUsersIds, loadFromDatabaseIfConnectionDropped = false)
+
+            // Optimization: All ids loaded from network ...
+            if (notLoadedUsersIds.size == ids.size) {
+                networkUsers
+            } else {
+                networkUsers.plus(userDao.loadByIds(notLoadedUsersIds))
+            }
+        }
+
+        // Free queue ...
+        usersLoadingLock.release()
+
+        // Merge results
+        return@async result as ArrayList<User>
+    }
+
+    /**
+     * Загружает актуальные данные об пользователе.
+     * Экономит трафик за счет ожидания и переиспользования подобных запросов.
+     *
+     * @param id - ID пользователя
+     */
+    fun loadActualUser(id: Long) = GlobalScope.async(Dispatchers.IO) {
+        return@async loadActualUsers(listOf(id))
+                .await()
+                .firstOrNull()
+    }
+
+    /**
+     * Загружает пользователя из сети и кеширует их.
+     *
+     * @param ids - ID пользователей
+     * @param loadFromDatabaseIfConnectionDropped - загружать с БД если возникнет ошибка, связанная с подключением к серверу
+     */
+    fun fetchUsers(ids: List<Long>, loadFromDatabaseIfConnectionDropped: Boolean = true): ArrayList<User> = runBlocking<ArrayList<User>> {
         try {
             val usersInfoDTO = authRepository.makeRequestWithSession<UsersInfoDTO>(protocolClient, "users.get", UsersInfoDTO().apply {
                 this.ids = ids
@@ -128,58 +204,90 @@ class UsersRepository @Inject constructor(private val authRepository: AuthReposi
                 }
 
                 // As result ...
-                return ArrayList(saveableUsers)
+                return@runBlocking ArrayList(saveableUsers)
             } else if (usersInfoDTO.error == Errors.INVALID_USERS) {
                 removeUsers(*ids.toLongArray()).await()
             }
         } catch (e: NetworkException) {
             if (loadFromDatabaseIfConnectionDropped) {
-                return ArrayList(userDao.loadByIds(ids))
+                return@runBlocking ArrayList(userDao.loadByIds(ids))
             }
         }
 
-        return arrayListOf()
+        return@runBlocking arrayListOf()
     }
 
-    fun removeUsers(vararg ids: Long, updateExists: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
+    /**
+     * Удаляет пользователя из кэша и обновляет если требуется.
+     *
+     * @param ids - ID пользователей
+     * @param updateExists - требуется ли обновлять пользователя после удаления из кэша?
+     */
+    fun removeUsers(vararg ids: Long, updateExists: Boolean = false, unsubscribeFromUpdates: Boolean = true) = GlobalScope.async(Dispatchers.IO) {
         val existsIds = if (updateExists) userDao.filterExists(ids) else ids.toList()
 
-        loadedUsersIds.minusAssign(existsIds)
+        // Remove old users data ...
         userDao.removeAll(existsIds)
+        loadedUsersIds.minusAssign(existsIds)
 
         if (updateExists) {
             // saveOrUpdateUsers and notifyUsersUpdated methods will be called after loadUsers cache update ...
-            return@async loadUsers(existsIds, onlyFromNetwork = true).await()
-        } else {
-            // No needed to listen updates but users was removed ...
+            return@async loadActualUsers(existsIds).await()
+        } else if (unsubscribeFromUpdates) {
             unsubscribeFromUsersUpdates(*ids)
-
-            // Nothing to return ...
-            return@async null
         }
+
+        // Nothing to return ...
+        return@async null
     }
 
+    /**
+     * Сохраняет/обновляет пользователей в кэше, уведомляет об этом их слушателей
+     *
+     * @param users - обьекты пользователей
+     */
     fun saveOrUpdateUsers(vararg users: User) = GlobalScope.async(Dispatchers.IO) {
         userDao.insertAll(users)
         notifyUsersUpdated(*users)
     }
 
+    /**
+     * Подписывает пользователя с указанным ID на нотификации в случае обновления
+     *
+     * @param id - ID пользователя
+     * @param callback - функция, которая будет вызвана в случае обновления
+     */
     fun subscribeToUserUpdates(id: Long, callback: (User) -> (Unit)) {
         usersUpdatesCallbacks.plusAssign(Pair(id, MutablePair(callback, 0)))
     }
 
+    /**
+     * Отписывает указанную функцию от нотификации в случае обновлений
+     *
+     * @param callback - функция, которая будет вызвана в случае обновления
+     */
     fun unsubscribeFromUserUpdates(callback: ((User) -> (Unit))?) {
         usersUpdatesCallbacks
                 .filter { (if (callback != null) it.second.first == callback else true) }
                 .forEach { this@UsersRepository.usersUpdatesCallbacks.remove(it) }
     }
 
+    /**
+     * Отписывает пользователей с указанными ID от нотификаций в случае обновлений
+     *
+     * @param ids - ID пользователей, которых следует отписать
+     */
     fun unsubscribeFromUsersUpdates(vararg ids: Long) {
         usersUpdatesCallbacks
                 .filter { ids.contains(it.first) }
                 .forEach { this@UsersRepository.usersUpdatesCallbacks.remove(it) }
     }
 
+    /**
+     * Уведомляет об обновлении пользователей их слушателей
+     *
+     * @param users - обьекты пользователей
+     */
     fun notifyUsersUpdated(vararg users: User) {
         users.forEach { user ->
             val newHash = user.hashCode()

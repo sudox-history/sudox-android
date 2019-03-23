@@ -3,6 +3,7 @@ package com.sudox.tests.helpers
 import android.os.Handler
 import android.os.Looper
 import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito
 import org.mockito.stubbing.Answer
 import org.powermock.api.mockito.PowerMockito
@@ -18,6 +19,8 @@ fun <T> any(): T {
     // Fix Kotlin nullable issue
     return uninitialized()
 }
+
+fun <T : Any> eq(value: T): T = eq(value) ?: value
 
 @Throws(Exception::class)
 fun mockMainThreadHandler() {

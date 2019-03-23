@@ -15,12 +15,4 @@ class RepositoriesContainer @Inject constructor(val accountRepository: AccountRe
                                                 val contactsRepository: ContactsRepository,
                                                 val usersRepository: UsersRepository,
                                                 val dialogsMessagesRepository: DialogsMessagesRepository,
-                                                val dialogsRepository: DialogsRepository) {
-
-    init {
-        // Репозитории начнут слушать события после создания этого обьекта.
-
-        // Запуск костыля для избежания циклического инжекта
-        authRepository.init(usersRepository)
-    }
-}
+                                                val dialogsRepository: DialogsRepository)

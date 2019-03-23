@@ -1,13 +1,10 @@
-package com.sudox.android.data.repositories.main
+package com.sudox.android.data.repositories.users
 
 import com.sudox.android.data.database.dao.user.UserDao
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.users.dto.UserDTO
 import com.sudox.android.data.models.users.dto.UsersInfoDTO
-import com.sudox.android.data.repositories.users.AccountRepository
-import com.sudox.android.data.repositories.users.AuthRepository
-import com.sudox.android.data.repositories.users.UsersRepository
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.ReadCallback

@@ -18,6 +18,9 @@ interface UserDao {
     @Query("SELECT * FROM users WHERE uid in (:ids)")
     fun loadByIds(ids: List<Long>): List<User>
 
+    @Query("SELECT * FROM users WHERE uid = :id")
+    fun loadById(id: Long): User?
+
     @Query("SELECT uid FROM users WHERE uid IN (:ids) AND isContact = 1")
     fun filterContactsIds(ids: List<Long>): List<Long>
 

@@ -131,7 +131,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
         val cachedOffset = loadedDialogsRecipientIds[recipientId] ?: -1
         val newOffset = if (offset > 0) recalculateNetworkOffset(recipientId, offset) else 0
 
-        if (onlyFromNetwork || (protocolClient.isValid() && authRepository.isSessionInstalled && cachedOffset < newOffset)) {
+        if (onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionInstalled && cachedOffset < newOffset)) {
             loadMessagesFromNetwork(recipientId, offset, limit, excludeDelivering)
         } else {
             loadMessagesFromDatabase(recipientId, offset, limit)
@@ -145,7 +145,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 
         try {
             // Try to get messages from server
-            val dialogHistoryDTO = protocolClient.makeRequestWithControl<DialogHistoryDTO>("dialogs.getHistory", DialogHistoryDTO().apply {
+            val dialogHistoryDTO = protocolClient.makeRequest<DialogHistoryDTO>("dialogs.getHistory", DialogHistoryDTO().apply {
                 this.id = recipientId
                 this.limit = limit
                 this.offset = newOffset
@@ -225,7 +225,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
     }
 
     fun loadLastMessages(offset: Int, limit: Int, onlyFromNetwork: Boolean = false, onlyFromDatabase: Boolean = false) = GlobalScope.async(Dispatchers.IO) {
-        if ((onlyFromNetwork || (protocolClient.isValid() && authRepository.isSessionInstalled)) && !onlyFromDatabase) {
+        if ((onlyFromNetwork || (protocolClient.isValid() && authRepository.sessionInstalled)) && !onlyFromDatabase) {
             loadLastMessagesFromNetwork(offset, limit)
         } else {
             loadLastMessagesFromDatabase(offset, limit)
@@ -234,7 +234,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 
     private suspend fun loadLastMessagesFromNetwork(offset: Int, limit: Int): ArrayList<DialogMessage> {
         try {
-            val lastDialogsMessages = protocolClient.makeRequestWithControl<LastDialogsMessagesDTO>("dialogs.get", LastDialogsMessagesDTO().apply {
+            val lastDialogsMessages = protocolClient.makeRequest<LastDialogsMessagesDTO>("dialogs.get", LastDialogsMessagesDTO().apply {
                 this.offset = offset
                 this.limit = limit
             }).await()
@@ -293,7 +293,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 
         // Sending ...
         try {
-            val sendDialogMessageDTO = protocolClient.makeRequestWithControl<DialogSendMessageDTO>("dialogs.send", DialogSendMessageDTO().apply {
+            val sendDialogMessageDTO = protocolClient.makeRequest<DialogSendMessageDTO>("dialogs.send", DialogSendMessageDTO().apply {
                 this.peerId = message.peer
                 this.message = message.message
             }).await()
