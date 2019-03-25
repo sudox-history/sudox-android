@@ -7,22 +7,45 @@ abstract class JsonModel {
     var error: Int = -1
     var response: Int = 0
 
-    open fun toJSON(): JSONObject? = null
-    open fun fromJSON(jsonObject: JSONObject) {}
-    fun containsError(): Boolean = error != -1
-    fun isSuccess(): Boolean = error == -1 || response == 1
-
-    internal fun readResponse(jsonObject: JSONObject) {
-        if (jsonObject.has("error")) {
-            error = jsonObject.optInt("error")
-        } else {
+    /**
+     * Читает ответ от сервера, определяет его формат и если все правильно, вызывает
+     * соответствующий метод для его парсинга.
+     *
+     * @param jsonObject - обьект ответа.
+     */
+    fun readResponse(jsonObject: JSONObject) {
+        if (!jsonObject.has("error")) {
             val value = jsonObject.opt("response")
 
             // Parse ...
-            when (value) {
-                null -> fromJSON(jsonObject)
-                is Int -> response = value
+            if (value is Int) {
+                response = value
+            } else if (value == null) {
+                fromJSON(jsonObject)
             }
+        } else {
+            error = jsonObject.optInt("error")
         }
     }
+
+    /**
+     * Преобразовавает обьект в формат JSON-обьекта и возвращает его.
+     */
+    open fun toJSON(): JSONObject? = null
+
+    /**
+     * Преобразовывает данные из JSON и записывает обьект.
+     *
+     * @param jsonObject - JSON-обьект для чтения.
+     */
+    open fun fromJSON(jsonObject: JSONObject) {}
+
+    /**
+     * Возвращает статус запроса.
+     *
+     * Если:
+     * true - запрос выполнен успешно,
+     * false - возникла ошибка.
+     */
+    fun isSuccess(): Boolean = error == -1 || response == 1
 }

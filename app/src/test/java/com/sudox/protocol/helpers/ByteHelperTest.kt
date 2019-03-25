@@ -2,7 +2,6 @@ package com.sudox.protocol.helpers
 
 import org.junit.Assert
 import org.junit.Test
-import org.junit.Assert.*
 
 class ByteHelperTest : Assert() {
 

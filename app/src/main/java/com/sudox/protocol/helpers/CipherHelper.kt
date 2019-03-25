@@ -3,139 +3,207 @@ package com.sudox.protocol.helpers
 import android.util.Base64
 import com.sudox.protocol.ELLIPTIC_CURVE_PARAM
 import com.sudox.protocol.SIGN_PUBLIC_KEY
+import com.sudox.protocol.abstractions.MutableIVParameterSpec
+import java.io.File
+import java.math.BigInteger
+import java.nio.ByteBuffer
 import java.security.*
 import java.security.interfaces.ECPublicKey
+import java.security.spec.ECPoint
+import java.security.spec.ECPublicKeySpec
+import java.security.spec.X509EncodedKeySpec
 import javax.crypto.Cipher
 import javax.crypto.IllegalBlockSizeException
 import javax.crypto.KeyAgreement
 import javax.crypto.Mac
-import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
-import java.math.BigInteger
-import java.security.spec.*
 
-fun readSignaturePublicKey(keyBody: String): PublicKey {
-    val keyFactory = KeyFactory.getInstance("EC")
-    val decoded = Base64.decode(keyBody, Base64.NO_PADDING)
-    val x509EncodedKeySpec = X509EncodedKeySpec(decoded)
-
-    return keyFactory.generatePublic(x509EncodedKeySpec)
+private val IV_PARAMETER_SPEC = MutableIVParameterSpec(16)
+private val DECRYPT_CIPHER = Cipher.getInstance("AES/CTR/NoPadding")
+private val ENCRYPT_CIPHER = Cipher.getInstance("AES/CTR/NoPadding")
+private val KEY_AGREEMENT = KeyAgreement.getInstance("ECDH")
+private var SECRET_KEY_SPEC: SecretKeySpec? = null
+private val HMAC_CALCULATOR = Mac.getInstance("HmacSHA224")
+private val KEY_FACTORY = KeyFactory.getInstance("EC")
+private val HASH_CALCULATOR = MessageDigest.getInstance("SHA-224")
+private val KEY_PAIR_GENERATOR = KeyPairGenerator.getInstance("EC").apply {
+    initialize(ELLIPTIC_CURVE_PARAM, SECURE_RANDOM)
 }
 
-fun generateKeys(): KeyPair {
-    return with(KeyPairGenerator.getInstance("EC")) {
-        initialize(ELLIPTIC_CURVE_PARAM, SecureRandom())
-        generateKeyPair()
+private val SIGNATURE_VERIFIER = Signature.getInstance("SHA224withECDSA").apply {
+    initVerify(SIGN_PUBLIC_KEY)
+}
+
+private val SECURE_RANDOM = SecureRandom().apply {
+    try {
+        val stream = File("/dev/urandom").inputStream()
+        val buffer = ByteArray(1024)
+
+        // Read and set seed
+        stream.read(buffer)
+        stream.close()
+        setSeed(buffer)
+    } catch (e: Exception) {
+        // Ignore
     }
 }
 
+/**
+ * Читает публичный ключ подписи в формате ECDSA.
+ *
+ * @param keyBody - тело публичного ключа подписи (часть ключа без шапки)
+ */
+fun readSignaturePublicKey(keyBody: String): PublicKey {
+    val decoded = Base64.decode(keyBody, Base64.NO_PADDING)
+    val spec = X509EncodedKeySpec(decoded)
+
+    // Generate public keySpec ...
+    return KEY_FACTORY.generatePublic(spec)
+}
+
+/**
+ * Читает публичный ключ в формате ECDH без сжатия, длиной 384 бита.
+ *
+ * @param keyBody - закодированные в Base64 байты ключа.
+ */
+fun readPublicKey(keyBody: String): ECPublicKey {
+    val decoded = Base64.decode(keyBody, Base64.NO_PADDING)
+    val x = decoded.copyOfRange(1, 49)
+    val y = decoded.copyOfRange(49, 97)
+    val spec = ECPublicKeySpec(ECPoint(BigInteger(x), BigInteger(y)), ELLIPTIC_CURVE_PARAM)
+
+    // Generate public keySpec ...
+    return KEY_FACTORY.generatePublic(spec) as ECPublicKey
+}
+
+/**
+ * Генерирует пару ключей на основе элиптической кривой EC - P384
+ */
+fun generateKeys() = KEY_PAIR_GENERATOR.genKeyPair()!!
+
+/**
+ * Преобразовывает публичный EC-ключ в массив байтов без сжатия.
+ */
 fun ECPublicKey.getPoint(): ByteArray {
     val affineXBytes = removeLeadingZeros(w.affineX.toByteArray())
     val affineYBytes = removeLeadingZeros(w.affineY.toByteArray())
-    val encodedBytes = ByteArray(48 * 2 + 1)
-    encodedBytes[0] = 0x04
-    System.arraycopy(affineXBytes, 0, encodedBytes, 48 - affineXBytes.size + 1, affineXBytes.size)
-    System.arraycopy(affineYBytes, 0, encodedBytes, encodedBytes.size - affineYBytes.size, affineYBytes.size)
-    return encodedBytes
+    val buffer = ByteBuffer.allocate(48 * 2 + 1)
+
+    // Write coordinates
+    buffer.put(0x04)
+    buffer.put(affineXBytes)
+    buffer.put(affineYBytes)
+
+    // Return bytes ...
+    return buffer.array()
 }
 
-fun readPublicKey(keyBody: String): ECPublicKey {
-    val decoded = Base64.decode(keyBody, Base64.NO_PADDING)
-    val keyFactory = KeyFactory.getInstance("EC")
-
-    val x = ByteArray(49)
-    val y = ByteArray(49)
-    System.arraycopy(decoded, 1, x, 1, 48)
-    System.arraycopy(decoded, 49, y, 1, 48)
-
-    // Get X & Y coords
-    val ecPublicKeySpec = ECPublicKeySpec(ECPoint(BigInteger(x), BigInteger(y)), ELLIPTIC_CURVE_PARAM)
-
-    // Generate key
-    return keyFactory.generatePublic(ecPublicKeySpec) as ECPublicKey
-}
-
+/**
+ * Проверяет данные на соответствие публичного ключа подписи.
+ *
+ * @param encodedData - данные, зашифрованные в Base64
+ * @param encodedSignature - подпись, зашифрованная в Base64
+ */
 @Throws(IllegalArgumentException::class)
-fun verifyData(data: String, signature: String, key: PublicKey = SIGN_PUBLIC_KEY): Boolean {
-    val verifier = Signature.getInstance("SHA224withECDSA")
-    val decodedSignature = Base64.decode(signature, Base64.NO_PADDING)
-    val decodedKey = Base64.decode(data, Base64.NO_PADDING)
-
-    // Init verifier
-    with(verifier) {
-        initVerify(key)
-        update(decodedKey)
-    }
+fun verifyData(encodedData: String, encodedSignature: String): Boolean {
+    val decodedSignature = Base64.decode(encodedSignature, Base64.NO_PADDING)
+    val decodedKey = Base64.decode(encodedData, Base64.NO_PADDING)
 
     return try {
-        verifier.verify(decodedSignature)
+        SIGNATURE_VERIFIER.update(decodedKey)
+        SIGNATURE_VERIFIER.verify(decodedSignature)
     } catch (e: SignatureException) {
         false
     }
 }
 
-fun decryptAES(key: ByteArray, iv: String, data: String): String {
-    val keySpec = SecretKeySpec(key, "AES")
-    val decodedIv = Base64.decode(iv, Base64.NO_PADDING)
-    val parameterSpec = IvParameterSpec(decodedIv)
-    val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+/**
+ * Расшифровывает данные, зашифрованные с помощью AES.
+ *
+ * @param encodedIv - IV, закодированный в Base64
+ * @param encodedData - сообщение, закодированное в Base64
+ */
+fun decryptAES(encodedIv: String, encodedData: String): String {
+    IV_PARAMETER_SPEC.iv = Base64.decode(encodedIv, Base64.NO_PADDING)
+    DECRYPT_CIPHER.init(Cipher.DECRYPT_MODE, SECRET_KEY_SPEC, IV_PARAMETER_SPEC, SECURE_RANDOM)
 
-    // Decrypt data
-    return with(cipher) {
-        init(Cipher.DECRYPT_MODE, keySpec, parameterSpec)
+    // Decode & decrypt
+    val data = Base64.decode(encodedData, Base64.NO_PADDING)
+    val decrypted = DECRYPT_CIPHER.doFinal(data)
 
-        // To string
-        String(cipher.doFinal(Base64.decode(data, Base64.NO_PADDING)))
-    }
+    // Return as string
+    return String(decrypted).replace("\\/", "/")
 }
 
+/**
+ * Зашифровывает строку с помощью AES и возвращает пару из IV и закодированных в Base64 байтов.
+ *
+ * @param originalData - незашифрованная информация.
+ */
 @Throws(IllegalArgumentException::class, InvalidKeyException::class, IllegalBlockSizeException::class)
-fun encryptAES(key: ByteArray, iv: String, data: String): String {
-    val keySpec = SecretKeySpec(key, "AES")
-    val decodedIv = Base64.decode(iv, Base64.NO_PADDING)
-    val parameterSpec = IvParameterSpec(decodedIv)
-    val cipher = Cipher.getInstance("AES/CTR/NoPadding")
+fun encryptAES(originalData: String): Pair<ByteArray, String> {
+    val bytes = ENCRYPT_CIPHER.doFinal(originalData.toByteArray())
+    val iv = ENCRYPT_CIPHER.iv
+    val encoded = Base64.encode(bytes, Base64.NO_WRAP)
 
-    return with(cipher) {
-        init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec)
-        val bytes = cipher.doFinal(data.toByteArray())
-        val encodedBytes = Base64.encode(bytes, Base64.NO_WRAP)
-
-        // Encode to string
-        String(encodedBytes)
-    }
+    // Return pair - iv & encoded to Base64 encrypted bytes
+    return Pair(iv, String(encoded))
 }
 
-fun calculateHMAC(secretKey: ByteArray, message: String): ByteArray {
-    return with(Mac.getInstance("HmacSHA224")) {
-        init(SecretKeySpec(secretKey, "HmacSHA224"))
-        doFinal(message.toByteArray())
-    }
-}
+/**
+ * Вычисляет HMAC строки на основе секретного ключа.
+ *
+ * @param message - строка, HMAC которой нужно вычислить.
+ */
+fun calculateHMAC(message: String): ByteArray = HMAC_CALCULATOR.doFinal(message.toByteArray())
 
-fun calculateHash(input: ByteArray): ByteArray {
-    return MessageDigest
-            .getInstance("SHA-224")
-            .digest(input)
-}
+/**
+ * Вычисляет хэш переданного массива байтов.
+ *
+ * @param input - массив байтов, хэш которого нужны вычислить.
+ */
+fun calculateHash(input: ByteArray): ByteArray = HASH_CALCULATOR.digest(input)
 
+/**
+ * Вычисляет секретный ключ на основе связки публичных и приватных ключей с помощью ECDH.
+ *
+ * @param privateKey - приватный EC-ключ
+ * @param publicKey - публичный EC-ключ.
+ */
 fun calculateSecretKey(privateKey: PrivateKey, publicKey: PublicKey): ByteArray {
-    val keyAgree = KeyAgreement.getInstance("ECDH").apply {
-        init(privateKey, SecureRandom())
-        doPhase(publicKey, true)
-    }
+    KEY_AGREEMENT.init(privateKey, SECURE_RANDOM)
+    KEY_AGREEMENT.doPhase(publicKey, true)
 
-    return keyAgree.generateSecret()
+    // Calculating the secret key
+    return KEY_AGREEMENT.generateSecret()
 }
 
+/**
+ * Генерирует случайную последовательность байтов указанной длины и кодирует в Base64.
+ *
+ * @param length - количество байтов для кодирования.
+ */
 fun randomBase64String(length: Int): String {
     val bytes = ByteArray(length)
 
     // Генерируем рандомные байты
-    SecureRandom().nextBytes(bytes)
+    SECURE_RANDOM.nextBytes(bytes)
 
     // Переводим в Base-64
     return Base64
             .encodeToString(bytes, Base64.DEFAULT)
             .replace("\n", "")
+}
+
+/**
+ * Инициализирует шифрование.
+ *
+ * @param - секретный ключ.
+ */
+fun bindEncryptionKey(secretKey: ByteArray) {
+    SECRET_KEY_SPEC = SecretKeySpec(secretKey, "AES")
+
+    // Init keys ...
+    ENCRYPT_CIPHER.init(Cipher.ENCRYPT_MODE, SECRET_KEY_SPEC, SECURE_RANDOM)
+    HMAC_CALCULATOR.init(SECRET_KEY_SPEC)
 }

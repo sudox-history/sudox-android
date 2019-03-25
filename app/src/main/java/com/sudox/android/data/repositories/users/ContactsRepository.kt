@@ -152,7 +152,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
             // Contacts exists ...
             if (contactsIdsListDTO.isSuccess()) {
                 return@runBlocking fetchNewContacts(contactsIdsListDTO.ids)
-            } else if (contactsIdsListDTO.containsError() && !invalidateContacts()) {
+            } else if (!invalidateContacts()) {
                 return@runBlocking ArrayList(userDao.loadContacts())
             }
         } catch (e: NetworkException) {

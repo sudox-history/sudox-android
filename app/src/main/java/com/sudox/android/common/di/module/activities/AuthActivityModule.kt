@@ -1,4 +1,4 @@
-package com.sudox.android.common.di.module.fragments
+package com.sudox.android.common.di.module.activities
 
 import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.phone.AuthPhoneFragment

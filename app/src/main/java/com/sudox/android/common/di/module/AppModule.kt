@@ -2,12 +2,19 @@ package com.sudox.android.common.di.module
 
 import android.app.Application
 import android.content.Context
-import dagger.Binds
+import com.sudox.protocol.ProtocolClient
 import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
 @Module
-abstract class AppModule {
+class AppModule(private val app: Application) {
 
-    @Binds
-    abstract fun providesApplication(app: Application): Context
+    @Provides
+    @Singleton
+    fun providesApplication(): Context = app
+
+    @Provides
+    @Singleton
+    fun providesProtocolClient(): ProtocolClient = ProtocolClient()
 }

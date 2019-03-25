@@ -9,6 +9,8 @@ import com.crashlytics.android.Crashlytics
 import com.sudox.android.common.API_KEY
 import com.sudox.android.common.di.AppComponent
 import com.sudox.android.common.di.DaggerAppComponent
+import com.sudox.android.common.di.module.AppModule
+import com.sudox.android.common.di.module.DatabaseModule
 import com.sudox.android.data.repositories.RepositoriesContainer
 import com.sudox.protocol.ProtocolClient
 import com.yandex.metrica.YandexMetrica
@@ -42,7 +44,8 @@ class ApplicationLoader : DaggerApplication(), Application.ActivityLifecycleCall
     override fun onCreate() {
         component = DaggerAppComponent
                 .builder()
-                .application(this)
+                .appModule(AppModule(this))
+                .databaseModule(DatabaseModule())
                 .build()
 
         component.inject(this)

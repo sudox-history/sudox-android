@@ -1,5 +1,10 @@
 package com.sudox.protocol.helpers
 
+/**
+ * Удаляет нули в начале массива байтов.
+ *
+ * @param bytes - байты для обработки.
+ */
 fun removeLeadingZeros(bytes: ByteArray): ByteArray {
     var i = 0
 

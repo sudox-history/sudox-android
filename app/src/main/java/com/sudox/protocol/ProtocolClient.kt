@@ -17,7 +17,6 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.concurrent.ConcurrentLinkedDeque
 import java.util.concurrent.LinkedBlockingQueue
-import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -25,7 +24,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 @Singleton
-class ProtocolClient @Inject constructor() {
+class ProtocolClient {
 
     internal var socket: Socket? = null
     internal var controller: ProtocolController? = null
@@ -152,9 +151,9 @@ class ProtocolClient @Inject constructor() {
             socket!!.close()
         }
 
-        // Убираем ключ.
+        // Убираем метку о пройденном хендшейке
         if (controller != null) {
-            controller!!.key = null
+            controller!!.isHandshakeInvoked = false
         }
 
         // "Убиваем" корутины (Если по-культурному, то снимаем блокировки и возвращаем NetworkException)
@@ -193,30 +192,28 @@ class ProtocolClient @Inject constructor() {
      * Отправляет сообщения в формате JSON по защищенному каналу.
      */
     fun sendMessage(event: String, message: JsonModel? = null) {
-        if (!isValid() || controller!!.key == null) {
+        if (!isValid() || !controller!!.isHandshakeInvoked) {
             connectionStateChannel.offer(ConnectionState.NO_CONNECTION)
         } else {
             controller!!.handler!!.post(Runnable {
-                val key = controller!!.key
-
-                if (!isValid() || key == null) {
+                if (!isValid() || !controller!!.isHandshakeInvoked) {
                     connectionStateChannel.offer(ConnectionState.NO_CONNECTION)
                 } else {
-                    val iv = randomBase64String(16)
                     val salt = randomBase64String(8)
-
-                    // Serialize message
                     val jsonObject = message?.toJSON()
                     val jsonMessage = jsonObject ?: JSONObject()
                     val payload = JSONArray(arrayOf(event, jsonMessage, salt))
                             .toString()
                             .replace("\\/", "/")
 
-                    val hmac = Base64.encodeToString(calculateHMAC(key, payload), Base64.NO_WRAP)
-                    val encryptedPayload = encryptAES(key, iv, payload)
+                    // Encrypt ...
+                    val encodedHmac = Base64.encodeToString(calculateHMAC(payload), Base64.NO_WRAP)
+                    val encryptedPair = encryptAES(payload)
+                    val encodedIv = Base64.encodeToString(encryptedPair.first, Base64.NO_WRAP)
+                    val encryptedPayload = encryptedPair.second
 
                     // Send packet to server
-                    sendArray("msg", iv, encryptedPayload, hmac)
+                    sendArray("msg", encodedIv, encryptedPayload, encodedHmac)
                 }
             })
         }
@@ -302,7 +299,7 @@ class ProtocolClient @Inject constructor() {
             instance.readResponse(JSONObject(json))
 
             // Ошибка...
-            if (instance.containsError()) errorsMessagesCallbacks.forEach { it(instance.error) }
+            if (!instance.isSuccess()) errorsMessagesCallbacks.forEach { it(instance.error) }
 
             // Крикнем в окно (для IDEA: не ори на отсуствие проверку типов)
             @Suppress("UNCHECKED_CAST")

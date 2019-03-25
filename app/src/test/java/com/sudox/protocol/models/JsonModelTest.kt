@@ -48,48 +48,6 @@ class JsonModelTest : Assert() {
     }
 
     @Test
-    fun testContainsError_one_error() {
-        val errorCode = Random.nextInt(1, Integer.MAX_VALUE)
-        val jsonObject = JSONObject().apply { put("error", errorCode) }
-        val jsonModel = Mockito.spy(JsonModel::class.java)
-
-        // Testing
-        jsonModel.readResponse(jsonObject)
-
-        // Verifying
-        assertTrue(jsonModel.containsError())
-    }
-
-    @Test
-    fun testContainsError_no_error() {
-        val random = Random.nextInt(1, Integer.MAX_VALUE)
-        val jsonObject = JSONObject().apply { put("response", random) }
-        val jsonModel = Mockito.spy(JsonModel::class.java)
-
-        // Testing
-        jsonModel.readResponse(jsonObject)
-
-        // Verifying
-        assertFalse(jsonModel.containsError())
-    }
-
-    @Test
-    fun testContainsError_error_and_success() {
-        val jsonModel = Mockito.spy(JsonModel::class.java)
-        val random = Random.nextInt(1, Integer.MAX_VALUE)
-        val jsonObject = JSONObject().apply {
-            put("error", random)
-            put("response", random)
-        }
-
-        // Testing
-        jsonModel.readResponse(jsonObject)
-
-        // Verifying
-        assertTrue(jsonModel.containsError())
-    }
-
-    @Test
     fun testIsSuccess_success() {
         val random = Random.nextInt(1, Integer.MAX_VALUE)
         val jsonObject = JSONObject().apply { put("response", random) }

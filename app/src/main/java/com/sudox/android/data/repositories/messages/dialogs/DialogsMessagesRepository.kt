@@ -239,7 +239,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
                 this.limit = limit
             }).await()
 
-            if (lastDialogsMessages.containsError() || lastDialogsMessages.messages.isEmpty()) {
+            if (!lastDialogsMessages.isSuccess() || lastDialogsMessages.messages.isEmpty()) {
                 if ((lastDialogsMessages.error == Errors.EMPTY_DIALOGS || lastDialogsMessages.messages.isEmpty()) && offset == 0) {
                     removeAllSavedMessages() // Invalidate all messages
                 }

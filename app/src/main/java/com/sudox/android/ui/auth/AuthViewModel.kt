@@ -67,7 +67,6 @@ class AuthViewModel @Inject constructor(val protocolClient: ProtocolClient,
                 authActivityEventsLiveData.postValue(AuthActivityEvent.SHOW_OLD_VERSION)
                 break
             }
-
         }
     }
 

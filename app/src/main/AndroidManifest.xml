@@ -28,12 +28,12 @@
             android:exported="true">
 
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
+                <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
 
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator_sudox"/>
+                android:resource="@xml/authenticator_sudox" />
         </service>
 
         <meta-data

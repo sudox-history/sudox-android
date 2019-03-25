@@ -29,7 +29,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
     var accountSessionStateChannel: ConflatedBroadcastChannel<Boolean> = ConflatedBroadcastChannel()
     @JvmField
     var authSessionChannel: ConflatedBroadcastChannel<AuthSession> = ConflatedBroadcastChannel()
-    val usersRepository: UsersRepository = usersRepositoryProvider.get()
+    val usersRepository: UsersRepository by lazy { usersRepositoryProvider.get() }
     var sessionInstalled: Boolean = false
 
     init {
@@ -131,7 +131,7 @@ class AuthRepository @Inject constructor(private val protocolClient: ProtocolCli
                 this.phone = phone
             }).await()
 
-            if (authCheckCodeDTO.containsError()) {
+            if (!authCheckCodeDTO.isSuccess()) {
                 if (authCheckCodeDTO.error == Errors.CODE_EXPIRED || authCheckCodeDTO.error == Errors.TOO_MANY_REQUESTS) {
                     authSessionChannel.clear()
                 }

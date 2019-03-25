@@ -13,6 +13,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import java.security.interfaces.ECPublicKey
 import java.security.spec.InvalidKeySpecException
+import javax.crypto.spec.SecretKeySpec
 
 /**
  * Контроллер протокола (соединения).
@@ -24,36 +25,38 @@ import java.security.spec.InvalidKeySpecException
 class ProtocolController(private val client: ProtocolClient) : HandlerThread("SSTP Controller") {
 
     // Для взаимодействия с другими потоками.
+    internal var isHandshakeInvoked = false
     internal var handler: Handler? = null
-    internal var alive: Boolean = false
-    var key: ByteArray? = null
-
-    // Looper prepared callback
     internal var looperPreparedCallback: (() -> (Unit))? = null
-    internal var getCoreVersionJob: Job? = null
+    private var requestedPing: Boolean = false
+    private var getCoreVersionJob: Job? = null
 
-    // Создаем обработчик.
+    companion object {
+        const val PING_SEND_TASK_TOKEN = 0
+        const val PING_CHECK_TASK_TOKEN = 1
+        const val SEND_PING_BEFORE_PACKET_INTERVAL = 6000L
+        const val CHECK_PING_BEFORE_SEND = 2000L
+    }
+
     override fun onLooperPrepared() {
         handler = Handler(looper)
 
         // Инициализация Looper'а
-        if (looperPreparedCallback != null) looperPreparedCallback!!()
+        if (looperPreparedCallback != null) {
+            looperPreparedCallback!!()
+        }
     }
-
-    /**
-     * Проверяет, выполнено ли рукопожатие.
-     **/
-    private fun handshakeIsInvoked() = key != null
 
     /**
      * Вызывается когда соединение будет успешно установлено.
      **/
     fun onStart() {
         // Соединение активно (нужно для функционирования ping-pong'а)
-        alive = true
+        requestedPing = true
+        isHandshakeInvoked = false
 
         // Начинаем хэндшейк
-        client.sendArray("vrf") // Начинаем Handshake ...
+        client.sendArray("vrf")
     }
 
     /**
@@ -69,27 +72,17 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                 "vrf" -> handleVerify(packet)
                 "upg" -> handleUpgrade(packet)
                 "msg" -> handleMessage(packet)
-                "png" -> if (alive) client.sendArray("png") else alive = true
+                "png" -> handlePing()
             }
 
-            // Remove all old tasks
-            handler!!.removeCallbacksAndMessages(0)
-            handler!!.removeCallbacksAndMessages(1)
-
-            // Plane tasks
-            handler!!.postAtTime({
-                alive = false
-
-                // Send ping
-                client.sendArray("png")
-
-                // Отправляем пинг
-                handler!!.postAtTime({ if (!alive) client.close() }, 1, SystemClock.uptimeMillis() + 2000L)
-            }, 0, SystemClock.uptimeMillis() + 6000L)
+            // Reschedule ping tasks
+            handler!!.removeCallbacksAndMessages(PING_SEND_TASK_TOKEN)
+            handler!!.removeCallbacksAndMessages(PING_CHECK_TASK_TOKEN)
+            handler!!.postAtTime(::sendPing, PING_SEND_TASK_TOKEN, SystemClock.uptimeMillis() + SEND_PING_BEFORE_PACKET_INTERVAL)
         } catch (e: JSONException) {
-            if (!handshakeIsInvoked()) client.close()
+            if (!isHandshakeInvoked) client.close()
         } catch (e: InvalidKeySpecException) {
-            if (!handshakeIsInvoked()) client.close()
+            if (!isHandshakeInvoked) client.close()
         }
     }
 
@@ -110,24 +103,35 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                 // Генерируем пару ключей (публичный и приватный)
                 val keyPair = generateKeys()
 
-                // Prepare public key
+                // Prepare public keySpec
                 val publicKeyBytes = (keyPair.public as ECPublicKey).getPoint()
                 val encodedPublicKey = Base64.encodeToString(publicKeyBytes, Base64.NO_WRAP)
 
-                // Generate secret key
+                // Generate secret keySpec
                 val serverEcdhPublicKeyInstance = readPublicKey(serverEcdhPublicKey)
-                val secretKey = calculateSecretKey(keyPair.private, serverEcdhPublicKeyInstance)
-                        .copyOf(24)
-
+                val secretKey = calculateSecretKey(keyPair.private, serverEcdhPublicKeyInstance).copyOf(24)
                 val secretHash = Base64.encodeToString(calculateHash(secretKey), Base64.NO_WRAP)
 
-                // Encrypt
-                key = secretKey
+                // Bind keys & complete handshake
+                bindEncryptionKey(secretKey)
 
                 // Send data to the server ...
                 client.sendArray("upg", encodedPublicKey, secretHash)
             } else client.close()
         } else client.close()
+    }
+
+    /**
+     * Метод, вызываемый при приходе Ping'а.
+     *
+     * Обновляет статус прихода пакета.
+     */
+    private fun handlePing() {
+        if (requestedPing) {
+            client.sendArray("png")
+        } else {
+            requestedPing = true
+        }
     }
 
     /**
@@ -165,14 +169,40 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
 
             // Compare versions
             if (coreVersionDTO.version == ProtocolClient.VERSION) {
+                isHandshakeInvoked = true
                 client.connectionStateChannel.offer(ConnectionState.HANDSHAKE_SUCCEED)
             } else {
+                isHandshakeInvoked = false
                 client.connectionStateChannel.offer(ConnectionState.OLD_PROTOCOL_VERSION)
                 client.close()
                 client.kill()
             }
         } catch (e: NetworkException) {
             // Ignore ...
+        }
+    }
+
+    /**
+     * Отправляет пакет Ping, запускает проверку на приход ответа.
+     */
+    private fun sendPing() {
+        requestedPing = false
+
+        // Отправляем Ping и проверяем приход ответа через некоторые время.
+        client.sendArray("png")
+
+        // Ожидаем ответ ...
+        handler!!.postAtTime(::checkPing, PING_CHECK_TASK_TOKEN, SystemClock.uptimeMillis() + CHECK_PING_BEFORE_SEND)
+    }
+
+    /**
+     * Проверяет приход ответа на Ping.
+     * Если ответа нет - закрывает соединение.
+     */
+    private fun checkPing() {
+        // Закрываем соединение если нет ответа ...
+        if (!requestedPing) {
+            client.close()
         }
     }
 
@@ -192,8 +222,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                     && payload.matches(BASE64_REGEX)
                     && hmac.matches(BASE64_REGEX)) {
 
-                val decryptedPayloadString = decryptAES(key!!, iv, payload)
-                        .replace("\\/", "/")
+                val decryptedPayloadString = decryptAES(iv, payload)
                 val decryptedPayload = JSONArray(decryptedPayloadString)
 
                 // Check length
@@ -202,9 +231,9 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                     val message = decryptedPayload.optJSONObject(1)
                     val salt = decryptedPayload.optString(2)
 
-                    if (event != null && message != null && salt != null && key != null) {
-                        val hmacReaded = calculateHMAC(key!!, decryptedPayloadString)
-                        val encodedHmac = Base64.encodeToString(hmacReaded, Base64.NO_WRAP)
+                    if (event != null && message != null && salt != null && isHandshakeInvoked) {
+                        val hmacRead = calculateHMAC(decryptedPayloadString)
+                        val encodedHmac = Base64.encodeToString(hmacRead, Base64.NO_WRAP)
 
                         // Проверим HMAC'ки ...
                         if (encodedHmac == hmac) client.notifyCallbacks(event, message.toString())
@@ -220,8 +249,11 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
     fun onEnd() = handler!!.post {
         handler!!.removeCallbacksAndMessages(null)
 
-        // Close connection ...
+        // Cancel all internal tasks ...
         getCoreVersionJob?.cancel()
+        isHandshakeInvoked = false
+
+        // Kill connection ...
         client.kill(false)
         client.connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
 
