@@ -269,7 +269,7 @@ class DialogsMessagesRepository @Inject constructor(private val protocolClient: 
 //        if (text.isEmpty()) return@launch
 //
 //        // Отправка ...
-//        sendMessage(DialogMessage(
+//        sendJsonMessage(DialogMessage(
 //                sender = accountId,
 //                peer = recipientId,
 //                message = text,

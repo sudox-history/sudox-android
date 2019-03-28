@@ -24,6 +24,10 @@ class SplashActivity : DaggerAppCompatActivity() {
         splashViewModel = getViewModel(viewModelFactory)
     }
 
+    /**
+     * Говорит ViewModel, что нужно проверить аккаунт.
+     * Устанавливает слушателя событий, отправленных ViewModel.
+     */
     override fun onStart() {
         super.onStart()
 
@@ -35,15 +39,21 @@ class SplashActivity : DaggerAppCompatActivity() {
             }
         })
 
-        // Init authSession
-        splashViewModel.initSession()
+        // Start working ...
+        splashViewModel.checkAccount()
     }
 
+    /**
+     * Открывает активность авторизации.
+     */
     private fun showAuthActivity() {
         startActivity(Intent(this, AuthActivity::class.java))
         finish()
     }
 
+    /**
+     * Открывает основную активность.
+     */
     private fun showMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()

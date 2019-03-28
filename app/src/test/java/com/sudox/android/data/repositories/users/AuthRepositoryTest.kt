@@ -6,7 +6,7 @@ import com.sudox.android.data.exceptions.RequestRegexException
 import com.sudox.android.data.models.auth.dto.*
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.data.models.common.Errors
-import com.sudox.android.data.models.core.CoreVersionDTO
+import com.sudox.protocol.models.dto.CoreVersionDTO
 import com.sudox.android.data.models.users.dto.UserDTO
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.helpers.randomBase64String
@@ -26,7 +26,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
-import org.mockito.exceptions.base.MockitoException
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
@@ -96,7 +95,7 @@ class AuthRepositoryTest : Assert() {
 
     @Test
     fun testRequestCode_network_exception() = runBlocking<Unit> {
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthCodeDTO>)
@@ -116,7 +115,7 @@ class AuthRepositoryTest : Assert() {
         val hash = randomBase64String(32)
         val status = Random.nextInt()
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthCodeDTO>)
@@ -140,7 +139,7 @@ class AuthRepositoryTest : Assert() {
 
     @Test
     fun testRequestCode_error() = runBlocking {
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthCodeDTO>)
@@ -179,7 +178,7 @@ class AuthRepositoryTest : Assert() {
 
     @Test
     fun testCheckCode_network_exception() = runBlocking<Unit> {
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthCheckCodeDTO>)
@@ -199,7 +198,7 @@ class AuthRepositoryTest : Assert() {
     fun testCheckCode_code_expired_error() = runBlocking {
         val hash = randomBase64String(64)
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthCheckCodeDTO>)
@@ -233,7 +232,7 @@ class AuthRepositoryTest : Assert() {
     fun testCheckCode_too_many_requests_error() = runBlocking {
         val hash = randomBase64String(64)
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthCheckCodeDTO>)
@@ -267,7 +266,7 @@ class AuthRepositoryTest : Assert() {
     fun testCheckCode_other_errors() = runBlocking {
         val hash = randomBase64String(64)
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthCheckCodeDTO>)
@@ -301,7 +300,7 @@ class AuthRepositoryTest : Assert() {
     fun testCheckCode_success() = runBlocking {
         val hash = randomBase64String(64)
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthCheckCodeDTO>)
@@ -339,7 +338,7 @@ class AuthRepositoryTest : Assert() {
 
     @Test
     fun testSignIn_network_exception() = runBlocking {
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthSignInDTO>)
@@ -361,7 +360,7 @@ class AuthRepositoryTest : Assert() {
     fun testSignIn_code_expired_error() = runBlocking {
         val hash = randomBase64String(64)
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthSignInDTO>)
@@ -395,7 +394,7 @@ class AuthRepositoryTest : Assert() {
     fun testSignIn_too_many_requests_error() = runBlocking {
         val hash = randomBase64String(64)
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthSignInDTO>)
@@ -436,7 +435,7 @@ class AuthRepositoryTest : Assert() {
             photo = String(Random.nextBytes(12))
         }
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthSignInDTO>)
@@ -509,7 +508,7 @@ class AuthRepositoryTest : Assert() {
 
     @Test
     fun testSignUp_network_exception() = runBlocking {
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthSignUpDTO>)
@@ -531,7 +530,7 @@ class AuthRepositoryTest : Assert() {
     fun testSignUp_code_expired_error() = runBlocking {
         val hash = randomBase64String(64)
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthSignUpDTO>)
@@ -565,7 +564,7 @@ class AuthRepositoryTest : Assert() {
     fun testSignUp_too_many_requests_error() = runBlocking {
         val hash = randomBase64String(64)
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthSignUpDTO>)
@@ -599,7 +598,7 @@ class AuthRepositoryTest : Assert() {
     fun testSignUp_invalid_account_error() = runBlocking {
         val hash = randomBase64String(64)
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthSignUpDTO>)
@@ -640,7 +639,7 @@ class AuthRepositoryTest : Assert() {
             photo = String(Random.nextBytes(12))
         }
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthSignUpDTO>)
@@ -670,7 +669,7 @@ class AuthRepositoryTest : Assert() {
 
     @Test
     fun testInstallAccountSession_network_exception() = runBlocking<Unit> {
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthSignUpDTO>)
@@ -689,7 +688,7 @@ class AuthRepositoryTest : Assert() {
 
     @Test
     fun testInstallAccountSession_invalid_account_error() = runBlocking {
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthImportDTO>)
@@ -710,7 +709,7 @@ class AuthRepositoryTest : Assert() {
 
     @Test
     fun testInstallAccountSession_other_errors() = runBlocking {
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthImportDTO>)
@@ -739,7 +738,7 @@ class AuthRepositoryTest : Assert() {
             photo = String(Random.nextBytes(12))
         }
 
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<AuthImportDTO>)
@@ -848,7 +847,7 @@ class AuthRepositoryTest : Assert() {
     fun testMakeRequestWithSession_without_event_bus_notifying() = runBlocking<Unit> {
         protocolClientMock.connectionStateChannel = PowerMockito.spy(protocolClientMock.connectionStateChannel)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(false)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<CoreVersionDTO>)
@@ -874,7 +873,7 @@ class AuthRepositoryTest : Assert() {
     fun testMakeRequestWithSession_with_event_bus_notifying() = runBlocking<Unit> {
         protocolClientMock.connectionStateChannel = PowerMockito.spy(protocolClientMock.connectionStateChannel)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(false)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<CoreVersionDTO>)
@@ -900,7 +899,7 @@ class AuthRepositoryTest : Assert() {
     fun testMakeRequestWithSession() = runBlocking<Unit> {
         protocolClientMock.connectionStateChannel = PowerMockito.spy(protocolClientMock.connectionStateChannel)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<CoreVersionDTO>)
@@ -916,6 +915,6 @@ class AuthRepositoryTest : Assert() {
                 .await()
 
         Mockito.verify(protocolClientMock.connectionStateChannel, Mockito.never()).offer(ConnectionState.NO_CONNECTION)
-        Mockito.verify(protocolClientMock).sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())
+        Mockito.verify(protocolClientMock).sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())
     }
 }

@@ -7,19 +7,15 @@ import com.sudox.android.data.repositories.users.AccountRepository
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class SplashViewModel @Inject constructor(private val accountRepository: AccountRepository) : ViewModel(), LifecycleObserver {
+class SplashViewModel @Inject constructor(private val accountRepository: AccountRepository) : ViewModel() {
 
     val splashActionLiveData: SingleLiveEvent<SplashAction> = SingleLiveEvent()
 
     /**
-     * Метод для инициализации соединения и сессии с сервером .
-     * Решает на какую Activity переключиться.
-     * **/
-    fun initSession() = GlobalScope.launch(Dispatchers.IO) {
-        val account = accountRepository.getAccount()
-
-        // Выполняем нужные действия
-        if (account != null) {
+     * Проверяет наличие аккаунта, далее решает какую Activity нужно открыть.
+     */
+    fun checkAccount() = GlobalScope.launch(Dispatchers.IO) {
+        if (accountRepository.getAccount() != null) {
             splashActionLiveData.postValue(SplashAction.SHOW_MAIN_ACTIVITY)
         } else {
             splashActionLiveData.postValue(SplashAction.SHOW_AUTH_ACTIVITY)

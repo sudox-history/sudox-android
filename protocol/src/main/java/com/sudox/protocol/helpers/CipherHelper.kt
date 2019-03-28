@@ -6,7 +6,6 @@ import com.sudox.protocol.SIGN_PUBLIC_KEY
 import com.sudox.protocol.abstractions.MutableIVParameterSpec
 import java.io.File
 import java.math.BigInteger
-import java.nio.ByteBuffer
 import java.security.*
 import java.security.interfaces.ECPublicKey
 import java.security.spec.ECPoint
@@ -68,12 +67,18 @@ fun readSignaturePublicKey(keyBody: String): PublicKey {
  */
 fun readPublicKey(keyBody: String): ECPublicKey {
     val decoded = Base64.decode(keyBody, Base64.NO_PADDING)
-    val x = decoded.copyOfRange(1, 49)
-    val y = decoded.copyOfRange(49, 97)
-    val spec = ECPublicKeySpec(ECPoint(BigInteger(x), BigInteger(y)), ELLIPTIC_CURVE_PARAM)
+    val keyFactory = KeyFactory.getInstance("EC")
+    val x = ByteArray(49)
+    val y = ByteArray(49)
+    System.arraycopy(decoded, 1, x, 1, 48)
+    System.arraycopy(decoded, 49, y, 1, 48)
+    val xInt = BigInteger(x)
+    val yInt = BigInteger(y)
+    val point = ECPoint(xInt, yInt)
+    val spec = ECPublicKeySpec(point, ELLIPTIC_CURVE_PARAM)
 
-    // Generate public keySpec ...
-    return KEY_FACTORY.generatePublic(spec) as ECPublicKey
+    // Generate key
+    return keyFactory.generatePublic(spec) as ECPublicKey
 }
 
 /**
@@ -87,15 +92,11 @@ fun generateKeys() = KEY_PAIR_GENERATOR.genKeyPair()!!
 fun ECPublicKey.getPoint(): ByteArray {
     val affineXBytes = removeLeadingZeros(w.affineX.toByteArray())
     val affineYBytes = removeLeadingZeros(w.affineY.toByteArray())
-    val buffer = ByteBuffer.allocate(48 * 2 + 1)
-
-    // Write coordinates
-    buffer.put(0x04)
-    buffer.put(affineXBytes)
-    buffer.put(affineYBytes)
-
-    // Return bytes ...
-    return buffer.array()
+    val encodedBytes = ByteArray(48 * 2 + 1)
+    encodedBytes[0] = 0x04 //uncompressed
+    System.arraycopy(affineXBytes, 0, encodedBytes, 48 - affineXBytes.size + 1, affineXBytes.size)
+    System.arraycopy(affineYBytes, 0, encodedBytes, encodedBytes.size - affineYBytes.size, affineYBytes.size)
+    return encodedBytes
 }
 
 /**
@@ -141,13 +142,13 @@ fun decryptAES(encodedIv: String, encodedData: String): String {
  * @param originalData - незашифрованная информация.
  */
 @Throws(IllegalArgumentException::class, InvalidKeyException::class, IllegalBlockSizeException::class)
-fun encryptAES(originalData: String): Pair<ByteArray, String> {
+fun encryptAES(originalData: String): Pair<ByteArray, ByteArray> {
     val bytes = ENCRYPT_CIPHER.doFinal(originalData.toByteArray())
     val iv = ENCRYPT_CIPHER.iv
     val encoded = Base64.encode(bytes, Base64.NO_WRAP)
 
     // Return pair - iv & encoded to Base64 encrypted bytes
-    return Pair(iv, String(encoded))
+    return Pair(iv, encoded)
 }
 
 /**
@@ -191,7 +192,7 @@ fun randomBase64String(length: Int): String {
 
     // Переводим в Base-64
     return Base64
-            .encodeToString(bytes, Base64.DEFAULT)
+            .encodeToString(bytes, Base64.NO_WRAP)
             .replace("\n", "")
 }
 

@@ -8,6 +8,9 @@ import java.security.spec.ECPoint
 import java.security.spec.EllipticCurve
 
 internal val BASE64_REGEX = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?\$".toRegex()
+internal val PACKET_MATCH_REGEX = "\\[.*?]|\\[.*|.*?]".toRegex()
+internal const val BUFFER_SIZE = 8192
+
 internal const val SIGN_PUBLIC_KEY_BODY = "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEflkmgol1o7GFRjjB72BBbqhsRSI1SwHK" +
         "/7357yJaEzwrBUt231AiPD2AG2MNaXr8SqDCUv3jbLzOB4+/bVkcimZVP2elvjsp/AdU1335LpuCufavSCrftkzD0MeiUBqc"
 

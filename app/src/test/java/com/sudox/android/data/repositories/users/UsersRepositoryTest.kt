@@ -81,7 +81,7 @@ class UsersRepositoryTest : Assert() {
         val ids = listOf(1L, 2L, 3L)
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             protocolClientMock
                     .readCallbacks
                     .first
@@ -104,7 +104,7 @@ class UsersRepositoryTest : Assert() {
         val ids = listOf(1L, 2L, 3L)
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(false)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             protocolClientMock
                     .readCallbacks
                     .first
@@ -128,7 +128,7 @@ class UsersRepositoryTest : Assert() {
         val ids = listOf(1L, 2L, 3L)
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             protocolClientMock
                     .readCallbacks
                     .first
@@ -151,7 +151,7 @@ class UsersRepositoryTest : Assert() {
         val ids = listOf(1L, 2L, 3L)
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             protocolClientMock
                     .readCallbacks
                     .first
@@ -174,7 +174,7 @@ class UsersRepositoryTest : Assert() {
         val ids = listOf(1L, 2L, 3L)
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(false)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             protocolClientMock
                     .readCallbacks
                     .first
@@ -197,7 +197,7 @@ class UsersRepositoryTest : Assert() {
         val ids = listOf(1L, 2L, 3L)
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(false)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             protocolClientMock
                     .readCallbacks
                     .first
@@ -220,7 +220,7 @@ class UsersRepositoryTest : Assert() {
         val ids = listOf(1L, 2L, 3L)
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .first as ReadCallback<UsersInfoDTO>)
@@ -266,7 +266,7 @@ class UsersRepositoryTest : Assert() {
         }
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<UsersInfoDTO>)
@@ -306,7 +306,7 @@ class UsersRepositoryTest : Assert() {
         }
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<UsersInfoDTO>)
@@ -324,7 +324,7 @@ class UsersRepositoryTest : Assert() {
         Mockito.reset(userDaoMock)
         Mockito.`when`(userDaoMock.loadByIds(ids)).thenReturn(fetchedUsers)
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(false)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             protocolClientMock
                     .readCallbacks
                     .first
@@ -368,7 +368,7 @@ class UsersRepositoryTest : Assert() {
         }
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<UsersInfoDTO>)
@@ -383,7 +383,7 @@ class UsersRepositoryTest : Assert() {
         Mockito.reset(userDaoMock)
         Mockito.reset(protocolClientMock)
         Mockito.`when`(userDaoMock.loadByIds(storedIds)).thenReturn(stored)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<UsersInfoDTO>)
@@ -427,7 +427,7 @@ class UsersRepositoryTest : Assert() {
         }
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<UsersInfoDTO>)
@@ -443,7 +443,7 @@ class UsersRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(userDaoMock.loadByIds(storedIds)).thenReturn(stored)
         Mockito.`when`(userDaoMock.loadByIds(fetchIds)).thenReturn(fetchUsers as List<User>)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             protocolClientMock
                     .readCallbacks
                     .removeFirst()
@@ -475,7 +475,7 @@ class UsersRepositoryTest : Assert() {
         // Testing ...
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(userDaoMock.loadByIds(ids)).thenReturn(users)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             protocolClientMock
                     .readCallbacks
                     .first
@@ -505,7 +505,7 @@ class UsersRepositoryTest : Assert() {
         // Testing ...
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(userDaoMock.loadByIds(ids)).thenReturn(users)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             protocolClientMock
                     .readCallbacks
                     .first
@@ -537,7 +537,7 @@ class UsersRepositoryTest : Assert() {
         // Testing ...
         Mockito.`when`(userDaoMock.filterContactsIds(ids)).thenReturn(ArrayList())
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .first as ReadCallback<UsersInfoDTO>)
@@ -570,7 +570,7 @@ class UsersRepositoryTest : Assert() {
         // Testing ...
         Mockito.`when`(userDaoMock.filterContactsIds(ids)).thenReturn(loadedContactsIds)
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .first as ReadCallback<UsersInfoDTO>)
@@ -605,7 +605,7 @@ class UsersRepositoryTest : Assert() {
         // Testing ...
         Mockito.`when`(userDaoMock.filterContactsIds(ids)).thenReturn(ArrayList())
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .first as ReadCallback<UsersInfoDTO>)
@@ -626,7 +626,7 @@ class UsersRepositoryTest : Assert() {
         val ids = listOf(1L, 2L, 3L, 4L)
 
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .first as ReadCallback<UsersInfoDTO>)

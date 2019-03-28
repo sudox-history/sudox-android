@@ -17,7 +17,7 @@ class ByteHelperTest : Assert() {
     @Test
     fun testRemoveLeadingZeros_singleton_array() {
         val input = byteArrayOf(0)
-        val output = byteArrayOf(0)
+        val output = byteArrayOf()
         val result = removeLeadingZeros(input)
 
         assertArrayEquals(output, result)

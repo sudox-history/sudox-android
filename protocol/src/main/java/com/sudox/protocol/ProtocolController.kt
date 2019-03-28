@@ -4,16 +4,17 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import android.util.Base64
-import com.sudox.android.data.models.core.CoreVersionDTO
 import com.sudox.protocol.helpers.*
+import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.NetworkException
+import com.sudox.protocol.models.dto.CoreVersionDTO
 import com.sudox.protocol.models.enums.ConnectionState
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONException
+import org.json.JSONObject
 import java.security.interfaces.ECPublicKey
 import java.security.spec.InvalidKeySpecException
-import javax.crypto.spec.SecretKeySpec
 
 /**
  * Контроллер протокола (соединения).
@@ -21,14 +22,16 @@ import javax.crypto.spec.SecretKeySpec
  * Выполняет функцию потока, принимает пакеты, обрабатывает их отправку.
  * Контроллирует статус соединения, выполняет соединение с сервером.
  * Может восстанавливать соединение с сервером.
- **/
+ *
+ * @param client - клиент протокола.
+ */
 class ProtocolController(private val client: ProtocolClient) : HandlerThread("SSTP Controller") {
 
     // Для взаимодействия с другими потоками.
-    internal var isHandshakeInvoked = false
     internal var handler: Handler? = null
     internal var looperPreparedCallback: (() -> (Unit))? = null
     private var requestedPing: Boolean = false
+    private var isHandshakeInvoked = false
     private var getCoreVersionJob: Job? = null
 
     companion object {
@@ -240,6 +243,33 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Отправляет сообщение в формате JSON на сервер.
+     *
+     * @param event - название события для отправки.
+     * @param message - обьект сообщения для отправки.
+     */
+    fun sendJsonMessage(event: String, message: JsonModel? = null) = handler!!.post {
+        if (client.isValid() && isHandshakeInvoked) {
+            val salt = randomBase64String(8)
+            val jsonObject = message?.toJSON()
+            val jsonMessage = jsonObject ?: JSONObject()
+            val payload = JSONArray(arrayOf(event, jsonMessage, salt)).toString().replace("\\/", "/")
+
+            // Encrypting
+            val hmac = calculateHMAC(payload)
+            val encodedHmac = Base64.encodeToString(hmac, Base64.NO_WRAP)
+            val encryptedPair = encryptAES(payload)
+            val encodedIv = Base64.encodeToString(encryptedPair.first, Base64.NO_WRAP)
+            val encryptedPayload = String(encryptedPair.second)
+
+            // Send packet to server
+            client.sendArray("msg", encodedIv, encryptedPayload, encodedHmac)
+        } else {
+            client.connectionStateChannel.offer(ConnectionState.NO_CONNECTION)
         }
     }
 

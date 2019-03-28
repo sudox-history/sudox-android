@@ -14,7 +14,6 @@ import com.sudox.android.ui.auth.confirm.AuthConfirmFragment
 import com.sudox.android.ui.auth.phone.AuthPhoneFragment
 import com.sudox.android.ui.auth.register.AuthRegisterFragment
 import com.sudox.android.ui.main.MainActivity
-import com.sudox.protocol.ProtocolClient
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.view_navigation_bar.view.*
@@ -24,9 +23,6 @@ class AuthActivity : DaggerAppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var protocolClient: ProtocolClient
     lateinit var authViewModel: AuthViewModel
     var authSession: AuthSession? = null
 

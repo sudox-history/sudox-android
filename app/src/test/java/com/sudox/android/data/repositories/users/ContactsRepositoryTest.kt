@@ -285,7 +285,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.loadActualUsers(ids)).thenReturn(CompletableDeferred(users))
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsIdsListDTO>)
@@ -321,7 +321,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(false)
         Mockito.`when`(usersRepositoryMock.loadUsers(ids)).thenReturn(CompletableDeferred(users))
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(false)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsIdsListDTO>)
@@ -366,7 +366,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(false)
         Mockito.`when`(usersRepositoryMock.loadUsers(ids)).thenReturn(CompletableDeferred(users))
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(false)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsIdsListDTO>)
@@ -403,7 +403,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.loadActualUsers(ids)).thenReturn(CompletableDeferred(ArrayList()))
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsIdsListDTO>)
@@ -436,7 +436,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(userDaoMock.loadContactsIds()).thenReturn(LongArray(0))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsIdsListDTO>)
@@ -471,7 +471,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(userDaoMock.loadContacts()).thenReturn(users)
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsIdsListDTO>)
@@ -508,7 +508,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(userDaoMock.loadContactsIds()).thenReturn(LongArray(0))
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsIdsListDTO>)
@@ -545,7 +545,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(userDaoMock.loadContactsIds()).thenReturn(ids.toLongArray())
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsIdsListDTO>)
@@ -570,7 +570,7 @@ class ContactsRepositoryTest : Assert() {
         PowerMockito.`when`(contextMock.loadContactsFromPhone()).thenReturn(ArrayList())
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsSyncDTO>)
@@ -614,7 +614,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(userDaoMock.loadContactsIds()).thenReturn(LongArray(0))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsSyncDTO>)
@@ -667,7 +667,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(userDaoMock.loadContactsIds()).thenReturn(LongArray(0))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsSyncDTO>)
@@ -711,7 +711,7 @@ class ContactsRepositoryTest : Assert() {
         PowerMockito.`when`(contextMock.loadContactsFromPhone()).thenReturn(pairs)
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(false)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(false)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsSyncDTO>)
@@ -749,7 +749,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(userDaoMock.loadContactsIds()).thenReturn(LongArray(0))
         Mockito.`when`(usersRepositoryMock.loadActualUsers(ids)).thenReturn(CompletableDeferred(ArrayList()))
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsSyncDTO>)
@@ -796,7 +796,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(userDaoMock.loadContactsIds()).thenReturn(LongArray(0))
         Mockito.`when`(usersRepositoryMock.loadActualUsers(ids)).thenReturn(CompletableDeferred(users))
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactsSyncDTO>)
@@ -871,7 +871,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(id)).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -904,7 +904,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(id)).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -936,7 +936,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(id)).thenReturn(deferred)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -970,7 +970,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(id)).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -1006,7 +1006,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(id)).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -1043,7 +1043,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -1081,7 +1081,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(id)).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -1120,7 +1120,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(id)).thenReturn(CompletableDeferred(user))
         Mockito.`when`(userDaoMock.isContactByPhone(any())).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -1159,7 +1159,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(id)).thenReturn(CompletableDeferred(user))
         Mockito.`when`(userDaoMock.isContactByPhone(any())).thenReturn(false)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -1193,7 +1193,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(id)).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -1229,7 +1229,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(id)).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactAddDTO>)
@@ -1255,7 +1255,7 @@ class ContactsRepositoryTest : Assert() {
         // Preparing ...
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactRemoveDTO>)
@@ -1286,7 +1286,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.loadActualUser(id)).thenReturn(deferred)
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactRemoveDTO>)
@@ -1318,7 +1318,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(authRepositoryMock.canExecuteNetworkRequest()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.loadActualUser(id)).thenReturn(CompletableDeferred(user))
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactRemoveDTO>)
@@ -1370,7 +1370,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(eq(id), eq(false), ArgumentMatchers.anyBoolean())).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactEditDTO>)
@@ -1404,7 +1404,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(protocolClientMock.isValid()).thenReturn(true)
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(eq(id), eq(false), ArgumentMatchers.anyBoolean())).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactEditDTO>)
@@ -1439,7 +1439,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(eq(id), eq(false), ArgumentMatchers.anyBoolean())).thenReturn(CompletableDeferred(user))
         Mockito.`when`(usersRepositoryMock.loadActualUser(ArgumentMatchers.anyLong())).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactEditDTO>)
@@ -1476,7 +1476,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(eq(id), eq(false), ArgumentMatchers.anyBoolean())).thenReturn(CompletableDeferred(user))
         Mockito.`when`(usersRepositoryMock.loadActualUser(ArgumentMatchers.anyLong())).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactEditDTO>)
@@ -1510,7 +1510,7 @@ class ContactsRepositoryTest : Assert() {
         Mockito.`when`(usersRepositoryMock.saveOrUpdateUsers(any())).thenReturn(CompletableDeferred(Unit))
         Mockito.`when`(usersRepositoryMock.loadUser(eq(id), eq(false), ArgumentMatchers.anyBoolean())).thenReturn(CompletableDeferred(user))
         Mockito.`when`(usersRepositoryMock.loadActualUser(ArgumentMatchers.anyLong())).thenReturn(CompletableDeferred(user))
-        Mockito.`when`(protocolClientMock.sendMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
+        Mockito.`when`(protocolClientMock.sendJsonMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any())).then {
             (protocolClientMock
                     .readCallbacks
                     .removeFirst() as ReadCallback<ContactEditDTO>)
