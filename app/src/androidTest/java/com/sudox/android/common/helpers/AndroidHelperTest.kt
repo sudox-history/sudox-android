@@ -6,7 +6,7 @@ import android.support.test.espresso.intent.matcher.IntentMatchers
 import android.support.test.espresso.intent.rule.IntentsTestRule
 import android.support.test.runner.AndroidJUnit4
 import com.sudox.android.ui.auth.AuthActivity
-import com.sudox.protocol.helpers.randomBase64String
+import com.sudox.android.tests.helpers.randomBase64String
 import org.hamcrest.Matchers
 import org.junit.Assert
 import org.junit.Test

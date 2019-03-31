@@ -9,7 +9,7 @@ import com.sudox.android.data.models.common.Errors
 import com.sudox.protocol.models.dto.CoreVersionDTO
 import com.sudox.android.data.models.users.dto.UserDTO
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.helpers.randomBase64String
+import com.sudox.tests.helpers.randomBase64String
 import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.ReadCallback
 import com.sudox.protocol.models.enums.ConnectionState

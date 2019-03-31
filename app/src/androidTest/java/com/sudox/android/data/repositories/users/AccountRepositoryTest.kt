@@ -9,7 +9,7 @@ import android.support.test.filters.SdkSuppress
 import android.support.test.runner.AndroidJUnit4
 import com.sudox.android.data.database.SudoxDatabase
 import com.sudox.android.data.database.model.user.User
-import com.sudox.protocol.helpers.randomBase64String
+import com.sudox.android.tests.helpers.randomBase64String
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before

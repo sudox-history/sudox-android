@@ -9,7 +9,7 @@
 #include <crypto++/pem.h>
 #include <jni.h>
 
-static CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA224>::Verifier *verifier = nullptr;
+static CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA224>::PublicKey key;
 static std::string PUBLIC_KEY_BODY = "-----BEGIN PUBLIC KEY-----\n"
                                      "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEflkmgol1o7GFRjjB72BBbqhsRSI1SwHK\n"
                                      "/7357yJaEzwrBUt231AiPD2AG2MNaXr8SqDCUv3jbLzOB4+/bVkcimZVP2elvjsp\n"
@@ -28,6 +28,8 @@ static std::string PUBLIC_KEY_BODY = "-----BEGIN PUBLIC KEY-----\n"
 bool verifyMessageWithECDSA(unsigned char *message, unsigned int messageLength,
                             unsigned char *signature, unsigned int signatureLength) {
 
+    CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA224>::Verifier verifier(key);
+
     // Check, that signature not ASN.1 & map to IEEE P1363 if needed
     if (signature[0] == 0x30 && signature[2] == 0x02) {
         unsigned int rLength = signature[3];
@@ -45,28 +47,27 @@ bool verifyMessageWithECDSA(unsigned char *message, unsigned int messageLength,
         signature = ieeeSignatureNative;
     }
 
-    // Verifying & map to jBoolean
-    return verifier->VerifyMessage((const CryptoPP::byte *) &message[0], messageLength,
-                                   (const CryptoPP::byte *) &signature[0], signatureLength);
+    // Verifying ...
+    bool result = verifier.VerifyMessage((const CryptoPP::byte *) &message[0], messageLength,
+                                         (const CryptoPP::byte *) &signature[0], signatureLength);
+
+    // Mapping to jBoolean
+    return result;
 }
 
 /**
  * Читает публичный ключ, создает верификатора подписи с публичным ключем.
  */
 void initECDSA() {
-    CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA224>::PublicKey key;
     CryptoPP::StringSource source(PUBLIC_KEY_BODY, true);
     CryptoPP::PEM_Load(source, key);
-
-    // Creating verifier instance
-    verifier = new CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA224>::Verifier(key);
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_sudox_protocol_helpers_CipherHelper_verifyMessageWithECDSA(JNIEnv *env, jclass type,
-                                                           jbyteArray message,
-                                                           jbyteArray signature) {
+                                                                    jbyteArray message,
+                                                                    jbyteArray signature) {
 
     auto messageLength = static_cast<unsigned int>(env->GetArrayLength(message));
     auto messageNative = new unsigned char[messageLength];

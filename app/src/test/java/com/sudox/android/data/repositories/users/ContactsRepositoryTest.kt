@@ -15,7 +15,7 @@ import com.sudox.android.data.models.common.Errors
 import com.sudox.android.data.models.common.InternalErrors
 import com.sudox.android.data.models.contacts.dto.*
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.helpers.randomBase64String
+import com.sudox.tests.helpers.randomBase64String
 import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.ReadCallback
 import com.sudox.protocol.models.enums.ConnectionState
