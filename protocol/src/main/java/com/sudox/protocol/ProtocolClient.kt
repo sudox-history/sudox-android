@@ -64,9 +64,6 @@ class ProtocolClient {
                     try {
                         socket = Socket()
                         socket!!.keepAlive = false
-                        socket!!.tcpNoDelay = false
-
-                        // Connect ...
                         socket!!.connect(InetSocketAddress("46.173.214.49", 5000), 5000)
 
                         // Start controller & IO threads

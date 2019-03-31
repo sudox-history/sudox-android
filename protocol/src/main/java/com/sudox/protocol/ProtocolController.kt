@@ -3,8 +3,7 @@ package com.sudox.protocol
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
-import android.util.Base64
-import com.sudox.protocol.helpers.*
+import com.sudox.protocol.helpers.CipherHelper
 import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.dto.CoreVersionDTO
@@ -13,7 +12,6 @@ import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.security.interfaces.ECPublicKey
 import java.security.spec.InvalidKeySpecException
 
 /**
@@ -28,6 +26,7 @@ import java.security.spec.InvalidKeySpecException
 class ProtocolController(private val client: ProtocolClient) : HandlerThread("SSTP Controller") {
 
     // Для взаимодействия с другими потоками.
+    internal var encryptionKey: ByteArray? = null
     internal var handler: Handler? = null
     internal var looperPreparedCallback: (() -> (Unit))? = null
     private var requestedPing: Boolean = false
@@ -57,6 +56,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
         // Соединение активно (нужно для функционирования ping-pong'а)
         requestedPing = true
         isHandshakeInvoked = false
+        encryptionKey = null
 
         // Начинаем хэндшейк
         client.sendArray("vrf")
@@ -94,32 +94,38 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
      */
     private fun handleVerify(packet: JSONArray) {
         if (packet.length() >= 3) {
-            val serverEcdhPublicKey = packet.optString(1)
-            val serverEcdhPublicKeySignature = packet.optString(2)
+            val serverPublicKeyEncoded = packet.optString(1)
+            val serverPublicKeySignatureEncoded = packet.optString(2)
 
-            if (serverEcdhPublicKey != null
-                    && serverEcdhPublicKeySignature != null
-                    && serverEcdhPublicKey.matches(BASE64_REGEX)
-                    && serverEcdhPublicKeySignature.matches(BASE64_REGEX)
-                    && verifyData(serverEcdhPublicKey, serverEcdhPublicKeySignature)) {
+            if (serverPublicKeyEncoded != null
+                    && serverPublicKeySignatureEncoded != null
+                    && serverPublicKeyEncoded.matches(BASE64_REGEX)
+                    && serverPublicKeySignatureEncoded.matches(BASE64_REGEX)) {
 
-                // Генерируем пару ключей (публичный и приватный)
-                val keyPair = generateKeys()
+                val serverPublicKey = CipherHelper.decodeFromBase64(serverPublicKeyEncoded.toByteArray())
+                val serverPublicKeySignature = CipherHelper.decodeFromBase64(serverPublicKeySignatureEncoded.toByteArray())
 
-                // Prepare public keySpec
-                val publicKeyBytes = (keyPair.public as ECPublicKey).getPoint()
-                val encodedPublicKey = Base64.encodeToString(publicKeyBytes, Base64.NO_WRAP)
+                // Preventing MITM-attacks ...
+                if (CipherHelper.verifyMessageWithECDSA(serverPublicKey, serverPublicKeySignature)) {
+                    val pairId = CipherHelper.generateKeysPair()
+                    val publicKey = CipherHelper.getPublicKey(pairId)
+                    val privateKey = CipherHelper.getPrivateKey(pairId)
+                    val secretKey = CipherHelper.calculateSecretKey(privateKey, serverPublicKey)
 
-                // Generate secret keySpec
-                val serverEcdhPublicKeyInstance = readPublicKey(serverEcdhPublicKey)
-                val secretKey = calculateSecretKey(keyPair.private, serverEcdhPublicKeyInstance).copyOf(24)
-                val secretHash = Base64.encodeToString(calculateHash(secretKey), Base64.NO_WRAP)
+                    // Preventing MITM-attacks ...
+                    if (secretKey.isNotEmpty()) {
+                        val encryptionKey = secretKey.copyOf(24)
+                        val encryptionKeyHash = CipherHelper.calculateSHA224(encryptionKey)
+                        val encryptionKeyHashEncoded = CipherHelper.encodeToBase64(encryptionKeyHash)
+                        val publicKeyEncoded = CipherHelper.encodeToBase64(publicKey)
 
-                // Bind keys & complete handshake
-                bindEncryptionKey(secretKey)
+                        // Save encryption key ...
+                        this.encryptionKey = encryptionKey
 
-                // Send data to the server ...
-                client.sendArray("upg", encodedPublicKey, secretHash)
+                        // Send data to the server ...
+                        client.sendArray("upg", publicKeyEncoded, encryptionKeyHashEncoded)
+                    } else client.close()
+                } else client.close()
             } else client.close()
         } else client.close()
     }
@@ -176,6 +182,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
                 client.connectionStateChannel.offer(ConnectionState.HANDSHAKE_SUCCEED)
             } else {
                 isHandshakeInvoked = false
+                encryptionKey = null
                 client.connectionStateChannel.offer(ConnectionState.OLD_PROTOCOL_VERSION)
                 client.close()
                 client.kill()
@@ -213,37 +220,43 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
      * Метод, вызываемый при приходе пакета ["msg"]
      **/
     private fun handleMessage(packet: JSONArray) {
-        if (packet.length() >= 4) {
-            val iv = packet.optString(1)
-            val payload = packet.optString(2)
-            val hmac = packet.optString(3)
+        if (encryptionKey != null) {
+            if (packet.length() >= 4) {
+                val ivEncoded = packet.optString(1)
+                val payloadEncoded = packet.optString(2)
+                val hmacEncoded = packet.optString(3)
 
-            if (iv != null
-                    && payload != null
-                    && hmac != null
-                    && iv.matches(BASE64_REGEX)
-                    && payload.matches(BASE64_REGEX)
-                    && hmac.matches(BASE64_REGEX)) {
+                if (ivEncoded != null
+                        && payloadEncoded != null
+                        && hmacEncoded != null
+                        && ivEncoded.matches(BASE64_REGEX)
+                        && payloadEncoded.matches(BASE64_REGEX)
+                        && hmacEncoded.matches(BASE64_REGEX)) {
 
-                val decryptedPayloadString = decryptAES(iv, payload)
-                val decryptedPayload = JSONArray(decryptedPayloadString)
+                    val iv = CipherHelper.decodeFromBase64(ivEncoded.toByteArray())
+                    val payload = CipherHelper.decodeFromBase64(payloadEncoded.toByteArray())
+                    val decryptedPayload = CipherHelper.decryptWithAES(encryptionKey, iv, payload)
+                    val decryptedPayloadArray = JSONArray(decryptedPayload)
 
-                // Check length
-                if (decryptedPayload.length() >= 3) {
-                    val event = decryptedPayload.optString(0)
-                    val message = decryptedPayload.optJSONObject(1)
-                    val salt = decryptedPayload.optString(2)
+                    // Preventing MITM-attacks
+                    if (decryptedPayloadArray.length() >= 3) {
+                        val event = decryptedPayloadArray.optString(0)
+                        val message = decryptedPayloadArray.optJSONObject(1)
+                        val salt = decryptedPayloadArray.optString(2)
 
-                    if (event != null && message != null && salt != null && isHandshakeInvoked) {
-                        val hmacRead = calculateHMAC(decryptedPayloadString)
-                        val encodedHmac = Base64.encodeToString(hmacRead, Base64.NO_WRAP)
+                        if (event != null && message != null && salt != null && isHandshakeInvoked && encryptionKey != null) {
+                            val hmacRead = CipherHelper.calculateHMAC(encryptionKey, decryptedPayload)
+                            val hmacReadEncoded = CipherHelper.encodeToBase64(hmacRead)
 
-                        // Проверим HMAC'ки ...
-                        if (encodedHmac == hmac) client.notifyCallbacks(event, message.toString())
+                            // Checking HMAC's
+                            if (hmacEncoded == hmacReadEncoded) {
+                                client.notifyCallbacks(event, message.toString())
+                            }
+                        }
                     }
                 }
             }
-        }
+        } else client.close()
     }
 
     /**
@@ -253,21 +266,25 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
      * @param message - обьект сообщения для отправки.
      */
     fun sendJsonMessage(event: String, message: JsonModel? = null) = handler!!.post {
-        if (client.isValid() && isHandshakeInvoked) {
-            val salt = randomBase64String(8)
+        if (client.isValid() && isHandshakeInvoked && encryptionKey != null) {
+            val salt = CipherHelper.generateBase64(8)
             val jsonObject = message?.toJSON()
             val jsonMessage = jsonObject ?: JSONObject()
-            val payload = JSONArray(arrayOf(event, jsonMessage, salt)).toString().replace("\\/", "/")
+            val payload = JSONArray(arrayOf(event, jsonMessage, salt))
+                    .toString()
+                    .replace("\\/", "/")
+                    .toByteArray()
 
-            // Encrypting
-            val hmac = calculateHMAC(payload)
-            val encodedHmac = Base64.encodeToString(hmac, Base64.NO_WRAP)
-            val encryptedPair = encryptAES(payload)
-            val encodedIv = Base64.encodeToString(encryptedPair.first, Base64.NO_WRAP)
-            val encryptedPayload = String(encryptedPair.second)
+            // Encrypting ...
+            val hmac = CipherHelper.calculateHMAC(encryptionKey, payload)
+            val iv = CipherHelper.generateBytes(16)
+            val hmacEncoded = CipherHelper.encodeToBase64(hmac)
+            val ivEncoded = CipherHelper.encodeToBase64(iv)
+            val payloadEncrypted = CipherHelper.encryptWithAES(encryptionKey, iv, payload)
+            val payloadEncryptedEncoded = CipherHelper.encodeToBase64(payloadEncrypted)
 
             // Send packet to server
-            client.sendArray("msg", encodedIv, encryptedPayload, encodedHmac)
+            client.sendArray("msg", ivEncoded, payloadEncryptedEncoded, hmacEncoded)
         } else {
             client.connectionStateChannel.offer(ConnectionState.NO_CONNECTION)
         }
@@ -282,6 +299,7 @@ class ProtocolController(private val client: ProtocolClient) : HandlerThread("SS
         // Cancel all internal tasks ...
         getCoreVersionJob?.cancel()
         isHandshakeInvoked = false
+        encryptionKey = null
 
         // Kill connection ...
         client.kill(false)

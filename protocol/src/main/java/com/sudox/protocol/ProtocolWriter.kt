@@ -23,7 +23,10 @@ class ProtocolWriter(private val client: ProtocolClient) : Thread("SSTP Writer")
         // Writing ...
         while (!isInterrupted && client.isValid()) {
             try {
-                stream.write(messagesQueue.take() ?: continue)
+                val message = messagesQueue.take() ?: continue
+
+                // Write message ...
+                stream.write(message)
                 stream.flush()
             } catch (e: Exception) {
                 break
