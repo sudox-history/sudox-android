@@ -18,7 +18,6 @@ import com.sudox.android.ui.main.profile.ProfileViewModel
 import com.sudox.design.recyclerview.adapters.ParametersAdapter
 import com.sudox.design.recyclerview.adapters.ParametersDiffUtil
 import com.sudox.design.tablayout.TabLayoutFragment
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_profile_info.*
 import javax.inject.Inject
 

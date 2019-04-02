@@ -1,7 +1,7 @@
 package com.sudox.android.common.helpers
 
-import com.redmadrobot.inputmask.helper.Mask
-import com.redmadrobot.inputmask.model.CaretString
+import ru.tinkoff.decoro.MaskImpl
+import ru.tinkoff.decoro.slots.PredefinedSlots
 
 val PHONE_REGEX by lazy { "7([0-9]{10})".toRegex() }
 val CODE_REGEX by lazy { "^[0-9]+".toRegex() }
@@ -58,10 +58,7 @@ fun formatPhone(phone: String, includePlus: Boolean): String {
 }
 
 fun formatPhoneByMask(phoneNumber: String): String {
-    val mask = Mask("+7 ([000]) [000]-[00]-[00]")
-    val result = mask.apply(CaretString(
-            phoneNumber.substring(1, phoneNumber.length),
-            phoneNumber.length), true)
-
-    return result.formattedText.string
+    val mask = MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER)
+    mask.insertFront(phoneNumber)
+    return mask.toString()
 }

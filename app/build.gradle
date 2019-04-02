@@ -25,7 +25,8 @@ dependencies {
     implementation 'com.android.installreferrer:installreferrer:1.0'
 
     // Input masks
-    implementation 'com.redmadrobot:inputmask:3.4.4'
+
+    implementation "ru.tinkoff.decoro:decoro:1.1.1"
 
     // Modules
     api project(path: ':protocol')

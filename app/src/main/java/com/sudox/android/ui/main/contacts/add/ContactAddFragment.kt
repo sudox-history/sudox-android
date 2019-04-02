@@ -10,7 +10,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.common.helpers.formatPhoneByMask
@@ -22,6 +21,12 @@ import com.sudox.android.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_add_contact.*
+import kotlinx.android.synthetic.main.fragment_auth_phone.*
+import ru.tinkoff.decoro.FormattedTextChangeListener
+import ru.tinkoff.decoro.MaskImpl
+import ru.tinkoff.decoro.slots.PredefinedSlots
+import ru.tinkoff.decoro.watchers.FormatWatcher
+import ru.tinkoff.decoro.watchers.MaskFormatWatcher
 import javax.inject.Inject
 
 class ContactAddFragment : DaggerFragment() {
@@ -32,8 +37,7 @@ class ContactAddFragment : DaggerFragment() {
 
     // Data
     private val mainActivity by lazy { activity as MainActivity }
-    private var phoneNumber: String = ""
-    private var isMaskFilled: Boolean = false
+    private var phoneNumber: String? = null
     var inEditMode: Boolean = false
     var editableUser: User? = null
         set(value) {
@@ -123,14 +127,22 @@ class ContactAddFragment : DaggerFragment() {
     @SuppressLint("SetTextI18n")
     private fun initPhoneEditText() {
         if (!inEditMode) {
-            contactPhoneEditText.addTextChangedListener(MaskedTextChangedListener("+7 ([000]) [000]-[00]-[00]", contactPhoneEditText,
-                    object : MaskedTextChangedListener.ValueListener {
-                        override fun onTextChanged(maskFilled: Boolean, extractedValue: String) {
-                            phoneNumber = extractedValue
-                            isMaskFilled = maskFilled
-                        }
-                    }
-            ))
+
+            val formatWatcher = MaskFormatWatcher(
+                    MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER)
+            )
+
+            formatWatcher.installOn(phoneEditText)
+
+            formatWatcher.setCallback(object: FormattedTextChangeListener {
+                override fun beforeFormatting(oldValue: String?, newValue: String?): Boolean { return false }
+                override fun onTextFormatted(formatter: FormatWatcher?, newFormattedText: String?) {
+                    phoneNumber = newFormattedText
+                }
+
+            })
+
+            phoneEditText.setText(phoneNumber)
         } else {
             contactPhoneEditText.isEnabled = false
             contactPhoneEditText.setText(formatPhoneByMask(editableUser!!.phone!!))

@@ -10,7 +10,6 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.sudox.android.R
 import com.sudox.android.common.di.viewmodels.getViewModel
 import com.sudox.android.data.models.common.Errors
@@ -21,6 +20,13 @@ import com.sudox.design.navigation.toolbar.enums.NavigationAction
 import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.fragment_auth_phone.*
 import javax.inject.Inject
+import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser
+import ru.tinkoff.decoro.slots.Slot
+import ru.tinkoff.decoro.MaskImpl
+import ru.tinkoff.decoro.watchers.MaskFormatWatcher
+import ru.tinkoff.decoro.watchers.FormatWatcher
+import ru.tinkoff.decoro.FormattedTextChangeListener
+import ru.tinkoff.decoro.slots.PredefinedSlots
 
 
 class AuthPhoneFragment @Inject constructor() : BaseAuthFragment() {
@@ -72,20 +78,20 @@ class AuthPhoneFragment @Inject constructor() : BaseAuthFragment() {
         onConnectionRecovered()
     }
 
-    private var isMaskFilled: Boolean = false
-
     private fun initPhoneEditText() {
-
-        val listener = MaskedTextChangedListener("+7 ([000]) [000]-[00]-[00]", phoneEditText,
-                object : MaskedTextChangedListener.ValueListener {
-                    override fun onTextChanged(maskFilled: Boolean, extractedValue: String) {
-                        phoneNumber = extractedValue
-                        isMaskFilled = maskFilled
-                    }
-                }
+        val formatWatcher = MaskFormatWatcher(
+                MaskImpl.createTerminated(PredefinedSlots.RUS_PHONE_NUMBER)
         )
 
-        phoneEditText.addTextChangedListener(listener)
+        formatWatcher.installOn(phoneEditText)
+
+        formatWatcher.setCallback(object: FormattedTextChangeListener{
+            override fun beforeFormatting(oldValue: String?, newValue: String?): Boolean { return false }
+            override fun onTextFormatted(formatter: FormatWatcher?, newFormattedText: String?) {
+                phoneNumber = newFormattedText
+            }
+
+        })
 
         phoneEditText.setText(phoneNumber)
     }
