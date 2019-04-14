@@ -3,6 +3,10 @@
 #include <crypto++/modes.h>
 #include <crypto++/filters.h>
 #include <jni.h>
+#include <string>
+
+using namespace std;
+using namespace CryptoPP;
 
 /**
  * Расшифровывает сообщение с помощью AES.
@@ -14,17 +18,16 @@
  * @param message - сообщение
  * @param messageLength - длина сообщения
  */
-std::string decryptWithAES(unsigned char *key, unsigned int keyLength,
-                           unsigned char *iv, unsigned int ivLength,
-                           unsigned char *message, unsigned int messageLength) {
+string decryptWithAES(unsigned char *key, unsigned int keyLength,
+                      unsigned char *iv, unsigned int ivLength,
+                      unsigned char *message, unsigned int messageLength) {
 
     // Decrypting ...
-    std::string decrypted;
-    CryptoPP::CTR_Mode<CryptoPP::AES>::Decryption decryption(key, keyLength, iv,
-                                                             ivLength);
-    auto *sink = new CryptoPP::StringSink(decrypted);
-    auto *filter = new CryptoPP::StreamTransformationFilter(decryption, sink);
-    CryptoPP::StringSource source(message, messageLength, true, filter);
+    CTR_Mode<AES>::Decryption decryption(key, keyLength, iv, ivLength);
+    string decrypted;
+    auto *sink = new StringSink(decrypted);
+    auto *filter = new StreamTransformationFilter(decryption, sink);
+    StringSource source(message, messageLength, true, filter);
 
     // Return result ...
     return decrypted;
@@ -40,17 +43,16 @@ std::string decryptWithAES(unsigned char *key, unsigned int keyLength,
  * @param message - сообщение
  * @param messageLength - длина сообщения
  */
-std::string encryptWithAES(unsigned char *key, unsigned int keyLength,
-                           unsigned char *iv, unsigned int ivLength,
-                           unsigned char *message, unsigned int messageLength) {
+string encryptWithAES(unsigned char *key, unsigned int keyLength,
+                      unsigned char *iv, unsigned int ivLength,
+                      unsigned char *message, unsigned int messageLength) {
 
     // Encrypting ...
-    std::string encrypted;
-    CryptoPP::CTR_Mode<CryptoPP::AES>::Encryption encryption(key, keyLength, iv,
-                                                             ivLength);
-    auto *sink = new CryptoPP::StringSink(encrypted);
-    auto *filter = new CryptoPP::StreamTransformationFilter(encryption, sink);
-    CryptoPP::StringSource source(message, messageLength, true, filter);
+    string encrypted;
+    CTR_Mode<AES>::Encryption encryption(key, keyLength, iv, ivLength);
+    auto *sink = new StringSink(encrypted);
+    auto *filter = new StreamTransformationFilter(encryption, sink);
+    StringSource source(message, messageLength, true, filter);
 
     // Return result ...
     return encrypted;
@@ -75,7 +77,7 @@ Java_com_sudox_protocol_helpers_CipherHelper_decryptWithAES(JNIEnv *env, jclass 
     env->GetByteArrayRegion(message, 0, messageLength, reinterpret_cast<jbyte *>(messageNative));
 
     // Decrypting and mapping result to jByteArray
-    std::string decrypted = decryptWithAES(keyNative, keyLength, ivNative, ivLength, messageNative,
+    string decrypted = decryptWithAES(keyNative, keyLength, ivNative, ivLength, messageNative,
                                            messageLength);
     auto size = decrypted.size();
     jbyteArray jArray = env->NewByteArray(size);
@@ -109,11 +111,11 @@ Java_com_sudox_protocol_helpers_CipherHelper_encryptWithAES(JNIEnv *env, jclass 
     env->GetByteArrayRegion(message, 0, messageLength, reinterpret_cast<jbyte *>(messageNative));
 
     // Encrypting & mapping result to jByteArray
-    std::string encrypted = encryptWithAES(keyNative, keyLength, ivNative, ivLength, messageNative,
+    string encrypted = encryptWithAES(keyNative, keyLength, ivNative, ivLength, messageNative,
                                            messageLength);
     auto size = encrypted.size();
-    jbyteArray jArray = env->NewByteArray(size);
-    env->SetByteArrayRegion(jArray, 0, size, reinterpret_cast<const jbyte *>(encrypted.c_str()));
+    jbyteArray jArray = env->NewByteArray(static_cast<jsize>(size));
+    env->SetByteArrayRegion(jArray, 0, static_cast<jsize>(size), reinterpret_cast<const jbyte *>(encrypted.c_str()));
 
     // Cleaning the RAM ...
     delete[] keyNative;

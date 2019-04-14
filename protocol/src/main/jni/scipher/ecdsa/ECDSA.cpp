@@ -8,9 +8,13 @@
 #include <crypto++/base64.h>
 #include <crypto++/pem.h>
 #include <jni.h>
+#include <string>
 
-static CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA224>::PublicKey key;
-static std::string PUBLIC_KEY_BODY = "-----BEGIN PUBLIC KEY-----\n"
+using namespace std;
+using namespace CryptoPP;
+
+static ECDSA<ECP, SHA224>::PublicKey key;
+static string PUBLIC_KEY_BODY = "-----BEGIN PUBLIC KEY-----\n"
                                      "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEflkmgol1o7GFRjjB72BBbqhsRSI1SwHK\n"
                                      "/7357yJaEzwrBUt231AiPD2AG2MNaXr8SqDCUv3jbLzOB4+/bVkcimZVP2elvjsp\n"
                                      "/AdU1335LpuCufavSCrftkzD0MeiUBqc\n"
@@ -28,7 +32,7 @@ static std::string PUBLIC_KEY_BODY = "-----BEGIN PUBLIC KEY-----\n"
 bool verifyMessageWithECDSA(unsigned char *message, unsigned int messageLength,
                             unsigned char *signature, unsigned int signatureLength) {
 
-    CryptoPP::ECDSA<CryptoPP::ECP, CryptoPP::SHA224>::Verifier verifier(key);
+    ECDSA<ECP, SHA224>::Verifier verifier(key);
 
     // Check, that signature not ASN.1 & map to IEEE P1363 if needed
     if (signature[0] == 0x30 && signature[2] == 0x02) {
@@ -38,9 +42,9 @@ bool verifyMessageWithECDSA(unsigned char *message, unsigned int messageLength,
         auto *ieeeSignatureNative = new unsigned char[signatureLength];
 
         // Converting ...
-        CryptoPP::DSAConvertSignatureFormat(ieeeSignatureNative, ieeeSignatureLength,
-                                            CryptoPP::DSA_P1363,
-                                            signature, signatureLength, CryptoPP::DSA_DER);
+        DSAConvertSignatureFormat(ieeeSignatureNative, ieeeSignatureLength,
+                                            DSA_P1363,
+                                            signature, signatureLength, DSA_DER);
 
         // Write new signatures
         signatureLength = ieeeSignatureLength;
@@ -48,8 +52,8 @@ bool verifyMessageWithECDSA(unsigned char *message, unsigned int messageLength,
     }
 
     // Verifying ...
-    bool result = verifier.VerifyMessage((const CryptoPP::byte *) &message[0], messageLength,
-                                         (const CryptoPP::byte *) &signature[0], signatureLength);
+    bool result = verifier.VerifyMessage((const byte *) &message[0], messageLength,
+                                         (const byte *) &signature[0], signatureLength);
 
     // Mapping to jBoolean
     return result;
@@ -59,8 +63,8 @@ bool verifyMessageWithECDSA(unsigned char *message, unsigned int messageLength,
  * Читает публичный ключ, создает верификатора подписи с публичным ключем.
  */
 void initECDSA() {
-    CryptoPP::StringSource source(PUBLIC_KEY_BODY, true);
-    CryptoPP::PEM_Load(source, key);
+    StringSource source(PUBLIC_KEY_BODY, true);
+    PEM_Load(source, key);
 }
 
 extern "C"

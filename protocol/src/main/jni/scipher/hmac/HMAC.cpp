@@ -4,6 +4,9 @@
 #include <crypto++/hmac.h>
 #include <crypto++/filters.h>
 
+using namespace std;
+using namespace CryptoPP;
+
 /**
  * Вычисляет HMAC сообщения с помощью SHA-224 на основе секретного ключа.
  *
@@ -12,16 +15,16 @@
  * @param message - сообщение
  * @param messageLength - длина сообщения
  */
-std::string calculateHMAC(unsigned char *key, unsigned int keyLength,
+string calculateHMAC(unsigned char *key, unsigned int keyLength,
                           unsigned char *message,
                           unsigned int messageLength) {
 
     // Calculating the HMAC ...
-    std::string mac;
-    CryptoPP::HMAC<CryptoPP::SHA224> hmac(key, keyLength);
-    auto sink = new CryptoPP::StringSink(mac);
-    auto filter = new CryptoPP::HashFilter(hmac, sink);
-    CryptoPP::StringSource source(message, messageLength, true, filter);
+    string mac;
+    HMAC<SHA224> hmac(key, keyLength);
+    auto sink = new StringSink(mac);
+    auto filter = new HashFilter(hmac, sink);
+    StringSource source(message, messageLength, true, filter);
 
     // Returning the result ...
     return mac;
@@ -43,7 +46,7 @@ Java_com_sudox_protocol_helpers_CipherHelper_calculateHMAC(JNIEnv *env, jclass t
     env->GetByteArrayRegion(message, 0, messageLength, reinterpret_cast<jbyte *>(messageNative));
 
     // Calculate HMAC
-    std::string hmac = calculateHMAC(keyNative, keyLength, messageNative, messageLength);
+    string hmac = calculateHMAC(keyNative, keyLength, messageNative, messageLength);
 
     // Mapping result to jByteArray
     auto length = hmac.size();

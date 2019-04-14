@@ -7,14 +7,18 @@
 #include <crypto++/eccrypto.h>
 #include <unordered_map>
 #include <jni.h>
+#include <utility>
 #include <stdexcept>
 
+using namespace std;
+using namespace CryptoPP;
+
 // Таблица для доступа к ключам через JNI.
-static std::unordered_map<unsigned int, KeysPair> keysMap;
+static unordered_map<unsigned int, KeysPair> keysMap;
 
 // Эллиптическая кривая и генератор ключей на её основе.
-static CryptoPP::OID curve = CryptoPP::ASN1::secp384r1();
-static CryptoPP::ECDH<CryptoPP::ECP>::Domain generator(curve);
+static OID curve = ASN1::secp384r1();
+static ECDH<ECP>::Domain generator(curve);
 
 /**
  * Производит расчет секретного ключа на основе приватного ключа и публичного ключа собеседника.
@@ -22,14 +26,14 @@ static CryptoPP::ECDH<CryptoPP::ECP>::Domain generator(curve);
  * @param privateKey - приватный ключ
  * @param recipientPublicKey - публичный ключ собеседника.
  */
-CryptoPP::SecByteBlock calculateSecretKey(unsigned char *privateKey,
+SecByteBlock calculateSecretKey(unsigned char *privateKey,
                                           unsigned char *recipientPublicKey) {
 
-    CryptoPP::SecByteBlock secretKey(generator.AgreedValueLength());
+    SecByteBlock secretKey(generator.AgreedValueLength());
 
     // Exception will be throw if agreement does not will be successfully
     if (!generator.Agree(secretKey, privateKey, recipientPublicKey)) {
-        throw std::runtime_error("Failed to reach secret key");
+        throw runtime_error("Failed to reach secret key");
     }
 
     return secretKey;
@@ -39,7 +43,7 @@ CryptoPP::SecByteBlock calculateSecretKey(unsigned char *privateKey,
  * Генерирует пару ключей (приватный и публичный) и выдает их ID в хранилище в качестве результата.
  */
 unsigned int generateKeysPair() {
-    CryptoPP::SecByteBlock keyPrivate(generator.PrivateKeyLength()), keyPublic(
+    SecByteBlock keyPrivate(generator.PrivateKeyLength()), keyPublic(
             generator.PublicKeyLength());
     generator.GenerateKeyPair(randomPool, keyPrivate, keyPublic);
 
@@ -78,7 +82,7 @@ KeysPair *findKeyPair(unsigned int pairId) {
  *
  * @param pairId - ID пары, полученный в ходе добавления записи.
  */
-CryptoPP::SecByteBlock *getPrivateKey(unsigned int pairId) {
+SecByteBlock *getPrivateKey(unsigned int pairId) {
     auto pair = findKeyPair(pairId);
 
     // Returning private key when pair founded.
@@ -95,7 +99,7 @@ CryptoPP::SecByteBlock *getPrivateKey(unsigned int pairId) {
  *
  * @param pairId - ID пары, полученный в ходе добавления записи.
  */
-CryptoPP::SecByteBlock *getPublicKey(unsigned int pairId) {
+SecByteBlock *getPublicKey(unsigned int pairId) {
     auto pair = findKeyPair(pairId);
 
     // Returning public key when pair founded.
@@ -146,7 +150,7 @@ Java_com_sudox_protocol_helpers_CipherHelper_calculateSecretKey(JNIEnv *env, jcl
                             reinterpret_cast<jbyte *>(recipientPublicKeyNative));
 
     try {
-        CryptoPP::SecByteBlock secretKey = calculateSecretKey(privateKeyNative, recipientPublicKeyNative);
+        SecByteBlock secretKey = calculateSecretKey(privateKeyNative, recipientPublicKeyNative);
 
         // Map to jByteArray
         auto length = secretKey.size();
@@ -157,7 +161,7 @@ Java_com_sudox_protocol_helpers_CipherHelper_calculateSecretKey(JNIEnv *env, jcl
         delete[] privateKeyNative;
         delete[] recipientPublicKeyNative;
         return jArray;
-    } catch (std::runtime_error error) {
+    } catch (runtime_error error) {
         delete[] privateKeyNative;
         delete[] recipientPublicKeyNative;
         return env->NewByteArray(0);
@@ -173,7 +177,7 @@ Java_com_sudox_protocol_helpers_CipherHelper_generateKeysPair(JNIEnv *env, jclas
 extern "C"
 JNIEXPORT jbyteArray JNICALL
 Java_com_sudox_protocol_helpers_CipherHelper_getPrivateKey(JNIEnv *env, jclass type, jint pairId) {
-    CryptoPP::SecByteBlock *key = getPrivateKey(static_cast<unsigned int>(pairId));
+    SecByteBlock *key = getPrivateKey(static_cast<unsigned int>(pairId));
 
     // If key not found empty array will be returned
     if (key == nullptr) {
@@ -192,7 +196,7 @@ Java_com_sudox_protocol_helpers_CipherHelper_getPrivateKey(JNIEnv *env, jclass t
 extern "C"
 JNIEXPORT jbyteArray JNICALL
 Java_com_sudox_protocol_helpers_CipherHelper_getPublicKey(JNIEnv *env, jclass type, jint pairId) {
-    CryptoPP::SecByteBlock *key = getPublicKey(static_cast<unsigned int>(pairId));
+    SecByteBlock *key = getPublicKey(static_cast<unsigned int>(pairId));
 
     // If key not found empty array will be returned
     if (key == nullptr) {

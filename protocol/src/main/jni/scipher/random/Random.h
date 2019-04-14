@@ -5,9 +5,12 @@
 #include <crypto++/secblock.h>
 #include <crypto++/randpool.h>
 
+using namespace CryptoPP;
+using namespace std;
+
 // Пул генератора случайных чисел.
 // Инициализируется после вызова initRandom()
-static CryptoPP::RandomPool randomPool;
+static RandomPool randomPool;
 
 // Количество байтов, которые будут взяты с /dev/urandom в качестве энтропии
 static unsigned int ENTROPY_SIZE = 1024;
@@ -23,6 +26,6 @@ void initRandom();
  *
  * @param length - длина массива.
  */
-CryptoPP::SecByteBlock generateBytes(size_t length);
+SecByteBlock generateBytes(size_t length);
 
 #endif //SUDOX_ANDROID_RANDOM_H

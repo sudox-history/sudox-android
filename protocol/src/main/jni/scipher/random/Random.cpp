@@ -5,13 +5,17 @@
 #include <scipher/random/Random.h>
 #include <scipher/base64/Base64.h>
 #include <jni.h>
+#include <string>
+
+using namespace CryptoPP;
+using namespace std;
 
 /**
  * Генерирует энтропию, создает пул генератора случайных чисел.
  */
 void initRandom() {
     // Generate entropy
-    CryptoPP::SecByteBlock seed(ENTROPY_SIZE);
+    SecByteBlock seed(ENTROPY_SIZE);
     OS_GenerateRandomBlock(false, seed, seed.size());
 
     // Seeding random pool
@@ -24,8 +28,8 @@ void initRandom() {
  *
  * @param length - длина массива.
  */
-CryptoPP::SecByteBlock generateBytes(size_t length) {
-    CryptoPP::SecByteBlock bytesBlock(length);
+SecByteBlock generateBytes(size_t length) {
+    SecByteBlock bytesBlock(length);
     randomPool.GenerateBlock(bytesBlock, bytesBlock.size());
 
     // Get bytes from block
@@ -35,7 +39,7 @@ CryptoPP::SecByteBlock generateBytes(size_t length) {
 extern "C"
 JNIEXPORT jbyteArray JNICALL
 Java_com_sudox_protocol_helpers_CipherHelper_generateBytes(JNIEnv *env, jclass type, jint length) {
-    CryptoPP::SecByteBlock block = generateBytes(static_cast<size_t>(length));
+    SecByteBlock block = generateBytes(static_cast<size_t>(length));
 
     // Convert to jByteArray
     jbyteArray jArray = env->NewByteArray(length);
@@ -48,8 +52,8 @@ Java_com_sudox_protocol_helpers_CipherHelper_generateBytes(JNIEnv *env, jclass t
 extern "C"
 JNIEXPORT jstring JNICALL
 Java_com_sudox_protocol_helpers_CipherHelper_generateBase64(JNIEnv *env, jclass type, jint length) {
-    CryptoPP::SecByteBlock block = generateBytes(static_cast<size_t>(length));
-    std::string encoded = encodeToBase64(block.data(), static_cast<unsigned int>(length));
+    SecByteBlock block = generateBytes(static_cast<size_t>(length));
+    string encoded = encodeToBase64(block.data(), static_cast<unsigned int>(length));
 
     // Map to jString and return result
     return env->NewStringUTF(encoded.c_str());

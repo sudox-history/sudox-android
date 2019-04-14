@@ -1,6 +1,10 @@
 #include <crypto++/base64.h>
 #include <scipher/base64/Base64.h>
 #include <jni.h>
+#include <string>
+
+using namespace std;
+using namespace CryptoPP;
 
 /**
  * Кодирует массив байтов с помощью Base64.
@@ -8,16 +12,16 @@
  * @param decoded - незакодированные байты.
  * @param length - кол-во байтов для кодирования.
  */
-std::string encodeToBase64(unsigned char *decoded, unsigned int length) {
-    auto *encoder = new CryptoPP::Base64Encoder(nullptr, false, 0);
+string encodeToBase64(unsigned char *decoded, unsigned int length) {
+    auto *encoder = new Base64Encoder(nullptr, false, 0);
     encoder->Put(decoded, static_cast<size_t>(length));
     encoder->MessageEnd();
 
     // Get result
-    std::string encoded;
-    CryptoPP::word64 size = encoder->MaxRetrievable();
+    string encoded;
+    word64 size = encoder->MaxRetrievable();
     encoded.resize(static_cast<unsigned int>(size));
-    encoder->Get(reinterpret_cast<CryptoPP::byte *>(&encoded[0]), encoded.size());
+    encoder->Get(reinterpret_cast<byte *>(&encoded[0]), encoded.size());
 
     // Clean memory & return result
     delete encoder;
@@ -31,16 +35,16 @@ std::string encodeToBase64(unsigned char *decoded, unsigned int length) {
  * @param encoded - массив байтов в формате Base64.
  * @param length - кол-во байтов для декодирования.
  */
-std::string decodeFromBase64(unsigned char *encoded, unsigned int length) {
-    CryptoPP::Base64Decoder decoder;
+string decodeFromBase64(unsigned char *encoded, unsigned int length) {
+    Base64Decoder decoder;
     decoder.Put(encoded, length);
     decoder.MessageEnd();
 
     // Get result
-    std::string decoded;
-    CryptoPP::word64 size = decoder.MaxRetrievable();
+    string decoded;
+    word64 size = decoder.MaxRetrievable();
     decoded.resize(static_cast<unsigned int>(size));
-    decoder.Get(reinterpret_cast<CryptoPP::byte *>(&decoded[0]), decoded.size());
+    decoder.Get(reinterpret_cast<byte *>(&decoded[0]), decoded.size());
 
     // Return size & result
     return decoded;
@@ -80,7 +84,7 @@ Java_com_sudox_protocol_helpers_CipherHelper_encodeToBase64(JNIEnv *env, jclass 
     env->GetByteArrayRegion(decoded, 0, decodedLength, reinterpret_cast<jbyte *>(decodedNative));
 
     // Convert to Base64
-    std::string encoded = encodeToBase64(decodedNative, decodedLength);
+    string encoded = encodeToBase64(decodedNative, decodedLength);
 
     // Clean memory
     delete[] decodedNative;

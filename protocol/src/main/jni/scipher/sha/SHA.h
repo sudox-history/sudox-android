@@ -4,12 +4,14 @@
 #include <stdio.h>
 #include <string>
 
+using namespace std;
+
 /**
  * Вычисляет SHA-224 хэш переданного массива байтов.
  *
  * @param data - массив байтов
  * @param length - длина массива байтов
  */
-std::string calculateSHA224(unsigned char *, unsigned int);
+string calculateSHA224(unsigned char *, unsigned int);
 
 #endif //SUDOX_ANDROID_SHA_H

@@ -1,6 +1,10 @@
 #include <scipher/sha/SHA.h>
 #include <crypto++/sha.h>
 #include <jni.h>
+#include <string>
+
+using namespace CryptoPP;
+using namespace std;
 
 /**
  * Вычисляет SHA-224 хэш переданного массива байтов.
@@ -8,16 +12,16 @@
  * @param data - массив байтов
  * @param length - длина массива байтов
  */
-std::string calculateSHA224(unsigned char *data, unsigned int length) {
-    std::string digest;
+string calculateSHA224(unsigned char *data, unsigned int length) {
+    string digest;
 
     // Calculating hash ...
-    CryptoPP::SHA224 hash;
+    SHA224 hash;
     hash.Update(data, length);
 
     // Getting the result
     digest.resize(hash.DigestSize());
-    hash.Final(reinterpret_cast<CryptoPP::byte *>(&digest[0]));
+    hash.Final(reinterpret_cast<byte *>(&digest[0]));
 
     // Return size
     return digest;
@@ -33,7 +37,7 @@ Java_com_sudox_protocol_helpers_CipherHelper_calculateSHA224(JNIEnv *env, jclass
     env->GetByteArrayRegion(data, 0, dataLength, reinterpret_cast<jbyte *>(dataNative));
 
     // Calculate hash & map to jByteArray
-    std::string hash = calculateSHA224(dataNative, dataLength);
+    string hash = calculateSHA224(dataNative, dataLength);
     size_t size = hash.size();
     jbyteArray jArray = env->NewByteArray(size);
     env->SetByteArrayRegion(jArray, 0, size, reinterpret_cast<const jbyte *>(hash.c_str()));

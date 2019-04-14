@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string>
 
+using namespace std;
+
 /**
  * Расшифровывает сообщение с помощью AES.
  *
@@ -14,8 +16,8 @@
  * @param message - сообщение
  * @param messageLength - длина сообщения
  */
-std::string decryptWithAES(unsigned char*, unsigned int, unsigned char*,
-                           unsigned int, unsigned char*, unsigned int);
+string decryptWithAES(unsigned char*, unsigned int, unsigned char*,
+                      unsigned int, unsigned char*, unsigned int);
 
 /**
  * Зашифровывает сообщение с помощью AES.

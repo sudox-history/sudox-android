@@ -3,13 +3,15 @@
 
 #include <scipher/common/KeysPair.h>
 
+using namespace CryptoPP;
+
 /**
  * Производит расчет секретного ключа на основе приватного ключа и публичного ключа собеседника.
  *
  * @param privateKey - приватный ключ
  * @param recipientPublicKey - публичный ключ собеседника.
  */
-CryptoPP::SecByteBlock calculateSecretKey(unsigned char *, unsigned char *);
+SecByteBlock calculateSecretKey(unsigned char *, unsigned char *);
 
 /**
  * Генерирует пару ключей (приватный и публичный) и выдает их ID в таблице в качестве результата.
@@ -28,14 +30,14 @@ KeysPair *findKeyPair(unsigned int);
  *
  * @param pairId - ID пары, полученный в ходе добавления записи.
  */
-CryptoPP::SecByteBlock *getPrivateKey(unsigned int);
+SecByteBlock *getPrivateKey(unsigned int);
 
 /**
  * Выдает публичный ключ из хранилища по ID его пары.
  *
  * @param pairId - ID пары, полученный в ходе добавления записи.
  */
-CryptoPP::SecByteBlock *getPublicKey(unsigned int);
+SecByteBlock *getPublicKey(unsigned int);
 
 /**
  * Удаляет все пары ключей из хранилища.
