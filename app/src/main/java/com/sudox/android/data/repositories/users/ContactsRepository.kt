@@ -149,7 +149,6 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
                     .makeRequestWithSession<ContactsIdsListDTO>(protocolClient, "contacts.get", notifyToEventBus = false)
                     .await()
 
-            // Contacts exists ...
             if (contactsIdsListDTO.isSuccess()) {
                 return@runBlocking fetchNewContacts(contactsIdsListDTO.ids)
             } else if (!invalidateContacts()) {
@@ -390,7 +389,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
     fun invalidateContacts(newContactsIds: List<Long>? = null, force: Boolean = false) = runBlocking {
         val contacts = userDao.loadContacts()
 
-        // Optimization: not needed to execute this code where contacts not exists
+        // Optimization: not needed to readReceivedPacket this code where contacts not exists
         if (contacts.isNotEmpty()) {
             val removedContacts = if (newContactsIds != null && newContactsIds.isNotEmpty()) {
                 contacts.filter { !newContactsIds.contains(it.uid) }
@@ -398,7 +397,7 @@ class ContactsRepository @Inject constructor(private val protocolClient: Protoco
                 contacts
             }
 
-            // Optimization: not needed to execute this code where no one contacts removed
+            // Optimization: not needed to readReceivedPacket this code where no one contacts removed
             if (removedContacts.isNotEmpty()) {
                 val ids = removedContacts.map { it.uid }
                 val users = usersRepository.loadActualUsers(ids).await()

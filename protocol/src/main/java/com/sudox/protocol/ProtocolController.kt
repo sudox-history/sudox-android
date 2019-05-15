@@ -1,318 +1,110 @@
 package com.sudox.protocol
 
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.SystemClock
-import com.sudox.protocol.helpers.CipherHelper
-import com.sudox.protocol.models.JsonModel
-import com.sudox.protocol.models.NetworkException
-import com.sudox.protocol.models.dto.CoreVersionDTO
+import com.sudox.common.async.ControllerThread
+import com.sudox.protocol.controllers.HandshakeController
+import com.sudox.protocol.helpers.deserializePacketSlices
+import com.sudox.protocol.helpers.serializePacket
 import com.sudox.protocol.models.enums.ConnectionState
-import kotlinx.coroutines.*
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.security.spec.InvalidKeySpecException
+import com.sudox.sockets.SocketClient
 
-/**
- * Контроллер протокола (соединения).
- *
- * Выполняет функцию потока, принимает пакеты, обрабатывает их отправку.
- * Контроллирует статус соединения, выполняет соединение с сервером.
- * Может восстанавливать соединение с сервером.
- *
- * @param client - клиент протокола.
- */
-class ProtocolController(private val client: ProtocolClient) : HandlerThread("SSTP Controller") {
+class ProtocolController(var protocolClient: ProtocolClient) :
+        ControllerThread("STIPS Worker"),
+        SocketClient.ClientCallback {
 
-    // Для взаимодействия с другими потоками.
-    internal var encryptionKey: ByteArray? = null
-    internal var handler: Handler? = null
-    internal var looperPreparedCallback: (() -> (Unit))? = null
-    private var requestedPing: Boolean = false
-    private var isHandshakeInvoked = false
-    private var getCoreVersionJob: Job? = null
+    internal val socketClient = SocketClient(protocolClient.host, protocolClient.port).apply {
+        callback(this@ProtocolController)
+    }
+
+    internal var connectionAttemptFailed: Boolean = true
+    internal val reader = ProtocolReader(socketClient)
+    internal val handshakeController = HandshakeController(this)
 
     companion object {
-        const val PING_SEND_TASK_TOKEN = 0
-        const val PING_CHECK_TASK_TOKEN = 1
-        const val SEND_PING_BEFORE_PACKET_INTERVAL = 6000L
-        const val CHECK_PING_BEFORE_SEND = 2000L
+        const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
     }
 
-    override fun onLooperPrepared() {
-        handler = Handler(looper)
+    override fun threadStart() = submitTask {
+        socketClient.connect()
+    }
 
-        // Инициализация Looper'а
-        if (looperPreparedCallback != null) {
-            looperPreparedCallback!!()
+    override fun threadStop() = submitTask {
+        socketClient.close(false)
+    }
+
+    override fun socketConnected() = submitTask {
+        connectionAttemptFailed = false
+        handshakeController.startHandshake()
+    }
+
+    override fun socketReceive() {
+        val buffer = reader.readPacketBytes() ?: return
+        val slices = deserializePacketSlices(buffer) ?: return
+
+        if (slices.isEmpty()) {
+            return
         }
-    }
 
-    /**
-     * Вызывается когда соединение будет успешно установлено.
-     **/
-    fun onStart() {
-        // Соединение активно (нужно для функционирования ping-pong'а)
-        requestedPing = true
-        isHandshakeInvoked = false
-        encryptionKey = null
-
-        // Начинаем хэндшейк
-        client.sendArray("vrf")
-    }
-
-    /**
-     * Вызывается при приходе пакета.
-     **/
-    fun onPacket(string: String) = handler!!.post {
-        try {
-            val packet = JSONArray(string)
-            val type = packet.optString(0) ?: return@post
-
-            // Ищем метод-обработчик
-            when (type) {
-                "vrf" -> handleVerify(packet)
-                "upg" -> handleUpgrade(packet)
-                "msg" -> handleMessage(packet)
-                "png" -> handlePing()
-            }
-
-            // Reschedule ping tasks
-            handler!!.removeCallbacksAndMessages(PING_SEND_TASK_TOKEN)
-            handler!!.removeCallbacksAndMessages(PING_CHECK_TASK_TOKEN)
-            handler!!.postAtTime(::sendPing, PING_SEND_TASK_TOKEN, SystemClock.uptimeMillis() + SEND_PING_BEFORE_PACKET_INTERVAL)
-        } catch (e: JSONException) {
-            if (!isHandshakeInvoked) client.close()
-        } catch (e: InvalidKeySpecException) {
-            if (!isHandshakeInvoked) client.close()
-        }
-    }
-
-    /**
-     * Метод, вызываемый при приходе пакета ["vrf"]
-     */
-    private fun handleVerify(packet: JSONArray) {
-        if (packet.length() >= 3) {
-            val serverPublicKeyEncoded = packet.optString(1)
-            val serverPublicKeySignatureEncoded = packet.optString(2)
-
-            if (serverPublicKeyEncoded != null
-                    && serverPublicKeySignatureEncoded != null
-                    && serverPublicKeyEncoded.matches(BASE64_REGEX)
-                    && serverPublicKeySignatureEncoded.matches(BASE64_REGEX)) {
-
-                val serverPublicKey = CipherHelper.decodeFromBase64(serverPublicKeyEncoded.toByteArray())
-                val serverPublicKeySignature = CipherHelper.decodeFromBase64(serverPublicKeySignatureEncoded.toByteArray())
-
-                // Preventing MITM-attacks ...
-                if (CipherHelper.verifyMessageWithECDSA(serverPublicKey, serverPublicKeySignature)) {
-                    val pairId = CipherHelper.generateKeysPair()
-                    val publicKey = CipherHelper.getPublicKey(pairId)
-                    val privateKey = CipherHelper.getPrivateKey(pairId)
-                    val secretKey = CipherHelper.calculateSecretKey(privateKey, serverPublicKey)
-
-                    // Preventing MITM-attacks ...
-                    if (secretKey.isNotEmpty()) {
-                        val encryptionKey = secretKey.copyOf(24)
-                        val encryptionKeyHash = CipherHelper.calculateSHA224(encryptionKey)
-                        val encryptionKeyHashEncoded = CipherHelper.encodeToBase64(encryptionKeyHash)
-                        val publicKeyEncoded = CipherHelper.encodeToBase64(publicKey)
-
-                        // Save encryption key ...
-                        this.encryptionKey = encryptionKey
-
-                        // Send data to the server ...
-                        client.sendArray("upg", publicKeyEncoded, encryptionKeyHashEncoded)
-                    } else client.close()
-                } else client.close()
-            } else client.close()
-        } else client.close()
-    }
-
-    /**
-     * Метод, вызываемый при приходе Ping'а.
-     *
-     * Обновляет статус прихода пакета.
-     */
-    private fun handlePing() {
-        if (requestedPing) {
-            client.sendArray("png")
-        } else {
-            requestedPing = true
-        }
-    }
-
-    /**
-     * Метод, вызываемый при приходе пакета ["upg"]
-     **/
-    private fun handleUpgrade(packet: JSONArray) {
-        if (packet.length() >= 2) {
-            val status = packet.optInt(1) == 1
-
-            // Handshake failed!
-            if (!status) {
-                client.close()
-                return
-            }
-
-            // Check protocol version ...
-            getCoreVersionJob = compareVersions()
-        }
-    }
-
-    /**
-     * Сравнивает версии протоколов на сервере и в клиенте.
-     *
-     * Если все ОК, то отправляет в шину событий протокола - HANDSHAKE_SUCCEED
-     * В противном случае отправит в шину событий протокола - OLD_PROTOCOL_VERSION
-     */
-    private fun compareVersions() = GlobalScope.async(Dispatchers.IO) {
-        try {
-            val coreVersionDTO = client
-                    .makeRequest<CoreVersionDTO>("core.getVersion")
-                    .await()
-
-            // Task can be invalidated
-            if (!isActive) return@async
-
-            // Compare versions
-            if (coreVersionDTO.version == ProtocolClient.VERSION) {
-                isHandshakeInvoked = true
-                client.connectionStateChannel.offer(ConnectionState.HANDSHAKE_SUCCEED)
+        submitTask {
+            if (handshakeController.isHandshakeSucceed()) {
+                // TODO: Messages controller
             } else {
-                isHandshakeInvoked = false
-                encryptionKey = null
-                client.connectionStateChannel.offer(ConnectionState.OLD_PROTOCOL_VERSION)
-                client.close()
-                client.kill()
+                handshakeController.handleIncomingMessage(slices)
             }
-        } catch (e: NetworkException) {
-            // Ignore ...
         }
     }
 
-    /**
-     * Отправляет пакет Ping, запускает проверку на приход ответа.
-     */
-    private fun sendPing() {
-        requestedPing = false
+    override fun socketClosed(needRestart: Boolean) = submitTask {
+        val handshakeSucceed = handshakeController.isHandshakeSucceed()
 
-        // Отправляем Ping и проверяем приход ответа через некоторые время.
-        client.sendArray("png")
+        removeAllPlannedTasks()
+        reader.resetPacket()
+        handshakeController.resetHandshake()
 
-        // Ожидаем ответ ...
-        handler!!.postAtTime(::checkPing, PING_CHECK_TASK_TOKEN, SystemClock.uptimeMillis() + CHECK_PING_BEFORE_SEND)
-    }
+        if (handshakeSucceed) {
+            submitConnectionClosedEvent()
+        }
 
-    /**
-     * Проверяет приход ответа на Ping.
-     * Если ответа нет - закрывает соединение.
-     */
-    private fun checkPing() {
-        // Закрываем соединение если нет ответа ...
-        if (!requestedPing) {
-            client.close()
+        if (needRestart) {
+            submitReconnectTask()
         }
     }
 
-    /**
-     * Метод, вызываемый при приходе пакета ["msg"]
-     **/
-    private fun handleMessage(packet: JSONArray) {
-        if (encryptionKey != null) {
-            if (packet.length() >= 4) {
-                val ivEncoded = packet.optString(1)
-                val payloadEncoded = packet.optString(2)
-                val hmacEncoded = packet.optString(3)
-
-                if (ivEncoded != null
-                        && payloadEncoded != null
-                        && hmacEncoded != null
-                        && ivEncoded.matches(BASE64_REGEX)
-                        && payloadEncoded.matches(BASE64_REGEX)
-                        && hmacEncoded.matches(BASE64_REGEX)) {
-
-                    val iv = CipherHelper.decodeFromBase64(ivEncoded.toByteArray())
-                    val payload = CipherHelper.decodeFromBase64(payloadEncoded.toByteArray())
-                    val decryptedPayload = CipherHelper.decryptWithAES(encryptionKey, iv, payload)
-                    val decryptedPayloadArray = JSONArray(decryptedPayload)
-
-                    // Preventing MITM-attacks
-                    if (decryptedPayloadArray.length() >= 3) {
-                        val event = decryptedPayloadArray.optString(0)
-                        val message = decryptedPayloadArray.optJSONObject(1)
-                        val salt = decryptedPayloadArray.optString(2)
-
-                        if (event != null && message != null && salt != null && isHandshakeInvoked && encryptionKey != null) {
-                            val hmacRead = CipherHelper.calculateHMAC(encryptionKey, decryptedPayload)
-                            val hmacReadEncoded = CipherHelper.encodeToBase64(hmacRead)
-
-                            // Checking HMAC's
-                            if (hmacEncoded == hmacReadEncoded) {
-                                client.notifyCallbacks(event, message.toString())
-                            }
-                        }
-                    }
-                }
-            }
-        } else client.close()
+    fun sendPacket(vararg slices: ByteArray) {
+        socketClient.sendBuffer(serializePacket(slices))
     }
 
     /**
-     * Отправляет сообщение в формате JSON на сервер.
+     * Submits reconnect task following rules:
      *
-     * @param event - название события для отправки.
-     * @param message - обьект сообщения для отправки.
+     * 1) if connection dropped - install connection now
+     * 2) if previous connection attempt failed - install connection thought interval
      */
-    fun sendJsonMessage(event: String, message: JsonModel? = null) = handler!!.post {
-        if (client.isValid() && isHandshakeInvoked && encryptionKey != null) {
-            val salt = CipherHelper.generateBase64(8)
-            val jsonObject = message?.toJSON()
-            val jsonMessage = jsonObject ?: JSONObject()
-            val payload = JSONArray(arrayOf(event, jsonMessage, salt))
-                    .toString()
-                    .replace("\\/", "/")
-                    .toByteArray()
-
-            // Encrypting ...
-            val hmac = CipherHelper.calculateHMAC(encryptionKey, payload)
-            val iv = CipherHelper.generateBytes(16)
-            val hmacEncoded = CipherHelper.encodeToBase64(hmac)
-            val ivEncoded = CipherHelper.encodeToBase64(iv)
-            val payloadEncrypted = CipherHelper.encryptWithAES(encryptionKey, iv, payload)
-            val payloadEncryptedEncoded = CipherHelper.encodeToBase64(payloadEncrypted)
-
-            // Send packet to server
-            client.sendArray("msg", ivEncoded, payloadEncryptedEncoded, hmacEncoded)
+    private fun submitReconnectTask() {
+        if (connectionAttemptFailed) {
+            submitDelayedTask(RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS) { socketClient.connect() }
         } else {
-            client.connectionStateChannel.offer(ConnectionState.NO_CONNECTION)
+            submitTask { socketClient.connect() }
+        }
+
+        connectionAttemptFailed = true
+    }
+
+    private fun submitConnectionClosedEvent() {
+        if (!connectionAttemptFailed) {
+            protocolClient.submitStateChangeEvent(ConnectionState.CONNECTION_CLOSED)
         }
     }
 
-    /**
-     * Вызывается при окончании соединения.
-     **/
-    fun onEnd() = handler!!.post {
-        handler!!.removeCallbacksAndMessages(null)
-
-        // Cancel all internal tasks ...
-        getCoreVersionJob?.cancel()
-        isHandshakeInvoked = false
-        encryptionKey = null
-
-        // Kill connection ...
-        client.kill(false)
-        client.connectionStateChannel.offer(ConnectionState.CONNECTION_CLOSED)
-
-        // Post reconnect after 1000ms
-        handler!!.postDelayed({ client.connect(false) }, 1000)
+    internal fun submitConnectSucceedEvent() {
+        protocolClient.submitStateChangeEvent(ConnectionState.CONNECT_SUCCEED)
     }
 
-    override fun interrupt() {
-        handler?.removeCallbacksAndMessages(null)
+    internal fun closeConnection() {
+        socketClient.close(false)
+    }
 
-        // Super!
-        super.interrupt()
+    internal fun restartConnection() {
+        // Connection will be recreated if it will be closed by error reason
+        socketClient.close(true)
     }
 }

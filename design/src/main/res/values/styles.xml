@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SudoxTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryDark">@color/dark_primary_color</item>
+        <item name="colorAccent">@color/accent_color</item>
+
+        <item name="android:editTextStyle">@style/EditText</item>
+        <item name="editTextStyle">@style/EditText</item>
+
+        <item name="navigationBarStyle">@style/NavigationBarStyle</item>
+        <item name="navigationBarButtonsStyle">@style/NavigationBarStyle.Buttons</item>
+        <item name="editTextLayoutStyle">@style/EditTextLayout</item>
+    </style>
+
+    <style name="SudoxTheme.Light" parent="SudoxTheme">
+        <!-- Coming soon ... -->
+    </style>
+
+    <style name="EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textSize">@dimen/edittext_text_size</item>
+        <item name="android:textColor">@color/edittext_text_color</item>
+        <item name="android:textColorHint">@color/edittext_hint_color</item>
+    </style>
+
+    <style name="NavigationBarStyle">
+        <item name="viewHeight">@dimen/navbar_height</item>
+        <item name="backgroundColor">@color/navbar_color</item>
+        <item name="horizontalPadding">@dimen/navbar_buttons_horizontal_padding</item>
+    </style>
+
+    <style name="NavigationBarStyle.Buttons">
+        <item name="leftArrowDrawable">@drawable/ic_arrow_left</item>
+        <item name="rightArrowDrawable">@drawable/ic_arrow_right</item>
+        <item name="arrowPadding">@dimen/navbar_buttons_arrow_padding</item>
+        <item name="textSize">@dimen/navbar_buttons_text_size</item>
+        <item name="textColor">@color/navbar_buttons_text_color</item>
+    </style>
+
+    <style name="EditTextLayout">
+        <item name="labelErrorTextColor">@color/edittextlayout_label_text_error_color</item>
+        <item name="labelTextSize">@dimen/edittextlayout_label_text_size</item>
+    </style>
+</resources>

@@ -1,0 +1,11 @@
+android {
+    externalNativeBuild {
+        cmake {
+            path file('src/main/jni/CMakeLists.txt')
+        }
+    }
+}
+
+dependencies {
+    api project(path: ':common')
+}

@@ -13,8 +13,8 @@ import com.sudox.tests.helpers.randomBase64String
 import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.ReadCallback
 import com.sudox.protocol.models.enums.ConnectionState
-import com.sudox.tests.helpers.any
-import com.sudox.tests.helpers.eq
+import com.sudox.common.helper.any
+import com.sudox.common.helper.eq
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
@@ -31,8 +31,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.concurrent.ConcurrentLinkedDeque
 import javax.inject.Provider
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.random.Random
 
 @RunWith(PowerMockRunner::class)

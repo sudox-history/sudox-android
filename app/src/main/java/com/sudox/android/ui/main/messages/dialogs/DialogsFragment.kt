@@ -176,7 +176,7 @@ class DialogsFragment @Inject constructor() : TabLayoutFragment() {
         dialogsAdapter.dialogs.add(0, dialog)
         dialogsAdapter.notifyItemInserted(0)
 
-        // Reapply the saved position
+        // Reapply the saved setPosition
         if (firstPos >= 0) {
             linearLayoutManager.scrollToPositionWithOffset(firstPos, offsetTop)
         }
@@ -191,7 +191,7 @@ class DialogsFragment @Inject constructor() : TabLayoutFragment() {
         dialogsAdapter.notifyItemMoved(indexOf, 0)
         dialogsAdapter.notifyItemChanged(0)
 
-        // Reapply the saved position
+        // Reapply the saved setPosition
         if (firstPos >= 0) {
             linearLayoutManager.scrollToPositionWithOffset(firstPos, offsetTop)
         }

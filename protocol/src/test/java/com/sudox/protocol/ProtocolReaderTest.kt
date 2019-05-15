@@ -1,222 +1,181 @@
 package com.sudox.protocol
 
+import com.sudox.protocol.helpers.LENGTH_HEADER_SIZE_IN_BYTES
+import com.sudox.protocol.helpers.toBytesBE
+import com.sudox.sockets.SocketClient
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mockito
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
-import java.net.InetSocketAddress
-import java.net.ServerSocket
-import java.net.Socket
-import java.util.concurrent.Semaphore
-import kotlin.random.Random
+import java.nio.ByteBuffer
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(ProtocolClient::class, ProtocolController::class, Socket::class)
-class ProtocolReaderTest {
+class ProtocolReaderTest : Assert() {
 
-    private lateinit var protocolClient: ProtocolClient
-    private lateinit var protocolReader: ProtocolReader
+    private lateinit var socketClient: SocketClient
+    private lateinit var reader: ProtocolReader
 
     @Before
     fun setUp() {
-        protocolClient = PowerMockito.mock(ProtocolClient::class.java)
-        protocolClient.controller = PowerMockito.mock(ProtocolController::class.java)
-        protocolClient.socket = Socket()
-        protocolReader = ProtocolReader(protocolClient)
-    }
-
-    @After
-    fun tearDown() {
-        Mockito.reset(protocolClient)
-        Mockito.reset(protocolClient.controller)
+        socketClient = Mockito.mock(SocketClient::class.java)
+        reader = ProtocolReader(socketClient)
     }
 
     @Test
-    fun testRead_socket_ended_by_server() {
-        Mockito.`when`(protocolClient.isValid()).thenReturn(true)
+    fun testPacketRead_fully_received() {
+        val bytes = byteArrayOf(0, 0, 12.toByte(), 0, 0, 1.toByte(), 127, 0, 0, 2.toByte(), 1, 1)
+        val lengthHeader = bytes.copyOf(LENGTH_HEADER_SIZE_IN_BYTES)
+        val dataBytes = bytes.copyOfRange(lengthHeader.size, bytes.size)
 
-        // Preparing ...
-        val randomPort = Random.nextInt(1, 65535)
-        val serverThread = Thread {
-            val serverSocket = ServerSocket(randomPort)
-            val socket = serverSocket.accept()
+        Mockito.`when`(socketClient.availableBytes()).thenReturn(bytes.size)
+        Mockito.`when`(socketClient.readBytes(LENGTH_HEADER_SIZE_IN_BYTES)).thenReturn(lengthHeader)
+        Mockito.`when`(socketClient.readToByteBuffer(any(), anyInt(), anyInt())).thenAnswer {
+            val buffer = it.getArgument<ByteBuffer>(0)
+            val count = it.getArgument<Int>(1)
+            val offset = it.getArgument<Int>(2)
 
-            // Close connection ...
-            serverSocket.close()
-            socket.close()
+            buffer.position(offset)
+            buffer.put(dataBytes)
+
+            return@thenAnswer dataBytes.size
         }
 
-        // Testing ...
-        serverThread.start()
-        protocolClient.socket!!.connect(InetSocketAddress(randomPort))
-        protocolReader.start()
-        protocolReader.join(3000)
+        val readBuffer = reader.readPacketBytes()
+        assertNotNull(readBuffer)
 
-        // Verifying ...
-        Mockito.verify(protocolClient.controller)!!.onEnd()
-        protocolReader.interrupt()
-        serverThread.interrupt()
+        val readBytes = ByteArray(readBuffer!!.limit())
+        readBuffer.get(readBytes)
+        assertArrayEquals(dataBytes, readBytes)
     }
 
     @Test
-    fun testRead_socket_ended_by_client() {
-        Mockito.`when`(protocolClient.isValid()).thenReturn(true)
+    fun testPacketRead_fully_received_but_length_is_negative() {
+        val length = (-5).toBytesBE(3)
+        val bytes = byteArrayOf(length[0], length[1], length[2], 0, 0, 1.toByte(), 127, 0, 0, 2.toByte(), 1, 1)
+        val lengthHeader = bytes.copyOf(LENGTH_HEADER_SIZE_IN_BYTES)
+        val dataBytes = bytes.copyOfRange(lengthHeader.size, bytes.size)
 
-        // Preparing ...
-        val semaphore = Semaphore(0)
-        val randomPort = Random.nextInt(1, 65535)
-        val serverThread = Thread {
-            val serverSocket = ServerSocket(randomPort)
-            serverSocket.accept()
+        Mockito.`when`(socketClient.availableBytes()).thenReturn(bytes.size)
+        Mockito.`when`(socketClient.readBytes(LENGTH_HEADER_SIZE_IN_BYTES)).thenReturn(lengthHeader)
+        Mockito.`when`(socketClient.readToByteBuffer(any(), anyInt(), anyInt())).thenAnswer {
+            val buffer = it.getArgument<ByteBuffer>(0)
+            val count = it.getArgument<Int>(1)
+            val offset = it.getArgument<Int>(2)
 
-            // Wait unblocking ...
-            semaphore.acquire()
+            buffer.position(offset)
+            buffer.put(dataBytes)
 
-            // Close client socket ...
-            protocolClient.socket!!.close()
+            return@thenAnswer dataBytes.size
         }
 
-        // Testing ...
-        serverThread.start()
-        protocolClient.socket!!.connect(InetSocketAddress(randomPort))
-        protocolReader.start()
-        protocolReader.join(3000)
-        semaphore.release()
-        protocolReader.join(3000)
-
-        // Verifying ...
-        Mockito.verify(protocolClient.controller)!!.onEnd()
-        protocolReader.interrupt()
-        serverThread.interrupt()
+        val readBuffer = reader.readPacketBytes()
+        assertNull(readBuffer)
     }
 
     @Test
-    fun testRead_packets_in_one_buffer() {
-        Mockito.`when`(protocolClient.isValid()).thenReturn(true)
+    fun testPacketRead_partially_receiving() {
+        val firstPart = byteArrayOf(0, 0)
+        val secondPart = byteArrayOf(12)
+        val lengthHeader = firstPart + secondPart
+        val thirdPart = byteArrayOf(0, 0, 1, 127, 0, 0, 2, 1, 1)
+        var availableBytes = 0
 
-        // Preparing ...
-        val randomPort = Random.nextInt(1, 65535)
-        val serverThread = Thread {
-            val serverSocket = ServerSocket(randomPort)
-            val socket = serverSocket.accept()
+        Mockito.`when`(socketClient.availableBytes()).thenAnswer { availableBytes }
 
-            // Wait unblocking ...
-            socket.getOutputStream().write("[a][b][c][d][e][f]".toByteArray())
-            socket.getOutputStream().flush()
+        // First part
+        Mockito.`when`(socketClient.readBytes(LENGTH_HEADER_SIZE_IN_BYTES)).thenAnswer {
+            return@thenAnswer firstPart
         }
 
-        // Testing ...
-        serverThread.start()
-        protocolClient.socket!!.connect(InetSocketAddress(randomPort))
-        protocolReader.start()
-        protocolReader.join(3000)
+        availableBytes = firstPart.size
+        val firstBuffer = reader.readPacketBytes()
+        assertNull(firstBuffer)
+        Mockito.verify(socketClient, Mockito.never()).readBytes(anyInt())
 
-        // Verifying ...
-        Mockito.verify(protocolClient.controller)!!.onPacket("[a]")
-        Mockito.verify(protocolClient.controller)!!.onPacket("[b]")
-        Mockito.verify(protocolClient.controller)!!.onPacket("[c]")
-        Mockito.verify(protocolClient.controller)!!.onPacket("[d]")
-        Mockito.verify(protocolClient.controller)!!.onPacket("[e]")
-        Mockito.verify(protocolClient.controller)!!.onPacket("[f]")
-        protocolReader.interrupt()
-        serverThread.interrupt()
+        // Second part
+        availableBytes = lengthHeader.size
+        Mockito.`when`(socketClient.readBytes(LENGTH_HEADER_SIZE_IN_BYTES)).thenAnswer {
+            return@thenAnswer lengthHeader
+        }
+
+        val secondBuffer = reader.readPacketBytes()
+        assertNull(secondBuffer)
+        Mockito.verify(socketClient).readBytes(LENGTH_HEADER_SIZE_IN_BYTES)
+
+        // Third part
+        availableBytes = lengthHeader.size
+        Mockito.`when`(socketClient.readToByteBuffer(any(), anyInt(), anyInt())).thenAnswer {
+            val buffer = it.getArgument<ByteBuffer>(0) ?: return@thenAnswer 0
+            val count = it.getArgument<Int>(1)
+            val offset = it.getArgument<Int>(2)
+
+            buffer.position(offset)
+            buffer.put(thirdPart)
+
+            return@thenAnswer thirdPart.size
+        }
+
+        val thirdBuffer = reader.readPacketBytes()
+        assertNotNull(thirdPart)
+
+        val thirdBytes = ByteArray(thirdBuffer!!.limit())
+        thirdBuffer.get(thirdBytes)
+
+        assertArrayEquals(thirdPart, thirdBytes)
     }
 
     @Test
-    fun testRead_single_packet_in_many_buffers() {
-        Mockito.`when`(protocolClient.isValid()).thenReturn(true)
+    fun testPacketRead_multiple_packets() {
+        val firstPacket = byteArrayOf(0, 0, 12.toByte(), 0, 0, 1.toByte(), 127, 0, 0, 2.toByte(), 1, 1)
+        val secondPacket = byteArrayOf(0, 0, 13.toByte(), 0, 0, 1.toByte(), 55, 0, 0, 3.toByte(), 1, 2, 3)
 
-        // Preparing ...
-        val firstBuffer = ByteArray(BUFFER_SIZE) {
-            if (it == 0) {
-                return@ByteArray '['.toByte()
-            } else {
-                return@ByteArray 'A'.toByte()
-            }
+        val firstPacketLengthHeader = firstPacket.copyOf(LENGTH_HEADER_SIZE_IN_BYTES)
+        val firstPacketDataBytes = firstPacket.copyOfRange(firstPacketLengthHeader.size, firstPacket.size)
+
+        val secondPacketLengthHeader = secondPacket.copyOf(LENGTH_HEADER_SIZE_IN_BYTES)
+        val secondPacketDataBytes = secondPacket.copyOfRange(secondPacketLengthHeader.size, secondPacket.size)
+
+        Mockito.`when`(socketClient.availableBytes()).thenReturn(firstPacket.size)
+        Mockito.`when`(socketClient.readBytes(LENGTH_HEADER_SIZE_IN_BYTES)).thenReturn(firstPacketLengthHeader)
+        Mockito.`when`(socketClient.readToByteBuffer(any(), anyInt(), anyInt())).thenAnswer {
+            val buffer = it.getArgument<ByteBuffer>(0) ?: return@thenAnswer 0
+            val count = it.getArgument<Int>(1)
+            val offset = it.getArgument<Int>(2)
+
+            buffer.position(offset)
+            buffer.put(firstPacketDataBytes)
+
+            return@thenAnswer firstPacketDataBytes.size
         }
 
-        val secondBuffer = ByteArray(BUFFER_SIZE) {
-            return@ByteArray 'B'.toByte()
+        val firstReadBuffer = reader.readPacketBytes()
+        assertNotNull(firstReadBuffer)
+
+        val firstReadBytes = ByteArray(firstReadBuffer!!.limit())
+        firstReadBuffer.get(firstReadBytes)
+        assertArrayEquals(firstPacketDataBytes, firstReadBytes)
+
+        // Second packet
+        Mockito.`when`(socketClient.availableBytes()).thenReturn(secondPacket.size)
+        Mockito.`when`(socketClient.readBytes(LENGTH_HEADER_SIZE_IN_BYTES)).thenReturn(secondPacketLengthHeader)
+        Mockito.`when`(socketClient.readToByteBuffer(any(), anyInt(), anyInt())).thenAnswer {
+            val buffer = it.getArgument<ByteBuffer>(0) ?: return@thenAnswer 0
+            val count = it.getArgument<Int>(1)
+            val offset = it.getArgument<Int>(2)
+
+            buffer.position(offset)
+            buffer.put(secondPacketDataBytes)
+
+            return@thenAnswer secondPacketDataBytes.size
         }
 
-        val thirdBuffer = ByteArray(BUFFER_SIZE / 2) {
-            if (it != BUFFER_SIZE / 2 - 1) {
-                return@ByteArray 'C'.toByte()
-            } else {
-                return@ByteArray ']'.toByte()
-            }
-        }
+        val secondReadBuffer = reader.readPacketBytes()
+        assertNotNull(secondReadBuffer)
 
-        val result = String(firstBuffer + secondBuffer + thirdBuffer)
-        val randomPort = Random.nextInt(1, 65535)
-        val serverThread = Thread {
-            val serverSocket = ServerSocket(randomPort)
-            val socket = serverSocket.accept()
-
-            // Wait unblocking ...
-            socket.getOutputStream().write(result.toByteArray())
-            socket.getOutputStream().flush()
-        }
-
-        // Testing ...
-        serverThread.start()
-        protocolClient.socket!!.connect(InetSocketAddress(randomPort))
-        protocolReader.start()
-        protocolReader.join(3000)
-
-        // Verifying ...
-        Mockito.verify(protocolClient.controller)!!.onPacket(result)
-        protocolReader.interrupt()
-        serverThread.interrupt()
-    }
-
-    @Test
-    fun testRead_many_packets_in_many_buffers() {
-        Mockito.`when`(protocolClient.isValid()).thenReturn(true)
-
-        // Preparing ...
-        val firstBuffer = ByteArray(BUFFER_SIZE) {
-            if (it == 0) {
-                return@ByteArray '['.toByte()
-            } else {
-                return@ByteArray 'A'.toByte()
-            }
-        }
-
-        val secondBuffer = ByteArray(BUFFER_SIZE / 2) {
-            if (it != BUFFER_SIZE / 2 - 1) {
-                return@ByteArray 'B'.toByte()
-            } else {
-                return@ByteArray ']'.toByte()
-            }
-        }
-
-        val firstPacket = "[D]"
-        val secondPacket = String(firstBuffer + secondBuffer)
-        val randomPort = Random.nextInt(1, 65535)
-        val serverThread = Thread {
-            val serverSocket = ServerSocket(randomPort)
-            val socket = serverSocket.accept()
-
-            // Wait unblocking ...
-            socket.getOutputStream().write((firstPacket + secondPacket).toByteArray())
-            socket.getOutputStream().flush()
-        }
-
-        // Testing ...
-        serverThread.start()
-        protocolClient.socket!!.connect(InetSocketAddress(randomPort))
-        protocolReader.start()
-        protocolReader.join(3000)
-
-        // Verifying ...
-        Mockito.verify(protocolClient.controller)!!.onPacket(firstPacket)
-        Mockito.verify(protocolClient.controller)!!.onPacket(secondPacket)
-        protocolReader.interrupt()
-        serverThread.interrupt()
+        val secondReadBytes = ByteArray(secondReadBuffer!!.limit())
+        secondReadBuffer.get(secondReadBytes)
+        assertArrayEquals(secondPacketDataBytes, secondReadBytes)
     }
 }

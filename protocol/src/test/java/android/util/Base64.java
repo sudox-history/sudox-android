@@ -75,7 +75,7 @@ public class Base64 {
         /**
          * Encode/decode another block of input data.  this.output is
          * provided by the caller, and must be big enough to hold all
-         * the coded data.  On exit, this.opwill be set to the length
+         * the coded data.  On exit, this.opwill be set to the lengthWithoutHeader
          * of the coded data.
          *
          * @param finish true if this is the final call to process for
@@ -142,7 +142,7 @@ public class Base64 {
      * if any are present, there must be the correct number of them.
      *
      * @param input  the data to decode
-     * @param offset the position within the input array at which to start
+     * @param offset the setPosition within the input array at which to start
      * @param len    the number of bytes of input to decode
      * @param flags  controls certain features of the decoded output.
      *               Pass {@code DEFAULT} to decode standard Base64.
@@ -172,7 +172,7 @@ public class Base64 {
 
     /* package */ static class Decoder extends Coder {
         /**
-         * Lookup table for turning bytes into their position in the
+         * Lookup table for turning bytes into their setPosition in the
          * Base64 alphabet.
          */
         private static final int DECODE[] = {
@@ -401,7 +401,7 @@ public class Base64 {
 
             switch (state) {
                 case 0:
-                    // Output length is a multiple of three.  Fine.
+                    // Output lengthWithoutHeader is a multiple of three.  Fine.
                     break;
                 case 1:
                     // Read one extra input byte, which isn't enough to
@@ -462,7 +462,7 @@ public class Base64 {
      * String with the result.
      *
      * @param input  the data to encode
-     * @param offset the position within the input array at which to
+     * @param offset the setPosition within the input array at which to
      *               start
      * @param len    the number of bytes of input to encode
      * @param flags  controls certain features of the encoded output.
@@ -496,7 +496,7 @@ public class Base64 {
      * byte[] with the result.
      *
      * @param input  the data to encode
-     * @param offset the position within the input array at which to
+     * @param offset the setPosition within the input array at which to
      *               start
      * @param len    the number of bytes of input to encode
      * @param flags  controls certain features of the encoded output.
@@ -506,7 +506,7 @@ public class Base64 {
     public static byte[] encode(byte[] input, int offset, int len, int flags) {
         Encoder encoder = new Encoder(flags, null);
 
-        // Compute the exact length of the array we will produce.
+        // Compute the exact lengthWithoutHeader of the array we will produce.
         int output_len = len / 3 * 4;
 
         // Account for the tail of the data and the padding bytes, if any.
@@ -539,7 +539,7 @@ public class Base64 {
     /* package */ static class Encoder extends Coder {
         /**
          * Emit a new line every this many output tuples.  Corresponds to
-         * a 76-character line length (the maximum allowable according to
+         * a 76-character line lengthWithoutHeader (the maximum allowable according to
          * <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC 2045</a>).
          */
         public static final int LINE_GROUPS = 19;

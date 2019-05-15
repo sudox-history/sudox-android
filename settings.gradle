@@ -1,1 +1,1 @@
-include ':app', ':protocol', ':design'
+include ':app', ':protocol', ':design', ':common', ':sockets', ':cipher'

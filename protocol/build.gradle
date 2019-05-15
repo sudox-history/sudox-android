@@ -1,11 +1,4 @@
-android {
-    externalNativeBuild {
-        cmake {
-            path file('src/main/jni/CMakeLists.txt')
-        }
-    }
-}
-
 dependencies {
-    testImplementation 'org.json:json:20180813'
+    api project(path: ':sockets')
+    api project(path: ':cipher')
 }

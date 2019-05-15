@@ -8,7 +8,7 @@ import com.sudox.android.data.models.users.dto.UsersInfoDTO
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.ReadCallback
-import com.sudox.tests.helpers.any
+import com.sudox.common.helper.any
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -23,8 +23,6 @@ import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.concurrent.ConcurrentLinkedDeque
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 import kotlin.random.Random
 
 @RunWith(PowerMockRunner::class)

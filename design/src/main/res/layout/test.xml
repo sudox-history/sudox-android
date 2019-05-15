@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.sudox.design.widgets.edittextlayout.EditTextLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/testInput"
+            android:hint="Номер телефона"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+7 (967) 478-81-47" />
+
+    </com.sudox.design.widgets.edittextlayout.EditTextLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/testInput1"
+            android:hint="Номер телефона"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+7 (967) 478-81-47" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <com.sudox.design.widgets.edittextlayout.EditTextLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/testInput2"
+            android:hint="Номер телефона"
+            android:enabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+7 (967) 478-81-47" />
+
+    </com.sudox.design.widgets.edittextlayout.EditTextLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/testInput3"
+            android:hint="Номер телефона"
+            android:enabled="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+7 (967) 478-81-47" />
+
+    </android.support.design.widget.TextInputLayout>
+</LinearLayout>

@@ -12,23 +12,15 @@ dependencies {
     implementation "android.arch.persistence.room:runtime:1.1.1"
     kapt "android.arch.persistence.room:compiler:1.1.1"
 
-    // Dagger
-    implementation "com.google.dagger:dagger:2.17"
-    implementation "com.google.dagger:dagger-android:2.17"
-    implementation "com.google.dagger:dagger-android-support:2.17"
-    compileOnly 'javax.annotation:jsr250-api:1.0'
-    kapt "com.google.dagger:dagger-compiler:2.17"
-    kapt "com.google.dagger:dagger-android-processor:2.17"
-
     // AppMetrica
     implementation 'com.yandex.android:mobmetricalib:3.2.2'
     implementation 'com.android.installreferrer:installreferrer:1.0'
 
     // Input masks
-
     implementation "ru.tinkoff.decoro:decoro:1.1.1"
 
     // Modules
+    api project(path: ':common')
     api project(path: ':protocol')
     api project(path: ':design')
 }

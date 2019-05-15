@@ -2,8 +2,8 @@ package com.sudox.android.common.helpers.livedata
 
 import android.arch.lifecycle.LiveData
 import android.os.Looper
-import com.sudox.tests.helpers.any
-import com.sudox.tests.helpers.mockMainThreadHandler
+import com.sudox.common.helper.any
+import com.sudox.common.helper.mockMainThreadHandler
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
