@@ -345,7 +345,7 @@ class SocketClientTest {
         Thread.sleep(500) // Waiting callback ...
         Mockito.verify(callback).socketReceive()
 
-        var buffer = ByteBuffer.allocateDirect(message.size)
+        val buffer = ByteBuffer.allocateDirect(message.size)
         var availableBefore = client.availableBytes()
         var receivedCount = client.readToByteBuffer(buffer, 5, 0)
         var availableAfter = client.availableBytes()

@@ -5,7 +5,3 @@ android {
         }
     }
 }
-
-dependencies {
-    api project(path: ':common')
-}

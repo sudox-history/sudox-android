@@ -13,14 +13,13 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
 import com.sudox.android.ApplicationLoader
 import com.sudox.android.R
 import com.sudox.design.helpers.FontsHelper.Companion.SANS_SERIF_LIGHT
 import com.sudox.design.widgets.PrecomputedTextView
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.models.enums.ConnectionState
+import com.sudox.protocol.ConnectionState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.android.Main
 import kotlinx.coroutines.channels.ReceiveChannel

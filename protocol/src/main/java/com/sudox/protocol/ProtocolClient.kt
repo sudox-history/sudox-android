@@ -1,42 +1,46 @@
 package com.sudox.protocol
 
-import com.sudox.protocol.models.enums.ConnectionState
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+class ProtocolClient(internal val host: String, internal val port: Short, internal val callback: ProtocolCallback) {
 
-class ProtocolClient(val host: String, val port: Short) {
-
-    var protocolController: ProtocolController? = null
-    val connectionStateChannel = ConflatedBroadcastChannel<ConnectionState>()
+    internal var protocolController: ProtocolController? = null
 
     fun connect() {
-        if (!isWorkerAlive()) {
-            protocolController = getWorker()
+        if (!isControllerAlive()) {
+            protocolController = getController()
             protocolController!!.start()
         }
     }
 
     fun close() {
-        if (isWorkerAlive()) {
+        if (isControllerAlive()) {
             protocolController!!.interrupt()
             protocolController = null
         }
     }
 
-    private fun getWorker(): ProtocolController {
-        return if (!isWorkerAlive()) {
+    /**
+     * Returns false if message not sent
+     * Returns true if message sent
+     */
+    fun sendMessage(message: ByteArray): Boolean {
+        if (!isControllerAlive()) {
+            return false
+        }
+
+        return protocolController!!.sendEncryptedMessage(message)
+    }
+
+    private fun getController(): ProtocolController {
+        return if (!isControllerAlive()) {
             ProtocolController(this)
         } else {
             protocolController!!
         }
     }
 
-    private fun isWorkerAlive(): Boolean {
+    private fun isControllerAlive(): Boolean {
         return protocolController != null &&
                 !protocolController!!.isInterrupted &&
                 protocolController!!.isAlive
-    }
-
-    internal fun submitStateChangeEvent(connectionState: ConnectionState) {
-        connectionStateChannel.offer(connectionState)
     }
 }

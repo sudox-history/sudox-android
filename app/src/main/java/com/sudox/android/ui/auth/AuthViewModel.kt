@@ -6,7 +6,7 @@ import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.data.repositories.users.AuthRepository
 import com.sudox.protocol.ProtocolClient
-import com.sudox.protocol.models.enums.ConnectionState
+import com.sudox.protocol.ConnectionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.IO

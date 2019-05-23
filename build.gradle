@@ -98,7 +98,9 @@ subprojects { subproject ->
         testImplementation 'org.mockito:mockito-core:2.25.1'
         testImplementation 'org.powermock:powermock-module-junit4:2.0.0-RC.1'
         testImplementation 'org.powermock:powermock-api-mockito2:2.0.0'
+        testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
         androidTestImplementation 'junit:junit:4.12'
+        androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
         androidTestImplementation 'org.mockito:mockito-core:2.25.1'
         androidTestImplementation 'org.mockito:mockito-android:2.25.1'
         androidTestImplementation 'com.android.support.test:runner:1.0.2'

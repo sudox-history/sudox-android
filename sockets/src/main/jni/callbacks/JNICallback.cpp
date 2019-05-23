@@ -1,6 +1,6 @@
 #include <jni.h>
 
-#include "../helpers/JNIHelper.h"
+#include "./helpers/JNIHelper.h"
 #include "JNICallback.h"
 
 JNICallback::JNICallback(JNIEnv* env, jobject javaInstance) {

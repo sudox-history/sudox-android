@@ -36,7 +36,7 @@ abstract class ControllerThread : HandlerThread {
         }
     }
 
-    fun removeAllPlannedTasks() {
+    fun removeAllScheduledTasks() {
         if (!isInterrupted) {
             threadHandler?.removeCallbacksAndMessages(0)
         }

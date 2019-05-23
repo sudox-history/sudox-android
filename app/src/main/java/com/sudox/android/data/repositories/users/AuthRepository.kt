@@ -10,7 +10,7 @@ import com.sudox.android.data.models.common.Errors
 import com.sudox.protocol.ProtocolClient
 import com.sudox.protocol.models.JsonModel
 import com.sudox.protocol.models.NetworkException
-import com.sudox.protocol.models.enums.ConnectionState
+import com.sudox.protocol.ConnectionState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import javax.inject.Inject

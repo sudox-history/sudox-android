@@ -1,5 +1,6 @@
 #include "SocketListener.h"
 #include "SocketClient.h"
+
 #include <sys/epoll.h>
 #include <sys/eventfd.h>
 #include <cstdlib>
@@ -25,7 +26,7 @@ SocketListener::~SocketListener() {
 }
 
 void *SocketListener::process(void *listenerData) {
-    SocketListener *instance = (SocketListener*) listenerData;
+    auto *instance = (SocketListener*) listenerData;
 
     while (!instance->interrupted) {
         instance->select();

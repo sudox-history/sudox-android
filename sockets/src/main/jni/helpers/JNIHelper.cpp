@@ -5,7 +5,7 @@ JavaVM *javaVM;
 
 extern "C"
 JNIEXPORT jint JNICALL
-JNI_OnLoad(JavaVM *vm, void *unused) {
+JNI_OnLoad(JavaVM *vm, __unused void *unused) {
     javaVM = vm;
 
     // All successfully initialized!

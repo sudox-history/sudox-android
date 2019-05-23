@@ -1,4 +1,5 @@
 #include <jni.h>
+
 #include "SocketClient.h"
 #include "callbacks/JNICallback.h"
 
@@ -16,25 +17,25 @@ Java_com_sudox_sockets_SocketClient_createNativeInstance(JNIEnv *env, jobject in
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_sudox_sockets_SocketClient_connect(JNIEnv *env, jobject instance, jlong pointer) {
+Java_com_sudox_sockets_SocketClient_connect(__unused JNIEnv *env, __unused jobject instance, jlong pointer) {
     ((SocketClient*) pointer)->connect();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_sudox_sockets_SocketClient_close(JNIEnv *env, jobject instance, jlong pointer, jboolean error) {
+Java_com_sudox_sockets_SocketClient_close(__unused JNIEnv *env, __unused jobject instance, jlong pointer, jboolean error) {
     ((SocketClient*) pointer)->close(error);
 }
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_sudox_sockets_SocketClient_opened(JNIEnv *env, jobject instance, jlong pointer) {
+Java_com_sudox_sockets_SocketClient_opened(__unused JNIEnv *env, __unused jobject instance, jlong pointer) {
     return (jboolean) ((SocketClient*) pointer)->opened();
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_sudox_sockets_SocketClient_send(JNIEnv *env, jobject instance, jlong pointer, jbyteArray _data) {
+Java_com_sudox_sockets_SocketClient_send(JNIEnv *env, __unused jobject instance, jlong pointer, jbyteArray _data) {
     jboolean isCopy;
     auto data = (char*) env->GetByteArrayElements(_data, &isCopy);
     auto dataLength = (unsigned int) env->GetArrayLength(_data);
@@ -45,7 +46,7 @@ Java_com_sudox_sockets_SocketClient_send(JNIEnv *env, jobject instance, jlong po
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_sudox_sockets_SocketClient_sendBuffer(JNIEnv *env, jobject instance, jlong pointer,
+Java_com_sudox_sockets_SocketClient_sendBuffer(JNIEnv *env, __unused jobject instance, jlong pointer,
                                                jobject _buffer, jint _length) {
 
     auto buffer = (char*) env->GetDirectBufferAddress(_buffer);
@@ -56,7 +57,7 @@ Java_com_sudox_sockets_SocketClient_sendBuffer(JNIEnv *env, jobject instance, jl
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_sudox_sockets_SocketClient_callback(JNIEnv *env, jobject instance, jlong pointer,
+Java_com_sudox_sockets_SocketClient_callback(JNIEnv *env, __unused jobject instance, jlong pointer,
                                              jobject _callback) {
 
     auto client = ((SocketClient*) pointer);
@@ -69,7 +70,7 @@ Java_com_sudox_sockets_SocketClient_callback(JNIEnv *env, jobject instance, jlon
 
 extern "C"
 JNIEXPORT jbyteArray JNICALL
-Java_com_sudox_sockets_SocketClient_readBytes(JNIEnv *env, jobject instance, jlong pointer, jint count) {
+Java_com_sudox_sockets_SocketClient_readBytes(JNIEnv *env, __unused jobject instance, jlong pointer, jint count) {
     auto client = ((SocketClient*) pointer);
     char *buffer = new char[count];
     ssize_t read = client->read(buffer, static_cast<size_t>(count));
@@ -87,7 +88,7 @@ Java_com_sudox_sockets_SocketClient_readBytes(JNIEnv *env, jobject instance, jlo
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_sudox_sockets_SocketClient_availableBytes(JNIEnv *env, jobject instance, jlong pointer) {
+Java_com_sudox_sockets_SocketClient_availableBytes(__unused JNIEnv *env, __unused jobject instance, jlong pointer) {
     auto client = ((SocketClient*) pointer);
     auto available = client->available();
 
@@ -96,7 +97,7 @@ Java_com_sudox_sockets_SocketClient_availableBytes(JNIEnv *env, jobject instance
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_sudox_sockets_SocketClient_readToBuffer(JNIEnv *env, jobject instance, jlong pointer,
+Java_com_sudox_sockets_SocketClient_readToBuffer(JNIEnv *env, __unused jobject instance, jlong pointer,
                                                  jobject buffer, jint count, jint offset) {
 
     auto client = ((SocketClient*) pointer);

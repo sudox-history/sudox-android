@@ -2,10 +2,12 @@ package com.sudox.protocol
 
 import com.sudox.common.async.ControllerThread
 import com.sudox.protocol.controllers.HandshakeController
+import com.sudox.protocol.controllers.MessagesController
+import com.sudox.protocol.controllers.PingController
 import com.sudox.protocol.helpers.deserializePacketSlices
 import com.sudox.protocol.helpers.serializePacket
-import com.sudox.protocol.models.enums.ConnectionState
 import com.sudox.sockets.SocketClient
+import java.util.*
 
 class ProtocolController(var protocolClient: ProtocolClient) :
         ControllerThread("STIPS Worker"),
@@ -16,8 +18,10 @@ class ProtocolController(var protocolClient: ProtocolClient) :
     }
 
     internal var connectionAttemptFailed: Boolean = true
-    internal val reader = ProtocolReader(socketClient)
+    internal val protocolReader = ProtocolReader(socketClient)
     internal val handshakeController = HandshakeController(this)
+    internal val messagesController = MessagesController(this)
+    internal val pingController = PingController(this)
 
     companion object {
         const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
@@ -33,40 +37,58 @@ class ProtocolController(var protocolClient: ProtocolClient) :
 
     override fun socketConnected() = submitTask {
         connectionAttemptFailed = false
+        pingController.startPingCycle()
         handshakeController.startHandshake()
     }
 
     override fun socketReceive() {
-        val buffer = reader.readPacketBytes() ?: return
+        val buffer = protocolReader.readPacketBytes() ?: return
         val slices = deserializePacketSlices(buffer) ?: return
 
         if (slices.isEmpty()) {
             return
         }
 
-        submitTask {
-            if (handshakeController.isHandshakeSucceed()) {
-                // TODO: Messages controller
-            } else {
-                handshakeController.handleIncomingMessage(slices)
-            }
+        pingController.schedulePingSendTask()
+
+        if (pingController.isPingPacket(slices)) {
+            pingController.handlePing()
+        } else {
+            addMessageToQueue(slices)
+        }
+    }
+
+    fun addMessageToQueue(slices: LinkedList<ByteArray>) = submitTask {
+        if (messagesController.isSessionStarted()) {
+            messagesController.handleIncomingMessage(slices)
+        } else {
+            handshakeController.handleIncomingMessage(slices)
         }
     }
 
     override fun socketClosed(needRestart: Boolean) = submitTask {
-        val handshakeSucceed = handshakeController.isHandshakeSucceed()
+        val sessionStarted = messagesController.isSessionStarted()
 
-        removeAllPlannedTasks()
-        reader.resetPacket()
+        removeAllScheduledTasks()
+        protocolReader.resetPacket()
         handshakeController.resetHandshake()
+        messagesController.secretKey = null
 
-        if (handshakeSucceed) {
-            submitConnectionClosedEvent()
+        if (sessionStarted) {
+            submitSessionEndedEvent()
         }
 
         if (needRestart) {
             submitReconnectTask()
         }
+    }
+
+    /**
+     * Returns false if message not sent
+     * Returns true if message sent
+     */
+    fun sendEncryptedMessage(message: ByteArray): Boolean {
+        return messagesController.sendEncryptedMessage(message)
     }
 
     fun sendPacket(vararg slices: ByteArray) {
@@ -89,14 +111,23 @@ class ProtocolController(var protocolClient: ProtocolClient) :
         connectionAttemptFailed = true
     }
 
-    private fun submitConnectionClosedEvent() {
+    internal fun startEncryptedSession(secretKey: ByteArray) {
+        messagesController.secretKey = secretKey
+        submitSessionStartedEvent()
+    }
+
+    internal fun submitSessionStartedEvent() {
+        protocolClient.callback.onStarted()
+    }
+
+    internal fun submitSessionEndedEvent() {
         if (!connectionAttemptFailed) {
-            protocolClient.submitStateChangeEvent(ConnectionState.CONNECTION_CLOSED)
+            protocolClient.callback.onEnded()
         }
     }
 
-    internal fun submitConnectSucceedEvent() {
-        protocolClient.submitStateChangeEvent(ConnectionState.CONNECT_SUCCEED)
+    internal fun submitSessionMessageEvent(message: ByteArray) {
+        protocolClient.callback.onMessage(message)
     }
 
     internal fun closeConnection() {

@@ -18,7 +18,7 @@ import com.sudox.protocol.ProtocolClient
 import com.sudox.tests.helpers.randomBase64String
 import com.sudox.protocol.models.NetworkException
 import com.sudox.protocol.models.ReadCallback
-import com.sudox.protocol.models.enums.ConnectionState
+import com.sudox.protocol.ConnectionState
 import com.sudox.common.helper.any
 import com.sudox.common.helper.eq
 import kotlinx.coroutines.CompletableDeferred

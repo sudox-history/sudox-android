@@ -3,7 +3,6 @@ package com.sudox.protocol
 import com.sudox.protocol.helpers.LENGTH_HEADER_SIZE_IN_BYTES
 import com.sudox.protocol.helpers.toBytesBE
 import com.sudox.sockets.SocketClient
-import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

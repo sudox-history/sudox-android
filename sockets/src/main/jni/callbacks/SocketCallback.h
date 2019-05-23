@@ -7,6 +7,7 @@ using namespace std;
 
 class SocketCallback {
 public:
+    virtual ~SocketCallback() {};
     virtual void onConnected() = 0;
     virtual void onDisconnected(bool error) = 0;
     virtual void onReceived() = 0;

@@ -1,16 +1,18 @@
 package com.sudox.protocol
 
 import android.support.test.runner.AndroidJUnit4
+import com.nhaarman.mockitokotlin2.any
 import com.sudox.protocol.ProtocolController.Companion.RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS
 import com.sudox.protocol.controllers.HandshakeStatus
-import com.sudox.protocol.models.enums.ConnectionState
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito
 import java.net.InetSocketAddress
 import java.net.ServerSocket
+import java.net.Socket
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
@@ -23,11 +25,13 @@ class ProtocolControllerTest : Assert() {
     private lateinit var client: ProtocolClient
     private lateinit var controller: ProtocolController
     private lateinit var serverSocket: ServerSocket
+    private lateinit var callback: ProtocolCallback
 
     @Before
     fun setUp() {
         port = Random.nextInt(1000, 32768)
-        client = ProtocolClient("127.0.0.1", port.toShort())
+        callback = Mockito.mock(ProtocolCallback::class.java)
+        client = ProtocolClient("127.0.0.1", port.toShort(), callback)
         controller = ProtocolController(client)
         serverSocket = ServerSocket()
     }
@@ -61,6 +65,59 @@ class ProtocolControllerTest : Assert() {
 
         assertTrue(isConnectedToServer)
         assertFalse(controller.connectionAttemptFailed)
+
+        // Checking that handshake started
+        assertEquals(HandshakeStatus.WAIT_SERVER_PUBLIC_KEY, controller.handshakeController.handshakeStatus)
+    }
+
+    @Test
+    fun testCloseConnection() {
+        val connectSemaphore = Semaphore(0)
+        var connected = false
+
+        startServer()
+        thread {
+            serverSocket.accept()
+            connectSemaphore.release()
+        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
+
+        controller.start()
+        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        controller.closeConnection()
+
+        thread {
+            serverSocket.accept()
+            connected = true
+            connectSemaphore.release()
+        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
+
+        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        assertFalse(connected)
+    }
+
+    @Test
+    fun testRestartConnection() {
+        val connectSemaphore = Semaphore(0)
+        var connected = false
+
+        startServer()
+        thread {
+            serverSocket.accept()
+            connectSemaphore.release()
+        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
+
+        controller.start()
+        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        controller.restartConnection()
+
+        thread {
+            serverSocket.accept()
+            connected = true
+            connectSemaphore.release()
+        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
+
+        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        assertTrue(connected)
     }
 
     @Test
@@ -71,7 +128,9 @@ class ProtocolControllerTest : Assert() {
         controller.join(500)
 
         assertTrue(controller.connectionAttemptFailed)
-        assertNull(client.connectionStateChannel.valueOrNull)
+        Mockito.verify(callback, Mockito.never()).onMessage(any())
+        Mockito.verify(callback, Mockito.never()).onEnded()
+        Mockito.verify(callback, Mockito.never()).onStarted()
 
         startServer()
         thread {
@@ -82,10 +141,13 @@ class ProtocolControllerTest : Assert() {
         controller.join(RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS)
         assertTrue(isConnectedToServer)
         assertFalse(controller.connectionAttemptFailed)
+
+        // Checking that handshake started
+        assertEquals(HandshakeStatus.WAIT_SERVER_PUBLIC_KEY, controller.handshakeController.handshakeStatus)
     }
 
     @Test
-    fun testConnectionDropping_without_handshake() {
+    fun testConnectionDropping_without_session() {
         val disconnectionSemaphore = Semaphore(0)
 
         startServer()
@@ -98,22 +160,25 @@ class ProtocolControllerTest : Assert() {
         controller.start()
         controller.join(500)
 
+        stopServer() // Preventing reconnection
         disconnectionSemaphore.acquire()
-        controller.interrupt()
         controller.join(500)
+        controller.interrupt()
 
-        // TODO: Testing reader resetting
-
-        assertNull(client.connectionStateChannel.valueOrNull)
+        assertFalse(controller.messagesController.isSessionStarted())
+        assertEquals(HandshakeStatus.NOT_STARTED, controller.handshakeController.handshakeStatus)
+        Mockito.verify(callback, Mockito.never()).onMessage(any())
+        Mockito.verify(callback, Mockito.never()).onEnded()
+        Mockito.verify(callback, Mockito.never()).onStarted()
     }
 
     @Test
-    fun testConnectionDropping_with_handshake() {
+    fun testConnectionDropping_with_started_session() {
         controller.start()
         controller.join(500)
 
         controller.connectionAttemptFailed = false
-        controller.handshakeController.handshakeStatus = HandshakeStatus.SUCCESS
+        controller.messagesController.secretKey = Random.nextBytes(1024)
 
         controller::class.java
                 .getDeclaredMethod("socketClosed", Boolean::class.java)
@@ -123,9 +188,11 @@ class ProtocolControllerTest : Assert() {
         controller.interrupt()
         controller.join(500)
 
-        // TODO: Testing reader, handshake resetting
-
-        assertEquals(ConnectionState.CONNECTION_CLOSED, client.connectionStateChannel.valueOrNull)
+        assertFalse(controller.messagesController.isSessionStarted())
+        assertEquals(HandshakeStatus.NOT_STARTED, controller.handshakeController.handshakeStatus)
+        Mockito.verify(callback, Mockito.never()).onMessage(any())
+        Mockito.verify(callback).onEnded()
+        Mockito.verify(callback, Mockito.never()).onStarted()
     }
 
     @Test
@@ -154,5 +221,16 @@ class ProtocolControllerTest : Assert() {
         readableSemaphore.tryAcquire(5, TimeUnit.SECONDS)
 
         assertArrayEquals(valid, receiveBuffer)
+    }
+
+    @Test
+    fun testStartEncryptedSession() {
+        val secretKey = Random.nextBytes(128)
+
+        controller.startEncryptedSession(secretKey)
+        assertTrue(controller.messagesController.isSessionStarted())
+        Mockito.verify(callback, Mockito.never()).onMessage(any())
+        Mockito.verify(callback, Mockito.never()).onEnded()
+        Mockito.verify(callback).onStarted()
     }
 }

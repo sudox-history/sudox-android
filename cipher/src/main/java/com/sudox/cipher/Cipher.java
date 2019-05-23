@@ -3,8 +3,11 @@ package com.sudox.cipher;
 public class Cipher {
 
     static {
-        System.loadLibrary("scipher");
-        initLibrary();
+        try {
+            System.loadLibrary("scipher");
+            initLibrary();
+        } catch (UnsatisfiedLinkError ignored) {
+        }
     }
 
     public static boolean checkEqualsAllBytes(byte[] first, byte[] second) {
