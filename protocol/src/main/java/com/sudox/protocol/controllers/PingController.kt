@@ -6,7 +6,9 @@ import java.util.LinkedList
 
 class PingController(val protocolController: ProtocolController) {
 
-    private var pingRequestedOrDelivered: Boolean = false
+//    private var pingRequestedOrDelivered: Boolean = false
+    private var pingWillBeSendByServer: Boolean = false
+    private var pingReceived: Boolean = false
 
     companion object {
         internal val PING_PACKET_NAME = "png".toByteArray()
@@ -19,14 +21,16 @@ class PingController(val protocolController: ProtocolController) {
     }
 
     internal fun startPingCycle() {
-        pingRequestedOrDelivered = true
+        // First ping will be send by server
+        pingWillBeSendByServer = true
+        pingReceived = false
+        schedulePingCheckTask()
     }
 
     internal fun handlePing() {
-        if (pingRequestedOrDelivered) {
+        pingReceived = true
+        if (pingWillBeSendByServer) {
             sendPingPacket()
-        } else {
-            pingRequestedOrDelivered = true
         }
     }
 
@@ -51,7 +55,8 @@ class PingController(val protocolController: ProtocolController) {
     }
 
     internal fun sendPing() {
-        pingRequestedOrDelivered = false
+        pingWillBeSendByServer = true
+        pingReceived = false
         sendPingPacket()
         schedulePingCheckTask()
     }
@@ -61,7 +66,7 @@ class PingController(val protocolController: ProtocolController) {
     }
 
     internal fun checkPing() {
-        if (!pingRequestedOrDelivered) {
+        if (pingWillBeSendByServer && !pingReceived) {
             protocolController.restartConnection()
         }
     }

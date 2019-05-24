@@ -4,6 +4,8 @@ import android.support.test.runner.AndroidJUnit4
 import com.nhaarman.mockitokotlin2.any
 import com.sudox.protocol.ProtocolController.Companion.RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS
 import com.sudox.protocol.controllers.HandshakeStatus
+import com.sudox.protocol.controllers.PingController.Companion.PING_PACKET_NAME
+import com.sudox.protocol.controllers.PingController.Companion.PING_SEND_INTERVAL_IN_MILLIS
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -12,7 +14,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito
 import java.net.InetSocketAddress
 import java.net.ServerSocket
-import java.net.Socket
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
@@ -93,6 +94,62 @@ class ProtocolControllerTest : Assert() {
 
         connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
         assertFalse(connected)
+    }
+
+    @Test
+    fun testPing() {
+        val connectSemaphore = Semaphore(0)
+
+        startServer()
+        thread {
+            serverSocket.accept()
+            connectSemaphore.release()
+        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
+
+        controller.start()
+
+        // Because onEnded() never calling without session
+        controller.messagesController.secretKey = "Fake key!".toByteArray()
+        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        Thread.sleep(7000)
+
+        Mockito.verify(callback).onEnded()
+    }
+
+    @Test
+    fun testPing_normal() {
+        val connectSemaphore = Semaphore(0)
+        val pingMessage = byteArrayOf(0x00, 0x00, 0x09, 0x00, 0x00, 0x03) + PING_PACKET_NAME
+        val pingReceivedMessage = ByteArray(pingMessage.size)
+
+        startServer()
+        thread {
+            val socket = serverSocket.accept()
+            socket.tcpNoDelay = true
+            socket.getOutputStream().write(pingMessage)
+            connectSemaphore.release()
+            socket.getInputStream().read(pingReceivedMessage)
+
+            for (i in 0 until 10) {
+                Thread.sleep(PING_SEND_INTERVAL_IN_MILLIS)
+                socket.getOutputStream().write(pingMessage)
+            }
+        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
+
+        controller.start()
+
+        // Because onEnded() never calling without session
+        controller.messagesController.secretKey = "Fake key!".toByteArray()
+        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        Thread.sleep(6500)
+
+        Mockito.verify(callback, Mockito.never()).onEnded()
+        assertArrayEquals(pingMessage, pingReceivedMessage)
+    }
+
+    @Test
+    fun testAddMessageToQueue() {
+
     }
 
     @Test

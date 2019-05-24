@@ -7,7 +7,7 @@ import com.sudox.protocol.controllers.PingController
 import com.sudox.protocol.helpers.deserializePacketSlices
 import com.sudox.protocol.helpers.serializePacket
 import com.sudox.sockets.SocketClient
-import java.util.*
+import java.util.LinkedList
 
 class ProtocolController(var protocolClient: ProtocolClient) :
         ControllerThread("STIPS Worker"),
