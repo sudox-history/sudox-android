@@ -6,7 +6,6 @@ import java.util.LinkedList
 
 class PingController(val protocolController: ProtocolController) {
 
-//    private var pingRequestedOrDelivered: Boolean = false
     private var pingWillBeSendByServer: Boolean = false
     private var pingReceived: Boolean = false
 
@@ -29,6 +28,7 @@ class PingController(val protocolController: ProtocolController) {
 
     internal fun handlePing() {
         pingReceived = true
+
         if (pingWillBeSendByServer) {
             sendPingPacket()
         }
