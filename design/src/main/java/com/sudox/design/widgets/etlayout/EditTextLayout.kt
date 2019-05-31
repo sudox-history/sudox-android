@@ -1,4 +1,4 @@
-package com.sudox.design.widgets.edittextlayout
+package com.sudox.design.widgets.etlayout
 
 import android.content.Context
 import android.graphics.Canvas
@@ -18,7 +18,7 @@ class EditTextLayout : ViewGroup, TextWatcher {
     internal var editText: EditText? = null
 
     constructor(context: Context) : this(context, null)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.editTextLayoutStyle)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         with(context.obtainStyledAttributes(attrs, R.styleable.EditTextLayout, defStyleAttr, R.style.EditTextLayout)) {
             labelParamsTemp = EditTextLayoutLabelParams()

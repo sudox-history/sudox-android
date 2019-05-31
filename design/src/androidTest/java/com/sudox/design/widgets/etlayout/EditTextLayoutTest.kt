@@ -1,4 +1,4 @@
-package com.sudox.design.widgets.edittextlayout
+package com.sudox.design.widgets.etlayout
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*

@@ -6,7 +6,8 @@
     <color name="accent_color">#FFFFFF</color>
 
     <color name="navbar_buttons_text_color">@color/accent_color</color>
-    <color name="navbar_color">@color/primary_color</color>
+    <color name="navbar_buttons_icon_tint">@color/accent_color</color>
+    <color name="navbar_background_color">@color/primary_color</color>
 
     <color name="edittext_text_color">@color/accent_color</color>
     <color name="edittext_hint_color">#9F9F9F</color>

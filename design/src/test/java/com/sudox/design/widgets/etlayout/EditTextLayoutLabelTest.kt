@@ -1,4 +1,4 @@
-package com.sudox.design.widgets.edittextlayout
+package com.sudox.design.widgets.etlayout
 
 import android.graphics.Canvas
 import android.graphics.Paint

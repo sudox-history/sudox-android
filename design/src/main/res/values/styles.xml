@@ -9,7 +9,7 @@
         <item name="editTextStyle">@style/EditText</item>
 
         <item name="navigationBarStyle">@style/NavigationBarStyle</item>
-        <item name="navigationBarButtonsStyle">@style/NavigationBarStyle.Buttons</item>
+        <item name="navigationBarBtnStyle">@style/NavigationBarStyle.Button</item>
         <item name="editTextLayoutStyle">@style/EditTextLayout</item>
     </style>
 
@@ -24,21 +24,19 @@
     </style>
 
     <style name="NavigationBarStyle">
-        <item name="viewHeight">@dimen/navbar_height</item>
-        <item name="backgroundColor">@color/navbar_color</item>
-        <item name="horizontalPadding">@dimen/navbar_buttons_horizontal_padding</item>
+        <item name="navbarBackgroundColor">@color/navbar_background_color</item>
+        <item name="navbarHorizontalPadding">@dimen/navbar_horizontal_padding</item>
     </style>
 
-    <style name="NavigationBarStyle.Buttons">
-        <item name="leftArrowDrawable">@drawable/ic_arrow_left</item>
-        <item name="rightArrowDrawable">@drawable/ic_arrow_right</item>
-        <item name="arrowPadding">@dimen/navbar_buttons_arrow_padding</item>
-        <item name="textSize">@dimen/navbar_buttons_text_size</item>
-        <item name="textColor">@color/navbar_buttons_text_color</item>
+    <style name="NavigationBarStyle.Button">
+        <item name="navbarBtnTextSize">@dimen/navbar_buttons_text_size</item>
+        <item name="navbarBtnTextColor">@color/navbar_buttons_text_color</item>
+        <item name="navbarBtnIconTint">@color/navbar_buttons_icon_tint</item>
+        <item name="navbarBtnIconMargin">@dimen/navbar_buttons_icon_margin</item>
     </style>
 
     <style name="EditTextLayout">
-        <item name="labelErrorTextColor">@color/edittextlayout_label_text_error_color</item>
-        <item name="labelTextSize">@dimen/edittextlayout_label_text_size</item>
+        <item name="etLayoutLabelErrorTextColor">@color/edittextlayout_label_text_error_color</item>
+        <item name="etLayoutLabelTextSize">@dimen/edittextlayout_label_text_size</item>
     </style>
 </resources>
