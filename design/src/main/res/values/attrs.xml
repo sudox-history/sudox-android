@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="EditTextLayout">
-        <attr name="etLayoutLabelErrorTextColor" format="color" />
-        <attr name="etLayoutLabelTextSize" format="dimension" />
+        <attr name="labelStyle" format="reference" />
+        <attr name="errorTextColor" />
     </declare-styleable>
 
     <attr name="editTextLayoutStyle" format="reference" />
+    <attr name="errorTextColor" format="color" />
 </resources>

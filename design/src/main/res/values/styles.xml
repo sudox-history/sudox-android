@@ -21,7 +21,13 @@
     </style>
 
     <style name="EditTextLayout">
-        <item name="etLayoutLabelErrorTextColor">@color/edittextlayout_label_text_error_color</item>
-        <item name="etLayoutLabelTextSize">@dimen/edittextlayout_label_text_size</item>
+        <item name="errorTextColor">@color/edittextlayout_label_text_error_color</item>
+        <item name="labelStyle">@style/EditTextLayout.Label</item>
+    </style>
+
+    <style name="EditTextLayout.Label">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/edittextlayout_label_text_size</item>
     </style>
 </resources>

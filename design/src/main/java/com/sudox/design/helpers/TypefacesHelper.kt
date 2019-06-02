@@ -1,10 +1,23 @@
 package com.sudox.design.helpers
 
 import android.graphics.Typeface
+import android.util.SparseArray
 
-val SANS_SERIF_NORMAL by lazy { Typeface.create("sans-serif", Typeface.NORMAL) }
-val SANS_SERIF_LIGHT by lazy { Typeface.create("sans-serif-light", Typeface.NORMAL) }
-val SANS_SERIF_CONDENSED by lazy { Typeface.create("sans-serif-condensed", Typeface.NORMAL) }
-val SANS_SERIF_BLACK by lazy { Typeface.create("sans-serif-black", Typeface.NORMAL) }
-val SANS_SERIF_THIN by lazy { Typeface.create("sans-serif-thin", Typeface.NORMAL) }
-val SANS_SERIF_MEDIUM by lazy { Typeface.create("sans-serif-medium", Typeface.NORMAL) }
+private const val HASH_CODE_PRIME_ODD = 31
+private val typefaces = SparseArray<Typeface>()
+
+fun loadTypeface(name: String, style: Int = Typeface.NORMAL): Typeface {
+    val typefaceHashCode = getTypefaceHashCode(name, style)
+    var typeface = typefaces[typefaceHashCode]
+
+    if (typeface == null) {
+        typeface = Typeface.create(name, style)
+        typefaces.append(typefaceHashCode, typeface)
+    }
+
+    return typeface
+}
+
+private fun getTypefaceHashCode(name: String, style: Int): Int {
+    return HASH_CODE_PRIME_ODD * name.hashCode() + style
+}

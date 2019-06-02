@@ -22,7 +22,7 @@ class EditTextLayout : ViewGroup, TextWatcher {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         with(context.obtainStyledAttributes(attrs, R.styleable.EditTextLayout, defStyleAttr, R.style.EditTextLayout)) {
             labelParamsTemp = EditTextLayoutLabelParams()
-            labelParamsTemp!!.readFromAttrs(this)
+            labelParamsTemp!!.readFromAttrs(this, context.theme)
             recycle()
         }
     }

@@ -3,7 +3,6 @@ package com.sudox.design.widgets.etlayout
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.widget.EditText
-import com.sudox.design.helpers.SANS_SERIF_NORMAL
 
 class EditTextLayoutLabel(val editText: EditText, val params: EditTextLayoutLabelParams) {
 
@@ -22,13 +21,11 @@ class EditTextLayoutLabel(val editText: EditText, val params: EditTextLayoutLabe
         val y = getHeight().toFloat()
 
         paint.color = textColor
-
         canvas.drawText(text, x, y, paint)
-        canvas.save()
     }
 
     internal fun configurePaint() {
-        paint.typeface = SANS_SERIF_NORMAL
+        paint.typeface = params.textTypeface
         paint.textSize = params.textSize.toFloat()
     }
 
