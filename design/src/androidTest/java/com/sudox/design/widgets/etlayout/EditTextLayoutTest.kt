@@ -26,7 +26,7 @@ class EditTextLayoutTest : Assert() {
 
     @Rule
     @JvmField
-    val viewTestRule = ViewTestRule<EditTextLayout>(ViewCreator<EditTextLayout> { context, parentView ->
+    val viewTestRule = ViewTestRule<EditTextLayout>(ViewCreator<EditTextLayout> { context, _ ->
         return@ViewCreator EditTextLayout(context).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             linkedEditText = EditText(context).apply {

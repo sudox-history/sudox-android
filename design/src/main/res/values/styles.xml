@@ -7,9 +7,6 @@
 
         <item name="android:editTextStyle">@style/EditText</item>
         <item name="editTextStyle">@style/EditText</item>
-
-        <item name="navigationBarStyle">@style/NavigationBarStyle</item>
-        <item name="navigationBarBtnStyle">@style/NavigationBarStyle.Button</item>
         <item name="editTextLayoutStyle">@style/EditTextLayout</item>
     </style>
 
@@ -21,18 +18,6 @@
         <item name="android:textSize">@dimen/edittext_text_size</item>
         <item name="android:textColor">@color/edittext_text_color</item>
         <item name="android:textColorHint">@color/edittext_hint_color</item>
-    </style>
-
-    <style name="NavigationBarStyle">
-        <item name="navbarBackgroundColor">@color/navbar_background_color</item>
-        <item name="navbarHorizontalPadding">@dimen/navbar_horizontal_padding</item>
-    </style>
-
-    <style name="NavigationBarStyle.Button">
-        <item name="navbarBtnTextSize">@dimen/navbar_buttons_text_size</item>
-        <item name="navbarBtnTextColor">@color/navbar_buttons_text_color</item>
-        <item name="navbarBtnIconTint">@color/navbar_buttons_icon_tint</item>
-        <item name="navbarBtnIconMargin">@dimen/navbar_buttons_icon_margin</item>
     </style>
 
     <style name="EditTextLayout">

@@ -1,23 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="NavigationBar">
-        <attr name="navbarBackgroundColor" format="color" />
-        <attr name="navbarHorizontalPadding" format="dimension" />
-    </declare-styleable>
-
-    <declare-styleable name="NavigationBarButton">
-        <attr name="navbarBtnTextSize" format="dimension" />
-        <attr name="navbarBtnTextColor" format="color" />
-        <attr name="navbarBtnIconTint" format="color" />
-        <attr name="navbarBtnIconMargin" format="dimension" />
-    </declare-styleable>
-
     <declare-styleable name="EditTextLayout">
         <attr name="etLayoutLabelErrorTextColor" format="color" />
         <attr name="etLayoutLabelTextSize" format="dimension" />
     </declare-styleable>
 
-    <attr name="navigationBarStyle" format="reference" />
-    <attr name="navigationBarBtnStyle" format="reference" />
     <attr name="editTextLayoutStyle" format="reference" />
 </resources>
