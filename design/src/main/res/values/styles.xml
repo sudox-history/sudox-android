@@ -8,6 +8,8 @@
         <item name="android:editTextStyle">@style/EditText</item>
         <item name="editTextStyle">@style/EditText</item>
         <item name="editTextLayoutStyle">@style/EditTextLayout</item>
+
+        <item name="navigationBarStyle">@style/NavigationBar</item>
     </style>
 
     <style name="SudoxTheme.Light" parent="SudoxTheme">
@@ -29,5 +31,20 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">@dimen/edittextlayout_label_text_size</item>
+    </style>
+
+    <style name="NavigationBar">
+        <item name="buttonsStyle">@style/NavigationBar.Button</item>
+    </style>
+
+    <style name="NavigationBar.Button">
+        <item name="android:paddingLeft">@dimen/navigationbar_button_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/navigationbar_button_horizontal_padding</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">@dimen/navigationbar_button_text_size</item>
+        <item name="android:textColor">@color/navigationbar_button_text_color</item>
+        <item name="iconTint">@color/navigationbar_button_icon_tint</item>
+        <item name="iconTextMargin">@dimen/navigationbar_button_icon_text_margin</item>
     </style>
 </resources>
