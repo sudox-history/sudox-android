@@ -79,7 +79,7 @@ void SocketClient::close(bool error) {
         return;
     }
 
-    epoll_ctl(listener.epoll_fd, EPOLL_CTL_DEL, socket_fd, NULL);
+    epoll_ctl(listener.epoll_fd, EPOLL_CTL_DEL, socket_fd, nullptr);
     ::close(socket_fd);
     connected = false;
     socket_fd = -1;

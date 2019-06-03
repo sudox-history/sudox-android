@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 public class SocketClient {
 
     // Указатель на обьект клиента в нативной памяти.
-    private long pointer;
+    private final long pointer;
 
     /**
      * Конструктор обьекта клиента.
