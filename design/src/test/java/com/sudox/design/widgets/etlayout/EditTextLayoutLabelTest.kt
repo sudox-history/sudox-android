@@ -2,7 +2,9 @@ package com.sudox.design.widgets.etlayout
 
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Rect
 import android.widget.EditText
+import com.sudox.design.helpers.isTextRtl
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,7 +17,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(EditTextLayoutLabel::class, Canvas::class, EditText::class, Paint::class)
+@PrepareForTest(EditTextLayoutLabel::class, Canvas::class, EditText::class, Paint::class,
+        fullyQualifiedNames = ["com.sudox.design.helpers.TextHelperKt"])
 class EditTextLayoutLabelTest : Assert() {
 
     @Test
@@ -157,11 +160,84 @@ class EditTextLayoutLabelTest : Assert() {
         PowerMockito.`when`(editTextLayoutLabel.getCurrentText()).thenReturn("Test")
         PowerMockito.`when`(editTextLayoutLabel.getHeight()).thenReturn(15)
         PowerMockito.`when`(editTextLayoutLabel.getCurrentColor()).thenReturn(3)
-        PowerMockito.`when`(editText.compoundPaddingLeft).thenReturn(10)
+        PowerMockito.`when`(editTextLayoutLabel.getXCoord("Test")).thenReturn(10)
         editTextLayoutLabel.dispatchDraw(canvas)
 
         Mockito.verify(paint).color = 3
         Mockito.verify(canvas).drawText("Test", 10F, 15F, paint)
+    }
+
+    @Test
+    fun testXCoordRtl() {
+        val editTextLayoutLabel = PowerMockito.mock(EditTextLayoutLabel::class.java)
+        val editText = PowerMockito.mock(EditText::class.java)
+        val paint = PowerMockito.mock(Paint::class.java)
+        val bounds = PowerMockito.mock(Rect::class.java)
+        val editTextWidth = 512
+        val paddingStart = 10
+        val textWidth = 256
+        val text = "لوحة المفاتيح العربية"
+
+        EditTextLayoutLabel::class.java
+                .getDeclaredField("editText")
+                .apply { isAccessible = true }
+                .set(editTextLayoutLabel, editText)
+
+        EditTextLayoutLabel::class.java
+                .getDeclaredField("paint")
+                .apply { isAccessible = true }
+                .set(editTextLayoutLabel, paint)
+
+        EditTextLayoutLabel::class.java
+                .getDeclaredField("bounds")
+                .apply { isAccessible = true }
+                .set(editTextLayoutLabel, bounds)
+
+        PowerMockito.mockStatic(Class.forName("com.sudox.design.helpers.TextHelperKt"))
+        PowerMockito.`when`(editText.isTextRtl(text)).thenReturn(true)
+
+        PowerMockito.`when`(editText.measuredWidth).thenReturn(editTextWidth)
+        PowerMockito.`when`(editText.compoundPaddingStart).thenReturn(paddingStart)
+        PowerMockito.`when`(bounds.width()).thenReturn(textWidth)
+        PowerMockito.`when`(editTextLayoutLabel.getXCoord(anyString())).thenCallRealMethod()
+
+        val result = editTextLayoutLabel.getXCoord(text)
+        assertEquals(editTextWidth - paddingStart - textWidth, result)
+
+        Mockito.verify(paint).getTextBounds(text, 0, text.length, bounds)
+    }
+
+    @Test
+    fun testXCoordLtr() {
+        val editTextLayoutLabel = PowerMockito.mock(EditTextLayoutLabel::class.java)
+        val editText = PowerMockito.mock(EditText::class.java)
+        val paint = PowerMockito.mock(Paint::class.java)
+        val bounds = PowerMockito.mock(Rect::class.java)
+        val editTextWidth = 512
+        val paddingStart = 10
+        val textWidth = 256
+        val text = "Hello World"
+
+        EditTextLayoutLabel::class.java
+                .getDeclaredField("editText")
+                .apply { isAccessible = true }
+                .set(editTextLayoutLabel, editText)
+
+        EditTextLayoutLabel::class.java
+                .getDeclaredField("paint")
+                .apply { isAccessible = true }
+                .set(editTextLayoutLabel, paint)
+
+        PowerMockito.mockStatic(Class.forName("com.sudox.design.helpers.TextHelperKt"))
+        PowerMockito.`when`(editText.isTextRtl(text)).thenReturn(false)
+
+        PowerMockito.`when`(editText.measuredWidth).thenReturn(editTextWidth)
+        PowerMockito.`when`(editText.compoundPaddingStart).thenReturn(paddingStart)
+        PowerMockito.`when`(bounds.width()).thenReturn(textWidth)
+        PowerMockito.`when`(editTextLayoutLabel.getXCoord(anyString())).thenCallRealMethod()
+
+        val result = editTextLayoutLabel.getXCoord(text)
+        assertEquals(paddingStart, result)
     }
 
     @Test

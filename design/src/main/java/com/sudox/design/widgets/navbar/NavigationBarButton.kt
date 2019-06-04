@@ -153,8 +153,8 @@ class NavigationBarButton(context: Context, styleResourceId: Int) : View(context
     }
 
     internal fun drawText(canvas: Canvas) {
-        val leftBorder = getTextLeftBorder()
         val bottomBorder = getTextBottomBorder(canvas)
+        val leftBorder = getTextLeftBorder()
 
         canvas.drawText(text!!, leftBorder.toFloat(), bottomBorder.toFloat(), textPaint)
     }
