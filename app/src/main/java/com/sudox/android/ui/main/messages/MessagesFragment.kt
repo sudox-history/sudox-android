@@ -1,9 +1,9 @@
 package com.sudox.android.ui.main.messages
 
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.appcompat.widget.Toolbar
 import android.view.*
 import android.widget.Toast
 import com.sudox.android.R

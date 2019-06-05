@@ -18,7 +18,7 @@
         android:layout_above="@+id/bottomNavigationView"
         android:layout_below="@id/mainToolbar" />
 
-    <android.support.design.widget.BottomNavigationView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         style="@style/AppTheme.BottomNavigationView"
         app:menu="@menu/menu_main" />

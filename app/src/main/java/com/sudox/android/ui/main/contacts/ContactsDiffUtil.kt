@@ -1,6 +1,6 @@
 package com.sudox.android.ui.main.contacts
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import com.sudox.android.data.database.model.user.User
 
 class ContactsDiffUtil(val newContacts: ArrayList<User>,

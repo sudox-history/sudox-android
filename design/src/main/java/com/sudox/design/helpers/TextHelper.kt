@@ -1,8 +1,8 @@
 package com.sudox.design.helpers
 
-import android.support.v4.text.TextDirectionHeuristicCompat
-import android.support.v4.text.TextDirectionHeuristicsCompat
-import android.support.v4.view.ViewCompat
+import androidx.core.text.TextDirectionHeuristicCompat
+import androidx.core.text.TextDirectionHeuristicsCompat
+import androidx.core.view.ViewCompat
 import android.view.View
 
 fun View.isTextRtl(text: String): Boolean {

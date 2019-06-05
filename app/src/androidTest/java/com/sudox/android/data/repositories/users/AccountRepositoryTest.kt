@@ -3,10 +3,10 @@ package com.sudox.android.data.repositories.users
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.os.Build
-import android.support.test.InstrumentationRegistry
-import android.support.test.filters.MediumTest
-import android.support.test.filters.SdkSuppress
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.InstrumentationRegistry
+import androidx.test.filters.MediumTest
+import androidx.test.filters.SdkSuppress
+import androidx.test.runner.AndroidJUnit4
 import com.sudox.android.data.database.SudoxDatabase
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.tests.helpers.randomBase64String

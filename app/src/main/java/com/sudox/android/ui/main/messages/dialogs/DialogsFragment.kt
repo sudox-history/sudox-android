@@ -1,10 +1,10 @@
 package com.sudox.android.ui.main.messages.dialogs
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +29,7 @@ class DialogsFragment @Inject constructor() : TabLayoutFragment() {
     private val messagesFragment by lazy { parentFragment as MessagesFragment }
     private val dialogsViewModel by lazy { getViewModel<DialogsViewModel>(viewModelFactory) }
     private val dialogsAdapter by lazy { DialogsAdapter(context!!) }
-    private val linearLayoutManager by lazy { LinearLayoutManager(context!!) }
+    private val linearLayoutManager by lazy { androidx.recyclerview.widget.LinearLayoutManager(context!!) }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -157,8 +157,8 @@ class DialogsFragment @Inject constructor() : TabLayoutFragment() {
                 })
 
         // Paging ...
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        recyclerView.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 val position = linearLayoutManager.findLastCompletelyVisibleItemPosition()
                 val updatePosition = dialogsAdapter.dialogs.size - 1
 

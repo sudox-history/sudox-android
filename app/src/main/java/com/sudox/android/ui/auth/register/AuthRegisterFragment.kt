@@ -1,6 +1,6 @@
 package com.sudox.android.ui.auth.register
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

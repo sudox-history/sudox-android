@@ -1,12 +1,12 @@
 package com.sudox.android.ui.messages.dialog
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -27,7 +27,7 @@ class DialogFragment @Inject constructor() : DaggerFragment(), Toolbar.OnMenuIte
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     // Список сообщений
-    private val linearLayoutManager by lazy { LinearLayoutManager(context!!).apply { stackFromEnd = true } }
+    private val linearLayoutManager by lazy { androidx.recyclerview.widget.LinearLayoutManager(context!!).apply { stackFromEnd = true } }
     private val dialogAdapter by lazy { DialogAdapter(context!!) }
     private var isInitialized: Boolean = false
 
@@ -141,8 +141,8 @@ class DialogFragment @Inject constructor() : DaggerFragment(), Toolbar.OnMenuIte
         })
 
         // Paging ...
-        chatMessagesList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+        chatMessagesList.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: androidx.recyclerview.widget.RecyclerView, dx: Int, dy: Int) {
                 val visibleItemCount = linearLayoutManager.childCount
                 val totalItemCount = linearLayoutManager.itemCount
                 val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()

@@ -1,13 +1,13 @@
 package com.sudox.android.ui.main.contacts
 
 import android.app.AlertDialog
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -59,7 +59,7 @@ class ContactsFragment @Inject constructor() : NavigationRootFragment(), Toolbar
         contactsRecyclerViewContainer
                 .recyclerView
                 .apply {
-                    layoutManager = LinearLayoutManager(context)
+                    layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
                     adapter = contactsAdapter
                     itemAnimator = null
                     addItemDecoration(SecondColumnItemDecorator(context, false, true))

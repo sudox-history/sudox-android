@@ -1,7 +1,7 @@
 package com.sudox.design.recyclerview.adapters
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import com.sudox.android.R
 import kotlinx.android.synthetic.main.item_parameter.view.*
 import javax.inject.Inject
 
-class ParametersAdapter(private val context: Context) : RecyclerView.Adapter<ParametersAdapter.ViewHolder>() {
+class ParametersAdapter(private val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<ParametersAdapter.ViewHolder>() {
 
     var parameters: ArrayList<Parameter> = arrayListOf()
 
@@ -25,7 +25,7 @@ class ParametersAdapter(private val context: Context) : RecyclerView.Adapter<Par
         viewHolder.bind(parameters[position], position)
     }
 
-    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
 
         fun bind(parameter: Parameter, position: Int) {
             view.parameterFavicon.setBackgroundResource(parameter.iconRes)

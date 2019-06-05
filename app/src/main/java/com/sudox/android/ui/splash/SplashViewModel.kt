@@ -1,6 +1,6 @@
 package com.sudox.android.ui.splash
 
-import android.arch.lifecycle.*
+import androidx.lifecycle.*
 import com.sudox.android.ui.splash.enums.SplashAction
 import com.sudox.android.common.helpers.livedata.SingleLiveEvent
 import com.sudox.android.data.repositories.users.AccountRepository

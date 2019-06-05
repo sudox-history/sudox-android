@@ -2,7 +2,7 @@ package com.sudox.design.widgets
 
 import android.content.Context
 import android.os.Build
-import android.support.design.widget.TextInputLayout
+import com.google.android.material.textfield.TextInputLayout
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View

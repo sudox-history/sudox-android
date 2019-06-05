@@ -33,7 +33,7 @@
         app:counterEnabled="true"
         app:counterMaxLength="@integer/length_email_code">
 
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/codeEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

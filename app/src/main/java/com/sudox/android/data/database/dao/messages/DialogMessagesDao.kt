@@ -1,6 +1,6 @@
 package com.sudox.android.data.database.dao.messages
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.sudox.android.data.database.model.messages.DialogMessage
 
 @Dao

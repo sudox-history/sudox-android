@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.graphics.drawable.shapes.OvalShape
-import android.support.v7.widget.AppCompatTextView
+import androidx.appcompat.widget.AppCompatTextView
 import android.util.TypedValue
 import com.sudox.android.data.database.model.user.User
 import com.sudox.design.helpers.getTwoFirstLetters

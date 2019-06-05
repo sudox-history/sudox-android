@@ -1,22 +1,22 @@
 package com.sudox.design.navigation
 
 import android.app.Activity
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.sudox.android.R
 import com.sudox.design.helpers.hideKeyboard
 import java.util.*
 import kotlin.collections.HashSet
 
 class FragmentNavigator(val activity: Activity,
-                        val fragmentManager: FragmentManager,
+                        val fragmentManager: androidx.fragment.app.FragmentManager,
                         val rootFragments: List<NavigationRootFragment>,
                         val containerId: Int) {
 
     private var isFirstStart: Boolean = false
     private val loadedRootFragments = HashSet<Int>()
-    private val fragmentsPath: LinkedList<Fragment> = LinkedList()
+    private val fragmentsPath: LinkedList<androidx.fragment.app.Fragment> = LinkedList()
 
     init {
         startRootFragments()
@@ -38,14 +38,14 @@ class FragmentNavigator(val activity: Activity,
         val transaction = fragmentManager.beginTransaction()
 
         // Чистим Backstack
-        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        fragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         // Анимация
         if (isFirstStart) {
             isFirstStart = false
 
             // Просто Fade эффект
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            transaction.setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         }
 
         // Родительские фрагменты скрываются, дочерние - удаляются из ОЗУ
@@ -81,7 +81,7 @@ class FragmentNavigator(val activity: Activity,
     }
 
     // Показывает дочерний фрагмент
-    fun showChildFragment(fragment: Fragment) {
+    fun showChildFragment(fragment: androidx.fragment.app.Fragment) {
         val transaction = fragmentManager.beginTransaction()
 
         // Анимация

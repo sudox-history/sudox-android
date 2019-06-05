@@ -2,7 +2,7 @@ package com.sudox.design.widgets.etlayout
 
 import android.content.Context
 import android.graphics.Canvas
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet

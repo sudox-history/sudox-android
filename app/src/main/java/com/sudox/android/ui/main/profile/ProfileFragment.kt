@@ -1,12 +1,12 @@
 package com.sudox.android.ui.main.profile
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 import android.os.Bundle
-import android.support.constraint.motion.MotionLayout
-import android.support.v7.widget.Toolbar
+import androidx.constraintlayout.motion.widget.MotionLayout
+import androidx.appcompat.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View

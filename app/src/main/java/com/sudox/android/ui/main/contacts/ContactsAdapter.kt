@@ -1,9 +1,9 @@
 package com.sudox.android.ui.main.contacts
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import android.content.Context
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.NO_POSITION
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.item_contacts_count.view.*
 import javax.inject.Inject
 
 class ContactsAdapter @Inject constructor(val context: Context,
-                                          val contactsRepository: ContactsRepository) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                                          val contactsRepository: ContactsRepository) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     // Contacts for showing
     var contacts: ArrayList<User> = arrayListOf()
@@ -35,7 +35,7 @@ class ContactsAdapter @Inject constructor(val context: Context,
     // Menu inflater for context menu (must be initialized in onViewCreated())
     lateinit var menuInflater: MenuInflater
 
-    override fun onCreateViewHolder(root: ViewGroup, type: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(root: ViewGroup, type: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         if (type == CONTACTS_LIST_CONTACT) {
             val view = LayoutInflater
                     .from(context)
@@ -79,7 +79,7 @@ class ContactsAdapter @Inject constructor(val context: Context,
     }
 
     @Suppress("NAME_SHADOWING")
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         val type = getItemViewType(position)
 
         if (type == CONTACTS_LIST_CONTACT) {
@@ -108,13 +108,13 @@ class ContactsAdapter @Inject constructor(val context: Context,
         CONTACTS_LIST_CONTACT
     }
 
-    class ContactViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ContactViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var avatar: AvatarView = itemView.contactAvatar
         var name: PrecomputedTextView = itemView.contactName
         var nickname: PrecomputedTextView = itemView.contactNickname
     }
 
-    class ContactsCountHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ContactsCountHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val count: PrecomputedTextView = itemView.contactsCount
     }
 }

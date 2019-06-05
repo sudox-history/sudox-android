@@ -1,6 +1,6 @@
 package com.sudox.android.ui.main
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.sudox.android.data.repositories.users.AuthRepository
 import com.sudox.android.ui.main.enums.MainActivityAction
 import com.sudox.protocol.ProtocolClient

@@ -1,6 +1,6 @@
 package com.sudox.protocol.controllers
 
-import android.support.annotation.IntDef
+import androidx.annotation.IntDef
 
 @Retention(AnnotationRetention.SOURCE)
 @IntDef(HandshakeStatus.NOT_STARTED,

@@ -1,10 +1,10 @@
 package com.sudox.android.ui.main.profile.info
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,7 +48,7 @@ class ProfileInfoFragment @Inject constructor() : TabLayoutFragment() {
 
     private fun initParametersList() {
         profileInfoParametersList.adapter = parametersAdapter
-        profileInfoParametersList.layoutManager = LinearLayoutManager(context!!)
+        profileInfoParametersList.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context!!)
         profileInfoParametersList.itemAnimator = null
         profileInfoParametersList.layoutAnimation = null
 

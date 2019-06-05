@@ -1,6 +1,6 @@
 package com.sudox.design.recyclerview.adapters
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 
 class ParametersDiffUtil(val newParameters: ArrayList<ParametersAdapter.Parameter>,
                          val oldParameters: ArrayList<ParametersAdapter.Parameter>) : DiffUtil.Callback() {

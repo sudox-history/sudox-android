@@ -1,7 +1,7 @@
 package com.sudox.android.ui.main.contacts.add
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
 import com.sudox.android.data.exceptions.RequestException

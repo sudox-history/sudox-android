@@ -1,7 +1,7 @@
 package com.sudox.android.ui.auth
 
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.models.auth.state.AuthSession
 import com.sudox.android.data.repositories.users.AuthRepository

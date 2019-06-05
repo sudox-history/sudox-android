@@ -3,11 +3,11 @@ package com.sudox.design.navigation.toolbar
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.ViewCompat
-import android.support.v7.view.menu.ActionMenuItemView
-import android.support.v7.widget.ActionMenuView
-import android.support.v7.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.appcompat.view.menu.ActionMenuItemView
+import androidx.appcompat.widget.ActionMenuView
+import androidx.appcompat.widget.Toolbar
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.TypedValue

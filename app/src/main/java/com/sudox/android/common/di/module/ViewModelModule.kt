@@ -1,7 +1,7 @@
 package com.sudox.android.common.di.module
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.sudox.android.common.di.annotation.ViewModelKey
 import com.sudox.android.common.di.viewmodels.ViewModelFactory
 import com.sudox.android.ui.auth.AuthViewModel

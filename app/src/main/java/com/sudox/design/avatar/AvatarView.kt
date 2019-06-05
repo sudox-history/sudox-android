@@ -2,7 +2,7 @@ package com.sudox.design.avatar
 
 import android.content.Context
 import android.graphics.*
-import android.support.v7.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatImageView
 import android.util.AttributeSet
 import com.sudox.android.data.database.model.user.User
 import com.sudox.design.helpers.getTwoFirstLetters

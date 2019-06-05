@@ -1,6 +1,6 @@
 package com.sudox.android.ui.auth.phone
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.sudox.android.data.exceptions.RequestException
 import com.sudox.android.data.repositories.users.AuthRepository
 import com.sudox.android.ui.auth.phone.enums.AuthEmailAction

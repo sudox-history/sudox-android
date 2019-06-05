@@ -1,6 +1,6 @@
 package com.sudox.android.ui.messages.dialog
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import com.sudox.android.data.database.model.messages.DialogMessage
 
 class DialogDiffUtil(val newMessages: List<DialogMessage>,

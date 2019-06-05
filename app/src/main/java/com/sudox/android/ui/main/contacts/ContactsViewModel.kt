@@ -2,11 +2,11 @@ package com.sudox.android.ui.main.contacts
 
 import android.Manifest
 import android.app.Activity
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import android.content.pm.PackageManager
 import android.os.Build
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.sudox.android.data.SubscriptionsContainer
 import com.sudox.android.data.database.model.user.User
 import com.sudox.android.data.exceptions.InternalRequestException
@@ -61,7 +61,7 @@ class ContactsViewModel @Inject constructor(private val contactsRepository: Cont
         }
     }
 
-    fun syncContacts(activity: Activity, fragment: Fragment, permissionGranted: Boolean = false) {
+    fun syncContacts(activity: Activity, fragment: androidx.fragment.app.Fragment, permissionGranted: Boolean = false) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val grant = activity.checkSelfPermission(Manifest.permission.READ_CONTACTS)
 

@@ -1,8 +1,8 @@
 package com.sudox.android.ui.main
 
 import android.app.AlertDialog
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast

@@ -3,12 +3,12 @@ package com.sudox.design.recyclerview.decorators
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.sudox.android.R
 
-class SecondColumnItemDecorator(val context: Context, val showOnLatestElement: Boolean = true, val showBeforeLatestElement: Boolean = true) : RecyclerView.ItemDecoration() {
+class SecondColumnItemDecorator(val context: Context, val showOnLatestElement: Boolean = true, val showBeforeLatestElement: Boolean = true) : androidx.recyclerview.widget.RecyclerView.ItemDecoration() {
 
     private val divider: Drawable = ContextCompat.getDrawable(context, R.drawable.divider_item)!!
 
@@ -16,7 +16,7 @@ class SecondColumnItemDecorator(val context: Context, val showOnLatestElement: B
      * Метод для отрисовки делителя.
      * Отрисовка производится после расчета места отрисовки.
      */
-    override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+    override fun onDraw(canvas: Canvas, parent: androidx.recyclerview.widget.RecyclerView, state: androidx.recyclerview.widget.RecyclerView.State) {
         val childCount = parent.childCount
 
         // Draw decorators

@@ -1,6 +1,6 @@
 package com.sudox.protocol
 
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.nhaarman.mockitokotlin2.any
 import com.sudox.protocol.ProtocolController.Companion.RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS
 import com.sudox.protocol.controllers.HandshakeStatus

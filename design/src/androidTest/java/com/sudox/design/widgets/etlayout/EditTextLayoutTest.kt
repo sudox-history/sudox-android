@@ -1,14 +1,14 @@
 package com.sudox.design.widgets.etlayout
 
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.action.ViewActions.*
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.matcher.ViewMatchers.withHint
-import android.support.test.filters.LargeTest
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.withHint
+import androidx.test.filters.LargeTest
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.novoda.espresso.ViewCreator
 import com.novoda.espresso.ViewTestRule
 import com.sudox.design.R

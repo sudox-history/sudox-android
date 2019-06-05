@@ -1,6 +1,6 @@
 package com.sudox.android.common.helpers.livedata
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import android.os.Looper
 import com.sudox.common.helper.any
 import com.sudox.common.helper.mockMainThreadHandler

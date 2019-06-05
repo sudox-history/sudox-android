@@ -1,9 +1,9 @@
 package com.sudox.android.ui.main.messages.dialogs
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import android.content.Context
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.NO_POSITION
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +16,7 @@ import com.sudox.design.helpers.formatHtml
 import com.sudox.android.common.helpers.livedata.SingleLiveEvent
 import kotlinx.android.synthetic.main.item_dialog.view.*
 
-class DialogsAdapter(val context: Context) : RecyclerView.Adapter<DialogsAdapter.Holder>() {
+class DialogsAdapter(val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<DialogsAdapter.Holder>() {
 
     var dialogs: ArrayList<Dialog> = ArrayList()
     var clickedDialogLiveData: MutableLiveData<Dialog> = SingleLiveEvent()
@@ -65,7 +65,7 @@ class DialogsAdapter(val context: Context) : RecyclerView.Adapter<DialogsAdapter
         }
     }
 
-    class Holder(val view: View) : RecyclerView.ViewHolder(view) {
+    class Holder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         val dialogRecipientAvatar = view.dialogRecipientAvatar
         val dialogRecipientName = view.dialogRecipientName
         val dialogLastMsgTime = view.dialogLastMsgTime

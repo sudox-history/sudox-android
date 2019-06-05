@@ -1,6 +1,6 @@
 package com.sudox.android.ui.messages
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.sudox.android.data.repositories.users.AuthRepository
 import com.sudox.android.data.repositories.messages.dialogs.DialogsMessagesRepository
 import com.sudox.android.data.repositories.users.AccountRepository

@@ -56,7 +56,7 @@ subprojects { subproject ->
             targetSdkVersion compileSdkProjectVersion
             versionCode versionMajor * 1000 + versionMinor * 100 + versionUpdate * 10 + versionPatch
             versionName "${versionMajor}.${versionMinor}.${versionUpdate}.${versionPatch}"
-            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+            testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
             if (name == 'app') {
                 applicationId projectApplicationId
@@ -73,7 +73,7 @@ subprojects { subproject ->
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
-        implementation 'com.android.support:support-annotations:28.0.0'
+        implementation 'androidx.annotation:annotation:1.0.0'
 
         // Dagger
         implementation "com.google.dagger:dagger:2.17"
@@ -93,10 +93,11 @@ subprojects { subproject ->
         androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
         androidTestImplementation 'org.mockito:mockito-core:2.25.1'
         androidTestImplementation 'org.mockito:mockito-android:2.25.1'
-        androidTestImplementation 'com.android.support.test:runner:1.0.2'
-        androidTestImplementation 'com.android.support.test:rules:1.0.2'
-        androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-        androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.2'
+        androidTestImplementation 'androidx.test:runner:1.1.0'
+        androidTestImplementation 'androidx.test:rules:1.1.0'
+        androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+        androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.0'
+        androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     }
 
     kapt {

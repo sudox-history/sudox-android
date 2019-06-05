@@ -1,10 +1,10 @@
 package com.sudox.android.common.helpers
 
 import android.content.Intent
-import android.support.test.espresso.intent.Intents
-import android.support.test.espresso.intent.matcher.IntentMatchers
-import android.support.test.espresso.intent.rule.IntentsTestRule
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.rule.IntentsTestRule
+import androidx.test.runner.AndroidJUnit4
 import com.sudox.android.ui.auth.AuthActivity
 import com.sudox.android.tests.helpers.randomBase64String
 import org.hamcrest.Matchers

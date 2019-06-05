@@ -1,8 +1,8 @@
 package com.sudox.design.widgets
 
 import android.content.Context
-import android.support.v4.text.PrecomputedTextCompat
-import android.support.v4.widget.TextViewCompat
+import androidx.core.text.PrecomputedTextCompat
+import androidx.core.widget.TextViewCompat
 import android.util.AttributeSet
 import android.widget.TextView
 import com.sudox.android.R

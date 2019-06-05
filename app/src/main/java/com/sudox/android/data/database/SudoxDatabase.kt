@@ -1,8 +1,8 @@
 package com.sudox.android.data.database
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
-import android.arch.persistence.room.TypeConverters
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.sudox.android.data.database.converters.messages.MessageDirectionConverter
 import com.sudox.android.data.database.converters.messages.MessageStatusConverter
 import com.sudox.android.data.database.dao.user.UserDao

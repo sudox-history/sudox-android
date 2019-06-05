@@ -1,7 +1,7 @@
 package com.sudox.design.recyclerview
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
@@ -12,7 +12,7 @@ import android.widget.ProgressBar
 
 class RecyclerViewContainer : FrameLayout {
 
-    var recyclerView: RecyclerView = RecyclerView(context)
+    var recyclerView: androidx.recyclerview.widget.RecyclerView = androidx.recyclerview.widget.RecyclerView(context)
     var loadingSpinner: ProgressBar = ProgressBar(context)
 
     constructor(context: Context) : this(context, null)

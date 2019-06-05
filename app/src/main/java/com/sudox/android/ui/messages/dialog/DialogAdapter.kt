@@ -1,8 +1,8 @@
 package com.sudox.android.ui.messages.dialog
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +14,7 @@ import com.sudox.android.data.models.messages.MessageStatus
 import kotlinx.android.synthetic.main.view_dialog_message_to.view.*
 import java.util.*
 
-class DialogAdapter(val context: Context) : RecyclerView.Adapter<DialogAdapter.ViewHolder>() {
+class DialogAdapter(val context: Context) : androidx.recyclerview.widget.RecyclerView.Adapter<DialogAdapter.ViewHolder>() {
 
     var messages: ArrayList<DialogMessage> = ArrayList()
 
@@ -75,7 +75,7 @@ class DialogAdapter(val context: Context) : RecyclerView.Adapter<DialogAdapter.V
     override fun getItemCount() = messages.size
     override fun getItemViewType(position: Int) = messages[position].direction.ordinal
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val dialogMessageEndOfGroupMark = itemView.dialogMessageEndOfGroupMark
         val dialogMessageText = itemView.dialogMessageText
         val dialogMessageSendTime = itemView.dialogMessageSendTime

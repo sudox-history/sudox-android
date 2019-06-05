@@ -7,10 +7,10 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
-import android.support.annotation.IntDef
-import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
+import androidx.annotation.DrawableRes
+import androidx.annotation.IntDef
+import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import android.view.View
 import com.sudox.design.R
 import com.sudox.design.helpers.addCircleRipple

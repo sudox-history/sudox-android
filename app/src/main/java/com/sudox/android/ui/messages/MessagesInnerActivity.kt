@@ -1,6 +1,6 @@
 package com.sudox.android.ui.messages
 
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import com.sudox.android.R
 import com.sudox.android.ui.messages.dialog.DialogFragment
