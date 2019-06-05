@@ -1,5 +1,5 @@
 dependencies {
-    api project(path: ':sockets')
-    api project(path: ':cipher')
-    api project(path: ':common')
+    implementation project(path: ':sockets')
+    implementation project(path: ':cipher')
+    implementation project(path: ':common')
 }

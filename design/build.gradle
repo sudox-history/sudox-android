@@ -4,11 +4,3 @@ dependencies {
     androidTestImplementation 'com.vanniktech:espresso-core-utils:0.2.0'
     androidTestImplementation 'com.novoda:espresso-support-extras:1.0.0'
 }
-
-android {
-    sourceSets {
-        main {
-            res.srcDirs = ['src/main/res', 'src/androidTest/res/']
-        }
-    }
-}
