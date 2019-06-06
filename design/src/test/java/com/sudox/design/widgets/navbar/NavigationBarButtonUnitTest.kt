@@ -44,11 +44,11 @@ class NavigationBarButtonUnitTest : Assert() {
                 .set(navigationBarButton, drawable)
 
         Mockito.`when`(drawable.intrinsicWidth).thenReturn(drawableWidth)
-        Mockito.`when`(navigationBarButton.measureVisibleComponents()).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.calculateWidth()).thenCallRealMethod()
         Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(leftPadding)
         Mockito.`when`(navigationBarButton.paddingRight).thenReturn(rightPadding)
 
-        val result = navigationBarButton.measureVisibleComponents()
+        val result = navigationBarButton.calculateWidth()
         assertEquals(drawableWidth + leftPadding + rightPadding, result)
     }
 
@@ -77,11 +77,11 @@ class NavigationBarButtonUnitTest : Assert() {
                 .set(navigationBarButton, textBounds)
 
         Mockito.`when`(textBounds.width()).thenReturn(textWidth)
-        Mockito.`when`(navigationBarButton.measureVisibleComponents()).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.calculateWidth()).thenCallRealMethod()
         Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(leftPadding)
         Mockito.`when`(navigationBarButton.paddingRight).thenReturn(rightPadding)
 
-        val result = navigationBarButton.measureVisibleComponents()
+        val result = navigationBarButton.calculateWidth()
         assertEquals(textWidth + leftPadding + rightPadding, result)
     }
 
@@ -118,11 +118,11 @@ class NavigationBarButtonUnitTest : Assert() {
 
         Mockito.`when`(drawable.intrinsicWidth).thenReturn(drawableWidth)
         Mockito.`when`(textBounds.width()).thenReturn(textWidth)
-        Mockito.`when`(navigationBarButton.measureVisibleComponents()).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.calculateWidth()).thenCallRealMethod()
         Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(leftPadding)
         Mockito.`when`(navigationBarButton.paddingRight).thenReturn(rightPadding)
 
-        val result = navigationBarButton.measureVisibleComponents()
+        val result = navigationBarButton.calculateWidth()
         assertEquals(drawableWidth + iconTextMargin + textWidth + leftPadding + rightPadding, result)
     }
 

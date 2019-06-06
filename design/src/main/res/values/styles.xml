@@ -34,6 +34,7 @@
     </style>
 
     <style name="NavigationBar">
+        <item name="android:background"></item>
         <item name="buttonsStyle">@style/NavigationBar.Button</item>
     </style>
 

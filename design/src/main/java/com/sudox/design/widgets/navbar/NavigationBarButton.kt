@@ -93,12 +93,12 @@ class NavigationBarButton(context: Context, styleResourceId: Int) : View(context
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val needWidth = measureVisibleComponents()
+        val needWidth = calculateWidth()
         val needWidthMeasureSpec = MeasureSpec.makeMeasureSpec(needWidth, MeasureSpec.EXACTLY)
         setMeasuredDimension(needWidthMeasureSpec, heightMeasureSpec)
     }
 
-    internal fun measureVisibleComponents(): Int {
+    internal fun calculateWidth(): Int {
         var needWidth = 0
 
         if (iconDrawable != null) {

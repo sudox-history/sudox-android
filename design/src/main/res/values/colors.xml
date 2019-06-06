@@ -9,6 +9,7 @@
     <color name="edittext_hint_color">#9F9F9F</color>
     <color name="edittextlayout_label_text_error_color">#E53935</color>
 
+    <color name="navigationbar_background">@color/primary_color</color>
     <color name="navigationbar_button_text_color">@color/accent_color</color>
     <color name="navigationbar_button_icon_tint">@color/accent_color</color>
 
