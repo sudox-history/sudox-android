@@ -170,7 +170,7 @@ class MessagesControllerTest : Assert() {
         Mockito.verify(protocolController).sendPacket(iv, cipher, cipherHmac)
 
         PowerMockito.verifyStatic(Cipher::class.java)
-        Cipher.generateBytes(MessagesController.ENCRYPTED_MESSAGE_IV_SIZE)
+        Cipher.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
 
         PowerMockito.verifyStatic(Cipher::class.java)
         Cipher.encryptWithAES(secretKey, iv, message)

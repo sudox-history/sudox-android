@@ -4,17 +4,15 @@ import com.sudox.cipher.Cipher
 import com.sudox.protocol.ProtocolController
 import java.util.LinkedList
 
+internal const val PUBLIC_KEY_MESSAGE_SLICES_COUNT = 3
+internal val HMAC_VALIDATION_WORD = "ok".toByteArray()
+
 class HandshakeController(val protocolController: ProtocolController) {
 
     @HandshakeStatus
     internal var handshakeStatus = HandshakeStatus.NOT_STARTED
     private var ownPublicKey: ByteArray? = null
     private var ownPrivateKey: ByteArray? = null
-
-    companion object {
-        internal const val PUBLIC_KEY_MESSAGE_SLICES_COUNT = 3
-        internal val HMAC_VALIDATION_WORD = "ok".toByteArray()
-    }
 
     fun startHandshake() {
         generateKeysPair()

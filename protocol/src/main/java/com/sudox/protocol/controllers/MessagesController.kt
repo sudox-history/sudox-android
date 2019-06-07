@@ -4,14 +4,12 @@ import com.sudox.cipher.Cipher
 import com.sudox.protocol.ProtocolController
 import java.util.LinkedList
 
+internal const val ENCRYPTED_MESSAGE_SLICE_COUNT = 3
+internal const val ENCRYPTED_MESSAGE_IV_SIZE = 16
+
 class MessagesController(val protocolController: ProtocolController) {
 
     internal var secretKey: ByteArray? = null
-
-    companion object {
-        internal const val ENCRYPTED_MESSAGE_SLICE_COUNT = 3
-        internal const val ENCRYPTED_MESSAGE_IV_SIZE = 16
-    }
 
     internal fun handleIncomingMessage(slices: LinkedList<ByteArray>) {
         if (!handleEncryptedMessage(slices)) {

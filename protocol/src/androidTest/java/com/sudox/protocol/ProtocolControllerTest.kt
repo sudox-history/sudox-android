@@ -2,10 +2,9 @@ package com.sudox.protocol
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.nhaarman.mockitokotlin2.any
-import com.sudox.protocol.ProtocolController.Companion.RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS
 import com.sudox.protocol.controllers.HandshakeStatus
-import com.sudox.protocol.controllers.PingController.Companion.PING_PACKET_NAME
-import com.sudox.protocol.controllers.PingController.Companion.PING_SEND_INTERVAL_IN_MILLIS
+import com.sudox.protocol.controllers.PING_PACKET_NAME
+import com.sudox.protocol.controllers.PING_SEND_INTERVAL_IN_MILLIS
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before

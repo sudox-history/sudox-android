@@ -3,7 +3,6 @@ package com.sudox.protocol.controllers
 import com.nhaarman.mockitokotlin2.any
 import com.sudox.cipher.Cipher
 import com.sudox.protocol.ProtocolController
-import com.sudox.protocol.controllers.HandshakeController.Companion.HMAC_VALIDATION_WORD
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

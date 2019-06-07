@@ -9,6 +9,8 @@ import com.sudox.protocol.helpers.serializePacket
 import com.sudox.sockets.SocketClient
 import java.util.LinkedList
 
+internal const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
+
 class ProtocolController(var protocolClient: ProtocolClient) :
         ControllerThread("STIPS Worker"),
         SocketClient.ClientCallback {
@@ -22,10 +24,6 @@ class ProtocolController(var protocolClient: ProtocolClient) :
     internal val handshakeController = HandshakeController(this)
     internal val messagesController = MessagesController(this)
     internal val pingController = PingController(this)
-
-    companion object {
-        const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
-    }
 
     override fun threadStart() = submitTask {
         socketClient.connect()
