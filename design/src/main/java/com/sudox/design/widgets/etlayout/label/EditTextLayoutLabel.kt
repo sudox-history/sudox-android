@@ -1,4 +1,4 @@
-package com.sudox.design.widgets.etlayout
+package com.sudox.design.widgets.etlayout.label
 
 import android.graphics.Canvas
 import android.graphics.Paint

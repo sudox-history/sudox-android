@@ -10,19 +10,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.sudox.design.R
+import com.sudox.design.widgets.etlayout.label.EditTextLayoutLabel
+import com.sudox.design.widgets.etlayout.label.EditTextLayoutLabelParams
 
 class EditTextLayout : ViewGroup, TextWatcher {
 
     internal var label: EditTextLayoutLabel? = null
-    internal var labelParamsTemp: EditTextLayoutLabelParams? = null
+    internal var labelParams = EditTextLayoutLabelParams()
     internal var editText: EditText? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.editTextLayoutStyle)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         with(context.obtainStyledAttributes(attrs, R.styleable.EditTextLayout, defStyleAttr, R.style.EditTextLayout)) {
-            labelParamsTemp = EditTextLayoutLabelParams()
-            labelParamsTemp!!.readFromAttrs(this, context.theme)
+            labelParams.readFromAttrs(this, context.theme)
             recycle()
         }
     }
@@ -38,10 +39,9 @@ class EditTextLayout : ViewGroup, TextWatcher {
 
     private fun initEditText() {
         if (editText != null) {
-            label = EditTextLayoutLabel(editText!!, labelParamsTemp!!)
+            label = EditTextLayoutLabel(editText!!, labelParams)
             label!!.originalText = editText!!.hint?.toString()
 
-            labelParamsTemp = null
             editText!!.hint = null
             editText!!.addTextChangedListener(this)
         }

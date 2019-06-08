@@ -4,7 +4,8 @@
     <dimen name="edittextlayout_label_text_size">12sp</dimen>
 
     <dimen name="navigationbar_height">60dp</dimen>
+    <dimen name="navigationbar_title_text_size">12sp</dimen>
     <dimen name="navigationbar_button_horizontal_padding">15dp</dimen>
-    <dimen name="navigationbar_button_text_size">15dp</dimen>
+    <dimen name="navigationbar_button_text_size">15sp</dimen>
     <dimen name="navigationbar_button_icon_text_margin">10dp</dimen>
 </resources>

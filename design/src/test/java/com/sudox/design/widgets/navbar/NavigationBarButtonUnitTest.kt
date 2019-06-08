@@ -4,6 +4,9 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import com.sudox.design.widgets.navbar.button.NavigationBarButton
+import com.sudox.design.widgets.navbar.button.NavigationBarButtonIconDirection
+import com.sudox.design.widgets.navbar.button.NavigationBarButtonParams
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -32,11 +35,12 @@ class NavigationBarButtonUnitTest : Assert() {
         val drawableWidth = 512
         val leftPadding = 2
         val rightPadding = 3
+        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
 
         NavigationBarButton::class.java
-                .getDeclaredField("iconTextMargin")
+                .getDeclaredField("params")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, iconTextMargin)
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")
@@ -60,11 +64,12 @@ class NavigationBarButtonUnitTest : Assert() {
         val text = "Hello"
         val leftPadding = 2
         val rightPadding = 3
+        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
 
         NavigationBarButton::class.java
-                .getDeclaredField("iconTextMargin")
+                .getDeclaredField("params")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, iconTextMargin)
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("text")
@@ -95,16 +100,17 @@ class NavigationBarButtonUnitTest : Assert() {
         val text = "Hello"
         val leftPadding = 2
         val rightPadding = 3
+        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("text")
                 .apply { isAccessible = true }
                 .set(navigationBarButton, text)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconTextMargin")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, iconTextMargin)
 
         NavigationBarButton::class.java
                 .getDeclaredField("textBounds")
@@ -256,16 +262,17 @@ class NavigationBarButtonUnitTest : Assert() {
     fun testSetIconDrawable() {
         val drawable = Mockito.mock(Drawable::class.java)
         val tintColor = -127
+        val params = NavigationBarButtonParams().apply { this.iconTintColor = tintColor }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")
                 .apply { isAccessible = true }
                 .set(navigationBarButton, drawable)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconTintColor")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, tintColor)
 
         Mockito.`when`(navigationBarButton.setIconDrawable(drawable)).thenCallRealMethod()
         Mockito.`when`(drawable.intrinsicHeight).thenReturn(15)
@@ -350,7 +357,7 @@ class NavigationBarButtonUnitTest : Assert() {
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButton.IconDirection.LEFT)
+                .set(navigationBarButton, NavigationBarButtonIconDirection.LEFT)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")
@@ -379,7 +386,7 @@ class NavigationBarButtonUnitTest : Assert() {
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButton.IconDirection.LEFT)
+                .set(navigationBarButton, NavigationBarButtonIconDirection.LEFT)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")
@@ -413,7 +420,7 @@ class NavigationBarButtonUnitTest : Assert() {
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButton.IconDirection.RIGHT)
+                .set(navigationBarButton, NavigationBarButtonIconDirection.RIGHT)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")
@@ -442,7 +449,7 @@ class NavigationBarButtonUnitTest : Assert() {
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButton.IconDirection.RIGHT)
+                .set(navigationBarButton, NavigationBarButtonIconDirection.RIGHT)
 
         NavigationBarButton::class.java
                 .getDeclaredField("text")
@@ -471,7 +478,7 @@ class NavigationBarButtonUnitTest : Assert() {
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButton.IconDirection.RIGHT)
+                .set(navigationBarButton, NavigationBarButtonIconDirection.RIGHT)
 
         Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(paddingLeft)
         Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenCallRealMethod()
@@ -486,16 +493,17 @@ class NavigationBarButtonUnitTest : Assert() {
         val paddingLeft = 15
         val iconTextMargin = 10
         val iconWidth = 512
+        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
 
         NavigationBarButton::class.java
-                .getDeclaredField("iconTextMargin")
+                .getDeclaredField("params")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, iconTextMargin)
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButton.IconDirection.RIGHT)
+                .set(navigationBarButton, NavigationBarButtonIconDirection.RIGHT)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")
@@ -514,16 +522,17 @@ class NavigationBarButtonUnitTest : Assert() {
     fun testTextLeftBorder_left_icon_direction_without_icon() {
         val paddingLeft = 15
         val iconTextMargin = 10
+        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
 
         NavigationBarButton::class.java
-                .getDeclaredField("iconTextMargin")
+                .getDeclaredField("params")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, iconTextMargin)
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButton.IconDirection.LEFT)
+                .set(navigationBarButton, NavigationBarButtonIconDirection.LEFT)
 
         Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(paddingLeft)
         Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenCallRealMethod()
@@ -538,16 +547,17 @@ class NavigationBarButtonUnitTest : Assert() {
         val paddingLeft = 15
         val iconTextMargin = 10
         val iconWidth = 512
+        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
 
         NavigationBarButton::class.java
-                .getDeclaredField("iconTextMargin")
+                .getDeclaredField("params")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, iconTextMargin)
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButton.IconDirection.LEFT)
+                .set(navigationBarButton, NavigationBarButtonIconDirection.LEFT)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")

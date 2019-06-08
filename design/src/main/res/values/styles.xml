@@ -34,8 +34,16 @@
     </style>
 
     <style name="NavigationBar">
-        <item name="android:background"></item>
+        <item name="android:background">@color/navigationbar_background</item>
+        <item name="titleStyle">@style/NavigationBar.Title</item>
         <item name="buttonsStyle">@style/NavigationBar.Button</item>
+    </style>
+
+    <style name="NavigationBar.Title">
+        <item name="android:textColor">@color/navigationbar_title_text_color</item>
+        <item name="android:textSize">@dimen/navigationbar_title_text_size</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="NavigationBar.Button">

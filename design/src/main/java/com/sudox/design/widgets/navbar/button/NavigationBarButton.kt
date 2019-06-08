@@ -1,95 +1,36 @@
-package com.sudox.design.widgets.navbar
+package com.sudox.design.widgets.navbar.button
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.view.View
 import androidx.annotation.DrawableRes
-import androidx.annotation.IntDef
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import android.view.View
-import com.sudox.design.R
 import com.sudox.design.helpers.addCircleRipple
-import com.sudox.design.helpers.loadTypeface
 
 @SuppressLint("ViewConstructor")
-class NavigationBarButton(context: Context, styleResourceId: Int) : View(context) {
+class NavigationBarButton(context: Context, val params: NavigationBarButtonParams) : View(context) {
 
     internal var textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     internal var textBounds = Rect()
     internal var text: String? = null
 
-    @IconDirection
-    internal var iconDirection: Int = IconDirection.DEFAULT
-    internal var iconTintColor: Int = 0
-    internal var iconTextMargin: Int = 0
+    @NavigationBarButtonIconDirection
+    internal var iconDirection: Int = NavigationBarButtonIconDirection.DEFAULT
     internal var iconDrawable: Drawable? = null
 
-    companion object {
-        // Warning! All attrs must be ordered by id.
-        private val styleAttrs = intArrayOf(
-                android.R.attr.textSize,
-                android.R.attr.textStyle,
-                android.R.attr.textColor,
-                android.R.attr.paddingLeft,
-                android.R.attr.paddingRight,
-                android.R.attr.fontFamily,
-                R.attr.iconTextMargin,
-                R.attr.iconTintColor)
-
-        private const val TEXT_SIZE_ATTR_INDEX = 0
-        private const val TEXT_STYLE_ATTR_INDEX = 1
-        private const val TEXT_COLOR_ATTR_INDEX = 2
-        private const val PADDING_LEFT_ATTR_INDEX = 3
-        private const val PADDING_RIGHT_ATTR_INDEX = 4
-        private const val FONT_FAMILY_ATTR_INDEX = 5
-        private const val ICON_TEXT_MARGIN_ATTR_INDEX = 6
-        private const val ICON_TINT_COLOR_ATTR_INDEX = 7
-    }
-
-    @Retention(AnnotationRetention.SOURCE)
-    @IntDef(IconDirection.LEFT, IconDirection.RIGHT)
-    annotation class IconDirection {
-        companion object {
-            const val LEFT = 0
-            const val RIGHT = 1
-            const val DEFAULT = LEFT
-        }
-    }
-
     init {
-        with(context.obtainStyledAttributes(styleResourceId, styleAttrs)) {
-            readTextAttrs(this)
-            readViewAttrs(this)
-            recycle()
-        }
+        textPaint.textSize = params.textSize
+        textPaint.color = params.textColor
+        textPaint.typeface = params.textTypeface
 
+        setPadding(params.leftPadding, 0, params.rightPadding, 0)
         addCircleRipple()
         resetView()
-    }
-
-    @SuppressLint("ResourceType")
-    internal fun readTextAttrs(typedArray: TypedArray) {
-        textPaint.textSize = typedArray.getDimensionPixelSize(TEXT_SIZE_ATTR_INDEX, -1).toFloat()
-        textPaint.color = typedArray.getColor(TEXT_COLOR_ATTR_INDEX, -1)
-
-        val textStyle = typedArray.getInt(TEXT_STYLE_ATTR_INDEX, -1)
-        val fontFamily = typedArray.getString(FONT_FAMILY_ATTR_INDEX)
-        textPaint.typeface = loadTypeface(fontFamily!!, textStyle)
-    }
-
-    @SuppressLint("ResourceType")
-    internal fun readViewAttrs(typedArray: TypedArray) {
-        val paddingLeft = typedArray.getDimensionPixelSize(PADDING_LEFT_ATTR_INDEX, -1)
-        val paddingRight = typedArray.getDimensionPixelSize(PADDING_RIGHT_ATTR_INDEX, -1)
-        setPadding(paddingLeft, 0, paddingRight, 0)
-
-        iconTintColor = typedArray.getColor(ICON_TINT_COLOR_ATTR_INDEX, -1)
-        iconTextMargin = typedArray.getDimensionPixelSize(ICON_TEXT_MARGIN_ATTR_INDEX, -1)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -109,7 +50,7 @@ class NavigationBarButton(context: Context, styleResourceId: Int) : View(context
             needWidth += textBounds.width()
 
             if (iconDrawable != null) {
-                needWidth += iconTextMargin
+                needWidth += params.iconTextMargin
             }
         }
 
@@ -145,7 +86,7 @@ class NavigationBarButton(context: Context, styleResourceId: Int) : View(context
     }
 
     internal fun getIconLeftBorder(canvas: Canvas): Int {
-        return if (text != null && iconDirection == IconDirection.RIGHT) {
+        return if (text != null && iconDirection == NavigationBarButtonIconDirection.RIGHT) {
             canvas.width - paddingRight - iconDrawable!!.intrinsicWidth
         } else {
             paddingLeft
@@ -160,8 +101,8 @@ class NavigationBarButton(context: Context, styleResourceId: Int) : View(context
     }
 
     internal fun getTextLeftBorder(): Int {
-        return if (iconDrawable != null && iconDirection == IconDirection.LEFT) {
-            paddingLeft + iconDrawable!!.intrinsicWidth + iconTextMargin
+        return if (iconDrawable != null && iconDirection == NavigationBarButtonIconDirection.LEFT) {
+            paddingLeft + iconDrawable!!.intrinsicWidth + params.iconTextMargin
         } else {
             paddingLeft
         }
@@ -173,7 +114,7 @@ class NavigationBarButton(context: Context, styleResourceId: Int) : View(context
 
     fun setIconDrawable(drawable: Drawable?) {
         drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-        drawable?.setTint(iconTintColor)
+        drawable?.setTint(params.iconTintColor)
         iconDrawable = drawable
         requestLayout()
         invalidate()
@@ -184,7 +125,7 @@ class NavigationBarButton(context: Context, styleResourceId: Int) : View(context
         setIconDrawable(drawable)
     }
 
-    fun setIconDirection(@IconDirection direction: Int) {
+    fun setIconDirection(@NavigationBarButtonIconDirection direction: Int) {
         iconDirection = direction
         invalidate()
     }
@@ -207,7 +148,7 @@ class NavigationBarButton(context: Context, styleResourceId: Int) : View(context
     fun resetView() {
         isClickable = false
         visibility = GONE
-        setIconDirection(IconDirection.DEFAULT)
+        setIconDirection(NavigationBarButtonIconDirection.DEFAULT)
         setIconDrawable(null)
         setText(null)
     }
