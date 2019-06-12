@@ -54,7 +54,7 @@ class ProtocolReader(val socketClient: SocketClient) {
         val readCount = Math.min(availableBytes, packetDataLengthInBytes)
 
         if (readCount > 0) {
-            socketClient.readToByteBuffer(packetDataBuffer, readCount, packetDataBuffer!!.position())
+            socketClient.readToByteBuffer(packetDataBuffer!!, readCount, packetDataBuffer!!.position())
         }
     }
 

@@ -7,7 +7,7 @@ import android.graphics.Typeface
 import com.sudox.design.R
 import com.sudox.design.helpers.loadTypeface
 
-private val styleAttrs = intArrayOf(
+internal val labelStyleAttrs = intArrayOf(
         android.R.attr.textSize,
         android.R.attr.textStyle,
         android.R.attr.fontFamily)
@@ -25,7 +25,7 @@ class EditTextLayoutLabelParams {
     @SuppressLint("ResourceType")
     fun readFromAttrs(typedArray: TypedArray, theme: Resources.Theme) {
         val labelStyleResourceId = typedArray.getResourceId(R.styleable.EditTextLayout_labelStyle, -1)
-        with(theme.obtainStyledAttributes(labelStyleResourceId, styleAttrs)) {
+        with(theme.obtainStyledAttributes(labelStyleResourceId, labelStyleAttrs)) {
             val textStyle = getInt(TEXT_STYLE_ATTR_INDEX, -1)
             val fontFamily = getString(FONT_FAMILY_ATTR_INDEX)
 

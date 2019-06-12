@@ -15,6 +15,8 @@ class PingController(val protocolController: ProtocolController) {
 
     private var pingWillBeSendByServer: Boolean = false
     private var pingReceived: Boolean = false
+    private var sendPingRunnable = ::sendPing
+    private var checkPingRunnable = ::checkPing
 
     internal fun startPingCycle() {
         // First ping will be send by server
@@ -37,14 +39,14 @@ class PingController(val protocolController: ProtocolController) {
 
         threadHandler.removeCallbacksAndMessages(PING_SEND_TASK_ID)
         threadHandler.removeCallbacksAndMessages(PING_CHECK_TASK_ID)
-        threadHandler.postAtTime(::sendPing, PING_SEND_TASK_ID, time)
+        threadHandler.postAtTime(sendPingRunnable, PING_SEND_TASK_ID, time)
     }
 
     internal fun schedulePingCheckTask() {
         val threadHandler = protocolController.threadHandler!!
         val time = SystemClock.uptimeMillis() + PING_CHECK_INTERVAL_IN_MILLIS
 
-        threadHandler.postAtTime(::checkPing, PING_CHECK_TASK_ID, time)
+        threadHandler.postAtTime(checkPingRunnable, PING_CHECK_TASK_ID, time)
     }
 
     internal fun isPingPacket(slices: LinkedList<ByteArray>): Boolean {

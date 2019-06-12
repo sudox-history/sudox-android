@@ -1,5 +1,7 @@
 package com.sudox.sockets;
 
+import androidx.annotation.NonNull;
+
 import java.nio.ByteBuffer;
 
 public class SocketClient {
@@ -13,7 +15,7 @@ public class SocketClient {
      * @param host - адрес сервера
      * @param port - порт сервера
      */
-    public SocketClient(String host, short port) {
+    public SocketClient(@NonNull String host, short port) {
         System.loadLibrary("ssockets");
 
         // Creating the client instance in native memory
@@ -59,7 +61,7 @@ public class SocketClient {
      *
      * @param buffer - буффер для отправки.
      */
-    public void sendBuffer(ByteBuffer buffer) {
+    public void sendBuffer(@NonNull ByteBuffer buffer) {
         if (buffer.isDirect()) {
             sendBuffer(pointer, buffer, buffer.limit());
         } else {
@@ -73,7 +75,7 @@ public class SocketClient {
      *
      * @param data - данные для отправки.
      */
-    public void send(byte[] data) {
+    public void send(@NonNull byte[] data) {
         send(pointer, data);
     }
 
@@ -83,6 +85,7 @@ public class SocketClient {
      *
      * @param count - кол-во байтов, которое нужно прочитать.
      */
+    @NonNull
     public byte[] readBytes(int count) {
         return readBytes(pointer, count);
     }
@@ -94,7 +97,7 @@ public class SocketClient {
      * @param buffer - буффер который нужно заполнить.
      * @param count - кол-во байтов для чтения
      */
-    public int readToByteBuffer(ByteBuffer buffer, int count, int offset) {
+    public int readToByteBuffer(@NonNull ByteBuffer buffer, int count, int offset) {
         if (!buffer.isDirect()) {
             throw new UnsupportedOperationException("It's method support only direct ByteBuffers!");
         }
@@ -122,7 +125,7 @@ public class SocketClient {
      *
      * @param callback - обьект обратного вызова.
      */
-    public void callback(ClientCallback callback) {
+    public void callback(@NonNull ClientCallback callback) {
         callback(pointer, callback);
     }
 

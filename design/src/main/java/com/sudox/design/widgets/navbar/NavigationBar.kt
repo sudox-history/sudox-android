@@ -2,11 +2,18 @@ package com.sudox.design.widgets.navbar
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TypedValue
+import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.annotation.StringRes
+import com.sudox.common.annotations.Checked
 import com.sudox.design.R
+import com.sudox.design.helpers.isLayoutRtl
 import com.sudox.design.widgets.navbar.button.NavigationBarButton
 import com.sudox.design.widgets.navbar.button.NavigationBarButtonParams
-import java.util.ArrayList
+import com.sudox.design.widgets.navbar.title.NavigationBarTitleParams
 
 private const val BUTTONS_IN_END_COUNT = 3
 
@@ -15,8 +22,11 @@ class NavigationBar : ViewGroup {
     internal var buttonParams = NavigationBarButtonParams()
     internal var titleParams = NavigationBarTitleParams()
 
-    var buttonStart = NavigationBarButton(context, buttonParams)
-    var buttonsEnd = ArrayList<NavigationBarButton>(BUTTONS_IN_END_COUNT)
+    var buttonStart: NavigationBarButton? = null
+    var buttonsEnd = arrayOfNulls<NavigationBarButton>(BUTTONS_IN_END_COUNT)
+
+    private var titleTextView = TextView(context)
+    private var contentView: View? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.navigationBarStyle)
@@ -26,9 +36,173 @@ class NavigationBar : ViewGroup {
             titleParams.readFromAttrs(this, context.theme)
             recycle()
         }
+
+        initButtons()
+        initTitle()
+    }
+
+    private fun initButtons() {
+        buttonStart = createButton()
+
+        for (i in 0 until buttonsEnd.size) {
+            buttonsEnd[i] = createButton()
+        }
+    }
+
+    private fun initTitle() {
+        titleTextView.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
+        titleTextView.gravity = Gravity.CENTER_VERTICAL
+        titleTextView.typeface = titleParams.textTypeface
+        titleTextView.setTextColor(titleParams.textColor)
+        titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleParams.textSize)
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        buttonStart!!.measure(widthMeasureSpec, heightMeasureSpec)
+        contentView?.measure(widthMeasureSpec, heightMeasureSpec)
+
+        for (button in buttonsEnd) {
+            button!!.measure(widthMeasureSpec, heightMeasureSpec)
+        }
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        val isRtl = isLayoutRtl()
 
+        layoutStart(left, right, top, bottom, isRtl)
+
+        if (buttonsEnd.isNotEmpty()) {
+            layoutEnd(left, right, top, bottom, isRtl)
+        }
+    }
+
+    internal fun layoutStart(left: Int, right: Int, top: Int, bottom: Int, rtl: Boolean) {
+        var leftBorder = getStartLeftBorder(left, right, rtl)
+        var rightBorder = leftBorder
+
+        if (buttonStart!!.visibility == View.VISIBLE) {
+            if (rtl) {
+                leftBorder -= buttonStart!!.measuredWidth
+            } else {
+                rightBorder += buttonStart!!.measuredWidth
+            }
+
+            buttonStart!!.layout(leftBorder, top, rightBorder, bottom)
+        }
+
+        if (contentView?.visibility == View.VISIBLE) {
+            if (rtl) {
+                rightBorder = leftBorder
+                leftBorder -= contentView!!.measuredWidth
+            } else {
+                leftBorder = rightBorder
+                rightBorder += contentView!!.measuredWidth
+            }
+
+            contentView!!.layout(leftBorder, top, rightBorder, bottom)
+        }
+    }
+
+    internal fun layoutEnd(left: Int, right: Int, top: Int, bottom: Int, rtl: Boolean) {
+        var leftBorder = getEndLeftBorder(left, right, rtl)
+        var rightBorder = leftBorder
+
+        for (button in buttonsEnd) {
+            if (button!!.visibility != View.VISIBLE) {
+                continue
+            }
+
+            if (rtl) {
+                rightBorder += button.measuredWidth
+            } else {
+                leftBorder -= button.measuredWidth
+            }
+
+            button.layout(leftBorder, top, rightBorder, bottom)
+
+            if (rtl) {
+                leftBorder = rightBorder
+            } else {
+                rightBorder = leftBorder
+            }
+        }
+    }
+
+    internal fun getStartLeftBorder(left: Int, right: Int, rtl: Boolean): Int {
+        var leftBorder: Int
+
+        if (rtl) {
+            leftBorder = right - paddingStart
+
+            if (buttonStart!!.visibility == View.VISIBLE) {
+                leftBorder += buttonParams.rightPadding
+            }
+        } else {
+            leftBorder = left + paddingStart
+
+            if (buttonStart!!.visibility == View.VISIBLE) {
+                leftBorder -= buttonParams.leftPadding
+            }
+        }
+
+        return leftBorder
+    }
+
+    internal fun getEndLeftBorder(left: Int, right: Int, rtl: Boolean): Int {
+        return if (rtl) {
+            left + paddingEnd - buttonParams.rightPadding
+        } else {
+            right - paddingEnd + buttonParams.leftPadding
+        }
+    }
+
+    private fun createButton(): NavigationBarButton {
+        val button = NavigationBarButton(context, buttonParams)
+        addView(button)
+        return button
+    }
+
+    @Checked
+    fun setContentView(view: View?) {
+        if (contentView != null && contentView == view) {
+            removeViewInLayout(view)
+        }
+
+        contentView = view
+        addView(contentView)
+    }
+
+    @Checked
+    fun setTitleText(text: String?) {
+        titleTextView.text = text
+
+        if (text != null) {
+            setContentView(titleTextView)
+        } else {
+            setContentView(null)
+        }
+    }
+
+    @Checked
+    fun setTitleTextRes(@StringRes textRes: Int) {
+        val text = resources.getString(textRes)
+        setTitleText(text)
+    }
+
+    @Checked
+    fun resetButtonsEnd() {
+        for (button in buttonsEnd) {
+            button!!.resetView()
+        }
+    }
+
+    @Checked
+    fun resetView() {
+        titleTextView.text = null
+        buttonStart!!.resetView()
+        setContentView(null)
+        resetButtonsEnd()
     }
 }

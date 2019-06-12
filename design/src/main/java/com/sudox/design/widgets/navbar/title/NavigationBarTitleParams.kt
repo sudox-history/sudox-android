@@ -1,4 +1,4 @@
-package com.sudox.design.widgets.navbar
+package com.sudox.design.widgets.navbar.title
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
@@ -7,7 +7,7 @@ import android.graphics.Typeface
 import com.sudox.design.R
 import com.sudox.design.helpers.loadTypeface
 
-private val styleAttrs = intArrayOf(
+internal val titleStyleAttrs = intArrayOf(
         android.R.attr.textSize,
         android.R.attr.textStyle,
         android.R.attr.textColor,
@@ -16,7 +16,7 @@ private val styleAttrs = intArrayOf(
 private const val TEXT_SIZE_ATTR_INDEX = 0
 private const val TEXT_STYLE_ATTR_INDEX = 1
 private const val TEXT_COLOR_ATTR_INDEX = 2
-private const val FONT_FAMILY_ATTR_INDEX = 4
+private const val FONT_FAMILY_ATTR_INDEX = 3
 
 class NavigationBarTitleParams {
 
@@ -27,12 +27,12 @@ class NavigationBarTitleParams {
     @SuppressLint("ResourceType")
     fun readFromAttrs(typedArray: TypedArray, theme: Resources.Theme) {
         val titleStyleResourceId = typedArray.getResourceId(R.styleable.NavigationBar_titleStyle, -1)
-        with(theme.obtainStyledAttributes(titleStyleResourceId, styleAttrs)) {
-            val textStyle = typedArray.getInt(TEXT_STYLE_ATTR_INDEX, -1)
-            val fontFamily = typedArray.getString(FONT_FAMILY_ATTR_INDEX)
+        with(theme.obtainStyledAttributes(titleStyleResourceId, titleStyleAttrs)) {
+            val textStyle = getInt(TEXT_STYLE_ATTR_INDEX, -1)
+            val fontFamily = getString(FONT_FAMILY_ATTR_INDEX)
 
-            textSize = typedArray.getDimension(TEXT_SIZE_ATTR_INDEX, -1F)
-            textColor = typedArray.getColor(TEXT_COLOR_ATTR_INDEX, -1)
+            textSize = getDimension(TEXT_SIZE_ATTR_INDEX, -1F)
+            textColor = getColor(TEXT_COLOR_ATTR_INDEX, -1)
             textTypeface = loadTypeface(fontFamily!!, textStyle)
             recycle()
         }

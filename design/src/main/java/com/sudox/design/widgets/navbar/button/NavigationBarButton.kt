@@ -10,7 +10,8 @@ import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.sudox.design.helpers.addCircleRipple
+import com.sudox.common.annotations.Checked
+import com.sudox.design.helpers.addRipple
 
 @SuppressLint("ViewConstructor")
 class NavigationBarButton(context: Context, val params: NavigationBarButtonParams) : View(context) {
@@ -27,9 +28,7 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
         textPaint.textSize = params.textSize
         textPaint.color = params.textColor
         textPaint.typeface = params.textTypeface
-
-        setPadding(params.leftPadding, 0, params.rightPadding, 0)
-        addCircleRipple()
+        addRipple()
         resetView()
     }
 
@@ -55,7 +54,7 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
         }
 
         if (needWidth > 0) {
-            needWidth += paddingLeft + paddingRight
+            needWidth += params.leftPadding + params.rightPadding
         }
 
         return needWidth
@@ -87,9 +86,9 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
 
     internal fun getIconLeftBorder(canvas: Canvas): Int {
         return if (text != null && iconDirection == NavigationBarButtonIconDirection.RIGHT) {
-            canvas.width - paddingRight - iconDrawable!!.intrinsicWidth
+            canvas.width - params.rightPadding - iconDrawable!!.intrinsicWidth
         } else {
-            paddingLeft
+            params.leftPadding
         }
     }
 
@@ -102,9 +101,9 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
 
     internal fun getTextLeftBorder(): Int {
         return if (iconDrawable != null && iconDirection == NavigationBarButtonIconDirection.LEFT) {
-            paddingLeft + iconDrawable!!.intrinsicWidth + params.iconTextMargin
+            params.leftPadding + iconDrawable!!.intrinsicWidth + params.iconTextMargin
         } else {
-            paddingLeft
+            params.leftPadding
         }
     }
 
@@ -120,11 +119,13 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
         invalidate()
     }
 
+    @Checked
     fun setIconDrawableRes(@DrawableRes drawableRes: Int) {
         val drawable = ContextCompat.getDrawable(context, drawableRes)
         setIconDrawable(drawable)
     }
 
+    @Checked
     fun setIconDirection(@NavigationBarButtonIconDirection direction: Int) {
         iconDirection = direction
         invalidate()
@@ -140,11 +141,13 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
         invalidate()
     }
 
+    @Checked
     fun setTextRes(@StringRes textRes: Int) {
         val text = resources.getString(textRes)
         setText(text)
     }
 
+    @Checked
     fun resetView() {
         isClickable = false
         visibility = GONE

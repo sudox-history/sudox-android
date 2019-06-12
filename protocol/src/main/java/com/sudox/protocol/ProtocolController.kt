@@ -1,6 +1,6 @@
 package com.sudox.protocol
 
-import com.sudox.common.async.ControllerThread
+import com.sudox.common.threading.ControllerThread
 import com.sudox.protocol.controllers.HandshakeController
 import com.sudox.protocol.controllers.MessagesController
 import com.sudox.protocol.controllers.PingController

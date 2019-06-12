@@ -14,7 +14,11 @@ fun serializePacket(slices: Array<out ByteArray>): ByteBuffer {
     val buffer = ByteBuffer.allocateDirect(packetLength)
 
     buffer.writeIntBE(packetLength, LENGTH_HEADER_SIZE_IN_BYTES)
-    slices.forEach { buffer.writePacketSlice(it) }
+
+    for (slice in slices) {
+        buffer.writePacketSlice(slice)
+    }
+
     buffer.flip()
 
     return buffer

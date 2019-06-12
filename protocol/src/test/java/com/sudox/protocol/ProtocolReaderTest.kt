@@ -32,7 +32,6 @@ class ProtocolReaderTest : Assert() {
         Mockito.`when`(socketClient.readBytes(LENGTH_HEADER_SIZE_IN_BYTES)).thenReturn(lengthHeader)
         Mockito.`when`(socketClient.readToByteBuffer(any(), anyInt(), anyInt())).thenAnswer {
             val buffer = it.getArgument<ByteBuffer>(0)
-            val count = it.getArgument<Int>(1)
             val offset = it.getArgument<Int>(2)
 
             buffer.position(offset)
@@ -60,7 +59,6 @@ class ProtocolReaderTest : Assert() {
         Mockito.`when`(socketClient.readBytes(LENGTH_HEADER_SIZE_IN_BYTES)).thenReturn(lengthHeader)
         Mockito.`when`(socketClient.readToByteBuffer(any(), anyInt(), anyInt())).thenAnswer {
             val buffer = it.getArgument<ByteBuffer>(0)
-            val count = it.getArgument<Int>(1)
             val offset = it.getArgument<Int>(2)
 
             buffer.position(offset)
@@ -107,7 +105,6 @@ class ProtocolReaderTest : Assert() {
         availableBytes = lengthHeader.size
         Mockito.`when`(socketClient.readToByteBuffer(any(), anyInt(), anyInt())).thenAnswer {
             val buffer = it.getArgument<ByteBuffer>(0) ?: return@thenAnswer 0
-            val count = it.getArgument<Int>(1)
             val offset = it.getArgument<Int>(2)
 
             buffer.position(offset)
@@ -140,7 +137,6 @@ class ProtocolReaderTest : Assert() {
         Mockito.`when`(socketClient.readBytes(LENGTH_HEADER_SIZE_IN_BYTES)).thenReturn(firstPacketLengthHeader)
         Mockito.`when`(socketClient.readToByteBuffer(any(), anyInt(), anyInt())).thenAnswer {
             val buffer = it.getArgument<ByteBuffer>(0) ?: return@thenAnswer 0
-            val count = it.getArgument<Int>(1)
             val offset = it.getArgument<Int>(2)
 
             buffer.position(offset)
@@ -161,7 +157,6 @@ class ProtocolReaderTest : Assert() {
         Mockito.`when`(socketClient.readBytes(LENGTH_HEADER_SIZE_IN_BYTES)).thenReturn(secondPacketLengthHeader)
         Mockito.`when`(socketClient.readToByteBuffer(any(), anyInt(), anyInt())).thenAnswer {
             val buffer = it.getArgument<ByteBuffer>(0) ?: return@thenAnswer 0
-            val count = it.getArgument<Int>(1)
             val offset = it.getArgument<Int>(2)
 
             buffer.position(offset)

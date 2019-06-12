@@ -34,7 +34,11 @@
     </style>
 
     <style name="NavigationBar">
+        <item name="android:layout_height">@dimen/navigationbar_height</item>
         <item name="android:background">@color/navigationbar_background</item>
+        <item name="android:paddingStart">@dimen/navigationbar_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/navigationbar_horizontal_padding</item>
+        <item name="android:clipToPadding">false</item>
         <item name="titleStyle">@style/NavigationBar.Title</item>
         <item name="buttonsStyle">@style/NavigationBar.Button</item>
     </style>
@@ -42,7 +46,7 @@
     <style name="NavigationBar.Title">
         <item name="android:textColor">@color/navigationbar_title_text_color</item>
         <item name="android:textSize">@dimen/navigationbar_title_text_size</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:textStyle">normal</item>
     </style>
 

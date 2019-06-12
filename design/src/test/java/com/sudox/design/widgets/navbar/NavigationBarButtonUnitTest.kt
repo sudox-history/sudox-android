@@ -30,12 +30,16 @@ class NavigationBarButtonUnitTest : Assert() {
 
     @Test
     fun testMeasureComponents_only_icon() {
-        val iconTextMargin = 5
+        val drawableWidth = 20
         val drawable = Mockito.mock(Drawable::class.java)
-        val drawableWidth = 512
-        val leftPadding = 2
-        val rightPadding = 3
-        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
+        val params = NavigationBarButtonParams().apply {
+            this.iconTextMargin = 10
+            this.rightPadding = 2
+            this.leftPadding = 3
+        }
+
+        Mockito.`when`(drawable.intrinsicWidth).thenReturn(drawableWidth)
+        Mockito.`when`(navigationBarButton.calculateWidth()).thenCallRealMethod()
 
         NavigationBarButton::class.java
                 .getDeclaredField("params")
@@ -47,24 +51,24 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .set(navigationBarButton, drawable)
 
-        Mockito.`when`(drawable.intrinsicWidth).thenReturn(drawableWidth)
-        Mockito.`when`(navigationBarButton.calculateWidth()).thenCallRealMethod()
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(leftPadding)
-        Mockito.`when`(navigationBarButton.paddingRight).thenReturn(rightPadding)
-
         val result = navigationBarButton.calculateWidth()
-        assertEquals(drawableWidth + leftPadding + rightPadding, result)
+        val valid = drawableWidth + params.rightPadding + params.leftPadding
+        assertEquals(valid, result)
     }
 
     @Test
     fun testMeasureComponents_only_text() {
-        val iconTextMargin = 5
+        val textWidth = 20
         val textBounds = Mockito.mock(Rect::class.java)
-        val textWidth = 512
         val text = "Hello"
-        val leftPadding = 2
-        val rightPadding = 3
-        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
+        val params = NavigationBarButtonParams().apply {
+            this.iconTextMargin = 5
+            this.rightPadding = 2
+            this.leftPadding = 3
+        }
+
+        Mockito.`when`(textBounds.width()).thenReturn(textWidth)
+        Mockito.`when`(navigationBarButton.calculateWidth()).thenCallRealMethod()
 
         NavigationBarButton::class.java
                 .getDeclaredField("params")
@@ -81,26 +85,23 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .set(navigationBarButton, textBounds)
 
-        Mockito.`when`(textBounds.width()).thenReturn(textWidth)
-        Mockito.`when`(navigationBarButton.calculateWidth()).thenCallRealMethod()
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(leftPadding)
-        Mockito.`when`(navigationBarButton.paddingRight).thenReturn(rightPadding)
-
         val result = navigationBarButton.calculateWidth()
-        assertEquals(textWidth + leftPadding + rightPadding, result)
+        val valid = textWidth + params.rightPadding + params.leftPadding
+        assertEquals(valid, result)
     }
 
     @Test
     fun testMeasureComponents_all() {
-        val iconTextMargin = 5
-        val drawable = Mockito.mock(Drawable::class.java)
-        val drawableWidth = 512
-        val textBounds = Mockito.mock(Rect::class.java)
-        val textWidth = 512
         val text = "Hello"
-        val leftPadding = 2
-        val rightPadding = 3
-        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
+        val drawableWidth = 512
+        val drawable = Mockito.mock(Drawable::class.java)
+        val textWidth = 512
+        val textBounds = Mockito.mock(Rect::class.java)
+        val params = NavigationBarButtonParams().apply {
+            this.iconTextMargin = 5
+            this.rightPadding = 2
+            this.leftPadding = 3
+        }
 
         NavigationBarButton::class.java
                 .getDeclaredField("params")
@@ -125,11 +126,10 @@ class NavigationBarButtonUnitTest : Assert() {
         Mockito.`when`(drawable.intrinsicWidth).thenReturn(drawableWidth)
         Mockito.`when`(textBounds.width()).thenReturn(textWidth)
         Mockito.`when`(navigationBarButton.calculateWidth()).thenCallRealMethod()
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(leftPadding)
-        Mockito.`when`(navigationBarButton.paddingRight).thenReturn(rightPadding)
 
         val result = navigationBarButton.calculateWidth()
-        assertEquals(drawableWidth + iconTextMargin + textWidth + leftPadding + rightPadding, result)
+        val valid = drawableWidth + params.iconTextMargin + textWidth + params.leftPadding + params.rightPadding
+        assertEquals(valid, result)
     }
 
     @Test
@@ -261,8 +261,7 @@ class NavigationBarButtonUnitTest : Assert() {
     @Test
     fun testSetIconDrawable() {
         val drawable = Mockito.mock(Drawable::class.java)
-        val tintColor = -127
-        val params = NavigationBarButtonParams().apply { this.iconTintColor = tintColor }
+        val params = NavigationBarButtonParams().apply { this.iconTintColor = -127 }
 
         NavigationBarButton::class.java
                 .getDeclaredField("params")
@@ -280,7 +279,7 @@ class NavigationBarButtonUnitTest : Assert() {
 
         navigationBarButton.setIconDrawable(drawable)
         Mockito.verify(drawable).setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-        Mockito.verify(drawable).setTint(tintColor)
+        Mockito.verify(drawable).setTint(params.iconTintColor)
         Mockito.verify(navigationBarButton).requestLayout()
         Mockito.verify(navigationBarButton).invalidate()
 
@@ -349,10 +348,16 @@ class NavigationBarButtonUnitTest : Assert() {
     fun testIconLeftBorder_left_icon_direction_without_text() {
         val canvas = Mockito.mock(Canvas::class.java)
         val drawable = Mockito.mock(Drawable::class.java)
-        val iconWidth = 1000
-        val width = 2000
-        val paddingRight = 50
-        val paddingLeft = 20
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
@@ -365,23 +370,27 @@ class NavigationBarButtonUnitTest : Assert() {
                 .set(navigationBarButton, drawable)
 
         Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas)).thenCallRealMethod()
-        Mockito.`when`(navigationBarButton.paddingRight).thenReturn(paddingRight)
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(paddingLeft)
-        Mockito.`when`(drawable.intrinsicWidth).thenReturn(iconWidth)
-        Mockito.`when`(canvas.width).thenReturn(width)
+        Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
+        Mockito.`when`(canvas.width).thenReturn(50)
 
         val result = navigationBarButton.getIconLeftBorder(canvas)
-        assertEquals(paddingLeft, result)
+        assertEquals(params.leftPadding, result)
     }
 
     @Test
     fun testIconLeftBorder_left_icon_direction_with_text() {
         val canvas = Mockito.mock(Canvas::class.java)
         val drawable = Mockito.mock(Drawable::class.java)
-        val iconWidth = 1000
-        val width = 2000
-        val paddingRight = 50
-        val paddingLeft = 20
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
@@ -399,23 +408,27 @@ class NavigationBarButtonUnitTest : Assert() {
                 .set(navigationBarButton, "Text")
 
         Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas)).thenCallRealMethod()
-        Mockito.`when`(navigationBarButton.paddingRight).thenReturn(paddingRight)
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(paddingLeft)
-        Mockito.`when`(drawable.intrinsicWidth).thenReturn(iconWidth)
-        Mockito.`when`(canvas.width).thenReturn(width)
+        Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
+        Mockito.`when`(canvas.width).thenReturn(50)
 
         val result = navigationBarButton.getIconLeftBorder(canvas)
-        assertEquals(paddingLeft, result)
+        assertEquals(params.leftPadding, result)
     }
 
     @Test
     fun testIconLeftBorder_right_icon_direction_without_text() {
         val canvas = Mockito.mock(Canvas::class.java)
         val drawable = Mockito.mock(Drawable::class.java)
-        val iconWidth = 1000
-        val width = 2000
-        val paddingRight = 50
-        val paddingLeft = 20
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
@@ -428,23 +441,27 @@ class NavigationBarButtonUnitTest : Assert() {
                 .set(navigationBarButton, drawable)
 
         Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas)).thenCallRealMethod()
-        Mockito.`when`(navigationBarButton.paddingRight).thenReturn(paddingRight)
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(paddingLeft)
-        Mockito.`when`(drawable.intrinsicWidth).thenReturn(iconWidth)
-        Mockito.`when`(canvas.width).thenReturn(width)
+        Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
+        Mockito.`when`(canvas.width).thenReturn(50)
 
         val result = navigationBarButton.getIconLeftBorder(canvas)
-        assertEquals(paddingLeft, result)
+        assertEquals(params.leftPadding, result)
     }
 
     @Test
     fun testIconLeftBorder_right_icon_direction_with_text() {
         val canvas = Mockito.mock(Canvas::class.java)
         val drawable = Mockito.mock(Drawable::class.java)
-        val iconWidth = 1000
-        val width = 2000
-        val paddingRight = 50
-        val paddingLeft = 20
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
@@ -462,38 +479,51 @@ class NavigationBarButtonUnitTest : Assert() {
                 .set(navigationBarButton, drawable)
 
         Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas)).thenCallRealMethod()
-        Mockito.`when`(navigationBarButton.paddingRight).thenReturn(paddingRight)
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(paddingLeft)
-        Mockito.`when`(drawable.intrinsicWidth).thenReturn(iconWidth)
-        Mockito.`when`(canvas.width).thenReturn(width)
+        Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
+        Mockito.`when`(canvas.width).thenReturn(50)
 
         val result = navigationBarButton.getIconLeftBorder(canvas)
-        assertEquals(width - paddingRight - iconWidth, result)
+        val valid = canvas.width - params.rightPadding - drawable.intrinsicWidth
+        assertEquals(valid, result)
     }
 
     @Test
     fun testTextRightBorder_left_icon_direction_without_icon() {
-        val paddingLeft = 15
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
                 .apply { isAccessible = true }
                 .set(navigationBarButton, NavigationBarButtonIconDirection.RIGHT)
 
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(paddingLeft)
         Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenCallRealMethod()
 
         val result = navigationBarButton.getTextLeftBorder()
-        assertEquals(paddingLeft, result)
+        assertEquals(params.leftPadding, result)
     }
 
     @Test
     fun testTextRightBorder_left_icon_direction_with_icon() {
         val drawable = Mockito.mock(Drawable::class.java)
-        val paddingLeft = 15
-        val iconTextMargin = 10
-        val iconWidth = 512
-        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("params")
@@ -510,19 +540,20 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .set(navigationBarButton, drawable)
 
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(paddingLeft)
-        Mockito.`when`(drawable.intrinsicWidth).thenReturn(iconWidth)
+        Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
         Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenCallRealMethod()
 
         val result = navigationBarButton.getTextLeftBorder()
-        assertEquals(paddingLeft, result)
+        assertEquals(params.leftPadding, result)
     }
 
     @Test
     fun testTextLeftBorder_left_icon_direction_without_icon() {
-        val paddingLeft = 15
-        val iconTextMargin = 10
-        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
 
         NavigationBarButton::class.java
                 .getDeclaredField("params")
@@ -534,20 +565,20 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .set(navigationBarButton, NavigationBarButtonIconDirection.LEFT)
 
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(paddingLeft)
         Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenCallRealMethod()
 
         val result = navigationBarButton.getTextLeftBorder()
-        assertEquals(paddingLeft, result)
+        assertEquals(params.leftPadding, result)
     }
 
     @Test
     fun testTextLeftBorder_left_icon_direction_with_icon() {
         val drawable = Mockito.mock(Drawable::class.java)
-        val paddingLeft = 15
-        val iconTextMargin = 10
-        val iconWidth = 512
-        val params = NavigationBarButtonParams().apply { this.iconTextMargin = iconTextMargin }
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
 
         NavigationBarButton::class.java
                 .getDeclaredField("params")
@@ -564,20 +595,18 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .set(navigationBarButton, drawable)
 
-        Mockito.`when`(navigationBarButton.paddingLeft).thenReturn(paddingLeft)
-        Mockito.`when`(drawable.intrinsicWidth).thenReturn(iconWidth)
+        Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
         Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenCallRealMethod()
 
         val result = navigationBarButton.getTextLeftBorder()
-        assertEquals(paddingLeft + iconWidth + iconTextMargin, result)
+        val valid = params.leftPadding + drawable.intrinsicWidth + params.iconTextMargin
+        assertEquals(valid, result)
     }
 
     @Test
     fun testTextBottomBorder() {
         val canvas = Mockito.mock(Canvas::class.java)
         val bounds = Mockito.mock(Rect::class.java)
-        val height = 2000
-        val textHeight = 1000
 
         NavigationBarButton::class.java
                 .getDeclaredField("textBounds")
@@ -585,10 +614,11 @@ class NavigationBarButtonUnitTest : Assert() {
                 .set(navigationBarButton, bounds)
 
         Mockito.`when`(navigationBarButton.getTextBottomBorder(canvas)).thenCallRealMethod()
-        Mockito.`when`(bounds.centerY()).thenReturn(textHeight / 2)
-        Mockito.`when`(canvas.height).thenReturn(height)
+        Mockito.`when`(bounds.centerY()).thenReturn(20)
+        Mockito.`when`(canvas.height).thenReturn(80)
 
         val result = navigationBarButton.getTextBottomBorder(canvas)
-        assertEquals(height / 2 - textHeight / 2, result)
+        val valid = 80 / 2 - bounds.centerY()
+        assertEquals(valid, result)
     }
 }

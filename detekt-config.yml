@@ -109,11 +109,11 @@ complexity:
     ignoreStringsRegex: '$^'
   TooManyFunctions:
     active: true
-    thresholdInFiles: 16
-    thresholdInClasses: 16
-    thresholdInInterfaces: 16
-    thresholdInObjects: 16
-    thresholdInEnums: 16
+    thresholdInFiles: 18
+    thresholdInClasses: 18
+    thresholdInInterfaces: 18
+    thresholdInObjects: 18
+    thresholdInEnums: 18
     ignoreDeprecated: false
     ignorePrivate: false
     ignoreOverridden: false

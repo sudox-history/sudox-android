@@ -1,4 +1,4 @@
-package com.sudox.common.async
+package com.sudox.common.threading
 
 import android.os.Handler
 import android.os.HandlerThread

@@ -7,7 +7,7 @@ import android.graphics.Typeface
 import com.sudox.design.R
 import com.sudox.design.helpers.loadTypeface
 
-private val styleAttrs = intArrayOf(
+internal val buttonStyleAttrs = intArrayOf(
         android.R.attr.textSize,
         android.R.attr.textStyle,
         android.R.attr.textColor,
@@ -39,17 +39,17 @@ class NavigationBarButtonParams {
     @SuppressLint("ResourceType")
     fun readFromAttrs(typedArray: TypedArray, theme: Resources.Theme) {
         val buttonStyleResourceId = typedArray.getResourceId(R.styleable.NavigationBar_buttonsStyle, -1)
-        with(theme.obtainStyledAttributes(buttonStyleResourceId, styleAttrs)) {
-            val textStyle = typedArray.getInt(TEXT_STYLE_ATTR_INDEX, -1)
-            val fontFamily = typedArray.getString(FONT_FAMILY_ATTR_INDEX)
+        with(theme.obtainStyledAttributes(buttonStyleResourceId, buttonStyleAttrs)) {
+            val textStyle = getInt(TEXT_STYLE_ATTR_INDEX, -1)
+            val fontFamily = getString(FONT_FAMILY_ATTR_INDEX)
 
-            textSize = typedArray.getDimension(TEXT_SIZE_ATTR_INDEX, -1F)
-            textColor = typedArray.getColor(TEXT_COLOR_ATTR_INDEX, -1)
+            textSize = getDimension(TEXT_SIZE_ATTR_INDEX, -1F)
+            textColor = getColor(TEXT_COLOR_ATTR_INDEX, -1)
             textTypeface = loadTypeface(fontFamily!!, textStyle)
-            iconTintColor = typedArray.getColor(ICON_TINT_COLOR_ATTR_INDEX, -1)
-            iconTextMargin = typedArray.getDimensionPixelSize(ICON_TEXT_MARGIN_ATTR_INDEX, -1)
-            leftPadding = typedArray.getDimensionPixelSize(PADDING_LEFT_ATTR_INDEX, -1)
-            rightPadding = typedArray.getDimensionPixelSize(PADDING_RIGHT_ATTR_INDEX, -1)
+            iconTintColor = getColor(ICON_TINT_COLOR_ATTR_INDEX, -1)
+            iconTextMargin = getDimensionPixelSize(ICON_TEXT_MARGIN_ATTR_INDEX, -1)
+            leftPadding = getDimensionPixelSize(PADDING_LEFT_ATTR_INDEX, -1)
+            rightPadding = getDimensionPixelSize(PADDING_RIGHT_ATTR_INDEX, -1)
             recycle()
         }
     }
