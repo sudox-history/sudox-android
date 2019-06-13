@@ -1,5 +1,7 @@
 package com.sudox.cipher;
 
+import androidx.annotation.NonNull;
+
 public class Cipher {
 
     static {
@@ -10,7 +12,7 @@ public class Cipher {
         }
     }
 
-    public static boolean checkEqualsAllBytes(byte[] first, byte[] second) {
+    public static boolean checkEqualsAllBytes(@NonNull byte[] first, @NonNull byte[] second) {
         if (first.length != second.length) {
             return false;
         }
@@ -18,10 +20,11 @@ public class Cipher {
         return countNonEqualityBytes(first, second) == 0;
     }
 
-    public static int countNonEqualityBytes(byte[] first, byte[] second) {
+    public static int countNonEqualityBytes(@NonNull byte[] first, @NonNull byte[] second) {
         int countNonEqualityBytes = 0;
+        int length = first.length;
 
-        for (int i = 0; i < first.length; i++) {
+        for (int i = 0; i < length; i++) {
             if (first[i] != second[i]) {
                 countNonEqualityBytes++;
             }
@@ -30,20 +33,41 @@ public class Cipher {
         return countNonEqualityBytes;
     }
 
-    public static native byte[] calculateSecretKey(byte[] privateKey, byte[] recipientPublicKey);
+    @NonNull
+    public static native byte[] calculateSecretKey(@NonNull byte[] privateKey, @NonNull byte[] recipientPublicKey);
     public static native void removeAllKeysPairs();
     public static native void removeKeysPair(int pairId);
+
+    @NonNull
     public static native byte[] getPublicKey(int pairId);
+
+    @NonNull
     public static native byte[] getPrivateKey(int pairId);
     public static native int generateKeysPair();
-    public static native byte[] calculateHMAC(byte[] key, byte[] message);
-    public static native byte[] decryptWithAES(byte[] key, byte[] iv, byte[] message);
-    public static native byte[] encryptWithAES(byte[] key, byte[] iv, byte[] message);
-    public static native boolean verifyMessageWithECDSA(byte[] message, byte[] signature);
-    public static native byte[] calculateSHA224(byte[] data);
-    public static native byte[] decodeFromBase64(byte[] encoded);
-    public static native String encodeToBase64(byte[] decoded);
+
+    @NonNull
+    public static native byte[] calculateHMAC(@NonNull byte[] key, @NonNull byte[] message);
+
+    @NonNull
+    public static native byte[] decryptWithAES(@NonNull byte[] key, @NonNull byte[] iv, @NonNull byte[] message);
+
+    @NonNull
+    public static native byte[] encryptWithAES(@NonNull byte[] key, @NonNull byte[] iv, @NonNull byte[] message);
+    public static native boolean verifyMessageWithECDSA(@NonNull byte[] message, @NonNull byte[] signature);
+
+    @NonNull
+    public static native byte[] calculateSHA224(@NonNull byte[] data);
+
+    @NonNull
+    public static native byte[] decodeFromBase64(@NonNull byte[] encoded);
+
+    @NonNull
+    public static native String encodeToBase64(@NonNull byte[] decoded);
+
+    @NonNull
     public static native String generateBase64(int length);
+
+    @NonNull
     public static native byte[] generateBytes(int length);
     private static native void initLibrary();
 }

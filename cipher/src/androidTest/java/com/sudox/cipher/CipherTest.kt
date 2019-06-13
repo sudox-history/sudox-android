@@ -1,7 +1,7 @@
 package com.sudox.cipher
 
-import androidx.test.runner.AndroidJUnit4
 import android.util.Base64
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,7 +15,8 @@ import kotlin.random.Random
 @RunWith(AndroidJUnit4::class)
 class CipherTest : Assert() {
 
-    private val BASE64_REGEX = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?\$".toRegex()
+    @Suppress("RegExpAnonymousGroup")
+    private val base64Regex = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?\$".toRegex()
 
     @Test
     fun testCheckEquals_all_bytes() {
@@ -246,7 +247,7 @@ class CipherTest : Assert() {
 
         // Verifying ...
         assertEquals(validEncoded, encoded)
-        assertTrue(BASE64_REGEX.matches(encoded))
+        assertTrue(base64Regex.matches(encoded))
     }
 
     @Test
@@ -257,14 +258,14 @@ class CipherTest : Assert() {
 
         // Verifying ...
         assertEquals(firstDecoded.size, firstLength)
-        assertTrue(BASE64_REGEX.matches(first))
+        assertTrue(base64Regex.matches(first))
 
         // Check, that results not equals ...
         val second = com.sudox.cipher.Cipher.generateBase64(firstLength)
 
         // Verifying ...
-        assertFalse(first!!.contentEquals(second))
-        assertTrue(BASE64_REGEX.matches(second))
+        assertFalse(first.contentEquals(second))
+        assertTrue(base64Regex.matches(second))
     }
 
     @Test
@@ -279,6 +280,6 @@ class CipherTest : Assert() {
         val secondBytes = com.sudox.cipher.Cipher.generateBytes(firstLength)
 
         // Verifying ...
-        assertFalse(firstBytes!!.contentEquals(secondBytes))
+        assertFalse(firstBytes.contentEquals(secondBytes))
     }
 }

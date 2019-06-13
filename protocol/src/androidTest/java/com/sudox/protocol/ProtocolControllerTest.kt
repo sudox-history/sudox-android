@@ -140,7 +140,7 @@ class ProtocolControllerTest : Assert() {
         // Because onEnded() never calling without session
         controller.messagesController.secretKey = "Fake key!".toByteArray()
         connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
-        Thread.sleep(6500)
+        Thread.sleep(7000)
 
         Mockito.verify(callback, Mockito.never()).onEnded()
         assertArrayEquals(pingMessage, pingReceivedMessage)
