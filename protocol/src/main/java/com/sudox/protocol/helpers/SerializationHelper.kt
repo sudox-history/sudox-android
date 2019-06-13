@@ -1,6 +1,5 @@
 package com.sudox.protocol.helpers
 
-import java.nio.BufferUnderflowException
 import java.nio.ByteBuffer
 import java.util.LinkedList
 
@@ -29,22 +28,18 @@ fun serializePacket(slices: Array<out ByteArray>): ByteBuffer {
  * Returns null if an error occurs.
  */
 fun deserializePacketSlices(buffer: ByteBuffer): LinkedList<ByteArray>? {
-    try {
-        val slices = LinkedList<ByteArray>()
-        var currentIndex = 0
+    val slices = LinkedList<ByteArray>()
+    var currentIndex = 0
 
-        while (currentIndex + LENGTH_HEADER_SIZE_IN_BYTES <= buffer.limit()) {
-            val slice = buffer.readPacketSlice() ?: return null
+    while (currentIndex + LENGTH_HEADER_SIZE_IN_BYTES <= buffer.limit()) {
+        val slice = buffer.readPacketSlice() ?: return null
 
-            slices.addLast(slice)
-            currentIndex += LENGTH_HEADER_SIZE_IN_BYTES
-            currentIndex += slice.size
-        }
-
-        return slices
-    } catch (e: BufferUnderflowException) {
-        return null
+        slices.addLast(slice)
+        currentIndex += LENGTH_HEADER_SIZE_IN_BYTES
+        currentIndex += slice.size
     }
+
+    return slices
 }
 
 fun ByteBuffer.writePacketSlice(it: ByteArray) {
@@ -59,7 +54,7 @@ fun ByteBuffer.writePacketSlice(it: ByteArray) {
 fun ByteBuffer.readPacketSlice(): ByteArray? {
     val length = readIntBE(LENGTH_HEADER_SIZE_IN_BYTES)
 
-    return if (length > 0) {
+    return if (length > 0 && remaining() >= length) {
         ByteArray(length).apply { get(this) }
     } else {
         null

@@ -31,7 +31,7 @@ class MessagesController(val protocolController: ProtocolController) {
         val serverCipherHmac = slices.remove()
 
         // First step - calculating hmac using generated secret key
-        val cipherHmac = Cipher.calculateHMAC(secretKey, cipher)
+        val cipherHmac = Cipher.calculateHMAC(secretKey!!, cipher)
 
         // Second step - comparing server and own hmacs
         if (!Cipher.checkEqualsAllBytes(serverCipherHmac, cipherHmac)) {
@@ -39,7 +39,7 @@ class MessagesController(val protocolController: ProtocolController) {
         }
 
         // Third step - decrypting message
-        val message = Cipher.decryptWithAES(secretKey, iv, cipher)
+        val message = Cipher.decryptWithAES(secretKey!!, iv, cipher)
         protocolController.submitSessionMessageEvent(message)
 
         return true
@@ -55,8 +55,8 @@ class MessagesController(val protocolController: ProtocolController) {
         }
 
         val iv = Cipher.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
-        val cipher = Cipher.encryptWithAES(secretKey, iv, message)
-        val cipherHmac = Cipher.calculateHMAC(secretKey, cipher)
+        val cipher = Cipher.encryptWithAES(secretKey!!, iv, message)
+        val cipherHmac = Cipher.calculateHMAC(secretKey!!, cipher)
 
         protocolController.sendPacket(iv, cipher, cipherHmac)
         return true

@@ -50,7 +50,7 @@ class HandshakeController(val protocolController: ProtocolController) {
         }
 
         // Second step - calculating secret key
-        val secretKey = Cipher.calculateSecretKey(ownPrivateKey, serverPublicKey)
+        val secretKey = Cipher.calculateSecretKey(ownPrivateKey!!, serverPublicKey)
 
         if (secretKey.isEmpty()) {
             return false
