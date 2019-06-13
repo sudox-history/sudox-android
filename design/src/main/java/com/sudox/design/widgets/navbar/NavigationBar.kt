@@ -17,11 +17,12 @@ import com.sudox.design.widgets.navbar.title.NavigationBarTitleParams
 
 private const val BUTTONS_IN_END_COUNT = 3
 
-class NavigationBar : ViewGroup {
+class NavigationBar : ViewGroup, View.OnClickListener {
 
     internal var buttonParams = NavigationBarButtonParams()
     internal var titleParams = NavigationBarTitleParams()
 
+    var listener: NavigationBarListener? = null
     var buttonStart: NavigationBarButton? = null
     var buttonsEnd = arrayOfNulls<NavigationBarButton>(BUTTONS_IN_END_COUNT)
 
@@ -41,6 +42,7 @@ class NavigationBar : ViewGroup {
         initTitle()
     }
 
+    @Checked
     private fun initButtons() {
         buttonStart = createButton()
 
@@ -49,6 +51,7 @@ class NavigationBar : ViewGroup {
         }
     }
 
+    @Checked
     private fun initTitle() {
         titleTextView.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
         titleTextView.gravity = Gravity.CENTER_VERTICAL
@@ -57,6 +60,7 @@ class NavigationBar : ViewGroup {
         titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleParams.textSize)
     }
 
+    @Checked
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         buttonStart!!.measure(widthMeasureSpec, heightMeasureSpec)
         contentView?.measure(widthMeasureSpec, heightMeasureSpec)
@@ -68,6 +72,7 @@ class NavigationBar : ViewGroup {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
+    @Checked
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val isRtl = isLayoutRtl()
 
@@ -76,6 +81,10 @@ class NavigationBar : ViewGroup {
         if (buttonsEnd.isNotEmpty()) {
             layoutEnd(left, right, top, bottom, isRtl)
         }
+    }
+
+    override fun onClick(view: View) {
+        listener?.onButtonClicked(view as NavigationBarButton)
     }
 
     internal fun layoutStart(left: Int, right: Int, top: Int, bottom: Int, rtl: Boolean) {
@@ -109,7 +118,9 @@ class NavigationBar : ViewGroup {
         var leftBorder = getEndLeftBorder(left, right, rtl)
         var rightBorder = leftBorder
 
-        for (button in buttonsEnd) {
+        for (i in buttonsEnd.size - 1 downTo 0) {
+            val button = buttonsEnd[i]
+
             if (button!!.visibility != View.VISIBLE) {
                 continue
             }
@@ -158,8 +169,10 @@ class NavigationBar : ViewGroup {
         }
     }
 
+    @Checked
     private fun createButton(): NavigationBarButton {
         val button = NavigationBarButton(context, buttonParams)
+        button.setOnClickListener(this)
         addView(button)
         return button
     }
