@@ -45,18 +45,12 @@ class HandshakeController(val protocolController: ProtocolController) {
         val serverHmac = slices.remove()
 
         // First step - verify public key
-        if (!Cipher.verifyMessageWithECDSA(serverPublicKey, serverPublicKeySign)) {
+        if (!Cipher.verifyMessageWithECDSA(serverPublicKey, serverPublicKeySign) || ownPrivateKey == null) {
             return false
         }
 
-        // Second step - calculating secret key
-        val secretKey = Cipher.calculateSecretKey(ownPrivateKey!!, serverPublicKey)
-
-        if (secretKey.isEmpty()) {
-            return false
-        }
-
-        // Third step - calculating hmac using generated secret key
+        // Second & third steps - calculating secret key and hmac
+        val secretKey = Cipher.calculateSecretKey(ownPrivateKey!!, serverPublicKey) ?: return false
         val hmac = Cipher.calculateHMAC(secretKey, HMAC_VALIDATION_WORD)
 
         // Fourth step - comparing server and own hmacs

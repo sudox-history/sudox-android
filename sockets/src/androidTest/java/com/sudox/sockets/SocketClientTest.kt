@@ -55,7 +55,7 @@ class SocketClientTest {
         Mockito.verify(callback).socketClosed(true)
         assertFalse(client.opened())
         assertEquals(-1, client.availableBytes())
-        assertEquals(0, client.readBytes(1024).size)
+        assertNull(client.readBytes(1024))
         assertEquals(-1, client.readToByteBuffer(ByteBuffer.allocateDirect(10), 10, 0))
     }
 
@@ -82,7 +82,7 @@ class SocketClientTest {
         assertTrue(isConnectedToServer)
         assertTrue(client.opened())
         assertEquals(0, client.availableBytes())
-        assertEquals(0, client.readBytes(1024).size)
+        assertNull(client.readBytes(1024))
         assertEquals(-1, client.readToByteBuffer(ByteBuffer.allocateDirect(10), 10, 0))
     }
 
@@ -97,7 +97,7 @@ class SocketClientTest {
         Mockito.verify(callback, Mockito.never()).socketClosed(Mockito.anyBoolean())
         assertFalse(client.opened())
         assertEquals(-1, client.availableBytes())
-        assertEquals(0, client.readBytes(1024).size)
+        assertNull(client.readBytes(1024))
         assertEquals(-1, client.readToByteBuffer(ByteBuffer.allocateDirect(10), 10, 0))
     }
 
@@ -126,7 +126,7 @@ class SocketClientTest {
         Mockito.verify(callback).socketClosed(true)
         assertFalse(client.opened())
         assertEquals(-1, client.availableBytes())
-        assertEquals(0, client.readBytes(1024).size)
+        assertNull(client.readBytes(1024))
         assertEquals(-1, client.readToByteBuffer(ByteBuffer.allocateDirect(10), 10, 0))
     }
 
@@ -155,7 +155,7 @@ class SocketClientTest {
         Mockito.verify(callback).socketClosed(false)
         assertFalse(client.opened())
         assertEquals(-1, client.availableBytes())
-        assertEquals(0, client.readBytes(1024).size)
+        assertNull(client.readBytes(1024))
         assertEquals(-1, client.readToByteBuffer(ByteBuffer.allocateDirect(10), 10, 0))
     }
 

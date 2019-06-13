@@ -1,6 +1,7 @@
 package com.sudox.cipher;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class Cipher {
 
@@ -33,15 +34,15 @@ public class Cipher {
         return countNonEqualityBytes;
     }
 
-    @NonNull
+    @Nullable
     public static native byte[] calculateSecretKey(@NonNull byte[] privateKey, @NonNull byte[] recipientPublicKey);
     public static native void removeAllKeysPairs();
     public static native void removeKeysPair(int pairId);
 
-    @NonNull
+    @Nullable
     public static native byte[] getPublicKey(int pairId);
 
-    @NonNull
+    @Nullable
     public static native byte[] getPrivateKey(int pairId);
     public static native int generateKeysPair();
 

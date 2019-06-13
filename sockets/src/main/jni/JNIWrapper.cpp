@@ -76,7 +76,7 @@ Java_com_sudox_sockets_SocketClient_readBytes(JNIEnv *env, __unused jobject inst
     ssize_t read = client->read(buffer, static_cast<size_t>(count));
 
     if (read <= 0) {
-        return env->NewByteArray(static_cast<jsize>(0));
+        return nullptr;
     }
 
     jbyteArray jArray = env->NewByteArray(static_cast<jsize>(read));

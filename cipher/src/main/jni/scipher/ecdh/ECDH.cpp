@@ -164,7 +164,7 @@ Java_com_sudox_cipher_Cipher_calculateSecretKey(JNIEnv *env, jclass type,
     } catch (runtime_error error) {
         delete[] privateKeyNative;
         delete[] recipientPublicKeyNative;
-        return env->NewByteArray(0);
+        return nullptr;
     }
 }
 
@@ -181,7 +181,7 @@ Java_com_sudox_cipher_Cipher_getPrivateKey(JNIEnv *env, jclass type, jint pairId
 
     // If key not found empty array will be returned
     if (key == nullptr) {
-        return env->NewByteArray(0);
+        return nullptr;
     }
 
     // Mapping result to jByteArray
@@ -200,7 +200,7 @@ Java_com_sudox_cipher_Cipher_getPublicKey(JNIEnv *env, jclass type, jint pairId)
 
     // If key not found empty array will be returned
     if (key == nullptr) {
-        return env->NewByteArray(0);
+        return nullptr;
     }
 
     // Mapping result to jByteArray

@@ -93,18 +93,17 @@ class HandshakeControllerTest : Assert() {
 
     @Test
     fun testHandlePublicKeyMessage_not_valid_slices_count() {
-        val secretKey = ByteArray(0)
         val slices = LinkedList<ByteArray>()
 
         PowerMockito.mockStatic(Cipher::class.java)
-        Mockito.`when`(Cipher.calculateSecretKey(Mockito.any(), Mockito.any())).thenReturn(secretKey)
+        Mockito.`when`(Cipher.calculateSecretKey(Mockito.any(), Mockito.any())).thenReturn(null)
         Mockito.`when`(handshakeController.handlePublicKeyMessage(any())).thenCallRealMethod()
 
         slices.add(ByteArray(128))
         slices.add(ByteArray(128))
 
         assertFalse(handshakeController.handlePublicKeyMessage(slices))
-        Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(secretKey)
+        Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(any())
 
         slices.clear()
         slices.add(ByteArray(128))
@@ -113,7 +112,7 @@ class HandshakeControllerTest : Assert() {
         slices.add(ByteArray(128))
 
         assertFalse(handshakeController.handlePublicKeyMessage(slices))
-        Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(secretKey)
+        Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(any())
 
         val handshakeStatus = HandshakeController::class.java
                 .getDeclaredField("handshakeStatus")
@@ -125,7 +124,6 @@ class HandshakeControllerTest : Assert() {
 
     @Test
     fun testHandlePublicKeyMessage_signature_checking() {
-        val secretKey = ByteArray(0)
         val slices = LinkedList<ByteArray>()
 
         val publicKey = ByteArray(128) { -1 }
@@ -136,7 +134,7 @@ class HandshakeControllerTest : Assert() {
         Mockito.`when`(Cipher.verifyMessageWithECDSA(Mockito.any(), Mockito.any())).thenReturn(false)
         Mockito.`when`(Cipher.checkEqualsAllBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(Cipher.countNonEqualityBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
-        Mockito.`when`(Cipher.calculateSecretKey(Mockito.any(), Mockito.any())).thenReturn(secretKey)
+        Mockito.`when`(Cipher.calculateSecretKey(Mockito.any(), Mockito.any())).thenReturn(null)
         Mockito.`when`(handshakeController.handlePublicKeyMessage(slices)).thenCallRealMethod()
 
         slices.add(publicKey)
@@ -145,7 +143,7 @@ class HandshakeControllerTest : Assert() {
 
         handshakeController.generateKeysPair()
         assertFalse(handshakeController.handlePublicKeyMessage(slices))
-        Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(secretKey)
+        Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(any())
 
         val handshakeStatus = HandshakeController::class.java
                 .getDeclaredField("handshakeStatus")
@@ -160,7 +158,6 @@ class HandshakeControllerTest : Assert() {
 
     @Test
     fun testHandlePublicKeyMessage_calculating_secret_key() {
-        val secretKey = ByteArray(0)
         val slices = LinkedList<ByteArray>()
 
         val publicKey = ByteArray(128) { -1 }
@@ -169,7 +166,7 @@ class HandshakeControllerTest : Assert() {
 
         PowerMockito.mockStatic(Cipher::class.java)
         Mockito.`when`(Cipher.verifyMessageWithECDSA(Mockito.any(), Mockito.any())).thenReturn(true)
-        Mockito.`when`(Cipher.calculateSecretKey(Mockito.any(), Mockito.any())).thenReturn(secretKey)
+        Mockito.`when`(Cipher.calculateSecretKey(Mockito.any(), Mockito.any())).thenReturn(null)
         Mockito.`when`(Cipher.checkEqualsAllBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(Cipher.countNonEqualityBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(handshakeController.handlePublicKeyMessage(slices)).thenCallRealMethod()
@@ -180,7 +177,7 @@ class HandshakeControllerTest : Assert() {
 
         handshakeController.generateKeysPair()
         assertFalse(handshakeController.handlePublicKeyMessage(slices))
-        Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(secretKey)
+        Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(any())
 
         val handshakeStatus = HandshakeController::class.java
                 .getDeclaredField("handshakeStatus")
@@ -214,6 +211,7 @@ class HandshakeControllerTest : Assert() {
         slices.add(publicKeySign)
         slices.add(okHmac)
 
+        handshakeController.generateKeysPair()
         assertFalse(handshakeController.handlePublicKeyMessage(slices))
 
         val handshakeStatus = HandshakeController::class.java
@@ -223,9 +221,6 @@ class HandshakeControllerTest : Assert() {
 
         assertNotEquals(HandshakeStatus.SUCCESS, handshakeStatus)
         Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(secretKey)
-
-        PowerMockito.verifyStatic(Cipher::class.java)
-        Cipher.calculateHMAC(secretKey, HMAC_VALIDATION_WORD)
     }
 
     @Test
@@ -245,6 +240,7 @@ class HandshakeControllerTest : Assert() {
         slices.add(ByteArray(128))
         slices.add(ByteArray(128))
 
+        handshakeController.generateKeysPair()
         assertTrue(handshakeController.handlePublicKeyMessage(slices))
 
         val handshakeStatus = HandshakeController::class.java

@@ -56,12 +56,12 @@ class CipherTest : Assert() {
         val bobPrivate = com.sudox.cipher.Cipher.getPrivateKey(bobPairId)
 
         // Testing ...
-        val aliceSecret = com.sudox.cipher.Cipher.calculateSecretKey(alicePrivate, ByteArray(0))
-        val bobSecret = com.sudox.cipher.Cipher.calculateSecretKey(bobPrivate, ByteArray(0))
+        val aliceSecret = com.sudox.cipher.Cipher.calculateSecretKey(alicePrivate!!, ByteArray(0))
+        val bobSecret = com.sudox.cipher.Cipher.calculateSecretKey(bobPrivate!!, ByteArray(0))
 
         // Verifying ...
-        assertEquals(0, aliceSecret.size)
-        assertEquals(0, bobSecret.size)
+        assertNull(aliceSecret)
+        assertNull(bobSecret)
     }
 
     @Test
@@ -74,8 +74,8 @@ class CipherTest : Assert() {
         val bobPublic = com.sudox.cipher.Cipher.getPublicKey(bobPairId)
 
         // Testing ...
-        val aliceSecret = com.sudox.cipher.Cipher.calculateSecretKey(alicePrivate, bobPublic)
-        val bobSecret = com.sudox.cipher.Cipher.calculateSecretKey(bobPrivate, alicePublic)
+        val aliceSecret = com.sudox.cipher.Cipher.calculateSecretKey(alicePrivate!!, bobPublic!!)
+        val bobSecret = com.sudox.cipher.Cipher.calculateSecretKey(bobPrivate!!, alicePublic!!)
 
         // Verifying ...
         assertArrayEquals(aliceSecret, bobSecret)
@@ -90,8 +90,8 @@ class CipherTest : Assert() {
         var public = com.sudox.cipher.Cipher.getPublicKey(pairId)
 
         // Verifying ...
-        assertEquals(48, private.size)
-        assertEquals(97, public.size)
+        assertEquals(48, private!!.size)
+        assertEquals(97, public!!.size)
 
         // Testing pairs removing ...
         com.sudox.cipher.Cipher.removeKeysPair(pairId)
@@ -100,8 +100,8 @@ class CipherTest : Assert() {
         public = com.sudox.cipher.Cipher.getPublicKey(pairId)
 
         // Verifying ...
-        assertEquals(0, private.size)
-        assertEquals(0, public.size)
+        assertNull(private)
+        assertNull(public)
 
         // Testing all pairs removing ...
         val secondPairId = com.sudox.cipher.Cipher.generateKeysPair()
@@ -115,10 +115,10 @@ class CipherTest : Assert() {
         val thirdPublicKey = com.sudox.cipher.Cipher.getPrivateKey(thirdPairId)
 
         // Verifying ...
-        assertEquals(0, secondPrivateKey.size)
-        assertEquals(0, secondPublicKey.size)
-        assertEquals(0, thirdPrivateKey.size)
-        assertEquals(0, thirdPublicKey.size)
+        assertNull(secondPrivateKey)
+        assertNull(secondPublicKey)
+        assertNull(thirdPrivateKey)
+        assertNull(thirdPublicKey)
     }
 
     @Test
