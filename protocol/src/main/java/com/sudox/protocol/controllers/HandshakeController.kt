@@ -45,7 +45,7 @@ class HandshakeController(val protocolController: ProtocolController) {
         val serverHmac = slices.remove()
 
         // First step - verify public key
-        if (!Cipher.verifyMessageWithECDSA(serverPublicKey, serverPublicKeySign) || ownPrivateKey == null) {
+        if (!Cipher.verifyMessageWithECDSA(serverPublicKey, serverPublicKeySign)) {
             return false
         }
 
