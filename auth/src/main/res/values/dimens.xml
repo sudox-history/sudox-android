@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="auth_screen_top_padding">30dp</dimen>
+    <dimen name="auth_screen_horizontal_padding">40dp</dimen>
+    <dimen name="auth_screen_title_text_size">25sp</dimen>
+    <dimen name="auth_screen_subtitle_text_size">16sp</dimen>
+    <dimen name="auth_screen_subtitle_top_margin">15dp</dimen>
+</resources>

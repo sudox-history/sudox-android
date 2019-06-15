@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--Main-->
+    <string name="app_name">Sudox</string>
+    <string name="wait_for_connect">Connecting…</string>
+    <string name="ok">OK</string>
+    <string name="search">Search</string>
+    <string name="tag">Tag</string>
+    <string name="hello_world">Hello world</string>
+    <string name="function_in_development">The function in development!</string>
+    <string name="oops_old_version">Oops! It seems you have old version of Sudox. Update to continue use it. </string>
+
+    <!--Registration and authorisation-->
+    <string name="next">Next</string>
+    <string name="toolbar_back">Back</string>
+    <string name="toolbar_next">Next</string>
+    <string name="code_expired">Code expired</string>
+
+        <!--First-->
+        <string name="sign_in">Sign in</string>
+        <string name="enter_your_phone">For the beginning enter your phone number</string>
+        <string name="hint_of_create_account">If you haven\'t got an account we will suggest you to create it</string>
+        <string name="phone_number">Phone number</string>
+
+        <!--Second-->
+        <string name="return_back">Welcome back!</string>
+        <string name="welcome">Welcome!</string>
+        <string name="we_glad_to_see_you">We glad to see you!</string>
+        <string name="code">Code</string>
+        <string name="enter_code_from_messages"><![CDATA[Enter code from messages we have sent to <br><font color="#FFFFFF">\n%1$s</font></br>]]></string>
+        <string name="retry_send">Where is code?</string>
+        <string name="retry_send_in">Try in %time</string>
+
+
+        <!--Third-->
+        <string name="what_is_your_name">What\'s your name?</string>
+        <string name="enter_your_name_and_nickname">Enter your name and nickname</string>
+        <string name="name_and_surname">Name &amp; surname</string>
+        <string name="nickname">Nickname</string>
+        <string name="about_name">Don\'t worry, it\'s the last step</string>
+
+
+    <!--Messages-->
+    <string name="messages">Messages</string>
+    <string name="dialogs">Dialogs</string>
+    <string name="channels">Channels</string>
+    <string name="talks">Talks</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="you">You</string>
+
+
+    <!--Contacts-->
+    <string name="contacts">Contacts</string>
+    <string name="have_not_got_contacts">You havent\'t got contacts! Add them right now!</string>
+    <string name="contact_has_already_added">Contact has already added</string>
+    <string name="contact_has_not_find">Contact hasn\'t found</string>
+    <string name="contact_add_yourself">You can\'t add yourself to contacts list</string>
+    <string name="sync_contacts">Sync contacts</string>
+    <string name="contacts_sync">Contacts sync</string>
+    <string name="contacts_sync_confirmation_text">All your Sudox contacts will be deleted and synced with contacts list from this device. Continue?</string>
+    <string name="add">Add</string>
+    <string name="invite_friend_sms">Hi! I want to talk with you in Sudox! https://vk.com/sudox_messenger</string>
+    <string name="hint_phone_wil_not_be_found">If phone won\'t be found you could invite your friend into Sudox</string>
+    <string name="hint_no_contact_in_sudox">No contact in Sudox, do you want to invite him?</string>
+    <string name="empty_contacts_book">Unfortunately, you have empty contacts book!</string>
+    <string name="edit_contact">Edit contact</string>
+    <string name="contact_edit">Edit contact</string>
+    <string name="add_contact">Add contact</string>
+    <string name="add_new_contact">Add new contact</string>
+    <string name="new_contact">New contact</string>
+    <string name="remove_contact">Remove contact</string>
+    <string name="name_not_necessary">Name (not necessary)</string>
+    <string name="find_new_friends">Find new friends</string>
+    <string name="no_contacts_in_sudox">There are no contacts which registered in Sudox</string>
+
+    <!--Cloud-->
+    <string name="cloud">Cloud</string>
+
+
+    <string name="profile">Profile</string>
+    <string name="profile_info">Info</string>
+    <string name="decoration_label">Decorations</string>
+    <string name="decorations_label">Decorations</string>
+    <string name="share_with_contact">Share with user</string>
+    <string name="info_label">Information</string>
+    <string name="add_contact_by_qr">Add contact by QR</string>
+    <string name="im_using_sudox">I\'m using Sudox!</string>
+    <string name="share_profile">Share profile</string>
+    <string name="website">Website</string>
+    <string name="bio">Bio</string>
+
+
+    <!--Settings-->
+    <string name="settings">Settings</string>
+    <string name="exit">Logout</string>
+
+
+    <!--Errors-->
+    <string name="wrong_phone_format">Wrong phone number format</string>
+    <string name="too_many_requests">Exceeded limit of requests</string>
+    <string name="no_internet_connection">No Internet connection!</string>
+    <string name="registration">Register</string>
+    <string name="authorisation">Auth</string>
+    <string name="lost_internet_connection">Connection terminated</string>
+    <string name="connection_restored">Connection restored</string>
+    <string name="code_did_nit_come">If code didn\'t come then push the send again button</string>
+    <string name="wrong_code_format">Wrong code format</string>
+    <string name="wrong_name_format">Wrong name format</string>
+    <string name="wrong_nickname_format">Wrong nickname format</string>
+    <string name="account_is_already_registered">Account is already registered</string>
+    <string name="wrong_code">Wrong confirmation code</string>
+    <string name="session_died">The session is out of date, please, sign up again</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="title_oops">Oops! Fail!</string>
+
+
+    <!--Chat-->
+    <string name="send_message">Send message</string>
+    <string name="enter_message">Enter message</string>
+    <string name="call_user">Call user</string>
+    <string name="attach_file">Attach file</string>
+
+
+    <!--Actions-->
+    <string name="yes_confirmation">Yes</string>
+    <string name="no_confirmation">No</string>
+    <string name="edit_save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="invite">Invite</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Formats -->
+    <string name="nickname_format" translatable="false"><![CDATA[<font color="#FFFFFF">@%1$s</font><font color="#BDBDBD">#%2$s</font>]]></string>
+
+
+    <plurals name="contacts_count">
+        <item quantity="one">%1$d contact</item>
+        <item quantity="few">%1$d contacts</item>
+        <item quantity="many">%1$d contacts</item>
+        <item quantity="other">%1$d contacts</item>
+    </plurals>
+
+</resources>

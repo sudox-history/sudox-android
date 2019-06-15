@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="SudoxTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/dark_primary_color</item>
         <item name="colorAccent">@color/accent_color</item>
+
+        <item name="android:colorBackground">@color/background_color</item>
+        <item name="android:windowBackground">@color/background_color</item>
 
         <item name="android:editTextStyle">@style/EditText</item>
         <item name="editTextStyle">@style/EditText</item>
         <item name="editTextLayoutStyle">@style/EditTextLayout</item>
 
         <item name="navigationBarStyle">@style/NavigationBar</item>
+    </style>
+
+    <style name="SudoxTheme.TextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="SudoxTheme.Hint" parent="SudoxTheme.TextAppearance">
+        <item name="android:layout_marginTop">@dimen/hint_top_margin</item>
+        <item name="android:layout_marginLeft">@dimen/hint_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/hint_horizontal_margin</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">@dimen/hint_text_size</item>
+        <item name="android:textColor">@color/hint_color</item>
     </style>
 
     <style name="EditText" parent="Widget.AppCompat.EditText">
