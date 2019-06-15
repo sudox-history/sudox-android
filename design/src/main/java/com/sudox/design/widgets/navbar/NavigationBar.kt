@@ -184,7 +184,10 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         }
 
         contentView = view
-        addView(contentView)
+
+        if (contentView != null) {
+            addView(contentView)
+        }
     }
 
     @Checked

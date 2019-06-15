@@ -1,6 +1,7 @@
 dependencies {
     implementation project(path: ':auth')
     implementation project(path: ':design')
+    api project(path: ':core')
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
