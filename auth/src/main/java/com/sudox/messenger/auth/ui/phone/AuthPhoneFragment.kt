@@ -18,16 +18,27 @@ class AuthPhoneFragment : AppFragment() {
     private var navbarController: AppNavbarController? = null
     private var navigationController: AppNavigationController? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        initViewModel()
+        initDependencies()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.fragment_auth_phone, container, false)
+    }
+
+    private fun initViewModel() {
         authPhoneViewModel = ViewModelProviders
                 .of(this)
                 .get(AuthPhoneViewModel::class.java)
+    }
 
+    private fun initDependencies() {
         val activity = activity as AppActivity
         navbarController = activity.getNavbarController()
         navigationController = activity.getNavigationController()
-
-        return inflater.inflate(R.layout.fragment_auth_phone, container, false)
     }
 
     override fun getFragmentType(): Int {

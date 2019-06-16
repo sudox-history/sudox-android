@@ -1,7 +1,10 @@
 package com.sudox.protocol
 
-class ProtocolClient(internal val host: String, internal val port: Short, internal val callback: ProtocolCallback) {
-
+class ProtocolClient(
+    internal val host: String,
+    internal val port: Short,
+    internal val callback: ProtocolCallback
+) {
     internal var protocolController: ProtocolController? = null
 
     fun connect() {

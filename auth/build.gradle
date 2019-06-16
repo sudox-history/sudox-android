@@ -1,4 +1,5 @@
 dependencies {
     implementation project(path: ':design')
-    compile project(path: ':core')
+    implementation project(path: ':core')
+    implementation project(path: ':api')
 }

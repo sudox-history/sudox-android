@@ -250,8 +250,8 @@ formatting:
     active: true
     autoCorrect: true
   NoTrailingSpaces:
-    active: true
-    autoCorrect: true
+    active: false
+    autoCorrect: false
   NoUnitReturn:
     active: true
     autoCorrect: true

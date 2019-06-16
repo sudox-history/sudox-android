@@ -11,9 +11,9 @@ import java.util.LinkedList
 
 internal const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
 
-class ProtocolController(var protocolClient: ProtocolClient) :
-        ControllerThread("STIPS Worker"),
-        SocketClient.ClientCallback {
+class ProtocolController(
+    var protocolClient: ProtocolClient
+) : ControllerThread("STIPS Worker"), SocketClient.ClientCallback {
 
     internal val socketClient = SocketClient(protocolClient.host, protocolClient.port).apply {
         callback(this@ProtocolController)

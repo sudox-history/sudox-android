@@ -2,46 +2,53 @@ package com.sudox.messenger.impls
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
-import com.sudox.messenger.core.fragment.AppFragment
 import com.sudox.messenger.core.controller.AppNavigationController
+import com.sudox.messenger.core.fragment.AppFragment
 
-private const val FRAGMENT_TAG = "fragmentTag"
-private const val FRAGMENT_KEY = "fragment"
+internal const val CURRENT_FRAGMENT_TAG = "current_fragment_tag"
+internal const val CURRENT_FRAGMENT_KEY = "current_fragment_key"
 
-class AppNavigationControllerImpl(val containerId: Int, val fragmentManager: FragmentManager)
-    : AppNavigationController {
+class AppNavigationControllerImpl(
+    val containerId: Int,
+    val fragmentManager: FragmentManager
+) : AppNavigationController {
 
-    override fun popBackstack() {
-        fragmentManager.popBackStack()
+    override fun showPreviousFragment(): Boolean {
+        return fragmentManager.popBackStackImmediate()
     }
 
-    override fun openFragment(fragment: AppFragment) {
-        fragmentManager
+    override fun showFragment(fragment: AppFragment, addToBackstack: Boolean) {
+        val transaction = fragmentManager
                 .beginTransaction()
-                .replace(containerId, fragment, FRAGMENT_TAG)
-                .addToBackStack(null)
-                .commit()
+                .replace(containerId, fragment, CURRENT_FRAGMENT_TAG)
+
+        if (addToBackstack) {
+            transaction.addToBackStack(null)
+        }
+
+        transaction.commit()
     }
 
     override fun getCurrentFragment(): AppFragment {
-        return fragmentManager.findFragmentByTag(FRAGMENT_TAG) as AppFragment
+        return fragmentManager.findFragmentByTag(CURRENT_FRAGMENT_TAG) as AppFragment
+    }
+
+    override fun saveState(bundle: Bundle) {
+        val currentFragment = getCurrentFragment()
+        fragmentManager.putFragment(bundle, CURRENT_FRAGMENT_KEY, currentFragment)
+    }
+
+    override fun restoreState(bundle: Bundle?): Boolean {
+        if (bundle == null) {
+            return false
+        }
+
+        val fragment = fragmentManager.getFragment(bundle, CURRENT_FRAGMENT_KEY) as AppFragment
+        showFragment(fragment, false)
+        return true
     }
 
     override fun clearBackstack() {
         fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-    }
-
-    override fun saveFragmentToState(outState: Bundle) {
-        val fragment = getCurrentFragment()
-        fragmentManager.putFragment(outState, FRAGMENT_KEY, fragment)
-    }
-
-    override fun restoreFragmentFromState(savedInstanceState: Bundle) {
-        val fragment = fragmentManager.getFragment(savedInstanceState, FRAGMENT_KEY) as AppFragment
-        openFragment(fragment)
-    }
-
-    override fun canRestoreFragmentFromState(savedInstanceState: Bundle?): Boolean {
-        return savedInstanceState != null && savedInstanceState.containsKey(FRAGMENT_KEY)
     }
 }

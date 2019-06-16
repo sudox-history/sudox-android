@@ -20,15 +20,13 @@ class AppActivityImpl : AppCompatActivity(), AppActivity {
         navbarController = AppNavbarControllerImpl(appNavigationBar)
         navigationController = AppNavigationControllerImpl(R.id.appFrameLayout, supportFragmentManager)
 
-        if (navigationController!!.canRestoreFragmentFromState(savedInstanceState)) {
-            navigationController!!.restoreFragmentFromState(savedInstanceState!!)
-        } else {
-            navigationController!!.openFragment(AuthPhoneFragment())
+        if (!navigationController!!.restoreState(savedInstanceState)) {
+            navigationController!!.showFragment(AuthPhoneFragment())
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        navigationController!!.saveFragmentToState(outState)
+        navigationController!!.saveState(outState)
         super.onSaveInstanceState(outState)
     }
 

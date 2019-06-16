@@ -4,11 +4,10 @@ import android.os.Bundle
 import com.sudox.messenger.core.fragment.AppFragment
 
 interface AppNavigationController {
-    fun popBackstack()
-    fun openFragment(fragment: AppFragment)
+    fun showPreviousFragment(): Boolean
+    fun showFragment(fragment: AppFragment, addToBackstack: Boolean = true)
     fun getCurrentFragment(): AppFragment
+    fun saveState(bundle: Bundle)
+    fun restoreState(bundle: Bundle?): Boolean
     fun clearBackstack()
-    fun saveFragmentToState(outState: Bundle)
-    fun restoreFragmentFromState(savedInstanceState: Bundle)
-    fun canRestoreFragmentFromState(savedInstanceState: Bundle?): Boolean
 }
