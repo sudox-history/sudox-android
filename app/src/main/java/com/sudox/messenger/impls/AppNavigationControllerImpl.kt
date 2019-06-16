@@ -11,18 +11,7 @@ private const val FRAGMENT_KEY = "fragment"
 class AppNavigationControllerImpl(val containerId: Int, val fragmentManager: FragmentManager)
     : AppNavigationController {
 
-    override fun popBackstack(params: Bundle?, restoreState: Boolean) {
-        val fragments = fragmentManager.fragments
-        val previousFragment = fragments[fragments.size - 2] as AppFragment
-
-        if (restoreState) {
-            previousFragment.setInitialSavedState(null)
-        }
-
-        if (params != null) {
-            previousFragment.params = params
-        }
-
+    override fun popBackstack() {
         fragmentManager.popBackStack()
     }
 
