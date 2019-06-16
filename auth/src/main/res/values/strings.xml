@@ -18,4 +18,8 @@
     <string name="name_and_surname">Name &amp; surname</string>
     <string name="nickname">Nickname</string>
     <string name="about_name">Don\'t worry, it\'s the last step</string>
+
+    <string name="too_many_requests">Exceeded limit of requests</string>
+    <string name="wrong_phone_format">Wrong phone number format</string>
+    <string name="unknown_error">Unknown error</string>
 </resources>

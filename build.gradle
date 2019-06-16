@@ -5,8 +5,8 @@ def versionPatch = 2
 
 // Build params
 def projectApplicationId = 'com.sudox.android'
-def projectBuildToolsVersion = '28.0.3'
-def compileSdkProjectVersion = 28
+def projectBuildToolsVersion = '29.0.0'
+def compileSdkProjectVersion = 29
 def minSdkProjectVersion = 21
 
 buildscript {
@@ -74,20 +74,12 @@ subprojects { subproject ->
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
 
-        implementation 'androidx.appcompat:appcompat:1.0.2'
         implementation 'androidx.annotation:annotation:1.1.0'
+        implementation 'androidx.appcompat:appcompat:1.0.2'
         implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
         implementation "androidx.lifecycle:lifecycle-viewmodel:2.0.0"
         implementation "androidx.lifecycle:lifecycle-livedata:2.0.0"
         implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-
-//        // Dagger
-//        implementation "com.google.dagger:dagger:2.17"
-//        implementation "com.google.dagger:dagger-android:2.17"
-//        implementation "com.google.dagger:dagger-android-support:2.17"
-//        compileOnly 'javax.annotation:jsr250-api:1.0'
-//        kapt "com.google.dagger:dagger-compiler:2.17"
-//        kapt "com.google.dagger:dagger-android-processor:2.17"
 
         // For testing
         testImplementation 'junit:junit:4.12'

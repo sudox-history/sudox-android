@@ -55,6 +55,8 @@ class EditTextLayoutTest : Assert() {
 
         assertEquals("Test", view.label!!.getCurrentText())
         assertEquals(linkedEditText.currentHintTextColor, view.label!!.getCurrentColor())
+        assertFalse(view.label!!.needShowingError())
+        assertFalse(view.isErrorShowing())
     }
 
     @Test
@@ -64,38 +66,54 @@ class EditTextLayoutTest : Assert() {
         viewTestRule.runOnMainSynchronously { view.setErrorText("Error") }
         assertEquals("Error", view.label!!.getCurrentText())
         assertEquals(view.label!!.params.errorTextColor, view.label!!.getCurrentColor())
+        assertTrue(view.label!!.needShowingError())
+        assertTrue(view.isErrorShowing())
 
         viewTestRule.runOnMainSynchronously { view.setErrorTextRes(R.string.test_string) }
         assertEquals("QWERTYUIOP", view.label!!.getCurrentText())
         assertEquals(view.label!!.params.errorTextColor, view.label!!.getCurrentColor())
+        assertTrue(view.label!!.needShowingError())
+        assertTrue(view.isErrorShowing())
 
         viewTestRule.runOnMainSynchronously { linkedEditText.isEnabled = false }
         assertEquals("Test", view.label!!.getCurrentText())
         assertEquals(linkedEditText.currentHintTextColor, view.label!!.getCurrentColor())
+        assertFalse(view.label!!.needShowingError())
+        assertFalse(view.isErrorShowing())
 
         viewTestRule.runOnMainSynchronously { linkedEditText.isEnabled = true }
         assertEquals("QWERTYUIOP", view.label!!.getCurrentText())
         assertEquals(view.label!!.params.errorTextColor, view.label!!.getCurrentColor())
+        assertTrue(view.label!!.needShowingError())
+        assertTrue(view.isErrorShowing())
 
         viewTestRule.runOnMainSynchronously { view.resetErrorText() }
         assertEquals("Test", view.label!!.getCurrentText())
         assertEquals(linkedEditText.currentHintTextColor, view.label!!.getCurrentColor())
+        assertFalse(view.label!!.needShowingError())
+        assertFalse(view.isErrorShowing())
 
         viewTestRule.runOnMainSynchronously { view.setErrorText("Error") }
         onView(allOf(`is`(linkedEditText as View))).perform(click(), replaceText("Не ори. (c) TheMax"))
         assertEquals("Test", view.label!!.getCurrentText())
         assertEquals(linkedEditText.currentTextColor, view.label!!.getCurrentColor())
+        assertFalse(view.label!!.needShowingError())
+        assertFalse(view.isErrorShowing())
 
         viewTestRule.runOnMainSynchronously { view.setErrorText("Error") }
         onView(allOf(`is`(linkedEditText as View))).perform(click(), replaceText("Не ори. (c) TheMax in August 2018"))
         assertEquals("Test", view.label!!.getCurrentText())
         assertEquals(linkedEditText.currentTextColor, view.label!!.getCurrentColor())
+        assertFalse(view.label!!.needShowingError())
+        assertFalse(view.isErrorShowing())
 
         onView(allOf(`is`(linkedEditText as View))).perform(click(), replaceText(""))
         viewTestRule.runOnMainSynchronously { view.setErrorText("Error") }
         onView(allOf(`is`(linkedEditText as View))).perform(click(), replaceText(""))
         assertEquals("Error", view.label!!.getCurrentText())
         assertEquals(view.label!!.params.errorTextColor, view.label!!.getCurrentColor())
+        assertTrue(view.label!!.needShowingError())
+        assertTrue(view.isErrorShowing())
     }
 
     fun createMatcher() = allOf(`is`(viewTestRule.view as View))!!

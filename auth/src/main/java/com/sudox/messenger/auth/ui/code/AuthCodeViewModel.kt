@@ -1,4 +1,7 @@
 package com.sudox.messenger.auth.ui.code
 
-class AuthCodeViewModel {
+import androidx.lifecycle.ViewModel
+
+class AuthCodeViewModel : ViewModel() {
+
 }

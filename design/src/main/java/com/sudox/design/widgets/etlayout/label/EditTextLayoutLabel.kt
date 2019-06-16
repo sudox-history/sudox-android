@@ -42,7 +42,7 @@ class EditTextLayoutLabel(val editText: EditText, val params: EditTextLayoutLabe
     }
 
     internal fun getCurrentColor(): Int {
-        return if (editText.isEnabled && errorText != null) {
+        return if (needShowingError()) {
             params.errorTextColor
         } else if (isEditTextActive()) {
             editText.currentTextColor
@@ -65,5 +65,9 @@ class EditTextLayoutLabel(val editText: EditText, val params: EditTextLayoutLabe
 
     internal fun isEditTextActive(): Boolean {
         return (editText.isFocused || editText.isPressed) && editText.isEnabled
+    }
+
+    internal fun needShowingError(): Boolean {
+        return editText.isEnabled && errorText != null
     }
 }

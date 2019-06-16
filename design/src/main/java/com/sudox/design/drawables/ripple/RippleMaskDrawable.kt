@@ -53,5 +53,5 @@ class RippleMaskDrawable(@RippleMaskType var type: Int) : Drawable() {
     }
 
     override fun setAlpha(alpha: Int) {}
-    override fun setColorFilter(colorFilter: ColorFilter) {}
+    override fun setColorFilter(colorFilter: ColorFilter?) {}
 }

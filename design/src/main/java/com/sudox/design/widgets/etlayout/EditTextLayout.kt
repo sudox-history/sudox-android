@@ -124,6 +124,10 @@ class EditTextLayout : ViewGroup, TextWatcher {
         }
     }
 
+    fun isErrorShowing(): Boolean {
+        return label?.needShowingError() ?: false
+    }
+
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
     override fun afterTextChanged(s: Editable) {}
 }

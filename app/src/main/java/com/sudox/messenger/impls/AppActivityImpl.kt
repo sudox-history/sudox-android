@@ -21,7 +21,7 @@ class AppActivityImpl : AppCompatActivity(), AppActivity {
         navigationController = AppNavigationControllerImpl(R.id.appFrameLayout, supportFragmentManager)
 
         if (!navigationController!!.restoreState(savedInstanceState)) {
-            navigationController!!.showFragment(AuthPhoneFragment())
+            navigationController!!.showFragment(AuthPhoneFragment(), false)
         }
     }
 
