@@ -74,7 +74,9 @@ subprojects { subproject ->
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
 
+        implementation 'androidx.appcompat:appcompat:1.0.2'
         implementation 'androidx.annotation:annotation:1.1.0'
+        implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
         implementation "androidx.lifecycle:lifecycle-viewmodel:2.0.0"
         implementation "androidx.lifecycle:lifecycle-livedata:2.0.0"
         implementation 'androidx.legacy:legacy-support-v4:1.0.0'

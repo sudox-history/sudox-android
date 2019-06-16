@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.sudox.messenger">
 
     <application
@@ -9,10 +10,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/SudoxTheme">
+        android:theme="@style/SudoxTheme"
+        tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".AppActivityImpl"
+            android:name=".impls.AppActivityImpl"
             android:hardwareAccelerated="true">
 
             <intent-filter>

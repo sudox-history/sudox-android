@@ -12,6 +12,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.sudox.common.annotations.Checked
 import com.sudox.design.helpers.addRipple
+import com.sudox.design.helpers.isLayoutRtl
 
 @SuppressLint("ViewConstructor")
 class NavigationBarButton(context: Context, val params: NavigationBarButtonParams) : View(context) {
@@ -61,18 +62,20 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
     }
 
     override fun dispatchDraw(canvas: Canvas) {
+        val isRtl = isLayoutRtl()
+
         if (iconDrawable != null) {
-            drawIcon(canvas)
+            drawIcon(canvas, isRtl)
         }
 
         if (text != null) {
-            drawText(canvas)
+            drawText(canvas, isRtl)
         }
     }
 
-    internal fun drawIcon(canvas: Canvas) {
+    internal fun drawIcon(canvas: Canvas, rtl: Boolean) {
         val bottomBorder = getIconBottomBorder(canvas)
-        val leftBorder = getIconLeftBorder(canvas)
+        val leftBorder = getIconLeftBorder(canvas, rtl)
 
         canvas.save()
         canvas.translate(leftBorder.toFloat(), bottomBorder.toFloat())
@@ -84,31 +87,36 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
         return canvas.height / 2 - iconDrawable!!.intrinsicHeight / 2
     }
 
-    internal fun getIconLeftBorder(canvas: Canvas): Int {
-        return if (text != null && iconDirection == NavigationBarButtonIconDirection.RIGHT) {
+    internal fun getIconLeftBorder(canvas: Canvas, rtl: Boolean): Int {
+        return if (text != null && isIconNeedShowOnRight(rtl)) {
             canvas.width - params.rightPadding - iconDrawable!!.intrinsicWidth
         } else {
             params.leftPadding
         }
     }
 
-    internal fun drawText(canvas: Canvas) {
+    internal fun drawText(canvas: Canvas, rtl: Boolean) {
         val bottomBorder = getTextBottomBorder(canvas)
-        val leftBorder = getTextLeftBorder()
+        val leftBorder = getTextLeftBorder(rtl)
 
         canvas.drawText(text!!, leftBorder.toFloat(), bottomBorder.toFloat(), textPaint)
     }
 
-    internal fun getTextLeftBorder(): Int {
-        return if (iconDrawable != null && iconDirection == NavigationBarButtonIconDirection.LEFT) {
+    internal fun getTextBottomBorder(canvas: Canvas): Int {
+        return canvas.height / 2 - textBounds.centerY()
+    }
+
+    internal fun getTextLeftBorder(rtl: Boolean): Int {
+        return if (iconDrawable != null && !isIconNeedShowOnRight(rtl)) {
             params.leftPadding + iconDrawable!!.intrinsicWidth + params.iconTextMargin
         } else {
             params.leftPadding
         }
     }
 
-    internal fun getTextBottomBorder(canvas: Canvas): Int {
-        return canvas.height / 2 - textBounds.centerY()
+    internal fun isIconNeedShowOnRight(rtl: Boolean): Boolean {
+        return (iconDirection == NavigationBarButtonIconDirection.END && !rtl) ||
+                (iconDirection == NavigationBarButtonIconDirection.START && rtl)
     }
 
     fun setIconDrawable(drawable: Drawable?) {

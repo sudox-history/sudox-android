@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import com.nhaarman.mockitokotlin2.eq
 import com.sudox.design.widgets.navbar.button.NavigationBarButton
 import com.sudox.design.widgets.navbar.button.NavigationBarButtonIconDirection
 import com.sudox.design.widgets.navbar.button.NavigationBarButtonParams
@@ -11,6 +12,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
 import org.powermock.api.mockito.PowerMockito
@@ -151,8 +153,8 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .invoke(navigationBarButton, canvas)
 
-        Mockito.verify(navigationBarButton).drawIcon(canvas)
-        Mockito.verify(navigationBarButton, Mockito.never()).drawText(canvas)
+        Mockito.verify(navigationBarButton).drawIcon(canvas, false)
+        Mockito.verify(navigationBarButton, Mockito.never()).drawText(canvas, false)
     }
 
     @Test
@@ -174,8 +176,8 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .invoke(navigationBarButton, canvas)
 
-        Mockito.verify(navigationBarButton, Mockito.never()).drawIcon(canvas)
-        Mockito.verify(navigationBarButton).drawText(canvas)
+        Mockito.verify(navigationBarButton, Mockito.never()).drawIcon(canvas, false)
+        Mockito.verify(navigationBarButton).drawText(canvas, false)
     }
 
     @Test
@@ -203,8 +205,8 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .invoke(navigationBarButton, canvas)
 
-        Mockito.verify(navigationBarButton).drawIcon(canvas)
-        Mockito.verify(navigationBarButton).drawText(canvas)
+        Mockito.verify(navigationBarButton).drawIcon(canvas, false)
+        Mockito.verify(navigationBarButton).drawText(canvas, false)
     }
 
     @Test
@@ -219,11 +221,11 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .set(navigationBarButton, drawable)
 
-        Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas)).thenReturn(leftBorder)
+        Mockito.`when`(navigationBarButton.getIconLeftBorder(eq(canvas), anyBoolean())).thenReturn(leftBorder)
         Mockito.`when`(navigationBarButton.getIconBottomBorder(canvas)).thenReturn(bottomBorder)
-        Mockito.`when`(navigationBarButton.drawIcon(canvas)).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.drawIcon(eq(canvas), anyBoolean())).thenCallRealMethod()
 
-        navigationBarButton.drawIcon(canvas)
+        navigationBarButton.drawIcon(canvas, false)
 
         Mockito.verify(canvas).save()
         Mockito.verify(canvas).translate(leftBorder.toFloat(), bottomBorder.toFloat())
@@ -249,11 +251,11 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .set(navigationBarButton, paint)
 
-        Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenReturn(leftBorder)
+        Mockito.`when`(navigationBarButton.getTextLeftBorder(anyBoolean())).thenReturn(leftBorder)
         Mockito.`when`(navigationBarButton.getTextBottomBorder(canvas)).thenReturn(bottomBorder)
-        Mockito.`when`(navigationBarButton.drawText(canvas)).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.drawText(eq(canvas), anyBoolean())).thenCallRealMethod()
 
-        navigationBarButton.drawText(canvas)
+        navigationBarButton.drawText(canvas, false)
 
         Mockito.verify(canvas).drawText(text, leftBorder.toFloat(), bottomBorder.toFloat(), paint)
     }
@@ -345,7 +347,7 @@ class NavigationBarButtonUnitTest : Assert() {
     }
 
     @Test
-    fun testIconLeftBorder_left_icon_direction_without_text() {
+    fun testIconLeftBorder_without_text_need_draw_on_right() {
         val canvas = Mockito.mock(Canvas::class.java)
         val drawable = Mockito.mock(Drawable::class.java)
         val params = NavigationBarButtonParams().apply {
@@ -358,27 +360,23 @@ class NavigationBarButtonUnitTest : Assert() {
                 .getDeclaredField("params")
                 .apply { isAccessible = true }
                 .set(navigationBarButton, params)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconDirection")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButtonIconDirection.LEFT)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")
                 .apply { isAccessible = true }
                 .set(navigationBarButton, drawable)
 
-        Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas)).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas, false)).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.isIconNeedShowOnRight(false)).thenReturn(true)
         Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
         Mockito.`when`(canvas.width).thenReturn(50)
 
-        val result = navigationBarButton.getIconLeftBorder(canvas)
+        val result = navigationBarButton.getIconLeftBorder(canvas, false)
         assertEquals(params.leftPadding, result)
     }
 
     @Test
-    fun testIconLeftBorder_left_icon_direction_with_text() {
+    fun testIconLeftBorder_need_draw_on_right_with_text() {
         val canvas = Mockito.mock(Canvas::class.java)
         val drawable = Mockito.mock(Drawable::class.java)
         val params = NavigationBarButtonParams().apply {
@@ -391,11 +389,6 @@ class NavigationBarButtonUnitTest : Assert() {
                 .getDeclaredField("params")
                 .apply { isAccessible = true }
                 .set(navigationBarButton, params)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconDirection")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButtonIconDirection.LEFT)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")
@@ -407,112 +400,19 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .set(navigationBarButton, "Text")
 
-        Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas)).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas, false)).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.isIconNeedShowOnRight(false)).thenReturn(true)
         Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
         Mockito.`when`(canvas.width).thenReturn(50)
 
-        val result = navigationBarButton.getIconLeftBorder(canvas)
-        assertEquals(params.leftPadding, result)
-    }
-
-    @Test
-    fun testIconLeftBorder_right_icon_direction_without_text() {
-        val canvas = Mockito.mock(Canvas::class.java)
-        val drawable = Mockito.mock(Drawable::class.java)
-        val params = NavigationBarButtonParams().apply {
-            this.leftPadding = 50
-            this.rightPadding = 20
-            this.iconTextMargin = 24
-        }
-
-        NavigationBarButton::class.java
-                .getDeclaredField("params")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, params)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconDirection")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButtonIconDirection.RIGHT)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconDrawable")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, drawable)
-
-        Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas)).thenCallRealMethod()
-        Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
-        Mockito.`when`(canvas.width).thenReturn(50)
-
-        val result = navigationBarButton.getIconLeftBorder(canvas)
-        assertEquals(params.leftPadding, result)
-    }
-
-    @Test
-    fun testIconLeftBorder_right_icon_direction_with_text() {
-        val canvas = Mockito.mock(Canvas::class.java)
-        val drawable = Mockito.mock(Drawable::class.java)
-        val params = NavigationBarButtonParams().apply {
-            this.leftPadding = 50
-            this.rightPadding = 20
-            this.iconTextMargin = 24
-        }
-
-        NavigationBarButton::class.java
-                .getDeclaredField("params")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, params)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconDirection")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButtonIconDirection.RIGHT)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("text")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, "Text")
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconDrawable")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, drawable)
-
-        Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas)).thenCallRealMethod()
-        Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
-        Mockito.`when`(canvas.width).thenReturn(50)
-
-        val result = navigationBarButton.getIconLeftBorder(canvas)
+        val result = navigationBarButton.getIconLeftBorder(canvas, false)
         val valid = canvas.width - params.rightPadding - drawable.intrinsicWidth
         assertEquals(valid, result)
     }
 
     @Test
-    fun testTextRightBorder_left_icon_direction_without_icon() {
-        val params = NavigationBarButtonParams().apply {
-            this.leftPadding = 50
-            this.rightPadding = 20
-            this.iconTextMargin = 24
-        }
-
-        NavigationBarButton::class.java
-                .getDeclaredField("params")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, params)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconDirection")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButtonIconDirection.RIGHT)
-
-        Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenCallRealMethod()
-
-        val result = navigationBarButton.getTextLeftBorder()
-        assertEquals(params.leftPadding, result)
-    }
-
-    @Test
-    fun testTextRightBorder_left_icon_direction_with_icon() {
+    fun testIconLeftBorder_not_need_draw_on_right_without_text() {
+        val canvas = Mockito.mock(Canvas::class.java)
         val drawable = Mockito.mock(Drawable::class.java)
         val params = NavigationBarButtonParams().apply {
             this.leftPadding = 50
@@ -526,53 +426,21 @@ class NavigationBarButtonUnitTest : Assert() {
                 .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
-                .getDeclaredField("params")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, params)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconDirection")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButtonIconDirection.RIGHT)
-
-        NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")
                 .apply { isAccessible = true }
                 .set(navigationBarButton, drawable)
 
+        Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas, false)).thenCallRealMethod()
         Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
-        Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenCallRealMethod()
+        Mockito.`when`(canvas.width).thenReturn(50)
 
-        val result = navigationBarButton.getTextLeftBorder()
+        val result = navigationBarButton.getIconLeftBorder(canvas, false)
         assertEquals(params.leftPadding, result)
     }
 
     @Test
-    fun testTextLeftBorder_left_icon_direction_without_icon() {
-        val params = NavigationBarButtonParams().apply {
-            this.leftPadding = 50
-            this.rightPadding = 20
-            this.iconTextMargin = 24
-        }
-
-        NavigationBarButton::class.java
-                .getDeclaredField("params")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, params)
-
-        NavigationBarButton::class.java
-                .getDeclaredField("iconDirection")
-                .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButtonIconDirection.LEFT)
-
-        Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenCallRealMethod()
-
-        val result = navigationBarButton.getTextLeftBorder()
-        assertEquals(params.leftPadding, result)
-    }
-
-    @Test
-    fun testTextLeftBorder_left_icon_direction_with_icon() {
+    fun testIconLeftBorder_not_need_draw_on_right_with_text() {
+        val canvas = Mockito.mock(Canvas::class.java)
         val drawable = Mockito.mock(Drawable::class.java)
         val params = NavigationBarButtonParams().apply {
             this.leftPadding = 50
@@ -586,9 +454,61 @@ class NavigationBarButtonUnitTest : Assert() {
                 .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
+                .getDeclaredField("text")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, "Text")
+
+        NavigationBarButton::class.java
+                .getDeclaredField("iconDrawable")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, drawable)
+
+        Mockito.`when`(navigationBarButton.getIconLeftBorder(canvas, false)).thenCallRealMethod()
+        Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
+        Mockito.`when`(canvas.width).thenReturn(50)
+
+        val result = navigationBarButton.getIconLeftBorder(canvas, false)
+        assertEquals(params.leftPadding, result)
+    }
+
+    @Test
+    fun testTextRightBorder_icon_need_draw_on_right_without_icon() {
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
+
+        NavigationBarButton::class.java
                 .getDeclaredField("iconDirection")
                 .apply { isAccessible = true }
-                .set(navigationBarButton, NavigationBarButtonIconDirection.LEFT)
+                .set(navigationBarButton, NavigationBarButtonIconDirection.END)
+
+        Mockito.`when`(navigationBarButton.isIconNeedShowOnRight(false)).thenReturn(false)
+        Mockito.`when`(navigationBarButton.getTextLeftBorder(false)).thenCallRealMethod()
+
+        val result = navigationBarButton.getTextLeftBorder(false)
+        assertEquals(params.leftPadding, result)
+    }
+
+    @Test
+    fun testTextLeftBorder_icon_not_need_draw_on_right_with_icon() {
+        val drawable = Mockito.mock(Drawable::class.java)
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
 
         NavigationBarButton::class.java
                 .getDeclaredField("iconDrawable")
@@ -596,11 +516,59 @@ class NavigationBarButtonUnitTest : Assert() {
                 .set(navigationBarButton, drawable)
 
         Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
-        Mockito.`when`(navigationBarButton.getTextLeftBorder()).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.isIconNeedShowOnRight(false)).thenReturn(false)
+        Mockito.`when`(navigationBarButton.getTextLeftBorder(false)).thenCallRealMethod()
 
-        val result = navigationBarButton.getTextLeftBorder()
+        val result = navigationBarButton.getTextLeftBorder(false)
         val valid = params.leftPadding + drawable.intrinsicWidth + params.iconTextMargin
         assertEquals(valid, result)
+    }
+
+    @Test
+    fun testTextLeftBorder_icon_not_need_draw_on_right_without_icon() {
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
+
+        Mockito.`when`(navigationBarButton.isIconNeedShowOnRight(false)).thenReturn(false)
+        Mockito.`when`(navigationBarButton.getTextLeftBorder(false)).thenCallRealMethod()
+
+        val result = navigationBarButton.getTextLeftBorder(false)
+        assertEquals(params.leftPadding, result)
+    }
+
+    @Test
+    fun testTextLeftBorder_icon_need_draw_on_right_with_icon() {
+        val drawable = Mockito.mock(Drawable::class.java)
+        val params = NavigationBarButtonParams().apply {
+            this.leftPadding = 50
+            this.rightPadding = 20
+            this.iconTextMargin = 24
+        }
+
+        NavigationBarButton::class.java
+                .getDeclaredField("params")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, params)
+
+        NavigationBarButton::class.java
+                .getDeclaredField("iconDrawable")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, drawable)
+
+        Mockito.`when`(drawable.intrinsicWidth).thenReturn(24)
+        Mockito.`when`(navigationBarButton.isIconNeedShowOnRight(false)).thenReturn(true)
+        Mockito.`when`(navigationBarButton.getTextLeftBorder(false)).thenCallRealMethod()
+
+        val result = navigationBarButton.getTextLeftBorder(false)
+        assertEquals(params.leftPadding, result)
     }
 
     @Test
@@ -620,5 +588,49 @@ class NavigationBarButtonUnitTest : Assert() {
         val result = navigationBarButton.getTextBottomBorder(canvas)
         val valid = 80 / 2 - bounds.centerY()
         assertEquals(valid, result)
+    }
+
+    @Test
+    fun testIconNeedShowOnRight_ltr_start() {
+        NavigationBarButton::class.java
+                .getDeclaredField("iconDirection")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, NavigationBarButtonIconDirection.START)
+
+        Mockito.`when`(navigationBarButton.isIconNeedShowOnRight(anyBoolean())).thenCallRealMethod()
+        assertFalse(navigationBarButton.isIconNeedShowOnRight(false))
+    }
+
+    @Test
+    fun testIconNeedShowOnRight_ltr_end() {
+        NavigationBarButton::class.java
+                .getDeclaredField("iconDirection")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, NavigationBarButtonIconDirection.END)
+
+        Mockito.`when`(navigationBarButton.isIconNeedShowOnRight(anyBoolean())).thenCallRealMethod()
+        assertTrue(navigationBarButton.isIconNeedShowOnRight(false))
+    }
+
+    @Test
+    fun testIconNeedShowOnRight_rtl_start() {
+        NavigationBarButton::class.java
+                .getDeclaredField("iconDirection")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, NavigationBarButtonIconDirection.START)
+
+        Mockito.`when`(navigationBarButton.isIconNeedShowOnRight(anyBoolean())).thenCallRealMethod()
+        assertTrue(navigationBarButton.isIconNeedShowOnRight(true))
+    }
+
+    @Test
+    fun testIconNeedShowOnRight_rtl_end() {
+        NavigationBarButton::class.java
+                .getDeclaredField("iconDirection")
+                .apply { isAccessible = true }
+                .set(navigationBarButton, NavigationBarButtonIconDirection.END)
+
+        Mockito.`when`(navigationBarButton.isIconNeedShowOnRight(anyBoolean())).thenCallRealMethod()
+        assertFalse(navigationBarButton.isIconNeedShowOnRight(true))
     }
 }

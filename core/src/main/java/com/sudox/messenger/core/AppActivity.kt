@@ -1,7 +1,9 @@
 package com.sudox.messenger.core
 
-import com.sudox.design.widgets.navbar.NavigationBar
+import com.sudox.messenger.core.controller.AppNavbarController
+import com.sudox.messenger.core.controller.AppNavigationController
 
 interface AppActivity {
-    fun getNavigationBar(): NavigationBar
+    fun getNavbarController(): AppNavbarController
+    fun getNavigationController(): AppNavigationController
 }

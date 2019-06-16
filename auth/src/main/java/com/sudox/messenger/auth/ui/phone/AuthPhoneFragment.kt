@@ -4,29 +4,37 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.sudox.design.widgets.navbar.button.NavigationBarButtonIconDirection
+import androidx.lifecycle.ViewModelProviders
 import com.sudox.messenger.auth.R
+import com.sudox.messenger.core.fragment.AppFragment
+import com.sudox.messenger.core.controller.AppNavigationController
+import com.sudox.messenger.core.controller.AppNavbarController
 import com.sudox.messenger.core.AppActivity
+import com.sudox.messenger.core.fragment.AppFragmentType
 
-class AuthPhoneFragment : Fragment() {
+class AuthPhoneFragment : AppFragment() {
+
+    private var authPhoneViewModel: AuthPhoneViewModel? = null
+    private var navbarController: AppNavbarController? = null
+    private var navigationController: AppNavigationController? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        configureNavbar()
+        authPhoneViewModel = ViewModelProviders
+                .of(this)
+                .get(AuthPhoneViewModel::class.java)
+
+        val activity = activity as AppActivity
+        navbarController = activity.getNavbarController()
+        navigationController = activity.getNavigationController()
 
         return inflater.inflate(R.layout.fragment_auth_phone, container, false)
     }
 
-    private fun configureNavbar() {
-        val activity = activity as AppActivity
-        val navigationBar = activity.getNavigationBar()
-        val buttonEnd = navigationBar.buttonsEnd[0]!!
+    override fun onParamsReady() {
+        // Ignore
+    }
 
-        navigationBar.resetView()
-        buttonEnd.setText("Далее")
-        buttonEnd.setIconDirection(NavigationBarButtonIconDirection.RIGHT)
-        buttonEnd.setIconDrawableRes(R.drawable.ic_arrow_nav_end)
-        buttonEnd.isClickable = true
-        buttonEnd.visibility = View.VISIBLE
+    override fun getFragmentType(): Int {
+        return AppFragmentType.AUTH
     }
 }
