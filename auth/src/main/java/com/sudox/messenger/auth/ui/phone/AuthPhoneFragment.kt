@@ -30,10 +30,6 @@ class AuthPhoneFragment : AppFragment() {
         return inflater.inflate(R.layout.fragment_auth_phone, container, false)
     }
 
-    override fun onParamsReady() {
-        // Ignore
-    }
-
     override fun getFragmentType(): Int {
         return AppFragmentType.AUTH
     }
