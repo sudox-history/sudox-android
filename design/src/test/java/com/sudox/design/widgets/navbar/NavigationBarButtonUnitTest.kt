@@ -20,7 +20,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(NavigationBarButton::class)
+@PrepareForTest(NavigationBarButton::class, Rect::class)
 class NavigationBarButtonUnitTest : Assert() {
 
     private lateinit var navigationBarButton: NavigationBarButton
@@ -61,7 +61,7 @@ class NavigationBarButtonUnitTest : Assert() {
     @Test
     fun testMeasureComponents_only_text() {
         val textWidth = 20
-        val textBounds = Mockito.mock(Rect::class.java)
+        val textBounds = PowerMockito.mock(Rect::class.java)
         val text = "Hello"
         val params = NavigationBarButtonParams().apply {
             this.iconTextMargin = 5
@@ -96,9 +96,9 @@ class NavigationBarButtonUnitTest : Assert() {
     fun testMeasureComponents_all() {
         val text = "Hello"
         val drawableWidth = 512
-        val drawable = Mockito.mock(Drawable::class.java)
+        val drawable = PowerMockito.mock(Drawable::class.java)
         val textWidth = 512
-        val textBounds = Mockito.mock(Rect::class.java)
+        val textBounds = PowerMockito.mock(Rect::class.java)
         val params = NavigationBarButtonParams().apply {
             this.iconTextMargin = 5
             this.rightPadding = 2
@@ -573,8 +573,8 @@ class NavigationBarButtonUnitTest : Assert() {
 
     @Test
     fun testTextBottomBorder() {
-        val canvas = Mockito.mock(Canvas::class.java)
-        val bounds = Mockito.mock(Rect::class.java)
+        val canvas = PowerMockito.mock(Canvas::class.java)
+        val bounds = PowerMockito.mock(Rect::class.java)
 
         NavigationBarButton::class.java
                 .getDeclaredField("textBounds")

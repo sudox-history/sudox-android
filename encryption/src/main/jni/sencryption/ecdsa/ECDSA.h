@@ -1,5 +1,5 @@
-#ifndef SUDOX_ANDROID_ECDSA_H
-#define SUDOX_ANDROID_ECDSA_H
+#ifndef SUDOX_ENCRYPTION_ECDSA_H
+#define SUDOX_ENCRYPTION_ECDSA_H
 
 /**
  * Проверяет данные на соответствие публичного ключа подписи.

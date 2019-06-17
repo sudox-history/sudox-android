@@ -1,4 +1,4 @@
-#include <scipher/hmac/HMAC.h>
+#include <sencryption/hmac/HMAC.h>
 #include <jni.h>
 #include <crypto++/sha.h>
 #include <crypto++/hmac.h>

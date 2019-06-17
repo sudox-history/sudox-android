@@ -1,6 +1,6 @@
-#include <scipher/ecdsa/ECDSA.h>
-#include <scipher/base64/Base64.h>
-#include <scipher/random/Random.h>
+#include <sencryption/ecdsa/ECDSA.h>
+#include <sencryption/base64/Base64.h>
+#include <sencryption/random/Random.h>
 #include <crypto++/ecp.h>
 #include <crypto++/sha.h>
 #include <crypto++/eccrypto.h>

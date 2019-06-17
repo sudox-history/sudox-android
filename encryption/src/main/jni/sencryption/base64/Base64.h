@@ -1,5 +1,5 @@
-#ifndef SUDOX_ANDROID_BASE64_H
-#define SUDOX_ANDROID_BASE64_H
+#ifndef SUDOX_ENCRYPTION_BASE64_H
+#define SUDOX_ENCRYPTION_BASE64_H
 
 #include <stdio.h>
 #include <string>

@@ -1,7 +1,7 @@
-#ifndef SUDOX_ANDROID_ECDH_H
-#define SUDOX_ANDROID_ECDH_H
+#ifndef SUDOX_ENCRYPTION_ECDH_H
+#define SUDOX_ENCRYPTION_ECDH_H
 
-#include <scipher/common/KeysPair.h>
+#include <sencryption/common/KeysPair.h>
 
 using namespace CryptoPP;
 

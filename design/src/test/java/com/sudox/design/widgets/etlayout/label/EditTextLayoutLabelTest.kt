@@ -17,7 +17,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(EditTextLayoutLabel::class, Canvas::class, EditText::class, Paint::class,
+@PrepareForTest(EditTextLayoutLabel::class, Canvas::class, EditText::class, Paint::class, Rect::class,
         fullyQualifiedNames = ["com.sudox.design.helpers.TextHelperKt"])
 class EditTextLayoutLabelTest : Assert() {
 
@@ -26,6 +26,8 @@ class EditTextLayoutLabelTest : Assert() {
         val editTextLayoutLabel = PowerMockito.mock(EditTextLayoutLabel::class.java)
         val editText = PowerMockito.mock(EditText::class.java)
         val params = EditTextLayoutLabelParams()
+
+        PowerMockito.`when`(editTextLayoutLabel.needShowingError()).thenCallRealMethod()
 
         EditTextLayoutLabel::class.java
                 .getDeclaredField("editText")
@@ -82,6 +84,8 @@ class EditTextLayoutLabelTest : Assert() {
         val editTextLayoutLabel = PowerMockito.mock(EditTextLayoutLabel::class.java)
         val editText = PowerMockito.mock(EditText::class.java)
         val params = EditTextLayoutLabelParams()
+
+        PowerMockito.`when`(editTextLayoutLabel.needShowingError()).thenCallRealMethod()
 
         EditTextLayoutLabel::class.java
                 .getDeclaredField("editText")

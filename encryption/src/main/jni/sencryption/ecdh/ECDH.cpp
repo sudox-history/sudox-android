@@ -1,6 +1,6 @@
-#include <scipher/ecdh/ECDH.h>
-#include <scipher/random/Random.h>
-#include <scipher/common/KeysPair.h>
+#include <sencryption/ecdh/ECDH.h>
+#include <sencryption/random/Random.h>
+#include <sencryption/common/KeysPair.h>
 #include <crypto++/asn.h>
 #include <crypto++/oids.h>
 #include <crypto++/ecp.h>

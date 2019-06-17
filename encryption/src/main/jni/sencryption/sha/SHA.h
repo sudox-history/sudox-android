@@ -1,5 +1,5 @@
-#ifndef SUDOX_ANDROID_SHA_H
-#define SUDOX_ANDROID_SHA_H
+#ifndef SUDOX_ENCRYPTION_SHA_H
+#define SUDOX_ENCRYPTION_SHA_H
 
 #include <stdio.h>
 #include <string>
@@ -14,4 +14,4 @@ using namespace std;
  */
 string calculateSHA224(unsigned char *, unsigned int);
 
-#endif //SUDOX_ANDROID_SHA_H
+#endif

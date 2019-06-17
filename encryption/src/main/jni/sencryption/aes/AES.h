@@ -1,5 +1,5 @@
-#ifndef SUDOX_ANDROID_AES_H
-#define SUDOX_ANDROID_AES_H
+#ifndef SUDOX_ENCRYPTION_AES_H
+#define SUDOX_ENCRYPTION_AES_H
 
 #include <stdio.h>
 #include <string>

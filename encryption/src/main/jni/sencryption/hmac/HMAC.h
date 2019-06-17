@@ -1,5 +1,5 @@
-#ifndef SUDOX_ANDROID_HMAC_H
-#define SUDOX_ANDROID_HMAC_H
+#ifndef SUDOX_ENCRYPTION_HMAC_H
+#define SUDOX_ENCRYPTION_HMAC_H
 
 #include <stdio.h>
 #include <string>

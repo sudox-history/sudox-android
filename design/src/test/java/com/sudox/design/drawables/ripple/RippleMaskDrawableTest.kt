@@ -13,7 +13,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(RippleMaskDrawable::class)
+@PrepareForTest(RippleMaskDrawable::class, Paint::class, Canvas::class, Rect::class)
 class RippleMaskDrawableTest : Assert() {
 
     private lateinit var rippleMaskDrawable: RippleMaskDrawable
@@ -27,7 +27,7 @@ class RippleMaskDrawableTest : Assert() {
 
     @Test
     fun testGetRadius_bordered() {
-        val bounds = Mockito.mock(Rect::class.java)
+        val bounds = PowerMockito.mock(Rect::class.java)
 
         Mockito.`when`(bounds.width()).thenReturn(15)
         Mockito.`when`(bounds.height()).thenReturn(5)
@@ -46,7 +46,7 @@ class RippleMaskDrawableTest : Assert() {
 
     @Test
     fun testGetRadius_borderless() {
-        val bounds = Mockito.mock(Rect::class.java)
+        val bounds = PowerMockito.mock(Rect::class.java)
 
         Mockito.`when`(bounds.centerX()).thenReturn(30)
         Mockito.`when`(bounds.centerY()).thenReturn(40)
@@ -87,9 +87,9 @@ class RippleMaskDrawableTest : Assert() {
 
     @Test
     fun testDraw() {
-        val bounds = Mockito.mock(Rect::class.java)
-        val canvas = Mockito.mock(Canvas::class.java)
-        val paint = Mockito.mock(Paint::class.java)
+        val bounds = PowerMockito.mock(Rect::class.java)
+        val canvas = PowerMockito.mock(Canvas::class.java)
+        val paint = PowerMockito.mock(Paint::class.java)
 
         RippleMaskDrawable::class.java
                 .getDeclaredField("paint")

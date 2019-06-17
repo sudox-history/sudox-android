@@ -1,4 +1,4 @@
-#include <scipher/sha/SHA.h>
+#include <sencryption/sha/SHA.h>
 #include <crypto++/sha.h>
 #include <jni.h>
 #include <string>

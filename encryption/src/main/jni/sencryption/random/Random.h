@@ -1,5 +1,5 @@
-#ifndef SUDOX_ANDROID_RANDOM_H
-#define SUDOX_ANDROID_RANDOM_H
+#ifndef SUDOX_ENCRYPTION_RANDOM_H
+#define SUDOX_ENCRYPTION_RANDOM_H
 
 #include <stdio.h>
 #include <crypto++/secblock.h>

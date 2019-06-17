@@ -2,8 +2,8 @@
 #include <crypto++/osrng.h>
 #include <crypto++/randpool.h>
 #include <crypto++/filters.h>
-#include <scipher/random/Random.h>
-#include <scipher/base64/Base64.h>
+#include <sencryption/random/Random.h>
+#include <sencryption/base64/Base64.h>
 #include <jni.h>
 #include <string>
 

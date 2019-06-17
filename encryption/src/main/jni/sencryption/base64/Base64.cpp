@@ -1,5 +1,5 @@
 #include <crypto++/base64.h>
-#include <scipher/base64/Base64.h>
+#include <sencryption/base64/Base64.h>
 #include <jni.h>
 #include <string>
 

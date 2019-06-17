@@ -1,5 +1,5 @@
-#ifndef SUDOX_ANDROID_KEYSPAIR_H
-#define SUDOX_ANDROID_KEYSPAIR_H
+#ifndef SUDOX_ENCRYPTION_KEYSPAIR_H
+#define SUDOX_ENCRYPTION_KEYSPAIR_H
 
 #include <crypto++/secblock.h>
 

@@ -186,7 +186,7 @@ class NavigationBarUnitTest : Assert() {
 
     @Test
     fun testLayoutStart_ltr_all_components() {
-        val contentView = Mockito.mock(View::class.java)
+        val contentView = PowerMockito.mock(View::class.java)
 
         NavigationBar::class.java
                 .getDeclaredField("contentView")
@@ -209,7 +209,7 @@ class NavigationBarUnitTest : Assert() {
 
     @Test
     fun testLayoutStart_rtl_all_components() {
-        val contentView = Mockito.mock(View::class.java)
+        val contentView = PowerMockito.mock(View::class.java)
 
         NavigationBar::class.java
                 .getDeclaredField("contentView")
@@ -258,7 +258,7 @@ class NavigationBarUnitTest : Assert() {
 
     @Test
     fun testLayoutStart_ltr_only_with_content_view() {
-        val contentView = Mockito.mock(View::class.java)
+        val contentView = PowerMockito.mock(View::class.java)
 
         NavigationBar::class.java
                 .getDeclaredField("contentView")
@@ -278,7 +278,7 @@ class NavigationBarUnitTest : Assert() {
 
     @Test
     fun testLayoutStart_rtl_only_with_content_view() {
-        val contentView = Mockito.mock(View::class.java)
+        val contentView = PowerMockito.mock(View::class.java)
 
         NavigationBar::class.java
                 .getDeclaredField("contentView")

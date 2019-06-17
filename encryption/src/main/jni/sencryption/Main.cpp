@@ -1,5 +1,5 @@
-#include <scipher/random/Random.h>
-#include <scipher/ecdsa/ECDSA.h>
+#include <sencryption/random/Random.h>
+#include <sencryption/ecdsa/ECDSA.h>
 #include <jni.h>
 
 extern "C"
