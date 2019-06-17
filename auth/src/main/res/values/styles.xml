@@ -10,14 +10,12 @@
 
     <style name="SudoxTheme.Auth.Title" parent="@style/SudoxTheme.TextAppearance">
         <item name="android:textSize">@dimen/auth_screen_title_text_size</item>
-        <item name="android:fontFamily">sans-serif-regular</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
 
     <style name="SudoxTheme.Auth.Subtitle" parent="@style/SudoxTheme.TextAppearance">
         <item name="android:layout_marginTop">@dimen/auth_screen_subtitle_top_margin</item>
         <item name="android:textSize">@dimen/auth_screen_subtitle_text_size</item>
-        <item name="android:fontFamily">sans-serif-regular</item>
         <item name="android:gravity">center_horizontal</item>
     </style>
 </resources>
