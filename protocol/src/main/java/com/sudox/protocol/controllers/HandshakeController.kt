@@ -1,6 +1,6 @@
 package com.sudox.protocol.controllers
 
-import com.sudox.cipher.Cipher
+import com.sudox.encryption.Encryption
 import com.sudox.protocol.ProtocolController
 import java.util.LinkedList
 
@@ -45,16 +45,16 @@ class HandshakeController(val protocolController: ProtocolController) {
         val serverHmac = slices.remove()
 
         // First step - verify public key
-        if (!Cipher.verifyMessageWithECDSA(serverPublicKey, serverPublicKeySign)) {
+        if (!Encryption.verifyMessageWithECDSA(serverPublicKey, serverPublicKeySign)) {
             return false
         }
 
         // Second & third steps - calculating secret key and hmac
-        val secretKey = Cipher.calculateSecretKey(ownPrivateKey!!, serverPublicKey) ?: return false
-        val hmac = Cipher.calculateHMAC(secretKey, HMAC_VALIDATION_WORD)
+        val secretKey = Encryption.calculateSecretKey(ownPrivateKey!!, serverPublicKey) ?: return false
+        val hmac = Encryption.calculateHMAC(secretKey, HMAC_VALIDATION_WORD)
 
         // Fourth step - comparing server and own hmacs
-        if (!Cipher.checkEqualsAllBytes(hmac, serverHmac)) {
+        if (!Encryption.checkEqualsAllBytes(hmac, serverHmac)) {
             return false
         }
 
@@ -66,12 +66,12 @@ class HandshakeController(val protocolController: ProtocolController) {
     }
 
     internal fun generateKeysPair() {
-        val keysPairId = Cipher.generateKeysPair()
+        val keysPairId = Encryption.generateKeysPair()
 
-        ownPublicKey = Cipher.getPublicKey(keysPairId)
-        ownPrivateKey = Cipher.getPrivateKey(keysPairId)
+        ownPublicKey = Encryption.getPublicKey(keysPairId)
+        ownPrivateKey = Encryption.getPrivateKey(keysPairId)
 
-        Cipher.removeKeysPair(keysPairId)
+        Encryption.removeKeysPair(keysPairId)
     }
 
     internal fun resetHandshake() {

@@ -1,5 +1,5 @@
 dependencies {
     implementation project(path: ':sockets')
-    implementation project(path: ':cipher')
+    implementation project(path: ':encryption')
     implementation project(path: ':common')
 }

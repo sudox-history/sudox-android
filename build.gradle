@@ -4,7 +4,7 @@ def versionUpdate = 0
 def versionPatch = 2
 
 // Build params
-def projectApplicationId = 'com.sudox.android'
+def projectApplicationId = 'com.sudox.messenger.android'
 def projectBuildToolsVersion = '29.0.0'
 def compileSdkProjectVersion = 29
 def minSdkProjectVersion = 21

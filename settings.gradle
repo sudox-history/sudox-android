@@ -5,5 +5,5 @@ include ':app',
         ':design',
         ':common',
         ':sockets',
-        ':cipher',
+        ':encryption',
         ':api'

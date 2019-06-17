@@ -1,7 +1,7 @@
 package com.sudox.protocol.controllers
 
 import com.nhaarman.mockitokotlin2.any
-import com.sudox.cipher.Cipher
+import com.sudox.encryption.Encryption
 import com.sudox.protocol.ProtocolController
 import org.junit.Assert
 import org.junit.Before
@@ -15,7 +15,7 @@ import java.util.*
 import kotlin.random.Random
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(MessagesController::class, ProtocolController::class, Cipher::class)
+@PrepareForTest(MessagesController::class, ProtocolController::class, Encryption::class)
 class MessagesControllerTest : Assert() {
 
     private lateinit var messagesController: MessagesController
@@ -83,10 +83,10 @@ class MessagesControllerTest : Assert() {
                 .apply { isAccessible = true }
                 .set(messagesController, secretKey)
 
-        PowerMockito.mockStatic(Cipher::class.java)
-        Mockito.`when`(Cipher.calculateHMAC(Mockito.any(), Mockito.any())).thenReturn(hmac)
-        Mockito.`when`(Cipher.countNonEqualityBytes(any(), any())).thenCallRealMethod()
-        Mockito.`when`(Cipher.checkEqualsAllBytes(any(), any())).thenCallRealMethod()
+        PowerMockito.mockStatic(Encryption::class.java)
+        Mockito.`when`(Encryption.calculateHMAC(Mockito.any(), Mockito.any())).thenReturn(hmac)
+        Mockito.`when`(Encryption.countNonEqualityBytes(any(), any())).thenCallRealMethod()
+        Mockito.`when`(Encryption.checkEqualsAllBytes(any(), any())).thenCallRealMethod()
         Mockito.`when`(messagesController.handleEncryptedMessage(any())).thenCallRealMethod()
 
         val slices = LinkedList<ByteArray>()
@@ -98,8 +98,8 @@ class MessagesControllerTest : Assert() {
         assertFalse(messagesController.handleEncryptedMessage(slices))
         Mockito.verify(protocolController, Mockito.never()).submitSessionMessageEvent(any())
 
-        PowerMockito.verifyStatic(Cipher::class.java)
-        Cipher.calculateHMAC(secretKey, cipher)
+        PowerMockito.verifyStatic(Encryption::class.java)
+        Encryption.calculateHMAC(secretKey, cipher)
     }
 
     @Test
@@ -115,11 +115,11 @@ class MessagesControllerTest : Assert() {
                 .apply { isAccessible = true }
                 .set(messagesController, secretKey)
 
-        PowerMockito.mockStatic(Cipher::class.java)
-        Mockito.`when`(Cipher.calculateHMAC(Mockito.any(), Mockito.any())).thenReturn(serverCipherHmac)
-        Mockito.`when`(Cipher.countNonEqualityBytes(any(), any())).thenCallRealMethod()
-        Mockito.`when`(Cipher.checkEqualsAllBytes(any(), any())).thenCallRealMethod()
-        Mockito.`when`(Cipher.decryptWithAES(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(message)
+        PowerMockito.mockStatic(Encryption::class.java)
+        Mockito.`when`(Encryption.calculateHMAC(Mockito.any(), Mockito.any())).thenReturn(serverCipherHmac)
+        Mockito.`when`(Encryption.countNonEqualityBytes(any(), any())).thenCallRealMethod()
+        Mockito.`when`(Encryption.checkEqualsAllBytes(any(), any())).thenCallRealMethod()
+        Mockito.`when`(Encryption.decryptWithAES(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(message)
         Mockito.`when`(messagesController.handleEncryptedMessage(any())).thenCallRealMethod()
 
         val slices = LinkedList<ByteArray>()
@@ -131,8 +131,8 @@ class MessagesControllerTest : Assert() {
         assertTrue(messagesController.handleEncryptedMessage(slices))
         Mockito.verify(protocolController).submitSessionMessageEvent(message)
 
-        PowerMockito.verifyStatic(Cipher::class.java)
-        Cipher.decryptWithAES(secretKey, iv, cipher)
+        PowerMockito.verifyStatic(Encryption::class.java)
+        Encryption.decryptWithAES(secretKey, iv, cipher)
     }
 
     @Test
@@ -159,24 +159,24 @@ class MessagesControllerTest : Assert() {
                 .apply { isAccessible = true }
                 .set(messagesController, secretKey)
 
-        PowerMockito.mockStatic(Cipher::class.java)
-        Mockito.`when`(Cipher.generateBytes(any())).thenReturn(iv)
-        Mockito.`when`(Cipher.encryptWithAES(any(), any(), any())).thenReturn(cipher)
-        Mockito.`when`(Cipher.calculateHMAC(secretKey, cipher)).thenReturn(cipherHmac)
+        PowerMockito.mockStatic(Encryption::class.java)
+        Mockito.`when`(Encryption.generateBytes(any())).thenReturn(iv)
+        Mockito.`when`(Encryption.encryptWithAES(any(), any(), any())).thenReturn(cipher)
+        Mockito.`when`(Encryption.calculateHMAC(secretKey, cipher)).thenReturn(cipherHmac)
         Mockito.`when`(messagesController.sendEncryptedMessage(any())).thenCallRealMethod()
         Mockito.`when`(messagesController.isSessionStarted()).thenReturn(true)
 
         assertTrue(messagesController.sendEncryptedMessage(message))
         Mockito.verify(protocolController).sendPacket(iv, cipher, cipherHmac)
 
-        PowerMockito.verifyStatic(Cipher::class.java)
-        Cipher.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
+        PowerMockito.verifyStatic(Encryption::class.java)
+        Encryption.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
 
-        PowerMockito.verifyStatic(Cipher::class.java)
-        Cipher.encryptWithAES(secretKey, iv, message)
+        PowerMockito.verifyStatic(Encryption::class.java)
+        Encryption.encryptWithAES(secretKey, iv, message)
 
-        PowerMockito.verifyStatic(Cipher::class.java)
-        Cipher.calculateHMAC(secretKey, cipher)
+        PowerMockito.verifyStatic(Encryption::class.java)
+        Encryption.calculateHMAC(secretKey, cipher)
     }
 
     @Test

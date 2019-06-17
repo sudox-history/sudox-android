@@ -1,6 +1,6 @@
 package com.sudox.protocol.controllers
 
-import com.sudox.cipher.Cipher
+import com.sudox.encryption.Encryption
 import com.sudox.protocol.ProtocolController
 import java.util.LinkedList
 
@@ -31,15 +31,15 @@ class MessagesController(val protocolController: ProtocolController) {
         val serverCipherHmac = slices.remove()
 
         // First step - calculating hmac using generated secret key
-        val cipherHmac = Cipher.calculateHMAC(secretKey!!, cipher)
+        val cipherHmac = Encryption.calculateHMAC(secretKey!!, cipher)
 
         // Second step - comparing server and own hmacs
-        if (!Cipher.checkEqualsAllBytes(serverCipherHmac, cipherHmac)) {
+        if (!Encryption.checkEqualsAllBytes(serverCipherHmac, cipherHmac)) {
             return false
         }
 
         // Third step - decrypting message
-        val message = Cipher.decryptWithAES(secretKey!!, iv, cipher)
+        val message = Encryption.decryptWithAES(secretKey!!, iv, cipher)
         protocolController.submitSessionMessageEvent(message)
 
         return true
@@ -54,9 +54,9 @@ class MessagesController(val protocolController: ProtocolController) {
             return false
         }
 
-        val iv = Cipher.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
-        val cipher = Cipher.encryptWithAES(secretKey!!, iv, message)
-        val cipherHmac = Cipher.calculateHMAC(secretKey!!, cipher)
+        val iv = Encryption.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
+        val cipher = Encryption.encryptWithAES(secretKey!!, iv, message)
+        val cipherHmac = Encryption.calculateHMAC(secretKey!!, cipher)
 
         protocolController.sendPacket(iv, cipher, cipherHmac)
         return true

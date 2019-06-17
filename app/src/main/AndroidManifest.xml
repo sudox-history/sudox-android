@@ -4,7 +4,7 @@
     package="com.sudox.messenger">
 
     <application
-        android:name=".AppLoader"
+        android:name=".android.AppLoader"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +14,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".impls.AppActivityImpl"
+            android:name=".android.impls.AppActivityImpl"
             android:hardwareAccelerated="true">
 
             <intent-filter>
