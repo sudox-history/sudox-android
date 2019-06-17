@@ -20,6 +20,8 @@
     <string name="about_name">Don\'t worry, it\'s the last step</string>
 
     <string name="too_many_requests">Exceeded limit of requests</string>
+    <string name="account_is_already_registered">Account is already registered</string>
     <string name="wrong_phone_format">Wrong phone number format</string>
+    <string name="wrong_code">Wrong confirmation code</string>
     <string name="unknown_error">Unknown error</string>
 </resources>

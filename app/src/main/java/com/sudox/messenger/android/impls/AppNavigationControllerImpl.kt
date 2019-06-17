@@ -2,6 +2,7 @@ package com.sudox.messenger.android.impls
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
+import com.sudox.messenger.R
 import com.sudox.messenger.android.core.controller.AppNavigationController
 import com.sudox.messenger.android.core.fragment.AppFragment
 
@@ -20,6 +21,11 @@ class AppNavigationControllerImpl(
     override fun showFragment(fragment: AppFragment, addToBackstack: Boolean) {
         val transaction = fragmentManager
                 .beginTransaction()
+                .setCustomAnimations(
+                        R.animator.animator_fragment_enter_push,
+                        R.animator.animator_fragment_exit_push,
+                        R.animator.animator_fragment_enter_pop,
+                        R.animator.animator_fragment_exit_pop)
                 .replace(containerId, fragment, CURRENT_FRAGMENT_TAG)
 
         if (addToBackstack) {
