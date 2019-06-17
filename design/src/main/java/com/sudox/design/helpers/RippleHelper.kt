@@ -1,19 +1,22 @@
 package com.sudox.design.helpers
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.RippleDrawable
 import android.util.StateSet
 import android.view.View
-import com.sudox.common.annotations.Checked
 import com.sudox.design.drawables.ripple.RippleMaskDrawable
 import com.sudox.design.drawables.ripple.RippleMaskType
 
-@Checked
-fun View.addRipple(): RippleMaskDrawable {
-    val controlHighlightColor = context.theme.getControlHighlightColor()
-    val colorStateList = ColorStateList(arrayOf(StateSet.WILD_CARD), intArrayOf(controlHighlightColor))
-    val maskDrawable = RippleMaskDrawable(RippleMaskType.DEFAULT)
-    background = RippleDrawable(colorStateList, null, maskDrawable)
+internal fun Context.getRippleColorState(): ColorStateList {
+    val controlHighlightColor = theme.getControlHighlightColor()
+    val states = arrayOf(StateSet.WILD_CARD)
+    val colors = intArrayOf(controlHighlightColor)
+    return ColorStateList(states, colors)
+}
 
-    return maskDrawable
+fun View.addRipple(@RippleMaskType maskType: Int = RippleMaskType.DEFAULT) {
+    val colorStateList = context.getRippleColorState()
+    val maskDrawable = RippleMaskDrawable(maskType)
+    background = RippleDrawable(colorStateList, null, maskDrawable)
 }

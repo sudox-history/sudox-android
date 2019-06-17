@@ -67,25 +67,6 @@ class RippleMaskDrawableTest : Assert() {
     }
 
     @Test
-    fun testGetRadius_specified() {
-        val valid = 40F
-
-        RippleMaskDrawable::class.java
-                .getDeclaredField("specifiedRadius")
-                .apply { isAccessible = true }
-                .set(rippleMaskDrawable, valid)
-
-        RippleMaskDrawable::class.java
-                .getDeclaredField("type")
-                .apply { isAccessible = true }
-                .set(rippleMaskDrawable, RippleMaskType.WITH_SPECIFIED_RADIUS)
-
-        Mockito.`when`(rippleMaskDrawable.getRadius()).thenCallRealMethod()
-        val result = rippleMaskDrawable.getRadius()
-        assertEquals(valid, result)
-    }
-
-    @Test
     fun testDraw() {
         val bounds = PowerMockito.mock(Rect::class.java)
         val canvas = PowerMockito.mock(Canvas::class.java)

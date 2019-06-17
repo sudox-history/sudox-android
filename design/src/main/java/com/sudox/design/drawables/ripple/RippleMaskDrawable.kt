@@ -1,19 +1,17 @@
 package com.sudox.design.drawables.ripple
 
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Canvas
 import android.graphics.PixelFormat
 import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable
-import com.sudox.common.annotations.Checked
 
 private const val RIPPLE_MASK_COLOR = Color.WHITE
 
 class RippleMaskDrawable(@RippleMaskType var type: Int) : Drawable() {
 
     private var paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private var specifiedRadius: Float = 0F
 
     init {
         paint.color = RIPPLE_MASK_COLOR
@@ -37,17 +35,10 @@ class RippleMaskDrawable(@RippleMaskType var type: Int) : Drawable() {
 
             Math.ceil(Math.sqrt(area)).toFloat()
         } else {
-            specifiedRadius
+            0F
         }
     }
 
-    @Checked
-    fun setRadius(radius: Float) {
-        specifiedRadius = radius
-        type = RippleMaskType.WITH_SPECIFIED_RADIUS
-    }
-
-    @Checked
     override fun getOpacity(): Int {
         return PixelFormat.UNKNOWN
     }

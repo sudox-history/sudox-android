@@ -275,4 +275,40 @@ class EditTextLayoutLabelTest : Assert() {
         PowerMockito.`when`(editText.isEnabled).thenReturn(true)
         assertTrue(editTextLayoutLabel.isEditTextActive())
     }
+
+    @Test
+    fun testNeedShowingError() {
+        val editTextLayoutLabel = PowerMockito.mock(EditTextLayoutLabel::class.java)
+        val editText = PowerMockito.mock(EditText::class.java)
+
+        PowerMockito.`when`(editTextLayoutLabel.needShowingError()).thenCallRealMethod()
+
+        EditTextLayoutLabel::class.java
+                .getDeclaredField("editText")
+                .apply { isAccessible = true }
+                .set(editTextLayoutLabel, editText)
+
+        EditTextLayoutLabel::class.java
+                .getDeclaredField("errorText")
+                .apply { isAccessible = true }
+                .set(editTextLayoutLabel, "Error")
+
+        PowerMockito.`when`(editText.isEnabled).thenReturn(true)
+        assertTrue(editTextLayoutLabel.needShowingError())
+
+        PowerMockito.`when`(editText.isEnabled).thenReturn(false)
+        assertFalse(editTextLayoutLabel.needShowingError())
+
+        // Without error
+        EditTextLayoutLabel::class.java
+                .getDeclaredField("errorText")
+                .apply { isAccessible = true }
+                .set(editTextLayoutLabel, null)
+
+        PowerMockito.`when`(editText.isEnabled).thenReturn(true)
+        assertFalse(editTextLayoutLabel.needShowingError())
+
+        PowerMockito.`when`(editText.isEnabled).thenReturn(false)
+        assertFalse(editTextLayoutLabel.needShowingError())
+    }
 }
