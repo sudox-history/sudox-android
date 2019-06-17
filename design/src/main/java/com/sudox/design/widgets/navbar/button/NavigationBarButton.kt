@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.os.Parcelable
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -19,16 +20,19 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
 
     internal var textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     internal var textBounds = Rect()
+    internal var textRes: Int = 0
     internal var text: String? = null
 
     @NavigationBarButtonIconDirection
     internal var iconDirection: Int = NavigationBarButtonIconDirection.DEFAULT
+    internal var iconDrawableRes: Int = 0
     internal var iconDrawable: Drawable? = null
 
     init {
         textPaint.textSize = params.textSize
         textPaint.color = params.textColor
         textPaint.typeface = params.textTypeface
+        isSaveEnabled = true
         addRipple()
         resetView()
     }
@@ -37,6 +41,19 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
         val needWidth = calculateWidth()
         val needWidthMeasureSpec = MeasureSpec.makeMeasureSpec(needWidth, MeasureSpec.EXACTLY)
         setMeasuredDimension(needWidthMeasureSpec, heightMeasureSpec)
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+        val state = NavigationBarButtonSavedState(superState!!)
+        state.readFromView(this)
+        return state
+    }
+
+    override fun onRestoreInstanceState(parcelable: Parcelable) {
+        val state = parcelable as NavigationBarButtonSavedState
+        super.onRestoreInstanceState(state.superState)
+        state.writeToView(this)
     }
 
     internal fun calculateWidth(): Int {
@@ -119,9 +136,14 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
                 (iconDirection == NavigationBarButtonIconDirection.START && rtl)
     }
 
-    fun setIconDrawable(drawable: Drawable?) {
+    fun setIconDrawable(drawable: Drawable?, fromRes: Boolean = false) {
         drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
         drawable?.setTint(params.iconTintColor)
+
+        if (!fromRes) {
+            iconDrawableRes = 0
+        }
+
         iconDrawable = drawable
         requestLayout()
         invalidate()
@@ -130,7 +152,8 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
     @Checked
     fun setIconDrawableRes(@DrawableRes drawableRes: Int) {
         val drawable = ContextCompat.getDrawable(context, drawableRes)
-        setIconDrawable(drawable)
+        iconDrawableRes = drawableRes
+        setIconDrawable(drawable, true)
     }
 
     @Checked
@@ -139,12 +162,17 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
         invalidate()
     }
 
-    fun setText(text: String?) {
+    fun setText(text: String?, fromRes: Boolean = false) {
         if (text != null) {
             textPaint.getTextBounds(text, 0, text.length, textBounds)
         }
 
         this.text = text
+
+        if (!fromRes) {
+            textRes = 0
+        }
+
         requestLayout()
         invalidate()
     }
@@ -152,7 +180,8 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
     @Checked
     fun setTextRes(@StringRes textRes: Int) {
         val text = resources.getString(textRes)
-        setText(text)
+        this.textRes = textRes
+        setText(text, true)
     }
 
     @Checked

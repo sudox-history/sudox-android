@@ -1,6 +1,7 @@
 package com.sudox.design.widgets.navbar
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -81,6 +82,19 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         if (buttonsEnd.isNotEmpty()) {
             layoutEnd(left, right, top, bottom, isRtl)
         }
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+        val state = NavigationBarSavedState(superState!!)
+        state.readFromView(this)
+        return state
+    }
+
+    override fun onRestoreInstanceState(parcelable: Parcelable) {
+        val state = parcelable as NavigationBarSavedState
+        super.onRestoreInstanceState(state.superState)
+        state.writeToView(this)
     }
 
     override fun onClick(view: View) {
@@ -172,6 +186,7 @@ class NavigationBar : ViewGroup, View.OnClickListener {
     @Checked
     private fun createButton(): NavigationBarButton {
         val button = NavigationBarButton(context, buttonParams)
+        button.id = View.generateViewId()
         button.setOnClickListener(this)
         addView(button)
         return button
