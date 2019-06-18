@@ -5,6 +5,7 @@ class ProtocolClient(
     internal val port: Short,
     internal val callback: ProtocolCallback
 ) {
+
     internal var protocolController: ProtocolController? = null
 
     fun connect() {

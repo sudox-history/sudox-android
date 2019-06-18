@@ -43,28 +43,40 @@ class PingControllerTest : Assert() {
 
     @Test
     fun testPing_success() {
-        pingController.startPingCycle()
-        pingController.sendPing()
-        pingController.handlePing()
-        pingController.checkPing()
+        pingController.apply {
+            startPingCycle()
+            sendPing()
+            handlePing()
+            checkPing()
+        }
+
         Mockito.verify(protocolController, Mockito.never()).restartConnection()
 
-        pingController.sendPing()
-        pingController.handlePing()
-        pingController.checkPing()
+        pingController.apply {
+            sendPing()
+            handlePing()
+            checkPing()
+        }
+
         Mockito.verify(protocolController, Mockito.never()).restartConnection()
 
-        pingController.handlePing()
-        pingController.checkPing()
-        pingController.sendPing()
+        pingController.apply {
+            handlePing()
+            checkPing()
+            sendPing()
+        }
+
         Mockito.verify(protocolController, Mockito.never()).restartConnection()
     }
 
     @Test
     fun testPing_error() {
-        pingController.startPingCycle()
-        pingController.sendPing()
-        pingController.checkPing()
+        pingController.apply {
+            startPingCycle()
+            sendPing()
+            checkPing()
+        }
+
         Mockito.verify(protocolController).restartConnection()
     }
 }

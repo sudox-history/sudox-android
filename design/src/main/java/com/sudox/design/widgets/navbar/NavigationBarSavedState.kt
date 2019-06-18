@@ -20,9 +20,11 @@ class NavigationBarSavedState : View.BaseSavedState {
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
-        out.writeInt(buttonStartId)
-        out.writeInt(buttonsEndIds!!.size)
-        out.writeIntArray(buttonsEndIds)
+        out.apply {
+            writeInt(buttonStartId)
+            writeInt(buttonsEndIds!!.size)
+            writeIntArray(buttonsEndIds)
+        }
     }
 
     fun readFromView(navigationBar: NavigationBar) {

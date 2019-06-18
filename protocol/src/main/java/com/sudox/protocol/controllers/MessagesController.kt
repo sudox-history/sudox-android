@@ -10,6 +10,7 @@ internal const val ENCRYPTED_MESSAGE_SLICE_COUNT = 3
 internal const val ENCRYPTED_MESSAGE_IV_SIZE = 16
 
 class MessagesController(val protocolController: ProtocolController) {
+
     private var secretKey: ByteArray? = null
 
     fun startSession(secretKey: ByteArray) {
@@ -37,7 +38,7 @@ class MessagesController(val protocolController: ProtocolController) {
             return false
         }
 
-        val message = Encryption.decryptWithAES(secretKey!!, iv, cipher)
+        val message = Encryption.decryptWithAES(secretKey!!, iv, cipher) ?: return false
         protocolController.submitSessionMessageEvent(message)
         return true
     }

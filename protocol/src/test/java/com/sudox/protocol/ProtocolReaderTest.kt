@@ -61,8 +61,10 @@ class ProtocolReaderTest : Assert() {
             val buffer = it.getArgument<ByteBuffer>(0)
             val offset = it.getArgument<Int>(2)
 
-            buffer.position(offset)
-            buffer.put(dataBytes)
+            buffer.apply {
+                position(offset)
+                put(dataBytes)
+            }
 
             return@thenAnswer dataBytes.size
         }
@@ -107,8 +109,10 @@ class ProtocolReaderTest : Assert() {
             val buffer = it.getArgument<ByteBuffer>(0) ?: return@thenAnswer 0
             val offset = it.getArgument<Int>(2)
 
-            buffer.position(offset)
-            buffer.put(thirdPart)
+            buffer.apply {
+                position(offset)
+                put(thirdPart)
+            }
 
             return@thenAnswer thirdPart.size
         }
@@ -139,8 +143,10 @@ class ProtocolReaderTest : Assert() {
             val buffer = it.getArgument<ByteBuffer>(0) ?: return@thenAnswer 0
             val offset = it.getArgument<Int>(2)
 
-            buffer.position(offset)
-            buffer.put(firstPacketDataBytes)
+            buffer.apply {
+                position(offset)
+                put(firstPacketDataBytes)
+            }
 
             return@thenAnswer firstPacketDataBytes.size
         }
@@ -159,8 +165,10 @@ class ProtocolReaderTest : Assert() {
             val buffer = it.getArgument<ByteBuffer>(0) ?: return@thenAnswer 0
             val offset = it.getArgument<Int>(2)
 
-            buffer.position(offset)
-            buffer.put(secondPacketDataBytes)
+            buffer.apply {
+                position(offset)
+                put(secondPacketDataBytes)
+            }
 
             return@thenAnswer secondPacketDataBytes.size
         }

@@ -310,7 +310,7 @@ class NavigationBarButtonUnitTest : Assert() {
                 .apply { isAccessible = true }
                 .set(navigationBarButton, textBounds)
 
-        Mockito.`when`(navigationBarButton.setText(anyString())).thenCallRealMethod()
+        Mockito.`when`(navigationBarButton.setText(anyString(), anyBoolean())).thenCallRealMethod()
 
         navigationBarButton.setText(text)
 

@@ -8,7 +8,12 @@ internal const val SIGNED_VALUE_MASK = 0xFF
 internal const val LENGTH_HEADER_SIZE_IN_BYTES = 3
 
 fun serializePacket(slices: Array<out ByteArray>): ByteBuffer {
-    val slicesLength = slices.sumBy { it.size + LENGTH_HEADER_SIZE_IN_BYTES }
+    var slicesLength = 0
+
+    for (slice in slices) {
+        slicesLength += slice.size + LENGTH_HEADER_SIZE_IN_BYTES
+    }
+
     val packetLength = slicesLength + LENGTH_HEADER_SIZE_IN_BYTES
     val buffer = ByteBuffer.allocateDirect(packetLength)
 

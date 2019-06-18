@@ -28,7 +28,7 @@ class ProtocolControllerTest : Assert() {
 
     @Before
     fun setUp() {
-        port = Random.nextInt(1000, 32768)
+        port = Random.nextInt(9000, 10000)
         callback = Mockito.mock(ProtocolCallback::class.java)
         client = ProtocolClient("127.0.0.1", port.toShort(), callback)
         controller = ProtocolController(client)

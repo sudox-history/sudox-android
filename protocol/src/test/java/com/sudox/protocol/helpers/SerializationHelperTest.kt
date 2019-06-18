@@ -25,10 +25,12 @@ class SerializationHelperTest : Assert() {
     fun testIntBEBuffer() {
         val buffer = ByteBuffer.allocate(5)
 
-        buffer.writeIntBE(255, 1)
-        buffer.writeIntBE(1250, 2)
-        buffer.writeIntBE(-1250, 2)
-        buffer.rewind()
+        buffer.apply {
+            writeIntBE(255, 1)
+            writeIntBE(1250, 2)
+            writeIntBE(-1250, 2)
+            rewind()
+        }
 
         assertEquals(255, buffer.readIntBE(1))
         assertEquals(1250, buffer.readIntBE(2))
@@ -73,8 +75,10 @@ class SerializationHelperTest : Assert() {
         val bytes = byteArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
         val buffer = ByteBuffer.allocate(bytes.size + LENGTH_HEADER_SIZE_IN_BYTES)
 
-        buffer.writePacketSlice(bytes)
-        buffer.rewind()
+        buffer.apply {
+            writePacketSlice(bytes)
+            rewind()
+        }
 
         assertEquals(bytes.size, buffer.readIntBE(LENGTH_HEADER_SIZE_IN_BYTES))
 

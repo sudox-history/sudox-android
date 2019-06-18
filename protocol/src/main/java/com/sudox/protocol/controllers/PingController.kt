@@ -11,6 +11,7 @@ internal const val PING_SEND_TASK_ID = 0
 internal const val PING_CHECK_TASK_ID = 1
 
 class PingController(val protocolController: ProtocolController) {
+
     private var pingSent: Boolean = false
     private var pingReceived: Boolean = false
     private var sendPingRunnable = ::sendPing

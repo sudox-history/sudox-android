@@ -21,10 +21,12 @@ class NavigationBarButtonSavedState : View.BaseSavedState {
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
-        out.writeInt(iconDirection)
-        out.writeInt(iconDrawableRes)
-        out.writeInt(textRes)
-        out.writeInt(visibility)
+        out.apply {
+            writeInt(iconDirection)
+            writeInt(iconDrawableRes)
+            writeInt(textRes)
+            writeInt(visibility)
+        }
     }
 
     fun readFromView(button: NavigationBarButton) {
@@ -43,8 +45,10 @@ class NavigationBarButtonSavedState : View.BaseSavedState {
             button.setTextRes(textRes)
         }
 
-        button.setIconDirection(iconDirection)
-        button.visibility = visibility
+        button.apply {
+            setIconDirection(iconDirection)
+            visibility = visibility
+        }
     }
 
     companion object CREATOR : Parcelable.Creator<NavigationBarButtonSavedState> {

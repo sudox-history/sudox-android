@@ -71,9 +71,11 @@ class MessagesControllerTest : Assert() {
 
         val slices = LinkedList<ByteArray>()
 
-        slices.add(iv)
-        slices.add(cipher)
-        slices.add(serverCipherHmac)
+        slices.apply {
+            add(iv)
+            add(cipher)
+            add(serverCipherHmac)
+        }
 
         assertFalse(messagesController.handleEncryptedMessage(slices))
         Mockito.verify(protocolController, Mockito.never()).submitSessionMessageEvent(any())
@@ -104,9 +106,11 @@ class MessagesControllerTest : Assert() {
 
         val slices = LinkedList<ByteArray>()
 
-        slices.add(iv)
-        slices.add(cipher)
-        slices.add(serverCipherHmac)
+        slices.apply {
+            add(iv)
+            add(cipher)
+            add(serverCipherHmac)
+        }
 
         assertTrue(messagesController.handleEncryptedMessage(slices))
         Mockito.verify(protocolController).submitSessionMessageEvent(message)
@@ -177,13 +181,13 @@ class MessagesControllerTest : Assert() {
         Mockito.`when`(messagesController.isEncryptedMessagePacket(any(), any())).thenCallRealMethod()
 
         val slices = LinkedList<ByteArray>()
-        slices.add(ByteArray(3))
-        slices.add(ByteArray(3))
-        slices.add(ByteArray(3))
+        for (i in 1..3){
+            slices.add(ByteArray(3))
+        }
 
         assertTrue(messagesController.isEncryptedMessagePacket(ENCRYPTED_MESSAGE_NAME, slices))
         assertFalse(messagesController.isEncryptedMessagePacket("H".toByteArray(), slices))
-        assertFalse(messagesController.isEncryptedMessagePacket("H".toByteArray(),  LinkedList()))
-        assertFalse(messagesController.isEncryptedMessagePacket(ENCRYPTED_MESSAGE_NAME,  LinkedList()))
+        assertFalse(messagesController.isEncryptedMessagePacket("H".toByteArray(), LinkedList()))
+        assertFalse(messagesController.isEncryptedMessagePacket(ENCRYPTED_MESSAGE_NAME, LinkedList()))
     }
 }

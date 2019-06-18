@@ -18,7 +18,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(EditTextLayoutLabel::class, Canvas::class, EditText::class, Paint::class, Rect::class,
-        fullyQualifiedNames = ["com.sudox.design.helpers.TextHelperKt"])
+        fullyQualifiedNames = ["com.sudox.design.helpers.RtlHelperKt"])
 class EditTextLayoutLabelTest : Assert() {
 
     @Test
@@ -197,7 +197,7 @@ class EditTextLayoutLabelTest : Assert() {
                 .apply { isAccessible = true }
                 .set(editTextLayoutLabel, bounds)
 
-        PowerMockito.mockStatic(Class.forName("com.sudox.design.helpers.TextHelperKt"))
+        PowerMockito.mockStatic(Class.forName("com.sudox.design.helpers.RtlHelperKt"))
         PowerMockito.`when`(editText.isTextRtl(text)).thenReturn(true)
 
         PowerMockito.`when`(editText.measuredWidth).thenReturn(editTextWidth)
@@ -232,7 +232,7 @@ class EditTextLayoutLabelTest : Assert() {
                 .apply { isAccessible = true }
                 .set(editTextLayoutLabel, paint)
 
-        PowerMockito.mockStatic(Class.forName("com.sudox.design.helpers.TextHelperKt"))
+        PowerMockito.mockStatic(Class.forName("com.sudox.design.helpers.RtlHelperKt"))
         PowerMockito.`when`(editText.isTextRtl(text)).thenReturn(false)
 
         PowerMockito.`when`(editText.measuredWidth).thenReturn(editTextWidth)

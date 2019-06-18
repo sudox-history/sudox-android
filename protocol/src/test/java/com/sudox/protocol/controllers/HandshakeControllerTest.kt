@@ -67,9 +67,11 @@ class HandshakeControllerTest : Assert() {
         Mockito.`when`(Encryption.calculateSecretKey(Mockito.any(), Mockito.any())).thenReturn(null)
         Mockito.`when`(handshakeController.handleHandshakePacket(slices)).thenCallRealMethod()
 
-        slices.add(publicKey)
-        slices.add(publicKeySign)
-        slices.add(okHmac)
+        slices.apply {
+            add(publicKey)
+            add(publicKeySign)
+            add(okHmac)
+        }
 
         handshakeController.generateKeysPair()
         assertFalse(handshakeController.handleHandshakePacket(slices))
@@ -91,9 +93,11 @@ class HandshakeControllerTest : Assert() {
         Mockito.`when`(Encryption.countNonEqualityBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(handshakeController.handleHandshakePacket(slices)).thenCallRealMethod()
 
-        slices.add(publicKey)
-        slices.add(publicKeySign)
-        slices.add(okHmac)
+        slices.apply {
+            add(publicKey)
+            add(publicKeySign)
+            add(okHmac)
+        }
 
         handshakeController.generateKeysPair()
         assertFalse(handshakeController.handleHandshakePacket(slices))
@@ -117,9 +121,11 @@ class HandshakeControllerTest : Assert() {
         Mockito.`when`(Encryption.countNonEqualityBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(handshakeController.handleHandshakePacket(slices)).thenCallRealMethod()
 
-        slices.add(publicKey)
-        slices.add(publicKeySign)
-        slices.add(okHmac)
+        slices.apply {
+            add(publicKey)
+            add(publicKeySign)
+            add(okHmac)
+        }
 
         handshakeController.generateKeysPair()
         assertFalse(handshakeController.handleHandshakePacket(slices))
@@ -139,9 +145,9 @@ class HandshakeControllerTest : Assert() {
         Mockito.`when`(Encryption.countNonEqualityBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(handshakeController.handleHandshakePacket(slices)).thenCallRealMethod()
 
-        slices.add(ByteArray(128))
-        slices.add(ByteArray(128))
-        slices.add(ByteArray(128))
+        for (i in 1..3){
+            slices.add(ByteArray(128))
+        }
 
         handshakeController.generateKeysPair()
         assertTrue(handshakeController.handleHandshakePacket(slices))
@@ -181,13 +187,13 @@ class HandshakeControllerTest : Assert() {
         Mockito.`when`(handshakeController.isHandshakePacket(any(), any())).thenCallRealMethod()
 
         val slices = LinkedList<ByteArray>()
-        slices.add(ByteArray(3))
-        slices.add(ByteArray(3))
-        slices.add(ByteArray(3))
+        for (i in 1..3){
+            slices.add(ByteArray(3))
+        }
 
         assertTrue(handshakeController.isHandshakePacket(HANDSHAKE_MESSAGE_NAME, slices))
         assertFalse(handshakeController.isHandshakePacket("H".toByteArray(), slices))
-        assertFalse(handshakeController.isHandshakePacket("H".toByteArray(),  LinkedList()))
-        assertFalse(handshakeController.isHandshakePacket(HANDSHAKE_MESSAGE_NAME,  LinkedList()))
+        assertFalse(handshakeController.isHandshakePacket("H".toByteArray(), LinkedList()))
+        assertFalse(handshakeController.isHandshakePacket(HANDSHAKE_MESSAGE_NAME, LinkedList()))
     }
 }

@@ -10,6 +10,7 @@ internal val HANDSHAKE_MESSAGE_NAME = byteArrayOf(0, 0, 10)
 internal const val HANDSHAKE_MESSAGE_SLICES_COUNT = 3
 
 class HandshakeController(val protocolController: ProtocolController) {
+
     private var ownPublicKey: ByteArray? = null
     private var ownPrivateKey: ByteArray? = null
 

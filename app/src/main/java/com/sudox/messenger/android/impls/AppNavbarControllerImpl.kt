@@ -9,7 +9,6 @@ import com.sudox.messenger.R
 import com.sudox.messenger.android.core.controller.AppNavbarController
 
 class AppNavbarControllerImpl(val navigationBar: NavigationBar) : AppNavbarController {
-
     override fun getButtonStart(): NavigationBarButton {
         return navigationBar.buttonStart!!
     }
@@ -22,11 +21,13 @@ class AppNavbarControllerImpl(val navigationBar: NavigationBar) : AppNavbarContr
         val button = navigationBar.buttonStart!!
 
         if (toggle) {
-            button.setIconDrawableRes(R.drawable.ic_arrow_nav_start)
-            button.setIconDirection(NavigationBarButtonIconDirection.START)
-            button.setTextRes(R.string.back)
-            button.isClickable = true
-            button.visibility = View.VISIBLE
+            button.apply {
+                setIconDrawableRes(R.drawable.ic_arrow_nav_start)
+                setIconDirection(NavigationBarButtonIconDirection.START)
+                setTextRes(R.string.back)
+                isClickable = true
+                visibility = View.VISIBLE
+            }
         } else {
             button.resetView()
         }
@@ -36,11 +37,13 @@ class AppNavbarControllerImpl(val navigationBar: NavigationBar) : AppNavbarContr
         val button = navigationBar.buttonsEnd[0]!!
 
         if (toggle) {
-            button.setIconDrawableRes(R.drawable.ic_arrow_nav_end)
-            button.setIconDirection(NavigationBarButtonIconDirection.END)
-            button.setTextRes(R.string.next)
-            button.isClickable = true
-            button.visibility = View.VISIBLE
+            button.apply {
+                setIconDrawableRes(R.drawable.ic_arrow_nav_end)
+                setIconDirection(NavigationBarButtonIconDirection.END)
+                setTextRes(R.string.next)
+                isClickable = true
+                visibility = View.VISIBLE
+            }
         } else {
             button.resetView()
         }

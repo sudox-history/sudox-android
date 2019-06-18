@@ -47,9 +47,10 @@ class SocketClientTest {
     fun testConnect_fail_contact_with_server() {
         val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
 
-        client.callback(callback)
-        client.connect()
-
+        client.apply {
+            callback(callback)
+            connect()
+        }
         Thread.sleep(500) // Waiting callback ...
 
         Mockito.verify(callback).socketClosed(true)
@@ -72,9 +73,10 @@ class SocketClientTest {
             connectSemaphore.release()
         }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
 
-        client.callback(callback)
-        client.connect()
-
+        client.apply {
+            callback(callback)
+            connect()
+        }
         connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
 
         Thread.sleep(500) // Waiting callback ...
@@ -90,9 +92,11 @@ class SocketClientTest {
     fun testClose_not_connected() {
         val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
 
-        client.callback(callback)
-        client.close(false)
-        client.close(true)
+        client.apply {
+            callback(callback)
+            close(false)
+            close(true)
+        }
 
         Mockito.verify(callback, Mockito.never()).socketClosed(Mockito.anyBoolean())
         assertFalse(client.opened())
@@ -116,9 +120,10 @@ class SocketClientTest {
             disconnectSemaphore.release()
         }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
 
-        client.callback(callback)
-        client.connect()
-
+        client.apply {
+            callback(callback)
+            connect()
+        }
         connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
         client.close(true)
         disconnectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
@@ -145,8 +150,10 @@ class SocketClientTest {
             disconnectSemaphore.release()
         }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
 
-        client.callback(callback)
-        client.connect()
+        client.apply {
+            callback(callback)
+            connect()
+        }
         connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
 
         client.close(false)
@@ -166,8 +173,10 @@ class SocketClientTest {
         val readSemaphore = Semaphore(0)
         val read = ByteArray(128)
 
-        client.callback(callback)
-        client.send(byteArrayOf(123))
+        client.apply {
+            callback(callback)
+            send(byteArrayOf(123))
+        }
 
         startServer()
         thread {
@@ -298,8 +307,10 @@ class SocketClientTest {
             readSemaphore.release()
         }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
 
-        client.callback(callback)
-        client.connect()
+        client.apply {
+            callback(callback)
+            connect()
+        }
         connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
 
         writeSemaphore.release()
@@ -335,8 +346,10 @@ class SocketClientTest {
             readSemaphore.release()
         }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
 
-        client.callback(callback)
-        client.connect()
+        client.apply {
+            callback(callback)
+            connect()
+        }
         connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
 
         writeSemaphore.release()
