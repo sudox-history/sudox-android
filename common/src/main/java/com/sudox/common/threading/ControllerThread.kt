@@ -4,7 +4,6 @@ import android.os.Handler
 import android.os.HandlerThread
 
 abstract class ControllerThread : HandlerThread {
-
     var threadHandler: Handler? = null
 
     constructor(name: String) : super(name)

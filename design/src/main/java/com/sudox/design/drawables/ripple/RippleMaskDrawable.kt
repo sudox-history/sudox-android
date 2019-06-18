@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable
 private const val RIPPLE_MASK_COLOR = Color.WHITE
 
 class RippleMaskDrawable(@RippleMaskType var type: Int) : Drawable() {
-
     private var paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {

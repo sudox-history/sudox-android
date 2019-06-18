@@ -14,7 +14,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(PingController::class, ProtocolController::class)
 class PingControllerTest : Assert() {
-
     private lateinit var protocolController: ProtocolController
     private lateinit var pingController: PingController
 

@@ -38,7 +38,11 @@ class MessagesController(val protocolController: ProtocolController) {
         }
 
         val message = Encryption.decryptWithAES(secretKey!!, iv, cipher)
-        protocolController.submitSessionMessageEvent(message)
+
+        if (message != null) {
+            protocolController.submitSessionMessageEvent(message)
+        }
+
         return true
     }
 

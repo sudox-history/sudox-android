@@ -15,7 +15,6 @@ import com.sudox.messenger.android.core.fragment.AppFragmentType
 import com.sudox.messenger.auth.R
 
 class AuthPhoneFragment : AppFragment(), NavigationBarListener {
-
     internal var navbarController: AppNavbarController? = null
     internal var navigationController: AppNavigationController? = null
 

@@ -17,7 +17,6 @@ import kotlin.random.Random
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(HandshakeController::class, ProtocolController::class, Encryption::class)
 class HandshakeControllerTest : Assert() {
-
     private lateinit var handshakeController: HandshakeController
     private lateinit var protocolController: ProtocolController
     private lateinit var privateKey: ByteArray

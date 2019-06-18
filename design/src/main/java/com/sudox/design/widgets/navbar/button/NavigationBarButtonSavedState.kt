@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.view.View
 
 class NavigationBarButtonSavedState : View.BaseSavedState {
-
     internal var iconDirection: Int = 0
     internal var iconDrawableRes: Int = 0
     internal var textRes: Int = 0

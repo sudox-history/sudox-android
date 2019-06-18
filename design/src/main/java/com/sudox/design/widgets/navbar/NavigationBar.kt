@@ -19,7 +19,6 @@ import com.sudox.design.widgets.navbar.title.NavigationBarTitleParams
 private const val BUTTONS_IN_END_COUNT = 3
 
 class NavigationBar : ViewGroup, View.OnClickListener {
-
     internal var buttonParams = NavigationBarButtonParams()
     internal var titleParams = NavigationBarTitleParams()
 

@@ -5,8 +5,6 @@ import androidx.annotation.NonNull;
 import java.nio.ByteBuffer;
 
 public class SocketClient {
-
-    // Указатель на обьект клиента в нативной памяти.
     private final long pointer;
 
     /**

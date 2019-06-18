@@ -17,7 +17,6 @@ internal const val TEXT_STYLE_ATTR_INDEX = 1
 internal const val FONT_FAMILY_ATTR_INDEX = 2
 
 class EditTextLayoutLabelParams {
-
     internal var errorTextColor: Int = 0
     internal var textTypeface: Typeface? = null
     internal var textSize: Int = 0
