@@ -158,6 +158,46 @@ class EncryptionTest : Assert() {
     }
 
     @Test
+    fun testDecryptWithAES_invalid_key() {
+        val key = Random.nextBytes(1000)
+        val iv = Random.nextBytes(16)
+        val message = "Hello World!".toByteArray()
+
+        // Testing ...
+        val keySpec = SecretKeySpec(Random.nextBytes(24), "AES")
+        val ivSpec = IvParameterSpec(iv)
+        val encrypted = with(Cipher.getInstance("AES/CTR/NoPadding")) {
+            init(Cipher.ENCRYPT_MODE, keySpec, ivSpec)
+            doFinal(message)
+        }
+
+        val result = Encryption.decryptWithAES(key, iv, encrypted)
+
+        // Verifying ...
+        assertNull(result)
+    }
+
+    @Test
+    fun testDecryptWithAES_invalid_iv() {
+        val key = Random.nextBytes(24)
+        val iv = Random.nextBytes(1)
+        val message = "Hello World!".toByteArray()
+
+        // Testing ...
+        val keySpec = SecretKeySpec(key, "AES")
+        val ivSpec = IvParameterSpec(Random.nextBytes(16))
+        val encrypted = with(Cipher.getInstance("AES/CTR/NoPadding")) {
+            init(Cipher.ENCRYPT_MODE, keySpec, ivSpec)
+            doFinal(message)
+        }
+
+        val result = Encryption.decryptWithAES(key, iv, encrypted)
+
+        // Verifying ...
+        assertNull(result)
+    }
+
+    @Test
     fun testEncryptWithAES() {
         val key = Random.nextBytes(24)
         val iv = Random.nextBytes(16)
@@ -194,9 +234,7 @@ class EncryptionTest : Assert() {
                 "CMBpfSec/zh1YYn6qCMIlTaUdgyyoHC6EcEpCPOIirWvce41qyMjQCseIVh1Ul7WhvA==", Base64.NO_WRAP)
 
         // Verifying ...
-        val start = System.nanoTime()
         assertTrue(Encryption.verifyMessageWithECDSA(message, signature))
-        println("Time Sudox: ${System.nanoTime() - start}")
     }
 
     @Test
@@ -214,6 +252,15 @@ class EncryptionTest : Assert() {
         val message = "Goodbye World!".toByteArray()
         val signature = Base64.decode("ucxPUn1ZdbUgqS23Ch8VY42CeGDIsETSBYI1SE8RIJgstBQPOIolYte" +
                 "kFHC2NmVrGl9J5z/OHVhifqoIwiVNpR2DLKgcLoRwSkI84iKta9x7jWrIyNAKx4hWHVSXtaG8", Base64.NO_WRAP)
+
+        // Verifying ...
+        assertFalse(Encryption.verifyMessageWithECDSA(message, signature))
+    }
+
+    @Test
+    fun testVerifyMessageWithECDSA_invalid_data_format() {
+        val message = "Goodbye World!".toByteArray()
+        val signature = "Test".toByteArray()
 
         // Verifying ...
         assertFalse(Encryption.verifyMessageWithECDSA(message, signature))

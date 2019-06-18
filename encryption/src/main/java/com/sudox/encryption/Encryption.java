@@ -49,7 +49,7 @@ public class Encryption {
     @NonNull
     public static native byte[] calculateHMAC(@NonNull byte[] key, @NonNull byte[] message);
 
-    @NonNull
+    @Nullable
     public static native byte[] decryptWithAES(@NonNull byte[] key, @NonNull byte[] iv, @NonNull byte[] message);
 
     @NonNull

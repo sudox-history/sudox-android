@@ -16,22 +16,18 @@ const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
 class ProtocolController(
     var protocolClient: ProtocolClient
 ) : ControllerThread("STIPS Worker"), SocketClient.ClientCallback {
-
-    @VisibleForTesting
-    val socketClient = SocketClient(protocolClient.host, protocolClient.port).apply {
+    private val socketClient = SocketClient(protocolClient.host, protocolClient.port).apply {
         callback(this@ProtocolController)
     }
+
+    private val protocolReader = ProtocolReader(socketClient)
+    private val handshakeController = HandshakeController(this)
+    private val pingController = PingController(this)
 
     @VisibleForTesting
     var connectionAttemptFailed: Boolean = true
     @VisibleForTesting
-    internal val protocolReader = ProtocolReader(socketClient)
-    @VisibleForTesting
-    val handshakeController = HandshakeController(this)
-    @VisibleForTesting
     val messagesController = MessagesController(this)
-    @VisibleForTesting
-    val pingController = PingController(this)
 
     override fun threadStart() = submitTask {
         socketClient.connect()
@@ -123,7 +119,7 @@ class ProtocolController(
     }
 
     internal fun startEncryptedSession(secretKey: ByteArray) {
-        messagesController.secretKey = secretKey
+        messagesController.startSession(secretKey)
         submitSessionStartedEvent()
     }
 

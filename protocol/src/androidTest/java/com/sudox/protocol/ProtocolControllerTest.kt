@@ -104,7 +104,7 @@ class ProtocolControllerTest : Assert() {
         controller.start()
 
         // Because onEnded() never calling without session
-        controller.messagesController.secretKey = "Fake key!".toByteArray()
+        controller.messagesController.startSession("Fake key!".toByteArray())
         connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
         Thread.sleep(10000)
 
@@ -123,7 +123,7 @@ class ProtocolControllerTest : Assert() {
             socket.tcpNoDelay = true
             socket.getOutputStream().write(pingMessage)
             connectSemaphore.release()
-            Thread.sleep(500)
+            Thread.sleep(2000)
             socket.getInputStream().read(pingReceivedMessage)
 
             for (i in 0 until 10) {
@@ -135,7 +135,7 @@ class ProtocolControllerTest : Assert() {
         controller.start()
 
         // Because onEnded() never calling without session
-        controller.messagesController.secretKey = "Fake key!".toByteArray()
+        controller.messagesController.startSession("Fake key!".toByteArray())
         connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
         Thread.sleep(10000)
 
@@ -223,7 +223,7 @@ class ProtocolControllerTest : Assert() {
         controller.join(500)
 
         controller.connectionAttemptFailed = false
-        controller.messagesController.secretKey = Random.nextBytes(1024)
+        controller.messagesController.startSession(Random.nextBytes(1024))
 
         controller::class.java
                 .getDeclaredMethod("socketClosed", Boolean::class.java)

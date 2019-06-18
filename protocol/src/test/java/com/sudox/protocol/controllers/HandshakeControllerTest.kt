@@ -53,14 +53,6 @@ class HandshakeControllerTest : Assert() {
     }
 
     @Test
-    fun startHandshake() {
-        handshakeController.startHandshake()
-
-        Mockito.verify(handshakeController).generateKeysPair()
-        Mockito.verify(protocolController).sendPacket(HANDSHAKE_MESSAGE_NAME, publicKey)
-    }
-
-    @Test
     fun testHandlePublicKeyMessage_signature_checking() {
         val slices = LinkedList<ByteArray>()
 
@@ -157,48 +149,6 @@ class HandshakeControllerTest : Assert() {
     }
 
     @Test
-    fun testResetKeys() {
-        Mockito.`when`(handshakeController.resetHandshake()).thenCallRealMethod()
-
-        handshakeController.generateKeysPair()
-        handshakeController.resetHandshake()
-
-        val publicKey = HandshakeController::class.java
-                .getDeclaredField("ownPublicKey")
-                .apply { isAccessible = true }
-                .get(handshakeController)
-
-        val privateKey = HandshakeController::class.java
-                .getDeclaredField("ownPrivateKey")
-                .apply { isAccessible = true }
-                .get(handshakeController)
-
-        assertNull(publicKey)
-        assertNull(privateKey)
-    }
-
-    @Test
-    fun testResetHandshake() {
-        Mockito.`when`(handshakeController.resetHandshake()).thenCallRealMethod()
-
-        handshakeController.generateKeysPair()
-        handshakeController.resetHandshake()
-
-        val publicKey = HandshakeController::class.java
-                .getDeclaredField("ownPublicKey")
-                .apply { isAccessible = true }
-                .get(handshakeController)
-
-        val privateKey = HandshakeController::class.java
-                .getDeclaredField("ownPrivateKey")
-                .apply { isAccessible = true }
-                .get(handshakeController)
-
-        assertNull(publicKey)
-        assertNull(privateKey)
-    }
-
-    @Test
     fun testGenerateKeysPair() {
         Mockito.`when`(handshakeController.generateKeysPair()).thenCallRealMethod()
 
@@ -224,9 +174,6 @@ class HandshakeControllerTest : Assert() {
 
         assertEquals(generatedPublicKey, publicKey)
         assertEquals(generatedPrivateKey, privateKey)
-
-        PowerMockito.verifyStatic(Encryption::class.java)
-        Encryption.removeKeysPair(1)
     }
 
     @Test

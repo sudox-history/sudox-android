@@ -77,19 +77,25 @@ Java_com_sudox_encryption_Encryption_decryptWithAES(JNIEnv *env, jclass type,
     env->GetByteArrayRegion(message, 0, messageLength, reinterpret_cast<jbyte *>(messageNative));
 
     // Decrypting and mapping result to jByteArray
-    string decrypted = decryptWithAES(keyNative, keyLength, ivNative, ivLength, messageNative,
-                                      messageLength);
-    auto size = decrypted.size();
-    jbyteArray jArray = env->NewByteArray(size);
-    env->SetByteArrayRegion(jArray, 0, size, reinterpret_cast<const jbyte *>(decrypted.c_str()));
+    try {
+        string decrypted = decryptWithAES(keyNative, keyLength, ivNative, ivLength, messageNative,
+                                          messageLength);
+        auto size = decrypted.size();
+        jbyteArray jArray = env->NewByteArray(size);
+        env->SetByteArrayRegion(jArray, 0, size,
+                                reinterpret_cast<const jbyte *>(decrypted.c_str()));
 
-    // Cleaning the RAM ...
-    delete[] keyNative;
-    delete[] ivNative;
-    delete[] messageNative;
-
-    // Returning the result ...
-    return jArray;
+        // Cleaning the RAM ...
+        delete[] keyNative;
+        delete[] ivNative;
+        delete[] messageNative;
+        return jArray;
+    } catch (CryptoPP::Exception &e) {
+        delete[] keyNative;
+        delete[] ivNative;
+        delete[] messageNative;
+        return nullptr;
+    }
 }
 
 extern "C"

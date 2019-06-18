@@ -52,11 +52,12 @@ bool verifyMessageWithECDSA(unsigned char *message, unsigned int messageLength,
     }
 
     // Verifying ...
-    bool result = verifier.VerifyMessage((const byte *) &message[0], messageLength,
-                                         (const byte *) &signature[0], signatureLength);
-
-    // Mapping to jBoolean
-    return result;
+    try {
+        return verifier.VerifyMessage((const byte *) &message[0], messageLength,
+                                             (const byte *) &signature[0], signatureLength);
+    } catch (CryptoPP::CryptoMaterial::InvalidMaterial &ex) {
+        return false;
+    }
 }
 
 /**

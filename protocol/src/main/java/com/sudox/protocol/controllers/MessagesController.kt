@@ -10,9 +10,11 @@ internal const val ENCRYPTED_MESSAGE_SLICE_COUNT = 3
 internal const val ENCRYPTED_MESSAGE_IV_SIZE = 16
 
 class MessagesController(val protocolController: ProtocolController) {
+    private var secretKey: ByteArray? = null
 
-    @VisibleForTesting
-    var secretKey: ByteArray? = null
+    fun startSession(secretKey: ByteArray) {
+        this.secretKey = secretKey
+    }
 
     fun handleIncomingMessage(slices: LinkedList<ByteArray>) {
         if (!handleEncryptedMessage(slices)) {

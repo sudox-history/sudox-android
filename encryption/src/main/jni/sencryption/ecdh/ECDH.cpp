@@ -161,7 +161,7 @@ Java_com_sudox_encryption_Encryption_calculateSecretKey(JNIEnv *env, jclass type
         delete[] privateKeyNative;
         delete[] recipientPublicKeyNative;
         return jArray;
-    } catch (runtime_error error) {
+    } catch (runtime_error &error) {
         delete[] privateKeyNative;
         delete[] recipientPublicKeyNative;
         return nullptr;

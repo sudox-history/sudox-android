@@ -160,16 +160,13 @@ class MessagesControllerTest : Assert() {
     }
 
     @Test
-    fun testIsSessionValid() {
+    fun testSessionManagement() {
         Mockito.`when`(messagesController.isSessionStarted()).thenCallRealMethod()
         Mockito.`when`(messagesController.resetSession()).thenCallRealMethod()
+        Mockito.`when`(messagesController.startSession(any())).thenCallRealMethod()
         assertFalse(messagesController.isSessionStarted())
 
-        MessagesController::class.java
-                .getDeclaredField("secretKey")
-                .apply { isAccessible = true }
-                .set(messagesController, ByteArray(128))
-
+        messagesController.startSession(ByteArray(128))
         assertTrue(messagesController.isSessionStarted())
         messagesController.resetSession()
         assertFalse(messagesController.isSessionStarted())

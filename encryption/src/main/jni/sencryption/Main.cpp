@@ -4,7 +4,7 @@
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_sudox_cipher_Encryption_initLibrary(JNIEnv *env, jclass type) {
+Java_com_sudox_encryption_Encryption_initLibrary(JNIEnv *env, jclass type) {
     initRandom();
     initECDSA();
 }
