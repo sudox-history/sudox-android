@@ -27,7 +27,6 @@ class EditTextLayoutTest : Assert() {
     @Rule
     @JvmField
     val viewTestRule = ViewTestRule<EditTextLayout>(ViewCreator<EditTextLayout> { context, _ ->
-        context.setTheme(R.style.SudoxTheme)
         return@ViewCreator EditTextLayout(context).apply {
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             linkedEditText = EditText(context).apply {
@@ -53,6 +52,7 @@ class EditTextLayoutTest : Assert() {
         val view = viewTestRule.view
 
         viewTestRule.runOnMainSynchronously { linkedEditText.isEnabled = false }
+
         assertEquals("Test", view.label!!.getCurrentText())
         assertEquals(linkedEditText.currentHintTextColor, view.label!!.getCurrentColor())
         assertFalse(view.label!!.needShowingError())
@@ -76,7 +76,6 @@ class EditTextLayoutTest : Assert() {
         assertTrue(view.isErrorShowing())
 
         viewTestRule.runOnMainSynchronously { linkedEditText.isEnabled = false }
-        Thread.sleep(1000)
         assertEquals("Test", view.label!!.getCurrentText())
         assertEquals(linkedEditText.currentHintTextColor, view.label!!.getCurrentColor())
         assertFalse(view.label!!.needShowingError())
@@ -90,8 +89,6 @@ class EditTextLayoutTest : Assert() {
 
         viewTestRule.runOnMainSynchronously { view.resetErrorText() }
         assertEquals("Test", view.label!!.getCurrentText())
-
-        //On some devices there was the error because of auto focus
         val color = view.label!!.getCurrentColor()
         assertTrue(color == linkedEditText.currentHintTextColor || color == linkedEditText.currentTextColor)
         assertFalse(view.label!!.needShowingError())
