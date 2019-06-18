@@ -8,7 +8,6 @@ import org.mockito.Mockito
 
 @RunWith(AndroidJUnit4::class)
 class ProtocolClientTest : Assert() {
-
     @Test
     fun testConnect() {
         val callback = Mockito.mock(ProtocolCallback::class.java)

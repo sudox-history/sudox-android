@@ -5,7 +5,6 @@ import android.os.Parcelable
 import android.view.View
 
 class NavigationBarSavedState : View.BaseSavedState {
-
     internal var buttonStartId: Int = 0
     internal var buttonsEndIds: IntArray? = null
 
