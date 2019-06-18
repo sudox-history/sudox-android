@@ -51,26 +51,6 @@ class MessagesControllerTest : Assert() {
     }
 
     @Test
-    fun testHandleEncryptedMessage_not_valid_slices_count() {
-        Mockito.`when`(messagesController.handleEncryptedMessage(any())).thenCallRealMethod()
-
-        val slices = LinkedList<ByteArray>()
-
-        slices.add(ByteArray(128))
-        slices.add(ByteArray(128))
-        assertFalse(messagesController.handleEncryptedMessage(slices))
-        Mockito.verify(protocolController, Mockito.never()).submitSessionMessageEvent(any())
-
-        slices.clear()
-        slices.add(ByteArray(128))
-        slices.add(ByteArray(128))
-        slices.add(ByteArray(128))
-        slices.add(ByteArray(128))
-        assertFalse(messagesController.handleEncryptedMessage(slices))
-        Mockito.verify(protocolController, Mockito.never()).submitSessionMessageEvent(any())
-    }
-
-    @Test
     fun testHandleEncryptedMessage_hmac_comparing() {
         val hmac = Random.nextBytes(128)
         val iv = Random.nextBytes(128)
@@ -167,7 +147,7 @@ class MessagesControllerTest : Assert() {
         Mockito.`when`(messagesController.isSessionStarted()).thenReturn(true)
 
         assertTrue(messagesController.sendEncryptedMessage(message))
-        Mockito.verify(protocolController).sendPacket(iv, cipher, cipherHmac)
+        Mockito.verify(protocolController).sendPacket(ENCRYPTED_MESSAGE_NAME, iv, cipher, cipherHmac)
 
         PowerMockito.verifyStatic(Encryption::class.java)
         Encryption.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
@@ -182,6 +162,7 @@ class MessagesControllerTest : Assert() {
     @Test
     fun testIsSessionValid() {
         Mockito.`when`(messagesController.isSessionStarted()).thenCallRealMethod()
+        Mockito.`when`(messagesController.resetSession()).thenCallRealMethod()
         assertFalse(messagesController.isSessionStarted())
 
         MessagesController::class.java
@@ -190,5 +171,22 @@ class MessagesControllerTest : Assert() {
                 .set(messagesController, ByteArray(128))
 
         assertTrue(messagesController.isSessionStarted())
+        messagesController.resetSession()
+        assertFalse(messagesController.isSessionStarted())
+    }
+
+    @Test
+    fun testIsEncryptedMessagePacket() {
+        Mockito.`when`(messagesController.isEncryptedMessagePacket(any(), any())).thenCallRealMethod()
+
+        val slices = LinkedList<ByteArray>()
+        slices.add(ByteArray(3))
+        slices.add(ByteArray(3))
+        slices.add(ByteArray(3))
+
+        assertTrue(messagesController.isEncryptedMessagePacket(ENCRYPTED_MESSAGE_NAME, slices))
+        assertFalse(messagesController.isEncryptedMessagePacket("H".toByteArray(), slices))
+        assertFalse(messagesController.isEncryptedMessagePacket("H".toByteArray(),  LinkedList()))
+        assertFalse(messagesController.isEncryptedMessagePacket(ENCRYPTED_MESSAGE_NAME,  LinkedList()))
     }
 }

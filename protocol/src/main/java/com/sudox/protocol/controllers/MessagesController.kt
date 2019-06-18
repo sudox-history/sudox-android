@@ -1,17 +1,20 @@
 package com.sudox.protocol.controllers
 
+import androidx.annotation.VisibleForTesting
 import com.sudox.encryption.Encryption
 import com.sudox.protocol.ProtocolController
 import java.util.LinkedList
 
+internal val ENCRYPTED_MESSAGE_NAME = byteArrayOf(0, 10, 0)
 internal const val ENCRYPTED_MESSAGE_SLICE_COUNT = 3
 internal const val ENCRYPTED_MESSAGE_IV_SIZE = 16
 
 class MessagesController(val protocolController: ProtocolController) {
 
-    internal var secretKey: ByteArray? = null
+    @VisibleForTesting
+    var secretKey: ByteArray? = null
 
-    internal fun handleIncomingMessage(slices: LinkedList<ByteArray>) {
+    fun handleIncomingMessage(slices: LinkedList<ByteArray>) {
         if (!handleEncryptedMessage(slices)) {
             protocolController.restartConnection()
         }
@@ -21,27 +24,19 @@ class MessagesController(val protocolController: ProtocolController) {
      * Returns true if message successfully decrypted
      * Returns false if error thrown
      */
-    internal fun handleEncryptedMessage(slices: LinkedList<ByteArray>): Boolean {
-        if (slices.size != ENCRYPTED_MESSAGE_SLICE_COUNT) {
-            return false
-        }
-
+    @VisibleForTesting
+    fun handleEncryptedMessage(slices: LinkedList<ByteArray>): Boolean {
         val iv = slices.remove()
         val cipher = slices.remove()
         val serverCipherHmac = slices.remove()
 
-        // First step - calculating hmac using generated secret key
         val cipherHmac = Encryption.calculateHMAC(secretKey!!, cipher)
-
-        // Second step - comparing server and own hmacs
         if (!Encryption.checkEqualsAllBytes(serverCipherHmac, cipherHmac)) {
             return false
         }
 
-        // Third step - decrypting message
         val message = Encryption.decryptWithAES(secretKey!!, iv, cipher)
         protocolController.submitSessionMessageEvent(message)
-
         return true
     }
 
@@ -49,7 +44,7 @@ class MessagesController(val protocolController: ProtocolController) {
      * Returns false if message not sent
      * Returns true if message sent
      */
-    internal fun sendEncryptedMessage(message: ByteArray): Boolean {
+    fun sendEncryptedMessage(message: ByteArray): Boolean {
         if (!isSessionStarted()) {
             return false
         }
@@ -57,12 +52,19 @@ class MessagesController(val protocolController: ProtocolController) {
         val iv = Encryption.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
         val cipher = Encryption.encryptWithAES(secretKey!!, iv, message)
         val cipherHmac = Encryption.calculateHMAC(secretKey!!, cipher)
-
-        protocolController.sendPacket(iv, cipher, cipherHmac)
+        protocolController.sendPacket(ENCRYPTED_MESSAGE_NAME, iv, cipher, cipherHmac)
         return true
     }
 
-    internal fun isSessionStarted(): Boolean {
+    fun isEncryptedMessagePacket(name: ByteArray, slices: LinkedList<ByteArray>): Boolean {
+        return slices.size == ENCRYPTED_MESSAGE_SLICE_COUNT && name.contentEquals(ENCRYPTED_MESSAGE_NAME)
+    }
+
+    fun isSessionStarted(): Boolean {
         return secretKey != null
+    }
+
+    fun resetSession() {
+        secretKey = null
     }
 }

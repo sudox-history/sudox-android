@@ -1,5 +1,6 @@
 package com.sudox.protocol
 
+import androidx.annotation.VisibleForTesting
 import com.sudox.common.threading.ControllerThread
 import com.sudox.protocol.controllers.HandshakeController
 import com.sudox.protocol.controllers.MessagesController
@@ -9,21 +10,28 @@ import com.sudox.protocol.helpers.serializePacket
 import com.sudox.sockets.SocketClient
 import java.util.LinkedList
 
-internal const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
+@VisibleForTesting
+const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
 
 class ProtocolController(
     var protocolClient: ProtocolClient
 ) : ControllerThread("STIPS Worker"), SocketClient.ClientCallback {
 
-    internal val socketClient = SocketClient(protocolClient.host, protocolClient.port).apply {
+    @VisibleForTesting
+    val socketClient = SocketClient(protocolClient.host, protocolClient.port).apply {
         callback(this@ProtocolController)
     }
 
-    internal var connectionAttemptFailed: Boolean = true
+    @VisibleForTesting
+    var connectionAttemptFailed: Boolean = true
+    @VisibleForTesting
     internal val protocolReader = ProtocolReader(socketClient)
-    internal val handshakeController = HandshakeController(this)
-    internal val messagesController = MessagesController(this)
-    internal val pingController = PingController(this)
+    @VisibleForTesting
+    val handshakeController = HandshakeController(this)
+    @VisibleForTesting
+    val messagesController = MessagesController(this)
+    @VisibleForTesting
+    val pingController = PingController(this)
 
     override fun threadStart() = submitTask {
         socketClient.connect()
@@ -48,19 +56,24 @@ class ProtocolController(
         }
 
         pingController.schedulePingSendTask()
+        handlePacket(slices)
+    }
 
-        if (pingController.isPingPacket(slices)) {
+    private fun handlePacket(slices: LinkedList<ByteArray>) {
+        val name = slices.remove()
+
+        if (pingController.isPingPacket(name)) {
             pingController.handlePing()
         } else {
-            addMessageToQueue(slices)
+            addMessageToQueue(name, slices)
         }
     }
 
-    fun addMessageToQueue(slices: LinkedList<ByteArray>) = submitTask {
-        if (messagesController.isSessionStarted()) {
+    private fun addMessageToQueue(name: ByteArray, slices: LinkedList<ByteArray>) = submitTask {
+        if (messagesController.isSessionStarted() && messagesController.isEncryptedMessagePacket(name, slices)) {
             messagesController.handleIncomingMessage(slices)
-        } else {
-            handshakeController.handleIncomingMessage(slices)
+        } else if (handshakeController.isHandshakePacket(name, slices)) {
+            handshakeController.handleIncomingPacket(slices)
         }
     }
 
@@ -70,7 +83,7 @@ class ProtocolController(
         removeAllScheduledTasks()
         protocolReader.resetPacket()
         handshakeController.resetHandshake()
-        messagesController.secretKey = null
+        messagesController.resetSession()
 
         if (sessionStarted) {
             submitSessionEndedEvent()
@@ -114,21 +127,21 @@ class ProtocolController(
         submitSessionStartedEvent()
     }
 
-    internal fun submitSessionStartedEvent() {
+    private fun submitSessionStartedEvent() {
         protocolClient.callback.onStarted()
     }
 
-    internal fun submitSessionEndedEvent() {
+    private fun submitSessionEndedEvent() {
         if (!connectionAttemptFailed) {
             protocolClient.callback.onEnded()
         }
     }
 
-    internal fun submitSessionMessageEvent(message: ByteArray) {
+    fun submitSessionMessageEvent(message: ByteArray) {
         protocolClient.callback.onMessage(message)
     }
 
-    internal fun closeConnection() {
+    fun closeConnection() {
         socketClient.close(false)
     }
 

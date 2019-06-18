@@ -1,72 +1,71 @@
 package com.sudox.protocol.controllers
 
 import android.os.SystemClock
+import androidx.annotation.VisibleForTesting
 import com.sudox.protocol.ProtocolController
-import java.util.LinkedList
 
-internal val PING_PACKET_NAME = "png".toByteArray()
-internal const val PING_PACKET_SLICES_COUNT = 1
-internal const val PING_SEND_INTERVAL_IN_MILLIS = 2000L
-internal const val PING_CHECK_INTERVAL_IN_MILLIS = 6000L
+internal val PING_PACKET_NAME = byteArrayOf(10, 0, 0)
+internal const val PING_SEND_INTERVAL_IN_MILLIS = 6000L
+internal const val PING_CHECK_INTERVAL_IN_MILLIS = 2000L
 internal const val PING_SEND_TASK_ID = 0
 internal const val PING_CHECK_TASK_ID = 1
 
 class PingController(val protocolController: ProtocolController) {
 
-    private var pingWillBeSendByServer: Boolean = false
+    private var pingSent: Boolean = false
     private var pingReceived: Boolean = false
     private var sendPingRunnable = ::sendPing
     private var checkPingRunnable = ::checkPing
 
-    internal fun startPingCycle() {
+    fun startPingCycle() {
         // First ping will be send by server
-        pingWillBeSendByServer = true
+        pingSent = true
         pingReceived = false
-        schedulePingCheckTask()
+        schedulePingSendTask()
     }
 
-    internal fun handlePing() {
+    fun handlePing() {
         pingReceived = true
 
-        if (pingWillBeSendByServer) {
+        if (pingSent) {
             sendPingPacket()
         }
     }
 
-    internal fun schedulePingSendTask() {
+    @VisibleForTesting
+    fun checkPing() {
+        if (pingSent && !pingReceived) {
+            protocolController.restartConnection()
+        }
+    }
+
+    fun schedulePingSendTask() {
         val threadHandler = protocolController.threadHandler!!
         val time = SystemClock.uptimeMillis() + PING_SEND_INTERVAL_IN_MILLIS
-
         threadHandler.removeCallbacksAndMessages(PING_SEND_TASK_ID)
         threadHandler.removeCallbacksAndMessages(PING_CHECK_TASK_ID)
         threadHandler.postAtTime(sendPingRunnable, PING_SEND_TASK_ID, time)
     }
 
-    internal fun schedulePingCheckTask() {
+    private fun schedulePingCheckTask() {
         val threadHandler = protocolController.threadHandler!!
         val time = SystemClock.uptimeMillis() + PING_CHECK_INTERVAL_IN_MILLIS
-
         threadHandler.postAtTime(checkPingRunnable, PING_CHECK_TASK_ID, time)
     }
 
-    internal fun isPingPacket(slices: LinkedList<ByteArray>): Boolean {
-        return slices.size == PING_PACKET_SLICES_COUNT && slices[0].contentEquals(PING_PACKET_NAME)
-    }
-
-    internal fun sendPing() {
-        pingWillBeSendByServer = true
+    @VisibleForTesting
+    fun sendPing() {
         pingReceived = false
+        pingSent = true
         sendPingPacket()
         schedulePingCheckTask()
     }
 
-    internal fun sendPingPacket() {
+    private fun sendPingPacket() {
         protocolController.sendPacket(PING_PACKET_NAME)
     }
 
-    internal fun checkPing() {
-        if (pingWillBeSendByServer && !pingReceived) {
-            protocolController.restartConnection()
-        }
+    fun isPingPacket(name: ByteArray): Boolean {
+        return name.contentEquals(PING_PACKET_NAME)
     }
 }

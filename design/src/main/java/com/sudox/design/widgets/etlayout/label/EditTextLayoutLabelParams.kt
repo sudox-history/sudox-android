@@ -12,9 +12,9 @@ internal val labelStyleAttrs = intArrayOf(
         android.R.attr.textStyle,
         android.R.attr.fontFamily)
 
-private const val TEXT_SIZE_ATTR_INDEX = 0
-private const val TEXT_STYLE_ATTR_INDEX = 1
-private const val FONT_FAMILY_ATTR_INDEX = 2
+internal const val TEXT_SIZE_ATTR_INDEX = 0
+internal const val TEXT_STYLE_ATTR_INDEX = 1
+internal const val FONT_FAMILY_ATTR_INDEX = 2
 
 class EditTextLayoutLabelParams {
 
@@ -25,6 +25,7 @@ class EditTextLayoutLabelParams {
     @SuppressLint("ResourceType")
     fun readFromAttrs(typedArray: TypedArray, theme: Resources.Theme) {
         val labelStyleResourceId = typedArray.getResourceId(R.styleable.EditTextLayout_labelStyle, -1)
+
         with(theme.obtainStyledAttributes(labelStyleResourceId, labelStyleAttrs)) {
             val textStyle = getInt(TEXT_STYLE_ATTR_INDEX, -1)
             val fontFamily = getString(FONT_FAMILY_ATTR_INDEX)

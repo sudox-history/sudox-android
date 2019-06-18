@@ -3,9 +3,9 @@ package com.sudox.protocol.helpers
 import java.nio.ByteBuffer
 import java.util.LinkedList
 
-const val BITS_IN_BYTE = 8
-const val SIGNED_VALUE_MASK = 0xFF
-const val LENGTH_HEADER_SIZE_IN_BYTES = 3
+internal const val BITS_IN_BYTE = 8
+internal const val SIGNED_VALUE_MASK = 0xFF
+internal const val LENGTH_HEADER_SIZE_IN_BYTES = 3
 
 fun serializePacket(slices: Array<out ByteArray>): ByteBuffer {
     val slicesLength = slices.sumBy { it.size + LENGTH_HEADER_SIZE_IN_BYTES }

@@ -49,7 +49,7 @@ class HandshakeControllerTest : Assert() {
 
         Mockito.`when`(handshakeController.startHandshake()).thenCallRealMethod()
         Mockito.`when`(handshakeController.resetHandshake()).thenCallRealMethod()
-        Mockito.`when`(handshakeController.handleIncomingMessage(any())).thenCallRealMethod()
+        Mockito.`when`(handshakeController.handleIncomingPacket(any())).thenCallRealMethod()
     }
 
     @Test
@@ -57,69 +57,7 @@ class HandshakeControllerTest : Assert() {
         handshakeController.startHandshake()
 
         Mockito.verify(handshakeController).generateKeysPair()
-        Mockito.verify(protocolController).sendPacket(publicKey)
-
-        val handshakeStatus = HandshakeController::class.java
-                .getDeclaredField("handshakeStatus")
-                .apply { isAccessible = true }
-                .get(handshakeController) as Int
-
-        assertEquals(HandshakeStatus.WAIT_SERVER_PUBLIC_KEY, handshakeStatus)
-    }
-
-    @Test
-    fun testHandleIncomingMessage_when_key_not_waiting() {
-        handshakeController.handleIncomingMessage(LinkedList())
-
-        Mockito.verify(handshakeController, Mockito.never()).handlePublicKeyMessage(any())
-        Mockito.verify(protocolController).restartConnection()
-    }
-
-    @Test
-    fun testHandleIncomingMessage_when_key_waiting() {
-        HandshakeController::class.java
-                .getDeclaredField("handshakeStatus")
-                .apply { isAccessible = true }
-                .set(handshakeController, HandshakeStatus.WAIT_SERVER_PUBLIC_KEY)
-
-        Mockito.`when`(handshakeController.handlePublicKeyMessage(any())).thenReturn(true)
-
-        // Testing when secret key not generated
-        handshakeController.handleIncomingMessage(LinkedList())
-
-        Mockito.verify(protocolController, Mockito.never()).restartConnection()
-        Mockito.verify(handshakeController).handlePublicKeyMessage(any())
-    }
-
-    @Test
-    fun testHandlePublicKeyMessage_not_valid_slices_count() {
-        val slices = LinkedList<ByteArray>()
-
-        PowerMockito.mockStatic(Encryption::class.java)
-        Mockito.`when`(Encryption.calculateSecretKey(Mockito.any(), Mockito.any())).thenReturn(null)
-        Mockito.`when`(handshakeController.handlePublicKeyMessage(any())).thenCallRealMethod()
-
-        slices.add(ByteArray(128))
-        slices.add(ByteArray(128))
-
-        assertFalse(handshakeController.handlePublicKeyMessage(slices))
-        Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(any())
-
-        slices.clear()
-        slices.add(ByteArray(128))
-        slices.add(ByteArray(128))
-        slices.add(ByteArray(128))
-        slices.add(ByteArray(128))
-
-        assertFalse(handshakeController.handlePublicKeyMessage(slices))
-        Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(any())
-
-        val handshakeStatus = HandshakeController::class.java
-                .getDeclaredField("handshakeStatus")
-                .apply { isAccessible = true }
-                .get(handshakeController) as Int
-
-        assertNotEquals(HandshakeStatus.SUCCESS, handshakeStatus)
+        Mockito.verify(protocolController).sendPacket(HANDSHAKE_MESSAGE_NAME, publicKey)
     }
 
     @Test
@@ -135,25 +73,15 @@ class HandshakeControllerTest : Assert() {
         Mockito.`when`(Encryption.checkEqualsAllBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(Encryption.countNonEqualityBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(Encryption.calculateSecretKey(Mockito.any(), Mockito.any())).thenReturn(null)
-        Mockito.`when`(handshakeController.handlePublicKeyMessage(slices)).thenCallRealMethod()
+        Mockito.`when`(handshakeController.handleHandshakePacket(slices)).thenCallRealMethod()
 
         slices.add(publicKey)
         slices.add(publicKeySign)
         slices.add(okHmac)
 
         handshakeController.generateKeysPair()
-        assertFalse(handshakeController.handlePublicKeyMessage(slices))
+        assertFalse(handshakeController.handleHandshakePacket(slices))
         Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(any())
-
-        val handshakeStatus = HandshakeController::class.java
-                .getDeclaredField("handshakeStatus")
-                .apply { isAccessible = true }
-                .get(handshakeController) as Int
-
-        assertNotEquals(HandshakeStatus.SUCCESS, handshakeStatus)
-
-        PowerMockito.verifyStatic(Encryption::class.java)
-        Encryption.verifyMessageWithECDSA(publicKey, publicKeySign)
     }
 
     @Test
@@ -169,25 +97,15 @@ class HandshakeControllerTest : Assert() {
         Mockito.`when`(Encryption.calculateSecretKey(Mockito.any(), Mockito.any())).thenReturn(null)
         Mockito.`when`(Encryption.checkEqualsAllBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(Encryption.countNonEqualityBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
-        Mockito.`when`(handshakeController.handlePublicKeyMessage(slices)).thenCallRealMethod()
+        Mockito.`when`(handshakeController.handleHandshakePacket(slices)).thenCallRealMethod()
 
         slices.add(publicKey)
         slices.add(publicKeySign)
         slices.add(okHmac)
 
         handshakeController.generateKeysPair()
-        assertFalse(handshakeController.handlePublicKeyMessage(slices))
+        assertFalse(handshakeController.handleHandshakePacket(slices))
         Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(any())
-
-        val handshakeStatus = HandshakeController::class.java
-                .getDeclaredField("handshakeStatus")
-                .apply { isAccessible = true }
-                .get(handshakeController) as Int
-
-        assertNotEquals(HandshakeStatus.SUCCESS, handshakeStatus)
-
-        PowerMockito.verifyStatic(Encryption::class.java)
-        Encryption.calculateSecretKey(privateKey, publicKey)
     }
 
     @Test
@@ -205,21 +123,14 @@ class HandshakeControllerTest : Assert() {
         Mockito.`when`(Encryption.calculateHMAC(Mockito.any(), Mockito.any())).thenReturn(Random.nextBytes(128))
         Mockito.`when`(Encryption.checkEqualsAllBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(Encryption.countNonEqualityBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
-        Mockito.`when`(handshakeController.handlePublicKeyMessage(slices)).thenCallRealMethod()
+        Mockito.`when`(handshakeController.handleHandshakePacket(slices)).thenCallRealMethod()
 
         slices.add(publicKey)
         slices.add(publicKeySign)
         slices.add(okHmac)
 
         handshakeController.generateKeysPair()
-        assertFalse(handshakeController.handlePublicKeyMessage(slices))
-
-        val handshakeStatus = HandshakeController::class.java
-                .getDeclaredField("handshakeStatus")
-                .apply { isAccessible = true }
-                .get(handshakeController) as Int
-
-        assertNotEquals(HandshakeStatus.SUCCESS, handshakeStatus)
+        assertFalse(handshakeController.handleHandshakePacket(slices))
         Mockito.verify(protocolController, Mockito.never()).startEncryptedSession(secretKey)
     }
 
@@ -234,30 +145,23 @@ class HandshakeControllerTest : Assert() {
         Mockito.`when`(Encryption.calculateHMAC(Mockito.any(), Mockito.any())).thenReturn(ByteArray(128))
         Mockito.`when`(Encryption.checkEqualsAllBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
         Mockito.`when`(Encryption.countNonEqualityBytes(Mockito.any(), Mockito.any())).thenCallRealMethod()
-        Mockito.`when`(handshakeController.handlePublicKeyMessage(slices)).thenCallRealMethod()
+        Mockito.`when`(handshakeController.handleHandshakePacket(slices)).thenCallRealMethod()
 
         slices.add(ByteArray(128))
         slices.add(ByteArray(128))
         slices.add(ByteArray(128))
 
         handshakeController.generateKeysPair()
-        assertTrue(handshakeController.handlePublicKeyMessage(slices))
-
-        val handshakeStatus = HandshakeController::class.java
-                .getDeclaredField("handshakeStatus")
-                .apply { isAccessible = true }
-                .get(handshakeController) as Int
-
-        assertEquals(HandshakeStatus.SUCCESS, handshakeStatus)
+        assertTrue(handshakeController.handleHandshakePacket(slices))
         Mockito.verify(protocolController).startEncryptedSession(secretKey)
     }
 
     @Test
     fun testResetKeys() {
-        Mockito.`when`(handshakeController.resetKeys()).thenCallRealMethod()
+        Mockito.`when`(handshakeController.resetHandshake()).thenCallRealMethod()
 
         handshakeController.generateKeysPair()
-        handshakeController.resetKeys()
+        handshakeController.resetHandshake()
 
         val publicKey = HandshakeController::class.java
                 .getDeclaredField("ownPublicKey")
@@ -275,12 +179,7 @@ class HandshakeControllerTest : Assert() {
 
     @Test
     fun testResetHandshake() {
-        HandshakeController::class.java
-                .getDeclaredField("handshakeStatus")
-                .apply { isAccessible = true }
-                .set(handshakeController, HandshakeStatus.WAIT_SERVER_PUBLIC_KEY)
-
-        Mockito.`when`(handshakeController.resetKeys()).thenCallRealMethod()
+        Mockito.`when`(handshakeController.resetHandshake()).thenCallRealMethod()
 
         handshakeController.generateKeysPair()
         handshakeController.resetHandshake()
@@ -295,12 +194,6 @@ class HandshakeControllerTest : Assert() {
                 .apply { isAccessible = true }
                 .get(handshakeController)
 
-        val handshakeStatus = HandshakeController::class.java
-                .getDeclaredField("handshakeStatus")
-                .apply { isAccessible = true }
-                .get(handshakeController) as Int
-
-        assertEquals(HandshakeStatus.NOT_STARTED, handshakeStatus)
         assertNull(publicKey)
         assertNull(privateKey)
     }
@@ -334,5 +227,20 @@ class HandshakeControllerTest : Assert() {
 
         PowerMockito.verifyStatic(Encryption::class.java)
         Encryption.removeKeysPair(1)
+    }
+
+    @Test
+    fun testIsHandshakePacket() {
+        Mockito.`when`(handshakeController.isHandshakePacket(any(), any())).thenCallRealMethod()
+
+        val slices = LinkedList<ByteArray>()
+        slices.add(ByteArray(3))
+        slices.add(ByteArray(3))
+        slices.add(ByteArray(3))
+
+        assertTrue(handshakeController.isHandshakePacket(HANDSHAKE_MESSAGE_NAME, slices))
+        assertFalse(handshakeController.isHandshakePacket("H".toByteArray(), slices))
+        assertFalse(handshakeController.isHandshakePacket("H".toByteArray(),  LinkedList()))
+        assertFalse(handshakeController.isHandshakePacket(HANDSHAKE_MESSAGE_NAME,  LinkedList()))
     }
 }

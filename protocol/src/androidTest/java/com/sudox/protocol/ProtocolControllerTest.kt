@@ -2,7 +2,6 @@ package com.sudox.protocol
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.nhaarman.mockitokotlin2.any
-import com.sudox.protocol.controllers.HandshakeStatus
 import com.sudox.protocol.controllers.PING_PACKET_NAME
 import com.sudox.protocol.controllers.PING_SEND_INTERVAL_IN_MILLIS
 import org.junit.After
@@ -65,9 +64,6 @@ class ProtocolControllerTest : Assert() {
 
         assertTrue(isConnectedToServer)
         assertFalse(controller.connectionAttemptFailed)
-
-        // Checking that handshake started
-        assertEquals(HandshakeStatus.WAIT_SERVER_PUBLIC_KEY, controller.handshakeController.handshakeStatus)
     }
 
     @Test
@@ -110,7 +106,7 @@ class ProtocolControllerTest : Assert() {
         // Because onEnded() never calling without session
         controller.messagesController.secretKey = "Fake key!".toByteArray()
         connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
-        Thread.sleep(7000)
+        Thread.sleep(10000)
 
         Mockito.verify(callback).onEnded()
     }
@@ -127,6 +123,7 @@ class ProtocolControllerTest : Assert() {
             socket.tcpNoDelay = true
             socket.getOutputStream().write(pingMessage)
             connectSemaphore.release()
+            Thread.sleep(500)
             socket.getInputStream().read(pingReceivedMessage)
 
             for (i in 0 until 10) {
@@ -144,11 +141,6 @@ class ProtocolControllerTest : Assert() {
 
         Mockito.verify(callback, Mockito.never()).onEnded()
         assertArrayEquals(pingMessage, pingReceivedMessage)
-    }
-
-    @Test
-    fun testAddMessageToQueue() {
-
     }
 
     @Test
@@ -196,10 +188,8 @@ class ProtocolControllerTest : Assert() {
 
         controller.join(RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS)
         assertTrue(isConnectedToServer)
+        assertFalse(controller.messagesController.isSessionStarted())
         assertFalse(controller.connectionAttemptFailed)
-
-        // Checking that handshake started
-        assertEquals(HandshakeStatus.WAIT_SERVER_PUBLIC_KEY, controller.handshakeController.handshakeStatus)
     }
 
     @Test
@@ -222,7 +212,6 @@ class ProtocolControllerTest : Assert() {
         controller.interrupt()
 
         assertFalse(controller.messagesController.isSessionStarted())
-        assertEquals(HandshakeStatus.NOT_STARTED, controller.handshakeController.handshakeStatus)
         Mockito.verify(callback, Mockito.never()).onMessage(any())
         Mockito.verify(callback, Mockito.never()).onEnded()
         Mockito.verify(callback, Mockito.never()).onStarted()
@@ -245,7 +234,6 @@ class ProtocolControllerTest : Assert() {
         controller.join(500)
 
         assertFalse(controller.messagesController.isSessionStarted())
-        assertEquals(HandshakeStatus.NOT_STARTED, controller.handshakeController.handshakeStatus)
         Mockito.verify(callback, Mockito.never()).onMessage(any())
         Mockito.verify(callback).onEnded()
         Mockito.verify(callback, Mockito.never()).onStarted()

@@ -30,7 +30,6 @@ class ProtocolClientTest : Assert() {
     fun testSendMessage_inactive_controller() {
         val callback = Mockito.mock(ProtocolCallback::class.java)
         val protocolClient = ProtocolClient("127.0.0.1", 7899, callback)
-
         assertFalse(protocolClient.sendMessage("test".toByteArray()))
     }
 
