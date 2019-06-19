@@ -26,7 +26,7 @@ SocketListener::~SocketListener() {
 }
 
 void *SocketListener::process(void *listenerData) {
-    auto *instance = (SocketListener*) listenerData;
+    auto *instance = (SocketListener *) listenerData;
 
     while (!instance->interrupted) {
         instance->select();

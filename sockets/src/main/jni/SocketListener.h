@@ -1,5 +1,5 @@
-#ifndef SUDOX_ANDROID_SOCKETMANAGER_H
-#define SUDOX_ANDROID_SOCKETMANAGER_H
+#ifndef SSOCKETS_SOCKETMANAGER_H
+#define SSOCKETS_SOCKETMANAGER_H
 
 #include <sys/epoll.h>
 
@@ -12,12 +12,15 @@ private:
     bool interrupted;
 
     static void *process(void *data);
+
     void select();
+
 public:
     int epoll_fd;
 
     SocketListener();
+
     ~SocketListener();
 };
 
-#endif //SUDOX_ANDROID_SOCKETMANAGER_H
+#endif

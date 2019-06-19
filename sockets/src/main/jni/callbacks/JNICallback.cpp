@@ -3,7 +3,7 @@
 #include "./helpers/JNIHelper.h"
 #include "JNICallback.h"
 
-JNICallback::JNICallback(JNIEnv* env, jobject javaInstance) {
+JNICallback::JNICallback(JNIEnv *env, jobject javaInstance) {
     this->javaReference = env->NewGlobalRef(javaInstance);
     this->javaClass = env->GetObjectClass(this->javaReference);
     this->onConnectedMethod = env->GetMethodID(this->javaClass, "socketConnected", "()V");

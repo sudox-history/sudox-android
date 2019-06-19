@@ -375,11 +375,4 @@ class SocketClientTest {
         assertEquals(availableBefore, receivedCount)
         assertEquals(0, availableAfter)
     }
-
-    @Test(expected = UnsupportedOperationException::class)
-    fun testReceiveBuffer_heap() {
-        val buffer = ByteBuffer.allocate(128)
-
-        client.readToByteBuffer(buffer, 5, 0)
-    }
 }

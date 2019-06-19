@@ -1,5 +1,5 @@
-#ifndef SUDOX_ANDROID_SOCKETCLIENT_H
-#define SUDOX_ANDROID_SOCKETCLIENT_H
+#ifndef SSOCKETS_SOCKETCLIENT_H
+#define SSOCKETS_SOCKETCLIENT_H
 
 #include "SocketListener.h"
 #include "structs/Data.h"
@@ -26,26 +26,35 @@ private:
     int connected = false;
 
     std::optional<sockaddr_in> get_address();
+
     bool init_socket();
+
     bool link_with_listener();
+
 public:
     SocketCallback *callback = nullptr;
 
     SocketClient(std::string host, uint16_t port);
+
     ~SocketClient();
 
     void connect();
+
     void close(bool error);
+
     bool opened();
 
     size_t available();
+
     size_t read(char *&buffer, size_t count);
 
     void send(char *buffer, size_t count);
+
     void adjust_write_flag();
 
     void handle_events(uint32_t events);
+
     bool check_errors();
 };
 
-#endif //SUDOX_ANDROID_SOCKETCLIENT_H
+#endif

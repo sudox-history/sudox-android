@@ -30,7 +30,8 @@ void SocketClient::connect() {
         return;
     }
 
-    if (::connect(socket_fd, (sockaddr *) &socket_addr, sizeof(socket_addr)) == -1 && errno != EINPROGRESS) {
+    if (::connect(socket_fd, (sockaddr *) &socket_addr, sizeof(socket_addr)) == -1 &&
+        errno != EINPROGRESS) {
         close(true);
     } else if (!link_with_listener()) {
         close(true);
@@ -43,8 +44,8 @@ std::optional<sockaddr_in> SocketClient::get_address() {
     if (hostent != nullptr) {
         sockaddr_in socket_addr{};
         socket_addr.sin_port = htons(port),
-        socket_addr.sin_family = AF_INET,
-        socket_addr.sin_addr.s_addr = static_cast<in_addr_t>(*(long *) hostent->h_addr_list[0]);
+                socket_addr.sin_family = AF_INET,
+                socket_addr.sin_addr.s_addr = static_cast<in_addr_t>(*(long *) hostent->h_addr_list[0]);
 
         return {socket_addr};
     }

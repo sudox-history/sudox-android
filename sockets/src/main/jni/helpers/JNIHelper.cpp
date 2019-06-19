@@ -15,7 +15,7 @@ JNI_OnLoad(JavaVM *vm, __unused void *unused) {
 JNIEnv *GetJavaEnv(bool &isThreadAttached) {
     JNIEnv *res;
 
-    if (javaVM->GetEnv((void **)&res, JNI_VERSION_1_6) == JNI_EDETACHED) {
+    if (javaVM->GetEnv((void **) &res, JNI_VERSION_1_6) == JNI_EDETACHED) {
         javaVM->AttachCurrentThread(&res, nullptr);
         isThreadAttached = true;
     }

@@ -1,5 +1,5 @@
-#ifndef SUDOX_ANDROID_JNICALLBACK_H
-#define SUDOX_ANDROID_JNICALLBACK_H
+#ifndef SSOCKETS_JNICALLBACK_H
+#define SSOCKETS_JNICALLBACK_H
 
 #include "SocketCallback.h"
 
@@ -13,10 +13,14 @@ private:
     jmethodID onDisconnectedMethod;
     jmethodID onReceivedMethod;
 public:
-    JNICallback(JNIEnv* env, jobject javaInstance);
+    JNICallback(JNIEnv *env, jobject javaInstance);
+
     ~JNICallback();
+
     void onConnected() override;
+
     void onDisconnected(bool error) override;
+
     void onReceived() override;
 };
 
