@@ -27,6 +27,7 @@ private const val ICON_TEXT_MARGIN_ATTR_INDEX = 6
 private const val ICON_TINT_COLOR_ATTR_INDEX = 7
 
 class NavigationBarButtonParams {
+
     internal var leftPadding: Int = 0
     internal var rightPadding: Int = 0
     internal var iconTintColor: Int = 0

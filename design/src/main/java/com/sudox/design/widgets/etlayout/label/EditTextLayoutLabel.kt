@@ -7,6 +7,7 @@ import android.widget.EditText
 import com.sudox.design.helpers.isTextRtl
 
 class EditTextLayoutLabel(val editText: EditText, val params: EditTextLayoutLabelParams) {
+
     internal var originalText: String? = null
     internal var errorText: String? = null
     internal var bounds = Rect()

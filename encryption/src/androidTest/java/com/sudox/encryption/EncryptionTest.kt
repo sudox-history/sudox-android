@@ -14,6 +14,7 @@ import kotlin.random.Random
 
 @RunWith(AndroidJUnit4::class)
 class EncryptionTest : Assert() {
+
     @Suppress("RegExpAnonymousGroup")
     private val base64Regex = "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?\$".toRegex()
 

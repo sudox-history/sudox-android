@@ -14,6 +14,7 @@ import com.sudox.design.widgets.etlayout.label.EditTextLayoutLabel
 import com.sudox.design.widgets.etlayout.label.EditTextLayoutLabelParams
 
 class EditTextLayout : ViewGroup, TextWatcher {
+
     internal var label: EditTextLayoutLabel? = null
     internal var labelParams = EditTextLayoutLabelParams()
     internal var editText: EditText? = null

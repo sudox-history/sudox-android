@@ -17,6 +17,7 @@ import kotlin.random.Random
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(MessagesController::class, ProtocolController::class, Encryption::class)
 class MessagesControllerTest : Assert() {
+
     private lateinit var messagesController: MessagesController
     private lateinit var protocolController: ProtocolController
 

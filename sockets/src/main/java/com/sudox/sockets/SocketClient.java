@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import java.nio.ByteBuffer;
 
 public class SocketClient {
+
     private final long pointer;
 
     /**

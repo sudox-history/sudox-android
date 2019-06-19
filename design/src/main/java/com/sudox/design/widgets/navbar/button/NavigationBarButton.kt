@@ -17,6 +17,7 @@ import com.sudox.design.helpers.isLayoutRtl
 
 @SuppressLint("ViewConstructor")
 class NavigationBarButton(context: Context, val params: NavigationBarButtonParams) : View(context) {
+
     internal var textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     internal var textBounds = Rect()
     internal var textRes: Int = 0

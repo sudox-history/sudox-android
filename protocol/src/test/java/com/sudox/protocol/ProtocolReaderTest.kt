@@ -12,6 +12,7 @@ import org.mockito.Mockito
 import java.nio.ByteBuffer
 
 class ProtocolReaderTest : Assert() {
+
     private lateinit var socketClient: SocketClient
     private lateinit var reader: ProtocolReader
 

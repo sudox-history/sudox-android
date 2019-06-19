@@ -5,6 +5,7 @@ import org.junit.Test
 import java.nio.ByteBuffer
 
 class SerializationHelperTest : Assert() {
+
     @Test
     fun testIntBE() {
         val first = 255.toBytesBE(1)

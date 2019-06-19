@@ -17,6 +17,7 @@ import kotlin.random.Random
 
 @RunWith(AndroidJUnit4::class)
 class SocketClientTest {
+
     private var port: Int = 0
     private lateinit var client: SocketClient
     private lateinit var serverSocket: ServerSocket

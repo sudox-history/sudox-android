@@ -10,6 +10,7 @@ import com.sudox.messenger.android.core.controller.AppNavigationController
 import kotlinx.android.synthetic.main.activity_app.*
 
 class AppActivityImpl : AppCompatActivity(), AppActivity {
+
     private var navbarController: AppNavbarController? = null
     private var navigationController: AppNavigationController? = null
 

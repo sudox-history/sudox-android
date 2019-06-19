@@ -9,6 +9,7 @@ import com.sudox.messenger.R
 import com.sudox.messenger.android.core.controller.AppNavbarController
 
 class AppNavbarControllerImpl(val navigationBar: NavigationBar) : AppNavbarController {
+
     override fun getButtonStart(): NavigationBarButton {
         return navigationBar.buttonStart!!
     }

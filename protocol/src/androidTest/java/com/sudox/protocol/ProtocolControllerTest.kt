@@ -19,6 +19,7 @@ import kotlin.random.Random
 
 @RunWith(AndroidJUnit4::class)
 class ProtocolControllerTest : Assert() {
+
     private var port: Int = 0
     private lateinit var client: ProtocolClient
     private lateinit var controller: ProtocolController

@@ -19,6 +19,7 @@ private const val TEXT_COLOR_ATTR_INDEX = 2
 private const val FONT_FAMILY_ATTR_INDEX = 3
 
 class NavigationBarTitleParams {
+
     internal var textTypeface: Typeface? = null
     internal var textColor: Int = 0
     internal var textSize: Float = 0F

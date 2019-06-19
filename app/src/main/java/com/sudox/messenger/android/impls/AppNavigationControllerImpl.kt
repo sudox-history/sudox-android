@@ -13,6 +13,7 @@ class AppNavigationControllerImpl(
     val containerId: Int,
     val fragmentManager: FragmentManager
 ) : AppNavigationController {
+
     override fun showPreviousFragment(): Boolean {
         return fragmentManager.popBackStackImmediate()
     }

@@ -6,6 +6,7 @@ import com.sudox.sockets.SocketClient
 import java.nio.ByteBuffer
 
 class ProtocolReader(val socketClient: SocketClient) {
+
     private var packetDataLengthInBytes: Int = 0
     private var packetDataBuffer: ByteBuffer? = null
 
