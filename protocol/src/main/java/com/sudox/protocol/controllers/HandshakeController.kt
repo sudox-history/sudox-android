@@ -41,7 +41,7 @@ class HandshakeController(val protocolController: ProtocolController) {
 
         val secretKey = Encryption.calculateSecretKey(ownPrivateKey!!, serverPublicKey)
                 ?: return false
-        val hmac = Encryption.calculateHMAC(secretKey, HMAC_VALIDATION_WORD)
+        val hmac = Encryption.computeHMAC(secretKey, HMAC_VALIDATION_WORD)
         if (!Encryption.checkEqualsAllBytes(hmac, serverHmac)) {
             return false
         }

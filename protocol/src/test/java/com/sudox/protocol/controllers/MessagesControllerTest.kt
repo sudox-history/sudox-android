@@ -64,7 +64,7 @@ class MessagesControllerTest : Assert() {
                 .set(messagesController, secretKey)
 
         PowerMockito.mockStatic(Encryption::class.java)
-        Mockito.`when`(Encryption.calculateHMAC(Mockito.any(), Mockito.any())).thenReturn(hmac)
+        Mockito.`when`(Encryption.computeHMAC(Mockito.any(), Mockito.any())).thenReturn(hmac)
         Mockito.`when`(Encryption.countNonEqualityBytes(any(), any())).thenCallRealMethod()
         Mockito.`when`(Encryption.checkEqualsAllBytes(any(), any())).thenCallRealMethod()
         Mockito.`when`(messagesController.handleEncryptedMessage(any())).thenCallRealMethod()
@@ -81,7 +81,7 @@ class MessagesControllerTest : Assert() {
         Mockito.verify(protocolController, Mockito.never()).submitSessionMessageEvent(any())
 
         PowerMockito.verifyStatic(Encryption::class.java)
-        Encryption.calculateHMAC(secretKey, cipher)
+        Encryption.computeHMAC(secretKey, cipher)
     }
 
     @Test
@@ -98,7 +98,7 @@ class MessagesControllerTest : Assert() {
                 .set(messagesController, secretKey)
 
         PowerMockito.mockStatic(Encryption::class.java)
-        Mockito.`when`(Encryption.calculateHMAC(Mockito.any(), Mockito.any())).thenReturn(serverCipherHmac)
+        Mockito.`when`(Encryption.computeHMAC(Mockito.any(), Mockito.any())).thenReturn(serverCipherHmac)
         Mockito.`when`(Encryption.countNonEqualityBytes(any(), any())).thenCallRealMethod()
         Mockito.`when`(Encryption.checkEqualsAllBytes(any(), any())).thenCallRealMethod()
         Mockito.`when`(Encryption.decryptWithAES(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(message)
@@ -146,7 +146,7 @@ class MessagesControllerTest : Assert() {
         PowerMockito.mockStatic(Encryption::class.java)
         Mockito.`when`(Encryption.generateBytes(any())).thenReturn(iv)
         Mockito.`when`(Encryption.encryptWithAES(any(), any(), any())).thenReturn(cipher)
-        Mockito.`when`(Encryption.calculateHMAC(secretKey, cipher)).thenReturn(cipherHmac)
+        Mockito.`when`(Encryption.computeHMAC(secretKey, cipher)).thenReturn(cipherHmac)
         Mockito.`when`(messagesController.sendEncryptedMessage(any())).thenCallRealMethod()
         Mockito.`when`(messagesController.isSessionStarted()).thenReturn(true)
 
@@ -160,7 +160,7 @@ class MessagesControllerTest : Assert() {
         Encryption.encryptWithAES(secretKey, iv, message)
 
         PowerMockito.verifyStatic(Encryption::class.java)
-        Encryption.calculateHMAC(secretKey, cipher)
+        Encryption.computeHMAC(secretKey, cipher)
     }
 
     @Test

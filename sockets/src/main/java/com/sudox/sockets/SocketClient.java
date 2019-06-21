@@ -15,7 +15,9 @@ public class SocketClient {
 
     public interface ClientCallback {
         void socketConnected();
+
         void socketClosed(boolean error);
+
         void socketReceive();
     }
 
@@ -53,7 +55,7 @@ public class SocketClient {
     /**
      * Returns count of read bytes.
      * Returns -1 if error thrown.
-     *
+     * <p>
      * P.S.: Supports only direct buffers!
      */
     public int readToByteBuffer(@NonNull ByteBuffer buffer, int count, int offset) {
@@ -79,13 +81,22 @@ public class SocketClient {
     }
 
     private native long createNativeInstance(String host, short port);
+
     private native void connect(long pointer);
+
     private native void close(long pointer, boolean error);
+
     private native boolean opened(long pointer);
+
     private native void send(long pointer, byte[] data);
+
     private native void sendBuffer(long pointer, ByteBuffer buffer, int length);
+
     private native byte[] readBytes(long pointer, int count);
+
     private native int readToBuffer(long pointer, ByteBuffer buffer, int count, int offset);
+
     private native int availableBytes(long pointer);
+
     private native void callback(long pointer, ClientCallback callback);
 }

@@ -33,7 +33,7 @@ class MessagesController(val protocolController: ProtocolController) {
         val cipher = slices.remove()
         val serverCipherHmac = slices.remove()
 
-        val cipherHmac = Encryption.calculateHMAC(secretKey!!, cipher)
+        val cipherHmac = Encryption.computeHMAC(secretKey!!, cipher)
         if (!Encryption.checkEqualsAllBytes(serverCipherHmac, cipherHmac)) {
             return false
         }
@@ -54,7 +54,7 @@ class MessagesController(val protocolController: ProtocolController) {
 
         val iv = Encryption.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
         val cipher = Encryption.encryptWithAES(secretKey!!, iv, message)
-        val cipherHmac = Encryption.calculateHMAC(secretKey!!, cipher)
+        val cipherHmac = Encryption.computeHMAC(secretKey!!, cipher)
         protocolController.sendPacket(ENCRYPTED_MESSAGE_NAME, iv, cipher, cipherHmac)
         return true
     }
