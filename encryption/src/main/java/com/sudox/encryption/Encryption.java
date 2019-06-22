@@ -32,4 +32,6 @@ public class Encryption {
 
     @Nullable
     public static native byte[] finishECDH(long keyPairPointer, @NonNull byte[] publicKey);
+
+    public static native void closeECDH(long keyPairPointer);
 }

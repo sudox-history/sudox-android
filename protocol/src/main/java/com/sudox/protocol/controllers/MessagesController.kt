@@ -1,9 +1,8 @@
 package com.sudox.protocol.controllers
 
-import androidx.annotation.VisibleForTesting
+import com.sudox.common.structures.QueueList
 import com.sudox.encryption.Encryption
 import com.sudox.protocol.ProtocolController
-import java.util.LinkedList
 
 internal val ENCRYPTED_MESSAGE_NAME = byteArrayOf(0, 10, 0)
 internal const val ENCRYPTED_MESSAGE_SLICE_COUNT = 3
@@ -17,7 +16,7 @@ class MessagesController(val protocolController: ProtocolController) {
         this.secretKey = secretKey
     }
 
-    fun handleIncomingMessage(slices: LinkedList<ByteArray>) {
+    fun handleIncomingMessage(slices: QueueList<ByteArray>) {
         if (!handleEncryptedMessage(slices)) {
             protocolController.restartConnection()
         }
@@ -27,14 +26,12 @@ class MessagesController(val protocolController: ProtocolController) {
      * Returns true if message successfully decrypted
      * Returns false if error thrown
      */
-    @VisibleForTesting
-    fun handleEncryptedMessage(slices: LinkedList<ByteArray>): Boolean {
-        val iv = slices.remove()
-        val cipher = slices.remove()
-        val serverCipherHmac = slices.remove()
+    private fun handleEncryptedMessage(slices: QueueList<ByteArray>): Boolean {
+        val iv = slices.pop()!!
+        val cipher = slices.pop()!!
+        val hmac = slices.pop()!!
 
-        val cipherHmac = Encryption.computeHMAC(secretKey!!, cipher)
-        if (!Encryption.checkEqualsAllBytes(serverCipherHmac, cipherHmac)) {
+        if (!Encryption.verifyHMAC(secretKey!!, cipher, hmac)) {
             return false
         }
 
@@ -43,24 +40,20 @@ class MessagesController(val protocolController: ProtocolController) {
         return true
     }
 
-    /**
-     * Returns false if message not sent
-     * Returns true if message sent
-     */
-    fun sendEncryptedMessage(message: ByteArray): Boolean {
+    fun sendMessage(message: ByteArray): Boolean {
         if (!isSessionStarted()) {
             return false
         }
 
         val iv = Encryption.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
-        val cipher = Encryption.encryptWithAES(secretKey!!, iv, message)
-        val cipherHmac = Encryption.computeHMAC(secretKey!!, cipher)
-        protocolController.sendPacket(ENCRYPTED_MESSAGE_NAME, iv, cipher, cipherHmac)
+        val cipher = Encryption.encryptWithAES(secretKey!!, iv, message)!!
+        val hmac = Encryption.computeHMAC(secretKey!!, cipher)
+        protocolController.sendPacket(ENCRYPTED_MESSAGE_NAME, iv, cipher, hmac)
         return true
     }
 
-    fun isEncryptedMessagePacket(name: ByteArray, slices: LinkedList<ByteArray>): Boolean {
-        return slices.size == ENCRYPTED_MESSAGE_SLICE_COUNT && name.contentEquals(ENCRYPTED_MESSAGE_NAME)
+    fun isEncryptedMessagePacket(name: ByteArray, slices: QueueList<ByteArray>): Boolean {
+        return slices.size() == ENCRYPTED_MESSAGE_SLICE_COUNT && name.contentEquals(ENCRYPTED_MESSAGE_NAME)
     }
 
     fun isSessionStarted(): Boolean {

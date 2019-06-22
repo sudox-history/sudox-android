@@ -1,7 +1,6 @@
 package com.sudox.protocol.controllers
 
 import android.os.SystemClock
-import androidx.annotation.VisibleForTesting
 import com.sudox.protocol.ProtocolController
 
 internal val PING_PACKET_NAME = byteArrayOf(10, 0, 0)
@@ -17,8 +16,7 @@ class PingController(val protocolController: ProtocolController) {
     private var sendPingRunnable = ::sendPing
     private var checkPingRunnable = ::checkPing
 
-    fun startPingCycle() {
-        // First ping will be send by server
+    fun startPing() {
         pingSent = true
         pingReceived = false
         schedulePingSendTask()
@@ -32,8 +30,7 @@ class PingController(val protocolController: ProtocolController) {
         }
     }
 
-    @VisibleForTesting
-    fun checkPing() {
+    private fun checkPing() {
         if (pingSent && !pingReceived) {
             protocolController.restartConnection()
         }
@@ -53,8 +50,7 @@ class PingController(val protocolController: ProtocolController) {
         threadHandler.postAtTime(checkPingRunnable, PING_CHECK_TASK_ID, time)
     }
 
-    @VisibleForTesting
-    fun sendPing() {
+    private fun sendPing() {
         pingReceived = false
         pingSent = true
         sendPingPacket()

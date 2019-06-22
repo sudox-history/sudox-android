@@ -1,47 +1,35 @@
 package com.sudox.protocol.helpers
 
+import com.sudox.common.structures.QueueList
 import java.nio.ByteBuffer
-import java.util.LinkedList
 
 internal const val BITS_IN_BYTE = 8
 internal const val SIGNED_VALUE_MASK = 0xFF
-internal const val LENGTH_HEADER_SIZE_IN_BYTES = 3
+internal const val LENGTH_HEADER_SIZE_IN_BYTES = 2
 
 fun serializePacket(slices: Array<out ByteArray>): ByteBuffer {
-    var slicesLength = 0
-
-    for (slice in slices) {
-        slicesLength += slice.size + LENGTH_HEADER_SIZE_IN_BYTES
-    }
-
+    val slicesLength = slices.sumBy { it.size + LENGTH_HEADER_SIZE_IN_BYTES }
     val packetLength = slicesLength + LENGTH_HEADER_SIZE_IN_BYTES
     val buffer = ByteBuffer.allocateDirect(packetLength)
 
     buffer.writeIntBE(packetLength, LENGTH_HEADER_SIZE_IN_BYTES)
-
-    for (slice in slices) {
-        buffer.writePacketSlice(slice)
-    }
-
+    slices.forEach { buffer.writePacketSlice(it) }
     buffer.flip()
 
     return buffer
 }
 
-/**
- * Returns list of slices if deserialization successfully completed.
- * Returns null if an error occurs.
- */
-fun deserializePacketSlices(buffer: ByteBuffer): LinkedList<ByteArray>? {
-    val slices = LinkedList<ByteArray>()
-    var currentIndex = 0
+fun deserializePacket(buffer: ByteBuffer): QueueList<ByteArray>? {
+    val slices = QueueList<ByteArray>()
+    val length = buffer.limit()
+    var index = 0
 
-    while (currentIndex + LENGTH_HEADER_SIZE_IN_BYTES <= buffer.limit()) {
+    while (index + LENGTH_HEADER_SIZE_IN_BYTES <= length) {
         val slice = buffer.readPacketSlice() ?: return null
+        slices.push(slice)
 
-        slices.addLast(slice)
-        currentIndex += LENGTH_HEADER_SIZE_IN_BYTES
-        currentIndex += slice.size
+        index += LENGTH_HEADER_SIZE_IN_BYTES
+        index += slice.size
     }
 
     return slices
@@ -52,10 +40,6 @@ fun ByteBuffer.writePacketSlice(it: ByteArray) {
     put(it)
 }
 
-/**
- * Returns bytes of slice if deserialization successfully completed.
- * Returns null if an error occurs.
- */
 fun ByteBuffer.readPacketSlice(): ByteArray? {
     val length = readIntBE(LENGTH_HEADER_SIZE_IN_BYTES)
 

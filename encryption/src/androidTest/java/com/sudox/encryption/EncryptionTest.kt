@@ -150,4 +150,10 @@ class EncryptionTest : Assert() {
         val secret = Encryption.finishECDH(session.keyPairPointer, ByteArray(0))
         assertNull(secret)
     }
+
+    @Test
+    fun testCloseECDH() {
+        val session = Encryption.startECDH()
+        Encryption.closeECDH(session.keyPairPointer)
+    }
 }

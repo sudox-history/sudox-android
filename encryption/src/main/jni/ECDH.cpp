@@ -46,7 +46,8 @@ Java_com_sudox_encryption_Encryption_startECDH(JNIEnv *env, __unused jclass type
 
 extern "C"
 JNIEXPORT jbyteArray JNICALL
-Java_com_sudox_encryption_Encryption_finishECDH(JNIEnv *env, jclass type, jlong keyPairPointer, jbyteArray _publicKey) {
+Java_com_sudox_encryption_Encryption_finishECDH(JNIEnv *env, __unused jclass type, jlong keyPairPointer,
+                                                jbyteArray _publicKey) {
     auto *keypair = reinterpret_cast<EVP_PKEY *>(keyPairPointer);
     EC_KEY *eckey = EVP_PKEY_get1_EC_KEY(keypair);
 
@@ -102,4 +103,11 @@ Java_com_sudox_encryption_Encryption_finishECDH(JNIEnv *env, jclass type, jlong 
     jbyteArray res = env->NewByteArray(secretsize);
     env->SetByteArrayRegion(res, 0, secretsize, reinterpret_cast<jbyte *>(secret));
     return res;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_sudox_encryption_Encryption_closeECDH(__unused JNIEnv *env, __unused jclass type, jlong keyPairPointer) {
+    auto *keypair = reinterpret_cast<EVP_PKEY *>(keyPairPointer);
+    EVP_PKEY_free(keypair);
 }

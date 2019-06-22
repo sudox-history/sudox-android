@@ -1,17 +1,15 @@
 package com.sudox.protocol
 
-import androidx.annotation.VisibleForTesting
+import com.sudox.common.structures.QueueList
 import com.sudox.common.threading.ControllerThread
 import com.sudox.protocol.controllers.HandshakeController
 import com.sudox.protocol.controllers.MessagesController
 import com.sudox.protocol.controllers.PingController
-import com.sudox.protocol.helpers.deserializePacketSlices
+import com.sudox.protocol.helpers.deserializePacket
 import com.sudox.protocol.helpers.serializePacket
 import com.sudox.sockets.SocketClient
-import java.util.LinkedList
 
-@VisibleForTesting
-const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
+internal const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
 
 class ProtocolController(
     var protocolClient: ProtocolClient
@@ -24,31 +22,28 @@ class ProtocolController(
     private val protocolReader = ProtocolReader(socketClient)
     private val handshakeController = HandshakeController(this)
     private val pingController = PingController(this)
-
-    @VisibleForTesting
-    var connectionAttemptFailed: Boolean = true
-    @VisibleForTesting
-    val messagesController = MessagesController(this)
+    private var connectionAttemptFailed: Boolean = true
+    private val messagesController = MessagesController(this)
 
     override fun threadStart() = submitTask {
         socketClient.connect()
     }
 
     override fun threadStop() = submitTask {
-        socketClient.close(false)
+        closeConnection()
     }
 
     override fun socketConnected() = submitTask {
         connectionAttemptFailed = false
-        pingController.startPingCycle()
+        pingController.startPing()
         handshakeController.startHandshake()
     }
 
     override fun socketReceive() {
         val buffer = protocolReader.readPacketBytes() ?: return
-        val slices = deserializePacketSlices(buffer) ?: return
+        val slices = deserializePacket(buffer) ?: return
 
-        if (slices.isEmpty()) {
+        if (slices.size() == 0) {
             return
         }
 
@@ -56,8 +51,8 @@ class ProtocolController(
         handlePacket(slices)
     }
 
-    private fun handlePacket(slices: LinkedList<ByteArray>) {
-        val name = slices.remove()
+    private fun handlePacket(slices: QueueList<ByteArray>) {
+        val name = slices.pop()!!
 
         if (pingController.isPingPacket(name)) {
             pingController.handlePing()
@@ -66,7 +61,7 @@ class ProtocolController(
         }
     }
 
-    private fun addMessageToQueue(name: ByteArray, slices: LinkedList<ByteArray>) = submitTask {
+    private fun addMessageToQueue(name: ByteArray, slices: QueueList<ByteArray>) = submitTask {
         if (messagesController.isSessionStarted() && messagesController.isEncryptedMessagePacket(name, slices)) {
             messagesController.handleIncomingMessage(slices)
         } else if (handshakeController.isHandshakePacket(name, slices)) {
@@ -95,11 +90,11 @@ class ProtocolController(
      * Returns false if message not sent
      * Returns true if message sent
      */
-    fun sendEncryptedMessage(message: ByteArray): Boolean {
-        return messagesController.sendEncryptedMessage(message)
+    internal fun sendMessage(message: ByteArray): Boolean {
+        return messagesController.sendMessage(message)
     }
 
-    fun sendPacket(vararg slices: ByteArray) {
+    internal fun sendPacket(vararg slices: ByteArray) {
         socketClient.sendBuffer(serializePacket(slices))
     }
 
@@ -134,11 +129,11 @@ class ProtocolController(
         }
     }
 
-    fun submitSessionMessageEvent(message: ByteArray) {
+    internal fun submitSessionMessageEvent(message: ByteArray) {
         protocolClient.callback.onMessage(message)
     }
 
-    fun closeConnection() {
+    internal fun closeConnection() {
         socketClient.close(false)
     }
 

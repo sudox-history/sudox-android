@@ -31,7 +31,7 @@ class ProtocolClient(
             return false
         }
 
-        return protocolController!!.sendEncryptedMessage(message)
+        return protocolController!!.sendMessage(message)
     }
 
     private fun getController(): ProtocolController {
