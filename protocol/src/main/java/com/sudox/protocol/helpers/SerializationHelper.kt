@@ -12,8 +12,8 @@ fun serializePacket(slices: Array<out ByteArray>): ByteBuffer {
     val packetLength = slicesLength + LENGTH_HEADER_SIZE_IN_BYTES
     val buffer = ByteBuffer.allocateDirect(packetLength)
 
-    buffer.writeIntBE(packetLength, LENGTH_HEADER_SIZE_IN_BYTES)
-    slices.forEach { buffer.writePacketSlice(it) }
+    buffer.putIntBE(packetLength, LENGTH_HEADER_SIZE_IN_BYTES)
+    slices.forEach { buffer.putPacketSlice(it) }
     buffer.flip()
 
     return buffer
@@ -35,8 +35,8 @@ fun deserializePacket(buffer: ByteBuffer): QueueList<ByteArray>? {
     return slices
 }
 
-fun ByteBuffer.writePacketSlice(it: ByteArray) {
-    writeIntBE(it.size, LENGTH_HEADER_SIZE_IN_BYTES)
+fun ByteBuffer.putPacketSlice(it: ByteArray) {
+    putIntBE(it.size, LENGTH_HEADER_SIZE_IN_BYTES)
     put(it)
 }
 
@@ -50,7 +50,24 @@ fun ByteBuffer.readPacketSlice(): ByteArray? {
     }
 }
 
-fun ByteArray.toIntFromBE(): Int {
+fun ByteBuffer.readIntBE(n: Int): Int {
+    return ByteArray(n)
+            .apply { get(this) }
+            .readIntBE()
+}
+
+fun ByteBuffer.putIntBE(value: Int, n: Int) {
+    val bytes = ByteArray(n)
+    var index = 0
+
+    for (i in n - 1 downTo 0) {
+        bytes[index++] = (value shr (i * BITS_IN_BYTE)).toByte()
+    }
+
+    put(bytes)
+}
+
+fun ByteArray.readIntBE(): Int {
     var bytesIndex = 0
     var value = 0
 
@@ -63,25 +80,4 @@ fun ByteArray.toIntFromBE(): Int {
     }
 
     return value
-}
-
-fun ByteBuffer.readIntBE(n: Int): Int {
-    return ByteArray(n)
-            .apply { get(this) }
-            .toIntFromBE()
-}
-
-fun Int.toBytesBE(n: Int): ByteArray {
-    val bytes = ByteArray(n)
-    var bytesIndex = 0
-
-    for (i in n - 1 downTo 0) {
-        bytes[bytesIndex++] = (this shr (i * BITS_IN_BYTE)).toByte()
-    }
-
-    return bytes
-}
-
-fun ByteBuffer.writeIntBE(value: Int, n: Int) {
-    put(value.toBytesBE(n))
 }

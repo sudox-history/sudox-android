@@ -1,7 +1,7 @@
 package com.sudox.protocol
 
 import com.sudox.common.structures.QueueList
-import com.sudox.common.threading.ControllerThread
+import com.sudox.common.threading.SequenceThread
 import com.sudox.protocol.controllers.HandshakeController
 import com.sudox.protocol.controllers.MessagesController
 import com.sudox.protocol.controllers.PingController
@@ -13,7 +13,7 @@ internal const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
 
 class ProtocolController(
     var protocolClient: ProtocolClient
-) : ControllerThread("STIPS Worker"), SocketClient.ClientCallback {
+) : SequenceThread("Sudox Protocol Controller"), SocketClient.ClientCallback {
 
     private val socketClient = SocketClient(protocolClient.host, protocolClient.port).apply {
         callback(this@ProtocolController)
@@ -42,13 +42,11 @@ class ProtocolController(
     override fun socketReceive() {
         val buffer = protocolReader.readPacketBytes() ?: return
         val slices = deserializePacket(buffer) ?: return
-
-        if (slices.size() == 0) {
-            return
-        }
-
         pingController.schedulePingSendTask()
-        handlePacket(slices)
+
+        if (slices.size() > 0) {
+            handlePacket(slices)
+        }
     }
 
     private fun handlePacket(slices: QueueList<ByteArray>) {
@@ -77,19 +75,21 @@ class ProtocolController(
         handshakeController.resetHandshake()
         messagesController.resetSession()
 
-        if (sessionStarted) {
-            submitSessionEndedEvent()
+        if (sessionStarted && !connectionAttemptFailed) {
+            protocolClient.callback.onEnded()
         }
 
         if (needRestart) {
-            submitReconnectTask()
+            if (connectionAttemptFailed) {
+                submitDelayedTask(RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS) { socketClient.connect() }
+            } else {
+                submitTask { socketClient.connect() }
+            }
+
+            connectionAttemptFailed = true
         }
     }
 
-    /**
-     * Returns false if message not sent
-     * Returns true if message sent
-     */
     internal fun sendMessage(message: ByteArray): Boolean {
         return messagesController.sendMessage(message)
     }
@@ -98,35 +98,9 @@ class ProtocolController(
         socketClient.sendBuffer(serializePacket(slices))
     }
 
-    /**
-     * Submits reconnect task following rules:
-     *
-     * 1) if connection dropped - install connection now
-     * 2) if previous connection attempt failed - install connection thought interval
-     */
-    private fun submitReconnectTask() {
-        if (connectionAttemptFailed) {
-            submitDelayedTask(RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS) { socketClient.connect() }
-        } else {
-            submitTask { socketClient.connect() }
-        }
-
-        connectionAttemptFailed = true
-    }
-
     internal fun startEncryptedSession(secretKey: ByteArray) {
         messagesController.startSession(secretKey)
-        submitSessionStartedEvent()
-    }
-
-    private fun submitSessionStartedEvent() {
         protocolClient.callback.onStarted()
-    }
-
-    private fun submitSessionEndedEvent() {
-        if (!connectionAttemptFailed) {
-            protocolClient.callback.onEnded()
-        }
     }
 
     internal fun submitSessionMessageEvent(message: ByteArray) {

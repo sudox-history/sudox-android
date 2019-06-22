@@ -22,10 +22,6 @@ class MessagesController(val protocolController: ProtocolController) {
         }
     }
 
-    /**
-     * Returns true if message successfully decrypted
-     * Returns false if error thrown
-     */
     private fun handleEncryptedMessage(slices: QueueList<ByteArray>): Boolean {
         val iv = slices.pop()!!
         val cipher = slices.pop()!!

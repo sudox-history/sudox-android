@@ -40,7 +40,7 @@ class HandshakeController(val protocolController: ProtocolController) {
             return true
         }
 
-        return true
+        return false
     }
 
     fun isHandshakePacket(name: ByteArray, slices: QueueList<ByteArray>): Boolean {

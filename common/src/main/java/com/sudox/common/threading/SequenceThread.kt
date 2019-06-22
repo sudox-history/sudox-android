@@ -3,15 +3,12 @@ package com.sudox.common.threading
 import android.os.Handler
 import android.os.HandlerThread
 
-abstract class ControllerThread : HandlerThread {
+abstract class SequenceThread(name: String) : HandlerThread(name) {
 
-    var threadHandler: Handler? = null
-
-    constructor(name: String) : super(name)
-    constructor(name: String, priority: Int) : super(name, priority)
+    var handler: Handler? = null
 
     override fun onLooperPrepared() {
-        threadHandler = Handler(looper)
+        handler = Handler(looper)
         threadStart()
     }
 
@@ -26,19 +23,19 @@ abstract class ControllerThread : HandlerThread {
 
     fun submitTask(runnable: () -> (Unit)) {
         if (!isInterrupted) {
-            threadHandler?.post(runnable)
+            handler?.post(runnable)
         }
     }
 
     fun submitDelayedTask(delay: Long, runnable: () -> (Unit)) {
         if (!isInterrupted) {
-            threadHandler?.postDelayed(runnable, delay)
+            handler?.postDelayed(runnable, delay)
         }
     }
 
     fun removeAllScheduledTasks() {
         if (!isInterrupted) {
-            threadHandler?.removeCallbacksAndMessages(0)
+            handler?.removeCallbacksAndMessages(0)
         }
     }
 

@@ -21,11 +21,7 @@ class ProtocolClient(
             protocolController = null
         }
     }
-
-    /**
-     * Returns false if message not sent
-     * Returns true if message sent
-     */
+    
     fun sendMessage(message: ByteArray): Boolean {
         if (!isControllerAlive()) {
             return false

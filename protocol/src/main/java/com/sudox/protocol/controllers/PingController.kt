@@ -4,8 +4,8 @@ import android.os.SystemClock
 import com.sudox.protocol.ProtocolController
 
 internal val PING_PACKET_NAME = byteArrayOf(10, 0, 0)
-internal const val PING_SEND_INTERVAL_IN_MILLIS = 6000L
-internal const val PING_CHECK_INTERVAL_IN_MILLIS = 2000L
+internal const val PING_SEND_TIMEOUT_IN_MILLIS = 6000L
+internal const val PING_CHECK_TIMEOUT_IN_MILLIS = 1000L
 internal const val PING_SEND_TASK_ID = 0
 internal const val PING_CHECK_TASK_ID = 1
 
@@ -37,16 +37,16 @@ class PingController(val protocolController: ProtocolController) {
     }
 
     fun schedulePingSendTask() {
-        val threadHandler = protocolController.threadHandler!!
-        val time = SystemClock.uptimeMillis() + PING_SEND_INTERVAL_IN_MILLIS
+        val threadHandler = protocolController.handler!!
+        val time = SystemClock.uptimeMillis() + PING_SEND_TIMEOUT_IN_MILLIS
         threadHandler.removeCallbacksAndMessages(PING_SEND_TASK_ID)
         threadHandler.removeCallbacksAndMessages(PING_CHECK_TASK_ID)
         threadHandler.postAtTime(sendPingRunnable, PING_SEND_TASK_ID, time)
     }
 
     private fun schedulePingCheckTask() {
-        val threadHandler = protocolController.threadHandler!!
-        val time = SystemClock.uptimeMillis() + PING_CHECK_INTERVAL_IN_MILLIS
+        val threadHandler = protocolController.handler!!
+        val time = SystemClock.uptimeMillis() + PING_CHECK_TIMEOUT_IN_MILLIS
         threadHandler.postAtTime(checkPingRunnable, PING_CHECK_TASK_ID, time)
     }
 
