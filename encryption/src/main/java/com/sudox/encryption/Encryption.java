@@ -14,6 +14,8 @@ public class Encryption {
     @NotNull
     public static native byte[] generateBytes(int count);
 
+    public static native int generateInt(int start, int end);
+
     @Nullable
     public static native byte[] encryptWithAES(@NonNull byte[] key, @NonNull byte[] iv, @NonNull byte[] message);
 

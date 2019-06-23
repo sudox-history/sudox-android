@@ -21,6 +21,13 @@ class EncryptionTest : Assert() {
     }
 
     @Test
+    fun testGenerateByte() {
+        for (i in 0 until 100) {
+            assertTrue(Encryption.generateInt(16, 32) in 16 .. 32)
+        }
+    }
+
+    @Test
     fun testCalculateHMAC() {
         val key = "012345678901234567890123".toByteArray()
         val message = "Hello Sudox!".toByteArray()

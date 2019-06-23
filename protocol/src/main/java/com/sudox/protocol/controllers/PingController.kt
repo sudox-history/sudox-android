@@ -3,7 +3,7 @@ package com.sudox.protocol.controllers
 import android.os.SystemClock
 import com.sudox.protocol.ProtocolController
 
-internal val PING_PACKET_NAME = byteArrayOf(10, 0, 0)
+internal val PING_PACKET_NAME = "png".toByteArray()
 internal const val PING_SEND_TIMEOUT_IN_MILLIS = 6000L
 internal const val PING_CHECK_TIMEOUT_IN_MILLIS = 1000L
 internal const val PING_SEND_TASK_ID = 0
@@ -11,27 +11,25 @@ internal const val PING_CHECK_TASK_ID = 1
 
 class PingController(val protocolController: ProtocolController) {
 
-    private var pingSent: Boolean = false
-    private var pingReceived: Boolean = false
+    private var alive: Boolean = false
     private var sendPingRunnable = ::sendPing
     private var checkPingRunnable = ::checkPing
 
     fun startPing() {
-        pingSent = true
-        pingReceived = false
+        alive = true
         schedulePingSendTask()
     }
 
     fun handlePing() {
-        pingReceived = true
-
-        if (pingSent) {
+        if (alive) {
             sendPingPacket()
+        } else {
+            alive = true
         }
     }
 
     private fun checkPing() {
-        if (pingSent && !pingReceived) {
+        if (!alive) {
             protocolController.restartConnection()
         }
     }
@@ -51,8 +49,7 @@ class PingController(val protocolController: ProtocolController) {
     }
 
     private fun sendPing() {
-        pingReceived = false
-        pingSent = true
+        alive = false
         sendPingPacket()
         schedulePingCheckTask()
     }

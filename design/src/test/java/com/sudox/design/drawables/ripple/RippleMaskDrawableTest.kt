@@ -18,26 +18,26 @@ class RippleMaskDrawableTest : Assert() {
 
     private lateinit var rippleMaskDrawable: RippleMaskDrawable
     private lateinit var paint: Paint
-    private lateinit var bounds: Rect
 
     @Before
     fun setUp() {
         rippleMaskDrawable = PowerMockito.mock(RippleMaskDrawable::class.java)
         paint = Mockito.mock(Paint::class.java)
-        bounds = PowerMockito.mock(Rect::class.java)
-
-        Mockito.`when`(rippleMaskDrawable.bounds).thenReturn(bounds)
-        Mockito.`when`(rippleMaskDrawable.getRadius()).thenCallRealMethod()
-
-        Mockito.`when`(bounds.width()).thenReturn(15)
-        Mockito.`when`(bounds.height()).thenReturn(5)
-        Mockito.`when`(bounds.exactCenterX()).thenReturn(7.5F)
-        Mockito.`when`(bounds.exactCenterY()).thenReturn(2.5F)
     }
 
     @Test
     fun testGetRadius_bordered() {
-        setType(RippleMaskType.BORDERED)
+        val bounds = PowerMockito.mock(Rect::class.java)
+
+        Mockito.`when`(bounds.width()).thenReturn(15)
+        Mockito.`when`(bounds.height()).thenReturn(5)
+        Mockito.`when`(rippleMaskDrawable.bounds).thenReturn(bounds)
+        Mockito.`when`(rippleMaskDrawable.getRadius()).thenCallRealMethod()
+
+        RippleMaskDrawable::class.java
+                .getDeclaredField("type")
+                .apply { isAccessible = true }
+                .set(rippleMaskDrawable, RippleMaskType.BORDERED)
 
         val result = rippleMaskDrawable.getRadius()
         val valid = (Math.max(bounds.width(), bounds.height()) / 2).toFloat()
@@ -46,7 +46,17 @@ class RippleMaskDrawableTest : Assert() {
 
     @Test
     fun testGetRadius_borderless() {
-        setType(RippleMaskType.BORDERLESS)
+        val bounds = PowerMockito.mock(Rect::class.java)
+
+        Mockito.`when`(bounds.centerX()).thenReturn(30)
+        Mockito.`when`(bounds.centerY()).thenReturn(40)
+        Mockito.`when`(rippleMaskDrawable.bounds).thenReturn(bounds)
+        Mockito.`when`(rippleMaskDrawable.getRadius()).thenCallRealMethod()
+
+        RippleMaskDrawable::class.java
+                .getDeclaredField("type")
+                .apply { isAccessible = true }
+                .set(rippleMaskDrawable, RippleMaskType.BORDERLESS)
 
         val result = rippleMaskDrawable.getRadius()
         val valid =  Math.ceil(Math.sqrt((bounds.left - bounds.centerX()) *
@@ -69,6 +79,7 @@ class RippleMaskDrawableTest : Assert() {
 
         Mockito.`when`(bounds.exactCenterX()).thenReturn(30F)
         Mockito.`when`(bounds.exactCenterY()).thenReturn(40F)
+        Mockito.`when`(rippleMaskDrawable.bounds).thenReturn(bounds)
         Mockito.`when`(rippleMaskDrawable.getRadius()).thenReturn(15F)
         Mockito.`when`(rippleMaskDrawable.draw(canvas)).thenCallRealMethod()
 
@@ -78,12 +89,5 @@ class RippleMaskDrawableTest : Assert() {
                 bounds.exactCenterY(),
                 rippleMaskDrawable.getRadius(),
                 paint)
-    }
-
-    private fun setType(@RippleMaskType type: Int) {
-        RippleMaskDrawable::class.java
-                .getDeclaredField("type")
-                .apply { isAccessible = true }
-                .set(rippleMaskDrawable, type)
     }
 }

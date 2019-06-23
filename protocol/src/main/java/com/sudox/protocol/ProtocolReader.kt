@@ -7,23 +7,23 @@ import java.nio.ByteBuffer
 
 class ProtocolReader(val socketClient: SocketClient) {
 
-    private var packetDataLengthInBytes: Int = 0
-    private var packetDataBuffer: ByteBuffer? = null
+    private var slicesLengthInBytes: Int = 0
+    private var slicesBuffer: ByteBuffer? = null
 
     fun readPacketBytes(): ByteBuffer? {
-        if (packetDataBuffer?.remaining() == 0) {
+        if (slicesBuffer?.remaining() == 0) {
             resetPacket()
         }
 
         if (isNewPacket()) {
-            readPacketHeaders()
+            readHeaders()
         }
 
-        if (packetDataLengthInBytes > 0) {
-            readPacketData()
+        if (slicesLengthInBytes > 0) {
+            readSlices()
 
-            return if (packetDataBuffer?.remaining() == 0) {
-                return packetDataBuffer!!.apply { flip() }
+            return if (slicesBuffer?.remaining() == 0) {
+                return slicesBuffer!!.apply { flip() }
             } else {
                 null
             }
@@ -33,34 +33,34 @@ class ProtocolReader(val socketClient: SocketClient) {
     }
 
     fun resetPacket() {
-        packetDataBuffer?.clear()
-        packetDataLengthInBytes = 0
+        slicesBuffer?.clear()
+        slicesLengthInBytes = 0
     }
 
-    private fun readPacketHeaders() {
-        packetDataLengthInBytes = Math.max(readFullPacketLength() - LENGTH_HEADER_SIZE_IN_BYTES, 0)
+    private fun readHeaders() {
+        slicesLengthInBytes = Math.max(readLength(), 0)
 
-        if (packetDataLengthInBytes > 0) {
-            packetDataBuffer = ByteBuffer.allocateDirect(packetDataLengthInBytes)
+        if (slicesLengthInBytes > 0) {
+            slicesBuffer = ByteBuffer.allocateDirect(slicesLengthInBytes)
         }
     }
 
-    private fun readPacketData() {
+    private fun readSlices() {
         val availableBytes = socketClient.availableBytes()
-        val readCount = Math.min(availableBytes, packetDataLengthInBytes)
+        val readCount = Math.min(availableBytes, slicesBuffer!!.remaining())
 
         if (readCount > 0) {
-            socketClient.readToByteBuffer(packetDataBuffer!!, readCount, packetDataBuffer!!.position())
+            socketClient.readToByteBuffer(slicesBuffer!!, readCount, slicesBuffer!!.position())
         }
     }
 
-    private fun readFullPacketLength(): Int {
+    private fun readLength(): Int {
         return socketClient
                 .readBytes(LENGTH_HEADER_SIZE_IN_BYTES)
                 .readIntBE()
     }
 
     private fun isNewPacket(): Boolean {
-        return packetDataLengthInBytes <= 0 && socketClient.availableBytes() >= LENGTH_HEADER_SIZE_IN_BYTES
+        return slicesLengthInBytes <= 0 && socketClient.availableBytes() >= LENGTH_HEADER_SIZE_IN_BYTES
     }
 }
