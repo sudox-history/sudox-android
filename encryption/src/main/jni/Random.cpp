@@ -21,7 +21,7 @@ Java_com_sudox_encryption_Encryption_generateInt(__unused JNIEnv *env, __unused 
     unsigned char output[intlen];
     RAND_bytes(output, intlen);
 
-    int number = (int) output;
+    int number = (int) (size_t) output;
     number = (start + (number * (end - start) / INT_MAX));
     return number;
 }
