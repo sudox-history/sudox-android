@@ -7,40 +7,40 @@ internal const val BITS_IN_BYTE = 8
 internal const val SIGNED_VALUE_MASK = 0xFF
 internal const val LENGTH_HEADER_SIZE_IN_BYTES = 2
 
-fun serializePacket(slices: Array<out ByteArray>): ByteBuffer {
-    val slicesLength = slices.sumBy { it.size + LENGTH_HEADER_SIZE_IN_BYTES }
-    val packetLength = slicesLength + LENGTH_HEADER_SIZE_IN_BYTES
+fun serializePacket(parts: Array<out ByteArray>): ByteBuffer {
+    val partsLength = parts.sumBy { it.size + LENGTH_HEADER_SIZE_IN_BYTES }
+    val packetLength = partsLength + LENGTH_HEADER_SIZE_IN_BYTES
     val buffer = ByteBuffer.allocateDirect(packetLength)
 
-    buffer.putIntBE(slicesLength, LENGTH_HEADER_SIZE_IN_BYTES)
-    slices.forEach { buffer.putPacketSlice(it) }
+    buffer.putIntBE(partsLength, LENGTH_HEADER_SIZE_IN_BYTES)
+    parts.forEach { buffer.putPacketPart(it) }
     buffer.flip()
 
     return buffer
 }
 
 fun deserializePacket(buffer: ByteBuffer): QueueList<ByteArray>? {
-    val slices = QueueList<ByteArray>()
+    val parts = QueueList<ByteArray>()
     val length = buffer.limit()
     var index = 0
 
     while (index + LENGTH_HEADER_SIZE_IN_BYTES <= length) {
-        val slice = buffer.readPacketSlice() ?: return null
-        slices.push(slice)
+        val part = buffer.readPacketPart() ?: return null
+        parts.push(part)
 
         index += LENGTH_HEADER_SIZE_IN_BYTES
-        index += slice.size
+        index += part.size
     }
 
-    return slices
+    return parts
 }
 
-fun ByteBuffer.putPacketSlice(it: ByteArray) {
+fun ByteBuffer.putPacketPart(it: ByteArray) {
     putIntBE(it.size, LENGTH_HEADER_SIZE_IN_BYTES)
     put(it)
 }
 
-fun ByteBuffer.readPacketSlice(): ByteArray? {
+fun ByteBuffer.readPacketPart(): ByteArray? {
     val length = readIntBE(LENGTH_HEADER_SIZE_IN_BYTES)
 
     return if (length > 0 && remaining() >= length) {

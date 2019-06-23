@@ -14,14 +14,14 @@ Java_com_sudox_encryption_Encryption_generateBytes(JNIEnv *env, __unused jclass 
 }
 
 extern "C"
-JNIEXPORT jint JNICALL
+JNIEXPORT jlong JNICALL
 Java_com_sudox_encryption_Encryption_generateInt(__unused JNIEnv *env, __unused jclass type,
                                                  jint start, jint end) {
     auto intlen = sizeof(int);
     unsigned char output[intlen];
     RAND_bytes(output, intlen);
 
-    int number = (int) output;
+    long number = (long) output;
     number = (start + (number * (end - start) / INT_MAX));
     return number;
 }
