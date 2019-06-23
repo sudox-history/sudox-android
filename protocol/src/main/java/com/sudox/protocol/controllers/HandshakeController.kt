@@ -5,33 +5,28 @@ import com.sudox.encryption.ECDHSession
 import com.sudox.encryption.Encryption
 import com.sudox.protocol.ProtocolController
 
-internal val HMAC_VALIDATION_WORD = "ok".toByteArray()
+internal val OK = "ok".toByteArray()
 internal val HANDSHAKE_PACKET_NAME = "hsk".toByteArray()
 internal const val SECRET_KEY_SIZE = 24
-internal const val HANDSHAKE_MESSAGE_SLICES_COUNT = 3
+internal const val HANDSHAKE_PACKET_PARTS_COUNT = 3
 
 class HandshakeController(val protocolController: ProtocolController) {
 
     private var ecdhSession: ECDHSession? = null
 
-    fun startHandshake() {
+    fun start() {
         ecdhSession = Encryption.startECDH()
         protocolController.sendPacket(HANDSHAKE_PACKET_NAME, ecdhSession!!.publicKey)
     }
 
-    fun handleIncomingPacket(slices: QueueList<ByteArray>) {
-        if (!handleHandshakePacket(slices)) {
-            protocolController.restartConnection()
-        }
-    }
-
-    private fun handleHandshakePacket(slices: QueueList<ByteArray>): Boolean {
-        val serverPublicKey = slices.pop()!!
-        val serverPublicKeySign = slices.pop()!!
-        val serverHmac = slices.pop()!!
+    fun handlePacket(parts: QueueList<ByteArray>) {
+        val serverPublicKey = parts.pop()!!
+        val serverPublicKeySign = parts.pop()!!
+        val serverHmac = parts.pop()!!
 
         if (!Encryption.verifySignature(serverPublicKey, serverPublicKeySign)) {
-            return false
+            protocolController.restartConnection()
+            return
         }
 
         var secretKey = Encryption.finishECDH(ecdhSession!!.keyPairPointer, serverPublicKey)
@@ -40,20 +35,20 @@ class HandshakeController(val protocolController: ProtocolController) {
         if (secretKey != null) {
             secretKey = secretKey.copyOf(SECRET_KEY_SIZE)
 
-            if (Encryption.verifyHMAC(secretKey, HMAC_VALIDATION_WORD, serverHmac)) {
+            if (Encryption.verifyHMAC(secretKey, OK, serverHmac)) {
                 protocolController.startEncryptedSession(secretKey)
-                return true
+                return
             }
         }
 
-        return false
+        protocolController.restartConnection()
     }
 
-    fun isHandshakePacket(name: ByteArray, slices: QueueList<ByteArray>): Boolean {
-        return slices.size() == HANDSHAKE_MESSAGE_SLICES_COUNT && name.contentEquals(HANDSHAKE_PACKET_NAME)
+    fun isPacket(name: ByteArray, parts: QueueList<ByteArray>): Boolean {
+        return parts.size() == HANDSHAKE_PACKET_PARTS_COUNT && name.contentEquals(HANDSHAKE_PACKET_NAME)
     }
 
-    fun resetHandshake() {
+    fun reset() {
         if (ecdhSession != null) {
             Encryption.closeECDH(ecdhSession!!.keyPairPointer)
             ecdhSession = null

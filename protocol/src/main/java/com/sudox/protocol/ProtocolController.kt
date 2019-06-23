@@ -35,35 +35,35 @@ class ProtocolController(
 
     override fun socketConnected() = submitTask {
         connectionAttemptFailed = false
-        pingController.startPing()
-        handshakeController.startHandshake()
+        pingController.start()
+        handshakeController.start()
     }
 
     override fun socketReceive() {
         val buffer = protocolReader.readPacketBytes() ?: return
-        val slices = deserializePacket(buffer) ?: return
-        pingController.schedulePingSendTask()
+        val parts = deserializePacket(buffer) ?: return
+        pingController.scheduleSendTask()
 
-        if (slices.size() > 0) {
-            handlePacket(slices)
+        if (parts.size() > 0) {
+            handlePacket(parts)
         }
     }
 
-    private fun handlePacket(slices: QueueList<ByteArray>) {
-        val name = slices.pop()!!
+    private fun handlePacket(parts: QueueList<ByteArray>) {
+        val name = parts.pop()!!
 
-        if (pingController.isPingPacket(name)) {
-            pingController.handlePing()
+        if (pingController.isPacket(name)) {
+            pingController.handle()
         } else {
-            addMessageToQueue(name, slices)
+            addMessageToQueue(name, parts)
         }
     }
 
-    private fun addMessageToQueue(name: ByteArray, slices: QueueList<ByteArray>) = submitTask {
-        if (messagesController.isSessionStarted() && messagesController.isEncryptedMessagePacket(name, slices)) {
-            messagesController.handleIncomingMessage(slices)
-        } else if (handshakeController.isHandshakePacket(name, slices)) {
-            handshakeController.handleIncomingPacket(slices)
+    private fun addMessageToQueue(name: ByteArray, parts: QueueList<ByteArray>) = submitTask {
+        if (messagesController.isSessionStarted() && messagesController.isPacket(name, parts)) {
+            messagesController.handle(parts)
+        } else if (handshakeController.isPacket(name, parts)) {
+            handshakeController.handlePacket(parts)
         }
     }
 
@@ -72,7 +72,7 @@ class ProtocolController(
 
         removeAllScheduledTasks()
         protocolReader.resetPacket()
-        handshakeController.resetHandshake()
+        handshakeController.reset()
         messagesController.resetSession()
 
         if (sessionStarted && !connectionAttemptFailed) {
@@ -91,11 +91,11 @@ class ProtocolController(
     }
 
     internal fun sendMessage(message: ByteArray): Boolean {
-        return messagesController.sendMessage(message)
+        return messagesController.send(message)
     }
 
-    internal fun sendPacket(vararg slices: ByteArray) {
-        socketClient.sendBuffer(serializePacket(slices))
+    internal fun sendPacket(vararg parts: ByteArray) {
+        socketClient.sendBuffer(serializePacket(parts))
     }
 
     internal fun startEncryptedSession(secretKey: ByteArray) {

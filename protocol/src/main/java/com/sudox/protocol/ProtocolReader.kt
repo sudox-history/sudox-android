@@ -7,11 +7,11 @@ import java.nio.ByteBuffer
 
 class ProtocolReader(val socketClient: SocketClient) {
 
-    private var slicesLengthInBytes: Int = 0
-    private var slicesBuffer: ByteBuffer? = null
+    private var partsLengthInBytes: Int = 0
+    private var partsBuffer: ByteBuffer? = null
 
     fun readPacketBytes(): ByteBuffer? {
-        if (slicesBuffer?.remaining() == 0) {
+        if (partsBuffer?.remaining() == 0) {
             resetPacket()
         }
 
@@ -19,11 +19,11 @@ class ProtocolReader(val socketClient: SocketClient) {
             readHeaders()
         }
 
-        if (slicesLengthInBytes > 0) {
-            readSlices()
+        if (partsLengthInBytes > 0) {
+            readParts()
 
-            return if (slicesBuffer?.remaining() == 0) {
-                return slicesBuffer!!.apply { flip() }
+            return if (partsBuffer?.remaining() == 0) {
+                return partsBuffer!!.apply { flip() }
             } else {
                 null
             }
@@ -33,24 +33,24 @@ class ProtocolReader(val socketClient: SocketClient) {
     }
 
     fun resetPacket() {
-        slicesBuffer?.clear()
-        slicesLengthInBytes = 0
+        partsBuffer?.clear()
+        partsLengthInBytes = 0
     }
 
     private fun readHeaders() {
-        slicesLengthInBytes = Math.max(readLength(), 0)
+        partsLengthInBytes = Math.max(readLength(), 0)
 
-        if (slicesLengthInBytes > 0) {
-            slicesBuffer = ByteBuffer.allocateDirect(slicesLengthInBytes)
+        if (partsLengthInBytes > 0) {
+            partsBuffer = ByteBuffer.allocateDirect(partsLengthInBytes)
         }
     }
 
-    private fun readSlices() {
+    private fun readParts() {
         val availableBytes = socketClient.availableBytes()
-        val readCount = Math.min(availableBytes, slicesBuffer!!.remaining())
+        val readCount = Math.min(availableBytes, partsBuffer!!.remaining())
 
         if (readCount > 0) {
-            socketClient.readToByteBuffer(slicesBuffer!!, readCount, slicesBuffer!!.position())
+            socketClient.readToByteBuffer(partsBuffer!!, readCount, partsBuffer!!.position())
         }
     }
 
@@ -61,6 +61,6 @@ class ProtocolReader(val socketClient: SocketClient) {
     }
 
     private fun isNewPacket(): Boolean {
-        return slicesLengthInBytes <= 0 && socketClient.availableBytes() >= LENGTH_HEADER_SIZE_IN_BYTES
+        return partsLengthInBytes <= 0 && socketClient.availableBytes() >= LENGTH_HEADER_SIZE_IN_BYTES
     }
 }
