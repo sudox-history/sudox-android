@@ -7,7 +7,7 @@ import com.sudox.protocol.ProtocolController
 
 internal val OK = "ok".toByteArray()
 internal val HANDSHAKE_PACKET_NAME = "hsk".toByteArray()
-internal const val SECRET_KEY_SIZE = 24
+internal const val KEY_SIZE = 24
 internal const val HANDSHAKE_PACKET_PARTS_COUNT = 3
 
 class HandshakeController(val protocolController: ProtocolController) {
@@ -20,9 +20,9 @@ class HandshakeController(val protocolController: ProtocolController) {
     }
 
     fun handlePacket(parts: QueueList<ByteArray>) {
-        val serverPublicKey = parts.pop()!!
-        val serverPublicKeySign = parts.pop()!!
-        val serverHmac = parts.pop()!!
+        val serverPublicKey = parts.shift()!!
+        val serverPublicKeySign = parts.shift()!!
+        val serverHmac = parts.shift()!!
 
         if (!Encryption.verifySignature(serverPublicKey, serverPublicKeySign)) {
             protocolController.restartConnection()
@@ -33,10 +33,10 @@ class HandshakeController(val protocolController: ProtocolController) {
         ecdhSession = null
 
         if (secretKey != null) {
-            secretKey = secretKey.copyOf(SECRET_KEY_SIZE)
+            secretKey = secretKey.copyOf(KEY_SIZE)
 
             if (Encryption.verifyHMAC(secretKey, OK, serverHmac)) {
-                protocolController.startEncryptedSession(secretKey)
+                protocolController.startSession(secretKey)
                 return
             }
         }

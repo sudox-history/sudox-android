@@ -20,7 +20,7 @@ class QueueList<T> {
         size++
     }
 
-    fun pop(): T? {
+    fun shift(): T? {
         if (firstNode == null) {
             return null
         }

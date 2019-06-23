@@ -10,7 +10,7 @@ class QueueListTest : Assert() {
         val queueList = QueueList<Int>()
         assertEquals(0, queueList.size())
 
-        queueList.pop()
+        queueList.shift()
         assertEquals(0, queueList.size())
     }
 
@@ -19,13 +19,13 @@ class QueueListTest : Assert() {
         val queueList = QueueList<Int>()
         queueList.push(1)
         assertEquals(1, queueList.size())
-        assertEquals(1, queueList.pop())
+        assertEquals(1, queueList.shift())
         assertEquals(0, queueList.size())
 
         // Retry
         queueList.push(1)
         assertEquals(1, queueList.size())
-        assertEquals(1, queueList.pop())
+        assertEquals(1, queueList.shift())
         assertEquals(0, queueList.size())
     }
 
@@ -37,13 +37,13 @@ class QueueListTest : Assert() {
         queueList.push(3)
         assertEquals(3, queueList.size())
 
-        assertEquals(1, queueList.pop())
+        assertEquals(1, queueList.shift())
         assertEquals(2, queueList.size())
 
-        assertEquals(2, queueList.pop())
+        assertEquals(2, queueList.shift())
         assertEquals(1, queueList.size())
 
-        assertEquals(3, queueList.pop())
+        assertEquals(3, queueList.shift())
         assertEquals(0, queueList.size())
 
         // Retry
@@ -52,13 +52,13 @@ class QueueListTest : Assert() {
         queueList.push(3)
         assertEquals(3, queueList.size())
 
-        assertEquals(1, queueList.pop())
+        assertEquals(1, queueList.shift())
         assertEquals(2, queueList.size())
 
-        assertEquals(2, queueList.pop())
+        assertEquals(2, queueList.shift())
         assertEquals(1, queueList.size())
 
-        assertEquals(3, queueList.pop())
+        assertEquals(3, queueList.shift())
         assertEquals(0, queueList.size())
     }
 }

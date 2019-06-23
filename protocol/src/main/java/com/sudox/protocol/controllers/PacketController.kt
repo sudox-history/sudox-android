@@ -1,21 +1,21 @@
-package com.sudox.protocol
+package com.sudox.protocol.controllers
 
 import com.sudox.protocol.helpers.LENGTH_HEADER_SIZE_IN_BYTES
 import com.sudox.protocol.helpers.readIntBE
 import com.sudox.sockets.SocketClient
 import java.nio.ByteBuffer
 
-class ProtocolReader(val socketClient: SocketClient) {
+class PacketController(val socketClient: SocketClient) {
 
     private var partsLengthInBytes: Int = 0
     private var partsBuffer: ByteBuffer? = null
 
-    fun readPacketBytes(): ByteBuffer? {
+    fun readPacket(): ByteBuffer? {
         if (partsBuffer?.remaining() == 0) {
-            resetPacket()
+            reset()
         }
 
-        if (isNewPacket()) {
+        if (partsLengthInBytes <= 0 && socketClient.availableBytes() >= LENGTH_HEADER_SIZE_IN_BYTES) {
             readHeaders()
         }
 
@@ -32,7 +32,7 @@ class ProtocolReader(val socketClient: SocketClient) {
         return null
     }
 
-    fun resetPacket() {
+    fun reset() {
         partsBuffer?.clear()
         partsLengthInBytes = 0
     }
@@ -58,9 +58,5 @@ class ProtocolReader(val socketClient: SocketClient) {
         return socketClient
                 .readBytes(LENGTH_HEADER_SIZE_IN_BYTES)
                 .readIntBE()
-    }
-
-    private fun isNewPacket(): Boolean {
-        return partsLengthInBytes <= 0 && socketClient.availableBytes() >= LENGTH_HEADER_SIZE_IN_BYTES
     }
 }

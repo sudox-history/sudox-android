@@ -4,10 +4,10 @@ import android.os.SystemClock
 import com.sudox.protocol.ProtocolController
 
 internal val PING_PACKET_NAME = "png".toByteArray()
-internal const val SEND_TIMEOUT = 6000L
-internal const val CHECK_TIMEOUT = 1000L
-internal const val SEND_TASK_ID = 0
-internal const val CHECK_TASK_ID = 1
+internal const val PING_SEND_TIMEOUT = 6000L
+internal const val PING_CHECK_TIMEOUT = 1000L
+internal const val PING_SEND_TASK_ID = 0
+internal const val PING_CHECK_TASK_ID = 1
 
 class PingController(val protocolController: ProtocolController) {
 
@@ -20,7 +20,7 @@ class PingController(val protocolController: ProtocolController) {
         scheduleSendTask()
     }
 
-    fun handle() {
+    fun handlePacket() {
         if (alive) {
             sendPacket()
         } else {
@@ -36,16 +36,16 @@ class PingController(val protocolController: ProtocolController) {
 
     fun scheduleSendTask() {
         val threadHandler = protocolController.handler!!
-        val time = SystemClock.uptimeMillis() + SEND_TIMEOUT
-        threadHandler.removeCallbacksAndMessages(SEND_TASK_ID)
-        threadHandler.removeCallbacksAndMessages(CHECK_TASK_ID)
-        threadHandler.postAtTime(sendRunnable, SEND_TASK_ID, time)
+        val time = SystemClock.uptimeMillis() + PING_SEND_TIMEOUT
+        threadHandler.removeCallbacksAndMessages(PING_SEND_TASK_ID)
+        threadHandler.removeCallbacksAndMessages(PING_CHECK_TASK_ID)
+        threadHandler.postAtTime(sendRunnable, PING_SEND_TASK_ID, time)
     }
 
     private fun scheduleCheckTask() {
         val threadHandler = protocolController.handler!!
-        val time = SystemClock.uptimeMillis() + CHECK_TIMEOUT
-        threadHandler.postAtTime(checkRunnable, CHECK_TASK_ID, time)
+        val time = SystemClock.uptimeMillis() + PING_CHECK_TIMEOUT
+        threadHandler.postAtTime(checkRunnable, PING_CHECK_TASK_ID, time)
     }
 
     private fun send() {

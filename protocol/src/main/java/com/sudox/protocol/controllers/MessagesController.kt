@@ -14,14 +14,14 @@ class MessagesController(val protocolController: ProtocolController) {
 
     private var secretKey: ByteArray? = null
 
-    fun startSession(secretKey: ByteArray) {
+    fun start(secretKey: ByteArray) {
         this.secretKey = secretKey
     }
 
-    fun handle(parts: QueueList<ByteArray>) {
-        val cipher = parts.pop()!!
-        val hmac = parts.pop()!!
-        val iv = parts.pop()!!
+    fun handlePacket(parts: QueueList<ByteArray>) {
+        val cipher = parts.shift()!!
+        val hmac = parts.shift()!!
+        val iv = parts.shift()!!
 
         if (!Encryption.verifyHMAC(secretKey!!, cipher, hmac)) {
             protocolController.restartConnection()
@@ -35,7 +35,7 @@ class MessagesController(val protocolController: ProtocolController) {
         }
 
         val message = messageWithSalt.copyOfRange(0, messageWithSalt.size - messageWithSalt.last() - 1)
-        protocolController.submitSessionMessageEvent(message)
+        protocolController.submitMessageEvent(message)
     }
 
     fun send(message: ByteArray): Boolean {
@@ -62,7 +62,7 @@ class MessagesController(val protocolController: ProtocolController) {
         return secretKey != null
     }
 
-    fun resetSession() {
+    fun reset() {
         secretKey = null
     }
 }

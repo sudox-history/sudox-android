@@ -7,6 +7,7 @@ import com.sudox.protocol.controllers.MessagesController
 import com.sudox.protocol.controllers.PingController
 import com.sudox.protocol.helpers.deserializePacket
 import com.sudox.protocol.helpers.serializePacket
+import com.sudox.protocol.controllers.PacketController
 import com.sudox.sockets.SocketClient
 
 internal const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
@@ -19,7 +20,7 @@ class ProtocolController(
         callback(this@ProtocolController)
     }
 
-    private val protocolReader = ProtocolReader(socketClient)
+    private val protocolReader = PacketController(socketClient)
     private val handshakeController = HandshakeController(this)
     private val pingController = PingController(this)
     private var connectionAttemptFailed: Boolean = true
@@ -40,7 +41,7 @@ class ProtocolController(
     }
 
     override fun socketReceive() {
-        val buffer = protocolReader.readPacketBytes() ?: return
+        val buffer = protocolReader.readPacket() ?: return
         val parts = deserializePacket(buffer) ?: return
         pingController.scheduleSendTask()
 
@@ -50,10 +51,10 @@ class ProtocolController(
     }
 
     private fun handlePacket(parts: QueueList<ByteArray>) {
-        val name = parts.pop()!!
+        val name = parts.shift()!!
 
         if (pingController.isPacket(name)) {
-            pingController.handle()
+            pingController.handlePacket()
         } else {
             addMessageToQueue(name, parts)
         }
@@ -61,7 +62,7 @@ class ProtocolController(
 
     private fun addMessageToQueue(name: ByteArray, parts: QueueList<ByteArray>) = submitTask {
         if (messagesController.isSessionStarted() && messagesController.isPacket(name, parts)) {
-            messagesController.handle(parts)
+            messagesController.handlePacket(parts)
         } else if (handshakeController.isPacket(name, parts)) {
             handshakeController.handlePacket(parts)
         }
@@ -71,9 +72,9 @@ class ProtocolController(
         val sessionStarted = messagesController.isSessionStarted()
 
         removeAllScheduledTasks()
-        protocolReader.resetPacket()
+        protocolReader.reset()
         handshakeController.reset()
-        messagesController.resetSession()
+        messagesController.reset()
 
         if (sessionStarted && !connectionAttemptFailed) {
             protocolClient.callback.onEnded()
@@ -98,12 +99,12 @@ class ProtocolController(
         socketClient.sendBuffer(serializePacket(parts))
     }
 
-    internal fun startEncryptedSession(secretKey: ByteArray) {
-        messagesController.startSession(secretKey)
+    internal fun startSession(secretKey: ByteArray) {
+        messagesController.start(secretKey)
         protocolClient.callback.onStarted()
     }
 
-    internal fun submitSessionMessageEvent(message: ByteArray) {
+    internal fun submitMessageEvent(message: ByteArray) {
         protocolClient.callback.onMessage(message)
     }
 
