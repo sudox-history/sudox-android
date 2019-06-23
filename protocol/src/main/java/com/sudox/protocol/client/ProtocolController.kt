@@ -1,13 +1,13 @@
-package com.sudox.protocol
+package com.sudox.protocol.client
 
 import com.sudox.common.structures.QueueList
 import com.sudox.common.threading.SequenceThread
-import com.sudox.protocol.controllers.HandshakeController
-import com.sudox.protocol.controllers.MessagesController
-import com.sudox.protocol.controllers.PingController
-import com.sudox.protocol.helpers.deserializePacket
-import com.sudox.protocol.helpers.serializePacket
-import com.sudox.protocol.controllers.PacketController
+import com.sudox.protocol.client.controllers.HandshakeController
+import com.sudox.protocol.client.controllers.MessagesController
+import com.sudox.protocol.client.controllers.PingController
+import com.sudox.protocol.client.helpers.deserializePacket
+import com.sudox.protocol.client.helpers.serializePacket
+import com.sudox.protocol.client.controllers.PacketController
 import com.sudox.sockets.SocketClient
 
 internal const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L

@@ -1,7 +1,7 @@
-package com.sudox.protocol.controllers
+package com.sudox.protocol.client.controllers
 
 import android.os.SystemClock
-import com.sudox.protocol.ProtocolController
+import com.sudox.protocol.client.ProtocolController
 
 internal val PING_PACKET_NAME = "png".toByteArray()
 internal const val PING_SEND_TIMEOUT = 6000L

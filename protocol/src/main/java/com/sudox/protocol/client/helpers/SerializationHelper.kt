@@ -1,4 +1,4 @@
-package com.sudox.protocol.helpers
+package com.sudox.protocol.client.helpers
 
 import com.sudox.common.structures.QueueList
 import java.nio.ByteBuffer

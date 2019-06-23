@@ -1,7 +1,7 @@
-package com.sudox.protocol.controllers
+package com.sudox.protocol.client.controllers
 
-import com.sudox.protocol.helpers.LENGTH_HEADER_SIZE_IN_BYTES
-import com.sudox.protocol.helpers.readIntBE
+import com.sudox.protocol.client.helpers.LENGTH_HEADER_SIZE_IN_BYTES
+import com.sudox.protocol.client.helpers.readIntBE
 import com.sudox.sockets.SocketClient
 import java.nio.ByteBuffer
 

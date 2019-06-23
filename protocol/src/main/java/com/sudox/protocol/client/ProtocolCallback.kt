@@ -1,4 +1,4 @@
-package com.sudox.protocol
+package com.sudox.protocol.client
 
 interface ProtocolCallback {
     fun onMessage(message: ByteArray)

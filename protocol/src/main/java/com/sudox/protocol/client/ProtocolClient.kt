@@ -1,4 +1,4 @@
-package com.sudox.protocol
+package com.sudox.protocol.client
 
 class ProtocolClient(
     internal val host: String,

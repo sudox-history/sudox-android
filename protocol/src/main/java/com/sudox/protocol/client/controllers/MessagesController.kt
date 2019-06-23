@@ -1,8 +1,8 @@
-package com.sudox.protocol.controllers
+package com.sudox.protocol.client.controllers
 
 import com.sudox.common.structures.QueueList
 import com.sudox.encryption.Encryption
-import com.sudox.protocol.ProtocolController
+import com.sudox.protocol.client.ProtocolController
 
 internal val MESSAGES_PACKET_NAME = "msg".toByteArray()
 internal const val MESSAGES_PARTS_COUNT = 3

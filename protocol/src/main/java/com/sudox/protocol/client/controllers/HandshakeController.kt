@@ -1,9 +1,9 @@
-package com.sudox.protocol.controllers
+package com.sudox.protocol.client.controllers
 
 import com.sudox.common.structures.QueueList
 import com.sudox.encryption.ECDHSession
 import com.sudox.encryption.Encryption
-import com.sudox.protocol.ProtocolController
+import com.sudox.protocol.client.ProtocolController
 
 internal val OK = "ok".toByteArray()
 internal val HANDSHAKE_PACKET_NAME = "hsk".toByteArray()
