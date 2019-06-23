@@ -34,7 +34,7 @@ class MessagesController(val protocolController: ProtocolController) {
         }
 
         val messageWithSalt = Encryption.decryptWithAES(secretKey!!, iv, cipher) ?: return false
-        val message = messageWithSalt.copyOfRange(0, messageWithSalt.size - messageWithSalt.last())
+        val message = messageWithSalt.copyOfRange(0, messageWithSalt.size - messageWithSalt.last() - 1)
         protocolController.submitSessionMessageEvent(message)
 
         return true
@@ -47,7 +47,7 @@ class MessagesController(val protocolController: ProtocolController) {
 
         val saltLength = Encryption.generateInt(SALT_LENGTH_RANGE_START, SALT_LENGTH_RANGE_END)
         val salt = Encryption.generateBytes(saltLength)
-        val messageWithSalt = message + salt + (saltLength + 1).toByte()
+        val messageWithSalt = message + salt + saltLength.toByte()
         val iv = Encryption.generateBytes(ENCRYPTED_MESSAGE_IV_SIZE)
         val cipher = Encryption.encryptWithAES(secretKey!!, iv, messageWithSalt)!!
         val hmac = Encryption.computeHMAC(secretKey!!, cipher)
