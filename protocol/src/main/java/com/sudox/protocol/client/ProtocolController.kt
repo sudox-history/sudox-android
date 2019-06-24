@@ -8,7 +8,7 @@ import com.sudox.protocol.client.controllers.PingController
 import com.sudox.protocol.client.helpers.deserializePacket
 import com.sudox.protocol.client.helpers.serializePacket
 import com.sudox.protocol.client.controllers.PacketController
-import com.sudox.sockets.SocketClient
+import com.sudox.protocol.client.network.SocketClient
 
 internal const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
 

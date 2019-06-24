@@ -1,5 +1,12 @@
 dependencies {
-    implementation project(path: ':sockets')
     implementation project(path: ':encryption')
     implementation project(path: ':common')
+}
+
+android {
+    externalNativeBuild {
+        cmake {
+            path file('src/main/jni/CMakeLists.txt')
+        }
+    }
 }

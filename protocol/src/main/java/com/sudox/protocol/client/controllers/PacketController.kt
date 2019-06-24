@@ -2,7 +2,7 @@ package com.sudox.protocol.client.controllers
 
 import com.sudox.protocol.client.helpers.LENGTH_HEADER_SIZE_IN_BYTES
 import com.sudox.protocol.client.helpers.readIntBE
-import com.sudox.sockets.SocketClient
+import com.sudox.protocol.client.network.SocketClient
 import java.nio.ByteBuffer
 
 class PacketController(val socketClient: SocketClient) {

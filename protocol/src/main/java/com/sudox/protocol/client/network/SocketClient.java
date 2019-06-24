@@ -1,4 +1,4 @@
-package com.sudox.sockets;
+package com.sudox.protocol.client.network;
 
 import androidx.annotation.NonNull;
 
