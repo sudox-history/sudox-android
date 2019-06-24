@@ -2,377 +2,216 @@ package com.sudox.protocol.client.network
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
-import java.net.InetSocketAddress
-import java.net.ServerSocket
 import java.nio.ByteBuffer
-import java.util.concurrent.Semaphore
-import java.util.concurrent.TimeUnit
-import kotlin.concurrent.thread
-import kotlin.random.Random
 
 @RunWith(AndroidJUnit4::class)
-class SocketClientTest {
+class SocketClientTest : Assert() {
 
-    private var port: Int = 0
+    private lateinit var server: TestSocketServer
     private lateinit var client: SocketClient
-    private lateinit var serverSocket: ServerSocket
+    private lateinit var callback: SocketCallbackMock
 
     @Before
     fun setUp() {
-        port = Random.nextInt(1000, 32767)
-        client = SocketClient("localhost", port.toShort())
-        serverSocket = ServerSocket()
+        server = TestSocketServer(4899)
+
+        client = SocketClient("127.0.0.1", 4899)
+        callback = SocketCallbackMock()
+        client.callback(callback)
     }
 
     @After
     fun tearDown() {
-        stopServer()
-    }
-
-    fun startServer() {
-        serverSocket.bind(InetSocketAddress(port))
-    }
-
-    fun stopServer() {
-        client.close(false)
-        serverSocket.close()
-    }
-
-    @Test
-    fun testConnect_fail_contact_with_server() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
-
-        client.apply {
-            callback(callback)
-            connect()
-        }
-        Thread.sleep(500) // Waiting callback ...
-
-        Mockito.verify(callback).socketClosed(true)
-        assertFalse(client.opened())
-        assertEquals(-1, client.availableBytes())
-        assertNull(client.readBytes(1024))
-        assertEquals(-1, client.readToByteBuffer(ByteBuffer.allocateDirect(10), 10, 0))
+        server.stopServer()
     }
 
     @Test
     fun testConnect_success() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
-        val connectSemaphore = Semaphore(0)
-        var isConnectedToServer = false
+        server.startServer()
+        client.connect()
+        server.connectionSemaphore.acquire()
+        callback.connectSemaphore.acquire()
 
-        startServer()
-        thread {
-            serverSocket.accept()
-            isConnectedToServer = true
-            connectSemaphore.release()
-        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
-
-        client.apply {
-            callback(callback)
-            connect()
-        }
-        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
-
-        Thread.sleep(500) // Waiting callback ...
-        Mockito.verify(callback).socketConnected()
-        assertTrue(isConnectedToServer)
-        assertTrue(client.opened())
-        assertEquals(0, client.availableBytes())
-        assertNull(client.readBytes(1024))
-        assertEquals(-1, client.readToByteBuffer(ByteBuffer.allocateDirect(10), 10, 0))
+        assertTrue(server.clientConnected)
+        assertEquals(1, callback.connectedCalled)
     }
 
     @Test
-    fun testClose_not_connected() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
+    fun testConnect_error() {
+        client.connect()
+        callback.closedSemaphore.acquire()
 
-        client.apply {
-            callback(callback)
-            close(false)
-            close(true)
-        }
-
-        Mockito.verify(callback, Mockito.never()).socketClosed(Mockito.anyBoolean())
-        assertFalse(client.opened())
-        assertEquals(-1, client.availableBytes())
-        assertNull(client.readBytes(1024))
-        assertEquals(-1, client.readToByteBuffer(ByteBuffer.allocateDirect(10), 10, 0))
+        assertEquals(1, callback.closedCalled)
+        assertTrue(callback.closedErrorLast)
     }
 
     @Test
     fun testClose_by_error() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
-        val connectSemaphore = Semaphore(0)
-        val disconnectSemaphore = Semaphore(0)
+        server.startServer()
+        client.connect()
+        server.connectionSemaphore.acquire()
+        callback.connectSemaphore.acquire()
 
-        startServer()
-        thread {
-            val socket = serverSocket.accept()
-            connectSemaphore.release()
-
-            socket.getInputStream().read()
-            disconnectSemaphore.release()
-        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
-
-        client.apply {
-            callback(callback)
-            connect()
-        }
-        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
         client.close(true)
-        disconnectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        server.disconnectionSemaphore.acquire()
+        callback.closedSemaphore.acquire()
 
-        Mockito.verify(callback).socketClosed(true)
-        assertFalse(client.opened())
-        assertEquals(-1, client.availableBytes())
-        assertNull(client.readBytes(1024))
-        assertEquals(-1, client.readToByteBuffer(ByteBuffer.allocateDirect(10), 10, 0))
+        assertEquals(1, callback.closedCalled)
+        assertTrue(callback.closedErrorLast)
+        assertFalse(server.clientConnected)
     }
 
     @Test
     fun testClose_by_user() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
-        val connectSemaphore = Semaphore(0)
-        val disconnectSemaphore = Semaphore(0)
-
-        startServer()
-        thread {
-            val socket = serverSocket.accept()
-            connectSemaphore.release()
-
-            socket.getInputStream().read()
-            disconnectSemaphore.release()
-        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
-
-        client.apply {
-            callback(callback)
-            connect()
-        }
-        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        server.startServer()
+        client.connect()
+        server.connectionSemaphore.acquire()
+        callback.connectSemaphore.acquire()
 
         client.close(false)
-        disconnectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        server.disconnectionSemaphore.acquire()
+        callback.closedSemaphore.acquire()
 
-        Mockito.verify(callback).socketClosed(false)
-        assertFalse(client.opened())
-        assertEquals(-1, client.availableBytes())
-        assertNull(client.readBytes(1024))
-        assertEquals(-1, client.readToByteBuffer(ByteBuffer.allocateDirect(10), 10, 0))
+        assertEquals(1, callback.closedCalled)
+        assertFalse(callback.closedErrorLast)
+        assertFalse(server.clientConnected)
     }
 
     @Test
-    fun testSend_before_connection() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
-        val connectSemaphore = Semaphore(0)
-        val readSemaphore = Semaphore(0)
-        val read = ByteArray(128)
-
-        client.apply {
-            callback(callback)
-            send(byteArrayOf(123))
-        }
-
-        startServer()
-        thread {
-            val socket = serverSocket.accept()
-            connectSemaphore.release()
-
-            socket.getInputStream().read(read)
-            readSemaphore.release()
-        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
-
+    fun testClose_by_server() {
+        server.startServer()
         client.connect()
-        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        server.connectionSemaphore.acquire()
+        callback.connectSemaphore.acquire()
 
-        readSemaphore.tryAcquire(5, TimeUnit.SECONDS)
-        assertEquals(0.toByte(), read[0])
+        server.clientSocket!!.close()
+        server.disconnectionSemaphore.acquire()
+        callback.closedSemaphore.acquire()
+
+        assertEquals(1, callback.closedCalled)
+        assertTrue(callback.closedErrorLast)
+        assertFalse(server.clientConnected)
     }
 
     @Test
-    fun testSend_with_connection() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
-        val connectSemaphore = Semaphore(0)
-        val readSemaphore = Semaphore(0)
-        val read = ByteArray(128)
-        val message = "Hello, World!"
-                .toByteArray()
-                .copyOf(128)
-
-        client.callback(callback)
-
-        startServer()
-        thread {
-            val socket = serverSocket.accept()
-            connectSemaphore.release()
-
-            socket.getInputStream().read(read)
-            readSemaphore.release()
-        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
-
+    fun testReceiving() {
+        server.startServer()
         client.connect()
-        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        server.connectionSemaphore.acquire()
+        callback.connectSemaphore.acquire()
 
-        client.send(message)
-        readSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        val bytes = "Hello World".toByteArray()
+        server.send(bytes)
+        callback.receiveSemaphore.acquire()
 
-        assertArrayEquals(message, read)
+        val available = client.available()
+        val received = client.read(available)
+        assertEquals(1, callback.receivedCalled)
+        assertEquals(bytes.size, available)
+        assertArrayEquals(bytes, received)
     }
 
     @Test
-    fun testSendBuffer_direct() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
-        val connectSemaphore = Semaphore(0)
-        val readSemaphore = Semaphore(0)
-        var read = ByteArray(128)
-        var readCount = 0
-        val message = "Hello, World!".toByteArray()
-
-        val buffer = ByteBuffer.allocateDirect(message.size)
-        buffer.put(message)
-
-        client.callback(callback)
-
-        startServer()
-        thread {
-            val socket = serverSocket.accept()
-            connectSemaphore.release()
-
-            readCount = socket.getInputStream().read(read)
-            readSemaphore.release()
-        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
-
+    fun testReceiving_buffer() {
+        server.startServer()
         client.connect()
-        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        server.connectionSemaphore.acquire()
+        callback.connectSemaphore.acquire()
 
-        client.sendBuffer(buffer)
-        readSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        val bytes = "Hello World".toByteArray()
+        server.send(bytes)
+        callback.receiveSemaphore.acquire()
 
-        read = read.copyOf(readCount)
-        assertArrayEquals(message, read)
+        val available = client.available()
+        val buffer = ByteBuffer.allocateDirect(available)
+        val received = client.read(buffer, available, 0)
+        assertEquals(bytes.size, available)
+        assertEquals(bytes.size, received)
+        assertEquals(bytes.size, buffer.position())
+
+        val bufferBytes = ByteArray(received)
+        buffer.rewind()
+        buffer.get(bufferBytes)
+        assertArrayEquals(bytes, bufferBytes)
+        assertEquals(1, callback.receivedCalled)
     }
 
     @Test
-    fun testSendBuffer_heap() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
-        val connectSemaphore = Semaphore(0)
-        val readSemaphore = Semaphore(0)
-        var read = ByteArray(128)
-        var readCount = 0
-        val message = "Hello, World!".toByteArray()
-
-        val buffer = ByteBuffer.wrap(message)
-
-        client.callback(callback)
-
-        startServer()
-        thread {
-            val socket = serverSocket.accept()
-            connectSemaphore.release()
-
-            readCount = socket.getInputStream().read(read)
-            readSemaphore.release()
-        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
-
+    fun testReceiving_buffer_positioning() {
+        server.startServer()
         client.connect()
-        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        server.connectionSemaphore.acquire()
+        callback.connectSemaphore.acquire()
 
-        client.sendBuffer(buffer)
-        readSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        val bytes = "Hello World".toByteArray()
+        server.send(bytes)
+        callback.receiveSemaphore.acquire()
 
-        read = read.copyOf(readCount)
-        assertArrayEquals(message, read)
+        // Fragmented reading checking
+        val buffer = ByteBuffer.allocateDirect(bytes.size)
+        val firstReceived = client.read(buffer, 5, 0)
+        assertEquals(5, firstReceived)
+        assertEquals(5, buffer.position())
+
+        val firstBytes = ByteArray(firstReceived)
+        buffer.rewind()
+        buffer.get(firstBytes)
+        assertArrayEquals(bytes.copyOf(5), firstBytes)
+
+        // Offset checking
+        val secondReceived = client.read(buffer, 5, 5)
+        assertEquals(5, secondReceived)
+        assertEquals(10, buffer.position())
+
+        val secondBytes = ByteArray(10)
+        buffer.rewind()
+        buffer.get(secondBytes)
+        assertArrayEquals(bytes.copyOf(10), secondBytes)
+        assertEquals(1, callback.receivedCalled)
     }
 
     @Test
-    fun testReceive() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
-        val connectSemaphore = Semaphore(0)
-        val writeSemaphore = Semaphore(0)
-        val readSemaphore = Semaphore(0)
-        val message = "Hello, World!".toByteArray()
+    fun testSending_without_urgent_flag() {
+        server.startServer()
+        client.connect()
+        server.connectionSemaphore.acquire()
+        callback.connectSemaphore.acquire()
 
-        startServer()
-        thread {
-            val socket = serverSocket.accept()
-            connectSemaphore.release()
+        val bytes = "Hello World".toByteArray()
+        val buffer = ByteBuffer.allocateDirect(bytes.size)
+        buffer.put(bytes)
 
-            writeSemaphore.tryAcquire(5, TimeUnit.SECONDS)
-            socket.getOutputStream().write(message)
-            readSemaphore.release()
-        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
+        server.buffer = ByteBuffer.allocate(bytes.size)
+        client.send(buffer, false)
+        server.receivingSemaphore.acquire()
 
-        client.apply {
-            callback(callback)
-            connect()
-        }
-        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
-
-        writeSemaphore.release()
-
-        readSemaphore.tryAcquire(5, TimeUnit.SECONDS)
-        Thread.sleep(500) // Waiting callback ...
-        Mockito.verify(callback).socketReceive()
-
-        val availableBefore = client.availableBytes()
-        val received = client.readBytes(2048)
-        val availableAfter = client.availableBytes()
-
-        assertArrayEquals(message, received)
-        assertEquals(message.size, availableBefore)
-        assertEquals(0, availableAfter)
+        assertArrayEquals(bytes, server.buffer!!.array())
     }
 
     @Test
-    fun testReceiveBuffer() {
-        val callback = Mockito.mock(SocketClient.ClientCallback::class.java)
-        val connectSemaphore = Semaphore(0)
-        val writeSemaphore = Semaphore(0)
-        val readSemaphore = Semaphore(0)
-        val message = "Hello, World!".toByteArray()
+    fun testSending_with_urgent_flag() {
+        server.startServer()
+        client.connect()
+        server.connectionSemaphore.acquire()
+        callback.connectSemaphore.acquire()
 
-        startServer()
-        thread {
-            val socket = serverSocket.accept()
-            connectSemaphore.release()
+        val normalBytes = "Hello World".toByteArray()
+        val normalBuffer = ByteBuffer.allocateDirect(normalBytes.size)
+        normalBuffer.put(normalBytes)
 
-            writeSemaphore.tryAcquire(5, TimeUnit.SECONDS)
-            socket.getOutputStream().write(message)
-            readSemaphore.release()
-        }.setUncaughtExceptionHandler { _, _ -> /** Ignore */ }
+        val urgentData = "Hello Hell".toByteArray()
+        val urgentBuffer = ByteBuffer.allocateDirect(urgentData.size)
+        urgentBuffer.put(urgentData)
 
-        client.apply {
-            callback(callback)
-            connect()
-        }
-        connectSemaphore.tryAcquire(5, TimeUnit.SECONDS)
+        server.buffer = ByteBuffer.allocate(urgentData.size + normalBytes.size)
+        client.send(normalBuffer, false)
+        client.send(urgentBuffer, true)
+        server.receivingSemaphore.acquire()
 
-        writeSemaphore.release()
-
-        readSemaphore.tryAcquire(5, TimeUnit.SECONDS)
-        Thread.sleep(500) // Waiting callback ...
-        Mockito.verify(callback).socketReceive()
-
-        val buffer = ByteBuffer.allocateDirect(message.size)
-        var availableBefore = client.availableBytes()
-        var receivedCount = client.readToByteBuffer(buffer, 5, 0)
-        var availableAfter = client.availableBytes()
-
-        assertEquals(5, receivedCount)
-        assertEquals(message.size, availableBefore)
-        assertEquals(message.size - 5, availableAfter)
-
-        // Second part
-        availableBefore = client.availableBytes()
-        receivedCount = client.readToByteBuffer(buffer, availableBefore, receivedCount)
-        availableAfter = client.availableBytes()
-
-        assertEquals(availableBefore, receivedCount)
-        assertEquals(0, availableAfter)
+        assertArrayEquals(urgentData + normalBytes, server.buffer!!.array())
     }
 }

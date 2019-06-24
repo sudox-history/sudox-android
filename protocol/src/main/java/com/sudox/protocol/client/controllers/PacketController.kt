@@ -15,7 +15,7 @@ class PacketController(val socketClient: SocketClient) {
             reset()
         }
 
-        if (partsLengthInBytes <= 0 && socketClient.availableBytes() >= LENGTH_HEADER_SIZE_IN_BYTES) {
+        if (partsLengthInBytes <= 0 && socketClient.available() >= LENGTH_HEADER_SIZE_IN_BYTES) {
             readHeaders()
         }
 
@@ -46,17 +46,17 @@ class PacketController(val socketClient: SocketClient) {
     }
 
     private fun readParts() {
-        val availableBytes = socketClient.availableBytes()
+        val availableBytes = socketClient.available()
         val readCount = Math.min(availableBytes, partsBuffer!!.remaining())
 
         if (readCount > 0) {
-            socketClient.readToByteBuffer(partsBuffer!!, readCount, partsBuffer!!.position())
+            socketClient.read(partsBuffer!!, readCount, partsBuffer!!.position())
         }
     }
 
     private fun readLength(): Int {
         return socketClient
-                .readBytes(LENGTH_HEADER_SIZE_IN_BYTES)
+                .read(LENGTH_HEADER_SIZE_IN_BYTES)
                 .readIntBE()
     }
 }

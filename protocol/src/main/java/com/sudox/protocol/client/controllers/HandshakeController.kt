@@ -16,7 +16,7 @@ class HandshakeController(val protocolController: ProtocolController) {
 
     fun start() {
         ecdhSession = Encryption.startECDH()
-        protocolController.sendPacket(HANDSHAKE_PACKET_NAME, ecdhSession!!.publicKey)
+        protocolController.sendPacket(arrayOf(HANDSHAKE_PACKET_NAME, ecdhSession!!.publicKey))
     }
 
     fun handlePacket(parts: QueueList<ByteArray>) {

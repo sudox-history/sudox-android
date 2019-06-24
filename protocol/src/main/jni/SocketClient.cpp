@@ -43,9 +43,9 @@ std::optional<sockaddr_in> SocketClient::get_address() {
 
     if (hostent != nullptr) {
         sockaddr_in socket_addr{};
-        socket_addr.sin_port = htons(port),
-                socket_addr.sin_family = AF_INET,
-                socket_addr.sin_addr.s_addr = static_cast<in_addr_t>(*(long *) hostent->h_addr_list[0]);
+        socket_addr.sin_port = htons(port);
+        socket_addr.sin_family = AF_INET;
+        socket_addr.sin_addr.s_addr = static_cast<in_addr_t>(*(long *) hostent->h_addr_list[0]);
 
         return {socket_addr};
     }
@@ -120,18 +120,25 @@ size_t SocketClient::read(char *&buffer, size_t count) {
     return bytes_read;
 }
 
-void SocketClient::send(char *buffer, size_t count) {
+void SocketClient::send(char *buffer, size_t count, bool urgent) {
     if (!opened()) {
         return;
     }
 
-    Data data{
+    Packet data{
             .buffer = buffer,
-            .count = count
+            .count = count,
+            .urgent = urgent
     };
 
     send_mutex.lock();
-    sending_queue.push_back(data);
+
+    if (urgent) {
+        sending_queue.push_front(data);
+    } else {
+        sending_queue.push_back(data);
+    }
+
     send_mutex.unlock();
     adjust_write_flag();
 }
@@ -161,14 +168,22 @@ void SocketClient::handle_events(uint32_t events) {
         }
 
         send_mutex.lock();
+        size_t size = sending_queue.size();
 
-        for (int i = 0; i < sending_queue.size(); ++i) {
+        for (int i = 0; i < size; ++i) {
             auto data = sending_queue.begin();
             auto buffer = data->buffer;
             auto count = data->count;
 
-            ::send(socket_fd, buffer, count, 0);
-            sending_queue.pop_back();
+            if (::send(socket_fd, buffer, count, 0) == -1) {
+                break;
+            }
+
+            if (data->urgent) {
+                sending_queue.pop_front();
+            } else {
+                sending_queue.pop_back();
+            }
         }
 
         send_mutex.unlock();

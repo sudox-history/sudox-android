@@ -49,7 +49,7 @@ class MessagesController(val protocolController: ProtocolController) {
         val iv = Encryption.generateBytes(IV_SIZE)
         val ciphertext = Encryption.encryptWithAES(secretKey!!, iv, messageWithSalt)!!
         val hmac = Encryption.computeHMAC(secretKey!!, ciphertext)
-        protocolController.sendPacket(MESSAGES_PACKET_NAME, ciphertext, hmac, iv)
+        protocolController.sendPacket(arrayOf(MESSAGES_PACKET_NAME, ciphertext, hmac, iv))
 
         return true
     }

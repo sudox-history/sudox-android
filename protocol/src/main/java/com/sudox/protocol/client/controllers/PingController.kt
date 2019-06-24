@@ -55,7 +55,7 @@ class PingController(val protocolController: ProtocolController) {
     }
 
     private fun sendPacket() {
-        protocolController.sendPacket(PING_PACKET_NAME)
+        protocolController.sendPacket(arrayOf(PING_PACKET_NAME), true)
     }
 
     fun isPacket(name: ByteArray): Boolean {

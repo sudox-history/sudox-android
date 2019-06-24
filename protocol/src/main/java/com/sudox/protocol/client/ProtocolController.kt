@@ -8,13 +8,14 @@ import com.sudox.protocol.client.controllers.PingController
 import com.sudox.protocol.client.helpers.deserializePacket
 import com.sudox.protocol.client.helpers.serializePacket
 import com.sudox.protocol.client.controllers.PacketController
+import com.sudox.protocol.client.network.SocketCallback
 import com.sudox.protocol.client.network.SocketClient
 
 internal const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
 
 class ProtocolController(
     var protocolClient: ProtocolClient
-) : SequenceThread("Sudox Protocol Controller"), SocketClient.ClientCallback {
+) : SequenceThread("Sudox Protocol Controller"), SocketCallback {
 
     private val socketClient = SocketClient(protocolClient.host, protocolClient.port).apply {
         callback(this@ProtocolController)
@@ -68,7 +69,7 @@ class ProtocolController(
         }
     }
 
-    override fun socketClosed(needRestart: Boolean) = submitTask {
+    override fun socketClosed(error: Boolean) = submitTask {
         val sessionStarted = messagesController.isSessionStarted()
 
         removeAllScheduledTasks()
@@ -80,7 +81,7 @@ class ProtocolController(
             protocolClient.callback.onEnded()
         }
 
-        if (needRestart) {
+        if (error) {
             if (connectionAttemptFailed) {
                 submitDelayedTask(RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS) { socketClient.connect() }
             } else {
@@ -95,8 +96,8 @@ class ProtocolController(
         return messagesController.send(message)
     }
 
-    internal fun sendPacket(vararg parts: ByteArray) {
-        socketClient.sendBuffer(serializePacket(parts))
+    internal fun sendPacket(parts: Array<ByteArray>, urgent: Boolean = false) {
+        socketClient.send(serializePacket(parts), urgent)
     }
 
     internal fun startSession(secretKey: ByteArray) {

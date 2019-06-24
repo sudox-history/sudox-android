@@ -8,6 +8,7 @@ add_library(ssockets SHARED
         SocketListener.cpp
         JNIWrapper.cpp
         callbacks/JNICallback.cpp
-        helpers/JNIHelper.cpp)
+        helpers/JNIHelper.cpp
+        )
 
 target_include_directories(ssockets PUBLIC .)

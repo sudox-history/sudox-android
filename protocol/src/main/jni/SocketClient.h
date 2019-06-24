@@ -2,14 +2,14 @@
 #define SSOCKETS_SOCKETCLIENT_H
 
 #include "SocketListener.h"
-#include "structs/Data.h"
+#include "structs/Packet.h"
 
 #include <sys/epoll.h>
 #include <cstdint>
 #include <string>
 #include <netinet/in.h>
 #include <optional>
-#include <list>
+#include <deque>
 #include <mutex>
 #include <callbacks/SocketCallback.h>
 
@@ -18,7 +18,7 @@ static SocketListener listener;
 class SocketClient {
 private:
     std::mutex send_mutex;
-    std::list<Data> sending_queue;
+    std::deque<Packet> sending_queue;
     epoll_event event_mask;
     std::string host;
     uint16_t port;
@@ -48,7 +48,7 @@ public:
 
     size_t read(char *&buffer, size_t count);
 
-    void send(char *buffer, size_t count);
+    void send(char *buffer, size_t count, bool urgent);
 
     void adjust_write_flag();
 
