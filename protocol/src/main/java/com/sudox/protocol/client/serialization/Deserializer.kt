@@ -165,4 +165,9 @@ class Deserializer {
             else -> null
         }
     }
+
+    fun reset() {
+        buffer = null
+        params = null
+    }
 }
