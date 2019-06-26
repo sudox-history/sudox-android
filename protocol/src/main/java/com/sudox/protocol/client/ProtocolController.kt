@@ -5,8 +5,8 @@ import com.sudox.common.threading.SequenceThread
 import com.sudox.protocol.client.controllers.HandshakeController
 import com.sudox.protocol.client.controllers.MessagesController
 import com.sudox.protocol.client.controllers.PingController
-import com.sudox.protocol.client.helpers.deserializePacket
-import com.sudox.protocol.client.helpers.serializePacket
+import com.sudox.protocol.client.serialization.helpers.deserializePacket
+import com.sudox.protocol.client.serialization.helpers.serializePacket
 import com.sudox.protocol.client.controllers.PacketController
 import com.sudox.protocol.client.network.SocketCallback
 import com.sudox.protocol.client.network.SocketClient

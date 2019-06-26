@@ -1,4 +1,4 @@
-package com.sudox.protocol.client.helpers
+package com.sudox.protocol.client.serialization.helpers
 
 import com.sudox.common.structures.QueueList
 import java.nio.ByteBuffer
