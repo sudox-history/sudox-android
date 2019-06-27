@@ -478,8 +478,8 @@ style:
   RedundantVisibilityModifierRule:
     active: false
   ReturnCount:
-    active: true
-    max: 5
+    active: false
+    max: 6
     excludedFunctions: "equals"
     excludeLabeled: false
     excludeReturnFromLambda: true

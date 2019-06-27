@@ -1,12 +1,9 @@
 package com.sudox.protocol.client
 
-import com.sudox.common.structures.QueueList
 import com.sudox.common.threading.SequenceThread
 import com.sudox.protocol.client.controllers.HandshakeController
 import com.sudox.protocol.client.controllers.MessagesController
 import com.sudox.protocol.client.controllers.PingController
-import com.sudox.protocol.client.serialization.helpers.deserializePacket
-import com.sudox.protocol.client.serialization.helpers.serializePacket
 import com.sudox.protocol.client.controllers.PacketController
 import com.sudox.protocol.client.network.SocketCallback
 import com.sudox.protocol.client.network.SocketClient
@@ -21,11 +18,11 @@ class ProtocolController(
         callback(this@ProtocolController)
     }
 
-    private val protocolReader = PacketController(socketClient)
+    private val packetController = PacketController(socketClient)
     private val handshakeController = HandshakeController(this)
     private val pingController = PingController(this)
-    private var connectionAttemptFailed: Boolean = true
     private val messagesController = MessagesController(this)
+    private var connectionAttemptFailed: Boolean = true
 
     override fun threadStart() = submitTask {
         socketClient.connect()
@@ -42,26 +39,25 @@ class ProtocolController(
     }
 
     override fun socketReceive() {
-        val buffer = protocolReader.readPacket() ?: return
-        val parts = deserializePacket(buffer) ?: return
+        val packet = packetController.readPacket() ?: return
+
         pingController.scheduleSendTask()
+        handlePacket(packet)
+    }
 
-        if (parts.size() > 0) {
-            handlePacket(parts)
+    private fun handlePacket(parts: Any) {
+        if (parts is Array<*> && parts.size >= 1) {
+            val name = parts[0] as? String ?: return
+
+            if (pingController.isPacket(name)) {
+                pingController.handlePacket()
+            } else {
+                addMessageToQueue(name, parts)
+            }
         }
     }
 
-    private fun handlePacket(parts: QueueList<ByteArray>) {
-        val name = parts.shift()!!
-
-        if (pingController.isPacket(name)) {
-            pingController.handlePacket()
-        } else {
-            addMessageToQueue(name, parts)
-        }
-    }
-
-    private fun addMessageToQueue(name: ByteArray, parts: QueueList<ByteArray>) = submitTask {
+    private fun addMessageToQueue(name: String, parts: Array<*>) = submitTask {
         if (messagesController.isSessionStarted() && messagesController.isPacket(name, parts)) {
             messagesController.handlePacket(parts)
         } else if (handshakeController.isPacket(name, parts)) {
@@ -73,7 +69,7 @@ class ProtocolController(
         val sessionStarted = messagesController.isSessionStarted()
 
         removeAllScheduledTasks()
-        protocolReader.reset()
+        packetController.resetReading()
         handshakeController.reset()
         messagesController.reset()
 
@@ -96,8 +92,8 @@ class ProtocolController(
         return messagesController.send(message)
     }
 
-    internal fun sendPacket(parts: Array<ByteArray>, urgent: Boolean = false) {
-        socketClient.send(serializePacket(parts), urgent)
+    internal fun sendPacket(parts: Array<Any>, urgent: Boolean = false) {
+        packetController.sendPacket(parts, urgent)
     }
 
     internal fun startSession(secretKey: ByteArray) {

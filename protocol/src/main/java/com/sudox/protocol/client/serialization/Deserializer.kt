@@ -144,7 +144,7 @@ class Deserializer {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : Serializable> deserialize(buffer: ByteBuffer, objectClass: KClass<T>? = null): Any? {
+    fun deserialize(buffer: ByteBuffer, objectClass: KClass<Any>? = null): Any? {
         if (!buffer.hasRemaining()) {
             return null
         }
@@ -156,8 +156,8 @@ class Deserializer {
 
         return if (result == null) {
             null
-        } else if (objectClass != null && result is LinkedHashMap<*, *>) {
-            objectClass.java.newInstance().apply {
+        } else if (objectClass != null && objectClass is Serializable && result is LinkedHashMap<*, *>) {
+            (objectClass.java.newInstance() as Serializable).apply {
                 deserialize(result as LinkedHashMap<String, Any>)
             }
         } else {

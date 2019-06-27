@@ -3,7 +3,7 @@ package com.sudox.protocol.client.controllers
 import android.os.SystemClock
 import com.sudox.protocol.client.ProtocolController
 
-internal val PING_PACKET_NAME = "png".toByteArray()
+internal const val PING_PACKET_NAME = "png"
 internal const val PING_SEND_TIMEOUT = 6000L
 internal const val PING_CHECK_TIMEOUT = 1000L
 internal const val PING_SEND_TASK_ID = 0
@@ -58,7 +58,7 @@ class PingController(val protocolController: ProtocolController) {
         protocolController.sendPacket(arrayOf(PING_PACKET_NAME), true)
     }
 
-    fun isPacket(name: ByteArray): Boolean {
-        return name.contentEquals(PING_PACKET_NAME)
+    fun isPacket(name: String): Boolean {
+        return name == PING_PACKET_NAME
     }
 }

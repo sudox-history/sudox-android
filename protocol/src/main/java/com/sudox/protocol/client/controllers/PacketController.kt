@@ -1,62 +1,80 @@
 package com.sudox.protocol.client.controllers
 
-import com.sudox.protocol.client.serialization.helpers.LENGTH_HEADER_SIZE_IN_BYTES
-import com.sudox.protocol.client.serialization.helpers.readIntBE
 import com.sudox.protocol.client.network.SocketClient
+import com.sudox.protocol.client.serialization.Deserializer
+import com.sudox.protocol.client.serialization.Serializer
 import java.nio.ByteBuffer
+
+internal const val LENGTH_HEADER_SIZE = 2
 
 class PacketController(val socketClient: SocketClient) {
 
-    private var partsLengthInBytes: Int = 0
-    private var partsBuffer: ByteBuffer? = null
+    private var readLength: Int = 0
+    private var readBuffer: ByteBuffer? = null
+    private var serializer = Serializer()
+    private var deserializer = Deserializer()
 
-    fun readPacket(): ByteBuffer? {
-        if (partsBuffer?.remaining() == 0) {
-            reset()
+    fun readPacket(): Any? {
+        if (readBuffer?.remaining() == 0) {
+            resetReading()
         }
 
-        if (partsLengthInBytes <= 0 && socketClient.available() >= LENGTH_HEADER_SIZE_IN_BYTES) {
-            readHeaders()
+        if (readLength <= 0 && socketClient.available() >= LENGTH_HEADER_SIZE) {
+            readLength()
         }
 
-        if (partsLengthInBytes > 0) {
-            readParts()
-
-            return if (partsBuffer?.remaining() == 0) {
-                return partsBuffer!!.apply { flip() }
-            } else {
-                null
-            }
+        if (readLength <= 0) {
+            return null
         }
 
-        return null
+        readParts()
+
+        return if (readBuffer?.remaining() == 0) {
+            val result = deserializer.deserialize(readBuffer!!.apply {
+                flip()
+            })
+
+            resetReading()
+            return result
+        } else {
+            null
+        }
     }
 
-    fun reset() {
-        partsBuffer?.clear()
-        partsLengthInBytes = 0
+    fun sendPacket(parts: Array<Any>, urgent: Boolean = false) {
+        val buffer = serializer.serialize(parts, LENGTH_HEADER_SIZE)
+
+        val length = buffer.limit() - LENGTH_HEADER_SIZE
+        val lengthFirstByte = length.toByte()
+        val lengthSecondByte = (length shl 8).toByte()
+        buffer.rewind()
+        buffer.put(lengthFirstByte)
+        buffer.put(lengthSecondByte)
+
+        socketClient.send(buffer, urgent)
     }
 
-    private fun readHeaders() {
-        partsLengthInBytes = Math.max(readLength(), 0)
+    private fun readLength() {
+        val bytes = socketClient.read(LENGTH_HEADER_SIZE)
+        val firstByte = bytes[0].toInt()
+        val secondByte = bytes[0].toInt() shl 8
 
-        if (partsLengthInBytes > 0) {
-            partsBuffer = ByteBuffer.allocateDirect(partsLengthInBytes)
-        }
+        readLength = firstByte or secondByte
+        readBuffer = ByteBuffer.allocateDirect(readLength)
     }
 
     private fun readParts() {
-        val availableBytes = socketClient.available()
-        val readCount = Math.min(availableBytes, partsBuffer!!.remaining())
+        val available = socketClient.available()
+        val need = Math.min(available, readBuffer!!.remaining())
 
-        if (readCount > 0) {
-            socketClient.read(partsBuffer!!, readCount, partsBuffer!!.position())
+        if (need > 0) {
+            socketClient.read(readBuffer!!, need, readBuffer!!.position())
         }
     }
 
-    private fun readLength(): Int {
-        return socketClient
-                .read(LENGTH_HEADER_SIZE_IN_BYTES)
-                .readIntBE()
+    fun resetReading() {
+        readBuffer?.clear()
+        readBuffer = null
+        readLength = 0
     }
 }
