@@ -5,31 +5,31 @@ import kotlin.reflect.KClass
 
 class Deserializer {
 
-    var buffer: ByteBuffer? = null
-    var params: LinkedHashMap<String, Any>? = null
+    private var internalBuffer: ByteBuffer? = null
+    private var internalParams: LinkedHashMap<String, Any>? = null
 
-    private fun readBoolean(defValue: Boolean = false): Boolean {
-        if (!buffer!!.hasRemaining()) {
-            return defValue
+    private fun readBoolean(): Boolean {
+        if (!internalBuffer!!.hasRemaining()) {
+            return false
         }
 
-        return buffer!!.get() == 1.toByte()
+        return internalBuffer!!.get() == 1.toByte()
     }
 
-    private fun readNumber(defValue: Long = 0): Long {
-        if (buffer!!.remaining() < Types.NUMBER_HEADERS_LENGTH) {
-            return defValue
+    private fun readNumber(): Long {
+        if (internalBuffer!!.remaining() < Types.NUMBER_HEADERS_LENGTH) {
+            return 0
         }
 
-        val length = buffer!!.get()
+        val length = internalBuffer!!.get()
         var value = 0L
 
-        if (buffer!!.remaining() < length) {
-            return defValue
+        if (internalBuffer!!.remaining() < length) {
+            return 0
         }
 
         for (i in 0 until length) {
-            val byte = buffer!!.get().toLong()
+            val byte = internalBuffer!!.get().toLong()
 
             value = value or if (i > 0) {
                 (byte shr (i * 8))
@@ -42,68 +42,68 @@ class Deserializer {
     }
 
     private fun readString(): String? {
-        if (buffer!!.remaining() < Types.STRING_HEADERS_LENGTH) {
+        if (internalBuffer!!.remaining() < Types.STRING_HEADERS_LENGTH) {
             return null
         }
 
-        val firstLengthByte = buffer!!.get().toInt()
-        val secondLengthByte = buffer!!.get().toInt() shl 8
+        val firstLengthByte = internalBuffer!!.get().toInt()
+        val secondLengthByte = internalBuffer!!.get().toInt() shl 8
         val length = firstLengthByte or secondLengthByte
 
-        if (buffer!!.remaining() < length) {
+        if (internalBuffer!!.remaining() < length) {
             return null
         }
 
         val bytes = ByteArray(length).apply {
-            buffer!!.get(this)
+            internalBuffer!!.get(this)
         }
 
         return String(bytes)
     }
 
     private fun readBuffer(): ByteArray? {
-        if (buffer!!.remaining() < Types.BUFFER_HEADERS_LENGTH) {
+        if (internalBuffer!!.remaining() < Types.BUFFER_HEADERS_LENGTH) {
             return null
         }
 
-        val firstLengthByte = buffer!!.get().toInt()
-        val secondLengthByte = buffer!!.get().toInt() shl 8
+        val firstLengthByte = internalBuffer!!.get().toInt()
+        val secondLengthByte = internalBuffer!!.get().toInt() shl 8
         val length = firstLengthByte or secondLengthByte
 
-        if (buffer!!.remaining() < length) {
+        if (internalBuffer!!.remaining() < length) {
             return null
         }
 
         return ByteArray(length).apply {
-            buffer!!.get(this)
+            internalBuffer!!.get(this)
         }
     }
 
     private fun readObjectInternal(): LinkedHashMap<String, Any>? {
-        if (buffer!!.remaining() < Types.OBJECT_HEADERS_LENGTH) {
+        if (internalBuffer!!.remaining() < Types.OBJECT_HEADERS_LENGTH) {
             return null
         }
 
-        val paramsCount = buffer!!.get().toInt()
+        val paramsCount = internalBuffer!!.get().toInt()
         val params = LinkedHashMap<String, Any>(paramsCount)
 
-        if (this.params == null) {
-            this.params = params
+        if (internalParams == null) {
+            internalParams = params
         }
 
         for (i in 1..paramsCount) {
-            params.plusAssign(readParam()!!)
+            params.plusAssign(readParam() ?: return null)
         }
 
         return params
     }
 
     private fun readArrayInternal(): Array<Any?>? {
-        if (buffer!!.remaining() < Types.ARRAY_HEADERS_LENGTH) {
+        if (internalBuffer!!.remaining() < Types.ARRAY_HEADERS_LENGTH) {
             return null
         }
 
-        val size = buffer!!.get().toInt()
+        val size = internalBuffer!!.get().toInt()
         val array = arrayOfNulls<Any?>(size)
 
         for (i in 0 until size) {
@@ -114,48 +114,25 @@ class Deserializer {
     }
 
     private fun readParam(): Pair<String, Any>? {
-        if (!buffer!!.hasRemaining()) {
+        if (!internalBuffer!!.hasRemaining()) {
             return null
         }
 
-        val keySize = buffer!!.get().toInt()
+        val keySize = internalBuffer!!.get().toInt()
 
-        if (buffer!!.remaining() < keySize) {
+        if (internalBuffer!!.remaining() < keySize) {
             return null
         }
 
-        val keyBytes = ByteArray(keySize).apply { buffer!!.get(this) }
+        val keyBytes = ByteArray(keySize).apply { internalBuffer!!.get(this) }
         val key = String(keyBytes)
         val element = readElement() ?: return null
 
         return Pair(key, element)
     }
 
-    fun readArray(): Array<Any?>? {
-        if (!buffer!!.hasRemaining() || buffer!!.get() != Types.ARRAY) {
-            return null
-        }
-
-        return readArrayInternal()
-    }
-
-    fun <T : Serializable> readObject(clazz: KClass<T>): T? {
-        if (!buffer!!.hasRemaining() || buffer!!.get() != Types.OBJECT) {
-            return null
-        }
-
-        if (readObjectInternal() == null) {
-            return null
-        }
-
-        return clazz.java.newInstance().apply {
-            deserialize(params!!)
-            params = null
-        }
-    }
-
     private fun readElement(): Any? {
-        return when (buffer!!.get()) {
+        return when (internalBuffer!!.get()) {
             Types.BOOLEAN -> readBoolean()
             Types.NUMBER -> readNumber()
             Types.STRING -> readString()
@@ -166,8 +143,25 @@ class Deserializer {
         }
     }
 
-    fun reset() {
-        buffer = null
-        params = null
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Serializable> deserialize(buffer: ByteBuffer, objectClass: KClass<T>? = null): Any? {
+        if (!buffer.hasRemaining()) {
+            return null
+        }
+
+        internalBuffer = buffer
+        val result = readElement()
+        internalBuffer = null
+        internalParams = null
+
+        return if (result == null) {
+            null
+        } else if (objectClass != null && result is LinkedHashMap<*, *>) {
+            objectClass.java.newInstance().apply {
+                deserialize(result as LinkedHashMap<String, Any>)
+            }
+        } else {
+            result
+        }
     }
 }

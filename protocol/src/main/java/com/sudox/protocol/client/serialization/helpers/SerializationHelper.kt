@@ -7,6 +7,7 @@ internal const val BITS_IN_BYTE = 8
 internal const val SIGNED_VALUE_MASK = 0xFF
 internal const val LENGTH_HEADER_SIZE_IN_BYTES = 2
 
+@Deprecated("Replace by new serialization")
 fun serializePacket(parts: Array<out ByteArray>): ByteBuffer {
     val partsLength = parts.sumBy { it.size + LENGTH_HEADER_SIZE_IN_BYTES }
     val packetLength = partsLength + LENGTH_HEADER_SIZE_IN_BYTES
@@ -19,6 +20,7 @@ fun serializePacket(parts: Array<out ByteArray>): ByteBuffer {
     return buffer
 }
 
+@Deprecated("Replace by new serialization")
 fun deserializePacket(buffer: ByteBuffer): QueueList<ByteArray>? {
     val parts = QueueList<ByteArray>()
     val length = buffer.limit()
@@ -35,11 +37,13 @@ fun deserializePacket(buffer: ByteBuffer): QueueList<ByteArray>? {
     return parts
 }
 
+@Deprecated("Replace by new serialization")
 fun ByteBuffer.putPacketPart(it: ByteArray) {
     putIntBE(it.size, LENGTH_HEADER_SIZE_IN_BYTES)
     put(it)
 }
 
+@Deprecated("Replace by new serialization")
 fun ByteBuffer.readPacketPart(): ByteArray? {
     val length = readIntBE(LENGTH_HEADER_SIZE_IN_BYTES)
 
@@ -50,12 +54,14 @@ fun ByteBuffer.readPacketPart(): ByteArray? {
     }
 }
 
+@Deprecated("Replace by new serialization")
 fun ByteBuffer.readIntBE(n: Int): Int {
     return ByteArray(n)
             .apply { get(this) }
             .readIntBE()
 }
 
+@Deprecated("Replace by new serialization")
 fun ByteBuffer.putIntBE(value: Int, n: Int) {
     val bytes = ByteArray(n)
     var index = 0
@@ -67,6 +73,7 @@ fun ByteBuffer.putIntBE(value: Int, n: Int) {
     put(bytes)
 }
 
+@Deprecated("Replace by new serialization")
 fun ByteArray.readIntBE(): Int {
     var bytesIndex = 0
     var value = 0

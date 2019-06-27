@@ -79,21 +79,7 @@ class Serializer {
         }
     }
 
-    fun writeParam(parent: Serializable, key: String, element: Any) {
-        val keyBytes = key.toByteArray()
-
-        if (!calculating) {
-            buffer!!.put(keyBytes.size.toByte())
-            buffer!!.put(keyBytes)
-        } else {
-            sizeCounter += keyBytes.size + 1
-        }
-
-        parent.paramsCounter++
-        writeElement(element)
-    }
-
-    fun writeObject(value: Serializable) {
+    private fun writeObject(value: Serializable) {
         var sizeIndex = 0
 
         if (!calculating) {
@@ -112,7 +98,7 @@ class Serializer {
         }
     }
 
-    fun writeObjectArray(values: Array<*>) {
+    private fun writeObjectArray(values: Array<*>) {
         if (!calculating) {
             buffer!!.put(Types.ARRAY)
             buffer!!.put(values.size.toByte())
@@ -123,7 +109,7 @@ class Serializer {
         values.forEach { writeElement(it!!) }
     }
 
-    fun writeLongArray(values: LongArray) {
+    private fun writeLongArray(values: LongArray) {
         if (!calculating) {
             buffer!!.put(Types.ARRAY)
             buffer!!.put(values.size.toByte())
@@ -134,7 +120,7 @@ class Serializer {
         values.forEach { writeElement(it) }
     }
 
-    fun writeBoolArray(values: BooleanArray) {
+    private fun writeBoolArray(values: BooleanArray) {
         if (!calculating) {
             buffer!!.put(Types.ARRAY)
             buffer!!.put(values.size.toByte())
@@ -158,23 +144,35 @@ class Serializer {
         }
     }
 
-    fun calculating(toggle: Boolean) {
-        calculating = toggle
+    fun writeParam(parent: Serializable, key: String, element: Any) {
+        val keyBytes = key.toByteArray()
 
-        if (!calculating && sizeCounter > 0) {
-            buffer = ByteBuffer.allocateDirect(sizeCounter)
+        if (!calculating) {
+            buffer!!.put(keyBytes.size.toByte())
+            buffer!!.put(keyBytes)
+        } else {
+            sizeCounter += keyBytes.size + 1
         }
 
-        sizeCounter = 0
+        parent.paramsCounter++
+        writeElement(element)
     }
 
-    fun buffer(): ByteBuffer? {
-        return buffer
-    }
-
-    fun reset() {
-        buffer = null
+    fun serialize(element: Any, offset: Int): ByteBuffer {
         calculating = true
+        writeElement(element)
+        calculating = false
+
+        buffer = ByteBuffer.allocateDirect(sizeCounter + offset)
+        buffer!!.position(offset)
         sizeCounter = 0
+
+        writeElement(element)
+
+        val result = buffer
+        result!!.flip()
+        buffer = null
+
+        return result
     }
 }
