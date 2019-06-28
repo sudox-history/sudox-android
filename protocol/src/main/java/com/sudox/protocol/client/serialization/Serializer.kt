@@ -19,7 +19,7 @@ class Serializer {
 
     private fun writeNumber(value: Long) {
         var sizeIndex = 0
-        var size: Byte = 1
+        var size = 1
         var pow = 256
 
         if (!calculating) {
@@ -30,14 +30,14 @@ class Serializer {
 
         while (true) {
             if (!calculating) {
-                buffer!!.put((value shl ((size - 1) * 8)).toByte())
+                buffer!!.put((value ushr ((size - 1) * 8)).toByte())
             }
 
             val max = pow / 2 - 1
             val min = -max + 1
             pow *= 256
 
-            if (value in min..max) {
+            if (value in min..max || size >= 8) {
                 break
             }
 
@@ -45,10 +45,19 @@ class Serializer {
         }
 
         if (!calculating) {
-            buffer!!.put(sizeIndex, size)
+            writeSizeLE(size, Types.NUMBER_HEADERS_LENGTH, sizeIndex)
         } else {
-            // Including type header & size
-            sizeCounter += size + 2
+            sizeCounter += size + Types.NUMBER_HEADERS_LENGTH + 1
+        }
+    }
+
+    private fun writeSizeLE(value: Int, bytesCount: Int, offset: Int = 0) {
+        for (i in 1..bytesCount) {
+            if (offset > 0) {
+                buffer!!.put(offset + i - 1, (value ushr ((i - 1) * 8)).toByte())
+            } else {
+                buffer!!.put((value ushr ((i - 1) * 8)).toByte())
+            }
         }
     }
 
@@ -58,11 +67,10 @@ class Serializer {
 
         if (!calculating) {
             buffer!!.put(Types.STRING)
-            buffer!!.put(size.toByte())
-            buffer!!.put((size shl 8).toByte())
+            writeSizeLE(size, Types.STRING_HEADERS_LENGTH)
             buffer!!.put(bytes)
         } else {
-            sizeCounter += size + 3
+            sizeCounter += size + Types.STRING_HEADERS_LENGTH + 1
         }
     }
 
@@ -71,11 +79,10 @@ class Serializer {
 
         if (!calculating) {
             buffer!!.put(Types.BUFFER)
-            buffer!!.put(size.toByte())
-            buffer!!.put((size shl 8).toByte())
+            writeSizeLE(size, Types.BUFFER_HEADERS_LENGTH)
             buffer!!.put(value)
         } else {
-            sizeCounter += size + 3
+            sizeCounter += size + Types.BUFFER_HEADERS_LENGTH + 1
         }
     }
 
@@ -85,25 +92,25 @@ class Serializer {
         if (!calculating) {
             buffer!!.put(Types.OBJECT)
             sizeIndex = buffer!!.position()
-            buffer!!.position(sizeIndex + 1)
+            buffer!!.position(sizeIndex + Types.OBJECT_HEADERS_LENGTH)
         }
 
         value.paramsCounter = 0
         value.serialize(this)
 
         if (!calculating) {
-            buffer!!.put(sizeIndex, value.paramsCounter.toByte())
+            writeSizeLE(value.paramsCounter, Types.OBJECT_HEADERS_LENGTH, sizeIndex)
         } else {
-            sizeCounter += 2
+            sizeCounter += Types.OBJECT_HEADERS_LENGTH + 1
         }
     }
 
     private fun writeObjectArray(values: Array<*>) {
         if (!calculating) {
             buffer!!.put(Types.ARRAY)
-            buffer!!.put(values.size.toByte())
+            writeSizeLE(values.size, Types.ARRAY_HEADERS_LENGTH)
         } else {
-            sizeCounter += 2
+            sizeCounter += Types.ARRAY_HEADERS_LENGTH + 1
         }
 
         values.forEach { writeElement(it!!) }
@@ -112,9 +119,9 @@ class Serializer {
     private fun writeLongArray(values: LongArray) {
         if (!calculating) {
             buffer!!.put(Types.ARRAY)
-            buffer!!.put(values.size.toByte())
+            writeSizeLE(values.size, Types.ARRAY_HEADERS_LENGTH)
         } else {
-            sizeCounter += 2
+            sizeCounter += Types.ARRAY_HEADERS_LENGTH + 1
         }
 
         values.forEach { writeElement(it) }
@@ -123,9 +130,9 @@ class Serializer {
     private fun writeBoolArray(values: BooleanArray) {
         if (!calculating) {
             buffer!!.put(Types.ARRAY)
-            buffer!!.put(values.size.toByte())
+            writeSizeLE(values.size, Types.ARRAY_HEADERS_LENGTH)
         } else {
-            sizeCounter += 2
+            sizeCounter += Types.ARRAY_HEADERS_LENGTH + 1
         }
 
         values.forEach { writeElement(it) }
@@ -148,10 +155,10 @@ class Serializer {
         val keyBytes = key.toByteArray()
 
         if (!calculating) {
-            buffer!!.put(keyBytes.size.toByte())
+            writeSizeLE(keyBytes.size, Types.PARAM_HEADERS_LENGTH)
             buffer!!.put(keyBytes)
         } else {
-            sizeCounter += keyBytes.size + 1
+            sizeCounter += Types.PARAM_HEADERS_LENGTH + keyBytes.size
         }
 
         parent.paramsCounter++
