@@ -30,8 +30,8 @@ class EncryptionTest : Assert() {
     @Test
     fun testCalculateHMAC() {
         val key = "012345678901234567890123".toByteArray()
-        val message = "Hello Sudox!".toByteArray()
-        val validHmac = Base64.decode("Yxy+iOT2cEO5mhNp5YbbIqoyvTW5XSW41+kK+Q==", Base64.NO_WRAP)
+        val message = "Hello World!".toByteArray()
+        val validHmac = Base64.decode("WA1xuW6GAW9vL55sPG3h4qpWm47htQDdMdZ5gB9lB0uJXIMAqmpG5Iw8Ldy1j2et", Base64.NO_WRAP)
         val result = Encryption.computeHMAC(key, message)
         assertArrayEquals(validHmac, result)
     }
@@ -39,8 +39,8 @@ class EncryptionTest : Assert() {
     @Test
     fun testVerifyHMAC_success() {
         val key = "012345678901234567890123".toByteArray()
-        val message = "Hello Sudox!".toByteArray()
-        val hmac = Base64.decode("Yxy+iOT2cEO5mhNp5YbbIqoyvTW5XSW41+kK+Q==", Base64.NO_WRAP)
+        val message = "Hello World!".toByteArray()
+        val hmac = Base64.decode("WA1xuW6GAW9vL55sPG3h4qpWm47htQDdMdZ5gB9lB0uJXIMAqmpG5Iw8Ldy1j2et", Base64.NO_WRAP)
         val result = Encryption.verifyHMAC(key, message, hmac)
         assertTrue(result)
     }
@@ -122,8 +122,8 @@ class EncryptionTest : Assert() {
     @Test
     fun testVerifySignature_success() {
         val message = "Hello World!".toByteArray()
-        val signature = Base64.decode("MGUCMQC5zE9SfVl1tSCpLbcKHxVjjYJ4YMiwRNIFgjVITxEgmCy0FA84iiVi16QUcLY2ZWs" +
-                "CMBpfSec/zh1YYn6qCMIlTaUdgyyoHC6EcEpCPOIirWvce41qyMjQCseIVh1Ul7WhvA==", Base64.NO_WRAP)
+        val signature = Base64.decode("MGUCMC1oRDQu6L21P6MTT8+lezZ6wGOkkM6l/JQRb0Z4YRY0dnfAiWYnVq7qOgTuK7W8oQIxAKD" +
+                "7MdNndaAXEAr816Byv3t9e1heRd03CdlkboLGU/7yXRK499m4LuaQcM9jZE/wEA==", Base64.NO_WRAP)
         assertTrue(Encryption.verifySignature(message, signature))
     }
 

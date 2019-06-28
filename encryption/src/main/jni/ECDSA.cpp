@@ -35,7 +35,7 @@ Java_com_sudox_encryption_Encryption_verifySignature(JNIEnv *env, __unused jclas
     env->GetByteArrayRegion(_signature, 0, _signaturelen, reinterpret_cast<jbyte *>(signature));
 
     EVP_MD_CTX *ctx = EVP_MD_CTX_new();
-    const EVP_MD *md = EVP_sha224();
+    const EVP_MD *md = EVP_sha3_384();
     EVP_DigestVerifyInit(ctx, nullptr, md, nullptr, EC_SIGNATURE_PKEY);
     EVP_DigestVerifyUpdate(ctx, message, sizeof(message));
 

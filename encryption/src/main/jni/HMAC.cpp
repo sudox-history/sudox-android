@@ -17,7 +17,7 @@ Java_com_sudox_encryption_Encryption_computeHMAC(JNIEnv *env, __unused jclass ty
 
     EVP_MD_CTX *ctx = EVP_MD_CTX_create();
     EVP_PKEY *pkey = EVP_PKEY_new_mac_key(EVP_PKEY_HMAC, nullptr, key, _keylen);
-    const EVP_MD *md = EVP_sha224();
+    const EVP_MD *md = EVP_sha3_384();
     EVP_DigestInit_ex(ctx, md, nullptr);
     EVP_DigestSignInit(ctx, nullptr, md, nullptr, pkey);
     EVP_DigestSignUpdate(ctx, message, sizeof(message));
@@ -53,7 +53,7 @@ Java_com_sudox_encryption_Encryption_verifyHMAC(JNIEnv *env, __unused jclass typ
 
     EVP_MD_CTX *ctx = EVP_MD_CTX_create();
     EVP_PKEY *pkey = EVP_PKEY_new_mac_key(EVP_PKEY_HMAC, nullptr, key, _keylen);
-    const EVP_MD *md = EVP_sha224();
+    const EVP_MD *md = EVP_sha3_384();
     EVP_DigestInit_ex(ctx, md, nullptr);
     EVP_DigestSignInit(ctx, nullptr, md, nullptr, pkey);
     EVP_DigestSignUpdate(ctx, message, sizeof(message));
