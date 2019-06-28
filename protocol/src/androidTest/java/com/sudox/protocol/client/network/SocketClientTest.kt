@@ -191,27 +191,4 @@ class SocketClientTest : Assert() {
 
         assertArrayEquals(bytes, server.buffer!!.array())
     }
-
-    @Test
-    fun testSending_with_urgent_flag() {
-        server.startServer()
-        client.connect()
-        server.connectionSemaphore.acquire()
-        callback.connectSemaphore.acquire()
-
-        val normalBytes = "Hello World".toByteArray()
-        val normalBuffer = ByteBuffer.allocateDirect(normalBytes.size)
-        normalBuffer.put(normalBytes)
-
-        val urgentData = "Hello Hell".toByteArray()
-        val urgentBuffer = ByteBuffer.allocateDirect(urgentData.size)
-        urgentBuffer.put(urgentData)
-
-        server.buffer = ByteBuffer.allocate(urgentData.size + normalBytes.size)
-        client.send(normalBuffer, false)
-        client.send(urgentBuffer, true)
-        server.receivingSemaphore.acquire()
-
-        assertArrayEquals(urgentData + normalBytes, server.buffer!!.array())
-    }
 }

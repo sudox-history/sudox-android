@@ -191,7 +191,7 @@ void SocketClient::handle_events(uint32_t events) {
 }
 
 void SocketClient::adjust_write_flag() {
-    event_mask.events = EPOLLIN | EPOLLRDHUP | EPOLLERR | EPOLLET;
+    event_mask.events = EPOLLIN | EPOLLRDHUP | EPOLLERR;
 
     if (!sending_queue.empty()) {
         event_mask.events |= EPOLLOUT;
