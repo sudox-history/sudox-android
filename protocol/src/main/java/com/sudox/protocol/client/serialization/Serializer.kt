@@ -1,6 +1,10 @@
 package com.sudox.protocol.client.serialization
 
 import java.nio.ByteBuffer
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.log2
 
 class Serializer {
 
@@ -18,37 +22,33 @@ class Serializer {
     }
 
     private fun writeNumber(value: Long) {
-        var sizeIndex = 0
-        var size = 1
-        var pow = 256
+        val size = calculateNumberSize(value)
 
-        if (!calculating) {
-            buffer!!.put(Types.NUMBER)
-            sizeIndex = buffer!!.position()
-            buffer!!.position(sizeIndex + 1)
-        }
-
-        while (true) {
-            if (!calculating) {
-                buffer!!.put((value ushr ((size - 1) * 8)).toByte())
-            }
-
-            val max = pow / 2 - 1
-            val min = -max + 1
-            pow *= 256
-
-            if (value in min..max || size >= 8) {
-                break
-            }
-
-            size++
-        }
-
-        if (!calculating) {
-            writeSizeLE(size, Types.NUMBER_HEADERS_LENGTH, sizeIndex)
-        } else {
+        if (calculating) {
             sizeCounter += size + Types.NUMBER_HEADERS_LENGTH + 1
+            return
         }
+
+        buffer!!.put(Types.NUMBER)
+        writeSizeLE(size, Types.NUMBER_HEADERS_LENGTH)
+
+        for (i in 1..size) {
+            buffer!!.put((value ushr ((i - 1) * 8)).toByte())
+        }
+    }
+
+    private fun calculateNumberSize(number: Long): Int {
+        if (number == 0L) {
+            return 1
+        } else if (number == Long.MAX_VALUE || number == Long.MIN_VALUE) {
+            return 8
+        }
+
+        return if (number > 0) {
+            floor(log2(number.toDouble() + 1) / 8) + 1
+        } else {
+            ceil(log2(abs(number).toDouble() + 1) / 8)
+        }.toInt()
     }
 
     private fun writeSizeLE(value: Int, bytesCount: Int, offset: Int = 0) {

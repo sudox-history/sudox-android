@@ -56,8 +56,8 @@ class PacketController(val socketClient: SocketClient) {
 
     private fun readLength() {
         val bytes = socketClient.read(LENGTH_HEADER_SIZE)
-        val firstByte = bytes[0].toInt()
-        val secondByte = bytes[0].toInt() shl 8
+        val firstByte = bytes[0].toInt() and 0xFF
+        val secondByte = (bytes[1].toInt() and 0xFF) shl 8
 
         readLength = firstByte or secondByte
         readBuffer = ByteBuffer.allocateDirect(readLength)

@@ -19,7 +19,7 @@ class SerializerTest : Assert() {
     fun testLong_1_byte() {
         val buffer = serializer.serialize(1L, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(2u, 1u, 1u).toByteArray()
+        val valid = ubyteArrayOf(20u, 1u, 1u).toByteArray()
         assertArrayEquals(valid, result)
     }
 
@@ -27,7 +27,7 @@ class SerializerTest : Assert() {
     fun testLong_1_byte_negative() {
         val buffer = serializer.serialize(-1L, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(2u, 1u, 255u).toByteArray()
+        val valid = ubyteArrayOf(20u, 1u, 255u).toByteArray()
         assertArrayEquals(valid, result)
     }
 
@@ -35,7 +35,7 @@ class SerializerTest : Assert() {
     fun testLong_2_byte() {
         val buffer = serializer.serialize(500L, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(2u, 2u, 244u, 1u).toByteArray()
+        val valid = ubyteArrayOf(20u, 2u, 244u, 1u).toByteArray()
         assertArrayEquals(valid, result)
     }
 
@@ -43,7 +43,7 @@ class SerializerTest : Assert() {
     fun testLong_2_byte_negative() {
         val buffer = serializer.serialize(-500L, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(2u, 2u, 12u, 254u).toByteArray()
+        val valid = ubyteArrayOf(20u, 2u, 12u, 254u).toByteArray()
         assertArrayEquals(valid, result)
     }
 
@@ -51,15 +51,15 @@ class SerializerTest : Assert() {
     fun testLong_max() {
         val buffer = serializer.serialize(Long.MAX_VALUE, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(2u, 8u, 255u, 255u, 255u, 255u, 255u, 255u, 255u, 127u).toByteArray()
+        val valid = ubyteArrayOf(20u, 8u, 255u, 255u, 255u, 255u, 255u, 255u, 255u, 127u).toByteArray()
         assertArrayEquals(valid, result)
     }
 
     @Test
-    fun testLong_negative() {
+    fun testLong_min() {
         val buffer = serializer.serialize(Long.MIN_VALUE, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(2u, 8u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 128u).toByteArray()
+        val valid = ubyteArrayOf(20u, 8u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 128u).toByteArray()
         assertArrayEquals(valid, result)
     }
 
@@ -69,7 +69,7 @@ class SerializerTest : Assert() {
         val bytes = string.toByteArray()
         val buffer = serializer.serialize(string, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(3u, 12u, 0u).toByteArray() + bytes
+        val valid = ubyteArrayOf(30u, 12u, 0u).toByteArray() + bytes
         assertArrayEquals(valid, result)
     }
 
@@ -84,7 +84,7 @@ class SerializerTest : Assert() {
 
         val buffer = serializer.serialize(string, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(3u, 244u, 1u).toByteArray() + string.toByteArray()
+        val valid = ubyteArrayOf(30u, 244u, 1u).toByteArray() + string.toByteArray()
         assertArrayEquals(valid, result)
     }
 
@@ -93,7 +93,7 @@ class SerializerTest : Assert() {
         val bytes = byteArrayOf(1, 2, 3, 4)
         val buffer = serializer.serialize(bytes, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(4u, 4u, 0u).toByteArray() + bytes
+        val valid = ubyteArrayOf(40u, 4u, 0u).toByteArray() + bytes
         assertArrayEquals(valid, result)
     }
 
@@ -102,7 +102,7 @@ class SerializerTest : Assert() {
         val bytes = Random.nextBytes(500)
         val buffer = serializer.serialize(bytes, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(4u, 244u, 1u).toByteArray() + bytes
+        val valid = ubyteArrayOf(40u, 244u, 1u).toByteArray() + bytes
         assertArrayEquals(valid, result)
     }
 
@@ -110,7 +110,7 @@ class SerializerTest : Assert() {
     fun testBoolean_true() {
         val buffer = serializer.serialize(true, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(1u, 1u).toByteArray()
+        val valid = ubyteArrayOf(10u, 1u).toByteArray()
         assertArrayEquals(valid, result)
     }
 
@@ -118,7 +118,7 @@ class SerializerTest : Assert() {
     fun testBoolean_false() {
         val buffer = serializer.serialize(false, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(1u, 0u).toByteArray()
+        val valid = ubyteArrayOf(10u, 0u).toByteArray()
         assertArrayEquals(valid, result)
     }
 
@@ -139,13 +139,13 @@ class SerializerTest : Assert() {
         val array = arrayOf(`object`, `object`)
         val buffer = serializer.serialize(array, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(5u, array.size.toUByte()).toByteArray() + ubyteArrayOf(6u, 2u).toByteArray() +
-                firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(1u, 1u).toByteArray() +
-                secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(2u, 8u).toByteArray() +
+        val valid = ubyteArrayOf(50u, array.size.toUByte()).toByteArray() + ubyteArrayOf(60u, 2u).toByteArray() +
+                firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(10u, 1u).toByteArray() +
+                secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(20u, 8u).toByteArray() +
                 ubyteArrayOf(255u, 255u, 255u, 255u, 255u, 255u, 255u, 127u).toByteArray() +
-                ubyteArrayOf(6u, 2u).toByteArray() +
-                firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(1u, 1u).toByteArray() +
-                secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(2u, 8u).toByteArray() +
+                ubyteArrayOf(60u, 2u).toByteArray() +
+                firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(10u, 1u).toByteArray() +
+                secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(20u, 8u).toByteArray() +
                 ubyteArrayOf(255u, 255u, 255u, 255u, 255u, 255u, 255u, 127u).toByteArray()
 
         assertArrayEquals(valid, result)
@@ -156,8 +156,8 @@ class SerializerTest : Assert() {
         val array = longArrayOf(1L, Long.MAX_VALUE, Long.MIN_VALUE)
         val buffer = serializer.serialize(array, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(5u, 3u, 2u, 1u, 1u, 2u, 8u, 255u,
-                255u, 255u, 255u, 255u, 255u, 255u, 127u, 2u,
+        val valid = ubyteArrayOf(50u, 3u, 20u, 1u, 1u, 20u, 8u, 255u,
+                255u, 255u, 255u, 255u, 255u, 255u, 127u, 20u,
                 8u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 128u)
 
         assertArrayEquals(valid.toByteArray(), result)
@@ -168,8 +168,8 @@ class SerializerTest : Assert() {
         val array = booleanArrayOf(false, true)
         val buffer = serializer.serialize(array, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(5u, array.size.toUByte()).toByteArray() + ubyteArrayOf(1u, 0u).toByteArray() +
-                ubyteArrayOf(1u, 1u).toByteArray()
+        val valid = ubyteArrayOf(50u, array.size.toUByte()).toByteArray() + ubyteArrayOf(10u, 0u).toByteArray() +
+                ubyteArrayOf(10u, 1u).toByteArray()
 
         assertArrayEquals(valid, result)
     }
@@ -181,10 +181,10 @@ class SerializerTest : Assert() {
         val array = arrayOf(firstArray, secondArray)
         val buffer = serializer.serialize(array, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(5u, array.size.toUByte()).toByteArray() +
-                ubyteArrayOf(5u, firstArray.size.toUByte(), 2u, 1u, 1u, 2u, 8u, 255u, 255u, 255u, 255u, 255u, 255u,
-                        255u, 127u, 2u, 8u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 128u).toByteArray() +
-                ubyteArrayOf(5u, secondArray.size.toUByte(), 1u, 0u, 1u, 1u).toByteArray()
+        val valid = ubyteArrayOf(50u, array.size.toUByte()).toByteArray() +
+                ubyteArrayOf(50u, firstArray.size.toUByte(), 20u, 1u, 1u, 20u, 8u, 255u, 255u, 255u, 255u, 255u, 255u,
+                        255u, 127u, 20u, 8u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 128u).toByteArray() +
+                ubyteArrayOf(50u, secondArray.size.toUByte(), 10u, 0u, 10u, 1u).toByteArray()
 
         assertArrayEquals(valid, result)
     }
@@ -205,9 +205,9 @@ class SerializerTest : Assert() {
 
         val buffer = serializer.serialize(`object`, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(6u, 2u).toByteArray() +
-                firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(1u, 1u).toByteArray() +
-                secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(2u, 8u).toByteArray() +
+        val valid = ubyteArrayOf(60u, 2u).toByteArray() +
+                firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(10u, 1u).toByteArray() +
+                secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(20u, 8u).toByteArray() +
                 ubyteArrayOf(255u, 255u, 255u, 255u, 255u, 255u, 255u, 127u).toByteArray()
 
         assertArrayEquals(valid, result)
@@ -241,13 +241,13 @@ class SerializerTest : Assert() {
 
         val buffer = serializer.serialize(firstObject, 0)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(6u, 3u).toByteArray() +
-                firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(1u, 1u).toByteArray() +
-                secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(2u, 8u).toByteArray() +
+        val valid = ubyteArrayOf(60u, 3u).toByteArray() +
+                firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(10u, 1u).toByteArray() +
+                secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(20u, 8u).toByteArray() +
                 ubyteArrayOf(255u, 255u, 255u, 255u, 255u, 255u, 255u, 127u).toByteArray() +
-                thirdParamKeyBytes.size.toByte() + thirdParamKeyBytes + ubyteArrayOf(6u, 2u).toByteArray() +
-                firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(1u, 1u).toByteArray() +
-                secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(2u, 8u).toByteArray() +
+                thirdParamKeyBytes.size.toByte() + thirdParamKeyBytes + ubyteArrayOf(60u, 2u).toByteArray() +
+                firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(10u, 1u).toByteArray() +
+                secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(20u, 8u).toByteArray() +
                 ubyteArrayOf(255u, 255u, 255u, 255u, 255u, 255u, 255u, 127u).toByteArray()
 
         assertArrayEquals(valid, result)
@@ -257,7 +257,7 @@ class SerializerTest : Assert() {
     fun testSerializeOffset() {
         val buffer = serializer.serialize(true, 2)
         val result = ByteArray(buffer.limit()).apply { buffer.get(this) }
-        val valid = ubyteArrayOf(0u, 0u, 1u, 1u).toByteArray()
+        val valid = ubyteArrayOf(0u, 0u, 10u, 1u).toByteArray()
         assertArrayEquals(valid, result)
     }
 }

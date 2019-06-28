@@ -5,7 +5,7 @@ import com.sudox.protocol.client.ProtocolController
 
 internal const val PING_PACKET_NAME = "png"
 internal const val PING_SEND_TIMEOUT = 6000L
-internal const val PING_CHECK_TIMEOUT = 1000L
+internal const val PING_CHECK_TIMEOUT = 200000L
 internal const val PING_SEND_TASK_ID = 0
 internal const val PING_CHECK_TASK_ID = 1
 

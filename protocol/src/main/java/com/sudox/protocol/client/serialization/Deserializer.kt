@@ -21,7 +21,7 @@ class Deserializer {
             return 0
         }
 
-        val length = internalBuffer!!.get()
+        val length = internalBuffer!!.get().toInt()
         var value = 0L
 
         if (internalBuffer!!.remaining() < length) {
@@ -31,11 +31,13 @@ class Deserializer {
         for (i in 0 until length) {
             val byte = internalBuffer!!.get().toLong()
 
-            value = value or if (i > 0) {
-                (byte shr (i * 8))
+            val b = if (i < length - 1) {
+                ((byte and 0xFF) shr (8 * i))
             } else {
-                (byte and 0xFF)
+                byte shl (8 * i)
             }
+
+            value += b
         }
 
         return value
