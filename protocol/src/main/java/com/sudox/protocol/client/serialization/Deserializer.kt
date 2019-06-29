@@ -31,13 +31,11 @@ class Deserializer {
         for (i in 0 until length) {
             val byte = internalBuffer!!.get().toLong()
 
-            val b = if (i < length - 1) {
-                ((byte and 0xFF) shr (8 * i))
+            value = value or if (i < length - 1) {
+                (((byte + 256) and 0xFF) shl (i * 8))
             } else {
-                byte shl (8 * i)
+                (byte shl (8 * i))
             }
-
-            value += b
         }
 
         return value
@@ -48,8 +46,8 @@ class Deserializer {
             return null
         }
 
-        val firstLengthByte = internalBuffer!!.get().toInt()
-        val secondLengthByte = internalBuffer!!.get().toInt() shl 8
+        val firstLengthByte = internalBuffer!!.get().toInt() and 0xFF
+        val secondLengthByte = (internalBuffer!!.get().toInt() and 0xFF) shl 8
         val length = firstLengthByte or secondLengthByte
 
         if (internalBuffer!!.remaining() < length) {
@@ -68,8 +66,8 @@ class Deserializer {
             return null
         }
 
-        val firstLengthByte = internalBuffer!!.get().toInt()
-        val secondLengthByte = internalBuffer!!.get().toInt() shl 8
+        val firstLengthByte = internalBuffer!!.get().toInt() and 0xFF
+        val secondLengthByte = (internalBuffer!!.get().toInt() and 0xFF) shl 8
         val length = firstLengthByte or secondLengthByte
 
         if (internalBuffer!!.remaining() < length) {
@@ -79,6 +77,21 @@ class Deserializer {
         return ByteArray(length).apply {
             internalBuffer!!.get(this)
         }
+    }
+
+    private fun readArrayInternal(): Array<Any?>? {
+        if (internalBuffer!!.remaining() < Types.ARRAY_HEADERS_LENGTH) {
+            return null
+        }
+
+        val size = internalBuffer!!.get().toInt()
+        val array = arrayOfNulls<Any?>(size)
+
+        for (i in 0 until size) {
+            array[i] = readElement() ?: return null
+        }
+
+        return array
     }
 
     private fun readObjectInternal(): LinkedHashMap<String, Any>? {
@@ -100,21 +113,6 @@ class Deserializer {
         return params
     }
 
-    private fun readArrayInternal(): Array<Any?>? {
-        if (internalBuffer!!.remaining() < Types.ARRAY_HEADERS_LENGTH) {
-            return null
-        }
-
-        val size = internalBuffer!!.get().toInt()
-        val array = arrayOfNulls<Any?>(size)
-
-        for (i in 0 until size) {
-            array[i] = readElement()
-        }
-
-        return array
-    }
-
     private fun readParam(): Pair<String, Any>? {
         if (!internalBuffer!!.hasRemaining()) {
             return null
@@ -134,6 +132,10 @@ class Deserializer {
     }
 
     private fun readElement(): Any? {
+        if (!internalBuffer!!.hasRemaining()) {
+            return null
+        }
+
         return when (internalBuffer!!.get()) {
             Types.BOOLEAN -> readBoolean()
             Types.NUMBER -> readNumber()
@@ -145,25 +147,42 @@ class Deserializer {
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    fun deserialize(buffer: ByteBuffer, objectClass: KClass<Any>? = null): Any? {
-        if (!buffer.hasRemaining()) {
-            return null
-        }
-
+    @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
+    fun deserialize(buffer: ByteBuffer, objectClass: KClass<out Serializable>? = null): Any? {
         internalBuffer = buffer
         val result = readElement()
         internalBuffer = null
         internalParams = null
 
-        return if (result == null) {
-            null
-        } else if (objectClass != null && objectClass is Serializable && result is LinkedHashMap<*, *>) {
-            (objectClass.java.newInstance() as Serializable).apply {
-                deserialize(result as LinkedHashMap<String, Any>)
-            }
+        if (result == null) {
+            return null
+        }
+
+        return if (objectClass == null) {
+            result
+        } else if (result is LinkedHashMap<*, *>) {
+            buildObject(result, objectClass)
+        } else if (result is Array<*>) {
+            buildArray(result, objectClass)
         } else {
             result
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun buildObject(params: LinkedHashMap<*, *>, clazz: KClass<out Serializable>): Serializable {
+        return clazz.java.newInstance().apply { deserialize(params as LinkedHashMap<String, Any>) }
+    }
+
+    private fun buildArray(array: Array<*>, clazz: KClass<out Serializable>): Array<Any?> {
+        return Array(array.size) {
+            val element = array[it]
+
+            if (element is LinkedHashMap<*, *>) {
+                buildObject(element, clazz)
+            } else {
+                array[it]
+            }
         }
     }
 }

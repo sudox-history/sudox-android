@@ -64,7 +64,7 @@ class SerializerTest : Assert() {
     }
 
     @Test
-    fun testString_string_1_byte_length() {
+    fun testString_1_byte_length() {
         val string = "Hello World!"
         val bytes = string.toByteArray()
         val buffer = serializer.serialize(string, 0)
@@ -74,7 +74,7 @@ class SerializerTest : Assert() {
     }
 
     @Test
-    fun testString_string_2_byte_length() {
+    fun testString_2_byte_length() {
         val string = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed varius enim," +
                 " sed consequat urna. Fusce hendrerit, leo ut posuere tincidunt, neque ex tempor diam, id blandit" +
                 " est lacus in nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubil" +
