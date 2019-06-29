@@ -82,7 +82,6 @@ class DeserializerTest : Assert() {
                 " rutrum mattis sit amet a metus. Integer sed lorem at arcu gravida semper. Etiam et orci viverra, " +
                 "egestas nunc non posuere."
 
-        val bytes = string.toByteArray()
         val buffer = ByteBuffer.wrap(ubyteArrayOf(30u, 244u, 1u).toByteArray() + string.toByteArray())
         val result = deserializer.deserialize(buffer)
         assertEquals(string, result)
@@ -160,6 +159,15 @@ class DeserializerTest : Assert() {
     fun testArrayOfBooleans() {
         val buffer = ByteBuffer.wrap(ubyteArrayOf(50u, 2u, 10u, 0u, 10u, 1u).toByteArray())
         val result = deserializer.deserialize(buffer)
+        assertTrue(result is Array<*>)
+        assertArrayEquals(arrayOf(false, true), result as Array<Any>)
+    }
+
+    @Test
+    @Suppress("UNCHECKED_CAST")
+    fun testArrayOfBooleansWithObjectClass() {
+        val buffer = ByteBuffer.wrap(ubyteArrayOf(50u, 2u, 10u, 0u, 10u, 1u).toByteArray())
+        val result = deserializer.deserialize(buffer, TestSerializable2::class)
         assertTrue(result is Array<*>)
         assertArrayEquals(arrayOf(false, true), result as Array<Any>)
     }

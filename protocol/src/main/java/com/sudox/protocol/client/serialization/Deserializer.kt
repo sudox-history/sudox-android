@@ -1,5 +1,7 @@
 package com.sudox.protocol.client.serialization
 
+import com.sudox.protocol.client.serialization.helpers.readLongLE
+import com.sudox.protocol.client.serialization.helpers.readUIntLE
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 
@@ -21,24 +23,13 @@ class Deserializer {
             return 0
         }
 
-        val length = internalBuffer!!.get().toInt()
-        var value = 0L
+        val octets = internalBuffer!!.readUIntLE(Types.NUMBER_HEADERS_LENGTH)
 
-        if (internalBuffer!!.remaining() < length) {
+        if (internalBuffer!!.remaining() < octets) {
             return 0
         }
 
-        for (i in 0 until length) {
-            val byte = internalBuffer!!.get().toLong()
-
-            value = value or if (i < length - 1) {
-                (((byte + 256) and 0xFF) shl (i * 8))
-            } else {
-                (byte shl (8 * i))
-            }
-        }
-
-        return value
+        return internalBuffer!!.readLongLE(octets)
     }
 
     private fun readString(): String? {
@@ -46,19 +37,15 @@ class Deserializer {
             return null
         }
 
-        val firstLengthByte = internalBuffer!!.get().toInt() and 0xFF
-        val secondLengthByte = (internalBuffer!!.get().toInt() and 0xFF) shl 8
-        val length = firstLengthByte or secondLengthByte
+        val size = internalBuffer!!.readUIntLE(Types.STRING_HEADERS_LENGTH)
 
-        if (internalBuffer!!.remaining() < length) {
+        if (internalBuffer!!.remaining() < size) {
             return null
         }
 
-        val bytes = ByteArray(length).apply {
+        return String(ByteArray(size).apply {
             internalBuffer!!.get(this)
-        }
-
-        return String(bytes)
+        })
     }
 
     private fun readBuffer(): ByteArray? {
@@ -66,15 +53,13 @@ class Deserializer {
             return null
         }
 
-        val firstLengthByte = internalBuffer!!.get().toInt() and 0xFF
-        val secondLengthByte = (internalBuffer!!.get().toInt() and 0xFF) shl 8
-        val length = firstLengthByte or secondLengthByte
+        val size = internalBuffer!!.readUIntLE(Types.BUFFER_HEADERS_LENGTH)
 
-        if (internalBuffer!!.remaining() < length) {
+        if (internalBuffer!!.remaining() < size) {
             return null
         }
 
-        return ByteArray(length).apply {
+        return ByteArray(size).apply {
             internalBuffer!!.get(this)
         }
     }
@@ -84,7 +69,7 @@ class Deserializer {
             return null
         }
 
-        val size = internalBuffer!!.get().toInt()
+        val size = internalBuffer!!.readUIntLE(Types.ARRAY_HEADERS_LENGTH)
         val array = arrayOfNulls<Any?>(size)
 
         for (i in 0 until size) {
@@ -99,7 +84,7 @@ class Deserializer {
             return null
         }
 
-        val paramsCount = internalBuffer!!.get().toInt()
+        val paramsCount = internalBuffer!!.readUIntLE(Types.OBJECT_HEADERS_LENGTH)
         val params = LinkedHashMap<String, Any>(paramsCount)
 
         if (internalParams == null) {
@@ -114,11 +99,11 @@ class Deserializer {
     }
 
     private fun readParam(): Pair<String, Any>? {
-        if (!internalBuffer!!.hasRemaining()) {
+        if (internalBuffer!!.remaining() < Types.PARAM_HEADERS_LENGTH) {
             return null
         }
 
-        val keySize = internalBuffer!!.get().toInt()
+        val keySize = internalBuffer!!.readUIntLE(Types.PARAM_HEADERS_LENGTH)
 
         if (internalBuffer!!.remaining() < keySize) {
             return null
