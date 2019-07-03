@@ -25,29 +25,39 @@ class TestSocketServer(val port: Int) : Thread() {
     }
 
     override fun run() {
+        while (!isInterrupted) {
+            handleClient()
+        }
+    }
+
+    private fun handleClient() {
         try {
             clientSocket = serverSocket!!.accept()
             clientSocket!!.tcpNoDelay = true
             clientConnected = true
             connectionSemaphore.release()
 
-            while (!isInterrupted) {
-                val read = clientSocket!!.getInputStream().read()
-
-                if (read == -1) {
-                    handleDisconnect()
-                    break
-                }
-
-                // Reading ...
-                buffer?.put(read.toByte())
-
-                if (buffer?.remaining() == 0) {
-                    receivingSemaphore.release()
-                }
-            }
+            handleReceiving()
         } catch (e: Exception) {
             handleDisconnect()
+        }
+    }
+
+    private fun handleReceiving() {
+        while (!isInterrupted) {
+            val read = clientSocket!!.getInputStream().read()
+
+            if (read == -1) {
+                handleDisconnect()
+                break
+            }
+
+            // Reading ...
+            buffer?.put(read.toByte())
+
+            if (buffer?.remaining() == 0) {
+                receivingSemaphore.release()
+            }
         }
     }
 

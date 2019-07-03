@@ -4,5 +4,4 @@ include ':app',
         ':protocol',
         ':design',
         ':common',
-        ':encryption',
         ':api'

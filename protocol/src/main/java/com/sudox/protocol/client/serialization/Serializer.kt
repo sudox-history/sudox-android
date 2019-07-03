@@ -149,12 +149,17 @@ class Serializer {
         }
     }
 
-    fun serialize(element: Any, offset: Int): ByteBuffer {
+    fun serialize(element: Any, offset: Int, allocateDirect: Boolean = false): ByteBuffer {
         calculating = true
         writeElement(element)
         calculating = false
 
-        buffer = ByteBuffer.allocateDirect(sizeCounter + offset)
+        if (allocateDirect) {
+            buffer = ByteBuffer.allocateDirect(sizeCounter + offset)
+        } else {
+            buffer = ByteBuffer.allocate(sizeCounter + offset)
+        }
+
         buffer!!.position(offset)
         sizeCounter = 0
 

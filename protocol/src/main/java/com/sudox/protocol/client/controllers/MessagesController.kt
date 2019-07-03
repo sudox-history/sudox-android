@@ -18,6 +18,10 @@ class MessagesController(val protocolController: ProtocolController) {
     }
 
     fun handlePacket(parts: Array<*>) {
+        if (!isSessionStarted()) {
+            return
+        }
+
         val cipher = parts[1] as? ByteArray ?: return
         val hmac = parts[2] as? ByteArray ?: return
         val iv = parts[3] as? ByteArray ?: return
@@ -35,7 +39,7 @@ class MessagesController(val protocolController: ProtocolController) {
         }
 
         // Including byte of salt length
-        val messageEndIndex = messageWithSalt.size - messageWithSalt.last() - 1
+        val messageEndIndex = messageWithSalt.size - messageWithSalt.last()
         val message = messageWithSalt.copyOfRange(0, messageEndIndex)
         protocolController.submitMessageEvent(message)
     }

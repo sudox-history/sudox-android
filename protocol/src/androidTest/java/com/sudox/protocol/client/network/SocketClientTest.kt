@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.nio.ByteBuffer
+import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
 class SocketClientTest : Assert() {
@@ -33,8 +34,8 @@ class SocketClientTest : Assert() {
     fun testConnect_success() {
         server.startServer()
         client.connect()
-        server.connectionSemaphore.acquire()
-        callback.connectSemaphore.acquire()
+        server.connectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.connectSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         assertTrue(server.clientConnected)
         assertEquals(1, callback.connectedCalled)
@@ -43,7 +44,7 @@ class SocketClientTest : Assert() {
     @Test
     fun testConnect_error() {
         client.connect()
-        callback.closedSemaphore.acquire()
+        callback.closedSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         assertEquals(1, callback.closedCalled)
         assertTrue(callback.closedErrorLast)
@@ -53,12 +54,12 @@ class SocketClientTest : Assert() {
     fun testClose_by_error() {
         server.startServer()
         client.connect()
-        server.connectionSemaphore.acquire()
-        callback.connectSemaphore.acquire()
+        server.connectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.connectSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         client.close(true)
-        server.disconnectionSemaphore.acquire()
-        callback.closedSemaphore.acquire()
+        server.disconnectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.closedSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         assertEquals(1, callback.closedCalled)
         assertTrue(callback.closedErrorLast)
@@ -69,12 +70,12 @@ class SocketClientTest : Assert() {
     fun testClose_by_user() {
         server.startServer()
         client.connect()
-        server.connectionSemaphore.acquire()
-        callback.connectSemaphore.acquire()
+        server.connectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.connectSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         client.close(false)
-        server.disconnectionSemaphore.acquire()
-        callback.closedSemaphore.acquire()
+        server.disconnectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.closedSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         assertEquals(1, callback.closedCalled)
         assertFalse(callback.closedErrorLast)
@@ -85,12 +86,12 @@ class SocketClientTest : Assert() {
     fun testClose_by_server() {
         server.startServer()
         client.connect()
-        server.connectionSemaphore.acquire()
-        callback.connectSemaphore.acquire()
+        server.connectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.connectSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         server.clientSocket!!.close()
-        server.disconnectionSemaphore.acquire()
-        callback.closedSemaphore.acquire()
+        server.disconnectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.closedSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         assertEquals(1, callback.closedCalled)
         assertTrue(callback.closedErrorLast)
@@ -101,12 +102,12 @@ class SocketClientTest : Assert() {
     fun testReceiving() {
         server.startServer()
         client.connect()
-        server.connectionSemaphore.acquire()
-        callback.connectSemaphore.acquire()
+        server.connectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.connectSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         val bytes = "Hello World".toByteArray()
         server.send(bytes)
-        callback.receiveSemaphore.acquire()
+        callback.receiveSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         val available = client.available()
         val received = client.read(available)
@@ -116,15 +117,26 @@ class SocketClientTest : Assert() {
     }
 
     @Test
+    fun testReceiving_empty() {
+        assertNull(client.read(12))
+
+        server.startServer()
+        client.connect()
+        server.connectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.connectSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        assertNull(client.read(12))
+    }
+
+    @Test
     fun testReceiving_buffer() {
         server.startServer()
         client.connect()
-        server.connectionSemaphore.acquire()
-        callback.connectSemaphore.acquire()
+        server.connectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.connectSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         val bytes = "Hello World".toByteArray()
         server.send(bytes)
-        callback.receiveSemaphore.acquire()
+        callback.receiveSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         val available = client.available()
         val buffer = ByteBuffer.allocateDirect(available)
@@ -144,12 +156,12 @@ class SocketClientTest : Assert() {
     fun testReceiving_buffer_positioning() {
         server.startServer()
         client.connect()
-        server.connectionSemaphore.acquire()
-        callback.connectSemaphore.acquire()
+        server.connectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.connectSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         val bytes = "Hello World".toByteArray()
         server.send(bytes)
-        callback.receiveSemaphore.acquire()
+        callback.receiveSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         // Fragmented reading checking
         val buffer = ByteBuffer.allocateDirect(bytes.size)
@@ -178,8 +190,8 @@ class SocketClientTest : Assert() {
     fun testSending_without_urgent_flag() {
         server.startServer()
         client.connect()
-        server.connectionSemaphore.acquire()
-        callback.connectSemaphore.acquire()
+        server.connectionSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
+        callback.connectSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         val bytes = "Hello World".toByteArray()
         val buffer = ByteBuffer.allocateDirect(bytes.size)
@@ -187,7 +199,7 @@ class SocketClientTest : Assert() {
 
         server.buffer = ByteBuffer.allocate(bytes.size)
         client.send(buffer, false)
-        server.receivingSemaphore.acquire()
+        server.receivingSemaphore.tryAcquire(5L, TimeUnit.SECONDS)
 
         assertArrayEquals(bytes, server.buffer!!.array())
     }

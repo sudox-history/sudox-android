@@ -1,5 +1,0 @@
-add_library(libcrypto STATIC IMPORTED)
-set_target_properties(libcrypto PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/openssl/output/libs/${ANDROID_ABI}/libcrypto.a)
-set_property(TARGET libcrypto APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/openssl/output/include)
-#set_target_properties(libcrypto APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES )
-#target_include_directories(libcrypto INTERFACE ${CMAKE_SOURCE_DIR}/openssl/output/include/openssl)

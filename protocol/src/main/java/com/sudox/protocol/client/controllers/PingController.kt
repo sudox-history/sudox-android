@@ -1,11 +1,12 @@
 package com.sudox.protocol.client.controllers
 
 import android.os.SystemClock
+import androidx.annotation.VisibleForTesting
 import com.sudox.protocol.client.ProtocolController
 
 internal const val PING_PACKET_NAME = "png"
 internal const val PING_SEND_TIMEOUT = 6000L
-internal const val PING_CHECK_TIMEOUT = 2000L
+internal const val PING_CHECK_TIMEOUT = 2000000L
 internal const val PING_SEND_TASK_ID = 0
 internal const val PING_CHECK_TASK_ID = 1
 
@@ -28,7 +29,8 @@ class PingController(val protocolController: ProtocolController) {
         }
     }
 
-    private fun check() {
+    @VisibleForTesting
+    fun check() {
         if (!alive) {
             protocolController.restartConnection()
         }
@@ -48,13 +50,15 @@ class PingController(val protocolController: ProtocolController) {
         threadHandler.postAtTime(checkRunnable, PING_CHECK_TASK_ID, time)
     }
 
-    private fun send() {
+    @VisibleForTesting
+    fun send() {
         alive = false
         sendPacket()
         scheduleCheckTask()
     }
 
-    private fun sendPacket() {
+    @VisibleForTesting
+    fun sendPacket() {
         protocolController.sendPacket(arrayOf(PING_PACKET_NAME), true)
     }
 

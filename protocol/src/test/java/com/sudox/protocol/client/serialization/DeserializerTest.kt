@@ -251,16 +251,6 @@ class DeserializerTest : Assert() {
     @Test
     @Suppress("UNCHECKED_CAST")
     fun testObjectInObject_tree_mode() {
-        val valid = TestSerializable2().apply {
-            `object` = TestSerializable3().apply {
-                number = Long.MAX_VALUE
-                boolean = true
-            }
-
-            number = Long.MAX_VALUE
-            boolean = true
-        }
-
         val buffer = ByteBuffer.wrap(ubyteArrayOf(60u, 3u).toByteArray() +
                 firstParamKeyBytes.size.toByte() + firstParamKeyBytes + ubyteArrayOf(10u, 1u).toByteArray() +
                 secondParamKeyBytes.size.toByte() + secondParamKeyBytes + ubyteArrayOf(20u, 8u).toByteArray() +

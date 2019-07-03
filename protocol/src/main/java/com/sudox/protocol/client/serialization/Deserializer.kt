@@ -132,7 +132,6 @@ class Deserializer {
         }
     }
 
-    @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
     fun deserialize(buffer: ByteBuffer, objectClass: KClass<out Serializable>? = null): Any? {
         internalBuffer = buffer
         val result = readElement()
@@ -152,6 +151,10 @@ class Deserializer {
         } else {
             result
         }
+    }
+
+    fun deserialize(buffer: ByteArray, objectClass: KClass<out Serializable>? = null): Any? {
+        return deserialize(ByteBuffer.wrap(buffer), objectClass)
     }
 
     @Suppress("UNCHECKED_CAST")

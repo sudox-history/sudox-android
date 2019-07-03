@@ -1,5 +1,5 @@
 dependencies {
-    implementation project(path: ':encryption')
+//    implementation project(path: ':encryption')
     implementation project(path: ':common')
 }
 

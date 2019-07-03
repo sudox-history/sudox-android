@@ -9,6 +9,7 @@ import com.sudox.protocol.client.network.SocketCallback
 import com.sudox.protocol.client.network.SocketClient
 
 internal const val RECONNECT_ATTEMPTS_INTERVAL_IN_MILLIS = 1000L
+internal var DISABLE_PING = false // Don't touch this variable! It's using only for testing.
 
 class ProtocolController(
     var protocolClient: ProtocolClient
@@ -34,7 +35,11 @@ class ProtocolController(
 
     override fun socketConnected() = submitTask {
         connectionAttemptFailed = false
-        pingController.start()
+
+        if (!DISABLE_PING) {
+            pingController.start()
+        }
+
         handshakeController.start()
     }
 

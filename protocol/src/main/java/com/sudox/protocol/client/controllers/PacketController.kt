@@ -15,11 +15,7 @@ class PacketController(val socketClient: SocketClient) {
     private var deserializer = Deserializer()
 
     fun readPacket(): Any? {
-        if (readBuffer?.remaining() == 0) {
-            resetReading()
-        }
-
-        if (readLength <= 0 && socketClient.available() >= LENGTH_HEADER_SIZE) {
+        if (readLength == 0 && socketClient.available() >= LENGTH_HEADER_SIZE) {
             readLength()
         }
 
@@ -31,7 +27,7 @@ class PacketController(val socketClient: SocketClient) {
 
         return if (readBuffer?.remaining() == 0) {
             val result = deserializer.deserialize(readBuffer!!.apply {
-                flip()
+                rewind()
             })
 
             resetReading()
@@ -42,7 +38,7 @@ class PacketController(val socketClient: SocketClient) {
     }
 
     fun sendPacket(parts: Array<Any>, urgent: Boolean = false) {
-        val buffer = serializer.serialize(parts, LENGTH_HEADER_SIZE)
+        val buffer = serializer.serialize(parts, LENGTH_HEADER_SIZE, true)
 
         val length = buffer.limit() - LENGTH_HEADER_SIZE
         val lengthFirstByte = length.toByte()
@@ -55,11 +51,11 @@ class PacketController(val socketClient: SocketClient) {
     }
 
     private fun readLength() {
-        val bytes = socketClient.read(LENGTH_HEADER_SIZE)
+        val bytes = socketClient.read(LENGTH_HEADER_SIZE)!!
         val firstByte = bytes[0].toInt() and 0xFF
         val secondByte = (bytes[1].toInt() and 0xFF) shl 8
 
-        readLength = firstByte or secondByte
+        readLength = (firstByte or secondByte) - LENGTH_HEADER_SIZE // TODO: Bug
         readBuffer = ByteBuffer.allocateDirect(readLength)
     }
 
@@ -73,7 +69,6 @@ class PacketController(val socketClient: SocketClient) {
     }
 
     fun resetReading() {
-        readBuffer?.clear()
         readBuffer = null
         readLength = 0
     }
