@@ -30,6 +30,18 @@ allprojects {
     repositories {
         google()
         jcenter()
+
+        maven {
+            url "https://bitbucket.org/sudox-inc/srepo-maven/raw/HEAD/"
+            credentials {
+                username System.getProperty("BITBUCKET_LOGIN")
+                password System.getProperty("BITBUCKET_PASSWORD")
+            }
+
+            authentication{
+                basic(BasicAuthentication)
+            }
+        }
     }
 
     apply from: "$rootDir/detekt.gradle"

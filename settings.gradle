@@ -1,7 +1,4 @@
 include ':app',
-        ':core',
         ':auth',
-        ':protocol',
         ':design',
-        ':common',
-        ':api'
+        ':core'

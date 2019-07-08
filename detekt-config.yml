@@ -384,7 +384,7 @@ potential-bugs:
   IteratorNotThrowingNoSuchElementException:
     active: false
   LateinitUsage:
-    active: false
+    active: true
     excludeAnnotatedProperties: ""
     ignoreOnClassesPattern: ""
   MissingWhenCase:

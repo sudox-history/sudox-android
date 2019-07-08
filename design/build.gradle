@@ -1,5 +1,4 @@
 dependencies {
-    implementation project(path: ':common')
     androidTestImplementation 'com.novoda:espresso-support:1.0.0'
     androidTestImplementation 'com.novoda:espresso-support-extras:1.0.0'
 }
