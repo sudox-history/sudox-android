@@ -13,17 +13,13 @@ class EditTextLayoutLabel(val editText: EditText, val params: EditTextLayoutLabe
     internal var bounds = Rect()
     internal var paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    init {
-        configurePaint()
-    }
-
-    fun dispatchDraw(canvas: Canvas) {
+    fun draw(canvas: Canvas) {
         val text = getCurrentText() ?: return
-        val textColor = getCurrentColor()
-        val x = getXCoord(text).toFloat()
+        val color = getCurrentColor()
+        val x = getX(text).toFloat()
         val y = getHeight().toFloat()
 
-        paint.color = textColor
+        paint.color = color
         canvas.drawText(text, x, y, paint)
     }
 
@@ -32,9 +28,10 @@ class EditTextLayoutLabel(val editText: EditText, val params: EditTextLayoutLabe
         paint.textSize = params.textSize.toFloat()
     }
 
-    internal fun getXCoord(text: String): Int {
+    internal fun getX(text: String): Int {
+        paint.getTextBounds(text, 0, text.length, bounds)
+
         return if (editText.isTextRtl(text)) {
-            paint.getTextBounds(text, 0, text.length, bounds)
             editText.measuredWidth - editText.compoundPaddingStart - bounds.width()
         } else {
             editText.compoundPaddingStart

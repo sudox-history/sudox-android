@@ -20,6 +20,7 @@ class NavigationBarSavedState : View.BaseSavedState {
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
+        
         out.apply {
             writeInt(buttonStartId)
             writeInt(buttonsEndIds!!.size)

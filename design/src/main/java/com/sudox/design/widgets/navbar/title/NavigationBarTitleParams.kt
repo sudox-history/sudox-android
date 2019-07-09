@@ -27,6 +27,7 @@ class NavigationBarTitleParams {
     @SuppressLint("ResourceType")
     fun readFromAttrs(typedArray: TypedArray, theme: Resources.Theme) {
         val titleStyleResourceId = typedArray.getResourceId(R.styleable.NavigationBar_titleStyle, -1)
+
         with(theme.obtainStyledAttributes(titleStyleResourceId, titleStyleAttrs)) {
             val textStyle = getInt(TEXT_STYLE_ATTR_INDEX, -1)
             val fontFamily = getString(FONT_FAMILY_ATTR_INDEX)

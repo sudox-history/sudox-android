@@ -1,93 +1,89 @@
 package com.sudox.design.drawables.ripple
 
 import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.Color
+import android.graphics.PixelFormat
+import com.sudox.design.DesignTestRunner
 import org.junit.Assert
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
+import org.robolectric.Shadows.shadowOf
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(RippleMaskDrawable::class, Paint::class, Canvas::class, Rect::class)
+@RunWith(DesignTestRunner::class)
 class RippleMaskDrawableTest : Assert() {
 
-    private lateinit var rippleMaskDrawable: RippleMaskDrawable
-    private lateinit var paint: Paint
+    @Test
+    fun testDrawBorderedRipple_width_equals_height() {
+        val canvas = Canvas()
 
-    @Before
-    fun setUp() {
-        rippleMaskDrawable = PowerMockito.mock(RippleMaskDrawable::class.java)
-        paint = Mockito.mock(Paint::class.java)
+        RippleMaskDrawable(RippleMaskType.BORDERED).apply {
+            setBounds(0, 0, 100, 100)
+            draw(canvas)
+        }
+
+        val shadow = shadowOf(canvas)
+        val event = shadow.getDrawnCircle(0)
+
+        assertNotNull(event)
+        assertEquals(Color.WHITE, event.paint.color)
+        assertEquals(50F, event.radius)
+        assertEquals(50F, event.centerX)
+        assertEquals(50F, event.centerY)
     }
 
     @Test
-    fun testGetRadius_bordered() {
-        val bounds = PowerMockito.mock(Rect::class.java)
+    fun testDrawBorderedRipple_width_more_than_height() {
+        val canvas = Canvas()
 
-        Mockito.`when`(bounds.width()).thenReturn(15)
-        Mockito.`when`(bounds.height()).thenReturn(5)
-        Mockito.`when`(rippleMaskDrawable.bounds).thenReturn(bounds)
-        Mockito.`when`(rippleMaskDrawable.getRadius()).thenCallRealMethod()
+        RippleMaskDrawable(RippleMaskType.BORDERED).apply {
+            setBounds(0, 0, 150, 100)
+            draw(canvas)
+        }
 
-        RippleMaskDrawable::class.java
-                .getDeclaredField("type")
-                .apply { isAccessible = true }
-                .set(rippleMaskDrawable, RippleMaskType.BORDERED)
+        val shadow = shadowOf(canvas)
+        val event = shadow.getDrawnCircle(0)
 
-        val result = rippleMaskDrawable.getRadius()
-        val valid = (Math.max(bounds.width(), bounds.height()) / 2).toFloat()
-        assertEquals(valid, result)
+        assertNotNull(event)
+        assertEquals(Color.WHITE, event.paint.color)
+        assertEquals(75F, event.radius)
+        assertEquals(75F, event.centerX)
+        assertEquals(50F, event.centerY)
     }
 
     @Test
-    fun testGetRadius_borderless() {
-        val bounds = PowerMockito.mock(Rect::class.java)
+    fun testDrawBorderlessRipple_width_equals_height() {
+        val canvas = Canvas()
+        RippleMaskDrawable(RippleMaskType.BORDERLESS).apply {
+            setBounds(0, 0, 100, 100)
+            draw(canvas)
+        }
 
-        Mockito.`when`(bounds.centerX()).thenReturn(30)
-        Mockito.`when`(bounds.centerY()).thenReturn(40)
-        Mockito.`when`(rippleMaskDrawable.bounds).thenReturn(bounds)
-        Mockito.`when`(rippleMaskDrawable.getRadius()).thenCallRealMethod()
+        val shadow = shadowOf(canvas)
+        val event = shadow.getDrawnCircle(0)
 
-        RippleMaskDrawable::class.java
-                .getDeclaredField("type")
-                .apply { isAccessible = true }
-                .set(rippleMaskDrawable, RippleMaskType.BORDERLESS)
-
-        val result = rippleMaskDrawable.getRadius()
-        val valid =  Math.ceil(Math.sqrt((bounds.left - bounds.centerX()) *
-                (bounds.left - bounds.centerX()) + (bounds.top - bounds.centerY()) *
-                (bounds.top - bounds.centerY()).toDouble())).toFloat()
-
-        assertEquals(valid, result)
+        assertNotNull(event)
+        assertEquals(Color.WHITE, event.paint.color)
+        assertEquals(71F, event.radius)
+        assertEquals(50F, event.centerX)
+        assertEquals(50F, event.centerY)
     }
 
     @Test
-    fun testDraw() {
-        val bounds = PowerMockito.mock(Rect::class.java)
-        val canvas = PowerMockito.mock(Canvas::class.java)
-        val paint = PowerMockito.mock(Paint::class.java)
+    fun testDrawBorderlessRipple_width_more_than_height() {
+        val canvas = Canvas()
 
-        RippleMaskDrawable::class.java
-                .getDeclaredField("paint")
-                .apply { isAccessible = true }
-                .set(rippleMaskDrawable, paint)
+        RippleMaskDrawable(RippleMaskType.BORDERLESS).apply {
+            setBounds(0, 0, 150, 100)
+            draw(canvas)
+        }
 
-        Mockito.`when`(bounds.exactCenterX()).thenReturn(30F)
-        Mockito.`when`(bounds.exactCenterY()).thenReturn(40F)
-        Mockito.`when`(rippleMaskDrawable.bounds).thenReturn(bounds)
-        Mockito.`when`(rippleMaskDrawable.getRadius()).thenReturn(15F)
-        Mockito.`when`(rippleMaskDrawable.draw(canvas)).thenCallRealMethod()
+        val shadow = shadowOf(canvas)
+        val event = shadow.getDrawnCircle(0)
 
-        rippleMaskDrawable.draw(canvas)
-        Mockito.verify(canvas).drawCircle(
-                bounds.exactCenterX(),
-                bounds.exactCenterY(),
-                rippleMaskDrawable.getRadius(),
-                paint)
+        assertNotNull(event)
+        assertEquals(Color.WHITE, event.paint.color)
+        assertEquals(107F, event.radius)
+        assertEquals(75F, event.centerX)
+        assertEquals(50F, event.centerY)
     }
 }

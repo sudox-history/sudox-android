@@ -1,4 +1,17 @@
+android {
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+
+            all {
+                jvmArgs '-noverify'
+            }
+        }
+    }
+}
+
 dependencies {
+    testImplementation 'org.robolectric:robolectric:4.3'
     androidTestImplementation 'com.novoda:espresso-support:1.0.0'
     androidTestImplementation 'com.novoda:espresso-support-extras:1.0.0'
 }

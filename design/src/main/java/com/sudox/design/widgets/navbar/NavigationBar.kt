@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.StringRes
-import com.sudox.common.annotations.Checked
 import com.sudox.design.R
 import com.sudox.design.helpers.isLayoutRtl
 import com.sudox.design.widgets.navbar.button.NavigationBarButton
@@ -27,8 +26,8 @@ class NavigationBar : ViewGroup, View.OnClickListener {
     var buttonStart: NavigationBarButton? = null
     var buttonsEnd = arrayOfNulls<NavigationBarButton>(BUTTONS_IN_END_COUNT)
 
-    private var titleTextView = TextView(context)
-    private var contentView: View? = null
+    internal var titleTextView = TextView(context)
+    internal var contentView: View? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.navigationBarStyle)
@@ -43,7 +42,6 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         initTitle()
     }
 
-    @Checked
     private fun initButtons() {
         buttonStart = createButton()
 
@@ -52,7 +50,6 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         }
     }
 
-    @Checked
     private fun initTitle() {
         titleTextView.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
         titleTextView.gravity = Gravity.CENTER_VERTICAL
@@ -61,7 +58,6 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         titleTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleParams.textSize)
     }
 
-    @Checked
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         buttonStart!!.measure(widthMeasureSpec, heightMeasureSpec)
         contentView?.measure(widthMeasureSpec, heightMeasureSpec)
@@ -73,7 +69,6 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 
-    @Checked
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val isRtl = isLayoutRtl()
 
@@ -183,16 +178,14 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         }
     }
 
-    @Checked
     private fun createButton(): NavigationBarButton {
-        val button = NavigationBarButton(context, buttonParams)
-        button.id = View.generateViewId()
-        button.setOnClickListener(this)
-        addView(button)
-        return button
+        return NavigationBarButton(context, buttonParams).apply {
+            id = View.generateViewId()
+            setOnClickListener(this@NavigationBar)
+            addView(this)
+        }
     }
 
-    @Checked
     fun setContentView(view: View?) {
         if (contentView != null && contentView == view) {
             removeViewInLayout(view)
@@ -205,7 +198,6 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         }
     }
 
-    @Checked
     fun setTitleText(text: String?) {
         titleTextView.text = text
 
@@ -216,20 +208,17 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         }
     }
 
-    @Checked
     fun setTitleTextRes(@StringRes textRes: Int) {
         val text = resources.getString(textRes)
         setTitleText(text)
     }
 
-    @Checked
     fun resetButtonsEnd() {
         for (button in buttonsEnd) {
             button!!.resetView()
         }
     }
 
-    @Checked
     fun resetView() {
         titleTextView.text = null
         buttonStart!!.resetView()

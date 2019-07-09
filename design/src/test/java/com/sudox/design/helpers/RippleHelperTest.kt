@@ -1,53 +1,42 @@
 package com.sudox.design.helpers
 
-import android.content.Context
+import android.app.Activity
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.graphics.drawable.RippleDrawable
 import android.util.StateSet
 import android.view.View
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
-import com.sudox.design.R
+import com.sudox.design.DesignTestRunner
 import com.sudox.design.drawables.ripple.RippleMaskDrawable
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.Robolectric
+import org.robolectric.android.controller.ActivityController
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(DesignTestRunner::class)
 class RippleHelperTest : Assert() {
 
-    private lateinit var context: Context
+    private lateinit var activityController: ActivityController<Activity>
+    private lateinit var activity: Activity
+    private lateinit var view: View
 
     @Before
     fun setUp() {
-        context = InstrumentationRegistry.getInstrumentation().context
-        context.setTheme(R.style.SudoxTheme)
+        activityController = Robolectric.buildActivity(Activity::class.java)
+        activity = activityController.get()
+        view = View(activity)
     }
 
     @Test
-    fun testGetRippleColorState() {
-        val controlHighlightColor = context.theme.getControlHighlightColor()
-        val result = context.getRippleColorState()
-        val colorForWildcard = result.getColorForState(StateSet.WILD_CARD, 0)
-        assertEquals(controlHighlightColor, colorForWildcard)
-    }
-
-    @Test
-    fun testAddRipple() {
-        val validColorState = context.getRippleColorState()
-        val validColors = validColorState.javaClass
-                .getDeclaredField("mColors")
-                .apply { isAccessible = true }
-                .get(validColorState) as IntArray?
-
-        val view = View(context)
+    fun testRippleAdding() {
         view.addRipple()
-
         assertTrue(view.background is RippleDrawable)
 
         val rippleDrawable = view.background as RippleDrawable
         val maskDrawable = rippleDrawable.getDrawable(0)
+        val (validColorState, validColors) = getValidColors(view.context.theme)
 
         assertTrue(maskDrawable is RippleMaskDrawable)
 
@@ -67,5 +56,13 @@ class RippleHelperTest : Assert() {
                 .get(validColorState) as IntArray?
 
         assertArrayEquals(validColors, colors)
+    }
+
+    private fun getValidColors(theme: Resources.Theme): Pair<ColorStateList, IntArray> {
+        val color = theme.getControlHighlightColor()
+        val states = arrayOf(StateSet.WILD_CARD)
+        val colors = intArrayOf(color)
+
+        return Pair(ColorStateList(states, colors), colors)
     }
 }

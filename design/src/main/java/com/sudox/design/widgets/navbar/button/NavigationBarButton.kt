@@ -11,7 +11,6 @@ import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import com.sudox.common.annotations.Checked
 import com.sudox.design.helpers.addRipple
 import com.sudox.design.helpers.isLayoutRtl
 
@@ -140,6 +139,7 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
         drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
         drawable?.setTint(params.iconTintColor)
 
+        // Reset resource id if new drawable not read from resources
         if (!fromRes) {
             iconDrawableRes = 0
         }
@@ -149,14 +149,12 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
         invalidate()
     }
 
-    @Checked
     fun setIconDrawableRes(@DrawableRes drawableRes: Int) {
         val drawable = ContextCompat.getDrawable(context, drawableRes)
         iconDrawableRes = drawableRes
         setIconDrawable(drawable, true)
     }
 
-    @Checked
     fun setIconDirection(@NavigationBarButtonIconDirection direction: Int) {
         iconDirection = direction
         invalidate()
@@ -169,6 +167,7 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
 
         this.text = text
 
+        // Reset resource id if new text not read from resources
         if (!fromRes) {
             textRes = 0
         }
@@ -177,14 +176,12 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
         invalidate()
     }
 
-    @Checked
     fun setTextRes(@StringRes textRes: Int) {
         val text = resources.getString(textRes)
         this.textRes = textRes
         setText(text, true)
     }
 
-    @Checked
     fun resetView() {
         isClickable = false
         visibility = GONE

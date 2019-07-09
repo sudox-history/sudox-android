@@ -1,20 +1,21 @@
 package com.sudox.design.drawables.ripple
 
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Canvas
-import android.graphics.PixelFormat
+import android.graphics.Color
 import android.graphics.ColorFilter
+import android.graphics.Paint
+import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
-
-private const val RIPPLE_MASK_COLOR = Color.WHITE
+import kotlin.math.ceil
+import kotlin.math.max
+import kotlin.math.sqrt
 
 class RippleMaskDrawable(@RippleMaskType var type: Int) : Drawable() {
 
     private var paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     init {
-        paint.color = RIPPLE_MASK_COLOR
+        paint.color = Color.WHITE
     }
 
     override fun draw(canvas: Canvas) {
@@ -25,15 +26,13 @@ class RippleMaskDrawable(@RippleMaskType var type: Int) : Drawable() {
         canvas.drawCircle(centerX, centerY, radius, paint)
     }
 
-    internal fun getRadius(): Float {
-        return if (type == RippleMaskType.BORDERED) {
-            (Math.max(bounds.width(), bounds.height()) / 2).toFloat()
-        } else if (type == RippleMaskType.BORDERLESS) {
-            val area = (bounds.left - bounds.centerX()) *
-                    (bounds.left - bounds.centerX()) + (bounds.top - bounds.centerY()) *
-                    (bounds.top - bounds.centerY()).toDouble()
+    private fun getRadius(): Float {
+        val max = max(bounds.width(), bounds.height())
 
-            Math.ceil(Math.sqrt(area)).toFloat()
+        return if (type == RippleMaskType.BORDERED) {
+            (max / 2).toFloat()
+        } else if (type == RippleMaskType.BORDERLESS) {
+            ceil(sqrt(max * max / 2F))
         } else {
             0F
         }

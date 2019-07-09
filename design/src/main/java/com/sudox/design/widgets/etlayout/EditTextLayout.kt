@@ -2,6 +2,7 @@ package com.sudox.design.widgets.etlayout
 
 import android.content.Context
 import android.graphics.Canvas
+import android.os.Parcelable
 import androidx.annotation.StringRes
 import android.text.Editable
 import android.text.TextWatcher
@@ -41,6 +42,7 @@ class EditTextLayout : ViewGroup, TextWatcher {
         if (editText != null) {
             label = EditTextLayoutLabel(editText!!, labelParams)
             label!!.originalText = editText!!.hint?.toString()
+            label!!.configurePaint()
 
             editText!!.hint = null
             editText!!.addTextChangedListener(this)
@@ -84,6 +86,19 @@ class EditTextLayout : ViewGroup, TextWatcher {
         }
     }
 
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+        val state = EditTextLayoutSavedState(superState!!)
+        state.readFromView(this)
+        return state
+    }
+
+    override fun onRestoreInstanceState(parcelable: Parcelable) {
+        val state = parcelable as EditTextLayoutSavedState
+        super.onRestoreInstanceState(state.superState)
+        state.writeToView(this)
+    }
+
     override fun onDetachedFromWindow() {
         editText?.removeTextChangedListener(this)
         super.onDetachedFromWindow()
@@ -94,11 +109,13 @@ class EditTextLayout : ViewGroup, TextWatcher {
             return
         }
 
-        resetErrorText()
+        if (label?.errorText != null) {
+            setErrorText(null)
+        }
     }
 
     override fun dispatchDraw(canvas: Canvas) {
-        label?.dispatchDraw(canvas)
+        label?.draw(canvas)
         super.dispatchDraw(canvas)
     }
 
@@ -116,16 +133,6 @@ class EditTextLayout : ViewGroup, TextWatcher {
     fun setErrorTextRes(@StringRes textRes: Int) {
         val text = resources.getText(textRes)
         setErrorText(text.toString())
-    }
-
-    fun resetErrorText() {
-        if (label?.errorText != null) {
-            setErrorText(null)
-        }
-    }
-
-    fun isErrorShowing(): Boolean {
-        return label?.needShowingError() ?: false
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

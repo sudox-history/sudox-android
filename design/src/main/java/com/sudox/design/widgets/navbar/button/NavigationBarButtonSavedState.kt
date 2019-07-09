@@ -21,6 +21,7 @@ class NavigationBarButtonSavedState : View.BaseSavedState {
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
+
         out.apply {
             writeInt(iconDirection)
             writeInt(iconDrawableRes)
@@ -47,7 +48,7 @@ class NavigationBarButtonSavedState : View.BaseSavedState {
 
         button.apply {
             setIconDirection(iconDirection)
-            visibility = visibility
+            visibility = this@NavigationBarButtonSavedState.visibility
         }
     }
 
