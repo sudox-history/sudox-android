@@ -45,6 +45,7 @@ class RTLHelperTest : Assert() {
         view.layoutDirection = LayoutDirection.RTL
         assertTrue(view.isTextRtl("مرحبا بالعالم!"))
         assertFalse(view.isTextRtl("Hello World!"))
+        assertTrue(view.isTextRtl("مرحبا بالعالم! Sudox"))
     }
 
     @Test
@@ -52,5 +53,6 @@ class RTLHelperTest : Assert() {
         view.layoutDirection = LayoutDirection.LTR
         assertTrue(view.isTextRtl("مرحبا بالعالم!"))
         assertFalse(view.isTextRtl("Hello World!"))
+        assertTrue(view.isTextRtl("مرحبا بالعالم! Sudox"))
     }
 }

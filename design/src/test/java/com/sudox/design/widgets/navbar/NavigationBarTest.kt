@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.view.ViewGroup
 import com.sudox.design.DesignTestRunner
 import com.sudox.design.R
 import com.sudox.design.shadows.TagViewShadow
@@ -49,7 +50,13 @@ class NavigationBarTest : Assert() {
                 .visible()
 
         activity = activityController.get()
-        navigationBar = NavigationBar(activity).apply { id = 1 }
+        navigationBar = NavigationBar(activity).apply {
+            id = 1
+            layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
+
         activity.setContentView(navigationBar)
 
         if (bundle != null) {

@@ -197,6 +197,7 @@ class NavigationBar : ViewGroup, View.OnClickListener {
     private fun createButton(): NavigationBarButton {
         return NavigationBarButton(context, buttonParams).apply {
             id = View.generateViewId()
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
             setOnClickListener(this@NavigationBar)
             addView(this)
         }
