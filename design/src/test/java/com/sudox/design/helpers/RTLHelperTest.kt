@@ -4,14 +4,17 @@ import android.app.Activity
 import android.util.LayoutDirection
 import android.view.View
 import com.sudox.design.DesignTestRunner
+import com.sudox.design.shadows.LayoutDirectionViewShadow
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.android.controller.ActivityController
+import org.robolectric.annotation.Config
 
 @RunWith(DesignTestRunner::class)
+@Config(shadows = [LayoutDirectionViewShadow::class])
 class RTLHelperTest : Assert() {
 
     private lateinit var activityController: ActivityController<Activity>

@@ -1,17 +1,13 @@
 package com.sudox.design.helpers
 
 import android.R
-import android.os.Build
 import android.util.TypedValue
 import androidx.core.content.ContextCompat
-import com.sudox.design.DesignTestApplication
 import com.sudox.design.DesignTestRunner
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
 
 @RunWith(DesignTestRunner::class)
 class ThemeHelperTest : Assert() {

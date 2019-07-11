@@ -6,32 +6,33 @@ import android.view.View
 
 class EditTextLayoutSavedState : View.BaseSavedState {
 
-    internal var originalText: String? = null
     internal var errorText: String? = null
+    internal var errorTextRes: Int = 0
 
     constructor(superState: Parcelable) : super(superState)
     constructor(source: Parcel) : super(source) {
-        originalText = source.readString()
         errorText = source.readString()
+        errorTextRes = source.readInt()
     }
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
 
-        out.apply {
-            writeString(originalText)
-            writeString(errorText)
-        }
+        out.writeString(errorText)
+        out.writeInt(errorTextRes)
     }
 
     fun readFromView(editTextLayout: EditTextLayout) {
-        originalText = editTextLayout.label?.originalText
         errorText = editTextLayout.label?.errorText
+        errorTextRes = editTextLayout.label?.errorTextRes ?: 0
     }
 
     fun writeToView(editTextLayout: EditTextLayout) {
-        editTextLayout.label!!.originalText = originalText
-        editTextLayout.label!!.errorText = errorText
+        if (errorTextRes != 0) {
+            editTextLayout.setErrorTextRes(errorTextRes)
+        } else if (errorText != null) {
+            editTextLayout.setErrorText(errorText)
+        }
     }
 
     companion object CREATOR : Parcelable.Creator<EditTextLayoutSavedState> {

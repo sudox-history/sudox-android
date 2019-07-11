@@ -6,35 +6,44 @@ import android.view.View
 
 class NavigationBarButtonSavedState : View.BaseSavedState {
 
+    internal var visibility: Int = 0
+    internal var clickableFlag: Byte = 0
+
     internal var iconDirection: Int = 0
     internal var iconDrawableRes: Int = 0
     internal var textRes: Int = 0
-    internal var visibility: Int = 0
+    internal var text: String? = null
 
     constructor(superState: Parcelable) : super(superState)
     constructor(source: Parcel) : super(source) {
+        visibility = source.readInt()
+        clickableFlag = source.readByte()
         iconDirection = source.readInt()
         iconDrawableRes = source.readInt()
         textRes = source.readInt()
-        visibility = source.readInt()
+        text = source.readString()
     }
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
 
         out.apply {
+            writeInt(visibility)
+            writeByte(clickableFlag)
             writeInt(iconDirection)
             writeInt(iconDrawableRes)
             writeInt(textRes)
-            writeInt(visibility)
+            writeString(text)
         }
     }
 
     fun readFromView(button: NavigationBarButton) {
+        visibility = button.visibility
+        clickableFlag = if (button.isClickable) 1.toByte() else 0.toByte()
         iconDirection = button.iconDirection
         iconDrawableRes = button.iconDrawableRes
         textRes = button.textRes
-        visibility = button.visibility
+        text = button.text
     }
 
     fun writeToView(button: NavigationBarButton) {
@@ -44,12 +53,13 @@ class NavigationBarButtonSavedState : View.BaseSavedState {
 
         if (textRes != 0) {
             button.setTextRes(textRes)
+        } else if (text != null) {
+            button.setText(text)
         }
 
-        button.apply {
-            setIconDirection(iconDirection)
-            visibility = this@NavigationBarButtonSavedState.visibility
-        }
+        button.setIconDirection(iconDirection)
+        button.isClickable = (clickableFlag == 1.toByte())
+        button.visibility = visibility
     }
 
     companion object CREATOR : Parcelable.Creator<NavigationBarButtonSavedState> {

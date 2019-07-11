@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.sudox.design.DesignTestRunner
+import com.sudox.design.R
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -69,15 +70,28 @@ class EditTextLayoutTest : Assert() {
     }
 
     @Test
-    fun testStateSaving() {
-        createActivity()
-        assertEquals(editText.currentHintTextColor, editTextLayout.label!!.getCurrentColor())
-        assertEquals(EDITTEXT_HINT, editTextLayout.label!!.getCurrentText())
-
+    fun testErrorTextSaving() {
         editTextLayout.setErrorText(ERROR_TEXT)
+
         createActivity()
         assertEquals(editTextLayout.label!!.params.errorTextColor, editTextLayout.label!!.getCurrentColor())
         assertEquals(ERROR_TEXT, editTextLayout.label!!.getCurrentText())
+    }
+
+    @Test
+    fun testErrorTextResSaving() {
+        editTextLayout.setErrorTextRes(R.string.test_string)
+
+        createActivity()
+        assertEquals(editTextLayout.label!!.params.errorTextColor, editTextLayout.label!!.getCurrentColor())
+        assertEquals("QWERTYUIOP", editTextLayout.label!!.getCurrentText())
+    }
+
+    @Test
+    fun testLabelTextSaving() {
+        createActivity()
+        assertEquals(editText.currentHintTextColor, editTextLayout.label!!.getCurrentColor())
+        assertEquals(EDITTEXT_HINT, editTextLayout.label!!.getCurrentText())
     }
 
     private fun createActivity() {

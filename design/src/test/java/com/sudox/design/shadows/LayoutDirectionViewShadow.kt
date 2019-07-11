@@ -1,7 +1,6 @@
 package com.sudox.design.shadows
 
 import android.view.View
-import android.widget.TextView
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 import org.robolectric.shadows.ShadowView

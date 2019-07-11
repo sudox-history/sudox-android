@@ -2,20 +2,14 @@ package com.sudox.messenger.android.impls
 
 import android.view.View
 import com.sudox.design.widgets.navbar.NavigationBar
-import com.sudox.design.widgets.navbar.NavigationBarListener
-import com.sudox.design.widgets.navbar.button.NavigationBarButton
 import com.sudox.design.widgets.navbar.button.NavigationBarButtonIconDirection
 import com.sudox.messenger.R
 import com.sudox.messenger.android.core.controller.AppNavbarController
 
 class AppNavbarControllerImpl(val navigationBar: NavigationBar) : AppNavbarController {
 
-    override fun getButtonStart(): NavigationBarButton {
-        return navigationBar.buttonStart!!
-    }
-
-    override fun getButtonNext(): NavigationBarButton {
-        return navigationBar.buttonsEnd[0]!!
+    override fun getTagButtonNext(): Int {
+        return navigationBar.buttonsEnd[0]!!.tag as Int
     }
 
     override fun toggleButtonBack(toggle: Boolean) {
@@ -50,8 +44,8 @@ class AppNavbarControllerImpl(val navigationBar: NavigationBar) : AppNavbarContr
         }
     }
 
-    override fun setListener(listener: NavigationBarListener?) {
-        navigationBar.listener = listener
+    override fun setButtonsClickCallback(callback: (Int) -> Unit) {
+        navigationBar.buttonsClickCallback = callback
     }
 
     override fun reset() {

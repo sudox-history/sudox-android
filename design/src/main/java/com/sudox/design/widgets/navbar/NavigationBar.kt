@@ -17,15 +17,21 @@ import com.sudox.design.widgets.navbar.title.NavigationBarTitleParams
 
 private const val BUTTONS_IN_END_COUNT = 3
 
+const val NAVBAR_START_BUTTON_TAG = 0
+const val NAVBAR_FIRST_END_BUTTON_TAG = 1
+const val NAVBAR_SECOND_END_BUTTON_TAG = 2
+const val NAVBAR_THIRD_END_BUTTON_TAG = 3
+
 class NavigationBar : ViewGroup, View.OnClickListener {
 
     internal var buttonParams = NavigationBarButtonParams()
     internal var titleParams = NavigationBarTitleParams()
 
-    var listener: NavigationBarListener? = null
+    var buttonsClickCallback: ((Int) -> (Unit))? = null
     var buttonStart: NavigationBarButton? = null
     var buttonsEnd = arrayOfNulls<NavigationBarButton>(BUTTONS_IN_END_COUNT)
 
+    internal var titleTextRes: Int = 0
     internal var titleTextView = TextView(context)
     internal var contentView: View? = null
 
@@ -44,9 +50,16 @@ class NavigationBar : ViewGroup, View.OnClickListener {
 
     private fun initButtons() {
         buttonStart = createButton()
+        buttonStart!!.tag = NAVBAR_START_BUTTON_TAG
 
         for (i in 0 until buttonsEnd.size) {
             buttonsEnd[i] = createButton()
+            buttonsEnd[i]!!.tag = when (i) {
+                0 -> NAVBAR_FIRST_END_BUTTON_TAG
+                1 -> NAVBAR_SECOND_END_BUTTON_TAG
+                2 -> NAVBAR_THIRD_END_BUTTON_TAG
+                else -> null
+            }
         }
     }
 
@@ -59,11 +72,14 @@ class NavigationBar : ViewGroup, View.OnClickListener {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        buttonStart!!.measure(widthMeasureSpec, heightMeasureSpec)
-        contentView?.measure(widthMeasureSpec, heightMeasureSpec)
+        measureChild(buttonStart, widthMeasureSpec, heightMeasureSpec)
+
+        if (contentView != null) {
+            measureChild(contentView!!, widthMeasureSpec, heightMeasureSpec)
+        }
 
         for (button in buttonsEnd) {
-            button!!.measure(widthMeasureSpec, heightMeasureSpec)
+            measureChild(button, widthMeasureSpec, heightMeasureSpec)
         }
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -93,7 +109,7 @@ class NavigationBar : ViewGroup, View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        listener?.onButtonClicked(view as NavigationBarButton)
+        buttonsClickCallback?.invoke(view.tag as Int)
     }
 
     internal fun layoutStart(left: Int, right: Int, top: Int, bottom: Int, rtl: Boolean) {
@@ -187,19 +203,26 @@ class NavigationBar : ViewGroup, View.OnClickListener {
     }
 
     fun setContentView(view: View?) {
-        if (contentView != null && contentView == view) {
-            removeViewInLayout(view)
+        if (contentView != null && contentView != view) {
+            removeViewInLayout(contentView)
         }
 
         contentView = view
 
-        if (contentView != null) {
-            addView(contentView)
+        if (view != null) {
+            addView(view)
+        } else {
+            requestLayout()
+            invalidate()
         }
     }
 
-    fun setTitleText(text: String?) {
+    fun setTitleText(text: String?, fromRes: Boolean = false) {
         titleTextView.text = text
+
+        if (!fromRes) {
+            titleTextRes = 0
+        }
 
         if (text != null) {
             setContentView(titleTextView)
@@ -210,7 +233,8 @@ class NavigationBar : ViewGroup, View.OnClickListener {
 
     fun setTitleTextRes(@StringRes textRes: Int) {
         val text = resources.getString(textRes)
-        setTitleText(text)
+        titleTextRes = textRes
+        setTitleText(text, true)
     }
 
     fun resetButtonsEnd() {
@@ -220,8 +244,8 @@ class NavigationBar : ViewGroup, View.OnClickListener {
     }
 
     fun resetView() {
-        titleTextView.text = null
         buttonStart!!.resetView()
+        setTitleText(null)
         setContentView(null)
         resetButtonsEnd()
     }

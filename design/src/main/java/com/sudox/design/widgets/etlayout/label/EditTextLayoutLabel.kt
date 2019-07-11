@@ -9,7 +9,9 @@ import com.sudox.design.helpers.isTextRtl
 class EditTextLayoutLabel(val editText: EditText, val params: EditTextLayoutLabelParams) {
 
     internal var originalText: String? = null
+    internal var errorTextRes: Int = 0
     internal var errorText: String? = null
+
     internal var bounds = Rect()
     internal var paint = Paint(Paint.ANTI_ALIAS_FLAG)
 

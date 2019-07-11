@@ -39,14 +39,16 @@ class EditTextLayout : ViewGroup, TextWatcher {
     }
 
     private fun initEditText() {
-        if (editText != null) {
-            label = EditTextLayoutLabel(editText!!, labelParams)
-            label!!.originalText = editText!!.hint?.toString()
-            label!!.configurePaint()
-
-            editText!!.hint = null
-            editText!!.addTextChangedListener(this)
+        if (editText!!.id == View.NO_ID) {
+            throw IllegalArgumentException("editText.id == View.NO_ID")
         }
+
+        label = EditTextLayoutLabel(editText!!, labelParams)
+        label!!.originalText = editText!!.hint?.toString()
+        label!!.configurePaint()
+
+        editText!!.hint = null
+        editText!!.addTextChangedListener(this)
     }
 
     private fun findEditText() {
@@ -63,27 +65,21 @@ class EditTextLayout : ViewGroup, TextWatcher {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        if (editText != null) {
-            measureChild(editText!!, widthMeasureSpec, heightMeasureSpec)
+        measureChild(editText!!, widthMeasureSpec, heightMeasureSpec)
 
-            val labelHeight = label!!.getHeight()
-            val measuredHeight = labelHeight + editText!!.measuredHeight
-            val measuredHeightSpec = MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
+        val labelHeight = label!!.getHeight()
+        val measuredHeight = labelHeight + editText!!.measuredHeight
+        val measuredHeightSpec = MeasureSpec.makeMeasureSpec(measuredHeight, MeasureSpec.EXACTLY)
 
-            setMeasuredDimension(widthMeasureSpec, measuredHeightSpec)
-        } else {
-            setMeasuredDimension(widthMeasureSpec, heightMeasureSpec)
-        }
+        setMeasuredDimension(widthMeasureSpec, measuredHeightSpec)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        if (editText != null) {
-            val topBorder = label!!.getHeight()
-            val bottomBorder = topBorder + editText!!.measuredHeight
-            val rightBorder = editText!!.measuredWidth
+        val topBorder = label!!.getHeight()
+        val bottomBorder = topBorder + editText!!.measuredHeight
+        val rightBorder = editText!!.measuredWidth
 
-            editText!!.layout(0, topBorder, rightBorder, bottomBorder)
-        }
+        editText!!.layout(0, topBorder, rightBorder, bottomBorder)
     }
 
     override fun onSaveInstanceState(): Parcelable {
@@ -100,7 +96,7 @@ class EditTextLayout : ViewGroup, TextWatcher {
     }
 
     override fun onDetachedFromWindow() {
-        editText?.removeTextChangedListener(this)
+        editText!!.removeTextChangedListener(this)
         super.onDetachedFromWindow()
     }
 
@@ -109,13 +105,13 @@ class EditTextLayout : ViewGroup, TextWatcher {
             return
         }
 
-        if (label?.errorText != null) {
+        if (label!!.errorText != null) {
             setErrorText(null)
         }
     }
 
     override fun dispatchDraw(canvas: Canvas) {
-        label?.draw(canvas)
+        label!!.draw(canvas)
         super.dispatchDraw(canvas)
     }
 
@@ -125,14 +121,20 @@ class EditTextLayout : ViewGroup, TextWatcher {
         }
     }
 
-    fun setErrorText(text: String?) {
-        label?.errorText = text
+    fun setErrorText(text: String?, fromRes: Boolean = false) {
+        label!!.errorText = text
+
+        if (!fromRes) {
+            label!!.errorTextRes = 0
+        }
+
         invalidate()
     }
 
     fun setErrorTextRes(@StringRes textRes: Int) {
         val text = resources.getText(textRes)
-        setErrorText(text.toString())
+        label!!.errorTextRes = textRes
+        setErrorText(text.toString(), true)
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

@@ -2,7 +2,6 @@ package com.sudox.design.drawables.ripple
 
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.PixelFormat
 import com.sudox.design.DesignTestRunner
 import org.junit.Assert
 import org.junit.Test

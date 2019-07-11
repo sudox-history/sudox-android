@@ -4,7 +4,8 @@ import android.view.View
 import androidx.core.text.TextDirectionHeuristicsCompat
 
 fun View.isLayoutRtl(): Boolean {
-    return layoutDirection == View.LAYOUT_DIRECTION_RTL
+    return resources.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL ||
+            layoutDirection == View.LAYOUT_DIRECTION_RTL
 }
 
 fun View.isTextRtl(text: String): Boolean {

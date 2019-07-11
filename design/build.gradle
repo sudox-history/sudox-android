@@ -1,4 +1,20 @@
+buildscript {
+    dependencies {
+        classpath 'com.facebook.testing.screenshot:plugin:0.10.0'
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.facebook.testing.screenshot'
+
 android {
+    defaultConfig {
+        testInstrumentationRunner "com.sudox.design.ScreenshotTestRunner"
+    }
+
     testOptions {
         unitTests {
             includeAndroidResources = true

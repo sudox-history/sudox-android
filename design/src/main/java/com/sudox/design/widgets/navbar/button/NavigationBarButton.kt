@@ -138,8 +138,7 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
     fun setIconDrawable(drawable: Drawable?, fromRes: Boolean = false) {
         drawable?.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
         drawable?.setTint(params.iconTintColor)
-
-        // Reset resource id if new drawable not read from resources
+        
         if (!fromRes) {
             iconDrawableRes = 0
         }
@@ -167,7 +166,6 @@ class NavigationBarButton(context: Context, val params: NavigationBarButtonParam
 
         this.text = text
 
-        // Reset resource id if new text not read from resources
         if (!fromRes) {
             textRes = 0
         }

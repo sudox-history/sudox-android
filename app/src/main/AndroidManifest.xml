@@ -4,7 +4,6 @@
     package="com.sudox.messenger">
 
     <application
-        android:name=".android.AppLoader"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
