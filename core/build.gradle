@@ -1,3 +1,5 @@
+apply from: '../configs/versions.gradle'
+
 dependencies {
-    api project(path: ':design')
+    implementation("com.sudox:design:$designVersion")
 }

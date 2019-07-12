@@ -1,4 +1,3 @@
 include ':app',
-        ':auth',
-        ':design',
+        ':auth-feature',
         ':core'
