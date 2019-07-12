@@ -1,5 +1,14 @@
 apply from: '../configs/versions.gradle'
 
+android {
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+        }
+    }
+}
+
 dependencies {
     implementation("com.sudox:design:$designVersion")
     implementation project(path: ':auth-feature')
