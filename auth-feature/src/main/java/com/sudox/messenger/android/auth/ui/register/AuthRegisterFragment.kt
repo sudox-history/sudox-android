@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.sudox.messenger.auth.R
+import com.sudox.messenger.android.auth.R
 
 class AuthRegisterFragment : Fragment() {
 

@@ -10,7 +10,7 @@ import com.sudox.messenger.android.core.controller.AppNavbarController
 import com.sudox.messenger.android.core.controller.AppNavigationController
 import com.sudox.messenger.android.core.fragment.AppFragment
 import com.sudox.messenger.android.core.fragment.AppFragmentType
-import com.sudox.messenger.auth.R
+import com.sudox.messenger.android.auth.R
 
 class AuthPhoneFragment : AppFragment() {
 
