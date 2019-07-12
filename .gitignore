@@ -11,3 +11,4 @@
 /captures
 .externalNativeBuild
 configs/vcs.gradle
+app/release
