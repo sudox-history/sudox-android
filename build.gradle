@@ -1,9 +1,9 @@
-def projectApplicationId = 'com.sudox.gateaway'
+def projectApplicationId = 'com.sudox.messenger.android'
 def projectBuildToolsVersion = '29.0.0'
 def compileSdkProjectVersion = 29
 def minSdkProjectVersion = 21
-def versionMajor = 2
-def versionMinor = 0
+def versionMajor = 0
+def versionMinor = 6
 def versionUpdate = 0
 def versionPatch = 0
 
