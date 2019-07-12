@@ -2,7 +2,7 @@ package com.sudox.messenger.android.impls
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
-import com.sudox.messenger.R
+import com.sudox.messenger.android.R
 import com.sudox.messenger.android.core.controller.AppNavigationController
 import com.sudox.messenger.android.core.fragment.AppFragment
 

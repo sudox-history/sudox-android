@@ -3,7 +3,7 @@ package com.sudox.messenger.android.impls
 import android.view.View
 import com.sudox.design.widgets.navbar.NavigationBar
 import com.sudox.design.widgets.navbar.button.NavigationBarButtonIconDirection
-import com.sudox.messenger.R
+import com.sudox.messenger.android.R
 import com.sudox.messenger.android.core.controller.AppNavbarController
 
 class AppNavbarControllerImpl(val navigationBar: NavigationBar) : AppNavbarController {

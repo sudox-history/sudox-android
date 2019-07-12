@@ -2,7 +2,7 @@ package com.sudox.messenger.android.impls
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.sudox.messenger.R
+import com.sudox.messenger.android.R
 import com.sudox.messenger.android.auth.ui.phone.AuthPhoneFragment
 import com.sudox.messenger.android.core.AppActivity
 import com.sudox.messenger.android.core.controller.AppNavbarController
