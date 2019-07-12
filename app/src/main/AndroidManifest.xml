@@ -13,7 +13,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name=".android.impls.AppActivityImpl"
+            android:name=".impls.AppActivityImpl"
             android:hardwareAccelerated="true">
 
             <intent-filter>
