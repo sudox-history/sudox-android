@@ -1,10 +1,32 @@
 apply from: '../configs/versions.gradle'
+apply plugin: 'AndResGuard'
+
+andResGuard {
+    use7zip = false
+    useSign = false
+    keepRoot = false
+    mergeDuplicatedRes = true
+
+    sevenzip {
+        artifact = 'com.tencent.mm:SevenZip:1.2.16'
+    }
+
+    compressFilePattern = [
+            "*.png",
+            "*.jpg",
+            "*.jpeg",
+            "*.gif",
+    ]
+}
 
 android {
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
+
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
         }
     }
 }
