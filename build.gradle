@@ -63,7 +63,7 @@ subprojects { subproject ->
             versionName "${versionMajor}.${versionMinor}.${versionUpdate}.${versionPatch}"
             testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
-            if (name == 'app') {
+            if (subproject.name == 'app') {
                 applicationId projectApplicationId
             }
         }
