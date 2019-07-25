@@ -1,0 +1,6 @@
+apply from: '../configs/versions.gradle'
+
+dependencies {
+    implementation "com.sudox:proto.client:$protocolVersion"
+    implementation project(path: ':core')
+}
