@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.auth.ui.code
+package com.sudox.messenger.android.auth.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,7 +12,7 @@ import com.sudox.messenger.android.core.fragment.AppFragment
 import com.sudox.messenger.android.core.fragment.AppFragmentType
 import com.sudox.messenger.android.auth.R
 
-class AuthCodeFragment : AppFragment() {
+class CodeFragment : AppFragment() {
 
     internal var navbarController: AppNavbarController? = null
     internal var navigationController: AppNavigationController? = null

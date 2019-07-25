@@ -1,10 +1,9 @@
-package com.sudox.messenger.android.auth.ui.phone
+package com.sudox.messenger.android.auth.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sudox.messenger.android.auth.ui.code.AuthCodeFragment
 import com.sudox.messenger.android.core.AppActivity
 import com.sudox.messenger.android.core.controller.AppNavbarController
 import com.sudox.messenger.android.core.controller.AppNavigationController
@@ -12,7 +11,7 @@ import com.sudox.messenger.android.core.fragment.AppFragment
 import com.sudox.messenger.android.core.fragment.AppFragmentType
 import com.sudox.messenger.android.auth.R
 
-class AuthPhoneFragment : AppFragment() {
+class PhoneFragment : AppFragment() {
 
     internal var navbarController: AppNavbarController? = null
     internal var navigationController: AppNavigationController? = null
@@ -38,7 +37,7 @@ class AuthPhoneFragment : AppFragment() {
 
     private fun handleNavbarButtonClick(tag: Int) {
         if (tag == navbarController!!.getTagButtonNext()) {
-            navigationController!!.showFragment(AuthCodeFragment())
+            navigationController!!.showFragment(CodeFragment())
         }
     }
 
