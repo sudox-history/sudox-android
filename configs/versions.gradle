@@ -1,4 +1,7 @@
 ext {
     designVersion = "0.1-SNAPSHOT"
     protocolVersion = "4.0.2.1-SNAPSHOT"
+    eventsVersion = "1.1.0-SNAPSHOT"
+    retrofutureVersion = "1.7.1"
+    junitVersion = "4.12"
 }

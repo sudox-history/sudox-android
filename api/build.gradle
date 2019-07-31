@@ -1,6 +1,8 @@
 apply from: '../configs/versions.gradle'
 
 dependencies {
-    implementation "com.sudox:proto.client:$protocolVersion"
-    implementation project(path: ':core')
+    implementation("com.sudox:proto.client:$protocolVersion")
+    implementation("com.sudox:events:$eventsVersion")
+    implementation("net.sourceforge.streamsupport:android-retrofuture:$retrofutureVersion")
+    testImplementation("junit:junit:$junitVersion")
 }
