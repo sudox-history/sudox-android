@@ -3,6 +3,10 @@ apply from: '../configs/versions.gradle'
 dependencies {
     implementation("com.sudox:proto.client:$protocolVersion")
     implementation("com.sudox:events:$eventsVersion")
+
     implementation("net.sourceforge.streamsupport:android-retrofuture:$retrofutureVersion")
+    implementation("com.google.dagger:dagger:$daggerVersion")
+    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+
     testImplementation("junit:junit:$junitVersion")
 }

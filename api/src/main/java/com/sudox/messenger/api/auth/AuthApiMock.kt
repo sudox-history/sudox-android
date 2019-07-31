@@ -15,7 +15,7 @@ class AuthApiMock : AuthApi {
     }
 
     override fun confirmPhone(phone: String, phoneCode: String, publicKey: ByteArray): ApiResult<Int> {
-        return if 
+
     }
 
     override fun confirmPhone(phone: String, phoneCode: String): ApiResult<Boolean> {
