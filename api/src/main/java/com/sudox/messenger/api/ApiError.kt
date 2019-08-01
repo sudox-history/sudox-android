@@ -7,5 +7,6 @@ import androidx.annotation.IntDef
 annotation class ApiError {
     companion object {
         const val NOT_CONNECTED = -1
+        const val CODE_NOT_INVALID = 1
     }
 }
