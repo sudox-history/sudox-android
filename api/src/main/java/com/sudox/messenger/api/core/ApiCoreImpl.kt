@@ -1,6 +1,6 @@
-package com.sudox.messenger.api
+package com.sudox.messenger.api.core
 
-class ApiCoreImpl : ApiCore {
+class ApiCoreImpl : ApiCore() {
 
     override fun startConnection() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

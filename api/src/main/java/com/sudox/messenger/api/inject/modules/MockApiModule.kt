@@ -1,7 +1,7 @@
 package com.sudox.messenger.api.inject.modules
 
-import com.sudox.messenger.api.ApiCore
-import com.sudox.messenger.api.ApiCoreMock
+import com.sudox.messenger.api.core.ApiCore
+import com.sudox.messenger.api.core.ApiCoreMock
 import com.sudox.messenger.api.auth.AuthApi
 import com.sudox.messenger.api.auth.AuthApiMock
 

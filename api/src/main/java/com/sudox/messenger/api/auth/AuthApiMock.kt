@@ -15,7 +15,7 @@ class AuthApiMock : AuthApi {
     }
 
     override fun confirmPhone(phone: String, phoneCode: String, publicKey: ByteArray): ApiResult<Int> {
-
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun confirmPhone(phone: String, phoneCode: String): ApiResult<Boolean> {
