@@ -1,8 +1,9 @@
 package com.sudox.messenger.api.auth
 
 import com.sudox.messenger.api.ApiResult
+import com.sudox.messenger.api.core.ApiCore
 
-class AuthApiImpl : AuthApi() {
+class AuthApiImpl(val apiCore: ApiCore) : AuthApi() {
 
     override fun start(phone: String): ApiResult<Boolean> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

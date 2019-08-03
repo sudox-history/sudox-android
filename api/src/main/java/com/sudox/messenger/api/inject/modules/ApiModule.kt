@@ -19,7 +19,7 @@ open class ApiModule {
 
     @Provides
     @ApiScope
-    open fun provideAuthApi(): AuthApi {
-        return AuthApiImpl()
+    open fun provideAuthApi(apiCore: ApiCore): AuthApi {
+        return AuthApiImpl(apiCore)
     }
 }

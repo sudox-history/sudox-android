@@ -11,7 +11,7 @@ class MockApiModule : ApiModule() {
         return ApiCoreMock()
     }
 
-    override fun provideAuthApi(): AuthApi {
-        return AuthApiMock()
+    override fun provideAuthApi(apiCore: ApiCore): AuthApi {
+        return AuthApiMock(apiCore)
     }
 }

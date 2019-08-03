@@ -4,11 +4,19 @@ import com.sudox.messenger.api.ApiStatus
 
 class ApiCoreMock : ApiCore() {
 
-    override fun startConnection() {
+    private var connected = false
+
+    override fun start() {
+        connected = true
         statusEventEmitter.emit(ApiStatus.CONNECTION_INSTALLED)
     }
 
-    override fun stopConnection() {
+    override fun stop() {
+        connected = false
         statusEventEmitter.emit(ApiStatus.CONNECTION_CLOSED)
+    }
+
+    override fun connected(): Boolean {
+        return connected
     }
 }

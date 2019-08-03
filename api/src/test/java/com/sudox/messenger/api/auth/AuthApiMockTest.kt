@@ -2,6 +2,7 @@ package com.sudox.messenger.api.auth
 
 import com.sudox.messenger.api.ApiError
 import com.sudox.messenger.api.ApiResult
+import com.sudox.messenger.api.core.ApiCore
 import com.sudox.messenger.api.inject.DaggerApiComponent
 import com.sudox.messenger.api.inject.modules.MockApiModule
 import org.junit.Assert
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit
 class AuthApiMockTest : Assert() {
 
     private var authApi: AuthApi? = null
+    private var apiCore: ApiCore? = null
 
     @Before
     fun setUp() {
@@ -22,10 +24,13 @@ class AuthApiMockTest : Assert() {
                 .build()
 
         authApi = component.authApi()
+        apiCore = component.apiCore()
     }
 
     @Test
     fun testStartWhenPhoneInvalid() {
+        apiCore!!.start()
+
         val result = authApi!!.start("1234567890")
 
         assertTrue(result is ApiResult.Failure)
@@ -34,6 +39,8 @@ class AuthApiMockTest : Assert() {
 
     @Test
     fun testStartWhenPhoneNotRegistered() {
+        apiCore!!.start()
+
         val result = authApi!!.start("79111111111")
 
         assertTrue(result is ApiResult.Success)
@@ -42,6 +49,8 @@ class AuthApiMockTest : Assert() {
 
     @Test
     fun testStartWhenPhoneRegistered() {
+        apiCore!!.start()
+
         val result = authApi!!.start(PHONE_REGISTERED)
 
         assertTrue(result is ApiResult.Success)
@@ -49,7 +58,15 @@ class AuthApiMockTest : Assert() {
     }
 
     @Test
+    fun testStartWhenConnectionNotInstalled() {
+        val result = authApi!!.start("79111111111") as ApiResult.Failure
+        assertEquals(ApiError.NOT_CONNECTED, result.errorCode)
+    }
+
+    @Test
     fun testSignInConfirmPhoneWhenPhoneInvalid() {
+        apiCore!!.start()
+
         val publicKey = ByteArray(PUBLIC_KEY_LENGTH)
         val result = authApi!!.confirmPhone("1234567890", PHONE_CODE_WHEN_EXCHANGE_ACCEPTED, publicKey)
 
@@ -58,16 +75,9 @@ class AuthApiMockTest : Assert() {
     }
 
     @Test
-    fun testSignInConfirmPhoneWhenPublicKeyInvalid() {
-        val publicKey = ByteArray(PUBLIC_KEY_LENGTH - 1)
-        val result = authApi!!.confirmPhone(PHONE_REGISTERED, PHONE_CODE_WHEN_EXCHANGE_ACCEPTED, publicKey)
-
-        assertTrue(result is ApiResult.Failure)
-        assertEquals(ApiError.INVALID_FORMAT, (result as ApiResult.Failure).errorCode)
-    }
-
-    @Test
     fun testSignInConfirmPhoneWhenCodeInvalid() {
+        apiCore!!.start()
+
         val publicKey = ByteArray(PUBLIC_KEY_LENGTH)
         val result = authApi!!.confirmPhone(PHONE_REGISTERED, "15793", publicKey)
 
@@ -77,6 +87,8 @@ class AuthApiMockTest : Assert() {
 
     @Test
     fun testSignInConfirmPhoneWhenExchangeAccepted() {
+        apiCore!!.start()
+
         val semaphore = Semaphore(0)
         var eventData: Any? = null
 
@@ -93,11 +105,13 @@ class AuthApiMockTest : Assert() {
 
         assertTrue(result is ApiResult.Success)
         assertEquals(EXCHANGE_CODE, (result as ApiResult.Success).data)
-        assertEquals(ACCOUNT_KEY, eventData)
+        assertArrayEquals(arrayOf(ENCRYPTED_ACCOUNT_KEY, RECIPIENT_PUBLIC_KEY), eventData as Array<*>)
     }
 
     @Test
     fun testSignInConfirmPhoneWhenExchangeDenied() {
+        apiCore!!.start()
+
         val semaphore = Semaphore(0)
         var eventCalled = false
 
@@ -118,7 +132,18 @@ class AuthApiMockTest : Assert() {
     }
 
     @Test
+    fun testSignInConfirmPhoneWhenConnectionNotInstalled() {
+        val result = authApi!!.confirmPhone(PHONE_REGISTERED,
+                PHONE_CODE_WHEN_EXCHANGE_DENIED,
+                ByteArray(PUBLIC_KEY_LENGTH))
+
+        assertEquals(ApiError.NOT_CONNECTED, (result as ApiResult.Failure).errorCode)
+    }
+
+    @Test
     fun testSignUpConfirmPhoneWhenPhoneInvalid() {
+        apiCore!!.start()
+
         val result = authApi!!.confirmPhone("1234567890", PHONE_CODE_WHEN_EXCHANGE_ACCEPTED)
 
         assertTrue(result is ApiResult.Failure)
@@ -127,6 +152,8 @@ class AuthApiMockTest : Assert() {
 
     @Test
     fun testSignUpConfirmPhoneWhenCodeInvalid() {
+        apiCore!!.start()
+
         val result = authApi!!.confirmPhone(PHONE_REGISTERED, "15793")
 
         assertTrue(result is ApiResult.Failure)
@@ -134,7 +161,15 @@ class AuthApiMockTest : Assert() {
     }
 
     @Test
-    fun testSignUpConfirmPhoneWhenResultIsSuccess() {
+    fun testSignUpConfirmPhoneWhenConnectionNotInstalled() {
+        val result = authApi!!.confirmPhone(PHONE_REGISTERED, PHONE_CODE_WHEN_EXCHANGE_DENIED)
+        assertEquals(ApiError.NOT_CONNECTED, (result as ApiResult.Failure).errorCode)
+    }
+
+    @Test
+    fun testSuccessSignUpConfirmPhone() {
+        apiCore!!.start()
+
         val result = authApi!!.confirmPhone(PHONE_REGISTERED, PHONE_CODE_WHEN_EXCHANGE_ACCEPTED)
 
         assertTrue(result is ApiResult.Success)
@@ -142,6 +177,8 @@ class AuthApiMockTest : Assert() {
 
     @Test
     fun testSignUpFinishWhenPhoneInvalid() {
+        apiCore!!.start()
+
         val result = authApi!!.finish("1234567890", "themax", ACCOUNT_KEY_HASH)
 
         assertTrue(result is ApiResult.Failure)
@@ -150,6 +187,8 @@ class AuthApiMockTest : Assert() {
 
     @Test
     fun testSignUpFinishWhenNicknameInvalid() {
+        apiCore!!.start()
+
         val result = authApi!!.finish("79000000000", "@", ACCOUNT_KEY_HASH)
 
         assertTrue(result is ApiResult.Failure)
@@ -158,6 +197,8 @@ class AuthApiMockTest : Assert() {
 
     @Test
     fun testSignUpFinishWhenHashInvalid() {
+        apiCore!!.start()
+
         val result = authApi!!.finish("79000000000", "themax", ByteArray(0))
 
         assertTrue(result is ApiResult.Failure)
@@ -165,8 +206,16 @@ class AuthApiMockTest : Assert() {
     }
 
     @Test
+    fun testSignUpFinishWhenConnectionNotInstalled() {
+        val result = authApi!!.finish(PHONE_REGISTERED, "themax", ACCOUNT_KEY_HASH)
+        assertEquals(ApiError.NOT_CONNECTED, (result as ApiResult.Failure).errorCode)
+    }
+
+    @Test
     fun testSuccessSignUpFinish() {
-        val result = authApi!!.finish("79000000000", "themax", ACCOUNT_KEY_HASH)
+        apiCore!!.start()
+
+        val result = authApi!!.finish(PHONE_REGISTERED, "themax", ACCOUNT_KEY_HASH)
 
         assertTrue(result is ApiResult.Success)
         assertEquals(TOKEN, (result as ApiResult.Success).data)
@@ -174,6 +223,8 @@ class AuthApiMockTest : Assert() {
 
     @Test
     fun testSignInFinishWhenPhoneInvalid() {
+        apiCore!!.start()
+
         val result = authApi!!.finish("1234567890", ACCOUNT_KEY_HASH)
 
         assertTrue(result is ApiResult.Failure)
@@ -182,15 +233,25 @@ class AuthApiMockTest : Assert() {
 
     @Test
     fun testSignInFinishWhenHashInvalid() {
-        val result = authApi!!.finish("79000000000", ByteArray(0))
+        apiCore!!.start()
+
+        val result = authApi!!.finish(PHONE_REGISTERED, ByteArray(0))
 
         assertTrue(result is ApiResult.Failure)
         assertEquals(ApiError.INVALID_KEY, (result as ApiResult.Failure).errorCode)
     }
 
     @Test
+    fun testSignInFinishWhenConnectionNotInstalled() {
+        val result = authApi!!.finish(PHONE_REGISTERED, ACCOUNT_KEY_HASH)
+        assertEquals(ApiError.NOT_CONNECTED, (result as ApiResult.Failure).errorCode)
+    }
+
+    @Test
     fun testSuccessSignInFinish() {
-        val result = authApi!!.finish("79000000000", ACCOUNT_KEY_HASH)
+        apiCore!!.start()
+
+        val result = authApi!!.finish(PHONE_REGISTERED, ACCOUNT_KEY_HASH)
 
         assertTrue(result is ApiResult.Success)
         assertEquals(TOKEN, (result as ApiResult.Success).data)
