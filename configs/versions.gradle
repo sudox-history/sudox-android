@@ -2,7 +2,10 @@ ext {
     designVersion = "0.1-SNAPSHOT"
     protocolVersion = "4.0.2.2-SNAPSHOT"
     eventsVersion = "1.1.0-SNAPSHOT"
+    cryptoVersion = "1.1.0-SNAPSHOT"
     daggerVersion = "2.24"
-    retrofutureVersion = "1.7.1"
+    cfutureVersion = "1.7.1"
     junitVersion = "4.12"
+    runnerVersion = "1.2.0"
+    junitExtsVersion = "1.1.1"
 }
