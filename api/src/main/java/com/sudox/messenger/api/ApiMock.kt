@@ -9,12 +9,12 @@ class ApiMock : Api() {
 
     override fun startConnection() {
         connected = true
-        eventEmitter.emit(CONNECT_EVENT_NAME)
+        eventEmitter.emit(API_CONNECT_EVENT_NAME)
     }
 
     override fun endConnection() {
         connected = false
-        eventEmitter.emit(DISCONNECT_EVENT_NAME)
+        eventEmitter.emit(API_DISCONNECT_EVENT_NAME)
     }
 
     override fun isConnected(): Boolean {

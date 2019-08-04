@@ -7,7 +7,7 @@ import com.sudox.messenger.api.common.ApiResult
 class SignInApiImpl(
         val api: Api,
         val authApi: AuthApi
-) : SignInApi() {
+) : SignInApi {
 
     override fun confirmPhone(phoneCode: Int): ApiResult<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

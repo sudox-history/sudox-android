@@ -9,6 +9,8 @@ import com.sudox.messenger.api.inject.modules.mocks.AuthApiModuleMock
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import java.util.concurrent.Semaphore
+import java.util.concurrent.TimeUnit
 
 class AuthApiMockTest : Assert() {
 
@@ -60,19 +62,43 @@ class AuthApiMockTest : Assert() {
     fun testStartingWhenPhoneNotRegistered() {
         api.startConnection()
 
+        var eventData: Array<*>? = null
+        val semaphore = Semaphore(0)
+
+        authApi.eventEmitter.on(AUTH_STARTED_EVENT_NAME) {
+            eventData = it as? Array<*>
+            semaphore.release()
+        }
+
         val result = authApi.start("79000000000") as? ApiResult.Success
 
         assertNotNull(result)
         assertFalse(result!!.data!!)
+
+        semaphore.tryAcquire(5, TimeUnit.SECONDS)
+        assertNotNull(eventData)
+        assertArrayEquals(arrayOf("79000000000", false), eventData)
     }
 
     @Test
     fun testStartingWhenPhoneRegistered() {
         api.startConnection()
 
+        var eventData: Array<*>? = null
+        val semaphore = Semaphore(0)
+
+        authApi.eventEmitter.on(AUTH_STARTED_EVENT_NAME) {
+            eventData = it as? Array<*>
+            semaphore.release()
+        }
+
         val result = authApi.start("79111111111") as? ApiResult.Success
 
         assertNotNull(result)
         assertTrue(result!!.data!!)
+
+        semaphore.tryAcquire(5, TimeUnit.SECONDS)
+        assertNotNull(eventData)
+        assertArrayEquals(arrayOf("79111111111", true), eventData)
     }
 }

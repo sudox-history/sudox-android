@@ -1,7 +1,8 @@
 package com.sudox.messenger.api.auth.signin
 
 import com.sudox.messenger.api.Api
-import com.sudox.messenger.api.DISCONNECT_EVENT_NAME
+import com.sudox.messenger.api.API_DISCONNECT_EVENT_NAME
+import com.sudox.messenger.api.auth.AUTH_STARTED_EVENT_NAME
 import com.sudox.messenger.api.auth.AuthApi
 import com.sudox.messenger.api.auth.AuthApiMock
 import com.sudox.messenger.api.common.ApiError
@@ -27,21 +28,29 @@ internal val ACCOUNT_KEY = Random.nextBytes(ACCOUNT_KEY_LENGTH)
 class SignInApiMock(
         val api: Api,
         val authApi: AuthApi
-) : SignInApi() {
+) : SignInApi {
 
     var waitingExchangeResponse = false
     var scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
     val tasks = ArrayList<ScheduledFuture<*>>()
 
     init {
-        api.eventEmitter.on(DISCONNECT_EVENT_NAME) {
-            tasks.forEach { it.cancel(true) }
+        listenDisconnect()
+        listenAuthStart()
+    }
 
-            if (waitingExchangeResponse) {
-                waitingExchangeResponse = false
-                exchangeEventEmitter.emit(EXCHANGE_DROPPED_EVENT_NAME)
-            }
-        }
+    private fun listenDisconnect() = api.eventEmitter.on(API_DISCONNECT_EVENT_NAME) {
+        cancelPendingExchangeTasks()
+        authApi.eventEmitter.emit(EXCHANGE_DROPPED_EVENT_NAME)
+    }
+
+    private fun listenAuthStart() = authApi.eventEmitter.on(AUTH_STARTED_EVENT_NAME) {
+        cancelPendingExchangeTasks()
+    }
+
+    private fun cancelPendingExchangeTasks() {
+        tasks.forEach { it.cancel(true) }
+        waitingExchangeResponse = false
     }
 
     override fun confirmPhone(phoneCode: Int): ApiResult<Int> {
@@ -62,10 +71,10 @@ class SignInApiMock(
             tasks.add(scheduler.schedule({
                 if (phoneCode in EXCHANGE_ACCEPTED_PHONE_CODE_MIN..EXCHANGE_ACCEPTED_PHONE_CODE_MAX) {
                     waitingExchangeResponse = false
-                    exchangeEventEmitter.emit(EXCHANGE_ACCEPTED_EVENT_NAME, ACCOUNT_KEY)
+                    authApi.eventEmitter.emit(EXCHANGE_ACCEPTED_EVENT_NAME, ACCOUNT_KEY)
                 } else if (phoneCode in EXCHANGE_DENIED_PHONE_CODE_MIN..EXCHANGE_DENIED_PHONE_CODE_MAX) {
                     waitingExchangeResponse = false
-                    exchangeEventEmitter.emit(EXCHANGE_DENIED_EVENT_NAME)
+                    authApi.eventEmitter.emit(EXCHANGE_DENIED_EVENT_NAME)
                 }
             }, EXCHANGE_RESPONSE_DELAY, TimeUnit.MILLISECONDS))
 

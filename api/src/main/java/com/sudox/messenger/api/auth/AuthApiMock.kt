@@ -10,6 +10,7 @@ class AuthApiMock(val api: Api) : AuthApi() {
     val authSessions = HashMap<String, Boolean>()
     val registeredPhones = ArrayList<String>().apply {
         add("79111111111")
+        add("79111111112")
     }
 
     override fun start(phone: String): ApiResult<Boolean> {
@@ -23,7 +24,10 @@ class AuthApiMock(val api: Api) : AuthApi() {
             authSessions[phone] = false
             currentPhone = phone
 
-            ApiResult.Success(registeredPhones.contains(phone))
+            val registered = registeredPhones.contains(phone)
+            eventEmitter.emit(AUTH_STARTED_EVENT_NAME, phone, registered)
+
+            ApiResult.Success(registered)
         }
     }
 }

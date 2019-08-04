@@ -92,7 +92,7 @@ class SignInApiMockTest : Assert() {
         val semaphore = Semaphore(0)
         var eventData: Any? = null
 
-        signInApi.exchangeEventEmitter.on(EXCHANGE_ACCEPTED_EVENT_NAME) {
+        authApi.eventEmitter.on(EXCHANGE_ACCEPTED_EVENT_NAME) {
             eventData = it!!
             semaphore.release()
         }
@@ -111,7 +111,7 @@ class SignInApiMockTest : Assert() {
         val semaphore = Semaphore(0)
         var eventEmitted = false
 
-        signInApi.exchangeEventEmitter.on(EXCHANGE_DENIED_EVENT_NAME) {
+        authApi.eventEmitter.on(EXCHANGE_DENIED_EVENT_NAME) {
             eventEmitted = true
             semaphore.release()
         }
@@ -130,7 +130,7 @@ class SignInApiMockTest : Assert() {
         val semaphore = Semaphore(0)
         var eventEmitted = false
 
-        signInApi.exchangeEventEmitter.on(EXCHANGE_DROPPED_EVENT_NAME) {
+        authApi.eventEmitter.on(EXCHANGE_DROPPED_EVENT_NAME) {
             eventEmitted = true
             semaphore.release()
         }
@@ -140,5 +140,25 @@ class SignInApiMockTest : Assert() {
 
         semaphore.tryAcquire(5, TimeUnit.SECONDS)
         assertTrue(eventEmitted)
+    }
+
+    @Test
+    fun testSituationWhenStartedSessionWithNewPhone() {
+        api.startConnection()
+        authApi.start("79111111111")
+
+        val semaphore = Semaphore(0)
+        var eventEmitted = false
+
+        authApi.eventEmitter.on(EXCHANGE_ACCEPTED_EVENT_NAME) {
+            eventEmitted = true
+            semaphore.release()
+        }
+
+        signInApi.confirmPhone(EXCHANGE_ACCEPTED_PHONE_CODE_MIN)
+        authApi.start("79111111112")
+
+        semaphore.tryAcquire(5, TimeUnit.SECONDS)
+        assertFalse(eventEmitted)
     }
 }
