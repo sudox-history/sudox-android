@@ -1,7 +1,7 @@
 package com.sudox.messenger.api.auth.signin
 
-import com.sudox.messenger.api.Api
 import com.sudox.messenger.api.API_DISCONNECT_EVENT_NAME
+import com.sudox.messenger.api.Api
 import com.sudox.messenger.api.auth.AUTH_STARTED_EVENT_NAME
 import com.sudox.messenger.api.auth.AuthApi
 import com.sudox.messenger.api.auth.AuthApiMock
@@ -30,7 +30,7 @@ class SignInApiMock(
         val authApi: AuthApi
 ) : SignInApi {
 
-    var waitingExchangeResponse = false
+    var isWaitingExchangeResponse = false
     var scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
     val tasks = ArrayList<ScheduledFuture<*>>()
 
@@ -50,7 +50,7 @@ class SignInApiMock(
 
     private fun cancelPendingExchangeTasks() {
         tasks.forEach { it.cancel(true) }
-        waitingExchangeResponse = false
+        isWaitingExchangeResponse = false
     }
 
     override fun confirmPhone(phoneCode: Int): ApiResult<Int> {
@@ -66,14 +66,14 @@ class SignInApiMock(
             ApiResult.Failure(ApiError.INVALID_CODE)
         } else {
             authApi.authSessions[authApi.currentPhone!!] = true
-            waitingExchangeResponse = true
+            isWaitingExchangeResponse = true
 
             tasks.add(scheduler.schedule({
                 if (phoneCode in EXCHANGE_ACCEPTED_PHONE_CODE_MIN..EXCHANGE_ACCEPTED_PHONE_CODE_MAX) {
-                    waitingExchangeResponse = false
+                    isWaitingExchangeResponse = false
                     authApi.eventEmitter.emit(EXCHANGE_ACCEPTED_EVENT_NAME, ACCOUNT_KEY)
                 } else if (phoneCode in EXCHANGE_DENIED_PHONE_CODE_MIN..EXCHANGE_DENIED_PHONE_CODE_MAX) {
-                    waitingExchangeResponse = false
+                    isWaitingExchangeResponse = false
                     authApi.eventEmitter.emit(EXCHANGE_DENIED_EVENT_NAME)
                 }
             }, EXCHANGE_RESPONSE_DELAY, TimeUnit.MILLISECONDS))
