@@ -29,7 +29,7 @@ class SignInApiMock(
         val authApi: AuthApi
 ) : SignInApi() {
 
-    var waitingExchangeResponse = false
+    var isWaitingExchangeResponse = false
     var scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
     val tasks = ArrayList<ScheduledFuture<*>>()
 
@@ -37,8 +37,8 @@ class SignInApiMock(
         api.eventEmitter.on(DISCONNECT_EVENT_NAME) {
             tasks.forEach { it.cancel(true) }
 
-            if (waitingExchangeResponse) {
-                waitingExchangeResponse = false
+            if (isWaitingExchangeResponse) {
+                isWaitingExchangeResponse = false
                 exchangeEventEmitter.emit(EXCHANGE_DROPPED_EVENT_NAME)
             }
         }
@@ -57,14 +57,14 @@ class SignInApiMock(
             ApiResult.Failure(ApiError.INVALID_CODE)
         } else {
             authApi.authSessions[authApi.currentPhone!!] = true
-            waitingExchangeResponse = true
+            isWaitingExchangeResponse = true
 
             tasks.add(scheduler.schedule({
                 if (phoneCode in EXCHANGE_ACCEPTED_PHONE_CODE_MIN..EXCHANGE_ACCEPTED_PHONE_CODE_MAX) {
-                    waitingExchangeResponse = false
+                    isWaitingExchangeResponse = false
                     exchangeEventEmitter.emit(EXCHANGE_ACCEPTED_EVENT_NAME, ACCOUNT_KEY)
                 } else if (phoneCode in EXCHANGE_DENIED_PHONE_CODE_MIN..EXCHANGE_DENIED_PHONE_CODE_MAX) {
-                    waitingExchangeResponse = false
+                    isWaitingExchangeResponse = false
                     exchangeEventEmitter.emit(EXCHANGE_DENIED_EVENT_NAME)
                 }
             }, EXCHANGE_RESPONSE_DELAY, TimeUnit.MILLISECONDS))
