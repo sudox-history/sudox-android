@@ -1,9 +1,7 @@
 package com.sudox.messenger.api.inject.modules
 
-import com.sudox.messenger.api.core.ApiCore
-import com.sudox.messenger.api.core.ApiCoreImpl
-import com.sudox.messenger.api.auth.AuthApi
-import com.sudox.messenger.api.auth.AuthApiImpl
+import com.sudox.messenger.api.Api
+import com.sudox.messenger.api.ApiImpl
 import com.sudox.messenger.api.inject.ApiScope
 import dagger.Module
 import dagger.Provides
@@ -11,15 +9,9 @@ import dagger.Provides
 @Module
 open class ApiModule {
 
-    @Provides
     @ApiScope
-    open fun provideApiCore(): ApiCore {
-        return ApiCoreImpl()
-    }
-
     @Provides
-    @ApiScope
-    open fun provideAuthApi(apiCore: ApiCore): AuthApi {
-        return AuthApiImpl(apiCore)
+    open fun provideApi(): Api {
+        return ApiImpl()
     }
 }
