@@ -6,7 +6,6 @@ import com.sudox.messenger.api.auth.AuthApi
 import com.sudox.messenger.api.auth.AuthApiMock
 import com.sudox.messenger.api.common.ApiError
 import com.sudox.messenger.api.common.ApiResult
-import com.sudox.messenger.api.common.PHONE_REGEX
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
@@ -22,7 +21,7 @@ internal const val EXCHANGE_CODE_MIN = 10000
 internal const val EXCHANGE_CODE_MAX = 99999
 internal const val EXCHANGE_RESPONSE_DELAY = 3000L
 
-internal const val ACCOUNT_KEY_LENGTH = 97
+internal const val ACCOUNT_KEY_LENGTH = 24
 internal val ACCOUNT_KEY = Random.nextBytes(ACCOUNT_KEY_LENGTH)
 
 class SignInApiMock(
@@ -30,32 +29,43 @@ class SignInApiMock(
         val authApi: AuthApi
 ) : SignInApi() {
 
+    var waitingExchangeResponse = false
     var scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
     val tasks = ArrayList<ScheduledFuture<*>>()
 
     init {
         api.eventEmitter.on(DISCONNECT_EVENT_NAME) {
             tasks.forEach { it.cancel(true) }
+
+            if (waitingExchangeResponse) {
+                waitingExchangeResponse = false
+                exchangeEventEmitter.emit(EXCHANGE_DROPPED_EVENT_NAME)
+            }
         }
     }
 
-    override fun confirmPhone(phoneCode: Int, publicKey: ByteArray): ApiResult<Int> {
+    override fun confirmPhone(phoneCode: Int): ApiResult<Int> {
         val authMock = authApi as AuthApiMock
 
         return if (!api.isConnected()) {
             ApiResult.Failure(ApiError.NOT_CONNECTED)
-        } else if (authApi.currentPhone != null || !PHONE_REGEX.matches(authApi.currentPhone!!)) {
+        } else if (authApi.currentPhone == null) {
             ApiResult.Failure(ApiError.INVALID_FORMAT)
         } else if (isPhoneInvalid(authMock, authApi.currentPhone!!)) {
             ApiResult.Failure(ApiError.INVALID_PHONE)
         } else if (phoneCode !in EXCHANGE_ACCEPTED_PHONE_CODE_MIN..EXCHANGE_DENIED_PHONE_CODE_MAX) {
             ApiResult.Failure(ApiError.INVALID_CODE)
         } else {
+            authApi.authSessions[authApi.currentPhone!!] = true
+            waitingExchangeResponse = true
+
             tasks.add(scheduler.schedule({
                 if (phoneCode in EXCHANGE_ACCEPTED_PHONE_CODE_MIN..EXCHANGE_ACCEPTED_PHONE_CODE_MAX) {
-                    eventEmitter.emit(EXCHANGE_ACCEPTED_EVENT_NAME, ACCOUNT_KEY)
+                    waitingExchangeResponse = false
+                    exchangeEventEmitter.emit(EXCHANGE_ACCEPTED_EVENT_NAME, ACCOUNT_KEY)
                 } else if (phoneCode in EXCHANGE_DENIED_PHONE_CODE_MIN..EXCHANGE_DENIED_PHONE_CODE_MAX) {
-                    eventEmitter.emit(EXCHANGE_DENIED_EVENT_NAME)
+                    waitingExchangeResponse = false
+                    exchangeEventEmitter.emit(EXCHANGE_DENIED_EVENT_NAME)
                 }
             }, EXCHANGE_RESPONSE_DELAY, TimeUnit.MILLISECONDS))
 

@@ -28,7 +28,7 @@ class AuthApiMockTest : Assert() {
     }
 
     @Test
-    fun testStartWhenNotConnected() {
+    fun testStartingWhenNotConnected() {
         val result = authApi.start("79000000000") as? ApiResult.Failure
 
         assertNotNull(result)
@@ -36,7 +36,7 @@ class AuthApiMockTest : Assert() {
     }
 
     @Test
-    fun testStartWhenPhoneFormatInvalid() {
+    fun testStartingWhenPhoneFormatInvalid() {
         api.startConnection()
 
         val result = authApi.start("1234567890") as? ApiResult.Failure
@@ -46,7 +46,7 @@ class AuthApiMockTest : Assert() {
     }
 
     @Test
-    fun testStartWhenSessionWithPhoneAlreadyStarted() {
+    fun testStartingWhenSessionWithPhoneAlreadyStarted() {
         api.startConnection()
         authApi.start("79000000000")
 
@@ -57,7 +57,7 @@ class AuthApiMockTest : Assert() {
     }
 
     @Test
-    fun testStartWhenPhoneNotRegistered() {
+    fun testStartingWhenPhoneNotRegistered() {
         api.startConnection()
 
         val result = authApi.start("79000000000") as? ApiResult.Success
@@ -67,7 +67,7 @@ class AuthApiMockTest : Assert() {
     }
 
     @Test
-    fun testStartWhenPhoneRegistered() {
+    fun testStartingWhenPhoneRegistered() {
         api.startConnection()
 
         val result = authApi.start("79111111111") as? ApiResult.Success

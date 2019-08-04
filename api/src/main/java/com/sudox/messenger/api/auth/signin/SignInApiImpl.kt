@@ -9,7 +9,7 @@ class SignInApiImpl(
         val authApi: AuthApi
 ) : SignInApi() {
 
-    override fun confirmPhone(phoneCode: Int, publicKey: ByteArray): ApiResult<Int> {
+    override fun confirmPhone(phoneCode: Int): ApiResult<Int> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
