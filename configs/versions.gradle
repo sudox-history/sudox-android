@@ -1,5 +1,5 @@
 ext {
-    designVersion = "0.1.1-SNAPSHOT"
+    designVersion = "0.2.0-SNAPSHOT"
     protocolVersion = "4.0.2.2-SNAPSHOT"
     eventsVersion = "1.1.0-SNAPSHOT"
     cryptoVersion = "1.1.0-SNAPSHOT"
