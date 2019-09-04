@@ -85,7 +85,7 @@ class SignInApiMockTest : Assert() {
     }
 
     @Test
-    fun testSituationWhenExchangeAccepted() {
+    fun testWhenExchangeAccepted() {
         api.startConnection()
         authApi.start("79111111111")
 
@@ -104,7 +104,7 @@ class SignInApiMockTest : Assert() {
     }
 
     @Test
-    fun testSituationWhenExchangeDenied() {
+    fun testWhenExchangeDenied() {
         api.startConnection()
         authApi.start("79111111111")
 
@@ -123,7 +123,7 @@ class SignInApiMockTest : Assert() {
     }
 
     @Test
-    fun testSituationWhenConnectionDroppedDuringKeyExchange() {
+    fun testWhenConnectionDroppedDuringKeyExchange() {
         api.startConnection()
         authApi.start("79111111111")
 
@@ -143,7 +143,7 @@ class SignInApiMockTest : Assert() {
     }
 
     @Test
-    fun testSituationWhenStartedSessionWithNewPhone() {
+    fun testWhenStartedSessionWithNewPhone() {
         api.startConnection()
         authApi.start("79111111111")
 
