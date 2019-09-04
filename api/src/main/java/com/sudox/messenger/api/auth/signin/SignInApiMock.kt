@@ -30,9 +30,8 @@ class SignInApiMock(
         val authApi: AuthApi
 ) : SignInApi {
 
-    var isWaitingExchangeResponse = false
-    var scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
-    val tasks = ArrayList<ScheduledFuture<*>>()
+    private var scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+    private val tasks = ArrayList<ScheduledFuture<*>>()
 
     init {
         listenDisconnect()
@@ -50,7 +49,6 @@ class SignInApiMock(
 
     private fun cancelPendingExchangeTasks() {
         tasks.forEach { it.cancel(true) }
-        isWaitingExchangeResponse = false
     }
 
     override fun confirmPhone(phoneCode: Int): ApiResult<Int> {
@@ -66,14 +64,11 @@ class SignInApiMock(
             ApiResult.Failure(ApiError.INVALID_CODE)
         } else {
             authApi.authSessions[authApi.currentPhone!!] = true
-            isWaitingExchangeResponse = true
 
             tasks.add(scheduler.schedule({
                 if (phoneCode in EXCHANGE_ACCEPTED_PHONE_CODE_MIN..EXCHANGE_ACCEPTED_PHONE_CODE_MAX) {
-                    isWaitingExchangeResponse = false
                     authApi.eventEmitter.emit(EXCHANGE_ACCEPTED_EVENT_NAME, ACCOUNT_KEY)
                 } else if (phoneCode in EXCHANGE_DENIED_PHONE_CODE_MIN..EXCHANGE_DENIED_PHONE_CODE_MAX) {
-                    isWaitingExchangeResponse = false
                     authApi.eventEmitter.emit(EXCHANGE_DENIED_EVENT_NAME)
                 }
             }, EXCHANGE_RESPONSE_DELAY, TimeUnit.MILLISECONDS))
