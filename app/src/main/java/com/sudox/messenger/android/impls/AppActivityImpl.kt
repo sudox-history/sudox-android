@@ -1,10 +1,10 @@
 package com.sudox.messenger.android.impls
 
+import android.app.Activity
 import android.os.Bundle
-import com.sudox.design.StyledActivity
 import com.sudox.messenger.android.R
 
-class AppActivityImpl : StyledActivity() {
+class AppActivityImpl : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
