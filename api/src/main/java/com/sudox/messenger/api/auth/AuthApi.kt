@@ -7,6 +7,7 @@ internal const val AUTH_STARTED_EVENT_NAME = "auth-success:started"
 
 abstract class AuthApi {
 
+    var currentToken: String? = null
     var currentPhone: String? = null
     val eventEmitter = EventEmitter()
 

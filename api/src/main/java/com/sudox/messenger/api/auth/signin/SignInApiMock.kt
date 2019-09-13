@@ -23,7 +23,9 @@ internal const val EXCHANGE_CODE_MAX = 99999
 internal const val EXCHANGE_RESPONSE_DELAY = 3000L
 
 internal const val ACCOUNT_KEY_LENGTH = 24
-internal val ACCOUNT_KEY = Random.nextBytes(ACCOUNT_KEY_LENGTH)
+internal const val ACCOUNT_KEY_HASH_LENGTH = 48
+internal val ACCOUNT_KEY = ByteArray(ACCOUNT_KEY_LENGTH) { 0 }
+internal val ACCOUNT_KEY_HASH = ByteArray(ACCOUNT_KEY_HASH_LENGTH) { 0 }
 
 class SignInApiMock(
         val api: Api,
@@ -58,7 +60,7 @@ class SignInApiMock(
             ApiResult.Failure(ApiError.NOT_CONNECTED)
         } else if (authApi.currentPhone == null) {
             ApiResult.Failure(ApiError.INVALID_FORMAT)
-        } else if (isPhoneInvalid(authMock, authApi.currentPhone!!)) {
+        } else if (isPhoneInvalid(authMock, authApi.currentPhone!!) || authMock.authSessions[authApi.currentPhone!!]!!) {
             ApiResult.Failure(ApiError.INVALID_PHONE)
         } else if (phoneCode !in EXCHANGE_ACCEPTED_PHONE_CODE_MIN..EXCHANGE_DENIED_PHONE_CODE_MAX) {
             ApiResult.Failure(ApiError.INVALID_CODE)
@@ -78,12 +80,25 @@ class SignInApiMock(
     }
 
     override fun finish(hash: ByteArray): ApiResult<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val authMock = authApi as AuthApiMock
+
+        return if (!api.isConnected()) {
+            ApiResult.Failure(ApiError.NOT_CONNECTED)
+        } else if (authApi.currentPhone == null || isPhoneInvalid(authMock, authApi.currentPhone!!)) {
+            ApiResult.Failure(ApiError.INVALID_PHONE)
+        } else if (!hash.contentEquals(ACCOUNT_KEY_HASH)) {
+            ApiResult.Failure(ApiError.INVALID_KEY)
+        } else {
+            authApi.currentToken = String(
+                    Random.nextBytes(ACCOUNT_KEY_HASH_LENGTH)
+            )
+
+            ApiResult.Success(authApi.currentToken)
+        }
     }
 
     private fun isPhoneInvalid(authMock: AuthApiMock, phone: String): Boolean {
-        return !authMock.registeredPhones.contains(phone) ||
-                !authMock.authSessions.containsKey(phone) ||
-                authMock.authSessions[phone]!!
+        return  !authMock.registeredPhones.contains(phone) ||
+                !authMock.authSessions.containsKey(phone)
     }
 }

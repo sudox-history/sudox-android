@@ -161,4 +161,49 @@ class SignInApiMockTest : Assert() {
         semaphore.tryAcquire(5, TimeUnit.SECONDS)
         assertFalse(eventEmitted)
     }
+
+    @Test
+    fun testFinishingWhenNotConnectedToServer() {
+        val result = signInApi.finish(ACCOUNT_KEY_HASH) as ApiResult.Failure
+
+        assertNull(authApi.currentToken)
+        assertNotNull(result)
+        assertEquals(ApiError.NOT_CONNECTED, result.errorCode)
+    }
+
+    @Test
+    fun testFinishingWhenAuthNotStarted() {
+        api.startConnection()
+
+        val result = signInApi.finish(ACCOUNT_KEY_HASH) as? ApiResult.Failure
+
+        assertNull(authApi.currentToken)
+        assertNotNull(result)
+        assertEquals(ApiError.INVALID_PHONE, result!!.errorCode)
+    }
+
+    @Test
+    fun testFinishingWhenKeyHashNotValid() {
+        api.startConnection()
+        authApi.start("79111111111")
+        signInApi.confirmPhone(EXCHANGE_ACCEPTED_PHONE_CODE_MIN)
+
+        val result = signInApi.finish(ByteArray(48) { 122 }) as? ApiResult.Failure
+
+        assertNull(authApi.currentToken)
+        assertNotNull(result)
+        assertEquals(ApiError.INVALID_KEY, result!!.errorCode)
+    }
+
+    @Test
+    fun testSuccessFinishing() {
+        api.startConnection()
+        authApi.start("79111111111")
+        signInApi.confirmPhone(EXCHANGE_ACCEPTED_PHONE_CODE_MIN)
+
+        val result = signInApi.finish(ACCOUNT_KEY_HASH) as? ApiResult.Success
+
+        assertNotNull(authApi.currentToken)
+        assertEquals(authApi.currentToken, result!!.data)
+    }
 }

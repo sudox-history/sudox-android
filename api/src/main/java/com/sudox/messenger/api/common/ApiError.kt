@@ -10,5 +10,6 @@ annotation class ApiError {
         const val INVALID_FORMAT = 1
         const val INVALID_PHONE = 2
         const val INVALID_CODE = 3
+        const val INVALID_KEY = 4
     }
 }
