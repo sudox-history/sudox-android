@@ -1,7 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Theme.Sudox.Messenger.Auth">
 
-</LinearLayout>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/authPhoneBackButton"
+        style="@style/Theme.Sudox.Messenger.Auth.BackButton" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/authPhoneSplashImage"
+        style="@style/Theme.Sudox.Messenger.Auth.SplashImage"
+        android:layout_below="@id/authPhoneBackButton"
+        android:src="@drawable/ic_phone_screen" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/authPhoneTitleText"
+        style="@style/Theme.Sudox.Messenger.Auth.TitleText"
+        android:layout_below="@id/authPhoneSplashImage"
+        android:text="@string/phone_verification" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/authPhoneSubtitleText"
+        style="@style/Theme.Sudox.Messenger.Auth.SubtitleText"
+        android:layout_below="@id/authPhoneTitleText"
+        android:text="@string/to_continue_enter_your_phone_number" />
+
+    <com.sudox.design.views.phoneedittext.PhoneEditText
+        android:id="@+id/authPhoneEditText"
+        style="@style/Theme.Sudox.Messenger.Auth.FirstEditText"
+        android:layout_below="@id/authPhoneSubtitleText" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/authPhoneActionText"
+        style="@style/Theme.Sudox.Messenger.Auth.ActionText"
+        android:text="@string/by_continuing_you_agree_to_terms_and_conditions" />
+
+    <com.sudox.design.views.loadingbutton.LoadingButton
+        android:layout_above="@id/authPhoneActionText"
+        style="@style/Theme.Sudox.Messenger.Auth.ActionButton"
+        android:text="@string/next" />
+
+</RelativeLayout>

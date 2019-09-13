@@ -2,5 +2,6 @@ apply from: '../configs/versions.gradle'
 
 dependencies {
     implementation("com.sudox:design:$designVersion")
+    implementation("androidx.constraintlayout:constraintlayout:$constraintLayoutVersion")
     implementation project(path: ':core')
 }
