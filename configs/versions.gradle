@@ -1,8 +1,8 @@
 ext {
-    designVersion = "0.2.0-SNAPSHOT"
-    protocolVersion = "4.0.2.2-SNAPSHOT"
+    designVersion = "0.2.0.1-SNAPSHOT"
+    protocolVersion = "4.0.3-SNAPSHOT"
     eventsVersion = "1.1.0-SNAPSHOT"
-    cryptoVersion = "1.1.0-SNAPSHOT"
+    cryptoVersion = "1.1.1-SNAPSHOT"
     daggerVersion = "2.24"
     constraintLayoutVersion = "2.0.0-beta2"
     cfutureVersion = "1.7.1"
