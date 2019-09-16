@@ -89,6 +89,7 @@ class SignInApiMock(
         } else if (!hash.contentEquals(ACCOUNT_KEY_HASH)) {
             ApiResult.Failure(ApiError.INVALID_KEY)
         } else {
+            authApi.currentKey = ACCOUNT_KEY
             authApi.currentToken = String(
                     Random.nextBytes(ACCOUNT_KEY_HASH_LENGTH)
             )
@@ -98,7 +99,6 @@ class SignInApiMock(
     }
 
     private fun isPhoneInvalid(authMock: AuthApiMock, phone: String): Boolean {
-        return  !authMock.registeredPhones.contains(phone) ||
-                !authMock.authSessions.containsKey(phone)
+        return !authMock.registeredPhones.contains(phone) || !authMock.authSessions.containsKey(phone)
     }
 }

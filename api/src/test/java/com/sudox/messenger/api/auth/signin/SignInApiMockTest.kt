@@ -167,8 +167,9 @@ class SignInApiMockTest : Assert() {
         val result = signInApi.finish(ACCOUNT_KEY_HASH) as ApiResult.Failure
 
         assertNull(authApi.currentToken)
-        assertNotNull(result)
+        assertNull(authApi.currentKey)
         assertEquals(ApiError.NOT_CONNECTED, result.errorCode)
+        assertNotNull(result)
     }
 
     @Test
@@ -178,8 +179,9 @@ class SignInApiMockTest : Assert() {
         val result = signInApi.finish(ACCOUNT_KEY_HASH) as? ApiResult.Failure
 
         assertNull(authApi.currentToken)
-        assertNotNull(result)
+        assertNull(authApi.currentKey)
         assertEquals(ApiError.INVALID_PHONE, result!!.errorCode)
+        assertNotNull(result)
     }
 
     @Test
@@ -191,8 +193,9 @@ class SignInApiMockTest : Assert() {
         val result = signInApi.finish(ByteArray(48) { 122 }) as? ApiResult.Failure
 
         assertNull(authApi.currentToken)
-        assertNotNull(result)
+        assertNull(authApi.currentToken)
         assertEquals(ApiError.INVALID_KEY, result!!.errorCode)
+        assertNotNull(result)
     }
 
     @Test
@@ -205,5 +208,6 @@ class SignInApiMockTest : Assert() {
 
         assertNotNull(authApi.currentToken)
         assertEquals(authApi.currentToken, result!!.data)
+        assertEquals(authApi.currentKey, ACCOUNT_KEY)
     }
 }

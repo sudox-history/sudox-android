@@ -5,6 +5,8 @@ import com.sudox.messenger.api.auth.AuthApi
 import com.sudox.messenger.api.auth.AuthApiImpl
 import com.sudox.messenger.api.auth.signin.SignInApi
 import com.sudox.messenger.api.auth.signin.SignInApiImpl
+import com.sudox.messenger.api.auth.signup.SignUpApi
+import com.sudox.messenger.api.auth.signup.SignUpApiImpl
 import com.sudox.messenger.api.inject.ApiScope
 import dagger.Module
 import dagger.Provides
@@ -22,5 +24,11 @@ open class AuthApiModule {
     @Provides
     open fun provideSignInApi(api: Api, authApi: AuthApi): SignInApi {
         return SignInApiImpl(api, authApi)
+    }
+
+    @ApiScope
+    @Provides
+    open fun provideSignUpApi(api: Api, authApi: AuthApi): SignUpApi {
+        return SignUpApiImpl()
     }
 }
