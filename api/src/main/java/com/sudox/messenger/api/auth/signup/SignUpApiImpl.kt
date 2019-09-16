@@ -8,7 +8,7 @@ class SignUpApiImpl : SignUpApi {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun finish(phone: String, nickname: String, hash: ByteArray): ApiResult<String> {
+    override fun finish(nickname: String, hash: ByteArray): ApiResult<String> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

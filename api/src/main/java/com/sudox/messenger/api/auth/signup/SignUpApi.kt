@@ -4,5 +4,5 @@ import com.sudox.messenger.api.common.ApiResult
 
 interface SignUpApi {
     fun confirmPhone(phoneCode: Int): ApiResult<Nothing>
-    fun finish(phone: String, nickname: String, hash: ByteArray): ApiResult<String>
+    fun finish(nickname: String, hash: ByteArray): ApiResult<String>
 }

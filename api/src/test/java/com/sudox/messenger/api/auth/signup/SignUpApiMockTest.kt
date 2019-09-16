@@ -2,6 +2,8 @@ package com.sudox.messenger.api.auth.signup
 
 import com.sudox.messenger.api.Api
 import com.sudox.messenger.api.auth.AuthApi
+import com.sudox.messenger.api.auth.signin.ACCOUNT_KEY
+import com.sudox.messenger.api.auth.signin.ACCOUNT_KEY_HASH
 import com.sudox.messenger.api.auth.signin.EXCHANGE_ACCEPTED_PHONE_CODE_MIN
 import com.sudox.messenger.api.common.ApiError
 import com.sudox.messenger.api.common.ApiResult
@@ -77,5 +79,70 @@ class SignUpApiMockTest : Assert() {
         authApi.start("79000000000")
 
         assertNotNull(signUpApi.confirmPhone(EXCHANGE_ACCEPTED_PHONE_CODE_MIN) as? ApiResult<Nothing>)
+    }
+
+    @Test
+    fun testFinishingWhenNotConnected() {
+        val result = signUpApi.finish("TheMax", ACCOUNT_KEY_HASH) as? ApiResult.Failure
+
+        assertNotNull(result)
+        assertEquals(ApiError.NOT_CONNECTED, result!!.errorCode)
+    }
+
+    @Test
+    fun testFinishingWhenAuthNotStarted() {
+        api.startConnection()
+
+        val result = signUpApi.finish("TheMax", ACCOUNT_KEY_HASH) as? ApiResult.Failure
+
+        assertNotNull(result)
+        assertEquals(ApiError.INVALID_FORMAT, result!!.errorCode)
+    }
+
+    @Test
+    fun testFinishingWhenNicknameNotValid() {
+        api.startConnection()
+        authApi.start("79000000000")
+
+        val result = signUpApi.finish("T", ACCOUNT_KEY_HASH) as? ApiResult.Failure
+
+        assertNotNull(result)
+        assertEquals(ApiError.INVALID_FORMAT, result!!.errorCode)
+    }
+
+    @Test
+    fun testFinishingWhenPhoneNotConfirmed() {
+        api.startConnection()
+        authApi.start("79000000000")
+
+        val result = signUpApi.finish("TheMax", ACCOUNT_KEY_HASH) as? ApiResult.Failure
+
+        assertNotNull(result)
+        assertEquals(ApiError.INVALID_PHONE, result!!.errorCode)
+    }
+
+    @Test
+    fun testFinishingWhenKeyHashNotValid() {
+        api.startConnection()
+        authApi.start("79000000000")
+        signUpApi.confirmPhone(EXCHANGE_ACCEPTED_PHONE_CODE_MIN)
+
+        val result = signUpApi.finish("TheMax", ByteArray(0)) as? ApiResult.Failure
+
+        assertNotNull(result)
+        assertEquals(ApiError.INVALID_KEY, result!!.errorCode)
+    }
+
+    @Test
+    fun testFinishingWhenAllValid() {
+        api.startConnection()
+        authApi.start("79000000000")
+        signUpApi.confirmPhone(EXCHANGE_ACCEPTED_PHONE_CODE_MIN)
+
+        val result = signUpApi.finish("TheMax", ACCOUNT_KEY_HASH) as? ApiResult.Success
+
+        assertNotNull(authApi.currentToken)
+        assertEquals(authApi.currentToken, result!!.data)
+        assertEquals(authApi.currentKey, ACCOUNT_KEY)
     }
 }
