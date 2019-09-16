@@ -85,8 +85,10 @@ class SignUpApiMockTest : Assert() {
     fun testFinishingWhenNotConnected() {
         val result = signUpApi.finish("TheMax", ACCOUNT_KEY_HASH) as? ApiResult.Failure
 
-        assertNotNull(result)
+        assertNull(authApi.currentToken)
+        assertNull(authApi.currentToken)
         assertEquals(ApiError.NOT_CONNECTED, result!!.errorCode)
+        assertNotNull(result)
     }
 
     @Test
@@ -95,8 +97,10 @@ class SignUpApiMockTest : Assert() {
 
         val result = signUpApi.finish("TheMax", ACCOUNT_KEY_HASH) as? ApiResult.Failure
 
-        assertNotNull(result)
+        assertNull(authApi.currentToken)
+        assertNull(authApi.currentToken)
         assertEquals(ApiError.INVALID_FORMAT, result!!.errorCode)
+        assertNotNull(result)
     }
 
     @Test
@@ -106,8 +110,10 @@ class SignUpApiMockTest : Assert() {
 
         val result = signUpApi.finish("T", ACCOUNT_KEY_HASH) as? ApiResult.Failure
 
-        assertNotNull(result)
+        assertNull(authApi.currentToken)
+        assertNull(authApi.currentToken)
         assertEquals(ApiError.INVALID_FORMAT, result!!.errorCode)
+        assertNotNull(result)
     }
 
     @Test
@@ -117,8 +123,10 @@ class SignUpApiMockTest : Assert() {
 
         val result = signUpApi.finish("TheMax", ACCOUNT_KEY_HASH) as? ApiResult.Failure
 
-        assertNotNull(result)
+        assertNull(authApi.currentToken)
+        assertNull(authApi.currentToken)
         assertEquals(ApiError.INVALID_PHONE, result!!.errorCode)
+        assertNotNull(result)
     }
 
     @Test
@@ -129,8 +137,10 @@ class SignUpApiMockTest : Assert() {
 
         val result = signUpApi.finish("TheMax", ByteArray(0)) as? ApiResult.Failure
 
-        assertNotNull(result)
+        assertNull(authApi.currentToken)
+        assertNull(authApi.currentToken)
         assertEquals(ApiError.INVALID_KEY, result!!.errorCode)
+        assertNotNull(result)
     }
 
     @Test
