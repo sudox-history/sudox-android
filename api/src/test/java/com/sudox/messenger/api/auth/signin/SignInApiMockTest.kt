@@ -180,6 +180,19 @@ class SignInApiMockTest : Assert() {
 
         assertNull(authApi.currentToken)
         assertNull(authApi.currentKey)
+        assertEquals(ApiError.INVALID_FORMAT, result!!.errorCode)
+        assertNotNull(result)
+    }
+
+    @Test
+    fun testFinishingWhenPhoneNotConfirmed() {
+        api.startConnection()
+        authApi.start("79111111111")
+
+        val result = signInApi.finish(ACCOUNT_KEY_HASH) as? ApiResult.Failure
+
+        assertNull(authApi.currentToken)
+        assertNull(authApi.currentKey)
         assertEquals(ApiError.INVALID_PHONE, result!!.errorCode)
         assertNotNull(result)
     }

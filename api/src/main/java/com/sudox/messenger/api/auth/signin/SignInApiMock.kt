@@ -84,7 +84,9 @@ class SignInApiMock(
 
         return if (!api.isConnected()) {
             ApiResult.Failure(ApiError.NOT_CONNECTED)
-        } else if (authApi.currentPhone == null || isPhoneInvalid(authMock, authApi.currentPhone!!)) {
+        } else if (authApi.currentPhone == null) {
+            ApiResult.Failure(ApiError.INVALID_FORMAT)
+        } else if (isPhoneInvalid(authMock, authApi.currentPhone!!) || !authMock.authSessions[authApi.currentPhone!!]!!) {
             ApiResult.Failure(ApiError.INVALID_PHONE)
         } else if (!hash.contentEquals(ACCOUNT_KEY_HASH)) {
             ApiResult.Failure(ApiError.INVALID_KEY)
