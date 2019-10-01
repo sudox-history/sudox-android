@@ -13,7 +13,6 @@ android {
 }
 
 dependencies {
-    implementation("com.sudox:design:$designVersion")
     implementation project(path: ':auth-feature')
     implementation project(path: ':core')
 }

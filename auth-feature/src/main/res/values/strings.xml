@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="phone_verification">Phone verification</string>
-    <string name="return_back">Return back</string>
-    <string name="to_continue_enter_your_phone_number">To continue enter your phone number</string>
-    <string name="by_continuing_you_agree_to_terms_and_conditions">By continuing you agree to terms and conditions</string>
-</resources>

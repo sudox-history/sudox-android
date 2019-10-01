@@ -1,5 +1,2 @@
-apply from: '../configs/versions.gradle'
-
 dependencies {
-    implementation("com.sudox:design:$designVersion")
 }
