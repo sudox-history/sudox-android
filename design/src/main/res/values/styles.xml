@@ -6,6 +6,8 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@drawable/drawable_splash_background</item>
 
+        <item name="android:buttonStyle">@style/Sudox.Button</item>
+
         <item name="backgroundGradientStartColor">@color/background_gradient_start_color</item>
         <item name="backgroundGradientEndColor">@color/background_gradient_end_color</item>
 
@@ -13,4 +15,9 @@
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
         <item name="colorAccent">@color/accent_color</item>
     </style>
+
+    <style name="Sudox.Button" parent="android:Widget.Button">
+
+    </style>
+
 </resources>
