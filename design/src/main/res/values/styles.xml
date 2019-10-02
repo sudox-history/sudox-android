@@ -6,13 +6,14 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
 
         <item name="android:buttonStyle">@style/Sudox.Button</item>
-
-        <item name="backgroundGradientStartColor">@color/background_gradient_start_color</item>
-        <item name="backgroundGradientEndColor">@color/background_gradient_end_color</item>
+        <item name="buttonStyle">@style/Sudox.Button</item>
     </style>
 
     <style name="Sudox.Button" parent="android:Widget.Button">
-
+        <item name="android:background">@drawable/drawable_button</item>
+        <item name="android:paddingLeft">@dimen/button_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
+        <item name="android:paddingBottom">@dimen/button_vertical_padding</item>
+        <item name="android:paddingTop">@dimen/button_vertical_padding</item>
     </style>
-
 </resources>

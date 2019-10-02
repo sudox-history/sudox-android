@@ -2,5 +2,6 @@
 <resources>
     <color name="background_gradient_start_color">#424654</color>
     <color name="background_gradient_end_color">#212533</color>
-    <color name="button_background">#707070</color>
+
+    <color name="button_background_color">#707070</color>
 </resources>
