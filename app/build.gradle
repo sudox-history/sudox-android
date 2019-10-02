@@ -16,5 +16,9 @@ dependencies {
     implementation project(path: ':auth-feature')
     implementation project(path: ':design')
     implementation project(path: ':core')
+
+    implementation("androidx.core:core-ktx:$ktxCoreVersion")
+    implementation("androidx.appcompat:appcompat:$appCompatVersion")
+    implementation("androidx.annotation:annotation:$annotationsVersion")
 }
 
