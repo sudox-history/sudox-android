@@ -1,7 +1,15 @@
 ext {
+    // Sudox libraries
     protocolVersion = "4.0.3-SNAPSHOT"
     eventsVersion = "1.1.0-SNAPSHOT"
     cryptoVersion = "1.1.1-SNAPSHOT"
+
+    // Android libraries
+    ktxCoreVersion = "1.1.0"
+    appCompatVersion = "1.1.0"
+    annotationsVersion = "1.1.0"
+
+    // Third-party libraries
     daggerVersion = "2.24"
     cfutureVersion = "1.7.1"
     junitVersion = "4.12"

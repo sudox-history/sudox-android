@@ -1,3 +1,7 @@
-dependencies {
+apply from: '../configs/versions.gradle'
 
+dependencies {
+    implementation("androidx.core:core-ktx:$ktxCoreVersion")
+    implementation("androidx.appcompat:appcompat:$appCompatVersion")
+    implementation("androidx.annotation:annotation:$annotationsVersion")
 }
