@@ -9,4 +9,8 @@
     <dimen name="edittext_vertical_padding">12dp</dimen>
     <dimen name="edittext_corner_radius">5dp</dimen>
     <dimen name="edittext_text_size">14sp</dimen>
+
+    <dimen name="countrycodeselector_flag_width">22dp</dimen>
+    <dimen name="countrycodeselector_flag_height">15dp</dimen>
+    <dimen name="countrycodeselector_flag_margin">12dp</dimen>
 </resources>

@@ -17,6 +17,8 @@
         <item name="android:editTextStyle">@style/Sudox.EditText</item>
         <item name="editTextStyle">@style/Sudox.EditText</item>
 
+        <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
+
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
         <item name="colorAccent">@color/accent_color</item>
@@ -46,5 +48,15 @@
         <item name="android:textColor">@color/text_color</item>
         <item name="android:fontFamily">@font/avenir_heavy</item>
         <item name="fontFamily">@font/avenir_heavy</item>
+    </style>
+
+    <style name="Sudox.CountryCodeSelector">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+
+        <item name="flagWidth">@dimen/countrycodeselector_flag_width</item>
+        <item name="flagHeight">@dimen/countrycodeselector_flag_height</item>
+        <item name="flagMargin">@dimen/countrycodeselector_flag_margin</item>
     </style>
 </resources>
