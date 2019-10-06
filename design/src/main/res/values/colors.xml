@@ -13,4 +13,6 @@
     <color name="button_background_color">#424654</color>
 
     <color name="edittext_background_color">#424654</color>
+
+    <color name="phoneedittext_separator_color">#FFFFFF</color>
 </resources>

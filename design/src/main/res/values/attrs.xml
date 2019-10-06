@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="PhoneEditText">
+        <attr name="separatorDrawable" format="reference" />
+        <attr name="separatorDrawableWidth" format="dimension" />
+        <attr name="separatorDrawableHeight" format="dimension" />
+        <attr name="separatorLeftMargin" format="dimension" />
+        <attr name="separatorRightMargin" format="dimension" />
+    </declare-styleable>
+
     <declare-styleable name="CountryCodeSelector">
         <attr name="flagWidth" format="dimension" />
         <attr name="flagHeight" format="dimension" />
@@ -7,4 +15,5 @@
     </declare-styleable>
 
     <attr name="countryCodeSelectorStyle" format="reference" />
+    <attr name="phoneEditTextStyle" format="reference" />
 </resources>

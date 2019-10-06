@@ -13,4 +13,9 @@
     <dimen name="countrycodeselector_flag_width">22dp</dimen>
     <dimen name="countrycodeselector_flag_height">15dp</dimen>
     <dimen name="countrycodeselector_flag_margin">12dp</dimen>
+
+    <dimen name="phoneedittext_separator_width">1dp</dimen>
+    <dimen name="phoneedittext_separator_height">22dp</dimen>
+    <dimen name="phoneedittext_separator_left_margin">12dp</dimen>
+    <dimen name="phoneedittext_separator_right_margin">12dp</dimen>
 </resources>

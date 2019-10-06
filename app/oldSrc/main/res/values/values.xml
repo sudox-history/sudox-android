@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <integer name="length_email_code">5</integer>
-    <integer name="length_name">20</integer>
-    <integer name="length_nickname">20</integer>
-</resources>

@@ -18,6 +18,7 @@
         <item name="editTextStyle">@style/Sudox.EditText</item>
 
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
+        <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
 
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
@@ -58,5 +59,13 @@
         <item name="flagWidth">@dimen/countrycodeselector_flag_width</item>
         <item name="flagHeight">@dimen/countrycodeselector_flag_height</item>
         <item name="flagMargin">@dimen/countrycodeselector_flag_margin</item>
+    </style>
+
+    <style name="Sudox.PhoneEditText">
+        <item name="separatorDrawable">@color/phoneedittext_separator_color</item>
+        <item name="separatorDrawableWidth">@dimen/phoneedittext_separator_width</item>
+        <item name="separatorDrawableHeight">@dimen/phoneedittext_separator_height</item>
+        <item name="separatorLeftMargin">@dimen/phoneedittext_separator_left_margin</item>
+        <item name="separatorRightMargin">@dimen/phoneedittext_separator_right_margin</item>
     </style>
 </resources>
