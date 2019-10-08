@@ -37,9 +37,10 @@ class OffsettedOutlineProviderTest {
 
         provider!!.getOutline(view, outline)
 
-        val rect = Rect().apply {
-            outline.getRect(this)
-        }
+        val rect = Outline::class.java
+                .getDeclaredField("mRect")
+                .apply { isAccessible = true }
+                .get(outline) as Rect
 
         assertEquals(40, rect.left)
         assertEquals(80, rect.right)
