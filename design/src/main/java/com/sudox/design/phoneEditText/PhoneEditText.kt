@@ -11,6 +11,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.use
@@ -28,7 +29,7 @@ class PhoneEditText : ViewGroup {
         id = View.generateViewId()
     }
 
-    val numberEditText = EditText(context).apply {
+    val numberEditText = AppCompatEditText(context).apply {
         addTextChangedListener(phoneTextWatcher)
 
         id = View.generateViewId()

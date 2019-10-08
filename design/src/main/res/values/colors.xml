@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#1F232D</color>
+    <color name="background_color">#FFFFFF</color>
 
-    <color name="primary_color">#424654</color>
-    <color name="primary_dark_color">#424654</color>
-    <color name="accent_color">#FFFFFF</color>
-    <color name="text_color">#FFFFFF</color>
+    <color name="primary_color">#000000</color>
+    <color name="primary_dark_color">#000000</color>
+    <color name="accent_color">#000000</color>
+    <color name="text_color">#000000</color>
 
-    <color name="background_gradient_start_color">#424654</color>
-    <color name="background_gradient_end_color">#212533</color>
+    <color name="button_background_color">#FFFFFF</color>
 
-    <color name="button_background_color">#424654</color>
+    <color name="edittext_background_color">#FFFFFF</color>
+    <color name="edittext_border_color">#E0E0E0</color>
 
-    <color name="edittext_background_color">#424654</color>
-
-    <color name="phoneedittext_separator_color">#FFFFFF</color>
+    <color name="phoneedittext_separator_color">#E0E0E0</color>
 </resources>

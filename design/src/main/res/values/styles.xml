@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Sudox" parent="Theme.AppCompat.NoActionBar">
+    <style name="Sudox" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowBackground">@drawable/drawable_splash_background</item>
@@ -34,8 +34,11 @@
 
         <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:textColor">@color/text_color</item>
-        <item name="android:fontFamily">@font/avenir_heavy</item>
-        <item name="fontFamily">@font/avenir_heavy</item>
+        <item name="android:fontFamily">@font/avenir_medium</item>
+        <item name="fontFamily">@font/avenir_medium</item>
+
+        <item name="topOutlineOffset">@dimen/button_elevation</item>
+        <item name="android:elevation">@dimen/button_elevation</item>
     </style>
 
     <style name="Sudox.EditText" parent="android:Widget.EditText">
@@ -47,8 +50,8 @@
 
         <item name="android:textSize">@dimen/edittext_text_size</item>
         <item name="android:textColor">@color/text_color</item>
-        <item name="android:fontFamily">@font/avenir_heavy</item>
-        <item name="fontFamily">@font/avenir_heavy</item>
+        <item name="android:fontFamily">@font/avenir_medium</item>
+        <item name="fontFamily">@font/avenir_medium</item>
     </style>
 
     <style name="Sudox.CountryCodeSelector">

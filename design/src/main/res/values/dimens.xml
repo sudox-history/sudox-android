@@ -4,7 +4,9 @@
     <dimen name="button_horizontal_padding">43dp</dimen>
     <dimen name="button_vertical_padding">12dp</dimen>
     <dimen name="button_text_size">16sp</dimen>
+    <dimen name="button_elevation">3dp</dimen>
 
+    <dimen name="edittext_border_width">1dp</dimen>
     <dimen name="edittext_horizontal_padding">12dp</dimen>
     <dimen name="edittext_vertical_padding">12dp</dimen>
     <dimen name="edittext_corner_radius">5dp</dimen>

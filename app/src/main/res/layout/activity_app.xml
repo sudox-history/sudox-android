@@ -6,7 +6,8 @@
     android:orientation="vertical"
     tools:context=".impls.AppActivity">
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.sudox.design.button.SudoxButton
+        android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -23,10 +24,11 @@
         android:layout_marginRight="20dp" />
 
     <com.sudox.design.phoneEditText.PhoneEditText
+        android:id="@+id/phoneEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_marginRight="20dp" />
 
 </LinearLayout>

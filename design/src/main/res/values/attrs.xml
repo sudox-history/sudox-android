@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="SudoxButton">
+        <attr name="topOutlineOffset" />
+        <attr name="bottomOutlineOffset" />
+        <attr name="rightOutlineOffset" />
+        <attr name="leftOutlineOffset" />
+    </declare-styleable>
+
     <declare-styleable name="PhoneEditText">
         <attr name="separatorDrawable" format="reference" />
         <attr name="separatorDrawableWidth" format="dimension" />
@@ -16,4 +23,9 @@
 
     <attr name="countryCodeSelectorStyle" format="reference" />
     <attr name="phoneEditTextStyle" format="reference" />
+
+    <attr name="topOutlineOffset" format="dimension" />
+    <attr name="bottomOutlineOffset" format="dimension" />
+    <attr name="rightOutlineOffset" format="dimension" />
+    <attr name="leftOutlineOffset" format="dimension" />
 </resources>
