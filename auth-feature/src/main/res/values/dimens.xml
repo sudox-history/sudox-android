@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="auth_margin_left">30dp</dimen>
+    <dimen name="auth_margin_right">30dp</dimen>
+    <dimen name="panel_bar_margin_top">53dp</dimen>
+    <dimen name="sign_in_size">18sp</dimen>
+    <dimen name="auth_content_margin_top">65dp</dimen>
+    <dimen name="phone_verification_margin_left">36dp</dimen>
+    <dimen name="phone_verification_text_size">22sp</dimen>
+    <dimen name="enter_phone_margin_top">16dp</dimen>
+    <dimen name="enter_phone_text_size">15sp</dimen>
+    <dimen name="enter_phone_margin_left_icon">19dp</dimen>
+    <dimen name="phone_edit_text_mergin_top">36dp</dimen>
+</resources>

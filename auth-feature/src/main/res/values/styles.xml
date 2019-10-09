@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.Auth.Title" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/avenir_heavy</item>
+        <item name="fontFamily">@font/avenir_heavy</item>
+    </style>
+
+    <style name="Sudox.Auth.Description" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/avenir_medium</item>
+        <item name="fontFamily">@font/avenir_medium</item>
+    </style>
+</resources>

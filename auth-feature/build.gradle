@@ -2,4 +2,6 @@ apply from: '../configs/versions.gradle'
 
 dependencies {
     implementation project(path: ':core')
+    implementation project(path: ':design')
+    implementation("androidx.appcompat:appcompat:$appCompatVersion")
 }

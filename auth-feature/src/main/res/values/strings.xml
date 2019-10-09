@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="phone_verification">Phone verification</string>
+    <string name="enter_phone">Enter your phone and we will send a confirmation code for you</string>
+    <string name="sign_in">Sign in</string>
+</resources>
