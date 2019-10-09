@@ -1,2 +1,5 @@
+apply from: '../configs/versions.gradle'
+
 dependencies {
+    implementation("androidx.appcompat:appcompat:$appCompatVersion")
 }
