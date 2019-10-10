@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Sudox" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+    <style name="Sudox" parent="Sudox.Base">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="Sudox.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/drawable_splash_background</item>
 
         <item name="android:includeFontPadding">false</item>
