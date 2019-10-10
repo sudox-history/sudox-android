@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <FrameLayout
@@ -8,7 +8,8 @@
         android:layout_marginRight="@dimen/auth_margin_right"
         android:layout_marginTop="@dimen/panel_bar_margin_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/panel_bar">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -27,20 +28,24 @@
     </FrameLayout>
 
     <TextView
+        android:layout_below="@id/panel_bar"
         style="@style/Sudox.Auth.Title"
         android:layout_marginTop="@dimen/auth_content_margin_top"
         android:layout_marginLeft="@dimen/phone_verification_margin_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/phone_verification"
-        android:textSize="@dimen/phone_verification_text_size"/>
+        android:textSize="@dimen/phone_verification_text_size"
+        android:id="@+id/phone_verification"/>
 
     <LinearLayout
+        android:layout_below="@id/phone_verification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/auth_margin_left"
         android:layout_marginRight="@dimen/auth_margin_right"
-        android:layout_marginTop="@dimen/enter_phone_margin_top">
+        android:layout_marginTop="@dimen/enter_phone_margin_top"
+        android:id="@+id/enter_phone">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -55,10 +60,25 @@
     </LinearLayout>
 
     <com.sudox.design.phoneEditText.PhoneEditText
+        android:layout_below="@id/enter_phone"
         android:layout_marginTop="@dimen/phone_edit_text_mergin_top"
         android:layout_marginLeft="@dimen/auth_margin_left"
         android:layout_marginRight="@dimen/auth_margin_right"
         android:id="@+id/phoneEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-</LinearLayout>
+    
+    <com.sudox.design.button.SudoxButton
+        android:layout_above="@id/bottom_space"
+        android:text="Next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/next_button_margin_right"/>
+
+    <Space
+        android:id="@+id/bottom_space"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/next_button_margin_bottom"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>
