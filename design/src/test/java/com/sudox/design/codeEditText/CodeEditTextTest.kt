@@ -70,6 +70,22 @@ class CodeEditTextTest : Assert() {
     }
 
     @Test
+    fun testDeletingFirstDigit() {
+        for (i in 0 until codeEditText!!.digitsEditTexts!!.size - 1) {
+            codeEditText!!.digitsEditTexts!![i].printOne()
+        }
+
+        for (i in codeEditText!!.digitsEditTexts!!.size - 1 downTo 0) {
+            codeEditText!!.digitsEditTexts!![i].deleteDigit()
+        }
+
+        val firstDigitEditText = codeEditText!!.digitsEditTexts!![0]
+
+        assertTrue(firstDigitEditText.text.isNullOrEmpty())
+        assertTrue(firstDigitEditText.isFocused)
+    }
+
+    @Test
     fun checkThatCodeReturnedAfterCodePrinting() {
         var codeFromCallback: String? = null
         val validCode = "1".repeat(codeEditText!!.digitsEditTexts!!.size)

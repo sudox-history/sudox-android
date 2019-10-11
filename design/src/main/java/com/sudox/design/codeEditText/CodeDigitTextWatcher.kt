@@ -18,7 +18,7 @@ class CodeDigitTextWatcher(
         }
 
         if (event.keyCode == KeyEvent.KEYCODE_DEL) {
-            codeEditText.digitsEditTexts!![digitEditTextIndex - 1].requestFocus()
+            codeEditText.digitsEditTexts!!.elementAtOrNull(digitEditTextIndex - 1)?.requestFocus()
         } else if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
             codeEditText.onCodeCompleted()
         } else if (digitEditText.text.isNotEmpty()) {
