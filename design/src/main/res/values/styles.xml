@@ -19,6 +19,7 @@
 
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
         <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
+        <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>
 
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
@@ -47,6 +48,8 @@
         <item name="android:paddingRight">@dimen/edittext_horizontal_padding</item>
         <item name="android:paddingBottom">@dimen/edittext_vertical_padding</item>
         <item name="android:paddingTop">@dimen/edittext_vertical_padding</item>
+        <item name="android:minHeight">@dimen/edittext_min_height</item>
+        <item name="android:minWidth">@dimen/edittext_min_height</item>
 
         <item name="android:textSize">@dimen/edittext_text_size</item>
         <item name="android:textColor">@color/text_color</item>
@@ -70,5 +73,10 @@
         <item name="separatorDrawableHeight">@dimen/phoneedittext_separator_height</item>
         <item name="separatorLeftMargin">@dimen/phoneedittext_separator_left_margin</item>
         <item name="separatorRightMargin">@dimen/phoneedittext_separator_right_margin</item>
+    </style>
+
+    <style name="Sudox.CodeEditText">
+        <item name="digitsCount">@integer/default_code_length</item>
+        <item name="digitsMargin">@dimen/codeedittext_digits_margin</item>
     </style>
 </resources>

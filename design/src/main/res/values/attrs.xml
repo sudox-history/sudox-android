@@ -21,8 +21,14 @@
         <attr name="flagMargin" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="CodeEditText">
+        <attr name="digitsCount" format="integer" />
+        <attr name="digitsMargin" format="dimension" />
+    </declare-styleable>
+
     <attr name="countryCodeSelectorStyle" format="reference" />
     <attr name="phoneEditTextStyle" format="reference" />
+    <attr name="codeEditTextStyle" format="reference" />
 
     <attr name="topOutlineOffset" format="dimension" />
     <attr name="bottomOutlineOffset" format="dimension" />
