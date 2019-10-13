@@ -93,10 +93,12 @@ class SudoxButton : AppCompatButton {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val currentProgress = boundsChangeAnimator.animatedValue as Float
-        val currentWidth = (measuredWidth - (measuredWidth - minWidth) * currentProgress).toInt()
+        if (boundsChangeAnimator.isRunning || loadingSpinnerDrawable.isRunning) {
+            val currentProgress = boundsChangeAnimator.animatedValue as Float
+            val currentWidth = (measuredWidth - (measuredWidth - minWidth) * currentProgress).toInt()
 
-        setMeasuredDimension(currentWidth, measuredHeight)
+            setMeasuredDimension(currentWidth, measuredHeight)
+        }
     }
 
     override fun onRestoreInstanceState(parcelable: Parcelable) {
