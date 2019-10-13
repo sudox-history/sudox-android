@@ -1,4 +1,4 @@
-package com.sudox.design.button
+package com.sudox.design.actionButton
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
@@ -16,12 +16,12 @@ import androidx.core.content.res.use
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.sudox.design.R
 
-class SudoxButton : AppCompatButton {
+class ActionButton : AppCompatButton {
 
     @VisibleForTesting
     val loadingSpinnerDrawable = CircularProgressDrawable(context)
 
-    private var isInLoadingState = false
+    private var isLoadingState = false
     private val boundsChangeAnimator = ValueAnimator().apply {
         interpolator = LinearInterpolator()
 
@@ -31,14 +31,14 @@ class SudoxButton : AppCompatButton {
         }
 
         addListener(onEnd = {
-            if (isInLoadingState) {
+            if (isLoadingState) {
                 loadingSpinnerDrawable.start()
                 invalidate()
             } else {
                 isClickable = true
             }
         }, onStart = {
-            if (!isInLoadingState) {
+            if (!isLoadingState) {
                 loadingSpinnerDrawable.stop()
                 invalidate()
             } else {
@@ -52,13 +52,13 @@ class SudoxButton : AppCompatButton {
 
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        context.obtainStyledAttributes(attrs, R.styleable.SudoxButton, defStyleAttr, 0).use {
-            val loadingSpinnerHeight = it.getDimensionPixelSizeOrThrow(R.styleable.SudoxButton_loadingSpinnerHeight)
-            val loadingSpinnerWidth = it.getDimensionPixelSizeOrThrow(R.styleable.SudoxButton_loadingSpinnerWidth)
+        context.obtainStyledAttributes(attrs, R.styleable.ActionButton, defStyleAttr, 0).use {
+            val loadingSpinnerHeight = it.getDimensionPixelSizeOrThrow(R.styleable.ActionButton_loadingSpinnerHeight)
+            val loadingSpinnerWidth = it.getDimensionPixelSizeOrThrow(R.styleable.ActionButton_loadingSpinnerWidth)
 
             loadingSpinnerDrawable.setBounds(0, 0, loadingSpinnerWidth, loadingSpinnerHeight)
             boundsChangeAnimator.duration = it
-                    .getIntegerOrThrow(R.styleable.SudoxButton_boundsChangeAnimationDuration)
+                    .getIntegerOrThrow(R.styleable.ActionButton_boundsChangeAnimationDuration)
                     .toLong()
         }
     }
@@ -68,7 +68,7 @@ class SudoxButton : AppCompatButton {
     }
 
     fun toggleLoadingState(toggle: Boolean) {
-        isInLoadingState = toggle
+        isLoadingState = toggle
 
         if (toggle) {
             boundsChangeAnimator.start()
@@ -78,7 +78,7 @@ class SudoxButton : AppCompatButton {
     }
 
     internal fun toggleLoadingStateForce(toggle: Boolean) {
-        isInLoadingState = toggle
+        isLoadingState = toggle
 
         // Button in normal state as default
         if (toggle) {
@@ -86,8 +86,8 @@ class SudoxButton : AppCompatButton {
         }
     }
 
-    fun isInLoadingState(): Boolean {
-        return isInLoadingState
+    fun isLoadingState(): Boolean {
+        return isLoadingState
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -102,24 +102,24 @@ class SudoxButton : AppCompatButton {
     }
 
     override fun onRestoreInstanceState(parcelable: Parcelable) {
-        val state = parcelable as SudoxButtonState
+        val state = parcelable as ActionButtonState
 
         state.apply {
             super.onRestoreInstanceState(superState)
-            readToView(this@SudoxButton)
+            readToView(this@ActionButton)
         }
     }
 
     override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()
 
-        return SudoxButtonState(superState!!).apply {
-            writeFromView(this@SudoxButton)
+        return ActionButtonState(superState!!).apply {
+            writeFromView(this@ActionButton)
         }
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (!isInLoadingState && !boundsChangeAnimator.isRunning) {
+        if (!isLoadingState && !boundsChangeAnimator.isRunning) {
             super.onDraw(canvas)
         } else if (loadingSpinnerDrawable.isRunning) {
             val centerX = measuredWidth / 2 - loadingSpinnerDrawable.bounds.exactCenterX()

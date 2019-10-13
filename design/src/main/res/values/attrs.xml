@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="SudoxButton">
+    <declare-styleable name="ActionButton">
         <attr name="boundsChangeAnimationDuration" format="integer" />
         <attr name="loadingSpinnerHeight" format="dimension" />
         <attr name="loadingSpinnerWidth" format="dimension" />

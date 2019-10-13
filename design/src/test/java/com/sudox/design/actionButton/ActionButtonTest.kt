@@ -1,4 +1,4 @@
-package com.sudox.design.button
+package com.sudox.design.actionButton
 
 import android.app.Activity
 import android.os.Bundle
@@ -13,9 +13,9 @@ import org.robolectric.Robolectric
 import org.robolectric.android.controller.ActivityController
 
 @RunWith(DesignTestRunner::class)
-class SudoxButtonTest : Assert() {
+class ActionButtonTest : Assert() {
 
-    private var sudoxButton: SudoxButton? = null
+    private var actionButton: ActionButton? = null
     private var activityController: ActivityController<Activity>? = null
 
     @Before
@@ -41,12 +41,12 @@ class SudoxButtonTest : Assert() {
                 .start()
 
         activityController!!.get().apply {
-            sudoxButton = SudoxButton(this).apply {
+            actionButton = ActionButton(this).apply {
                 id = Int.MAX_VALUE
             }
 
             phoneNumberUtil = PhoneNumberUtil.createInstance(this)
-            setContentView(sudoxButton)
+            setContentView(actionButton)
         }
 
         state?.let {
@@ -60,20 +60,20 @@ class SudoxButtonTest : Assert() {
 
     @Test
     fun testNormalToLoadingStateToggling() {
-        sudoxButton!!.toggleLoadingState(true)
+        actionButton!!.toggleLoadingState(true)
         Robolectric.flushForegroundThreadScheduler()
 
-        assertFalse(sudoxButton!!.isClickable)
-        assertTrue(sudoxButton!!.isInLoadingState())
+        assertFalse(actionButton!!.isClickable)
+        assertTrue(actionButton!!.isLoadingState())
     }
 
     @Test
     fun testStateSaving() {
-        sudoxButton!!.toggleLoadingState(true)
+        actionButton!!.toggleLoadingState(true)
         createActivity()
 
-        assertFalse(sudoxButton!!.isClickable)
-        assertTrue(sudoxButton!!.isInLoadingState())
-        assertTrue(sudoxButton!!.loadingSpinnerDrawable.isRunning)
+        assertFalse(actionButton!!.isClickable)
+        assertTrue(actionButton!!.isLoadingState())
+        assertTrue(actionButton!!.loadingSpinnerDrawable.isRunning)
     }
 }
