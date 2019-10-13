@@ -31,14 +31,18 @@
         <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
         <item name="android:paddingBottom">@dimen/button_vertical_padding</item>
         <item name="android:paddingTop">@dimen/button_vertical_padding</item>
+        <item name="android:minHeight">@dimen/button_min_height</item>
+        <item name="android:minWidth">@dimen/button_min_height</item>
+        <item name="android:elevation">@dimen/button_elevation</item>
 
         <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:textColor">@color/text_color</item>
         <item name="android:fontFamily">@font/avenir_medium</item>
         <item name="fontFamily">@font/avenir_medium</item>
 
-        <item name="topOutlineOffset">@dimen/button_elevation</item>
-        <item name="android:elevation">@dimen/button_elevation</item>
+        <item name="boundsChangeAnimationDuration">1000</item>
+        <item name="loadingSpinnerHeight">24dp</item>
+        <item name="loadingSpinnerWidth">24dp</item>
     </style>
 
     <style name="Sudox.EditText" parent="android:Widget.EditText">
