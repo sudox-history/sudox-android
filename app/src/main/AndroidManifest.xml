@@ -5,6 +5,7 @@
     tools:ignore="GoogleAppIndexingWarning">
 
     <application
+        android:name=".AppLoader"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
