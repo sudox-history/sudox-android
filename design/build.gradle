@@ -16,6 +16,7 @@ dependencies {
     implementation("androidx.core:core-ktx:$ktxCoreVersion")
     implementation("androidx.appcompat:appcompat:$appCompatVersion")
     implementation("androidx.annotation:annotation:$annotationsVersion")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefreshLayoutVersion")
     implementation("io.michaelrocks:libphonenumber-android:$libPhoneNumberVersion")
 
     testImplementation("junit:junit:$junitVersion")

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Sudox" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+    <style name="Sudox" parent="Sudox.Base">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="Sudox.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/drawable_splash_background</item>
 
         <item name="android:includeFontPadding">false</item>
@@ -19,6 +22,7 @@
 
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
         <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
+        <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>
 
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
@@ -31,14 +35,19 @@
         <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
         <item name="android:paddingBottom">@dimen/button_vertical_padding</item>
         <item name="android:paddingTop">@dimen/button_vertical_padding</item>
+        <item name="android:minHeight">@dimen/button_min_height</item>
+        <item name="android:minWidth">@dimen/button_min_height</item>
+        <item name="android:elevation">@dimen/button_elevation</item>
 
         <item name="android:textSize">@dimen/button_text_size</item>
         <item name="android:textColor">@color/text_color</item>
         <item name="android:fontFamily">@font/avenir_medium</item>
         <item name="fontFamily">@font/avenir_medium</item>
 
-        <item name="topOutlineOffset">@dimen/button_elevation</item>
-        <item name="android:elevation">@dimen/button_elevation</item>
+        <item name="boundsChangeAnimationDuration">@integer/button_bounds_change_animation_duration</item>
+        <item name="loadingSpinnerThickness">@dimen/button_loading_spinner_thickness</item>
+        <item name="loadingSpinnerHeight">@dimen/button_loading_spinner_height</item>
+        <item name="loadingSpinnerWidth">@dimen/button_loading_spinner_width</item>
     </style>
 
     <style name="Sudox.EditText" parent="android:Widget.EditText">
@@ -47,6 +56,8 @@
         <item name="android:paddingRight">@dimen/edittext_horizontal_padding</item>
         <item name="android:paddingBottom">@dimen/edittext_vertical_padding</item>
         <item name="android:paddingTop">@dimen/edittext_vertical_padding</item>
+        <item name="android:minHeight">@dimen/edittext_min_height</item>
+        <item name="android:minWidth">@dimen/edittext_min_height</item>
 
         <item name="android:textSize">@dimen/edittext_text_size</item>
         <item name="android:textColor">@color/text_color</item>
@@ -70,5 +81,10 @@
         <item name="separatorDrawableHeight">@dimen/phoneedittext_separator_height</item>
         <item name="separatorLeftMargin">@dimen/phoneedittext_separator_left_margin</item>
         <item name="separatorRightMargin">@dimen/phoneedittext_separator_right_margin</item>
+    </style>
+
+    <style name="Sudox.CodeEditText">
+        <item name="digitsCount">@integer/default_code_length</item>
+        <item name="digitsMargin">@dimen/codeedittext_digits_margin</item>
     </style>
 </resources>

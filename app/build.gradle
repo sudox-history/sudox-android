@@ -10,6 +10,16 @@ android {
                     'proguard-rules.pro'
         }
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+
+            all {
+                jvmArgs '-noverify'
+            }
+        }
+    }
 }
 
 dependencies {
@@ -20,5 +30,8 @@ dependencies {
     implementation("androidx.core:core-ktx:$ktxCoreVersion")
     implementation("androidx.appcompat:appcompat:$appCompatVersion")
     implementation("androidx.annotation:annotation:$annotationsVersion")
+
+    testImplementation("junit:junit:$junitVersion")
+    testImplementation("org.robolectric:robolectric:$robolectricVersion")
 }
 

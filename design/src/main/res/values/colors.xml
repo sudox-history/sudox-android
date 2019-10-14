@@ -3,8 +3,8 @@
     <color name="ic_launcher_background">#1F232D</color>
     <color name="background_color">#FFFFFF</color>
 
-    <color name="primary_color">#000000</color>
-    <color name="primary_dark_color">#000000</color>
+    <color name="primary_color">#FFFFFF</color>
+    <color name="primary_dark_color">#FFFFFF</color>
     <color name="accent_color">#000000</color>
     <color name="text_color">#000000</color>
 
