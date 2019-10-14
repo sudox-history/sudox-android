@@ -40,9 +40,10 @@
         <item name="android:fontFamily">@font/avenir_medium</item>
         <item name="fontFamily">@font/avenir_medium</item>
 
-        <item name="boundsChangeAnimationDuration">1000</item>
-        <item name="loadingSpinnerHeight">24dp</item>
-        <item name="loadingSpinnerWidth">24dp</item>
+        <item name="boundsChangeAnimationDuration">@integer/button_bounds_change_animation_duration</item>
+        <item name="loadingSpinnerThickness">@dimen/button_loading_spinner_thickness</item>
+        <item name="loadingSpinnerHeight">@dimen/button_loading_spinner_height</item>
+        <item name="loadingSpinnerWidth">@dimen/button_loading_spinner_width</item>
     </style>
 
     <style name="Sudox.EditText" parent="android:Widget.EditText">

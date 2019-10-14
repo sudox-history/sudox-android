@@ -6,7 +6,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.os.Parcelable
 import android.util.AttributeSet
-import android.view.animation.LinearInterpolator
+import android.view.animation.AccelerateInterpolator
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.animation.addListener
@@ -23,7 +23,7 @@ class ActionButton : AppCompatButton {
 
     private var isLoadingState = false
     private val boundsChangeAnimator = ValueAnimator().apply {
-        interpolator = LinearInterpolator()
+        interpolator = AccelerateInterpolator()
 
         setFloatValues(0.0F, 1.0F)
         addUpdateListener {
@@ -55,8 +55,13 @@ class ActionButton : AppCompatButton {
         context.obtainStyledAttributes(attrs, R.styleable.ActionButton, defStyleAttr, 0).use {
             val loadingSpinnerHeight = it.getDimensionPixelSizeOrThrow(R.styleable.ActionButton_loadingSpinnerHeight)
             val loadingSpinnerWidth = it.getDimensionPixelSizeOrThrow(R.styleable.ActionButton_loadingSpinnerWidth)
+            val loadingSpinnerThickness = it.getDimensionPixelSizeOrThrow(R.styleable.ActionButton_loadingSpinnerThickness)
 
-            loadingSpinnerDrawable.setBounds(0, 0, loadingSpinnerWidth, loadingSpinnerHeight)
+            loadingSpinnerDrawable.apply {
+                setBounds(0, 0, loadingSpinnerWidth, loadingSpinnerHeight)
+                setStyle(loadingSpinnerThickness)
+            }
+
             boundsChangeAnimator.duration = it
                     .getIntegerOrThrow(R.styleable.ActionButton_boundsChangeAnimationDuration)
                     .toLong()
