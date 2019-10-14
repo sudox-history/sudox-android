@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_go_back_left_arrow" />
+            android:src="@drawable/ic_left_arrow" />
 
         <TextView
             android:textSize="@dimen/sign_in_size"
@@ -62,7 +62,7 @@
     <!-- TODO: Place for keycode view -->
 
     <com.sudox.design.button.SudoxButton
-        android:layout_above="@id/bottom_space"
+        android:layout_above="@id/authPhoneBottomSpace"
         android:text="Next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
         android:layout_marginRight="@dimen/next_button_margin_right"/>
 
     <Space
-        android:id="@+id/bottom_space"
+        android:id="@+id/authPhoneBottomSpace"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/next_button_margin_bottom"
         android:layout_alignParentBottom="true"/>

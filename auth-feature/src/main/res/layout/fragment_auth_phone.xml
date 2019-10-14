@@ -4,81 +4,83 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:layout_marginLeft="@dimen/auth_margin_left"
-        android:layout_marginRight="@dimen/auth_margin_right"
-        android:layout_marginTop="@dimen/panel_bar_margin_top"
+        android:id="@+id/panel_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/panel_bar">
+        android:layout_marginLeft="@dimen/auth_margin_left"
+        android:layout_marginTop="@dimen/panel_bar_margin_top"
+        android:layout_marginRight="@dimen/auth_margin_right">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_go_back_left_arrow" />
+            android:src="@drawable/ic_left_arrow" />
 
         <TextView
-            android:textSize="@dimen/sign_in_size"
             style="@style/Sudox.Auth.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="@string/sign_in" />
+            android:text="@string/sign_in"
+            android:textSize="@dimen/sign_in_size" />
     </FrameLayout>
 
     <TextView
-        android:layout_below="@id/panel_bar"
+        android:id="@+id/phone_verification"
         style="@style/Sudox.Auth.Title"
-        android:layout_marginTop="@dimen/auth_content_margin_top"
-        android:layout_marginLeft="@dimen/phone_verification_margin_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/panel_bar"
+        android:layout_marginLeft="@dimen/phone_verification_margin_left"
+        android:layout_marginTop="@dimen/auth_content_margin_top"
         android:text="@string/phone_verification"
-        android:textSize="@dimen/phone_verification_text_size"
-        android:id="@+id/phone_verification"/>
+        android:textSize="@dimen/phone_verification_text_size" />
 
     <LinearLayout
-        android:layout_below="@id/phone_verification"
+        android:id="@+id/enter_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/phone_verification"
         android:layout_marginLeft="@dimen/auth_margin_left"
-        android:layout_marginRight="@dimen/auth_margin_right"
         android:layout_marginTop="@dimen/enter_phone_margin_top"
-        android:id="@+id/enter_phone">
+        android:layout_marginRight="@dimen/auth_margin_right">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_smartphone"/>
+            android:src="@drawable/ic_smartphone" />
+
         <TextView
-            android:textSize="@dimen/enter_phone_text_size"
             style="@style/Sudox.Auth.Description"
-            android:layout_marginLeft="@dimen/enter_phone_margin_left_icon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/enter_phone"/>
+            android:layout_marginLeft="@dimen/enter_phone_margin_left_icon"
+            android:text="@string/enter_phone"
+            android:textSize="@dimen/enter_phone_text_size" />
     </LinearLayout>
 
     <com.sudox.design.phoneEditText.PhoneEditText
-        android:layout_below="@id/enter_phone"
-        android:layout_marginTop="@dimen/phone_edit_text_mergin_top"
-        android:layout_marginLeft="@dimen/auth_margin_left"
-        android:layout_marginRight="@dimen/auth_margin_right"
         android:id="@+id/phoneEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    
+        android:layout_height="wrap_content"
+        android:layout_below="@id/enter_phone"
+        android:layout_marginLeft="@dimen/auth_margin_left"
+        android:layout_marginTop="@dimen/phone_edit_text_mergin_top"
+        android:layout_marginRight="@dimen/auth_margin_right" />
+
     <com.sudox.design.button.SudoxButton
-        android:layout_above="@id/bottom_space"
-        android:text="Next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/bottom_space"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/next_button_margin_right"/>
+        android:layout_marginRight="@dimen/next_button_margin_right"
+        android:text="Next" />
 
     <Space
         android:id="@+id/bottom_space"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/next_button_margin_bottom"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>

@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 
-class EnterCodeFragment : Fragment() {
+class AuthCodeFragment : Fragment() {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_enter_code, container, false)
+        return inflater.inflate(R.layout.fragment_auth_code, container, false)
     }
 }
