@@ -1,5 +1,6 @@
 package com.sudox.messenger.android
 
+import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sudox.messenger.android.core.CoreActivity
@@ -12,6 +13,11 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        (window.decorView.background as LayerDrawable)
+                .getDrawable(1)
+                .alpha = 1
+
         setContentView(R.layout.activity_app)
 
         if (savedInstanceState != null) {
