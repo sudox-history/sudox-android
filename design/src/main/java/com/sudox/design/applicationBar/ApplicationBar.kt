@@ -2,10 +2,12 @@ package com.sudox.design.applicationBar
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
@@ -15,17 +17,21 @@ import com.sudox.design.applicationBar.applicationBarButton.ApplicationBarButton
 import kotlin.math.max
 import kotlin.math.min
 
-const val APPBAR_BUTTON_AT_START_TAG = "button_at_start_tag"
-const val APPBAR_BUTTON_AT_END_TAG = "button_at_end_tag"
+const val APPBAR_BUTTON_AT_START_TAG = 0
+const val APPBAR_BUTTON_AT_END_TAG = 1
 
-class ApplicationBar : ViewGroup {
+class ApplicationBar : ViewGroup, View.OnClickListener {
 
     var buttonAtStart: ApplicationBarButton? = null
     var buttonAtEnd: ApplicationBarButton? = null
+    var listener: ApplicationBarListener? = null
 
-    private var titleTextId = 0
-    private var titleTextView = AppCompatTextView(context)
-    private var contentView: View? = null
+    @VisibleForTesting
+    var titleTextId = 0
+    @VisibleForTesting
+    var titleTextView = AppCompatTextView(context)
+    @VisibleForTesting
+    var contentView: View? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.applicationBarStyle)
@@ -40,12 +46,13 @@ class ApplicationBar : ViewGroup {
         buttonAtEnd = createButton(APPBAR_BUTTON_AT_END_TAG)
     }
 
-    private fun createButton(tag: String): ApplicationBarButton {
+    private fun createButton(tag: Any): ApplicationBarButton {
         return ApplicationBarButton(context).apply {
             this.id = View.generateViewId()
             this.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
             this.tag = tag
 
+            setOnClickListener(this@ApplicationBar)
             addView(this)
         }
     }
@@ -132,28 +139,28 @@ class ApplicationBar : ViewGroup {
         }
     }
 
-    fun setTitle(title: String?, fromRes: Boolean = false) {
-        titleTextView.text = title
+    override fun onRestoreInstanceState(parcelable: Parcelable) {
+        val state = parcelable as ApplicationBarState
 
-        if (!fromRes) {
-            titleTextId = 0
-        }
-
-        if (title != null) {
-            setContentView(titleTextView)
-        } else {
-            setContentView(null)
+        state.apply {
+            super.onRestoreInstanceState(superState)
+            readToView(this@ApplicationBar)
         }
     }
 
-    fun setTitle(@StringRes titleTextId: Int) {
-        val title = context.getString(titleTextId)
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
 
-        this.titleTextId = titleTextId
-        this.setTitle(title, true)
+        return ApplicationBarState(superState!!).apply {
+            writeFromView(this@ApplicationBar)
+        }
     }
 
-    fun setContentView(view: View?) {
+    override fun onClick(view: View) {
+        listener?.onButtonClicked(view.tag)
+    }
+
+    fun setContent(view: View?) {
         if (contentView != null && contentView != view) {
             removeViewInLayout(contentView)
         }
@@ -166,5 +173,32 @@ class ApplicationBar : ViewGroup {
             requestLayout()
             invalidate()
         }
+    }
+
+    fun setTitle(title: String?, fromRes: Boolean = false) {
+        titleTextView.text = title
+
+        if (!fromRes) {
+            titleTextId = 0
+        }
+
+        if (title != null) {
+            setContent(titleTextView)
+        } else {
+            setContent(null)
+        }
+    }
+
+    fun setTitle(@StringRes titleTextId: Int) {
+        val title = context.getString(titleTextId)
+
+        this.titleTextId = titleTextId
+        this.setTitle(title, true)
+    }
+
+    fun reset() {
+        buttonAtStart!!.toggle(null)
+        buttonAtEnd!!.toggle(null)
+        setTitle(null)
     }
 }
