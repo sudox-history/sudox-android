@@ -26,7 +26,18 @@
         <attr name="digitsMargin" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="ApplicationBar">
+        <attr name="titleTextAppearance" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ApplicationBarButton">
+        <attr name="iconHeight" format="dimension" />
+        <attr name="iconWidth" format="dimension" />
+    </declare-styleable>
+
     <attr name="countryCodeSelectorStyle" format="reference" />
     <attr name="phoneEditTextStyle" format="reference" />
     <attr name="codeEditTextStyle" format="reference" />
+    <attr name="applicationBarStyle" format="reference" />
+    <attr name="applicationBarButtonStyle" format="reference" />
 </resources>

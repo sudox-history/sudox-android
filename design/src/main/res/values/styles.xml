@@ -20,6 +20,8 @@
         <item name="android:editTextStyle">@style/Sudox.EditText</item>
         <item name="editTextStyle">@style/Sudox.EditText</item>
 
+        <item name="applicationBarStyle">@style/Sudox.ApplicationBar</item>
+        <item name="applicationBarButtonStyle">@style/Sudox.ApplicationBar.Button</item>
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
         <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
         <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>
@@ -44,7 +46,9 @@
         <item name="android:fontFamily">@font/avenir_medium</item>
         <item name="fontFamily">@font/avenir_medium</item>
 
-        <item name="boundsChangeAnimationDuration">@integer/button_bounds_change_animation_duration</item>
+        <item name="boundsChangeAnimationDuration">
+            @integer/button_bounds_change_animation_duration
+        </item>
         <item name="loadingSpinnerThickness">@dimen/button_loading_spinner_thickness</item>
         <item name="loadingSpinnerHeight">@dimen/button_loading_spinner_height</item>
         <item name="loadingSpinnerWidth">@dimen/button_loading_spinner_width</item>
@@ -86,5 +90,27 @@
     <style name="Sudox.CodeEditText">
         <item name="digitsCount">@integer/default_code_length</item>
         <item name="digitsMargin">@dimen/codeedittext_digits_margin</item>
+    </style>
+
+    <style name="Sudox.ApplicationBar">
+        <item name="titleTextAppearance">@style/Sudox.ApplicationBar.TitleTextAppearance</item>
+    </style>
+
+    <style name="Sudox.ApplicationBar.TitleTextAppearance" parent="">
+        <item name="android:textSize">@dimen/applicationbartitle_text_size</item>
+        <item name="android:fontFamily">@font/avenir_heavy</item>
+        <item name="android:includeFontPadding">true</item>
+        <item name="fontFamily">@font/avenir_heavy</item>
+    </style>
+
+    <style name="Sudox.ApplicationBar.Button" parent="">
+        <item name="android:background">?actionBarItemBackground</item>
+        <item name="android:paddingLeft">@dimen/applicationbarbutton_padding_left</item>
+        <item name="android:paddingRight">@dimen/applicationbarbutton_padding_right</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+
+        <item name="iconHeight">@dimen/applicationbarbutton_icon_height</item>
+        <item name="iconWidth">@dimen/applicationbarbutton_icon_width</item>
     </style>
 </resources>
