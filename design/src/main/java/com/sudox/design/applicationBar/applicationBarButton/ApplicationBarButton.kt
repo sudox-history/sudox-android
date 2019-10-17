@@ -1,12 +1,14 @@
-package com.sudox.design.applicationBar
+package com.sudox.design.applicationBar.applicationBarButton
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.DrawableRes
+import androidx.annotation.VisibleForTesting
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
 import com.sudox.design.R
@@ -14,10 +16,14 @@ import kotlin.math.min
 
 class ApplicationBarButton : View {
 
-    private var iconDrawable: Drawable? = null
-    private var iconDrawableId = 0
-    private var iconHeight = 0
-    private var iconWidth = 0
+    @VisibleForTesting
+    var iconDrawable: Drawable? = null
+    @VisibleForTesting
+    var iconDrawableId = 0
+    @VisibleForTesting
+    var iconHeight = 0
+    @VisibleForTesting
+    var iconWidth = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.applicationBarButtonStyle)
@@ -59,6 +65,23 @@ class ApplicationBarButton : View {
         setMeasuredDimension(measuredWidth, measuredHeight)
     }
 
+    override fun onRestoreInstanceState(parcelable: Parcelable) {
+        val state = parcelable as ApplicationBarButtonState
+
+        state.apply {
+            super.onRestoreInstanceState(superState)
+            readToView(this@ApplicationBarButton)
+        }
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+
+        return ApplicationBarButtonState(superState!!).apply {
+            writeFromView(this@ApplicationBarButton)
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
         if (iconDrawable == null) {
             return
@@ -79,11 +102,10 @@ class ApplicationBarButton : View {
             iconDrawableId = 0
         }
 
-        visibility = if (iconDrawable != null) {
-            VISIBLE
-        } else {
-            GONE
-        }
+        isClickable = iconDrawable != null
+
+        requestLayout()
+        invalidate()
     }
 
     fun toggle(@DrawableRes iconDrawableId: Int) {

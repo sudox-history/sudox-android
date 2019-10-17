@@ -11,6 +11,7 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat
 import com.sudox.design.R
+import com.sudox.design.applicationBar.applicationBarButton.ApplicationBarButton
 import kotlin.math.max
 import kotlin.math.min
 
