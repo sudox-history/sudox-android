@@ -1,10 +1,9 @@
-package com.sudox.design.applicationBar
+package com.sudox.design.applicationBar.applicationBarButton
 
 import android.app.Activity
 import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
 import com.sudox.design.DesignTestRunner
-import com.sudox.design.applicationBar.applicationBarButton.ApplicationBarButton
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
