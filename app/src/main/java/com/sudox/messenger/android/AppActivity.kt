@@ -27,6 +27,12 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         }
     }
 
+    override fun onBackPressed() {
+        if (!navigationManager.showPreviousFragment()) {
+            super.onBackPressed()
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         navigationManager.saveState(outState)
         super.onSaveInstanceState(outState)
