@@ -57,10 +57,21 @@ class ApplicationBarTest : Assert() {
 
     @Test
     fun testStartup() = applicationBar!!.let {
+        assertNull(it.listener)
         assertNull(it.contentView)
         assertNull(it.titleTextView.parent)
         assertNotEquals(it.titleTextView, it.contentView)
         assertEquals(0, it.titleTextId)
+
+        assertEquals(0, it.buttonAtStart!!.iconDrawableId)
+        assertNull(it.buttonAtStart!!.iconDrawable)
+        assertFalse(it.buttonAtStart!!.isClickable)
+        assertFalse(it.buttonAtStart!!.isFocusable)
+
+        assertEquals(0, it.buttonAtEnd!!.iconDrawableId)
+        assertNull(it.buttonAtEnd!!.iconDrawable)
+        assertFalse(it.buttonAtEnd!!.isClickable)
+        assertFalse(it.buttonAtEnd!!.isFocusable)
     }
 
     @Test
@@ -96,11 +107,17 @@ class ApplicationBarTest : Assert() {
 
     @Test
     fun testResetting() = applicationBar!!.let {
+        val listener = object : ApplicationBarListener {
+            override fun onButtonClicked(tag: Any) {}
+        }
+
+        it.listener = listener
         it.setTitle(android.R.string.selectAll)
         it.buttonAtStart!!.toggle(android.R.drawable.ic_input_add)
         it.buttonAtEnd!!.toggle(android.R.drawable.ic_input_delete)
         it.reset()
 
+        assertNull(it.listener)
         assertNull(it.contentView)
         assertNull(it.titleTextView.parent)
         assertNotEquals(it.titleTextView, it.contentView)
@@ -109,10 +126,12 @@ class ApplicationBarTest : Assert() {
         assertEquals(0, it.buttonAtStart!!.iconDrawableId)
         assertNull(it.buttonAtStart!!.iconDrawable)
         assertFalse(it.buttonAtStart!!.isClickable)
+        assertFalse(it.buttonAtStart!!.isFocusable)
 
         assertEquals(0, it.buttonAtEnd!!.iconDrawableId)
         assertNull(it.buttonAtEnd!!.iconDrawable)
         assertFalse(it.buttonAtEnd!!.isClickable)
+        assertFalse(it.buttonAtEnd!!.isFocusable)
     }
 
     @Test
@@ -152,6 +171,9 @@ class ApplicationBarTest : Assert() {
 
         assertTrue(applicationBar!!.buttonAtStart!!.isClickable)
         assertTrue(applicationBar!!.buttonAtEnd!!.isClickable)
+
+        assertTrue(applicationBar!!.buttonAtStart!!.isFocusable)
+        assertTrue(applicationBar!!.buttonAtEnd!!.isFocusable)
 
         assertNotNull(applicationBar!!.buttonAtStart!!.iconDrawable)
         assertNotNull(applicationBar!!.buttonAtEnd!!.iconDrawable)

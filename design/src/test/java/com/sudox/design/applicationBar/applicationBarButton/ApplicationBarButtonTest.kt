@@ -60,6 +60,7 @@ class ApplicationBarButtonTest : Assert() {
     fun testStartup() = applicationBarButton!!.let { button ->
         assertEquals(0, button.iconDrawableId)
         assertFalse(button.isClickable)
+        assertFalse(button.isFocusable)
         assertNull(button.iconDrawable)
     }
 
@@ -74,6 +75,7 @@ class ApplicationBarButtonTest : Assert() {
 
         assertEquals(0, button.iconDrawableId)
         assertTrue(button.isClickable)
+        assertTrue(button.isFocusable)
     }
 
     @Test
@@ -83,6 +85,7 @@ class ApplicationBarButtonTest : Assert() {
 
         assertEquals(0, button.iconDrawableId)
         assertFalse(button.isClickable)
+        assertFalse(button.isFocusable)
         assertNull(button.iconDrawable)
     }
 
@@ -98,6 +101,7 @@ class ApplicationBarButtonTest : Assert() {
         assertEquals(android.R.drawable.ic_delete, button.iconDrawableId)
         assertNotNull(button.iconDrawable)
         assertTrue(button.isClickable)
+        assertTrue(button.isFocusable)
     }
 
     @Test
@@ -108,5 +112,6 @@ class ApplicationBarButtonTest : Assert() {
         assertEquals(android.R.drawable.ic_delete, applicationBarButton!!.iconDrawableId)
         assertNotNull(applicationBarButton!!.iconDrawable)
         assertTrue(applicationBarButton!!.isClickable)
+        assertTrue(applicationBarButton!!.isFocusable)
     }
 }

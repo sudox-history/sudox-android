@@ -44,6 +44,7 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
 
         buttonAtStart = createButton(APPBAR_BUTTON_AT_START_TAG)
         buttonAtEnd = createButton(APPBAR_BUTTON_AT_END_TAG)
+        reset()
     }
 
     private fun createButton(tag: Any): ApplicationBarButton {
@@ -197,8 +198,9 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
     }
 
     fun reset() {
+        setTitle(null)
         buttonAtStart!!.toggle(null)
         buttonAtEnd!!.toggle(null)
-        setTitle(null)
+        listener = null
     }
 }
