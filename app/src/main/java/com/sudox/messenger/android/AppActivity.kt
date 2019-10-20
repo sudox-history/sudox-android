@@ -4,12 +4,16 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.sudox.messenger.android.core.CoreActivity
+import com.sudox.messenger.android.core.managers.ApplicationBarManager
 import com.sudox.messenger.android.core.managers.NavigationManager
+import com.sudox.messenger.android.managers.AppApplicationBarManager
 import com.sudox.messenger.android.managers.AppNavigationManager
+import kotlinx.android.synthetic.main.activity_app.applicationBar
 
 class AppActivity : AppCompatActivity(), CoreActivity {
 
     private val navigationManager = AppNavigationManager(supportFragmentManager, R.id.frameContainer)
+    private val applicationBarManager = AppApplicationBarManager(applicationBar)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,5 +38,9 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     override fun getNavigationManager(): NavigationManager {
         return navigationManager
+    }
+
+    override fun getApplicationBarManager(): ApplicationBarManager {
+        return applicationBarManager
     }
 }
