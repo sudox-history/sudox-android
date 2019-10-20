@@ -57,6 +57,7 @@ class ApplicationBarTest : Assert() {
 
     @Test
     fun testStartup() = applicationBar!!.let {
+        assertNull(it.listener)
         assertNull(it.contentView)
         assertNull(it.titleTextView.parent)
         assertNotEquals(it.titleTextView, it.contentView)
@@ -96,11 +97,17 @@ class ApplicationBarTest : Assert() {
 
     @Test
     fun testResetting() = applicationBar!!.let {
+        val listener = object : ApplicationBarListener {
+            override fun onButtonClicked(tag: Any) {}
+        }
+
+        it.listener = listener
         it.setTitle(android.R.string.selectAll)
         it.buttonAtStart!!.toggle(android.R.drawable.ic_input_add)
         it.buttonAtEnd!!.toggle(android.R.drawable.ic_input_delete)
         it.reset()
 
+        assertNull(it.listener)
         assertNull(it.contentView)
         assertNull(it.titleTextView.parent)
         assertNotEquals(it.titleTextView, it.contentView)

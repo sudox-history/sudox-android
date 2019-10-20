@@ -197,8 +197,9 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
     }
 
     fun reset() {
+        setTitle(null)
         buttonAtStart!!.toggle(null)
         buttonAtEnd!!.toggle(null)
-        setTitle(null)
+        listener = null
     }
 }
