@@ -27,4 +27,16 @@
     <dimen name="phoneedittext_separator_right_margin">12dp</dimen>
 
     <dimen name="codeedittext_digits_margin">12.5dp</dimen>
+
+    <dimen name="applicationbar_height">56dp</dimen>
+    <dimen name="applicationbar_padding_start">30dp</dimen>
+    <dimen name="applicationbar_padding_end">30dp</dimen>
+
+    <dimen name="applicationbarbutton_icon_height">24dp</dimen>
+    <dimen name="applicationbarbutton_icon_width">24dp</dimen>
+    <dimen name="applicationbarbutton_padding_left">30dp</dimen>
+    <dimen name="applicationbarbutton_padding_right">30dp</dimen>
+    <dimen name="applicationbarbutton_ripple_radius">24dp</dimen>
+
+    <dimen name="applicationbartitle_text_size">20sp</dimen>
 </resources>
