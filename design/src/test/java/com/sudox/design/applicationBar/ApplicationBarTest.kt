@@ -61,6 +61,16 @@ class ApplicationBarTest : Assert() {
         assertNull(it.titleTextView.parent)
         assertNotEquals(it.titleTextView, it.contentView)
         assertEquals(0, it.titleTextId)
+
+        assertEquals(0, it.buttonAtStart!!.iconDrawableId)
+        assertNull(it.buttonAtStart!!.iconDrawable)
+        assertFalse(it.buttonAtStart!!.isClickable)
+        assertFalse(it.buttonAtStart!!.isFocusable)
+
+        assertEquals(0, it.buttonAtEnd!!.iconDrawableId)
+        assertNull(it.buttonAtEnd!!.iconDrawable)
+        assertFalse(it.buttonAtEnd!!.isClickable)
+        assertFalse(it.buttonAtEnd!!.isFocusable)
     }
 
     @Test
@@ -109,10 +119,12 @@ class ApplicationBarTest : Assert() {
         assertEquals(0, it.buttonAtStart!!.iconDrawableId)
         assertNull(it.buttonAtStart!!.iconDrawable)
         assertFalse(it.buttonAtStart!!.isClickable)
+        assertFalse(it.buttonAtStart!!.isFocusable)
 
         assertEquals(0, it.buttonAtEnd!!.iconDrawableId)
         assertNull(it.buttonAtEnd!!.iconDrawable)
         assertFalse(it.buttonAtEnd!!.isClickable)
+        assertFalse(it.buttonAtEnd!!.isFocusable)
     }
 
     @Test
@@ -152,6 +164,9 @@ class ApplicationBarTest : Assert() {
 
         assertTrue(applicationBar!!.buttonAtStart!!.isClickable)
         assertTrue(applicationBar!!.buttonAtEnd!!.isClickable)
+
+        assertTrue(applicationBar!!.buttonAtStart!!.isFocusable)
+        assertTrue(applicationBar!!.buttonAtEnd!!.isFocusable)
 
         assertNotNull(applicationBar!!.buttonAtStart!!.iconDrawable)
         assertNotNull(applicationBar!!.buttonAtEnd!!.iconDrawable)

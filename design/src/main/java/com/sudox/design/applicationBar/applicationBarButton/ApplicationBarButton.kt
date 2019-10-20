@@ -102,7 +102,13 @@ class ApplicationBarButton : View {
             iconDrawableId = 0
         }
 
-        isClickable = iconDrawable != null
+        if (iconDrawable == null) {
+            isClickable = false
+            isFocusable = false
+        } else {
+            isClickable = true
+            isFocusable = true
+        }
 
         requestLayout()
         invalidate()
