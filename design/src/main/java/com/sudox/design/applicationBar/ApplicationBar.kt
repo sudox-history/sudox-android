@@ -168,7 +168,7 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
 
         contentView = view
 
-        if (view != null) {
+        if (view != null && view.parent == null) {
             addView(view)
         } else {
             requestLayout()
