@@ -38,6 +38,9 @@ class AppApplicationBarManager(
     }
 
     override fun reset() {
-        applicationBar.reset()
+        applicationBar.apply {
+            buttonAtStart!!.setOnClickListener(applicationBar)
+            reset()
+        }
     }
 }
