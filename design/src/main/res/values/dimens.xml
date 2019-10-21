@@ -5,7 +5,7 @@
     <dimen name="button_vertical_padding">12dp</dimen>
     <dimen name="button_text_size">16sp</dimen>
     <dimen name="button_elevation">3dp</dimen>
-    <dimen name="button_min_height">50dp</dimen>
+    <dimen name="button_height">50dp</dimen>
     <dimen name="button_loading_spinner_thickness">3dp</dimen>
     <dimen name="button_loading_spinner_height">16dp</dimen>
     <dimen name="button_loading_spinner_width">16dp</dimen>

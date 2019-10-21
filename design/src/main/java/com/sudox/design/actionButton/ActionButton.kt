@@ -127,12 +127,12 @@ class ActionButton : AppCompatButton {
         if (!isLoadingState && !boundsChangeAnimator.isRunning) {
             super.onDraw(canvas)
         } else if (loadingSpinnerDrawable.isRunning) {
-            val centerX = measuredWidth / 2 - loadingSpinnerDrawable.bounds.exactCenterX()
-            val centerY = measuredHeight / 2 - loadingSpinnerDrawable.bounds.exactCenterY()
+            val centerX = measuredWidth / 2 - loadingSpinnerDrawable.bounds.exactCenterX() + scrollX
+            val centerY = measuredHeight / 2 - loadingSpinnerDrawable.bounds.exactCenterY() + scrollY
 
             canvas.translate(centerX, centerY)
             loadingSpinnerDrawable.draw(canvas)
-            invalidate()
+            post { invalidate() }
         }
     }
 }

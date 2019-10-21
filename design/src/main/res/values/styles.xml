@@ -37,8 +37,9 @@
         <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
         <item name="android:paddingBottom">@dimen/button_vertical_padding</item>
         <item name="android:paddingTop">@dimen/button_vertical_padding</item>
-        <item name="android:minHeight">@dimen/button_min_height</item>
-        <item name="android:minWidth">@dimen/button_min_height</item>
+        <item name="android:maxHeight">@dimen/button_height</item>
+        <item name="android:minHeight">@dimen/button_height</item>
+        <item name="android:minWidth">@dimen/button_height</item>
         <item name="android:elevation">@dimen/button_elevation</item>
 
         <item name="android:textSize">@dimen/button_text_size</item>
