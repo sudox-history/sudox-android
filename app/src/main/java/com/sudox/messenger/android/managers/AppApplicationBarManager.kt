@@ -20,7 +20,10 @@ class AppApplicationBarManager(
     }
 
     override fun showButtonAtStart(iconDrawableId: Int) {
-        applicationBar.buttonAtStart!!.toggle(iconDrawableId)
+        applicationBar.buttonAtStart!!.apply {
+            setOnClickListener(applicationBar)
+            toggle(iconDrawableId)
+        }
     }
 
     override fun showButtonAtEnd(iconDrawableId: Int) {
@@ -28,8 +31,10 @@ class AppApplicationBarManager(
     }
 
     override fun showBackButton() {
-        applicationBar.buttonAtStart!!.toggle(R.drawable.ic_left_arrow)
-        applicationBar.buttonAtStart!!.setOnClickListener { activity.onBackPressed() }
+        applicationBar.buttonAtStart!!.apply {
+            setOnClickListener { activity.onBackPressed() }
+            toggle(R.drawable.ic_left_arrow)
+        }
     }
 
     override fun reset() {
