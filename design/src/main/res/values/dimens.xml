@@ -28,7 +28,7 @@
 
     <dimen name="codeedittext_digits_margin">12.5dp</dimen>
 
-    <dimen name="applicationbar_height">56dp</dimen>
+    <dimen name="applicationbar_height">64dp</dimen>
     <dimen name="applicationbar_padding_start">30dp</dimen>
     <dimen name="applicationbar_padding_end">30dp</dimen>
 

@@ -9,5 +9,6 @@ interface ApplicationBarManager {
     fun setListener(listener: ApplicationBarListener)
     fun showButtonAtStart(@DrawableRes iconDrawableId: Int)
     fun showButtonAtEnd(@DrawableRes iconDrawableId: Int)
+    fun showBackButton()
     fun reset()
 }

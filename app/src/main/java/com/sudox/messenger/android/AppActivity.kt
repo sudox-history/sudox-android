@@ -3,6 +3,7 @@ package com.sudox.messenger.android
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.sudox.messenger.android.auth.AuthPhoneFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.ApplicationBarManager
 import com.sudox.messenger.android.core.managers.NavigationManager
@@ -13,7 +14,9 @@ import kotlinx.android.synthetic.main.activity_app.applicationBar
 class AppActivity : AppCompatActivity(), CoreActivity {
 
     private val navigationManager = AppNavigationManager(supportFragmentManager, R.id.frameContainer)
-    private val applicationBarManager = AppApplicationBarManager(applicationBar)
+    private val applicationBarManager by lazy {
+        AppApplicationBarManager(applicationBar, this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +30,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         if (savedInstanceState != null) {
             navigationManager.restoreState(savedInstanceState)
         } else {
-            TODO("Start fragment")
+            navigationManager.showFragment(AuthPhoneFragment(), false)
         }
     }
 

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="auth_margin_left">30dp</dimen>
-    <dimen name="auth_margin_right">30dp</dimen>
-    <dimen name="panel_bar_margin_top">53dp</dimen>
-    <dimen name="sign_in_size">18sp</dimen>
-    <dimen name="auth_content_margin_top">65dp</dimen>
-    <dimen name="phone_verification_margin_left">30dp</dimen>
-    <dimen name="phone_verification_text_size">22sp</dimen>
-    <dimen name="enter_phone_margin_top">16dp</dimen>
-    <dimen name="enter_phone_text_size">15sp</dimen>
-    <dimen name="enter_phone_margin_left_icon">19dp</dimen>
-    <dimen name="phone_edit_text_mergin_top">36dp</dimen>
-    <dimen name="next_button_margin_right">30dp</dimen>
-    <dimen name="next_button_margin_bottom">40dp</dimen>
+    <dimen name="auth_padding_left">30dp</dimen>
+    <dimen name="auth_padding_right">30dp</dimen>
+    <dimen name="auth_padding_top">65dp</dimen>
+    <dimen name="auth_padding_bottom">30dp</dimen>
+
+    <dimen name="auth_title_text_size">22sp</dimen>
+
+    <dimen name="auth_description_text_size">15sp</dimen>
+    <dimen name="auth_description_drawable_padding">15dp</dimen>
+    <dimen name="auth_description_margin_top">16dp</dimen>
+
+    <dimen name="auth_first_edit_text_margin">35dp</dimen>
 </resources>
