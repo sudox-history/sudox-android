@@ -61,6 +61,7 @@ class NicknameEditTextTest : Assert() {
         nicknameEditText!!.setText("nickname")
 
         assertEquals("nickname#4877", nicknameEditText!!.text.toString())
+        assertEquals("nickname", nicknameEditText!!.getNickname())
     }
 
     @Test
@@ -70,6 +71,7 @@ class NicknameEditTextTest : Assert() {
         nicknameEditText!!.setText("")
 
         assertEquals("", nicknameEditText!!.text.toString())
+        assertEquals("", nicknameEditText!!.getNickname())
     }
 
     @Test
@@ -79,6 +81,7 @@ class NicknameEditTextTest : Assert() {
         nicknameEditText!!.setText("nickname#4877-invalid-data")
 
         assertEquals("nickname#4877", nicknameEditText!!.text.toString())
+        assertEquals("nickname", nicknameEditText!!.getNickname())
     }
 
     @Test
@@ -88,5 +91,6 @@ class NicknameEditTextTest : Assert() {
         nicknameEditText!!.setText("nickname4877")
 
         assertEquals("nickname#4877", nicknameEditText!!.text.toString())
+        assertEquals("nickname", nicknameEditText!!.getNickname())
     }
 }

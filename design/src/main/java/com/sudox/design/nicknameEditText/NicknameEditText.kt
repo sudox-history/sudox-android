@@ -58,4 +58,8 @@ class NicknameEditText : AppCompatEditText {
         val needScroll = totalTextWidth - width
         scrollTo(needScroll, scrollY)
     }
+
+    fun getNickname(): String? {
+        return text?.toString()?.removeSuffix(tag!!) ?: return null
+    }
 }

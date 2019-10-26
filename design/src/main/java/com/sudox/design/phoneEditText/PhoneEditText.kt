@@ -10,7 +10,7 @@ import android.text.InputType
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getDrawableOrThrow
@@ -34,6 +34,7 @@ class PhoneEditText : ViewGroup {
 
         id = View.generateViewId()
         inputType = InputType.TYPE_CLASS_PHONE
+        imeOptions = EditorInfo.IME_ACTION_DONE
         isSingleLine = true
         maxLines = 1
     }
