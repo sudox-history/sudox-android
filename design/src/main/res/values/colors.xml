@@ -14,4 +14,6 @@
     <color name="edittext_border_color">#E0E0E0</color>
 
     <color name="phoneedittext_separator_color">#E0E0E0</color>
+
+    <color name="nicknameedittext_tag_text_color">#BDBDBD</color>
 </resources>

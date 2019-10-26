@@ -25,6 +25,7 @@
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
         <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
         <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>
+        <item name="nicknameEditTextStyle">@style/Sudox.NicknameEditText</item>
 
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
@@ -70,7 +71,7 @@
         <item name="fontFamily">@font/avenir_medium</item>
     </style>
 
-    <style name="Sudox.CountryCodeSelector">
+    <style name="Sudox.CountryCodeSelector" parent="">
         <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
@@ -80,7 +81,7 @@
         <item name="flagMargin">@dimen/countrycodeselector_flag_margin</item>
     </style>
 
-    <style name="Sudox.PhoneEditText">
+    <style name="Sudox.PhoneEditText" parent="">
         <item name="separatorDrawable">@color/phoneedittext_separator_color</item>
         <item name="separatorDrawableWidth">@dimen/phoneedittext_separator_width</item>
         <item name="separatorDrawableHeight">@dimen/phoneedittext_separator_height</item>
@@ -88,12 +89,16 @@
         <item name="separatorRightMargin">@dimen/phoneedittext_separator_right_margin</item>
     </style>
 
-    <style name="Sudox.CodeEditText">
+    <style name="Sudox.CodeEditText" parent="">
         <item name="digitsCount">@integer/default_code_length</item>
         <item name="digitsMargin">@dimen/codeedittext_digits_margin</item>
     </style>
 
-    <style name="Sudox.ApplicationBar">
+    <style name="Sudox.NicknameEditText" parent="Sudox.EditText">
+        <item name="tagTextColor">@color/nicknameedittext_tag_text_color</item>
+    </style>
+
+    <style name="Sudox.ApplicationBar" parent="">
         <item name="titleTextAppearance">@style/Sudox.ApplicationBar.TitleTextAppearance</item>
     </style>
 

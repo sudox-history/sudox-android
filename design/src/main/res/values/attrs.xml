@@ -35,9 +35,14 @@
         <attr name="iconWidth" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="NicknameEditText">
+        <attr name="tagTextColor" format="color" />
+    </declare-styleable>
+
     <attr name="countryCodeSelectorStyle" format="reference" />
     <attr name="phoneEditTextStyle" format="reference" />
     <attr name="codeEditTextStyle" format="reference" />
+    <attr name="nicknameEditTextStyle" format="reference" />
     <attr name="applicationBarStyle" format="reference" />
     <attr name="applicationBarButtonStyle" format="reference" />
 </resources>
