@@ -18,4 +18,5 @@ ext {
     robolectricVersion = "4.3"
     swipeRefreshLayoutVersion = "1.0.0"
     libPhoneNumberVersion = "8.10.16"
+    lifecycleVersion = "2.1.0"
 }
