@@ -11,11 +11,8 @@
 
         <item name="android:includeFontPadding">false</item>
         <item name="android:textColor">@color/text_color</item>
-        <item name="android:fontFamily">@font/avenir_medium</item>
-        <item name="fontFamily">@font/avenir_medium</item>
-
-        <item name="android:buttonStyle">@style/Sudox.Button</item>
-        <item name="buttonStyle">@style/Sudox.Button</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
 
         <item name="android:editTextStyle">@style/Sudox.EditText</item>
         <item name="editTextStyle">@style/Sudox.EditText</item>
@@ -32,30 +29,6 @@
         <item name="colorAccent">@color/accent_color</item>
     </style>
 
-    <style name="Sudox.Button" parent="android:Widget.Button">
-        <item name="android:background">@drawable/drawable_button</item>
-        <item name="android:paddingLeft">@dimen/button_horizontal_padding</item>
-        <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
-        <item name="android:paddingBottom">@dimen/button_vertical_padding</item>
-        <item name="android:paddingTop">@dimen/button_vertical_padding</item>
-        <item name="android:maxHeight">@dimen/button_height</item>
-        <item name="android:minHeight">@dimen/button_height</item>
-        <item name="android:minWidth">@dimen/button_height</item>
-        <item name="android:elevation">@dimen/button_elevation</item>
-
-        <item name="android:textSize">@dimen/button_text_size</item>
-        <item name="android:textColor">@color/text_color</item>
-        <item name="android:fontFamily">@font/avenir_medium</item>
-        <item name="fontFamily">@font/avenir_medium</item>
-
-        <item name="boundsChangeAnimationDuration">
-            @integer/button_bounds_change_animation_duration
-        </item>
-        <item name="loadingSpinnerThickness">@dimen/button_loading_spinner_thickness</item>
-        <item name="loadingSpinnerHeight">@dimen/button_loading_spinner_height</item>
-        <item name="loadingSpinnerWidth">@dimen/button_loading_spinner_width</item>
-    </style>
-
     <style name="Sudox.EditText" parent="android:Widget.EditText">
         <item name="android:background">@drawable/drawable_edittext</item>
         <item name="android:paddingLeft">@dimen/edittext_horizontal_padding</item>
@@ -67,8 +40,8 @@
 
         <item name="android:textSize">@dimen/edittext_text_size</item>
         <item name="android:textColor">@color/text_color</item>
-        <item name="android:fontFamily">@font/avenir_medium</item>
-        <item name="fontFamily">@font/avenir_medium</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
     </style>
 
     <style name="Sudox.CountryCodeSelector" parent="">
@@ -104,9 +77,8 @@
 
     <style name="Sudox.ApplicationBar.TitleTextAppearance" parent="">
         <item name="android:textSize">@dimen/applicationbartitle_text_size</item>
-        <item name="android:fontFamily">@font/avenir_heavy</item>
-        <item name="android:includeFontPadding">true</item>
-        <item name="fontFamily">@font/avenir_heavy</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
     </style>
 
     <style name="Sudox.ApplicationBar.Button" parent="">

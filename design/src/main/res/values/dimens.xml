@@ -38,5 +38,5 @@
     <dimen name="applicationbarbutton_padding_right">30dp</dimen>
     <dimen name="applicationbarbutton_ripple_radius">24dp</dimen>
 
-    <dimen name="applicationbartitle_text_size">20sp</dimen>
+    <dimen name="applicationbartitle_text_size">18sp</dimen>
 </resources>
