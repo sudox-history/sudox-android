@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getIntegerOrThrow
@@ -135,6 +136,12 @@ class CodeEditText : ViewGroup {
     }
 
     internal fun onCodeCompleted() {
-        codeFilledCallback?.invoke(getCode() ?: return)
+        val code = getCode() ?: return
+        val lastDigitEditText = digitsEditTexts!!.last()
+        val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        inputMethodManager.hideSoftInputFromWindow(lastDigitEditText.windowToken, 0)
+        lastDigitEditText.requestFocus()
+        codeFilledCallback?.invoke(code)
     }
 }
