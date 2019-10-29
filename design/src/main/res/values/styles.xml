@@ -25,6 +25,7 @@
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
         <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
         <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>
+        <item name="editTextLayoutStyle">@style/Sudox.EditTextLayout</item>
 
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
@@ -67,6 +68,21 @@
         <item name="android:textColor">@color/text_color</item>
         <item name="android:fontFamily">@font/avenir_medium</item>
         <item name="fontFamily">@font/avenir_medium</item>
+    </style>
+
+    <style name="Sudox.EditTextLayout" parent="">
+        <item name="strokeColor">@color/edittext_stroke_color</item>
+        <item name="strokeWidth">@dimen/edittext_stroke_width</item>
+
+        <item name="errorTextAppearance">@style/Sudox.EditTextLayout.ErrorTextAppearance</item>
+        <item name="errorTextTopMargin">@dimen/edittext_error_text_top_margin</item>
+        <item name="errorTextLeftMargin">@dimen/edittext_error_text_left_margin</item>
+    </style>
+
+    <style name="Sudox.EditTextLayout.ErrorTextAppearance" parent="">
+        <item name="android:textColor">@color/edittext_error_color</item>
+        <item name="android:textSize">@dimen/edittext_error_text_size</item>
+        <item name="android:fontFamily">@font/avenir_medium</item> <!-- TODO: Replace to OpenSans -->
     </style>
 
     <style name="Sudox.CountryCodeSelector">

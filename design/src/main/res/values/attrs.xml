@@ -35,9 +35,18 @@
         <attr name="iconWidth" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="EditTextLayout">
+        <attr name="errorTextAppearance" format="reference" />
+        <attr name="errorTextTopMargin" format="dimension" />
+        <attr name="errorTextLeftMargin" format="dimension" />
+        <attr name="strokeColor" format="color" />
+        <attr name="strokeWidth" format="dimension" />
+    </declare-styleable>
+
     <attr name="countryCodeSelectorStyle" format="reference" />
     <attr name="phoneEditTextStyle" format="reference" />
     <attr name="codeEditTextStyle" format="reference" />
     <attr name="applicationBarStyle" format="reference" />
     <attr name="applicationBarButtonStyle" format="reference" />
+    <attr name="editTextLayoutStyle" format="reference" />
 </resources>

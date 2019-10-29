@@ -11,7 +11,8 @@
     <color name="button_background_color">#FFFFFF</color>
 
     <color name="edittext_background_color">#FFFFFF</color>
-    <color name="edittext_border_color">#E0E0E0</color>
+    <color name="edittext_stroke_color">#E0E0E0</color>
+    <color name="edittext_error_color">#FF0000</color>
 
     <color name="phoneedittext_separator_color">#E0E0E0</color>
 </resources>
