@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Parcelable
 import android.telephony.PhoneNumberUtils
 import android.text.InputType
@@ -17,11 +18,12 @@ import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.use
 import androidx.core.view.updatePadding
 import com.sudox.design.R
+import com.sudox.design.editTextLayout.EditTextLayoutChild
 import com.sudox.design.phoneEditText.countryCodeSelector.CountryCodeSelector
 import kotlin.math.max
 import kotlin.math.min
 
-class PhoneEditText : ViewGroup {
+class PhoneEditText : ViewGroup, EditTextLayoutChild {
 
     internal var phoneTextWatcher = PhoneTextWatcher()
 
@@ -199,5 +201,13 @@ class PhoneEditText : ViewGroup {
 
     fun getRegionCode(): String? {
         return phoneTextWatcher.regionCode
+    }
+
+    override fun setStroke(width: Int, color: Int) {
+        (background as GradientDrawable).setStroke(width, color)
+    }
+
+    override fun getInstance(): View {
+        return this
     }
 }

@@ -2,12 +2,10 @@ package com.sudox.design.editTextLayout
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.GradientDrawable
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
@@ -29,7 +27,7 @@ class EditTextLayout : ViewGroup {
         addView(this)
     }
 
-    private var editText: EditText? = null
+    private var child: EditTextLayoutChild? = null
     private var strokeColor = 0
     private var strokeWidth = 0
 
@@ -49,8 +47,8 @@ class EditTextLayout : ViewGroup {
     }
 
     override fun addView(child: View) {
-        if (editText == null && child is EditText) {
-            editText = child
+        if (this.child == null && child is EditTextLayoutChild) {
+            this.child = child
         }
 
         super.addView(child)
@@ -59,9 +57,9 @@ class EditTextLayout : ViewGroup {
     override fun onFinishInflate() {
         super.onFinishInflate()
 
-        editText = (0 until childCount)
+        child = (0 until childCount)
                 .map { getChildAt(it) }
-                .first { it is EditText } as EditText
+                .first { it is EditTextLayoutChild } as EditTextLayoutChild
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -69,12 +67,13 @@ class EditTextLayout : ViewGroup {
         val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
         val availableHeight = MeasureSpec.getSize(heightMeasureSpec)
+        val childInstance = child!!.getInstance()
 
-        measureChild(editText!!, widthMeasureSpec, heightMeasureSpec)
+        measureChild(childInstance, widthMeasureSpec, heightMeasureSpec)
         measureChild(errorTextView, widthMeasureSpec, heightMeasureSpec)
 
         val needWidth = paddingLeft +
-                max(editText!!.measuredWidth, errorTextView.measuredWidth + errorTextViewLeftMargin) +
+                max(childInstance.measuredWidth, errorTextView.measuredWidth + errorTextViewLeftMargin) +
                 paddingRight
 
         val measuredWidth = if (widthMode == MeasureSpec.EXACTLY) {
@@ -86,7 +85,7 @@ class EditTextLayout : ViewGroup {
         }
 
         val needHeight = paddingTop +
-                editText!!.measuredHeight +
+                childInstance.measuredHeight +
                 errorTextViewTopMargin +
                 errorTextView.measuredHeight +
                 paddingBottom
@@ -103,16 +102,17 @@ class EditTextLayout : ViewGroup {
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        val editTextTopBorder = paddingTop
-        val editTextBottomBorder = editTextTopBorder + editText!!.measuredHeight
-        val editTextLeftBorder = paddingLeft
-        val editTextRightBorder = editTextLeftBorder + editText!!.measuredWidth
+        val childInstance = child!!.getInstance()
+        val childTopBorder = paddingTop
+        val childBottomBorder = childTopBorder + childInstance.measuredHeight
+        val childLeftBorder = paddingLeft
+        val childRightBorder = childLeftBorder + childInstance.measuredWidth
 
-        editText!!.layout(editTextLeftBorder, editTextTopBorder, editTextRightBorder, editTextBottomBorder)
+        childInstance.layout(childLeftBorder, childTopBorder, childRightBorder, childBottomBorder)
 
-        val errorTextViewTopBorder = editTextBottomBorder + errorTextViewTopMargin
+        val errorTextViewTopBorder = childBottomBorder + errorTextViewTopMargin
         val errorTextViewBottomBorder = errorTextViewTopBorder + errorTextView.measuredHeight
-        val errorTextViewLeftBorder = editTextLeftBorder + errorTextViewLeftMargin
+        val errorTextViewLeftBorder = childLeftBorder + errorTextViewLeftMargin
         val errorTextViewRightBorder = errorTextViewLeftBorder + errorTextView.measuredWidth
 
         errorTextView.layout(errorTextViewLeftBorder, errorTextViewTopBorder, errorTextViewRightBorder, errorTextViewBottomBorder)
@@ -149,7 +149,7 @@ class EditTextLayout : ViewGroup {
             strokeColor
         }
 
-        (editText!!.background as? GradientDrawable)?.setStroke(strokeWidth, needStrokeColor)
+        child!!.setStroke(strokeWidth, needStrokeColor)
     }
 
     fun setErrorText(@StringRes errorTextId: Int) {
