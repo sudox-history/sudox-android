@@ -41,11 +41,20 @@ class PercentRelativeLayout : RelativeLayout {
         val windowHeight = windowSize.y
         val windowWidth = windowSize.x
 
-        updatePadding(
-                top = (windowHeight * paddingTopPercent).toInt(),
-                bottom = (windowHeight * paddingBottomPercent).toInt(),
-                right = (windowWidth * paddingRightPercent).toInt(),
-                left = (windowWidth * paddingLeftPercent).toInt()
-        )
+        if (paddingTopPercent != 0.0F) {
+            updatePadding(top = (windowHeight * paddingTopPercent).toInt())
+        }
+
+        if (paddingBottomPercent != 0.0F) {
+            updatePadding(bottom = (windowHeight * paddingBottomPercent).toInt())
+        }
+
+        if (paddingRightPercent != 0.0F) {
+            updatePadding(right = (windowWidth * paddingRightPercent).toInt())
+        }
+
+        if (paddingLeftPercent != 0.0F) {
+            updatePadding(left = (windowWidth * paddingLeftPercent).toInt())
+        }
     }
 }

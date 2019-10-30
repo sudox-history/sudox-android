@@ -3,17 +3,21 @@ package com.sudox.messenger.android
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.auth.phone.AuthPhoneFragment
 import com.sudox.messenger.android.auth.register.AuthRegisterFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.ApplicationBarManager
 import com.sudox.messenger.android.core.managers.NavigationManager
+import com.sudox.messenger.android.core.managers.ScreenManager
 import com.sudox.messenger.android.managers.AppApplicationBarManager
 import com.sudox.messenger.android.managers.AppNavigationManager
+import com.sudox.messenger.android.managers.AppScreenManager
 import kotlinx.android.synthetic.main.activity_app.applicationBar
 
 class AppActivity : AppCompatActivity(), CoreActivity {
 
+    private val screenManager = AppScreenManager(this)
     private val navigationManager = AppNavigationManager(supportFragmentManager, R.id.frameContainer)
     private val applicationBarManager by lazy {
         AppApplicationBarManager(applicationBar, this)
@@ -31,7 +35,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         if (savedInstanceState != null) {
             navigationManager.restoreState(savedInstanceState)
         } else {
-            navigationManager.showFragment(AuthPhoneFragment(), false)
+            navigationManager.showFragment(AuthRegisterFragment(), false)
         }
     }
 
@@ -44,6 +48,10 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     override fun onSaveInstanceState(outState: Bundle) {
         navigationManager.saveState(outState)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun getScreenManager(): ScreenManager {
+        return screenManager
     }
 
     override fun getNavigationManager(): NavigationManager {
