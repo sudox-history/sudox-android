@@ -10,10 +10,10 @@ import com.sudox.design.R
 
 class PercentRelativeLayout : RelativeLayout {
 
-    private var paddingTopPercent = 0F
-    private var paddingBottomPercent = 0F
-    private var paddingRightPercent = 0F
-    private var paddingLeftPercent = 0F
+    var paddingTopPercent = 0F
+    var paddingBottomPercent = 0F
+    var paddingRightPercent = 0F
+    var paddingLeftPercent = 0F
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -29,6 +29,8 @@ class PercentRelativeLayout : RelativeLayout {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        updatePadding(0, 0, 0, 0)
+
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
         updatePadding(
