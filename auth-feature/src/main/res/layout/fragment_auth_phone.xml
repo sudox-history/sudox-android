@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sudox.design.percentLayouts.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Sudox.Auth"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -18,7 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/authPhoneTitleTextView"
         android:drawableLeft="@drawable/ic_smartphone"
-        android:text="@string/enter_phone" />
+        android:text="@string/enter_phone"
+        tools:ignore="RtlHardcoded" />
 
     <com.sudox.design.phoneEditText.PhoneEditText
         android:id="@+id/authPhoneEditText"
@@ -27,4 +29,4 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/authPhoneDescriptionTextView" />
 
-</RelativeLayout>
+</com.sudox.design.percentLayouts.PercentRelativeLayout>

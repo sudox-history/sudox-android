@@ -9,7 +9,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
 import com.sudox.design.R
@@ -22,18 +21,13 @@ class CodeEditText : ViewGroup {
     internal var digitsEditTexts: Array<AppCompatEditText>? = null
     internal var isPositioningEnabled = true
 
-    private var digitsMargin = 0
-
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.codeEditTextStyle)
 
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.CodeEditText, defStyleAttr, 0).use {
-            val digitsCount = it.getIntegerOrThrow(R.styleable.CodeEditText_digitsCount)
-
-            digitsMargin = it.getDimensionPixelSizeOrThrow(R.styleable.CodeEditText_digitsMargin)
-            digitsEditTexts = Array(digitsCount, ::createDigitEditText)
+            digitsEditTexts = Array(it.getIntegerOrThrow(R.styleable.CodeEditText_digitsCount), ::createDigitEditText)
         }
     }
 
@@ -68,7 +62,7 @@ class CodeEditText : ViewGroup {
             it.measuredWidth
         }
 
-        val needWidth = paddingLeft + digitsWidth + (digitsEditTexts!!.size - 1) * digitsMargin + paddingRight
+        val needWidth = paddingLeft + digitsWidth + paddingRight
         val measuredWidth = if (widthMode == MeasureSpec.EXACTLY) {
             availableWidth
         } else if (widthMode == MeasureSpec.AT_MOST) {
@@ -91,10 +85,15 @@ class CodeEditText : ViewGroup {
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val digitHeight = digitsEditTexts!![0].measuredHeight
+        val digitWidth = digitsEditTexts!![0].measuredWidth
         var rightBorder: Int
         var leftBorder = paddingLeft
         val topBorder = paddingTop
         val bottomBorder = topBorder + digitHeight
+
+        val width = right - left
+        val freeWidth = width - digitsEditTexts!!.size * digitWidth
+        val digitsMargin = freeWidth / (digitsEditTexts!!.size - 1)
 
         digitsEditTexts!!.forEach {
             rightBorder = leftBorder + it.measuredWidth

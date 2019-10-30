@@ -23,7 +23,6 @@
 
     <declare-styleable name="CodeEditText">
         <attr name="digitsCount" format="integer" />
-        <attr name="digitsMargin" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="ApplicationBar">
@@ -37,6 +36,13 @@
 
     <declare-styleable name="NicknameEditText">
         <attr name="tagTextColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="PercentRelativeLayout">
+        <attr name="paddingTopPercent" format="float" />
+        <attr name="paddingBottomPercent" format="float" />
+        <attr name="paddingRightPercent" format="float" />
+        <attr name="paddingLeftPercent" format="float" />
     </declare-styleable>
 
     <attr name="countryCodeSelectorStyle" format="reference" />

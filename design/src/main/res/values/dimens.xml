@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="frame_left_padding">16dp</dimen>
+    <dimen name="frame_right_padding">16dp</dimen>
+
     <dimen name="button_corner_radius">25dp</dimen>
     <dimen name="button_horizontal_padding">28dp</dimen>
     <dimen name="button_vertical_padding">12dp</dimen>
@@ -11,10 +14,10 @@
     <dimen name="button_loading_spinner_width">16dp</dimen>
 
     <dimen name="edittext_border_width">1dp</dimen>
-    <dimen name="edittext_horizontal_padding">12dp</dimen>
-    <dimen name="edittext_vertical_padding">12dp</dimen>
+    <dimen name="edittext_horizontal_padding">20dp</dimen>
+    <dimen name="edittext_vertical_padding">15dp</dimen>
     <dimen name="edittext_corner_radius">5dp</dimen>
-    <dimen name="edittext_text_size">14sp</dimen>
+    <dimen name="edittext_text_size">15sp</dimen>
     <dimen name="edittext_min_height">50dp</dimen>
 
     <dimen name="countrycodeselector_flag_width">22dp</dimen>
@@ -26,16 +29,12 @@
     <dimen name="phoneedittext_separator_left_margin">12dp</dimen>
     <dimen name="phoneedittext_separator_right_margin">12dp</dimen>
 
-    <dimen name="codeedittext_digits_margin">12.5dp</dimen>
-
-    <dimen name="applicationbar_height">64dp</dimen>
-    <dimen name="applicationbar_padding_start">30dp</dimen>
-    <dimen name="applicationbar_padding_end">30dp</dimen>
+    <dimen name="applicationbar_height">56dp</dimen>
 
     <dimen name="applicationbarbutton_icon_height">16dp</dimen>
     <dimen name="applicationbarbutton_icon_width">16dp</dimen>
-    <dimen name="applicationbarbutton_padding_left">30dp</dimen>
-    <dimen name="applicationbarbutton_padding_right">30dp</dimen>
+    <dimen name="applicationbarbutton_padding_left">16dp</dimen>
+    <dimen name="applicationbarbutton_padding_right">16dp</dimen>
     <dimen name="applicationbarbutton_ripple_radius">24dp</dimen>
 
     <dimen name="applicationbartitle_text_size">18sp</dimen>

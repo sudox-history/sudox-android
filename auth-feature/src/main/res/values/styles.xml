@@ -2,17 +2,14 @@
 <resources>
 
     <style name="Sudox.Auth">
-        <item name="android:paddingTop">@dimen/auth_padding_top</item>
-        <item name="android:paddingLeft">@dimen/auth_padding_left</item>
-        <item name="android:paddingRight">@dimen/auth_padding_right</item>
-        <item name="android:paddingBottom">@dimen/auth_padding_bottom</item>
+        <item name="paddingTopPercent">@dimen/auth_padding_top_percent</item>
         <item name="android:clipToPadding">false</item>
     </style>
 
     <style name="Sudox.Auth.Title" parent="android:Widget.TextView">
         <item name="android:textSize">@dimen/auth_title_text_size</item>
-        <item name="android:fontFamily">@font/opensans_semibold</item>
-        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_bold</item>
     </style>
 
     <style name="Sudox.Auth.Description" parent="android:Widget.TextView">

@@ -14,6 +14,9 @@
     <FrameLayout
         android:id="@+id/frameContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/frame_left_padding"
+        android:paddingRight="@dimen/frame_right_padding"
+        tools:ignore="RtlHardcoded" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

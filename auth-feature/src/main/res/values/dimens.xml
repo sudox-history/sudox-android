@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="auth_padding_left">30dp</dimen>
-    <dimen name="auth_padding_right">30dp</dimen>
-    <dimen name="auth_padding_top">65dp</dimen>
-    <dimen name="auth_padding_bottom">30dp</dimen>
+    <item name="auth_padding_top_percent" format="float" type="dimen">0.07</item>
 
     <dimen name="auth_title_text_size">20sp</dimen>
-
     <dimen name="auth_description_text_size">14sp</dimen>
     <dimen name="auth_description_drawable_padding">15dp</dimen>
     <dimen name="auth_description_margin_top">16dp</dimen>

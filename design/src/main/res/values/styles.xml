@@ -45,7 +45,6 @@
     </style>
 
     <style name="Sudox.CountryCodeSelector" parent="">
-        <item name="android:background">?attr/selectableItemBackground</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
 
@@ -64,7 +63,6 @@
 
     <style name="Sudox.CodeEditText" parent="">
         <item name="digitsCount">@integer/default_code_length</item>
-        <item name="digitsMargin">@dimen/codeedittext_digits_margin</item>
     </style>
 
     <style name="Sudox.NicknameEditText" parent="Sudox.EditText">
@@ -77,8 +75,8 @@
 
     <style name="Sudox.ApplicationBar.TitleTextAppearance" parent="">
         <item name="android:textSize">@dimen/applicationbartitle_text_size</item>
-        <item name="android:fontFamily">@font/opensans_semibold</item>
-        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_bold</item>
     </style>
 
     <style name="Sudox.ApplicationBar.Button" parent="">
