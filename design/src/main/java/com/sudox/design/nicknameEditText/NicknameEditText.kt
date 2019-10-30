@@ -3,6 +3,7 @@ package com.sudox.design.nicknameEditText
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
+import android.os.Parcelable
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
@@ -39,11 +40,32 @@ class NicknameEditText : AppCompatEditText {
         addTextChangedListener(NicknameTextWatcher(this))
     }
 
-    fun setTag(tag: String?) {
+    override fun onRestoreInstanceState(parcelable: Parcelable) {
+        val state = parcelable as NicknameEditTextState
+
+        state.apply {
+            super.onRestoreInstanceState(state.superState)
+            state.readToView(this@NicknameEditText)
+        }
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+
+        return NicknameEditTextState(superState!!).apply {
+            writeFromView(this@NicknameEditText)
+        }
+    }
+
+    fun setNicknameTag(tag: String?) {
         this.tag = "${TAG_SPLITTER}$tag"
         this.tagColorSpannable = ForegroundColorSpan(tagColor)
 
         paint.getTextBounds(this.tag!!, 0, this.tag!!.length, tagBounds)
+    }
+
+    fun getNicknameTag(): String? {
+        return tag?.removePrefix(TAG_SPLITTER.toString()) ?: return null
     }
 
     fun scrollToEnd() {
@@ -60,6 +82,10 @@ class NicknameEditText : AppCompatEditText {
     }
 
     fun getNickname(): String? {
+        if (tag == null) {
+            return null
+        }
+
         return text?.toString()?.removeSuffix(tag!!) ?: return null
     }
 }

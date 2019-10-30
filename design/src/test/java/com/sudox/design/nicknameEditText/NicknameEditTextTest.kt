@@ -57,7 +57,7 @@ class NicknameEditTextTest : Assert() {
 
     @Test
     fun testThatTagInserted() {
-        nicknameEditText!!.setTag("4877")
+        nicknameEditText!!.setNicknameTag("4877")
         nicknameEditText!!.setText("nickname")
 
         assertEquals("nickname#4877", nicknameEditText!!.text.toString())
@@ -66,7 +66,7 @@ class NicknameEditTextTest : Assert() {
 
     @Test
     fun testThatTagRemoved() {
-        nicknameEditText!!.setTag("4877")
+        nicknameEditText!!.setNicknameTag("4877")
         nicknameEditText!!.setText("nickname")
         nicknameEditText!!.setText("")
 
@@ -76,7 +76,7 @@ class NicknameEditTextTest : Assert() {
 
     @Test
     fun testThatTagFixed() {
-        nicknameEditText!!.setTag("4877")
+        nicknameEditText!!.setNicknameTag("4877")
         nicknameEditText!!.setText("nickname#4877")
         nicknameEditText!!.setText("nickname#4877-invalid-data")
 
@@ -86,11 +86,22 @@ class NicknameEditTextTest : Assert() {
 
     @Test
     fun testThatTagFixedBeforeSplitterRemoved() {
-        nicknameEditText!!.setTag("4877")
+        nicknameEditText!!.setNicknameTag("4877")
         nicknameEditText!!.setText("nickname#4877")
         nicknameEditText!!.setText("nickname4877")
 
         assertEquals("nickname#4877", nicknameEditText!!.text.toString())
         assertEquals("nickname", nicknameEditText!!.getNickname())
+    }
+
+    @Test
+    fun testStateSaving() {
+        nicknameEditText!!.setNicknameTag("4877")
+        nicknameEditText!!.setText("nickname#4877")
+        createActivity()
+
+        assertEquals("nickname#4877", nicknameEditText!!.text.toString())
+        assertEquals("nickname", nicknameEditText!!.getNickname())
+        assertEquals("4877", nicknameEditText!!.getNicknameTag())
     }
 }
