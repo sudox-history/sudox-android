@@ -60,6 +60,12 @@ class PhoneEditTextTest : Assert() {
     }
 
     @Test
+    fun checkThatHintInstalled() {
+        phoneEditText!!.setCountry("RU", "7", R.drawable.ic_flag_russia)
+        assertEquals("301 123-45-67", phoneEditText!!.numberEditText.hint.toString())
+    }
+
+    @Test
     fun checkThatUserCanGetPhoneNumberAndRegion() {
         phoneEditText!!.setCountry("RU", "7", R.drawable.ic_flag_russia)
         phoneEditText!!.numberEditText.setText("9000000000")

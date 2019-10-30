@@ -3,6 +3,7 @@ package com.sudox.design.phoneEditText
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.drawable.Drawable
 import android.os.Parcelable
 import android.telephony.PhoneNumberUtils
@@ -18,6 +19,8 @@ import androidx.core.content.res.use
 import androidx.core.view.updatePadding
 import com.sudox.design.R
 import com.sudox.design.phoneEditText.countryCodeSelector.CountryCodeSelector
+import com.sudox.design.phoneNumberUtil
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import kotlin.math.max
 import kotlin.math.min
 
@@ -72,7 +75,10 @@ class PhoneEditText : ViewGroup {
 
         countryCodeSelector.apply {
             updatePadding(left = numberEditText.paddingLeft, right = separatorLeftMargin)
-            codePaint = numberEditText.paint
+
+            codePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                set(numberEditText.paint)
+            }
         }
 
         numberEditText.apply {
@@ -183,6 +189,13 @@ class PhoneEditText : ViewGroup {
 
         countryCodeSelector.set(countryCode, flagResId)
         phoneTextWatcher.setRegionCode(regionCode)
+
+        val exampleNumber = phoneNumberUtil!!.getExampleNumber(regionCode)
+        val formattedExampleNumber = phoneNumberUtil!!
+                .format(exampleNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
+                .removePrefix("${countryCodeSelector.code} ")
+
+        numberEditText.hint = formattedExampleNumber
         invalidate()
     }
 

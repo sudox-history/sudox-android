@@ -19,8 +19,9 @@ import kotlin.math.min
 class CountryCodeSelector : View {
 
     var codePaint: Paint? = null
+    var code: String? = null
+
     private val codeBounds = Rect()
-    private var code: String? = null
 
     internal var flagDrawableResId = 0
     private var flagDrawable: Drawable? = null
