@@ -2,13 +2,18 @@ package com.sudox.design.percentLayouts
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Point
 import android.util.AttributeSet
+import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.core.content.res.use
 import androidx.core.view.updatePadding
 import com.sudox.design.R
 
 class PercentRelativeLayout : RelativeLayout {
+
+    private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private val windowSize = Point()
 
     var paddingTopPercent = 0F
     var paddingBottomPercent = 0F
@@ -29,15 +34,18 @@ class PercentRelativeLayout : RelativeLayout {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        updatePadding(0, 0, 0, 0)
-
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
+        windowManager.defaultDisplay.getSize(windowSize)
+
+        val windowHeight = windowSize.y
+        val windowWidth = windowSize.x
+
         updatePadding(
-                top = (measuredHeight * paddingTopPercent).toInt(),
-                bottom = (measuredHeight * paddingBottomPercent).toInt(),
-                right = (measuredWidth * paddingRightPercent).toInt(),
-                left = (measuredWidth * paddingLeftPercent).toInt()
+                top = (windowHeight * paddingTopPercent).toInt(),
+                bottom = (windowHeight * paddingBottomPercent).toInt(),
+                right = (windowWidth * paddingRightPercent).toInt(),
+                left = (windowWidth * paddingLeftPercent).toInt()
         )
     }
 }

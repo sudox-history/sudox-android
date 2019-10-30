@@ -74,4 +74,25 @@ class PercentRelativeLayoutTest : Assert() {
         assertEquals(30, percentRelativeLayout!!.paddingRight)
         assertEquals(40, percentRelativeLayout!!.paddingLeft)
     }
+
+    @Test
+    fun testDoublePaddingCalculation() {
+        percentRelativeLayout!!.apply {
+            paddingTopPercent = 0.1F
+            paddingBottomPercent = 0.2F
+            paddingRightPercent = 0.3F
+            paddingLeftPercent = 0.4F
+
+            layoutParams.height = 100
+            layoutParams.width = 100
+
+            requestLayout()
+            requestLayout()
+        }
+
+        assertEquals(10, percentRelativeLayout!!.paddingTop)
+        assertEquals(20, percentRelativeLayout!!.paddingBottom)
+        assertEquals(30, percentRelativeLayout!!.paddingRight)
+        assertEquals(40, percentRelativeLayout!!.paddingLeft)
+    }
 }

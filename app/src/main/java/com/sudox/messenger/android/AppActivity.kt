@@ -3,7 +3,8 @@ package com.sudox.messenger.android
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.sudox.messenger.android.auth.code.AuthCodeFragment
+import com.sudox.messenger.android.auth.phone.AuthPhoneFragment
+import com.sudox.messenger.android.auth.register.AuthRegisterFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.ApplicationBarManager
 import com.sudox.messenger.android.core.managers.NavigationManager
@@ -30,7 +31,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         if (savedInstanceState != null) {
             navigationManager.restoreState(savedInstanceState)
         } else {
-            navigationManager.showFragment(AuthCodeFragment(), false)
+            navigationManager.showFragment(AuthPhoneFragment(), false)
         }
     }
 

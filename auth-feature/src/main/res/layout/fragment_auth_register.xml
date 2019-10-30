@@ -25,6 +25,7 @@
         style="@style/Sudox.Auth.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/authRegisterDescriptionTextView" />
+        android:layout_below="@id/authRegisterDescriptionTextView"
+        android:hint="@string/nickname" />
 
 </com.sudox.design.percentLayouts.PercentRelativeLayout>

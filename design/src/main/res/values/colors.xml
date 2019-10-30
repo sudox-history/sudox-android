@@ -10,8 +10,10 @@
 
     <color name="button_background_color">#FFFFFF</color>
 
+    <color name="edittext_text_color">#000000</color>
     <color name="edittext_background_color">#FFFFFF</color>
     <color name="edittext_border_color">#E0E0E0</color>
+    <color name="edittext_hint_text_color">#BDBDBD</color>
 
     <color name="phoneedittext_separator_color">#E0E0E0</color>
 
