@@ -188,7 +188,7 @@ class PhoneEditText : ViewGroup {
         }
 
         countryCodeSelector.set(countryCode, flagResId)
-        phoneTextWatcher.setRegionCode(regionCode)
+        phoneTextWatcher.updateCountry(regionCode, countryCode.toInt())
 
         val exampleNumber = phoneNumberUtil!!.getExampleNumber(regionCode)
         val formattedExampleNumber = phoneNumberUtil!!
@@ -212,6 +212,6 @@ class PhoneEditText : ViewGroup {
     }
 
     fun getRegionCode(): String? {
-        return phoneTextWatcher.regionCode
+        return phoneTextWatcher.countryNameCode
     }
 }

@@ -7,12 +7,14 @@ import android.view.View
 class PhoneEditTextState : View.BaseSavedState {
 
     private var regionCode: String? = null
+    private var countryCode: String? = null
     private var countryCodeSelectorId = 0
     private var editTextId = 0
 
     constructor(superState: Parcelable) : super(superState)
     constructor(source: Parcel) : super(source) {
         regionCode = source.readString()
+        countryCode = source.readString()
         countryCodeSelectorId = source.readInt()
         editTextId = source.readInt()
     }
@@ -20,6 +22,7 @@ class PhoneEditTextState : View.BaseSavedState {
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
         out.writeString(regionCode)
+        out.writeString(countryCode)
         out.writeInt(countryCodeSelectorId)
         out.writeInt(editTextId)
     }
@@ -28,11 +31,12 @@ class PhoneEditTextState : View.BaseSavedState {
         editTextId = phoneEditText.numberEditText.id
         countryCodeSelectorId = phoneEditText.countryCodeSelector.id
         regionCode = phoneEditText.getRegionCode()
+        countryCode = phoneEditText.countryCodeSelector.get()
     }
 
     fun readToView(phoneEditText: PhoneEditText) {
         if (regionCode != null) {
-            phoneEditText.phoneTextWatcher.setRegionCode(regionCode!!)
+            phoneEditText.phoneTextWatcher.updateCountry(regionCode!!, countryCode!!.toInt())
         }
 
         phoneEditText.numberEditText.id = editTextId
