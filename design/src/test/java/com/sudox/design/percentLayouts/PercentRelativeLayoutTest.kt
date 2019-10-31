@@ -63,16 +63,13 @@ class PercentRelativeLayoutTest : Assert() {
             paddingRightPercent = 0.3F
             paddingLeftPercent = 0.4F
 
-            layoutParams.height = 100
-            layoutParams.width = 100
-
             requestLayout()
         }
 
-        assertEquals(10, percentRelativeLayout!!.paddingTop)
-        assertEquals(20, percentRelativeLayout!!.paddingBottom)
-        assertEquals(30, percentRelativeLayout!!.paddingRight)
-        assertEquals(40, percentRelativeLayout!!.paddingLeft)
+        assertEquals(47, percentRelativeLayout!!.paddingTop)
+        assertEquals(94, percentRelativeLayout!!.paddingBottom)
+        assertEquals(96, percentRelativeLayout!!.paddingRight)
+        assertEquals(128, percentRelativeLayout!!.paddingLeft)
     }
 
     @Test
@@ -83,16 +80,13 @@ class PercentRelativeLayoutTest : Assert() {
             paddingRightPercent = 0.3F
             paddingLeftPercent = 0.4F
 
-            layoutParams.height = 100
-            layoutParams.width = 100
-
             requestLayout()
             requestLayout()
         }
 
-        assertEquals(10, percentRelativeLayout!!.paddingTop)
-        assertEquals(20, percentRelativeLayout!!.paddingBottom)
-        assertEquals(30, percentRelativeLayout!!.paddingRight)
-        assertEquals(40, percentRelativeLayout!!.paddingLeft)
+        assertEquals(47, percentRelativeLayout!!.paddingTop)
+        assertEquals(94, percentRelativeLayout!!.paddingBottom)
+        assertEquals(96, percentRelativeLayout!!.paddingRight)
+        assertEquals(128, percentRelativeLayout!!.paddingLeft)
     }
 }
