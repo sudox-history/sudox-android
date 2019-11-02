@@ -8,6 +8,7 @@
     </declare-styleable>
 
     <declare-styleable name="PhoneEditText">
+        <attr name="autofillMyNumber" format="boolean" />
         <attr name="separatorDrawable" format="reference" />
         <attr name="separatorDrawableWidth" format="dimension" />
         <attr name="separatorDrawableHeight" format="dimension" />
@@ -15,7 +16,7 @@
         <attr name="separatorRightMargin" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="CountryCodeSelector">
+    <declare-styleable name="PhoneCountryCodeSelector">
         <attr name="flagWidth" format="dimension" />
         <attr name="flagHeight" format="dimension" />
         <attr name="flagMargin" format="dimension" />

@@ -5,41 +5,29 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Parcelable
 import android.telephony.PhoneNumberUtils
-import android.text.InputType
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.use
 import androidx.core.view.updatePadding
 import com.sudox.design.R
-import com.sudox.design.phoneEditText.countryCodeSelector.CountryCodeSelector
-import com.sudox.design.phoneNumberUtil
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import com.sudox.design.phoneEditText.childs.PhoneCountryCodeSelector
+import com.sudox.design.phoneEditText.childs.PhoneNumberEditText
 import kotlin.math.max
 import kotlin.math.min
 
 class PhoneEditText : ViewGroup {
 
-    internal var phoneTextWatcher = PhoneTextWatcher()
+    var regionFlagIdCallback: ((String) -> (Int))? = null
 
-    val countryCodeSelector = CountryCodeSelector(context).apply {
+    internal val countryCodeSelector = PhoneCountryCodeSelector(context)
+    internal val numberEditText = PhoneNumberEditText(context).apply {
         id = View.generateViewId()
-    }
-
-    val numberEditText = AppCompatEditText(context).apply {
-        addTextChangedListener(phoneTextWatcher)
-
-        id = View.generateViewId()
-        inputType = InputType.TYPE_CLASS_PHONE
-        imeOptions = EditorInfo.IME_ACTION_DONE
-        isSingleLine = true
-        maxLines = 1
     }
 
     private var separatorDrawable: Drawable? = null
@@ -61,6 +49,14 @@ class PhoneEditText : ViewGroup {
 
             separatorLeftMargin = it.getDimensionPixelSizeOrThrow(R.styleable.PhoneEditText_separatorLeftMargin)
             separatorRightMargin = it.getDimensionPixelSizeOrThrow(R.styleable.PhoneEditText_separatorRightMargin)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (it.getBoolean(R.styleable.PhoneEditText_autofillMyNumber, false)) {
+                    numberEditText.setAutofillHints(View.AUTOFILL_HINT_PHONE)
+                } else {
+                    numberEditText.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+                }
+            }
         }
 
         addView(countryCodeSelector)
@@ -182,25 +178,23 @@ class PhoneEditText : ViewGroup {
         }
     }
 
-    fun setCountry(regionCode: String, countryCode: String, flagResId: Int, reset: Boolean = true) {
+    fun setCountry(regionCode: String, countryCode: Int, flagResId: Int, reset: Boolean = true) {
         if (reset) {
             numberEditText.text = null
         }
 
         countryCodeSelector.set(countryCode, flagResId)
-        phoneTextWatcher.updateCountry(regionCode, countryCode.toInt())
-
-        val exampleNumber = phoneNumberUtil!!.getExampleNumber(regionCode)
-        val formattedExampleNumber = phoneNumberUtil!!
-                .format(exampleNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
-                .removePrefix("${countryCodeSelector.code} ")
-
-        numberEditText.hint = formattedExampleNumber
+        numberEditText.setCountry(regionCode, countryCode)
         invalidate()
     }
 
     fun getPhoneNumber(): String? {
-        val countryCode = countryCodeSelector.get() ?: return null
+        val countryCode = countryCodeSelector.get()
+
+        if (countryCode == 0) {
+            return null
+        }
+
         val formattedPhone = numberEditText.text ?: return null
         val unformattedPhone = PhoneNumberUtils.stripSeparators(formattedPhone.toString())
 
@@ -212,6 +206,6 @@ class PhoneEditText : ViewGroup {
     }
 
     fun getRegionCode(): String? {
-        return phoneTextWatcher.countryNameCode
+        return numberEditText.getRegionCode()
     }
 }

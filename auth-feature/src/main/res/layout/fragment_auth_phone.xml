@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.sudox.design.percentLayouts.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Sudox.Auth"
     android:layout_width="match_parent"
@@ -27,6 +28,7 @@
         style="@style/Sudox.Auth.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/authPhoneDescriptionTextView" />
+        android:layout_below="@id/authPhoneDescriptionTextView"
+        app:autofillMyNumber="true" />
 
 </com.sudox.design.percentLayouts.PercentRelativeLayout>

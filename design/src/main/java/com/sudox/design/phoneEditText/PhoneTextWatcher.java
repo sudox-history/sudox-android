@@ -1,6 +1,5 @@
 package com.sudox.design.phoneEditText;
 
-import android.content.Context;
 import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.Selection;
@@ -14,10 +13,10 @@ import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
 
 
 //Reference https://stackoverflow.com/questions/32661363/using-phonenumberformattingtextwatcher-without-typing-country-calling-code to solve formatting issue
+@SuppressWarnings("ALL")
 public class PhoneTextWatcher implements TextWatcher {
 
     private static final String TAG = "Int'l Phone TextWatcher";
-    PhoneNumberUtil phoneNumberUtil = DesignLibraryKt.getPhoneNumberUtil();
     /**
      * Indicates the change was caused by ourselves.
      */
@@ -36,9 +35,11 @@ public class PhoneTextWatcher implements TextWatcher {
     private boolean needUpdateForCountryChange = false;
     private boolean internationalOnly;
 
-    public void updateCountry(String countryNameCode, int countryPhoneCode) {
+    public void setCountry(String countryNameCode, int countryPhoneCode) {
         this.countryNameCode = countryNameCode;
         this.countryPhoneCode = countryPhoneCode;
+
+        PhoneNumberUtil phoneNumberUtil = DesignLibraryKt.getPhoneNumberUtil();
 
         mFormatter = phoneNumberUtil.getAsYouTypeFormatter(countryNameCode);
         mFormatter.clear();

@@ -1,4 +1,4 @@
-package com.sudox.design.phoneEditText.countryCodeSelector
+package com.sudox.design.phoneEditText.childs
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -16,14 +15,13 @@ import com.sudox.design.R
 import kotlin.math.max
 import kotlin.math.min
 
-class CountryCodeSelector : View {
+class PhoneCountryCodeSelector : View {
 
+    var flagDrawableResId = 0
     var codePaint: Paint? = null
     var code: String? = null
 
     private val codeBounds = Rect()
-
-    internal var flagDrawableResId = 0
     private var flagDrawable: Drawable? = null
     private var flagWidth = 0
     private var flagHeight = 0
@@ -34,27 +32,10 @@ class CountryCodeSelector : View {
 
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        context.obtainStyledAttributes(attrs, R.styleable.CountryCodeSelector, defStyleAttr, 0).use {
-            flagWidth = it.getDimensionPixelSizeOrThrow(R.styleable.CountryCodeSelector_flagWidth)
-            flagHeight = it.getDimensionPixelSizeOrThrow(R.styleable.CountryCodeSelector_flagHeight)
-            flagMargin = it.getDimensionPixelSizeOrThrow(R.styleable.CountryCodeSelector_flagMargin)
-        }
-    }
-
-    override fun onRestoreInstanceState(parcelable: Parcelable) {
-        val state = parcelable as CountryCodeSelectorState
-
-        state.apply {
-            super.onRestoreInstanceState(state.superState)
-            state.readToView(this@CountryCodeSelector)
-        }
-    }
-
-    override fun onSaveInstanceState(): Parcelable {
-        val superState = super.onSaveInstanceState()
-
-        return CountryCodeSelectorState(superState!!).apply {
-            writeFromView(this@CountryCodeSelector)
+        context.obtainStyledAttributes(attrs, R.styleable.PhoneCountryCodeSelector, defStyleAttr, 0).use {
+            flagWidth = it.getDimensionPixelSizeOrThrow(R.styleable.PhoneCountryCodeSelector_flagWidth)
+            flagHeight = it.getDimensionPixelSizeOrThrow(R.styleable.PhoneCountryCodeSelector_flagHeight)
+            flagMargin = it.getDimensionPixelSizeOrThrow(R.styleable.PhoneCountryCodeSelector_flagMargin)
         }
     }
 
@@ -96,11 +77,11 @@ class CountryCodeSelector : View {
         flagDrawable!!.draw(canvas)
     }
 
-    fun get(): String? {
-        return code?.removePrefix("+")
+    fun get(): Int {
+        return code?.removePrefix("+")?.toInt() ?: return 0
     }
 
-    fun set(code: String, flagDrawableResId: Int) {
+    fun set(code: Int, flagDrawableResId: Int) {
         this.code = "+${code}"
         this.codePaint!!.getTextBounds(this.code, 0, this.code!!.length, codeBounds)
 

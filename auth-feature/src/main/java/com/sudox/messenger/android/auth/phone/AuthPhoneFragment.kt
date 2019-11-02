@@ -29,7 +29,10 @@ class AuthPhoneFragment : Fragment() {
         }
 
         return inflater.inflate(R.layout.fragment_auth_phone, container, false).apply {
-            findViewById<PhoneEditText>(R.id.authPhoneEditText).setCountry("RU", "7", com.sudox.design.R.drawable.ic_flag_russia)
+            findViewById<PhoneEditText>(R.id.authPhoneEditText).apply {
+                setCountry("RU", 7, com.sudox.design.R.drawable.ic_flag_russia)
+                regionFlagIdCallback = { R.drawable.ic_flag_russia }
+            }
         }
     }
 }
