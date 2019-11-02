@@ -130,6 +130,7 @@ class PhoneEditTextTest : Assert() {
         assertEquals("79000000000", phoneEditText!!.getPhoneNumber())
         assertEquals("900 000-00-00", phoneEditText!!.numberEditText.text.toString())
         assertEquals("301 123-45-67", phoneEditText!!.numberEditText.hint.toString())
+        assertEquals(R.drawable.ic_flag_russia, phoneEditText!!.countryCodeSelector.flagDrawableResId)
         assertEquals(7, phoneEditText!!.countryCodeSelector.get())
     }
 
