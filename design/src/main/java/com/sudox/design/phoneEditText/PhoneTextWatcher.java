@@ -6,17 +6,15 @@ import android.text.Selection;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.sudox.design.DesignLibraryKt;
 
 import io.michaelrocks.libphonenumber.android.AsYouTypeFormatter;
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
 
-//@SuppressWarnings("ALL")
+@SuppressWarnings("ALL")
 public class PhoneTextWatcher implements TextWatcher {
 
+    private static final String TAG = "Int'l Phone TextWatcher";
     /**
      * Indicates the change was caused by ourselves.
      */
@@ -27,10 +25,15 @@ public class PhoneTextWatcher implements TextWatcher {
     private boolean mStopFormatting;
     private AsYouTypeFormatter mFormatter;
     private String countryNameCode;
+    Editable lastFormatted = null;
     private int countryPhoneCode;
 
-    @SuppressWarnings("ConstantConditions")
-    public void setCountry(@NonNull String countryNameCode, int countryPhoneCode) {
+    //when country is changed, we update the number.
+    //at this point this will avoid "stopFormatting"
+    private boolean needUpdateForCountryChange = false;
+    private boolean internationalOnly = false;
+
+    public void setCountry(String countryNameCode, int countryPhoneCode) {
         this.countryNameCode = countryNameCode;
         this.countryPhoneCode = countryPhoneCode;
 
@@ -38,100 +41,110 @@ public class PhoneTextWatcher implements TextWatcher {
 
         mFormatter = phoneNumberUtil.getAsYouTypeFormatter(countryNameCode);
         mFormatter.clear();
+        if (lastFormatted != null) {
+            needUpdateForCountryChange = true;
+            String onlyDigits = phoneNumberUtil.normalizeDigitsOnly(lastFormatted);
+            lastFormatted.replace(0, lastFormatted.length(), onlyDigits, 0, onlyDigits.length());
+            needUpdateForCountryChange = false;
+        }
     }
 
-    @Nullable
     public String getCountryNameCode() {
         return countryNameCode;
     }
 
     @Override
-    public void beforeTextChanged(@NonNull CharSequence s, int start, int count, int after) { }
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        if (mSelfChange || mStopFormatting) {
+            return;
+        }
+    }
 
     @Override
-    public void onTextChanged(@NonNull CharSequence s, int start, int before, int count) { }
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (mSelfChange || mStopFormatting) {
+            return;
+        }
+    }
 
     @Override
-    public void afterTextChanged(@NonNull Editable s) {
-        synchronized (this) {
-            int length1 = s.length();
+    public synchronized void afterTextChanged(Editable s) {
+        if (mStopFormatting) {
+            // Restart the formatting when all texts were clear.
+            mStopFormatting = !(s.length() == 0);
+            return;
+        }
+        if (mSelfChange) {
+            // Ignore the change caused by s.replace().
+            return;
+        }
 
-            if (mStopFormatting) {
-                // Restart the formatting when all texts were clear.
-                mStopFormatting = !(length1 == 0);
-                return;
-            }
-            if (mSelfChange) {
-                // Ignore the change caused by s.replace().
-                return;
-            }
+        //calculate few things that will be helpful later
+        int selectionEnd = Selection.getSelectionEnd(s);
+        boolean isCursorAtEnd = (selectionEnd == s.length());
 
-            //calculate few things that will be helpful later
-            int selectionEnd = Selection.getSelectionEnd(s);
-            boolean isCursorAtEnd = (selectionEnd == length1);
+        //get formatted text for this number
+        String formatted = reformat(s);
 
-            //get formatted text for this number
-            String formatted = reformat(s);
+        if (formatted == null) {
+            return;
+        }
 
-            if (formatted == null) {
-                return;
-            }
+        //now calculate cursor position in formatted text
+        int finalCursorPosition = 0;
+        if (formatted.equals(s.toString())) {
+            //means there is no change while formatting don't move cursor
+            finalCursorPosition = selectionEnd;
+        } else if (isCursorAtEnd) {
+            //if cursor was already at the end, put it at the end.
+            finalCursorPosition = formatted.length();
+        } else {
 
-            //now calculate cursor position in formatted text
-            int finalCursorPosition = 0;
-            int length = formatted.length();
-            if (formatted.equals(s.toString())) {
-                //means there is no change while formatting don't move cursor
-                finalCursorPosition = selectionEnd;
-            } else if (isCursorAtEnd) {
-                //if cursor was already at the end, put it at the end.
-                finalCursorPosition = length;
-            } else {
-
-                // if no earlier case matched, we will use "digitBeforeCursor" way to figure out the cursor position
-                int digitsBeforeCursor = 0;
-                for (int i = 0; i < length1; i++) {
-                    if (i >= selectionEnd) {
-                        break;
-                    }
-                    if (PhoneNumberUtils.isNonSeparator(s.charAt(i))) {
-                        digitsBeforeCursor++;
-                    }
+            // if no earlier case matched, we will use "digitBeforeCursor" way to figure out the cursor position
+            int digitsBeforeCursor = 0;
+            for (int i = 0; i < s.length(); i++) {
+                if (i >= selectionEnd) {
+                    break;
                 }
-
-                //at this point we will have digitsBeforeCursor calculated.
-                // now find this position in formatted text
-                for (int i = 0, digitPassed = 0; i < length; i++) {
-                    if (digitPassed == digitsBeforeCursor) {
-                        finalCursorPosition = i;
-                        break;
-                    }
-                    if (PhoneNumberUtils.isNonSeparator(formatted.charAt(i))) {
-                        digitPassed++;
-                    }
+                if (PhoneNumberUtils.isNonSeparator(s.charAt(i))) {
+                    digitsBeforeCursor++;
                 }
             }
 
-            //if this ends right before separator, we might wish to move it further so user do not delete separator by mistake.
-            // because deletion of separator will cause stop formatting that should not happen by mistake
-            if (!isCursorAtEnd) {
-                while (0 < finalCursorPosition - 1) {
-                    if (PhoneNumberUtils.isNonSeparator(formatted.charAt(finalCursorPosition - 1)))
-                        break;
-                    finalCursorPosition--;
+            //at this point we will have digitsBeforeCursor calculated.
+            // now find this position in formatted text
+            for (int i = 0, digitPassed = 0; i < formatted.length(); i++) {
+                if (digitPassed == digitsBeforeCursor) {
+                    finalCursorPosition = i;
+                    break;
                 }
-            }
-
-            //Now we have everything calculated, set this values in
-            try {
-                mSelfChange = true;
-                s.replace(0, length1, formatted, 0, length);
-                mSelfChange = false;
-                Selection.setSelection(s, finalCursorPosition);
-            } catch (Exception e) {
-                e.printStackTrace();
+                if (PhoneNumberUtils.isNonSeparator(formatted.charAt(i))) {
+                    digitPassed++;
+                }
             }
         }
+
+        //if this ends right before separator, we might wish to move it further so user do not delete separator by mistake.
+        // because deletion of separator will cause stop formatting that should not happen by mistake
+        if (!isCursorAtEnd) {
+            while (0 < finalCursorPosition - 1 && !PhoneNumberUtils.isNonSeparator(formatted.charAt(finalCursorPosition - 1))) {
+                finalCursorPosition--;
+            }
+        }
+
+        //Now we have everything calculated, set this values in
+        try {
+            if (formatted != null) {
+                mSelfChange = true;
+                s.replace(0, s.length(), formatted, 0, formatted.length());
+                mSelfChange = false;
+                lastFormatted = s;
+                Selection.setSelection(s, finalCursorPosition);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -147,7 +160,10 @@ public class PhoneTextWatcher implements TextWatcher {
         char lastNonSeparator = 0;
 
         String countryCallingCode = "+" + countryPhoneCode;
-        s = countryCallingCode + s;
+
+        if (internationalOnly || (s.length() > 0 && s.charAt(0) != '0'))
+            //to have number formatted as international format, add country code before that
+            s = countryCallingCode + s;
         int len = s.length();
 
         for (int i = 0; i < len; i++) {
@@ -164,17 +180,34 @@ public class PhoneTextWatcher implements TextWatcher {
         }
 
         internationalFormatted = internationalFormatted.trim();
-
-        if (internationalFormatted.length() > countryCallingCode.length()) {
-            if (internationalFormatted.charAt(countryCallingCode.length()) == ' ') {
-                internationalFormatted = internationalFormatted.substring(countryCallingCode.length() + 1);
+        if (internationalOnly || (s.length() == 0 || s.charAt(0) != '0')) {
+            if (internationalFormatted.length() > countryCallingCode.length()) {
+                if (internationalFormatted.charAt(countryCallingCode.length()) == ' ')
+                    internationalFormatted = internationalFormatted.substring(countryCallingCode.length() + 1);
+                else
+                    internationalFormatted = internationalFormatted.substring(countryCallingCode.length());
             } else {
-                internationalFormatted = internationalFormatted.substring(countryCallingCode.length());
+                internationalFormatted = "";
             }
-        } else {
-            internationalFormatted = "";
         }
 
         return TextUtils.isEmpty(internationalFormatted) ? "" : internationalFormatted;
+    }
+
+    private void stopFormatting() {
+        mStopFormatting = true;
+        mFormatter.clear();
+    }
+
+    private boolean hasSeparator(final CharSequence s, final int start, final int count) {
+        for (int i = start; i < start + count; i++) {
+            char c = s.charAt(i);
+
+            if (!PhoneNumberUtils.isNonSeparator(c)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

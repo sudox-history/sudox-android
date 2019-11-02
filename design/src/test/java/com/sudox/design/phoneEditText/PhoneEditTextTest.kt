@@ -3,7 +3,6 @@ package com.sudox.design.phoneEditText
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import android.view.autofill.AutofillValue
 import com.sudox.design.DesignTestRunner
 import com.sudox.design.R
