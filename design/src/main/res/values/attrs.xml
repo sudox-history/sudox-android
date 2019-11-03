@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ActionButton">
-        <attr name="boundsChangeAnimationDuration" format="integer" />
-        <attr name="loadingSpinnerHeight" format="dimension" />
-        <attr name="loadingSpinnerWidth" format="dimension" />
-        <attr name="loadingSpinnerThickness" format="dimension" />
-    </declare-styleable>
-
     <declare-styleable name="PhoneEditText">
         <attr name="autofillMyNumber" format="boolean" />
         <attr name="separatorDrawable" format="reference" />
