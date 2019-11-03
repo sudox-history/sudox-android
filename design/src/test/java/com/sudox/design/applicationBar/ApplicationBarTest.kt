@@ -96,7 +96,12 @@ class ApplicationBarTest : Assert() {
     fun testButtonsListener() {
         val clicks = ArrayList<Int>()
 
-        applicationBar.buttonsClickCallback = { clicks.add(it) }
+        applicationBar.listener = object : ApplicationBarListener {
+            override fun onButtonClicked(tag: Int) {
+                clicks.add(tag)
+            }
+        }
+
         applicationBar.buttonsAtEnd.forEach { it!!.visibility = View.VISIBLE }
         applicationBar.buttonAtStart!!.visibility = View.VISIBLE
 
