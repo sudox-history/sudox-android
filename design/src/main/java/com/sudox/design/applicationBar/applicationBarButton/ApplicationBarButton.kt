@@ -19,6 +19,8 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import com.sudox.design.R
 import com.sudox.design.isLayoutRtl
+import kotlin.math.max
+import kotlin.math.min
 
 class ApplicationBarButton : View {
 
@@ -55,9 +57,30 @@ class ApplicationBarButton : View {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
+        val availableHeight = MeasureSpec.getSize(heightMeasureSpec)
+
         val needWidth = calculateWidth()
-        val needWidthMeasureSpec = MeasureSpec.makeMeasureSpec(needWidth, MeasureSpec.EXACTLY)
-        setMeasuredDimension(needWidthMeasureSpec, heightMeasureSpec)
+        val measuredWidth = if (widthMode == MeasureSpec.EXACTLY) {
+            availableWidth
+        } else if (widthMode == MeasureSpec.AT_MOST) {
+            min(needWidth, availableWidth)
+        } else {
+            needWidth
+        }
+
+        val needHeight = paddingTop + max(iconDrawable?.bounds?.height() ?: 0, textBounds.height()) + paddingBottom
+        val measuredHeight = if (heightMode == MeasureSpec.EXACTLY) {
+            availableHeight
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            min(needHeight, availableHeight)
+        } else {
+            needHeight
+        }
+
+        setMeasuredDimension(measuredWidth, measuredHeight)
     }
 
     override fun onRestoreInstanceState(parcelable: Parcelable) {
