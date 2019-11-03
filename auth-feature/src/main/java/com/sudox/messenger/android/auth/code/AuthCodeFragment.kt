@@ -19,8 +19,9 @@ class AuthCodeFragment : Fragment() {
 
         activity.getApplicationBarManager().let {
             it.reset()
-            it.showBackButton()
-            it.setTitle(R.string.sign_in)
+            it.toggleButtonBack(true)
+            it.toggleButtonNext(true)
+            it.setTitleText(R.string.sign_in)
         }
 
         activity.getScreenManager().let {

@@ -31,8 +31,13 @@
     </declare-styleable>
 
     <declare-styleable name="ApplicationBarButton">
+        <attr name="textSize" format="dimension" />
+        <attr name="textTypeface" format="reference" />
+        <attr name="textColor" format="color" />
+
         <attr name="iconHeight" format="dimension" />
         <attr name="iconWidth" format="dimension" />
+        <attr name="iconMargin" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="NicknameEditText">
