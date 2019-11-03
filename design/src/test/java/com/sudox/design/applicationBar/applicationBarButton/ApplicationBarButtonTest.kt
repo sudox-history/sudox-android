@@ -1,9 +1,12 @@
 package com.sudox.design.applicationBar.applicationBarButton
 
 import android.app.Activity
-import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
+import android.view.View
 import com.sudox.design.DesignTestRunner
+import com.sudox.design.R
+import com.sudox.design.phoneNumberUtil
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -44,6 +47,7 @@ class ApplicationBarButtonTest : Assert() {
                 id = Int.MAX_VALUE
             }
 
+            phoneNumberUtil = PhoneNumberUtil.createInstance(this)
             setContentView(applicationBarButton)
         }
 
@@ -57,61 +61,35 @@ class ApplicationBarButtonTest : Assert() {
     }
 
     @Test
-    fun testStartup() = applicationBarButton!!.let { button ->
-        assertEquals(0, button.iconDrawableId)
-        assertFalse(button.isClickable)
-        assertFalse(button.isFocusable)
-        assertNull(button.iconDrawable)
-    }
+    fun testViewResetting() {
+        applicationBarButton!!.isClickable = true
+        applicationBarButton!!.visibility = View.VISIBLE
+        applicationBarButton!!.iconDirection = ApplicationBarButtonIconDirection.END
+        applicationBarButton!!.setText(android.R.string.selectTextMode)
+        applicationBarButton!!.setIconDrawable(R.drawable.abc_vector_test)
+        applicationBarButton!!.reset()
+        createActivity()
 
-    @Test
-    fun testEnabling() = applicationBarButton!!.let { button ->
-        button.toggle(ShapeDrawable())
-
-        button.iconDrawable!!.let { drawable ->
-            assertEquals(button.iconWidth, drawable.bounds.width())
-            assertEquals(button.iconHeight, drawable.bounds.height())
-        }
-
-        assertEquals(0, button.iconDrawableId)
-        assertTrue(button.isClickable)
-        assertTrue(button.isFocusable)
-    }
-
-    @Test
-    fun testDisabling() = applicationBarButton!!.let { button ->
-        button.toggle(android.R.drawable.ic_delete)
-        button.toggle(null)
-
-        assertEquals(0, button.iconDrawableId)
-        assertFalse(button.isClickable)
-        assertFalse(button.isFocusable)
-        assertNull(button.iconDrawable)
-    }
-
-    @Test
-    fun testSettingIconById() = applicationBarButton!!.let { button ->
-        button.toggle(android.R.drawable.ic_delete)
-
-        button.iconDrawable!!.let { drawable ->
-            assertEquals(button.iconWidth, drawable.bounds.width())
-            assertEquals(button.iconHeight, drawable.bounds.height())
-        }
-
-        assertEquals(android.R.drawable.ic_delete, button.iconDrawableId)
-        assertNotNull(button.iconDrawable)
-        assertTrue(button.isClickable)
-        assertTrue(button.isFocusable)
+        assertFalse(applicationBarButton!!.isClickable)
+        assertEquals(View.GONE, applicationBarButton!!.visibility)
+        assertEquals(ApplicationBarButtonIconDirection.START, applicationBarButton!!.iconDirection)
+        assertNull(applicationBarButton!!.iconDrawable)
+        assertNull(applicationBarButton!!.text)
     }
 
     @Test
     fun testStateSaving() {
-        applicationBarButton!!.toggle(android.R.drawable.ic_delete)
+        applicationBarButton!!.isClickable = true
+        applicationBarButton!!.visibility = View.VISIBLE
+        applicationBarButton!!.iconDirection = ApplicationBarButtonIconDirection.END
+        applicationBarButton!!.setText(android.R.string.selectTextMode)
+        applicationBarButton!!.setIconDrawable(R.drawable.abc_vector_test)
         createActivity()
 
-        assertEquals(android.R.drawable.ic_delete, applicationBarButton!!.iconDrawableId)
-        assertNotNull(applicationBarButton!!.iconDrawable)
         assertTrue(applicationBarButton!!.isClickable)
-        assertTrue(applicationBarButton!!.isFocusable)
+        assertEquals(View.VISIBLE, applicationBarButton!!.visibility)
+        assertEquals(ApplicationBarButtonIconDirection.END, applicationBarButton!!.iconDirection)
+        assertEquals(android.R.string.selectTextMode, applicationBarButton!!.textRes)
+        assertEquals("Select text", applicationBarButton!!.text)
     }
 }

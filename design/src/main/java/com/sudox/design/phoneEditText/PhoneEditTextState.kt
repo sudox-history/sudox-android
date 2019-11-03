@@ -7,36 +7,39 @@ import android.view.View
 class PhoneEditTextState : View.BaseSavedState {
 
     private var regionCode: String? = null
-    private var countryCodeSelectorId = 0
+    private var countryCode = 0
     private var editTextId = 0
+    private var flagDrawableResId = 0
 
     constructor(superState: Parcelable) : super(superState)
     constructor(source: Parcel) : super(source) {
         regionCode = source.readString()
-        countryCodeSelectorId = source.readInt()
+        countryCode = source.readInt()
         editTextId = source.readInt()
+        flagDrawableResId = source.readInt()
     }
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
         out.writeString(regionCode)
-        out.writeInt(countryCodeSelectorId)
+        out.writeInt(countryCode)
         out.writeInt(editTextId)
+        out.writeInt(flagDrawableResId)
     }
 
     fun writeFromView(phoneEditText: PhoneEditText) {
         editTextId = phoneEditText.numberEditText.id
-        countryCodeSelectorId = phoneEditText.countryCodeSelector.id
         regionCode = phoneEditText.getRegionCode()
+        countryCode = phoneEditText.countryCodeSelector.get()
+        flagDrawableResId = phoneEditText.countryCodeSelector.flagDrawableResId
     }
 
     fun readToView(phoneEditText: PhoneEditText) {
-        if (regionCode != null) {
-            phoneEditText.phoneTextWatcher.setRegionCode(regionCode!!)
-        }
-
         phoneEditText.numberEditText.id = editTextId
-        phoneEditText.countryCodeSelector.id = countryCodeSelectorId
+
+        if (regionCode != null) {
+            phoneEditText.setCountry(regionCode!!, countryCode, flagDrawableResId, false)
+        }
     }
 
     companion object CREATOR : Parcelable.Creator<PhoneEditTextState> {

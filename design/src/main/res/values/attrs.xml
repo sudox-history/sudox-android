@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ActionButton">
-        <attr name="boundsChangeAnimationDuration" format="integer" />
-        <attr name="loadingSpinnerHeight" format="dimension" />
-        <attr name="loadingSpinnerWidth" format="dimension" />
-        <attr name="loadingSpinnerThickness" format="dimension" />
-    </declare-styleable>
-
     <declare-styleable name="PhoneEditText">
+        <attr name="autofillMyNumber" format="boolean" />
         <attr name="separatorDrawable" format="reference" />
         <attr name="separatorDrawableWidth" format="dimension" />
         <attr name="separatorDrawableHeight" format="dimension" />
@@ -15,7 +9,7 @@
         <attr name="separatorRightMargin" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="CountryCodeSelector">
+    <declare-styleable name="PhoneCountryCodeSelector">
         <attr name="flagWidth" format="dimension" />
         <attr name="flagHeight" format="dimension" />
         <attr name="flagMargin" format="dimension" />
@@ -23,7 +17,6 @@
 
     <declare-styleable name="CodeEditText">
         <attr name="digitsCount" format="integer" />
-        <attr name="digitsMargin" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="ApplicationBar">
@@ -31,13 +24,39 @@
     </declare-styleable>
 
     <declare-styleable name="ApplicationBarButton">
+        <attr name="textSize" format="dimension" />
+        <attr name="textTypeface" format="reference" />
+        <attr name="textColor" format="color" />
+
         <attr name="iconHeight" format="dimension" />
         <attr name="iconWidth" format="dimension" />
+        <attr name="iconMargin" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="NicknameEditText">
+        <attr name="tagTextColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="PercentRelativeLayout">
+        <attr name="paddingTopPercent" format="float" />
+        <attr name="paddingBottomPercent" format="float" />
+        <attr name="paddingRightPercent" format="float" />
+        <attr name="paddingLeftPercent" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="EditTextLayout">
+        <attr name="errorTextAppearance" format="reference" />
+        <attr name="errorTextTopMargin" format="dimension" />
+        <attr name="errorTextLeftMargin" format="dimension" />
+        <attr name="strokeColor" format="color" />
+        <attr name="strokeWidth" format="dimension" />
     </declare-styleable>
 
     <attr name="countryCodeSelectorStyle" format="reference" />
     <attr name="phoneEditTextStyle" format="reference" />
     <attr name="codeEditTextStyle" format="reference" />
+    <attr name="nicknameEditTextStyle" format="reference" />
     <attr name="applicationBarStyle" format="reference" />
     <attr name="applicationBarButtonStyle" format="reference" />
+    <attr name="editTextLayoutStyle" format="reference" />
 </resources>

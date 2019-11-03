@@ -2,6 +2,8 @@ package com.sudox.design.applicationBar
 
 import android.app.Activity
 import android.os.Bundle
+import android.text.TextUtils
+import android.view.View
 import com.sudox.design.DesignTestRunner
 import org.junit.Assert
 import org.junit.Before
@@ -10,11 +12,14 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.android.controller.ActivityController
 
+private const val TITLE_TEXT = "Title"
+
 @RunWith(DesignTestRunner::class)
 class ApplicationBarTest : Assert() {
 
-    private var applicationBar: ApplicationBar? = null
-    private var activityController: ActivityController<Activity>? = null
+    private lateinit var applicationBar: ApplicationBar
+    private lateinit var activityController: ActivityController<Activity>
+    private lateinit var activity: Activity
 
     @Before
     fun setUp() {
@@ -22,160 +27,123 @@ class ApplicationBarTest : Assert() {
     }
 
     private fun createActivity() {
-        var state: Bundle? = null
-
-        activityController?.let {
-            state = Bundle()
-
-            it.saveInstanceState(state)
-            it.pause()
-            it.stop()
-            it.destroy()
+        val bundle: Bundle? = if (::activityController.isInitialized) {
+            Bundle().apply {
+                activityController.saveInstanceState(this)
+            }
+        } else {
+            null
         }
 
         activityController = Robolectric
                 .buildActivity(Activity::class.java)
-                .create()
                 .start()
-
-        activityController!!.get().apply {
-            applicationBar = ApplicationBar(this).apply {
-                id = Int.MAX_VALUE
-            }
-
-            setContentView(applicationBar)
-        }
-
-        state?.let {
-            activityController!!.restoreInstanceState(state)
-        }
-
-        activityController!!
-                .resume()
                 .visible()
-    }
 
-    @Test
-    fun testStartup() = applicationBar!!.let {
-        assertNull(it.listener)
-        assertNull(it.contentView)
-        assertNull(it.titleTextView.parent)
-        assertNotEquals(it.titleTextView, it.contentView)
-        assertEquals(0, it.titleTextId)
-
-        assertEquals(0, it.buttonAtStart!!.iconDrawableId)
-        assertNull(it.buttonAtStart!!.iconDrawable)
-        assertFalse(it.buttonAtStart!!.isClickable)
-        assertFalse(it.buttonAtStart!!.isFocusable)
-
-        assertEquals(0, it.buttonAtEnd!!.iconDrawableId)
-        assertNull(it.buttonAtEnd!!.iconDrawable)
-        assertFalse(it.buttonAtEnd!!.isClickable)
-        assertFalse(it.buttonAtEnd!!.isFocusable)
-    }
-
-    @Test
-    fun testTitleSetting() = applicationBar!!.let {
-        it.setTitle("Title")
-
-        assertEquals(it.titleTextView, it.contentView)
-        assertEquals("Title", it.titleTextView.text.toString())
-        assertEquals(it, it.contentView!!.parent)
-        assertEquals(0, it.titleTextId)
-    }
-
-    @Test
-    fun testTitleSettingById() = applicationBar!!.let {
-        it.setTitle(android.R.string.selectAll)
-
-        assertEquals(it.titleTextView, it.contentView)
-        assertEquals(it.context.getString(android.R.string.selectAll), it.titleTextView.text.toString())
-        assertEquals(it, it.contentView!!.parent)
-        assertEquals(android.R.string.selectAll, it.titleTextId)
-    }
-
-    @Test
-    fun testTitleHiding() = applicationBar!!.let {
-        it.setTitle(android.R.string.selectAll)
-        it.setTitle(null)
-
-        assertNull(it.contentView)
-        assertNull(it.titleTextView.parent)
-        assertNotEquals(it.titleTextView, it.contentView)
-        assertEquals(0, it.titleTextId)
-    }
-
-    @Test
-    fun testResetting() = applicationBar!!.let {
-        val listener = object : ApplicationBarListener {
-            override fun onButtonClicked(tag: Any) {}
+        activity = activityController.get()
+        applicationBar = ApplicationBar(activity).apply {
+            id = Int.MAX_VALUE
         }
 
-        it.listener = listener
-        it.setTitle(android.R.string.selectAll)
-        it.buttonAtStart!!.toggle(android.R.drawable.ic_input_add)
-        it.buttonAtEnd!!.toggle(android.R.drawable.ic_input_delete)
-        it.reset()
+        activity.setContentView(applicationBar)
 
-        assertNull(it.listener)
-        assertNull(it.contentView)
-        assertNull(it.titleTextView.parent)
-        assertNotEquals(it.titleTextView, it.contentView)
-        assertEquals(0, it.titleTextId)
-
-        assertEquals(0, it.buttonAtStart!!.iconDrawableId)
-        assertNull(it.buttonAtStart!!.iconDrawable)
-        assertFalse(it.buttonAtStart!!.isClickable)
-        assertFalse(it.buttonAtStart!!.isFocusable)
-
-        assertEquals(0, it.buttonAtEnd!!.iconDrawableId)
-        assertNull(it.buttonAtEnd!!.iconDrawable)
-        assertFalse(it.buttonAtEnd!!.isClickable)
-        assertFalse(it.buttonAtEnd!!.isFocusable)
-    }
-
-    @Test
-    fun testListener() = applicationBar!!.let {
-        val tags = ArrayList<Any>()
-
-        it.listener = object : ApplicationBarListener {
-            override fun onButtonClicked(tag: Any) {
-                tags.add(tag)
-            }
+        if (bundle != null) {
+            activityController.restoreInstanceState(bundle)
         }
-
-        it.buttonAtStart!!.toggle(android.R.drawable.ic_input_add)
-        it.buttonAtEnd!!.toggle(android.R.drawable.ic_input_delete)
-
-        it.buttonAtStart!!.performClick()
-        it.buttonAtEnd!!.performClick()
-
-        assertEquals(APPBAR_BUTTON_AT_START_TAG, tags[0])
-        assertEquals(APPBAR_BUTTON_AT_END_TAG, tags[1])
     }
 
     @Test
-    fun testStateSaving() {
-        applicationBar!!.setTitle(android.R.string.selectAll)
-        applicationBar!!.buttonAtStart!!.toggle(android.R.drawable.ic_input_add)
-        applicationBar!!.buttonAtEnd!!.toggle(android.R.drawable.ic_input_delete)
+    fun testTitle() {
+        applicationBar.setTitleText(TITLE_TEXT)
+        assertNotEquals(-1, applicationBar.indexOfChild(applicationBar.titleTextView))
+        assertEquals(TITLE_TEXT, applicationBar.titleTextView.text)
+        assertEquals(View.VISIBLE, applicationBar.titleTextView.visibility)
+    }
+
+    @Test
+    fun testResetAllButtons() {
+        applicationBar.buttonsAtEnd.forEach { it!!.visibility = View.VISIBLE }
+        applicationBar.buttonAtStart!!.visibility = View.VISIBLE
+
+        applicationBar.reset()
         createActivity()
 
-        assertEquals(applicationBar!!.titleTextView, applicationBar!!.contentView)
-        assertEquals(applicationBar!!.context.getString(android.R.string.selectAll), applicationBar!!.titleTextView.text.toString())
-        assertEquals(applicationBar!!, applicationBar!!.contentView!!.parent)
-        assertEquals(android.R.string.selectAll, applicationBar!!.titleTextId)
+        applicationBar.buttonsAtEnd.forEach { assertEquals(View.GONE, it!!.visibility) }
+        assertEquals(View.GONE, applicationBar.buttonAtStart!!.visibility)
+    }
 
-        assertEquals(android.R.drawable.ic_input_add, applicationBar!!.buttonAtStart!!.iconDrawableId)
-        assertEquals(android.R.drawable.ic_input_delete, applicationBar!!.buttonAtEnd!!.iconDrawableId)
+    @Test
+    fun testViewResetTitleText() {
+        applicationBar.setTitleText(TITLE_TEXT)
+        applicationBar.reset()
+        createActivity()
 
-        assertTrue(applicationBar!!.buttonAtStart!!.isClickable)
-        assertTrue(applicationBar!!.buttonAtEnd!!.isClickable)
+        assertEquals(-1, applicationBar.indexOfChild(applicationBar.titleTextView))
+        assertTrue(TextUtils.isEmpty(applicationBar.titleTextView.text))
+    }
 
-        assertTrue(applicationBar!!.buttonAtStart!!.isFocusable)
-        assertTrue(applicationBar!!.buttonAtEnd!!.isFocusable)
+    @Test
+    fun testViewResetTitleRes() {
+        applicationBar.setTitleText(android.R.string.selectAll)
+        applicationBar.reset()
+        createActivity()
 
-        assertNotNull(applicationBar!!.buttonAtStart!!.iconDrawable)
-        assertNotNull(applicationBar!!.buttonAtEnd!!.iconDrawable)
+        assertEquals(-1, applicationBar.indexOfChild(applicationBar.titleTextView))
+        assertTrue(TextUtils.isEmpty(applicationBar.titleTextView.text))
+    }
+
+    @Test
+    fun testButtonsListener() {
+        val clicks = ArrayList<Int>()
+
+        applicationBar.listener = object : ApplicationBarListener {
+            override fun onButtonClicked(tag: Int) {
+                clicks.add(tag)
+            }
+        }
+
+        applicationBar.buttonsAtEnd.forEach { it!!.visibility = View.VISIBLE }
+        applicationBar.buttonAtStart!!.visibility = View.VISIBLE
+
+        applicationBar.buttonAtStart!!.performClick()
+        applicationBar.buttonsAtEnd[0]!!.performClick()
+        applicationBar.buttonsAtEnd[1]!!.performClick()
+        applicationBar.buttonsAtEnd[2]!!.performClick()
+
+        assertEquals(4, clicks.size)
+        assertEquals(APPBAR_START_BUTTON_TAG, clicks[0])
+        assertEquals(APPBAR_FIRST_END_BUTTON_TAG, clicks[1])
+        assertEquals(APPBAR_SECOND_END_BUTTON_TAG, clicks[2])
+        assertEquals(APPBAR_THIRD_END_BUTTON_TAG, clicks[3])
+    }
+
+    @Test
+    fun testButtonsIdsSaving() {
+        val ids = ArrayList<Int>()
+
+        applicationBar.buttonsAtEnd.forEach { ids.plusAssign(it!!.id) }
+        ids.plusAssign(applicationBar.buttonAtStart!!.id)
+        createActivity()
+
+        // Verifying ...
+        applicationBar.buttonsAtEnd.forEachIndexed { index, element ->
+            val id = ids.elementAt(index)
+
+            assertNotEquals(View.NO_ID, id)
+            assertEquals(element!!.id, id)
+        }
+
+        val id = ids.elementAt(3)
+        assertNotEquals(View.NO_ID, id)
+        assertEquals(applicationBar.buttonAtStart!!.id, id)
+    }
+
+    @Test
+    fun testTitleResIdSaving() {
+        applicationBar.setTitleText(android.R.string.selectAll)
+
+        createActivity()
+        assertEquals("Select all", applicationBar.titleTextView.text)
+        assertNotEquals(-1, applicationBar.indexOfChild(applicationBar.titleTextView))
     }
 }

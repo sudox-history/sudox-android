@@ -11,11 +11,8 @@
 
         <item name="android:includeFontPadding">false</item>
         <item name="android:textColor">@color/text_color</item>
-        <item name="android:fontFamily">@font/avenir_medium</item>
-        <item name="fontFamily">@font/avenir_medium</item>
-
-        <item name="android:buttonStyle">@style/Sudox.Button</item>
-        <item name="buttonStyle">@style/Sudox.Button</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
 
         <item name="android:editTextStyle">@style/Sudox.EditText</item>
         <item name="editTextStyle">@style/Sudox.EditText</item>
@@ -25,33 +22,12 @@
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
         <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
         <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>
+        <item name="nicknameEditTextStyle">@style/Sudox.NicknameEditText</item>
+        <item name="editTextLayoutStyle">@style/Sudox.EditTextLayout</item>
 
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
         <item name="colorAccent">@color/accent_color</item>
-    </style>
-
-    <style name="Sudox.Button" parent="android:Widget.Button">
-        <item name="android:background">@drawable/drawable_button</item>
-        <item name="android:paddingLeft">@dimen/button_horizontal_padding</item>
-        <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
-        <item name="android:paddingBottom">@dimen/button_vertical_padding</item>
-        <item name="android:paddingTop">@dimen/button_vertical_padding</item>
-        <item name="android:minHeight">@dimen/button_min_height</item>
-        <item name="android:minWidth">@dimen/button_min_height</item>
-        <item name="android:elevation">@dimen/button_elevation</item>
-
-        <item name="android:textSize">@dimen/button_text_size</item>
-        <item name="android:textColor">@color/text_color</item>
-        <item name="android:fontFamily">@font/avenir_medium</item>
-        <item name="fontFamily">@font/avenir_medium</item>
-
-        <item name="boundsChangeAnimationDuration">
-            @integer/button_bounds_change_animation_duration
-        </item>
-        <item name="loadingSpinnerThickness">@dimen/button_loading_spinner_thickness</item>
-        <item name="loadingSpinnerHeight">@dimen/button_loading_spinner_height</item>
-        <item name="loadingSpinnerWidth">@dimen/button_loading_spinner_width</item>
     </style>
 
     <style name="Sudox.EditText" parent="android:Widget.EditText">
@@ -64,13 +40,28 @@
         <item name="android:minWidth">@dimen/edittext_min_height</item>
 
         <item name="android:textSize">@dimen/edittext_text_size</item>
-        <item name="android:textColor">@color/text_color</item>
-        <item name="android:fontFamily">@font/avenir_medium</item>
-        <item name="fontFamily">@font/avenir_medium</item>
+        <item name="android:textColor">@color/edittext_text_color</item>
+        <item name="android:textColorHint">@color/edittext_hint_text_color</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
     </style>
 
-    <style name="Sudox.CountryCodeSelector">
-        <item name="android:background">?attr/selectableItemBackground</item>
+    <style name="Sudox.EditTextLayout" parent="">
+        <item name="strokeColor">@color/edittext_stroke_color</item>
+        <item name="strokeWidth">@dimen/edittext_stroke_width</item>
+
+        <item name="errorTextAppearance">@style/Sudox.EditTextLayout.ErrorTextAppearance</item>
+        <item name="errorTextTopMargin">@dimen/edittext_error_text_top_margin</item>
+        <item name="errorTextLeftMargin">@dimen/edittext_error_text_left_margin</item>
+    </style>
+
+    <style name="Sudox.EditTextLayout.ErrorTextAppearance" parent="">
+        <item name="android:textColor">@color/edittext_error_color</item>
+        <item name="android:textSize">@dimen/edittext_error_text_size</item>
+        <item name="android:fontFamily">@font/opensans_regular</item> <!-- TODO: Replace to OpenSans -->
+    </style>
+
+    <style name="Sudox.CountryCodeSelector" parent="">
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
 
@@ -79,7 +70,7 @@
         <item name="flagMargin">@dimen/countrycodeselector_flag_margin</item>
     </style>
 
-    <style name="Sudox.PhoneEditText">
+    <style name="Sudox.PhoneEditText" parent="">
         <item name="separatorDrawable">@color/phoneedittext_separator_color</item>
         <item name="separatorDrawableWidth">@dimen/phoneedittext_separator_width</item>
         <item name="separatorDrawableHeight">@dimen/phoneedittext_separator_height</item>
@@ -87,28 +78,36 @@
         <item name="separatorRightMargin">@dimen/phoneedittext_separator_right_margin</item>
     </style>
 
-    <style name="Sudox.CodeEditText">
+    <style name="Sudox.CodeEditText" parent="">
         <item name="digitsCount">@integer/default_code_length</item>
-        <item name="digitsMargin">@dimen/codeedittext_digits_margin</item>
     </style>
 
-    <style name="Sudox.ApplicationBar">
+    <style name="Sudox.NicknameEditText" parent="Sudox.EditText">
+        <item name="tagTextColor">@color/nicknameedittext_tag_text_color</item>
+    </style>
+
+    <style name="Sudox.ApplicationBar" parent="">
+        <item name="android:paddingStart">@dimen/applicationbarbutton_padding_left</item>
+        <item name="android:paddingEnd">@dimen/applicationbarbutton_padding_right</item>
+        <item name="android:clipToPadding">false</item>
+
         <item name="titleTextAppearance">@style/Sudox.ApplicationBar.TitleTextAppearance</item>
     </style>
 
     <style name="Sudox.ApplicationBar.TitleTextAppearance" parent="">
         <item name="android:textSize">@dimen/applicationbartitle_text_size</item>
-        <item name="android:fontFamily">@font/avenir_heavy</item>
-        <item name="android:includeFontPadding">true</item>
-        <item name="fontFamily">@font/avenir_heavy</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_bold</item>
     </style>
 
     <style name="Sudox.ApplicationBar.Button" parent="">
-        <item name="android:background">?actionBarItemBackground</item>
-        <item name="android:paddingLeft">@dimen/applicationbarbutton_padding_left</item>
-        <item name="android:paddingRight">@dimen/applicationbarbutton_padding_right</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
+        <item name="android:paddingStart">@dimen/applicationbarbutton_padding_left</item>
+        <item name="android:paddingEnd">@dimen/applicationbarbutton_padding_right</item>
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+
+        <item name="textSize">@dimen/applicationbarbutton_text_size</item>
+        <item name="textTypeface">@font/opensans_semibold</item>
+        <item name="textColor">@color/applicationbarbutton_text_color</item>
 
         <item name="iconHeight">@dimen/applicationbarbutton_icon_height</item>
         <item name="iconWidth">@dimen/applicationbarbutton_icon_width</item>

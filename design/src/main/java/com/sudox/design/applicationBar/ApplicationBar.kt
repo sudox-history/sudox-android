@@ -7,31 +7,32 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat
 import com.sudox.design.R
 import com.sudox.design.applicationBar.applicationBarButton.ApplicationBarButton
+import com.sudox.design.isLayoutRtl
 import kotlin.math.max
 import kotlin.math.min
 
-const val APPBAR_BUTTON_AT_START_TAG = 0
-const val APPBAR_BUTTON_AT_END_TAG = 1
+private const val BUTTONS_IN_END_COUNT = 3
+
+const val APPBAR_START_BUTTON_TAG = 0
+const val APPBAR_FIRST_END_BUTTON_TAG = 1
+const val APPBAR_SECOND_END_BUTTON_TAG = 2
+const val APPBAR_THIRD_END_BUTTON_TAG = 3
 
 class ApplicationBar : ViewGroup, View.OnClickListener {
 
-    var buttonAtStart: ApplicationBarButton? = null
-    var buttonAtEnd: ApplicationBarButton? = null
     var listener: ApplicationBarListener? = null
+    var buttonAtStart: ApplicationBarButton? = null
+    var buttonsAtEnd = arrayOfNulls<ApplicationBarButton>(BUTTONS_IN_END_COUNT)
 
-    @VisibleForTesting
-    var titleTextId = 0
-    @VisibleForTesting
-    var titleTextView = AppCompatTextView(context)
-    @VisibleForTesting
-    var contentView: View? = null
+    internal var titleTextRes: Int = 0
+    internal var titleTextView = AppCompatTextView(context)
+    internal var contentView: View? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.applicationBarStyle)
@@ -42,19 +43,21 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
             TextViewCompat.setTextAppearance(titleTextView, it.getResourceIdOrThrow(R.styleable.ApplicationBar_titleTextAppearance))
         }
 
-        buttonAtStart = createButton(APPBAR_BUTTON_AT_START_TAG)
-        buttonAtEnd = createButton(APPBAR_BUTTON_AT_END_TAG)
-        reset()
+        initButtons()
     }
 
-    private fun createButton(tag: Any): ApplicationBarButton {
-        return ApplicationBarButton(context).apply {
-            this.id = View.generateViewId()
-            this.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
-            this.tag = tag
+    private fun initButtons() {
+        buttonAtStart = createButton()
+        buttonAtStart!!.tag = APPBAR_START_BUTTON_TAG
 
-            setOnClickListener(this@ApplicationBar)
-            addView(this)
+        for (i in buttonsAtEnd.indices) {
+            buttonsAtEnd[i] = createButton()
+            buttonsAtEnd[i]!!.tag = when (i) {
+                0 -> APPBAR_FIRST_END_BUTTON_TAG
+                1 -> APPBAR_SECOND_END_BUTTON_TAG
+                2 -> APPBAR_THIRD_END_BUTTON_TAG
+                else -> null
+            }
         }
     }
 
@@ -65,16 +68,20 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
         val availableHeight = MeasureSpec.getSize(heightMeasureSpec)
 
         measureChild(buttonAtStart, widthMeasureSpec, heightMeasureSpec)
-        measureChild(buttonAtEnd, widthMeasureSpec, heightMeasureSpec)
 
         if (contentView != null) {
-            measureChild(contentView, widthMeasureSpec, heightMeasureSpec)
+            measureChild(contentView!!, widthMeasureSpec, heightMeasureSpec)
+        }
+
+        val buttonsAtEndWidth = buttonsAtEnd.sumBy {
+            measureChild(it, widthMeasureSpec, heightMeasureSpec)
+            it!!.measuredWidth
         }
 
         val needWidth = paddingStart +
                 buttonAtStart!!.measuredWidth +
                 (contentView?.measuredWidth ?: 0) +
-                buttonAtEnd!!.measuredWidth +
+                buttonsAtEndWidth +
                 paddingEnd
 
         val measuredWidth = if (widthMode == MeasureSpec.EXACTLY) {
@@ -85,7 +92,10 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
             needWidth
         }
 
-        val needHeight = paddingTop + max(contentView?.measuredHeight ?: 0, buttonAtStart!!.measuredHeight) + paddingBottom
+        val needHeight = paddingTop +
+                max(max(contentView?.measuredHeight ?: 0, buttonAtStart!!.measuredHeight), buttonsAtEnd[0]!!.measuredHeight) +
+                paddingBottom
+
         val measuredHeight = if (heightMode == MeasureSpec.EXACTLY) {
             availableHeight
         } else if (heightMode == MeasureSpec.AT_MOST) {
@@ -98,45 +108,12 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        val width = right - left
-        val height = bottom - top
+        val isRtl = isLayoutRtl()
 
-        val buttonAtStartLeftBorder = paddingLeft
-        val buttonAtStartRightBorder = buttonAtStartLeftBorder + buttonAtStart!!.measuredWidth
-        val buttonAtStartTopBorder = height / 2 - buttonAtStart!!.measuredHeight / 2
-        val buttonAtStartBottomBorder = buttonAtStartTopBorder + buttonAtStart!!.measuredHeight
+        layoutStart(left, right, top, bottom, isRtl)
 
-        buttonAtStart!!.layout(
-                buttonAtStartLeftBorder,
-                buttonAtStartTopBorder,
-                buttonAtStartRightBorder,
-                buttonAtStartBottomBorder
-        )
-
-        val buttonAtEndRightBorder = width - paddingRight
-        val buttonAtEndLeftBorder = buttonAtEndRightBorder - buttonAtEnd!!.measuredWidth
-        val buttonAtEndTopBorder = height / 2 - buttonAtEnd!!.measuredHeight / 2
-        val buttonAtEndBottomBorder = buttonAtEndTopBorder + buttonAtEnd!!.measuredHeight
-
-        buttonAtEnd!!.layout(
-                buttonAtEndLeftBorder,
-                buttonAtEndTopBorder,
-                buttonAtEndRightBorder,
-                buttonAtEndBottomBorder
-        )
-
-        if (contentView != null) {
-            val contentViewLeftBorder = width / 2 - contentView!!.measuredWidth / 2
-            val contentViewRightBorder = contentViewLeftBorder + contentView!!.measuredWidth
-            val contentViewTopBorder = height / 2 - contentView!!.measuredHeight / 2
-            val contentViewBottomBorder = contentViewTopBorder + contentView!!.measuredHeight
-
-            contentView!!.layout(
-                    contentViewLeftBorder,
-                    contentViewTopBorder,
-                    contentViewRightBorder,
-                    contentViewBottomBorder
-            )
+        if (buttonsAtEnd.isNotEmpty()) {
+            layoutEnd(left, right, top, bottom, isRtl)
         }
     }
 
@@ -158,10 +135,103 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        listener?.onButtonClicked(view.tag)
+        listener?.onButtonClicked(view.tag as Int)
     }
 
-    fun setContent(view: View?) {
+    internal fun layoutStart(left: Int, right: Int, top: Int, bottom: Int, rtl: Boolean) {
+        var leftBorder = getStartLeftBorder(left, right, rtl)
+        var rightBorder = leftBorder
+
+        if (buttonAtStart!!.visibility == View.VISIBLE) {
+            if (rtl) {
+                leftBorder -= buttonAtStart!!.measuredWidth
+            } else {
+                rightBorder += buttonAtStart!!.measuredWidth
+            }
+
+            buttonAtStart!!.layout(leftBorder, top, rightBorder, bottom)
+        }
+
+        if (contentView?.visibility == View.VISIBLE) {
+            val contentViewLeftBorder = width / 2 - contentView!!.measuredWidth / 2
+            val contentViewRightBorder = contentViewLeftBorder + contentView!!.measuredWidth
+            val contentViewTopBorder = height / 2 - contentView!!.measuredHeight / 2
+            val contentViewBottomBorder = contentViewTopBorder + contentView!!.measuredHeight
+
+            contentView!!.layout(
+                    contentViewLeftBorder,
+                    contentViewTopBorder,
+                    contentViewRightBorder,
+                    contentViewBottomBorder
+            )
+        }
+    }
+
+    internal fun layoutEnd(left: Int, right: Int, top: Int, bottom: Int, rtl: Boolean) {
+        var leftBorder = getEndLeftBorder(left, right, rtl)
+        var rightBorder = leftBorder
+
+        for (i in buttonsAtEnd.size - 1 downTo 0) {
+            val button = buttonsAtEnd[i]
+
+            if (button!!.visibility != View.VISIBLE) {
+                continue
+            }
+
+            if (rtl) {
+                rightBorder += button.measuredWidth
+            } else {
+                leftBorder -= button.measuredWidth
+            }
+
+            button.layout(leftBorder, top, rightBorder, bottom)
+
+            if (rtl) {
+                leftBorder = rightBorder
+            } else {
+                rightBorder = leftBorder
+            }
+        }
+    }
+
+    internal fun getStartLeftBorder(left: Int, right: Int, rtl: Boolean): Int {
+        var leftBorder: Int
+
+        if (rtl) {
+            leftBorder = right - paddingStart
+
+            if (buttonAtStart!!.visibility == View.VISIBLE) {
+                leftBorder += buttonAtStart!!.paddingRight
+            }
+        } else {
+            leftBorder = left + paddingStart
+
+            if (buttonAtStart!!.visibility == View.VISIBLE) {
+                leftBorder -= buttonAtStart!!.paddingLeft
+            }
+        }
+
+        return leftBorder
+    }
+
+    internal fun getEndLeftBorder(left: Int, right: Int, rtl: Boolean): Int {
+        return if (rtl) {
+            left + paddingEnd - buttonAtStart!!.paddingRight
+        } else {
+            right - paddingEnd + buttonAtStart!!.paddingLeft
+        }
+    }
+
+    private fun createButton(): ApplicationBarButton {
+        return ApplicationBarButton(context).apply {
+            id = View.generateViewId()
+            layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT)
+            setOnClickListener(this@ApplicationBar)
+            addView(this)
+        }
+    }
+
+    fun setContentView(view: View?) {
         if (contentView != null && contentView != view) {
             removeViewInLayout(contentView)
         }
@@ -176,31 +246,36 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
         }
     }
 
-    fun setTitle(title: String?, fromRes: Boolean = false) {
-        titleTextView.text = title
+    fun setTitleText(text: String?, fromRes: Boolean = false) {
+        titleTextView.text = text
 
         if (!fromRes) {
-            titleTextId = 0
+            titleTextRes = 0
         }
 
-        if (title != null) {
-            setContent(titleTextView)
+        if (text != null) {
+            setContentView(titleTextView)
         } else {
-            setContent(null)
+            setContentView(null)
         }
     }
 
-    fun setTitle(@StringRes titleTextId: Int) {
-        val title = context.getString(titleTextId)
+    fun setTitleText(@StringRes textRes: Int) {
+        val text = resources.getString(textRes)
+        titleTextRes = textRes
+        setTitleText(text, true)
+    }
 
-        this.titleTextId = titleTextId
-        this.setTitle(title, true)
+    fun resetButtonsEnd() {
+        for (button in buttonsAtEnd) {
+            button!!.reset()
+        }
     }
 
     fun reset() {
-        setTitle(null)
-        buttonAtStart!!.toggle(null)
-        buttonAtEnd!!.toggle(null)
-        listener = null
+        buttonAtStart!!.reset()
+        setTitleText(null)
+        setContentView(null)
+        resetButtonsEnd()
     }
 }

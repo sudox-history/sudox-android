@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="Sudox.Auth">
+        <item name="paddingTopPercent">@dimen/auth_padding_top_percent</item>
+        <item name="android:clipToPadding">false</item>
+    </style>
+
     <style name="Sudox.Auth.Title" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/avenir_heavy</item>
-        <item name="fontFamily">@font/avenir_heavy</item>
+        <item name="android:textSize">@dimen/auth_title_text_size</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_bold</item>
     </style>
 
     <style name="Sudox.Auth.Description" parent="android:Widget.TextView">
-        <item name="android:fontFamily">@font/avenir_medium</item>
-        <item name="fontFamily">@font/avenir_medium</item>
+        <item name="android:drawablePadding">@dimen/auth_description_drawable_padding</item>
+        <item name="android:layout_marginTop">@dimen/auth_description_margin_top</item>
+
+        <item name="android:textColor">@color/auth_description_text_color</item>
+        <item name="android:textSize">@dimen/auth_description_text_size</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+
+    <style name="Sudox.Auth.EditText" parent="">
+        <item name="android:layout_marginTop">@dimen/auth_first_edit_text_margin</item>
+    </style>
+
+    <style name="Sudox.Auth.ActionButton" parent="">
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_alignParentRight">true</item>
     </style>
 </resources>

@@ -2,6 +2,7 @@ package com.sudox.design.codeEditText
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.os.Parcelable
 import android.text.InputType
 import android.util.AttributeSet
@@ -9,20 +10,18 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
 import com.sudox.design.R
+import com.sudox.design.editTextLayout.EditTextLayoutChild
 import kotlin.math.min
 
-class CodeEditText : ViewGroup {
+class CodeEditText : ViewGroup, EditTextLayoutChild {
 
     var codeFilledCallback: ((String) -> (Unit))? = null
 
     internal var digitsEditTexts: Array<AppCompatEditText>? = null
     internal var isPositioningEnabled = true
-
-    private var digitsMargin = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.codeEditTextStyle)
@@ -30,10 +29,7 @@ class CodeEditText : ViewGroup {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.CodeEditText, defStyleAttr, 0).use {
-            val digitsCount = it.getIntegerOrThrow(R.styleable.CodeEditText_digitsCount)
-
-            digitsMargin = it.getDimensionPixelSizeOrThrow(R.styleable.CodeEditText_digitsMargin)
-            digitsEditTexts = Array(digitsCount, ::createDigitEditText)
+            digitsEditTexts = Array(it.getIntegerOrThrow(R.styleable.CodeEditText_digitsCount), ::createDigitEditText)
         }
     }
 
@@ -68,7 +64,7 @@ class CodeEditText : ViewGroup {
             it.measuredWidth
         }
 
-        val needWidth = paddingLeft + digitsWidth + (digitsEditTexts!!.size - 1) * digitsMargin + paddingRight
+        val needWidth = paddingLeft + digitsWidth + paddingRight
         val measuredWidth = if (widthMode == MeasureSpec.EXACTLY) {
             availableWidth
         } else if (widthMode == MeasureSpec.AT_MOST) {
@@ -91,10 +87,15 @@ class CodeEditText : ViewGroup {
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val digitHeight = digitsEditTexts!![0].measuredHeight
+        val digitWidth = digitsEditTexts!![0].measuredWidth
         var rightBorder: Int
         var leftBorder = paddingLeft
         val topBorder = paddingTop
         val bottomBorder = topBorder + digitHeight
+
+        val width = right - left
+        val freeWidth = width - digitsEditTexts!!.size * digitWidth
+        val digitsMargin = freeWidth / (digitsEditTexts!!.size - 1)
 
         digitsEditTexts!!.forEach {
             rightBorder = leftBorder + it.measuredWidth
@@ -136,5 +137,15 @@ class CodeEditText : ViewGroup {
 
     internal fun onCodeCompleted() {
         codeFilledCallback?.invoke(getCode() ?: return)
+    }
+
+    override fun getInstance(): View {
+        return this
+    }
+
+    override fun setStroke(width: Int, color: Int) {
+        digitsEditTexts!!
+                .map { it.background as GradientDrawable }
+                .forEach { it.setStroke(width, color) }
     }
 }
