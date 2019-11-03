@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="button_bounds_change_animation_duration">200</integer>
     <integer name="default_code_length">5</integer>
 </resources>

@@ -8,8 +8,6 @@
     <color name="accent_color">#000000</color>
     <color name="text_color">#000000</color>
 
-    <color name="button_background_color">#FFFFFF</color>
-
     <color name="edittext_text_color">#000000</color>
     <color name="edittext_background_color">#FFFFFF</color>
     <color name="edittext_stroke_color">#E0E0E0</color>

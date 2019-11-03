@@ -63,8 +63,8 @@ class EditTextLayoutTest : Assert() {
     }
 
     @Test
-    fun testStartup() = editTextLayout!!.let {
-        assertNull(it.getErrorText())
+    fun testStartup() {
+        assertNull(editTextLayout!!.getErrorText())
     }
 
     @Test

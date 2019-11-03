@@ -3,7 +3,6 @@ package com.sudox.messenger.android
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.auth.register.AuthRegisterFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.ApplicationBarManager

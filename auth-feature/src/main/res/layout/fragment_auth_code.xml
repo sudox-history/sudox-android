@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/authCodeTitleTextView"
-        android:drawableLeft="@drawable/ic_message" />
+        android:drawableStart="@drawable/ic_message" />
 
     <com.sudox.design.editTextLayout.EditTextLayout
         android:id="@+id/authCodeEditTextLayout"

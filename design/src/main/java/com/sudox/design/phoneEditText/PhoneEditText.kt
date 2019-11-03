@@ -5,22 +5,21 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Parcelable
 import android.telephony.PhoneNumberUtils
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.use
 import androidx.core.view.updatePadding
 import com.sudox.design.R
+import com.sudox.design.editTextLayout.EditTextLayoutChild
 import com.sudox.design.phoneEditText.childs.PhoneCountryCodeSelector
 import com.sudox.design.phoneEditText.childs.PhoneNumberEditText
-import com.sudox.design.editTextLayout.EditTextLayoutChild
 import kotlin.math.max
 import kotlin.math.min
 

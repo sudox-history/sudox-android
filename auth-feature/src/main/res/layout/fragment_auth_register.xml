@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/authRegisterTitleTextView"
-        android:drawableLeft="@drawable/ic_account"
+        android:drawableStart="@drawable/ic_account"
         android:text="@string/enter_nickname" />
 
     <com.sudox.design.editTextLayout.EditTextLayout

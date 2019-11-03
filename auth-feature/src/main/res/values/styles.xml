@@ -25,9 +25,4 @@
     <style name="Sudox.Auth.EditText" parent="">
         <item name="android:layout_marginTop">@dimen/auth_first_edit_text_margin</item>
     </style>
-
-    <style name="Sudox.Auth.ActionButton" parent="">
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_alignParentRight">true</item>
-    </style>
 </resources>
