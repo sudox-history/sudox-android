@@ -87,10 +87,7 @@
     <style name="Sudox.ApplicationBar.Button" parent="">
         <item name="android:paddingStart">@dimen/applicationbarbutton_padding_left</item>
         <item name="android:paddingEnd">@dimen/applicationbarbutton_padding_right</item>
-
-        <item name="android:background">?actionBarItemBackground</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
 
         <item name="textSize">@dimen/applicationbarbutton_text_size</item>
         <item name="textTypeface">@font/opensans_semibold</item>
