@@ -42,6 +42,7 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
                     InputType.TYPE_NUMBER_FLAG_DECIMAL or
                     InputType.TYPE_NUMBER_FLAG_SIGNED
 
+            background = background.mutate()
             isSingleLine = true
             maxLines = 1
 
@@ -154,5 +155,7 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
         digitsEditTexts!!
                 .map { it.background as GradientDrawable }
                 .forEach { it.setStroke(width, color) }
+
+        invalidate()
     }
 }

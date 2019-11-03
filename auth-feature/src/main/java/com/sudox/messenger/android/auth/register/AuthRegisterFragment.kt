@@ -7,17 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
+import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.core.CoreActivity
+import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayout
+import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterEditTextLayout
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterNicknameEditText
 
-class AuthRegisterFragment : Fragment() {
+class AuthRegisterFragment : Fragment(), ApplicationBarListener {
+
+    override fun onButtonClicked(tag: Int) {
+        authRegisterEditTextLayout.setErrorText(R.string.sudox_not_working_in_this_country)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val activity = activity as CoreActivity
 
         activity.getApplicationBarManager().let {
             it.reset()
+            it.setListener(this)
             it.toggleButtonBack(true)
             it.toggleButtonNext(true)
             it.setTitleText(R.string.sign_in)

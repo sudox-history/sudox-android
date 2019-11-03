@@ -25,6 +25,8 @@ class EditTextLayoutState : View.BaseSavedState {
     fun readToView(editTextLayout: EditTextLayout) {
         if (errorTextId != 0) {
             editTextLayout.setErrorText(errorTextId)
+        } else {
+            editTextLayout.setErrorText(null)
         }
     }
 

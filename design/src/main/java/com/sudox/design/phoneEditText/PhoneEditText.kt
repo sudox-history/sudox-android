@@ -69,7 +69,7 @@ class PhoneEditText : ViewGroup, EditTextLayoutChild {
 
     private fun inheritEditTextParameters() {
         clipToOutline = true // Fix for ripple-effect's borders
-        background = numberEditText.background
+        background = numberEditText.background.mutate()
 
         countryCodeSelector.apply {
             updatePadding(left = numberEditText.paddingLeft, right = separatorLeftMargin)
@@ -213,6 +213,7 @@ class PhoneEditText : ViewGroup, EditTextLayoutChild {
 
     override fun setStroke(width: Int, color: Int) {
         (background as GradientDrawable).setStroke(width, color)
+        invalidate()
     }
 
     override fun getInstance(): View {

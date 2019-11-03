@@ -1,9 +1,8 @@
 apply from: '../configs/versions.gradle'
 
 dependencies {
-    implementation("com.sudox:proto.client:$protocolVersion")
-    implementation("com.sudox:crypto:$cryptoVersion")
     implementation("com.sudox:events:$eventsVersion")
+    implementation("androidx.annotation:annotation:$annotationsVersion")
 
     implementation("net.sourceforge.streamsupport:streamsupport-cfuture:$cfutureVersion")
     implementation("com.google.dagger:dagger:$daggerVersion")

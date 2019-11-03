@@ -3,6 +3,7 @@ apply from: '../configs/versions.gradle'
 dependencies {
     implementation project(path: ':core')
     implementation project(path: ':design')
+    implementation project(path: ':api')
 
     implementation("androidx.appcompat:appcompat:$appCompatVersion")
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
