@@ -146,42 +146,6 @@ class CodeEditTextTest : Assert() {
     }
 
     @Test
-    fun testDigitReplacingWhenCursorOnStart() {
-        codeEditText!!.digitsEditTexts!!.forEach {
-            it.printOne()
-        }
-
-        codeEditText!!.digitsEditTexts!!.forEachIndexed { i, it ->
-            it.setSelection(0)
-            it.printTwo()
-
-            assertEquals("2", it.text.toString())
-
-            if (i < codeEditText!!.digitsEditTexts!!.lastIndex) {
-                assertTrue(codeEditText!!.digitsEditTexts!![i + 1].isFocused)
-            }
-        }
-    }
-
-    @Test
-    fun testDigitReplacingWhenCursorOnEnd() {
-        codeEditText!!.digitsEditTexts!!.forEach {
-            it.printOne()
-        }
-
-        codeEditText!!.digitsEditTexts!!.forEachIndexed { i, it ->
-            it.setSelection(1)
-            it.printTwo()
-
-            assertEquals("2", it.text.toString())
-
-            if (i < codeEditText!!.digitsEditTexts!!.lastIndex) {
-                assertTrue(codeEditText!!.digitsEditTexts!![i + 1].isFocused)
-            }
-        }
-    }
-
-    @Test
     fun checkThatInvalidSymbolsNotAllowed() {
         codeEditText!!.digitsEditTexts!!.forEach {
             it.printA()
