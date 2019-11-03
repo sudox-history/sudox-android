@@ -3,11 +3,13 @@ package com.sudox.design.applicationBar.applicationBarButton
 import android.os.Parcel
 import android.os.Parcelable
 import android.view.View
+import androidx.core.os.ParcelCompat.readBoolean
+import androidx.core.os.ParcelCompat.writeBoolean
 
 class ApplicationBarButtonState : View.BaseSavedState {
 
     private var visibility: Int = 0
-    private var clickableFlag: Byte = 0
+    private var isClickable: Boolean = false
     private var iconDirection: ApplicationBarButtonIconDirection? = null
     private var iconDrawableRes: Int = 0
     private var textRes: Int = 0
@@ -15,7 +17,7 @@ class ApplicationBarButtonState : View.BaseSavedState {
     constructor(superState: Parcelable) : super(superState)
     constructor(source: Parcel) : super(source) {
         visibility = source.readInt()
-        clickableFlag = source.readByte()
+        isClickable = readBoolean(source)
         iconDirection = ApplicationBarButtonIconDirection.values()[source.readInt()]
         iconDrawableRes = source.readInt()
         textRes = source.readInt()
@@ -24,18 +26,18 @@ class ApplicationBarButtonState : View.BaseSavedState {
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
 
-        out.apply {
-            writeInt(visibility)
-            writeByte(clickableFlag)
-            writeInt(iconDirection!!.ordinal)
-            writeInt(iconDrawableRes)
-            writeInt(textRes)
+        out.let {
+            it.writeInt(visibility)
+            writeBoolean(it, isClickable)
+            it.writeInt(iconDirection!!.ordinal)
+            it.writeInt(iconDrawableRes)
+            it.writeInt(textRes)
         }
     }
 
     fun writeFromView(button: ApplicationBarButton) {
         visibility = button.visibility
-        clickableFlag = if (button.isClickable) 1.toByte() else 0.toByte()
+        isClickable = button.isClickable
         iconDirection = button.iconDirection
         iconDrawableRes = button.iconDrawableRes
         textRes = button.textRes
@@ -51,7 +53,7 @@ class ApplicationBarButtonState : View.BaseSavedState {
         }
 
         button.setIconDirection(iconDirection!!)
-        button.isClickable = clickableFlag == 1.toByte()
+        button.isClickable = isClickable
         button.visibility = visibility
     }
 

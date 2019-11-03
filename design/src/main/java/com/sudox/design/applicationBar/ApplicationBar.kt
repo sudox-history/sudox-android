@@ -14,6 +14,8 @@ import androidx.core.widget.TextViewCompat
 import com.sudox.design.R
 import com.sudox.design.applicationBar.applicationBarButton.ApplicationBarButton
 import com.sudox.design.isLayoutRtl
+import kotlin.math.max
+import kotlin.math.min
 
 private const val BUTTONS_IN_END_COUNT = 3
 
@@ -60,17 +62,49 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
+        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
+        val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
+        val availableHeight = MeasureSpec.getSize(heightMeasureSpec)
+
         measureChild(buttonAtStart, widthMeasureSpec, heightMeasureSpec)
 
         if (contentView != null) {
             measureChild(contentView!!, widthMeasureSpec, heightMeasureSpec)
         }
 
-        for (button in buttonsAtEnd) {
-            measureChild(button, widthMeasureSpec, heightMeasureSpec)
+        val buttonsAtEndWidth = buttonsAtEnd.sumBy {
+            measureChild(it, widthMeasureSpec, heightMeasureSpec)
+            it!!.measuredWidth
         }
 
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val needWidth = paddingStart +
+                buttonAtStart!!.measuredWidth +
+                (contentView?.measuredWidth ?: 0) +
+                buttonsAtEndWidth +
+                paddingEnd
+
+        val measuredWidth = if (widthMode == MeasureSpec.EXACTLY) {
+            availableWidth
+        } else if (widthMode == MeasureSpec.AT_MOST) {
+            min(needWidth, availableWidth)
+        } else {
+            needWidth
+        }
+
+        val needHeight = paddingTop +
+                max(max(contentView?.measuredHeight ?: 0, buttonAtStart!!.measuredHeight), buttonsAtEnd[0]!!.measuredHeight) +
+                paddingBottom
+
+        val measuredHeight = if (heightMode == MeasureSpec.EXACTLY) {
+            availableHeight
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            min(needHeight, availableHeight)
+        } else {
+            needHeight
+        }
+
+        setMeasuredDimension(measuredWidth, measuredHeight)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

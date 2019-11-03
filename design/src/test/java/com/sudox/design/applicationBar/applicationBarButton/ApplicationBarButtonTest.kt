@@ -1,12 +1,12 @@
 package com.sudox.design.applicationBar.applicationBarButton
 
 import android.app.Activity
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import com.sudox.design.DesignTestRunner
 import com.sudox.design.R
+import com.sudox.design.phoneNumberUtil
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -14,15 +14,11 @@ import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.android.controller.ActivityController
 
-private const val BUTTON_TEXT = "Text"
-private val BUTTON_ICON_DRAWABLE = R.drawable.abc_vector_test
-
 @RunWith(DesignTestRunner::class)
 class ApplicationBarButtonTest : Assert() {
 
-    private lateinit var navigationBarButton: ApplicationBarButton
-    private lateinit var activityController: ActivityController<Activity>
-    private lateinit var activity: Activity
+    private var applicationBarButton: ApplicationBarButton? = null
+    private var activityController: ActivityController<Activity>? = null
 
     @Before
     fun setUp() {
@@ -30,92 +26,70 @@ class ApplicationBarButtonTest : Assert() {
     }
 
     private fun createActivity() {
-        val bundle: Bundle? = if (::activityController.isInitialized) {
-            Bundle().apply {
-                activityController.saveInstanceState(this)
-            }
-        } else {
-            null
+        var state: Bundle? = null
+
+        activityController?.let {
+            state = Bundle()
+
+            it.saveInstanceState(state)
+            it.pause()
+            it.stop()
+            it.destroy()
         }
 
         activityController = Robolectric
                 .buildActivity(Activity::class.java)
+                .create()
                 .start()
+
+        activityController!!.get().apply {
+            applicationBarButton = ApplicationBarButton(this).apply {
+                id = Int.MAX_VALUE
+            }
+
+            phoneNumberUtil = PhoneNumberUtil.createInstance(this)
+            setContentView(applicationBarButton)
+        }
+
+        state?.let {
+            activityController!!.restoreInstanceState(state)
+        }
+
+        activityController!!
+                .resume()
                 .visible()
-
-        activity = activityController.get()
-        navigationBarButton = ApplicationBarButton(activity).apply {
-            id = Int.MAX_VALUE
-        }
-
-        activity.setContentView(navigationBarButton)
-
-        if (bundle != null) {
-            activityController.restoreInstanceState(bundle)
-        }
     }
 
     @Test
-    fun testViewReset_BasicParams() {
-        navigationBarButton.isClickable = true
-        navigationBarButton.visibility = View.VISIBLE
-        navigationBarButton.iconDirection = ApplicationBarButtonIconDirection.END
-        navigationBarButton.reset()
+    fun testViewResetting() {
+        applicationBarButton!!.isClickable = true
+        applicationBarButton!!.visibility = View.VISIBLE
+        applicationBarButton!!.iconDirection = ApplicationBarButtonIconDirection.END
+        applicationBarButton!!.setText(android.R.string.selectTextMode)
+        applicationBarButton!!.setIconDrawable(R.drawable.abc_vector_test)
+        applicationBarButton!!.reset()
         createActivity()
 
-        assertFalse(navigationBarButton.isClickable)
-        assertEquals(View.GONE, navigationBarButton.visibility)
-        assertEquals(ApplicationBarButtonIconDirection.START, navigationBarButton.iconDirection)
+        assertFalse(applicationBarButton!!.isClickable)
+        assertEquals(View.GONE, applicationBarButton!!.visibility)
+        assertEquals(ApplicationBarButtonIconDirection.START, applicationBarButton!!.iconDirection)
+        assertNull(applicationBarButton!!.iconDrawable)
+        assertNull(applicationBarButton!!.text)
     }
 
     @Test
-    fun testViewResetMainParamsNotFromRes() {
-        navigationBarButton.setText(BUTTON_TEXT)
-        navigationBarButton.setIconDrawable(ColorDrawable(Color.BLACK))
-        navigationBarButton.reset()
+    fun testStateSaving() {
+        applicationBarButton!!.isClickable = true
+        applicationBarButton!!.visibility = View.VISIBLE
+        applicationBarButton!!.iconDirection = ApplicationBarButtonIconDirection.END
+        applicationBarButton!!.setText(android.R.string.selectTextMode)
+        applicationBarButton!!.setIconDrawable(R.drawable.abc_vector_test)
         createActivity()
 
-        assertNull(navigationBarButton.iconDrawable)
-        assertNull(navigationBarButton.text)
-    }
-
-    @Test
-    fun testViewResetMainParamsFromRes() {
-        navigationBarButton.setText(android.R.string.selectTextMode)
-        navigationBarButton.setIconDrawable(BUTTON_ICON_DRAWABLE)
-        navigationBarButton.reset()
-        createActivity()
-
-        assertNull(navigationBarButton.iconDrawable)
-        assertNull(navigationBarButton.text)
-    }
-
-    @Test
-    fun testBasicParamsSaving() {
-        navigationBarButton.isClickable = true
-        navigationBarButton.visibility = View.VISIBLE
-        navigationBarButton.iconDirection = ApplicationBarButtonIconDirection.END
-        createActivity()
-
-        assertTrue(navigationBarButton.isClickable)
-        assertEquals(View.VISIBLE, navigationBarButton.visibility)
-        assertEquals(ApplicationBarButtonIconDirection.END, navigationBarButton.iconDirection)
-    }
-
-    @Test
-    fun testSavingTextFromRes() {
-        navigationBarButton.setText(android.R.string.selectTextMode)
-        createActivity()
-
-        assertEquals(android.R.string.selectTextMode, navigationBarButton.textRes)
-        assertEquals("Select text", navigationBarButton.text)
-    }
-
-    @Test
-    fun testSavingDrawableFromRes() {
-        navigationBarButton.setIconDrawable(BUTTON_ICON_DRAWABLE)
-        createActivity()
-
-        assertEquals(BUTTON_ICON_DRAWABLE, navigationBarButton.iconDrawableRes)
+        assertTrue(applicationBarButton!!.isClickable)
+        assertEquals(View.VISIBLE, applicationBarButton!!.visibility)
+        assertEquals(ApplicationBarButtonIconDirection.END, applicationBarButton!!.iconDirection)
+        assertEquals(android.R.string.selectTextMode, applicationBarButton!!.textRes)
+        assertEquals("Select text", applicationBarButton!!.text)
     }
 }
