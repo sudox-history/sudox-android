@@ -6,7 +6,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 
-class CodeDigitTextWatcher(
+class CodeTextWatcher(
         val digitEditText: EditText,
         val digitEditTextIndex: Int,
         val codeEditText: CodeEditText
@@ -18,12 +18,9 @@ class CodeDigitTextWatcher(
         }
 
         if (event.keyCode == KeyEvent.KEYCODE_DEL) {
-            codeEditText.digitsEditTexts!!.elementAtOrNull(digitEditTextIndex - 1)?.requestFocus()
+            codeEditText.changeFocusedDigit(digitEditTextIndex - 1)
         } else if (event.keyCode == KeyEvent.KEYCODE_ENTER) {
-            codeEditText.onCodeCompleted()
-        } else if (digitEditText.text.isNotEmpty()) {
-            // First symbol will be removed
-            digitEditText.setSelection(1)
+            codeEditText.notifyThatCodeEntered()
         }
 
         return false
@@ -35,20 +32,21 @@ class CodeDigitTextWatcher(
         }
 
         if (codeEditText.isPositioningEnabled && filterSource(source)) {
-            if (digitEditTextIndex == codeEditText.digitsEditTexts!!.lastIndex) {
-                codeEditText.onCodeCompleted()
+            if (digitEditTextIndex != codeEditText.digitsEditTexts!!.lastIndex) {
+                codeEditText.changeFocusedDigit(digitEditTextIndex + 1)
             } else {
-                codeEditText
-                        .digitsEditTexts!!
-                        .elementAtOrNull(digitEditTextIndex + 1)
-                        ?.requestFocus()
+                codeEditText.notifyThatCodeEntered()
             }
         }
     }
 
     private fun filterSource(source: Editable): Boolean {
         if (source.length > 1) {
-            source.delete(0, source.length - 1)
+            if (digitEditText.selectionStart <= 1) {
+                source.delete(1, source.length)
+            } else {
+                source.delete(0, source.length - 1)
+            }
         }
 
         if (source.isNotEmpty() && !source[0].isDigit()) {

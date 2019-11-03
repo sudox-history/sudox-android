@@ -46,7 +46,7 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
             isSingleLine = true
             maxLines = 1
 
-            CodeDigitTextWatcher(this, index, this@CodeEditText).apply {
+            CodeTextWatcher(this, index, this@CodeEditText).apply {
                 addTextChangedListener(this)
                 setOnKeyListener(this)
             }
@@ -137,7 +137,7 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
         return builder.toString()
     }
 
-    internal fun onCodeCompleted() {
+    internal fun notifyThatCodeEntered() {
         val code = getCode() ?: return
         val lastDigitEditText = digitsEditTexts!!.last()
         val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -157,5 +157,17 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
                 .forEach { it.setStroke(width, color) }
 
         invalidate()
+    }
+
+    internal fun changeFocusedDigit(index: Int) {
+        val digitEditText = digitsEditTexts!!.elementAtOrNull(index)
+
+        if (digitEditText != null) {
+            if (digitEditText.text.toString().isNotEmpty()) {
+                digitEditText.setSelection(1)
+            }
+
+            digitEditText.requestFocus()
+        }
     }
 }
