@@ -58,7 +58,7 @@
     <style name="Sudox.EditTextLayout.ErrorTextAppearance" parent="">
         <item name="android:textColor">@color/edittext_error_color</item>
         <item name="android:textSize">@dimen/edittext_error_text_size</item>
-        <item name="android:fontFamily">@font/opensans_regular</item> <!-- TODO: Replace to OpenSans -->
+        <item name="android:fontFamily">@font/opensans_regular</item>
     </style>
 
     <style name="Sudox.CountryCodeSelector" parent="">

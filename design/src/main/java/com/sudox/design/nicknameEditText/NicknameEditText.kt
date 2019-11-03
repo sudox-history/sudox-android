@@ -7,14 +7,14 @@ import android.os.Parcelable
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.use
 import com.sudox.design.R
+import com.sudox.design.editTextLayout.ChildEditText
 
 internal const val TAG_SPLITTER = '#'
 
-class NicknameEditText : AppCompatEditText {
+class NicknameEditText : ChildEditText {
 
     private var tagColor = 0
 

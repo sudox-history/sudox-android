@@ -20,15 +20,20 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/authPhoneTitleTextView"
         android:drawableLeft="@drawable/ic_smartphone"
-        android:text="@string/enter_phone"
-        tools:ignore="RtlHardcoded" />
+        android:text="@string/enter_phone" />
 
-    <com.sudox.design.phoneEditText.PhoneEditText
-        android:id="@+id/authPhoneEditText"
+    <com.sudox.design.editTextLayout.EditTextLayout
+        android:id="@+id/authPhoneEditTextLayout"
         style="@style/Sudox.Auth.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/authPhoneDescriptionTextView"
-        app:autofillMyNumber="true" />
+        android:layout_below="@id/authPhoneDescriptionTextView">
 
+        <com.sudox.design.phoneEditText.PhoneEditText
+            android:id="@+id/authPhoneEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:autofillMyNumber="true" />
+
+    </com.sudox.design.editTextLayout.EditTextLayout>
 </com.sudox.design.percentLayouts.PercentRelativeLayout>

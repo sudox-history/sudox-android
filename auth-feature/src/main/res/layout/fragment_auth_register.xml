@@ -20,12 +20,18 @@
         android:drawableLeft="@drawable/ic_account"
         android:text="@string/enter_nickname" />
 
-    <com.sudox.design.nicknameEditText.NicknameEditText
-        android:id="@+id/authRegisterNicknameEditText"
+    <com.sudox.design.editTextLayout.EditTextLayout
+        android:id="@+id/authRegisterEditTextLayout"
         style="@style/Sudox.Auth.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/authRegisterDescriptionTextView"
-        android:hint="@string/nickname" />
+        android:layout_below="@id/authRegisterDescriptionTextView">
 
+        <com.sudox.design.nicknameEditText.NicknameEditText
+            android:id="@+id/authRegisterNicknameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/nickname" />
+
+    </com.sudox.design.editTextLayout.EditTextLayout>
 </com.sudox.design.percentLayouts.PercentRelativeLayout>

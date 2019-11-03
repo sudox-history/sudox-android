@@ -19,12 +19,17 @@
         android:layout_below="@id/authCodeTitleTextView"
         android:drawableLeft="@drawable/ic_message" />
 
-    <com.sudox.design.codeEditText.CodeEditText
-        android:id="@+id/authCodeEditText"
+    <com.sudox.design.editTextLayout.EditTextLayout
+        android:id="@+id/authCodeEditTextLayout"
         style="@style/Sudox.Auth.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/authCodeDescriptionTextView"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@id/authCodeDescriptionTextView">
 
+        <com.sudox.design.codeEditText.CodeEditText
+            android:id="@+id/authCodeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.sudox.design.editTextLayout.EditTextLayout>
 </com.sudox.design.percentLayouts.PercentRelativeLayout>

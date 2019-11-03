@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 
-class ChildEditText : AppCompatEditText, EditTextLayoutChild {
+open class ChildEditText : AppCompatEditText, EditTextLayoutChild {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
