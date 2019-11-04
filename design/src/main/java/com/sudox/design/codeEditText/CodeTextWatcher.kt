@@ -42,10 +42,12 @@ class CodeTextWatcher(
 
     private fun filterSource(source: Editable): Boolean {
         if (source.length > 1) {
-            if (digitEditText.selectionStart <= 1) {
-                source.delete(1, source.length)
-            } else {
+            val selection = digitEditText.selectionStart - source.length
+
+            if (selection >= 0) {
                 source.delete(0, source.length - 1)
+            } else {
+                source.delete(1, source.length)
             }
         }
 
