@@ -41,7 +41,7 @@ class EditTextLayoutTest : Assert() {
                 .start()
 
         activityController!!.get().apply {
-            editText = EditText(this).apply {
+            editText = ChildEditText(this).apply {
                 id = Int.MAX_VALUE - 1
             }
 
