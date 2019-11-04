@@ -1,6 +1,7 @@
 package com.sudox.messenger.android.managers
 
 import android.os.Bundle
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.sudox.messenger.android.R
@@ -49,21 +50,18 @@ class AppNavigationManagerTest : Assert() {
                 }.start()
 
         val activity = activityController!!.get()
+        val frameLayout = FrameLayout(activity).apply {
+            id = Int.MAX_VALUE
+        }
 
-        activity.setContentView(R.layout.activity_app)
+        activity.setContentView(frameLayout)
 
         state?.let {
             activityController!!.restoreInstanceState(state)
         }
 
-        navigationManager = AppNavigationManager(
-                activity.supportFragmentManager,
-                R.id.frameContainer
-        )
-
-        activityController!!
-                .resume()
-                .visible()
+        navigationManager = AppNavigationManager(activity.supportFragmentManager, frameLayout.id)
+        activityController!!.resume().visible()
     }
 
     @Test
