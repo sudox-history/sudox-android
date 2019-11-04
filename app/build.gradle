@@ -23,7 +23,7 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':auth-feature')
+    implementation project(path: ':auth')
     implementation project(path: ':design')
     implementation project(path: ':core')
 

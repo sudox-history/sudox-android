@@ -1,5 +1,5 @@
 include ':app',
         ':api',
         ':design',
-        ':auth-feature',
+        ':auth',
         ':core'
