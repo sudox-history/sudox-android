@@ -34,8 +34,6 @@ class PercentRelativeLayout : RelativeLayout {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-
         windowManager.defaultDisplay.getSize(windowSize)
 
         val windowHeight = windowSize.y
@@ -56,5 +54,7 @@ class PercentRelativeLayout : RelativeLayout {
         if (paddingLeftPercent != 0.0F) {
             updatePadding(left = (windowWidth * paddingLeftPercent).toInt())
         }
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 }
