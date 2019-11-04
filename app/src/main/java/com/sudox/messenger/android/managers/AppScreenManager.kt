@@ -8,11 +8,15 @@ import com.sudox.messenger.android.core.managers.ScreenManager
 class AppScreenManager(val activity: Activity) : ScreenManager {
 
     override fun setInputMode(mode: Int) {
-        activity.window.setSoftInputMode(mode)
+        if (activity.window.attributes.softInputMode != mode) {
+            activity.window.setSoftInputMode(mode)
+        }
     }
 
     override fun setOrientation(orientation: Int) {
-        activity.requestedOrientation = orientation
+        if (activity.window.attributes.screenOrientation != orientation) {
+            activity.requestedOrientation = orientation
+        }
     }
 
     override fun reset() {

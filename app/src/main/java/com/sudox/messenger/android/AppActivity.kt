@@ -4,7 +4,7 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
-import com.sudox.messenger.android.auth.register.AuthRegisterFragment
+import com.sudox.messenger.android.auth.phone.AuthPhoneFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.ApplicationBarManager
 import com.sudox.messenger.android.core.managers.NavigationManager
@@ -34,23 +34,21 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         if (savedInstanceState != null) {
             navigationManager.restoreState(savedInstanceState)
         } else {
-            navigationManager.showFragment(AuthRegisterFragment(), false)
+            navigationManager.showFragment(AuthPhoneFragment(), false)
         }
     }
 
-    override fun onBackPressed() {
-        if (!navigationManager.showPreviousFragment()) {
-            super.onBackPressed()
-        }
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK && !navigationManager.showPreviousFragment()) {
             super.onBackPressed()
             return true
         }
 
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onBackPressed() {
+        // Working bad with OnKeyListener in CustomView
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

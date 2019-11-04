@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.core.CoreActivity
-import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayout
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterEditTextLayout
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterNicknameEditText
 
@@ -24,7 +23,6 @@ class AuthRegisterFragment : Fragment(), ApplicationBarListener {
         val activity = activity as CoreActivity
 
         activity.getApplicationBarManager().let {
-            it.reset()
             it.setListener(this)
             it.toggleButtonBack(true)
             it.toggleButtonNext(true)
@@ -32,7 +30,6 @@ class AuthRegisterFragment : Fragment(), ApplicationBarListener {
         }
 
         activity.getScreenManager().let {
-            it.reset()
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         }

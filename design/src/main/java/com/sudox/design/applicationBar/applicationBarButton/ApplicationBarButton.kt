@@ -11,7 +11,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
@@ -192,16 +192,18 @@ class ApplicationBarButton : View {
         invalidate()
     }
 
-    fun setIconDrawable(@DrawableRes drawableRes: Int) {
-        val drawable = ContextCompat.getDrawable(context, drawableRes)
-
-        this.iconDrawableRes = drawableRes
-        this.setIconDrawable(drawable, true)
+    fun setIconDrawable(@DrawableRes iconDrawableRes: Int) {
+        if (this.iconDrawableRes != iconDrawableRes) {
+            this.setIconDrawable(getDrawable(context, iconDrawableRes), true)
+            this.iconDrawableRes = iconDrawableRes
+        }
     }
 
     fun setIconDirection(direction: ApplicationBarButtonIconDirection) {
-        iconDirection = direction
-        invalidate()
+        if (iconDirection != direction) {
+            iconDirection = direction
+            invalidate()
+        }
     }
 
     fun setText(text: String?, fromRes: Boolean = false) {
@@ -220,10 +222,10 @@ class ApplicationBarButton : View {
     }
 
     fun setText(@StringRes textRes: Int) {
-        val text = resources.getString(textRes)
-
-        this.textRes = textRes
-        this.setText(text, true)
+        if (this.textRes != textRes) {
+            this.setText(resources.getString(textRes), true)
+            this.textRes = textRes
+        }
     }
 
     fun reset() {

@@ -11,22 +11,21 @@ import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.phoneEditText.PhoneEditText
 import com.sudox.design.regionsFlags
 import com.sudox.messenger.android.auth.R
+import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.core.CoreActivity
+import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.api.supportedRegions
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayout
 import java.util.Locale
 
 class AuthPhoneFragment : Fragment(), ApplicationBarListener {
 
-    override fun onButtonClicked(tag: Int) {
-        authPhoneEditTextLayout.setErrorText(R.string.sudox_not_working_in_this_country)
-    }
+    private var navigationManager: NavigationManager? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val activity = activity as CoreActivity
 
         activity.getApplicationBarManager().let {
-            it.reset()
             it.setListener(this)
             it.toggleButtonBack(true)
             it.toggleButtonNext(true)
@@ -34,14 +33,19 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
         }
 
         activity.getScreenManager().let {
-            it.reset()
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         }
 
+        navigationManager = activity.getNavigationManager()
+
         return inflater.inflate(R.layout.fragment_auth_phone, container, false).apply {
             initPhoneEditText(this)
         }
+    }
+
+    override fun onButtonClicked(tag: Int) {
+        navigationManager!!.showFragment(AuthCodeFragment(), true)
     }
 
     private fun initPhoneEditText(view: View) {
