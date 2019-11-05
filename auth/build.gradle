@@ -1,10 +1,13 @@
-apply from: '../configs/versions.gradle'
+apply from: '../configs/dependencies.gradle'
+apply from: '../configs/common.gradle'
+
+registerModule(false, true, false)
 
 dependencies {
-    implementation project(path: ':core')
-    implementation project(path: ':design')
-    implementation project(path: ':api')
+    api project(path: ':core')
+    api project(path: ':design')
+    api project(path: ':api')
 
-    implementation("androidx.appcompat:appcompat:$appCompatVersion")
-    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
+    implementation libraries.appcompat
+    implementation libraries.lifecycle_extensions
 }

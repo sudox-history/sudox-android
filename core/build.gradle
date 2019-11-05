@@ -1,6 +1,11 @@
-apply from: '../configs/versions.gradle'
+apply from: '../configs/dependencies.gradle'
+apply from: '../configs/common.gradle'
+
+registerModule(false, false, false)
 
 dependencies {
-    implementation project(path: ':design')
-    implementation("androidx.appcompat:appcompat:$appCompatVersion")
+    api project(path: ':design')
+
+    implementation libraries.annotations
+    implementation libraries.appcompat
 }

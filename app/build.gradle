@@ -1,4 +1,7 @@
-apply from: '../configs/versions.gradle'
+apply from: '../configs/dependencies.gradle'
+apply from: '../configs/common.gradle'
+
+registerModule(true, true, false)
 
 android {
     buildTypes {
@@ -6,32 +9,25 @@ android {
             minifyEnabled true
             shrinkResources true
 
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+            proguardFiles getDefaultProguardFile(
+                    'proguard-android-optimize.txt'),
                     'proguard-rules.pro'
-        }
-    }
-
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-
-            all {
-                jvmArgs '-noverify'
-            }
         }
     }
 }
 
+apply from: '../configs/robolectric.gradle'
+
 dependencies {
-    implementation project(path: ':auth')
-    implementation project(path: ':design')
-    implementation project(path: ':core')
+    api project(path: ':auth')
+    api project(path: ':design')
+    api project(path: ':core')
 
-    implementation("androidx.core:core-ktx:$ktxCoreVersion")
-    implementation("androidx.appcompat:appcompat:$appCompatVersion")
-    implementation("androidx.annotation:annotation:$annotationsVersion")
+    implementation libraries.core_ktx
+    implementation libraries.appcompat
+    implementation libraries.annotations
 
-    testImplementation("junit:junit:$junitVersion")
-    testImplementation("org.robolectric:robolectric:$robolectricVersion")
+    testImplementation libraries.junit
+    testImplementation libraries.robolectric
 }
 

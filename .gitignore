@@ -10,5 +10,5 @@
 /build
 /captures
 .externalNativeBuild
-configs/vcs.gradle
+configs/passwords.gradle
 app/release
