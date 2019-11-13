@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sudox.design.common.supportedCountries
+import com.sudox.design.common.sortCountriesByNames
 import com.sudox.messenger.android.auth.R
 import kotlinx.android.synthetic.main.fragment_auth_country.authCountryList
 
@@ -17,12 +17,10 @@ class AuthCountryFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val countries = supportedCountries.sortedBy {
-            it.getName(context!!)
-        }
+        val countries = sortCountriesByNames(context!!)
 
         authCountryList.apply {
-            adapter = AuthCountryAdapter(context, countries)
+            adapter = AuthCountryAdapter(context!!, countries)
             layoutManager = LinearLayoutManager(context)
 
             setLettersProvider(AuthCountryLettersProvider(countries))

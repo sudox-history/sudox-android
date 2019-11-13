@@ -14,10 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Sudox">
 
-        <activity
-            android:name=".AppActivity"
-            android:hardwareAccelerated="true">
-
+        <activity android:name=".AppActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

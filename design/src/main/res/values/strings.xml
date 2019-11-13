@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="austria">Austria</string>
+    <string name="belgium">Belgium</string>
     <string name="russia">Russia</string>
+    <string name="romania">Romania</string>
+    <string name="poland">Poland</string>
+    <string name="hungary">Hungary</string>
     <string name="ukraine">Ukraine</string>
-    <string name="uae">ARARARA</string>
+    <string name="germany">Germany</string>
+    <string name="italy">Italy</string>
+    <string name="neatherlands">Neatherlands</string>
+    <string name="czech_republic">Czech Republic</string>
+    <string name="lithuania">Lithuania</string>
+    <string name="sweden">Sweden</string>
+    <string name="latvia">Latvia</string>
+    <string name="iceland">Iceland</string>
 </resources>

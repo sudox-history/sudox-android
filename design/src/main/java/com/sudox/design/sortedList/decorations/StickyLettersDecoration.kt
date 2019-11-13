@@ -32,7 +32,8 @@ class StickyLettersDecoration(
         (parent.childCount - 1 downTo 0).map {
             parent.getChildAt(it)
         }.filter {
-            !isChildNotVisible(it, parent)
+            it.top - sortedListView.lettersTopPadding - letterBounds.height() >= 0 &&
+                    it.top - sortedListView.lettersTopPadding - letterBounds.height() <= parent.height
         }.forEach {
             val position = parent.getChildAdapterPosition(it)
 
@@ -86,12 +87,5 @@ class StickyLettersDecoration(
         }
 
         outRect.left += letterBounds.height() + letterRightPadding
-    }
-
-    private fun isChildNotVisible(child: View, parent: RecyclerView): Boolean {
-        val letterTopPadding = sortedListView.lettersTopPadding
-
-        return child.top - letterTopPadding - letterBounds.height() < 0 ||
-                child.top + letterTopPadding + letterBounds.height() > parent.height
     }
 }
