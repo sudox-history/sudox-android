@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/auth_supported_country_vertical_padding"
+    android:paddingBottom="@dimen/auth_supported_country_vertical_padding">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/supportedCountryFlagImageView"
+        android:layout_width="@dimen/auth_supported_country_flag_width"
+        android:layout_height="@dimen/auth_supported_country_flag_height"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/ic_flag_russia" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/supportedCountryNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/auth_supported_country_text_right_margin"
+        android:layout_toRightOf="@id/supportedCountryFlagImageView"
+        android:textAppearance="@style/Sudox.RecyclerView.Text"
+        tools:ignore="RtlHardcoded"
+        tools:text="Russia" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/supportedCountryCodeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textAppearance="@style/Sudox.RecyclerView.Text"
+        tools:ignore="RelativeOverlap,RtlHardcoded"
+        tools:text="+7" />
+
+</RelativeLayout>

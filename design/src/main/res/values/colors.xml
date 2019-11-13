@@ -19,4 +19,8 @@
     <color name="phoneedittext_separator_color">#E0E0E0</color>
 
     <color name="nicknameedittext_tag_text_color">#BDBDBD</color>
+
+    <color name="recyclerview_text_color">#000000</color>
+
+    <color name="sortedlistview_letters_text_color">#000000</color>
 </resources>

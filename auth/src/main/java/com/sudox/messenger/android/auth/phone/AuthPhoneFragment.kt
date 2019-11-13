@@ -8,14 +8,15 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.sudox.design.applicationBar.ApplicationBarListener
-import com.sudox.design.phoneEditText.PhoneEditText
-import com.sudox.design.regionsFlags
+import com.sudox.design.common.findCountryByRegionCode
+import com.sudox.design.common.supportedCountries
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.code.AuthCodeFragment
+import com.sudox.messenger.android.auth.country.AuthCountryFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.NavigationManager
-import com.sudox.messenger.api.supportedRegions
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayout
+import kotlinx.android.synthetic.main.fragment_auth_phone.view.authPhoneEditText
 import java.util.Locale
 
 class AuthPhoneFragment : Fragment(), ApplicationBarListener {
@@ -48,30 +49,25 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
         navigationManager!!.showFragment(AuthCodeFragment(), true)
     }
 
-    private fun initPhoneEditText(view: View) {
-        val phoneEditText = view.findViewById<PhoneEditText>(R.id.authPhoneEditText)
+    private fun initPhoneEditText(view: View) = view.let {
         val regionCode = Locale.getDefault().country
+        val country = findCountryByRegionCode(regionCode) ?: supportedCountries[0]
 
-        var supportedCountryCode = supportedRegions[regionCode]
-        val supportedRegionCode: String
-
-        if (supportedCountryCode == null) {
-            supportedRegionCode = supportedRegions.keys.first()
-            supportedCountryCode = supportedRegions[supportedRegionCode]!!
-        } else {
-            supportedRegionCode = regionCode
+        it.authPhoneEditText.setCountry(country.regionCode, country.countryCode, country.flagImageId)
+        it.authPhoneEditText.regionFlagIdCallback = ::handleCountryChangingAttempt
+        it.authPhoneEditText.countryCodeSelector.setOnClickListener {
+            navigationManager!!.showFragment(AuthCountryFragment(), true)
         }
-
-        phoneEditText.regionFlagIdCallback = ::handleCountryChangingAttempt
-        phoneEditText.setCountry(supportedRegionCode, supportedCountryCode, regionsFlags[supportedRegionCode]!!)
     }
 
     private fun handleCountryChangingAttempt(regionCode: String): Int {
-        if (!supportedRegions.containsKey(regionCode)) {
+        val country = findCountryByRegionCode(regionCode)
+
+        if (country == null) {
             authPhoneEditTextLayout.setErrorText(R.string.sudox_not_working_in_this_country)
             return 0
         }
 
-        return regionsFlags[regionCode]!!
+        return country.flagImageId
     }
 }
