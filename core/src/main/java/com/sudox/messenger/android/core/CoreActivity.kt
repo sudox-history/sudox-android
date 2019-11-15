@@ -8,4 +8,5 @@ interface CoreActivity {
     fun getScreenManager(): ScreenManager
     fun getNavigationManager(): NavigationManager
     fun getApplicationBarManager(): ApplicationBarManager
+    fun getLoader(): CoreLoader
 }

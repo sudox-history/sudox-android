@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.sudox.design.applicationBar.ApplicationBarListener
-import com.sudox.design.common.findCountryByRegionCode
-import com.sudox.design.common.supportedCountries
+import com.sudox.design.countriesProvider.countries
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.auth.country.AuthCountryFragment
@@ -51,7 +50,7 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
 
     private fun initPhoneEditText(view: View) = view.let {
         val regionCode = Locale.getDefault().country
-        val country = findCountryByRegionCode(regionCode) ?: supportedCountries[0]
+        val country = countries[regionCode] ?: countries.values.elementAt(0)
 
         it.authPhoneEditText.setCountry(country.regionCode, country.countryCode, country.flagImageId)
         it.authPhoneEditText.regionFlagIdCallback = ::handleCountryChangingAttempt
@@ -61,7 +60,7 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
     }
 
     private fun handleCountryChangingAttempt(regionCode: String): Int {
-        val country = findCountryByRegionCode(regionCode)
+        val country = countries[regionCode]
 
         if (country == null) {
             authPhoneEditTextLayout.setErrorText(R.string.sudox_not_working_in_this_country)

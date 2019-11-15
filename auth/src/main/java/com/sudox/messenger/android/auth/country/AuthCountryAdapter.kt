@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.sudox.design.common.entries.Country
+import com.sudox.design.countriesProvider.entries.Country
 import com.sudox.messenger.android.auth.R
 import kotlinx.android.synthetic.main.item_supported_country.view.supportedCountryCodeText
 import kotlinx.android.synthetic.main.item_supported_country.view.supportedCountryFlagImageView

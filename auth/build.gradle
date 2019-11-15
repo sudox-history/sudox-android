@@ -11,4 +11,5 @@ dependencies {
     implementation libraries.appcompat
     implementation libraries.lifecycle_extensions
     implementation libraries.recyclerview
+    implementation libraries.coroutines
 }

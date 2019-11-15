@@ -5,6 +5,6 @@ import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
 var phoneNumberUtil: PhoneNumberUtil? = null
 
-fun initDesign(context: Context) {
+fun loadDesignComponents(context: Context) {
     phoneNumberUtil = PhoneNumberUtil.createInstance(context)
 }

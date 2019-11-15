@@ -4,6 +4,7 @@
     <string name="enter_phone">Enter your phone and we will send a confirmation code for you</string>
     <string name="sign_in">Sign in</string>
     <string name="nickname">Nickname</string>
+    <string name="countries">Countries</string>
 
     <string name="check_sms" tools:ignore="TypographyQuotes"><![CDATA[
         Check your SMS and enter the code we sent to <font color="#000000">%1$s</font>

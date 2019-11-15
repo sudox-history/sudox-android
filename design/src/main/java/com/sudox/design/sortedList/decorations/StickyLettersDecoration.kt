@@ -17,8 +17,8 @@ class StickyLettersDecoration(
 
     private var maxLetterWidth = 0
 
-    private val letters = provider.getLetters(context)
-    private val lettersPositions = letters.keys.sortedBy { -it }
+    private val letters = provider.getLetters(context, false)
+    private val lettersPositions = letters.keys
     private val letterBounds = Rect()
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {

@@ -6,6 +6,7 @@ import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.sudox.messenger.android.auth.phone.AuthPhoneFragment
 import com.sudox.messenger.android.core.CoreActivity
+import com.sudox.messenger.android.core.CoreLoader
 import com.sudox.messenger.android.core.managers.ApplicationBarManager
 import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.android.core.managers.ScreenManager
@@ -66,5 +67,9 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     override fun getApplicationBarManager(): ApplicationBarManager {
         return applicationBarManager
+    }
+
+    override fun getLoader(): CoreLoader {
+        return application as CoreLoader
     }
 }
