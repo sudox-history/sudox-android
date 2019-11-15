@@ -18,10 +18,10 @@ class SortedListView : RecyclerView {
 
     private var lettersDecoration: StickyLettersDecoration? = null
 
-    internal val lettersPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
-    internal var lettersRightPadding = 0
-    internal var lettersTopPadding = 0
-    internal var lettersMargin = 0
+    val lettersPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
+    var lettersRightPadding = 0
+    var lettersTopPadding = 0
+    var lettersMargin = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.sortedListViewStyle)
@@ -35,7 +35,7 @@ class SortedListView : RecyclerView {
 
             lettersRightPadding = it.getDimensionPixelSizeOrThrow(R.styleable.SortedListView_lettersRightPadding)
             lettersTopPadding = it.getDimensionPixelSizeOrThrow(R.styleable.SortedListView_lettersTopPadding)
-            lettersMargin = it.getDimensionPixelSizeOrThrow(R.styleable.SortedListView_lettersMargin)
+            lettersMargin = it.getDimensionPixelSize(R.styleable.SortedListView_lettersMargin, 0)
         }
     }
 

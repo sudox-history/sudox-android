@@ -10,9 +10,9 @@
     </declare-styleable>
 
     <declare-styleable name="PhoneCountryCodeSelector">
-        <attr name="flagWidth" format="dimension" />
-        <attr name="flagHeight" format="dimension" />
-        <attr name="flagMargin" format="dimension" />
+        <attr name="flagMargin" />
+        <attr name="flagHeight" />
+        <attr name="flagWidth" />
     </declare-styleable>
 
     <declare-styleable name="CodeEditText">
@@ -61,6 +61,18 @@
         <attr name="lettersColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="CountryItemView">
+        <attr name="flagMargin" />
+        <attr name="flagHeight" />
+        <attr name="flagWidth" />
+        <attr name="textAppearance" format="reference" />
+    </declare-styleable>
+
+    <attr name="flagMargin" format="dimension" />
+    <attr name="flagHeight" format="dimension" />
+    <attr name="flagWidth" format="dimension" />
+
+    <attr name="countryItemViewStyle" format="reference" />
     <attr name="countryCodeSelectorStyle" format="reference" />
     <attr name="phoneEditTextStyle" format="reference" />
     <attr name="codeEditTextStyle" format="reference" />

@@ -8,11 +8,4 @@
     <dimen name="auth_description_margin_top">16dp</dimen>
 
     <dimen name="auth_first_edit_text_margin">35dp</dimen>
-    
-    <dimen name="auth_supported_country_vertical_padding">8dp</dimen>
-    <dimen name="auth_supported_country_flag_height">18dp</dimen>
-    <dimen name="auth_supported_country_flag_width">27dp</dimen>
-    <dimen name="auth_supported_country_text_right_margin">16dp</dimen>
-
-    <dimen name="auth_supported_country_letters_margin">12dp</dimen>
 </resources>

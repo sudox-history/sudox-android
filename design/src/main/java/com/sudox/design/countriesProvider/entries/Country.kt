@@ -12,8 +12,4 @@ class Country(
     fun getName(context: Context): String {
         return context.getString(nameTextId)
     }
-
-    fun getCodeWithPlus(): String {
-        return "+${countryCode}"
-    }
 }

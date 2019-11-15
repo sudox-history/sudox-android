@@ -37,4 +37,10 @@
     <dimen name="sortedlistview_letters_text_size">18sp</dimen>
     <dimen name="sortedlistview_letters_right_padding">20dp</dimen>
     <dimen name="sortedlistview_letters_top_padding">16dp</dimen>
+
+    <dimen name="countryitemview_flag_margin">16dp</dimen>
+    <dimen name="countryitemview_flag_height">18dp</dimen>
+    <dimen name="countryitemview_flag_width">27dp</dimen>
+    <dimen name="countryitemview_vertical_padding">8dp</dimen>
+    <dimen name="countryitemview_letters_margin">12dp</dimen>
 </resources>

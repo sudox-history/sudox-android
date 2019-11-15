@@ -2,39 +2,39 @@ package com.sudox.messenger.android.auth.country
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.countriesProvider.entries.Country
-import com.sudox.messenger.android.auth.R
-import kotlinx.android.synthetic.main.item_supported_country.view.supportedCountryCodeText
-import kotlinx.android.synthetic.main.item_supported_country.view.supportedCountryFlagImageView
-import kotlinx.android.synthetic.main.item_supported_country.view.supportedCountryNameText
+import com.sudox.design.countryItemView.CountryItemView
 
 class AuthCountryAdapter(
-        context: Context,
+        val context: Context,
         val countries: List<Country>
 ) : RecyclerView.Adapter<AuthCountryAdapter.ViewHolder>() {
 
-    private val inflater = LayoutInflater.from(context)
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(inflater.inflate(R.layout.item_supported_country, parent, false))
+        return ViewHolder(CountryItemView(context).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        })
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.let {
         val country = countries[position]
 
-        it.supportedCountryFlagImageView.setImageResource(country.flagImageId)
-        it.supportedCountryNameText.setText(country.nameTextId)
-        it.supportedCountryCodeText.text = country.getCodeWithPlus()
+        holder.view.let { view ->
+            view.setFlag(country.flagImageId)
+            view.setName(country.nameTextId)
+            view.setCode(country.countryCode)
+        }
     }
 
     override fun getItemCount(): Int {
         return countries.size
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    class ViewHolder(val view: CountryItemView) : RecyclerView.ViewHolder(view)
 }

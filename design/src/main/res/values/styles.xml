@@ -25,6 +25,7 @@
         <item name="nicknameEditTextStyle">@style/Sudox.NicknameEditText</item>
         <item name="editTextLayoutStyle">@style/Sudox.EditTextLayout</item>
         <item name="sortedListViewStyle">@style/Sudox.SortedListView</item>
+        <item name="countryItemViewStyle">@style/Sudox.CountryItemView</item>
 
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
@@ -114,18 +115,28 @@
         <item name="iconWidth">@dimen/applicationbarbutton_icon_width</item>
     </style>
 
-    <style name="Sudox.RecyclerView.Text" parent="">
-        <item name="android:textColor">@color/recyclerview_text_color</item>
-        <item name="android:textSize">@dimen/recyclerview_text_size</item>
-        <item name="android:fontFamily">@font/opensans_semibold</item>
-        <item name="fontFamily">@font/opensans_semibold</item>
-    </style>
-
     <style name="Sudox.SortedListView" parent="">
         <item name="lettersRightPadding">@dimen/sortedlistview_letters_right_padding</item>
         <item name="lettersTopPadding">@dimen/sortedlistview_letters_top_padding</item>
         <item name="lettersTextSize">@dimen/sortedlistview_letters_text_size</item>
         <item name="lettersColor">@color/sortedlistview_letters_text_color</item>
         <item name="lettersFont">@font/opensans_semibold</item>
+    </style>
+
+    <style name="Sudox.CountryItemView" parent="">
+        <item name="android:paddingTop">@dimen/countryitemview_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/countryitemview_vertical_padding</item>
+
+        <item name="textAppearance">@style/Sudox.CountryItemView.Text</item>
+        <item name="flagMargin">@dimen/countryitemview_flag_margin</item>
+        <item name="flagHeight">@dimen/countryitemview_flag_height</item>
+        <item name="flagWidth">@dimen/countryitemview_flag_width</item>
+    </style>
+
+    <style name="Sudox.CountryItemView.Text" parent="">
+        <item name="android:textColor">@color/recyclerview_text_color</item>
+        <item name="android:textSize">@dimen/recyclerview_text_size</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
     </style>
 </resources>
