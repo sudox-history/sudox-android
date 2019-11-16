@@ -17,13 +17,14 @@ internal const val PREF_REGION_CODE = "region_code_"
 
 class CountriesProvider(val context: Context) {
 
-    private val preferences = context.getSharedPreferences(PREFS_COUNTRIES, Context.MODE_PRIVATE)
-    private var loadedFromCache: Boolean = false
-    private var lettersProvider = CountriesLettersProvider(this)
+    private val sharedPreferences = context.getSharedPreferences(PREFS_COUNTRIES, Context.MODE_PRIVATE)
+
+    private var loadedFromCache = false
     private var loadedCountries: List<Country>? = null
     private var loadedLetters: HashMap<Int, String>? = null
+    private val lettersProvider = CountriesLettersProvider(this)
 
-    fun tryLoadOrSort() = preferences.let {
+    fun tryLoadOrSort() = sharedPreferences.let {
         val cachedVersionCode = it.getInt(PREF_APP_VERSION_CODE, -1)
         val cachedAppLanguage = it.getString(PREF_APP_LANGUAGE, null)
         val cachedLettersCount = it.getInt(PREF_COUNTRY_LETTERS_COUNT, -1)
@@ -57,7 +58,7 @@ class CountriesProvider(val context: Context) {
         loadedFromCache = true
     }
 
-    fun sortAndCache() = preferences.edit {
+    fun sortAndCache() = sharedPreferences.edit {
         clear()
 
         putString(PREF_APP_LANGUAGE, context.resources.configuration.getLocale().displayLanguage)
