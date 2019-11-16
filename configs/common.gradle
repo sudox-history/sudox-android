@@ -28,11 +28,11 @@ ext.registerModule = { isApp, needExtensions, needApt ->
             minSdkVersion 21
             targetSdkVersion 29
             testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+            versionCode versionMajor * 1000 + versionMinor * 100 + versionUpdate * 10 + versionPatch
+            versionName "${versionMajor}.${versionMinor}.${versionUpdate}.${versionPatch}"
 
             if (isApp) {
                 applicationId 'com.sudox.messenger.android'
-                versionCode versionMajor * 1000 + versionMinor * 100 + versionUpdate * 10 + versionPatch
-                versionName "${versionMajor}.${versionMinor}.${versionUpdate}.${versionPatch}"
             }
         }
 

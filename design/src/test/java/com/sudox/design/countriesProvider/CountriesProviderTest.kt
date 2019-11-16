@@ -21,7 +21,12 @@ class CountriesProviderTest : Assert() {
     @Before
     fun setUp() {
         activityController = Robolectric.buildActivity(Activity::class.java)
-        activity = activityController!!.get()
+        activity = activityController!!.get().apply {
+            getSharedPreferences(PREFS_COUNTRIES, Context.MODE_PRIVATE).edit {
+                clear()
+            }
+        }
+
         countriesProvider = CountriesProvider(activity!!)
     }
 
@@ -83,6 +88,7 @@ class CountriesProviderTest : Assert() {
         val countriesBeforeLoading = countriesProvider!!.getLoadedCountries().toTypedArray()
         val lettersBeforeLoading = countriesProvider!!.getLoadedLetters()
 
+        assertFalse(countriesProvider!!.isLoadedFromCache())
         countriesProvider!!.tryLoadOrSort()
 
         val countriesAfterLoading = countriesProvider!!.getLoadedCountries().toTypedArray()
@@ -91,5 +97,39 @@ class CountriesProviderTest : Assert() {
         assertArrayEquals(countriesBeforeLoading, countriesAfterLoading)
         assertArrayEquals(lettersBeforeLoading.keys.toTypedArray(), lettersAfterLoading.keys.toTypedArray())
         assertArrayEquals(lettersBeforeLoading.values.toTypedArray(), lettersAfterLoading.values.toTypedArray())
+        assertTrue(countriesProvider!!.isLoadedFromCache())
+    }
+
+    @Test
+    fun testCacheInvalidationWhenLanguageChanged() {
+        countriesProvider!!.sortAndCache()
+        activity!!.getSharedPreferences(PREFS_COUNTRIES, Context.MODE_PRIVATE).edit {
+            remove(PREF_APP_LANGUAGE)
+        }
+
+        countriesProvider!!.tryLoadOrSort()
+        assertFalse(countriesProvider!!.isLoadedFromCache())
+    }
+
+    @Test
+    fun testCacheInvalidationWhenAppUpdated() {
+        countriesProvider!!.sortAndCache()
+        activity!!.getSharedPreferences(PREFS_COUNTRIES, Context.MODE_PRIVATE).edit {
+            remove(PREF_APP_VERSION_CODE)
+        }
+
+        countriesProvider!!.tryLoadOrSort()
+        assertFalse(countriesProvider!!.isLoadedFromCache())
+    }
+
+    @Test
+    fun testCacheInvalidationWhenLettersCountNotValid() {
+        countriesProvider!!.sortAndCache()
+        activity!!.getSharedPreferences(PREFS_COUNTRIES, Context.MODE_PRIVATE).edit {
+            remove(PREF_COUNTRY_LETTERS_COUNT)
+        }
+
+        countriesProvider!!.tryLoadOrSort()
+        assertFalse(countriesProvider!!.isLoadedFromCache())
     }
 }

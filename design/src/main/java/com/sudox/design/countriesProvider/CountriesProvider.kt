@@ -8,7 +8,7 @@ import com.sudox.design.countriesProvider.entries.Country
 import com.sudox.design.getLocale
 
 internal const val PREFS_COUNTRIES = "countries"
-internal const val PREF_APP_LANGUAGE = "app_lang_tag"
+internal const val PREF_APP_LANGUAGE = "app_lang"
 internal const val PREF_APP_VERSION_CODE = "app_version_code"
 internal const val PREF_COUNTRY_LETTERS_COUNT = "country_letters_count"
 internal const val PREF_COUNTRY_LETTER_POSITION = "country_letter_position_"
@@ -18,6 +18,7 @@ internal const val PREF_REGION_CODE = "region_code_"
 class CountriesProvider(val context: Context) {
 
     private val preferences = context.getSharedPreferences(PREFS_COUNTRIES, Context.MODE_PRIVATE)
+    private var loadedFromCache: Boolean = false
     private var lettersProvider = CountriesLettersProvider(this)
     private var loadedCountries: List<Country>? = null
     private var loadedLetters: HashMap<Int, String>? = null
@@ -29,7 +30,7 @@ class CountriesProvider(val context: Context) {
 
         if (cachedVersionCode != BuildConfig.VERSION_CODE ||
                 cachedAppLanguage != context.resources.configuration.getLocale().displayLanguage ||
-                cachedLettersCount != countries.size) {
+                cachedLettersCount == -1) {
 
             return sortAndCache()
         }
@@ -52,6 +53,8 @@ class CountriesProvider(val context: Context) {
 
             loadedLetters!![countryLetterPosition] = countryLetter
         }
+
+        loadedFromCache = true
     }
 
     fun sortAndCache() = preferences.edit {
@@ -69,12 +72,19 @@ class CountriesProvider(val context: Context) {
         }
 
         loadedLetters = lettersProvider.getLetters(context, true)
+
+        putInt(PREF_COUNTRY_LETTERS_COUNT, loadedLetters!!.size)
+
         loadedLetters!!.entries.forEachIndexed { index, pair ->
             putString("$PREF_COUNTRY_LETTER$index", pair.value)
             putInt("$PREF_COUNTRY_LETTER_POSITION$index", pair.key)
         }
 
-        putInt(PREF_COUNTRY_LETTERS_COUNT, loadedLetters!!.size)
+        loadedFromCache = false
+    }
+
+    fun isLoadedFromCache(): Boolean {
+        return loadedFromCache
     }
 
     fun getLettersProvider(): CountriesLettersProvider {
