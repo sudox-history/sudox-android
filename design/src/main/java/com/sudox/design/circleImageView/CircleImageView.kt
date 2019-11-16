@@ -1,11 +1,16 @@
 package com.sudox.design.circleImageView
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
 import kotlin.math.min
 
-class CircleImageView : androidx.appcompat.widget.AppCompatImageView {
+class CircleImageView : AppCompatImageView {
 
     private val simplePaint = Paint()
     private val circlePaint = Paint().apply {
@@ -13,26 +18,25 @@ class CircleImageView : androidx.appcompat.widget.AppCompatImageView {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
         isAntiAlias = true
     }
+
     private val mergePaint = Paint().apply {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
     }
 
-    constructor(context: Context) : this(context, null)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    override fun onDraw(canvas: Canvas?) {
-        canvas ?: return
+    override fun onDraw(canvas: Canvas) {
+        val imageLayer = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), simplePaint)
 
-        val a = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), simplePaint)
         super.onDraw(canvas)
 
-        val b = canvas.saveLayer(0f,0f, width.toFloat(), height.toFloat(), mergePaint)
+        val mergeLayer = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), mergePaint)
 
         canvas.drawColor(Color.GREEN)
         canvas.drawCircle(width / 2f, height / 2f, min(width, height) / 2f, circlePaint)
-        canvas.restoreToCount(b)
-
-        canvas.restoreToCount(a)
+        canvas.restoreToCount(mergeLayer)
+        canvas.restoreToCount(imageLayer)
     }
 }
