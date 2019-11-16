@@ -12,14 +12,18 @@ class CountriesLettersProvider(val provider: CountriesProvider) : StickyLettersP
 
         val lettersPositions = LinkedHashMap<Int, String>()
         val loadedCountries = provider.getLoadedCountries()
-        var previousLetter: String? = null
 
-        loadedCountries.map {
-            it.getName(context)[0].toString()
-        }.forEachIndexed { index, letter ->
-            if (previousLetter != letter) {
+        for (index in loadedCountries.size - 1 downTo 0) {
+            val letter = loadedCountries[index].getName(context)[0].toString()
+
+            if (index > 0) {
+                val prevLetter = loadedCountries[index - 1].getName(context)[0].toString()
+
+                if (letter != prevLetter) {
+                    lettersPositions[index] = letter
+                }
+            } else {
                 lettersPositions[index] = letter
-                previousLetter = letter
             }
         }
 

@@ -42,7 +42,7 @@ class CountriesProvider(val context: Context) {
             country
         }
 
-        for (index in cachedLettersCount - 1 downTo 0) {
+        for (index in 0 until cachedLettersCount) {
             val countryLetter = it.getString("$PREF_COUNTRY_LETTER$index", null) ?: return sortAndCache()
             val countryLetterPosition = it.getInt("$PREF_COUNTRY_LETTER_POSITION$index", -1)
 

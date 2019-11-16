@@ -14,9 +14,9 @@ import org.robolectric.android.controller.ActivityController
 @RunWith(DesignTestRunner::class)
 class CountriesProviderTest : Assert() {
 
+    private var countriesProvider: CountriesProvider? = null
     private var activityController: ActivityController<Activity>? = null
     private var activity: Activity? = null
-    private var countriesProvider: CountriesProvider? = null
 
     @Before
     fun setUp() {
@@ -53,7 +53,7 @@ class CountriesProviderTest : Assert() {
 
     @Test
     fun testLettersGrouping() {
-        val valid = hashMapOf(
+        val valid = linkedMapOf(
                 11 to "U",
                 10 to "S",
                 9 to "R",
@@ -72,54 +72,24 @@ class CountriesProviderTest : Assert() {
             getLoadedLetters()
         }
 
-        assertTrue(valid.entries == letters.entries)
+        assertArrayEquals(valid.keys.toTypedArray(), letters.keys.toTypedArray())
+        assertArrayEquals(valid.values.toTypedArray(), letters.values.toTypedArray())
     }
 
     @Test
     fun testCaching() {
-        val countries = with(countriesProvider!!) {
-            sortAndCache()
-            tryLoadOrSort()
-            getLoadedCountries()
-        }
-
-        assertNotNull(countries)
-        assertEquals(countries.size, countries.size)
-    }
-
-    @Test
-    fun testVersioning() {
         countriesProvider!!.sortAndCache()
 
-        activity!!.getSharedPreferences(PREFS_COUNTRIES, Context.MODE_PRIVATE).edit {
-            remove(PREF_APP_VERSION_CODE)
-            putInt(PREF_APP_VERSION_CODE, Integer.MAX_VALUE)
-        }
+        val countriesBeforeLoading = countriesProvider!!.getLoadedCountries().toTypedArray()
+        val lettersBeforeLoading = countriesProvider!!.getLoadedLetters()
 
-        val countries = with(countriesProvider!!) {
-            tryLoadOrSort()
-            getLoadedCountries()
-        }
+        countriesProvider!!.tryLoadOrSort()
 
-        assertNotNull(countries)
-        assertEquals(countries.size, countries.size)
-    }
+        val countriesAfterLoading = countriesProvider!!.getLoadedCountries().toTypedArray()
+        val lettersAfterLoading = countriesProvider!!.getLoadedLetters()
 
-    @Test
-    fun testLanguageChanging() {
-        countriesProvider!!.sortAndCache()
-
-        activity!!.getSharedPreferences(PREFS_COUNTRIES, Context.MODE_PRIVATE).edit {
-            remove(PREF_APP_LANGUAGE)
-            putString(PREF_APP_LANGUAGE, "Russian")
-        }
-
-        val countries = with(countriesProvider!!) {
-            tryLoadOrSort()
-            getLoadedCountries()
-        }
-
-        assertNotNull(countries)
-        assertEquals(countries.size, countries.size)
+        assertArrayEquals(countriesBeforeLoading, countriesAfterLoading)
+        assertArrayEquals(lettersBeforeLoading.keys.toTypedArray(), lettersAfterLoading.keys.toTypedArray())
+        assertArrayEquals(lettersBeforeLoading.values.toTypedArray(), lettersAfterLoading.values.toTypedArray())
     }
 }
