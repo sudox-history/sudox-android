@@ -52,6 +52,30 @@ class CountriesProviderTest : Assert() {
     }
 
     @Test
+    fun testLettersGrouping() {
+        val valid = hashMapOf(
+                11 to "U",
+                10 to "S",
+                9 to "R",
+                8 to "P",
+                7 to "N",
+                5 to "L",
+                3 to "I",
+                2 to "H",
+                1 to "G",
+                0 to "C"
+        )
+
+        val letters = with(countriesProvider!!) {
+            sortAndCache()
+            tryLoadOrSort()
+            getLoadedLetters()
+        }
+
+        assertTrue(valid.entries == letters.entries)
+    }
+
+    @Test
     fun testCaching() {
         val countries = with(countriesProvider!!) {
             sortAndCache()
