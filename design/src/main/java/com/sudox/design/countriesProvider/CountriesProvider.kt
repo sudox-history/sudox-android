@@ -29,7 +29,7 @@ class CountriesProvider(val context: Context) {
 
         if (cachedVersionCode != BuildConfig.VERSION_CODE ||
                 cachedAppLanguage != context.resources.configuration.getLocale().displayLanguage ||
-                cachedLettersCount == -1) {
+                cachedLettersCount != countries.size) {
 
             return sortAndCache()
         }
