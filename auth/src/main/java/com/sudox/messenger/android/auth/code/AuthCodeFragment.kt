@@ -13,7 +13,7 @@ import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.register.AuthRegisterFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.NavigationManager
-import kotlinx.android.synthetic.main.fragment_auth_code.authCodeDescriptionTextView
+import kotlinx.android.synthetic.main.fragment_auth_code.*
 
 class AuthCodeFragment : Fragment(), ApplicationBarListener {
 
@@ -31,12 +31,17 @@ class AuthCodeFragment : Fragment(), ApplicationBarListener {
 
         activity.getScreenManager().let {
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         }
 
         navigationManager = activity.getNavigationManager()
 
         return inflater.inflate(R.layout.fragment_auth_code, container, false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        authCodeEditText.showOnFocusedKeyboard()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

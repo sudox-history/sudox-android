@@ -15,13 +15,15 @@ import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
 import com.sudox.design.R
 import com.sudox.design.editTextLayout.EditTextLayoutChild
+import com.sudox.design.showSoftKeyboard
 import kotlin.math.min
 
 class CodeEditText : ViewGroup, EditTextLayoutChild {
 
     var codeFilledCallback: ((String) -> (Unit))? = null
 
-    internal var digitsEditTexts: Array<AppCompatEditText>? = null
+    var digitsEditTexts: Array<AppCompatEditText>? = null
+    var lastFocusedEditText = 0
     internal var isPositioningEnabled = true
 
     constructor(context: Context) : this(context, null)
@@ -32,6 +34,10 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
         context.obtainStyledAttributes(attrs, R.styleable.CodeEditText, defStyleAttr, 0).use {
             digitsEditTexts = Array(it.getIntegerOrThrow(R.styleable.CodeEditText_digitsCount), ::createDigitEditText)
         }
+    }
+
+    fun showOnFocusedKeyboard() {
+        digitsEditTexts!![lastFocusedEditText].showSoftKeyboard()
     }
 
     private fun createDigitEditText(index: Int): AppCompatEditText {
@@ -168,6 +174,8 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
             }
 
             digitEditText.requestFocus()
+
+            lastFocusedEditText = index
         }
     }
 }

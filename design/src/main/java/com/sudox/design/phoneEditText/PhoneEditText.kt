@@ -28,7 +28,7 @@ class PhoneEditText : ViewGroup, EditTextLayoutChild {
     var regionFlagIdCallback: ((String) -> (Int))? = null
 
     internal val countryCodeSelector = PhoneCountryCodeSelector(context)
-    internal val numberEditText = PhoneNumberEditText(context).apply {
+    val numberEditText = PhoneNumberEditText(context).apply {
         id = View.generateViewId()
     }
 

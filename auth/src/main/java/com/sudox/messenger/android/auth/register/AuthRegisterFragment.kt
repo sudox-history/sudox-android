@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.sudox.design.applicationBar.ApplicationBarListener
+import com.sudox.design.showSoftKeyboard
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.core.CoreActivity
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterEditTextLayout
@@ -31,10 +32,15 @@ class AuthRegisterFragment : Fragment(), ApplicationBarListener {
 
         activity.getScreenManager().let {
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
         }
 
         return inflater.inflate(R.layout.fragment_auth_register, container, false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        authRegisterNicknameEditText.showSoftKeyboard()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
