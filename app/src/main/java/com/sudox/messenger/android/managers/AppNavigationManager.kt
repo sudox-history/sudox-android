@@ -14,15 +14,6 @@ class AppNavigationManager(
         val containerId: Int
 ) : NavigationManager {
 
-    override fun showPreviousFragment(): Boolean {
-        if (fragmentManager.backStackEntryCount > 1) {
-            fragmentManager.popBackStack()
-            return true
-        }
-
-        return false
-    }
-
     override fun showFragment(fragment: Fragment, addToBackstack: Boolean) {
         val transaction = fragmentManager
                 .beginTransaction()
@@ -30,7 +21,8 @@ class AppNavigationManager(
                         R.animator.animator_fragment_enter_push,
                         R.animator.animator_fragment_exit_push,
                         R.animator.animator_fragment_enter_pop,
-                        R.animator.animator_fragment_exit_pop)
+                        R.animator.animator_fragment_exit_pop
+                )
                 .replace(containerId, fragment, CURRENT_FRAGMENT_TAG)
 
         if (addToBackstack) {

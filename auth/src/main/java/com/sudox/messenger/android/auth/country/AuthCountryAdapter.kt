@@ -2,6 +2,7 @@ package com.sudox.messenger.android.auth.country
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.countriesProvider.entries.Country
@@ -11,6 +12,8 @@ class AuthCountryAdapter(
         val context: Context,
         val countries: List<Country>
 ) : RecyclerView.Adapter<AuthCountryAdapter.ViewHolder>() {
+
+    var clickCallback: ((Country) -> (Unit))? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(CountryItemView(context).apply {
@@ -23,12 +26,15 @@ class AuthCountryAdapter(
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.let {
-        val country = countries[position]
+        val country = countries[holder.adapterPosition]
 
         holder.view.let { view ->
             view.setFlag(country.flagImageId)
             view.setName(country.nameTextId)
             view.setCode(country.countryCode)
+            view.setOnClickListener {
+                clickCallback?.invoke(countries[holder.adapterPosition])
+            }
         }
     }
 

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 
 interface NavigationManager {
-    fun showPreviousFragment(): Boolean
     fun showFragment(fragment: Fragment, addToBackstack: Boolean)
     fun getCurrentFragment(): Fragment?
     fun restoreState(bundle: Bundle): Boolean

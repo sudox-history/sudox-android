@@ -1,5 +1,6 @@
 package com.sudox.messenger.android.auth.phone
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,11 +10,14 @@ import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.countriesProvider.countries
+import com.sudox.design.countriesProvider.entries.Country
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.auth.country.AuthCountryFragment
+import com.sudox.messenger.android.auth.country.COUNTRY_EXTRA_NAME
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.NavigationManager
+import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditText
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayout
 import kotlinx.android.synthetic.main.fragment_auth_phone.view.authPhoneEditText
 import java.util.Locale
@@ -44,6 +48,12 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        data!!.getParcelableExtra<Country>(COUNTRY_EXTRA_NAME)!!.let {
+            authPhoneEditText.setCountry(it.regionCode, it.countryCode, it.flagImageId)
+        }
+    }
+
     override fun onButtonClicked(tag: Int) {
         navigationManager!!.showFragment(AuthCodeFragment(), true)
     }
@@ -55,7 +65,9 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
         it.authPhoneEditText.setCountry(country.regionCode, country.countryCode, country.flagImageId)
         it.authPhoneEditText.regionFlagIdCallback = ::handleCountryChangingAttempt
         it.authPhoneEditText.countryCodeSelector.setOnClickListener {
-            navigationManager!!.showFragment(AuthCountryFragment(), true)
+            navigationManager!!.showFragment(AuthCountryFragment().apply {
+                setTargetFragment(this@AuthPhoneFragment, 0)
+            }, true)
         }
     }
 

@@ -2,7 +2,6 @@ package com.sudox.messenger.android
 
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
-import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.sudox.messenger.android.auth.phone.AuthPhoneFragment
 import com.sudox.messenger.android.core.CoreActivity
@@ -37,19 +36,6 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         } else {
             navigationManager.showFragment(AuthPhoneFragment(), false)
         }
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK && !navigationManager.showPreviousFragment()) {
-            super.onBackPressed()
-            return true
-        }
-
-        return super.onKeyDown(keyCode, event)
-    }
-
-    override fun onBackPressed() {
-        // Working bad with OnKeyListener in CustomView
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
