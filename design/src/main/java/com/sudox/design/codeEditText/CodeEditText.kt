@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Parcelable
-import android.text.InputType
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -21,10 +19,8 @@ import kotlin.math.min
 class CodeEditText : ViewGroup, EditTextLayoutChild {
 
     var codeFilledCallback: ((String) -> (Unit))? = null
-
     var digitsEditTexts: Array<AppCompatEditText>? = null
-    var lastFocusedEditText = 0
-    internal var isPositioningEnabled = true
+    var isPositioningEnabled = true
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.codeEditTextStyle)
@@ -32,32 +28,9 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.CodeEditText, defStyleAttr, 0).use {
-            digitsEditTexts = Array(it.getIntegerOrThrow(R.styleable.CodeEditText_digitsCount), ::createDigitEditText)
-        }
-    }
-
-    fun showOnFocusedKeyboard() {
-        digitsEditTexts!![lastFocusedEditText].showSoftKeyboard()
-    }
-
-    private fun createDigitEditText(index: Int): AppCompatEditText {
-        return AppCompatEditText(context).apply {
-            id = View.generateViewId()
-            gravity = Gravity.CENTER
-            inputType = InputType.TYPE_CLASS_NUMBER or
-                    InputType.TYPE_NUMBER_FLAG_DECIMAL or
-                    InputType.TYPE_NUMBER_FLAG_SIGNED
-
-            background = background.mutate()
-            isSingleLine = true
-            maxLines = 1
-
-            CodeTextWatcher(this, index, this@CodeEditText).apply {
-                addTextChangedListener(this)
-                setOnKeyListener(this)
+            digitsEditTexts = Array(it.getIntegerOrThrow(R.styleable.CodeEditText_digitsCount)) { index ->
+                CodeDigitEditText(context, this, index)
             }
-
-            addView(this)
         }
     }
 
@@ -129,6 +102,18 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
         }
     }
 
+    fun showSoftKeyboard() {
+        val focusedDigitEditText = digitsEditTexts!!.find {
+            it.isFocused
+        } ?: digitsEditTexts!!.first()
+
+        if (focusedDigitEditText == digitsEditTexts!!.last() && focusedDigitEditText.text.isNullOrEmpty()) {
+            return
+        }
+
+        focusedDigitEditText.showSoftKeyboard()
+    }
+
     fun getCode(): String? {
         val builder = StringBuilder()
 
@@ -174,8 +159,6 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
             }
 
             digitEditText.requestFocus()
-
-            lastFocusedEditText = index
         }
     }
 }

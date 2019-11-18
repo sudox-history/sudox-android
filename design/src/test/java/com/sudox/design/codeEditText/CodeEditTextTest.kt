@@ -208,15 +208,4 @@ class CodeEditTextTest : Assert() {
             setText("A$text")
         }
     }
-
-    private fun EditText.printTwo() {
-        requestFocus()
-        dispatchKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_2))
-
-        if (selectionStart == 1) {
-            setText("${text}2")
-        } else {
-            setText("2$text")
-        }
-    }
 }

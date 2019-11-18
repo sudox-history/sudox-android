@@ -31,17 +31,12 @@ class AuthCodeFragment : Fragment(), ApplicationBarListener {
 
         activity.getScreenManager().let {
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
 
         navigationManager = activity.getNavigationManager()
 
         return inflater.inflate(R.layout.fragment_auth_code, container, false)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        authCodeEditText.showOnFocusedKeyboard()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,6 +46,7 @@ class AuthCodeFragment : Fragment(), ApplicationBarListener {
         val spannable = HtmlCompat.fromHtml(string, HtmlCompat.FROM_HTML_MODE_COMPACT)
 
         authCodeDescriptionTextView.text = spannable
+        authCodeEditText.showSoftKeyboard()
     }
 
     override fun onButtonClicked(tag: Int) {

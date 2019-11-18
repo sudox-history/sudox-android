@@ -32,20 +32,16 @@ class AuthRegisterFragment : Fragment(), ApplicationBarListener {
 
         activity.getScreenManager().let {
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
 
         return inflater.inflate(R.layout.fragment_auth_register, container, false)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        authRegisterNicknameEditText.showSoftKeyboard()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         authRegisterNicknameEditText.setNicknameTag("4566")
+        authRegisterNicknameEditText.showSoftKeyboard()
     }
 }

@@ -10,13 +10,13 @@ import androidx.fragment.app.Fragment
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.phoneEditText.PhoneEditText
 import com.sudox.design.regionsFlags
-import com.sudox.design.showSoftKeyboard
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.api.supportedRegions
-import kotlinx.android.synthetic.main.fragment_auth_phone.*
+import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditText
+import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayout
 import java.util.Locale
 
 class AuthPhoneFragment : Fragment(), ApplicationBarListener {
@@ -35,7 +35,7 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
 
         activity.getScreenManager().let {
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
 
         navigationManager = activity.getNavigationManager()
@@ -45,9 +45,8 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        authPhoneEditText.numberEditText.showSoftKeyboard()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        authPhoneEditText.showSoftKeyboard()
     }
 
     override fun onButtonClicked(tag: Int) {
