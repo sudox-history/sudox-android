@@ -1,5 +1,6 @@
 package com.sudox.messenger.android.auth.phone
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +11,6 @@ import androidx.fragment.app.Fragment
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.countriesProvider.countries
 import com.sudox.design.countriesProvider.entries.Country
-import com.sudox.design.phoneEditText.PhoneEditText
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.auth.country.AuthCountryFragment
@@ -19,9 +19,8 @@ import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.NavigationManager
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditText
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayout
+import kotlinx.android.synthetic.main.fragment_auth_phone.view.authPhoneEditText
 import java.util.Locale
-import com.sudox.messenger.api.supportedRegions
-import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditText
 
 class AuthPhoneFragment : Fragment(), ApplicationBarListener {
 
