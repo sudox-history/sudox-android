@@ -20,6 +20,7 @@ import com.sudox.design.R
 import com.sudox.design.editTextLayout.EditTextLayoutChild
 import com.sudox.design.phoneEditText.childs.PhoneCountryCodeSelector
 import com.sudox.design.phoneEditText.childs.PhoneNumberEditText
+import com.sudox.design.showSoftKeyboard
 import kotlin.math.max
 import kotlin.math.min
 
@@ -208,6 +209,10 @@ class PhoneEditText : ViewGroup, EditTextLayoutChild {
 
     fun getRegionCode(): String? {
         return numberEditText.getRegionCode()
+    }
+
+    fun showSoftKeyboard() {
+        numberEditText.showSoftKeyboard()
     }
 
     override fun setStroke(width: Int, color: Int) {

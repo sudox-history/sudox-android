@@ -1,6 +1,5 @@
 package com.sudox.messenger.android.auth.phone
 
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.countriesProvider.countries
 import com.sudox.design.countriesProvider.entries.Country
+import com.sudox.design.phoneEditText.PhoneEditText
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.auth.country.AuthCountryFragment
@@ -19,8 +19,9 @@ import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.NavigationManager
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditText
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayout
-import kotlinx.android.synthetic.main.fragment_auth_phone.view.authPhoneEditText
 import java.util.Locale
+import com.sudox.messenger.api.supportedRegions
+import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditText
 
 class AuthPhoneFragment : Fragment(), ApplicationBarListener {
 
@@ -38,7 +39,7 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
 
         activity.getScreenManager().let {
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
 
         navigationManager = activity.getNavigationManager()
@@ -46,6 +47,10 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
         return inflater.inflate(R.layout.fragment_auth_phone, container, false).apply {
             initPhoneEditText(this)
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        authPhoneEditText.showSoftKeyboard()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

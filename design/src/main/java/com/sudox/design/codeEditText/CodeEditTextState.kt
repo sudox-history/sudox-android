@@ -7,20 +7,32 @@ import android.view.View
 class CodeEditTextState : View.BaseSavedState {
 
     private var digitEditTextsIds: IntArray? = null
+    private var lastFocusedDigitEditText = -1
 
     constructor(superState: Parcelable) : super(superState)
     constructor(source: Parcel) : super(source) {
         digitEditTextsIds = source.createIntArray()
+        lastFocusedDigitEditText = source.readInt()
     }
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
-        out.writeIntArray(digitEditTextsIds)
+
+        out.let {
+            it.writeIntArray(digitEditTextsIds)
+            it.writeInt(lastFocusedDigitEditText)
+        }
     }
 
     fun writeFromView(codeEditText: CodeEditText) {
         digitEditTextsIds = IntArray(codeEditText.digitsEditTexts!!.size) {
-            codeEditText.digitsEditTexts!![it].id
+            val editText = codeEditText.digitsEditTexts!![it]
+
+            if (editText.isFocused) {
+                lastFocusedDigitEditText = it
+            }
+
+            editText.id
         }
     }
 
@@ -28,6 +40,8 @@ class CodeEditTextState : View.BaseSavedState {
         digitEditTextsIds!!.forEachIndexed { index, id ->
             codeEditText.digitsEditTexts!![index].id = id
         }
+
+        codeEditText.digitsEditTexts!![lastFocusedDigitEditText].requestFocus()
     }
 
     companion object CREATOR : Parcelable.Creator<CodeEditTextState> {

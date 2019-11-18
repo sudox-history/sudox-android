@@ -13,7 +13,7 @@ import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.register.AuthRegisterFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.NavigationManager
-import kotlinx.android.synthetic.main.fragment_auth_code.authCodeDescriptionTextView
+import kotlinx.android.synthetic.main.fragment_auth_code.*
 
 class AuthCodeFragment : Fragment(), ApplicationBarListener {
 
@@ -31,7 +31,7 @@ class AuthCodeFragment : Fragment(), ApplicationBarListener {
 
         activity.getScreenManager().let {
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
 
         navigationManager = activity.getNavigationManager()
@@ -46,6 +46,7 @@ class AuthCodeFragment : Fragment(), ApplicationBarListener {
         val spannable = HtmlCompat.fromHtml(string, HtmlCompat.FROM_HTML_MODE_COMPACT)
 
         authCodeDescriptionTextView.text = spannable
+        authCodeEditText.showSoftKeyboard()
     }
 
     override fun onButtonClicked(tag: Int) {
