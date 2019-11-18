@@ -30,7 +30,7 @@ class AppApplicationBarManager(
         if (toggle) {
             button.setIconDrawable(R.drawable.ic_left_arrow)
             button.setIconDirection(ApplicationBarButtonIconDirection.START)
-            button.setOnClickListener { activity.onBackPressed() }
+            button.setOnClickListener { activity.onKeyDown(KeyEvent.KEYCODE_BACK, null) }
             button.visibility = View.VISIBLE
             button.isClickable = true
         } else {
