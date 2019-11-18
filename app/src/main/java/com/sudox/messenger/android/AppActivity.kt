@@ -18,9 +18,9 @@ import kotlinx.android.synthetic.main.activity_app.applicationBar
 class AppActivity : AppCompatActivity(), CoreActivity {
 
     private val screenManager = AppScreenManager(this)
-    private val navigationManager = AppNavigationManager(supportFragmentManager, R.id.frameContainer)
+    private val navigationManager = AppNavigationManager(this, supportFragmentManager, R.id.frameContainer)
     private val applicationBarManager by lazy {
-        AppApplicationBarManager(applicationBar, this)
+        AppApplicationBarManager(applicationBar, navigationManager)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

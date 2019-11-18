@@ -1,7 +1,5 @@
 package com.sudox.messenger.android.managers
 
-import android.app.Activity
-import android.view.KeyEvent
 import android.view.View
 import com.sudox.design.applicationBar.ApplicationBar
 import com.sudox.design.applicationBar.ApplicationBarListener
@@ -13,7 +11,7 @@ import com.sudox.messenger.android.core.managers.ApplicationBarManager
 
 class AppApplicationBarManager(
         val applicationBar: ApplicationBar,
-        val activity: Activity
+        val navigationManager: AppNavigationManager
 ) : ApplicationBarManager {
 
     override fun getButtonStart(): ApplicationBarButton {
@@ -30,7 +28,7 @@ class AppApplicationBarManager(
         if (toggle) {
             button.setIconDrawable(R.drawable.ic_left_arrow)
             button.setIconDirection(ApplicationBarButtonIconDirection.START)
-            button.setOnClickListener { activity.onKeyDown(KeyEvent.KEYCODE_BACK, null) }
+            button.setOnClickListener { navigationManager.backToPreviousFragment() }
             button.visibility = View.VISIBLE
             button.isClickable = true
         } else {

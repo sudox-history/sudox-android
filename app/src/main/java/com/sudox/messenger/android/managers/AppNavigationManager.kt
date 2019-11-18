@@ -1,15 +1,19 @@
 package com.sudox.messenger.android.managers
 
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.sudox.messenger.android.AppActivity
 import com.sudox.messenger.android.R
+import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.managers.NavigationManager
 
 internal const val CURRENT_FRAGMENT_TAG = "current_fragment_tag"
 internal const val CURRENT_FRAGMENT_KEY = "current_fragment_key"
 
 class AppNavigationManager(
+        val appActivity: AppActivity,
         val fragmentManager: FragmentManager,
         val containerId: Int
 ) : NavigationManager {
@@ -34,6 +38,10 @@ class AppNavigationManager(
 
     override fun getCurrentFragment(): Fragment? {
         return fragmentManager.findFragmentByTag(CURRENT_FRAGMENT_TAG)
+    }
+
+    override fun backToPreviousFragment() {
+        appActivity.onKeyDown(KeyEvent.KEYCODE_BACK, null)
     }
 
     override fun restoreState(bundle: Bundle): Boolean {

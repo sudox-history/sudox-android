@@ -17,18 +17,20 @@ internal const val COUNTRY_EXTRA_NAME = "country"
 
 class AuthCountryFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val coreActivity = activity as CoreActivity
+    private var coreActivity: CoreActivity? = null
 
-        coreActivity.getScreenManager().setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-        coreActivity.getApplicationBarManager().let {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        coreActivity = activity as CoreActivity
+
+        coreActivity!!.getScreenManager().setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        coreActivity!!.getApplicationBarManager().let {
             it.toggleButtonBack(true)
             it.toggleButtonNext(false)
             it.setTitleText(R.string.countries)
         }
 
         return inflater.inflate(R.layout.fragment_auth_country, container, false).apply {
-            val provider = coreActivity.getLoader().getCountriesProvider()
+            val provider = coreActivity!!.getLoader().getCountriesProvider()
             val listView = this as SortedListView
 
             listView.setLettersProvider(provider.getLettersProvider())
@@ -40,8 +42,7 @@ class AuthCountryFragment : Fragment() {
     }
 
     private fun onCountryClicked(country: Country) {
-        activity!!.onBackPressed()
-
+        coreActivity!!.getNavigationManager().backToPreviousFragment()
         targetFragment!!.onActivityResult(0, 0, Intent().apply {
             putExtra(COUNTRY_EXTRA_NAME, country)
         })
