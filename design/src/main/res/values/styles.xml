@@ -3,7 +3,6 @@
 
     <style name="Sudox" parent="Sudox.Base">
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="Sudox.Base" parent="Theme.AppCompat.Light.NoActionBar">
