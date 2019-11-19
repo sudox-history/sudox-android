@@ -1,5 +1,6 @@
 package com.sudox.messenger.android.auth.phone
 
+import android.animation.Animator
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
@@ -7,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.fragment.app.Fragment
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.countriesProvider.countries
 import com.sudox.design.countriesProvider.entries.Country
@@ -16,13 +16,14 @@ import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.auth.country.AuthCountryFragment
 import com.sudox.messenger.android.auth.country.COUNTRY_EXTRA_NAME
 import com.sudox.messenger.android.core.CoreActivity
+import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.managers.NavigationManager
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditText
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayout
 import kotlinx.android.synthetic.main.fragment_auth_phone.view.authPhoneEditText
 import java.util.Locale
 
-class AuthPhoneFragment : Fragment(), ApplicationBarListener {
+class AuthPhoneFragment : CoreFragment(), ApplicationBarListener {
 
     private var navigationManager: NavigationManager? = null
 
@@ -48,8 +49,12 @@ class AuthPhoneFragment : Fragment(), ApplicationBarListener {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        authPhoneEditText.showSoftKeyboard()
+    override fun onAnimationEnd(animation: Animator) {
+        view?.post {
+            authPhoneEditText.showSoftKeyboard()
+        }
+
+        super.onAnimationEnd(animation)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

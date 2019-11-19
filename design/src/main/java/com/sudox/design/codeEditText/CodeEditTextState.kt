@@ -7,7 +7,7 @@ import android.view.View
 class CodeEditTextState : View.BaseSavedState {
 
     private var digitEditTextsIds: IntArray? = null
-    private var lastFocusedDigitEditText = -1
+    private var lastFocusedDigitEditText = 0
 
     constructor(superState: Parcelable) : super(superState)
     constructor(source: Parcel) : super(source) {
