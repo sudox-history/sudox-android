@@ -46,10 +46,10 @@ class ApplicationBarButton : View {
             iconHeight = it.getDimensionPixelSizeOrThrow(R.styleable.ApplicationBarButton_iconHeight)
             iconWidth = it.getDimensionPixelSizeOrThrow(R.styleable.ApplicationBarButton_iconWidth)
 
+            val typefaceId = it.getResourceIdOrThrow(R.styleable.ApplicationBarButton_textTypeface)
+
             textPaint.color = it.getColorOrThrow(R.styleable.ApplicationBarButton_textColor)
             textPaint.textSize = it.getDimensionPixelSizeOrThrow(R.styleable.ApplicationBarButton_textSize).toFloat()
-
-            val typefaceId = it.getResourceIdOrThrow(R.styleable.ApplicationBarButton_textTypeface)
             textPaint.typeface = ResourcesCompat.getFont(context, typefaceId)
         }
 

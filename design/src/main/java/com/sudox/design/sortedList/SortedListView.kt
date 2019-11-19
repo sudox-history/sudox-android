@@ -5,9 +5,11 @@ import android.content.Context
 import android.graphics.Paint
 import android.text.TextPaint
 import android.util.AttributeSet
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getFontOrThrow
+import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.R
@@ -29,9 +31,11 @@ class SortedListView : RecyclerView {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.SortedListView, defStyleAttr, 0).use {
+            val typefaceId = it.getResourceIdOrThrow(R.styleable.SortedListView_lettersFont)
+
             lettersPaint.textSize = it.getDimensionPixelSizeOrThrow(R.styleable.SortedListView_lettersTextSize).toFloat()
             lettersPaint.color = it.getColorOrThrow(R.styleable.SortedListView_lettersColor)
-            lettersPaint.typeface = it.getFontOrThrow(R.styleable.SortedListView_lettersFont)
+            lettersPaint.typeface = ResourcesCompat.getFont(context, typefaceId)
 
             lettersRightPadding = it.getDimensionPixelSizeOrThrow(R.styleable.SortedListView_lettersRightPadding)
             lettersTopPadding = it.getDimensionPixelSizeOrThrow(R.styleable.SortedListView_lettersTopPadding)
