@@ -9,7 +9,7 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     private var animator: Animator? = null
 
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? {
-        if (enter) {
+        if (enter && nextAnim != 0) {
             animator = AnimatorInflater.loadAnimator(context, nextAnim).apply {
                 addListener(this@CoreFragment)
             }
