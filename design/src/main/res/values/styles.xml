@@ -32,6 +32,13 @@
         <item name="colorAccent">@color/accent_color</item>
     </style>
 
+    <style name="Sudox.Screen" parent="">
+        <item name="android:clipToPadding">false</item>
+        <item name="android:paddingTop">@dimen/screen_top_padding</item>
+        <item name="android:paddingRight">@dimen/screen_right_padding</item>
+        <item name="android:paddingLeft">@dimen/screen_left_padding</item>
+    </style>
+
     <style name="Sudox.EditText" parent="android:Widget.EditText">
         <item name="android:background">@drawable/drawable_edittext</item>
         <item name="android:paddingLeft">@dimen/edittext_horizontal_padding</item>

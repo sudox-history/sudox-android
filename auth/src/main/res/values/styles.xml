@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Sudox.Auth">
+    <style name="Sudox.Auth" parent="Sudox.Screen">
         <item name="paddingTopPercent">@dimen/auth_padding_top_percent</item>
-        <item name="android:clipToPadding">false</item>
     </style>
 
     <style name="Sudox.Auth.Title" parent="android:Widget.TextView">

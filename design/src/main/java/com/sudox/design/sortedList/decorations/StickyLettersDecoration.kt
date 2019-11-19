@@ -25,6 +25,7 @@ class StickyLettersDecoration(
         val letterTopPadding = sortedListView.lettersTopPadding
         val letterPaint = sortedListView.lettersPaint
         val letterMargin = sortedListView.lettersMargin
+        val letterX = parent.paddingStart.toFloat()
 
         var previousLetterY = Float.MAX_VALUE
         var previousLetterPosition = -1
@@ -32,7 +33,7 @@ class StickyLettersDecoration(
         (parent.childCount - 1 downTo 0).map {
             parent.getChildAt(it)
         }.filter {
-            it.top - sortedListView.lettersTopPadding - letterBounds.height() >= 0 &&
+            it.top - letterTopPadding - letterBounds.height() >= parent.paddingTop &&
                     it.top - sortedListView.lettersTopPadding - letterBounds.height() <= parent.height
         }.forEach {
             val position = parent.getChildAdapterPosition(it)
@@ -44,10 +45,11 @@ class StickyLettersDecoration(
             val letter = letters[position] ?: return@forEach
             val letterY = (it.top - letterTopPadding)
                     .coerceAtLeast(letterTopPadding)
+                    .coerceAtLeast(parent.paddingTop + letterBounds.height())
                     .coerceAtMost((previousLetterY - letterTopPadding).toInt())
                     .toFloat()
 
-            canvas.drawText(letter, 0F, letterY, letterPaint)
+            canvas.drawText(letter, letterX, letterY, letterPaint)
 
             previousLetterY = letterY
             previousLetterPosition = position
@@ -66,8 +68,10 @@ class StickyLettersDecoration(
 
         val stickyLetterTop = previousLetterY - letterBounds.height() - letterMargin
         val stickyLetterY = min(stickyLetterTop, letterTopPadding.toFloat())
+                .coerceAtLeast((parent.paddingTop + letterBounds.height()).toFloat())
+                .coerceAtMost(previousLetterY - letterMargin - letterBounds.height())
 
-        canvas.drawText(stickyLetter, 0F, stickyLetterY, letterPaint)
+        canvas.drawText(stickyLetter, letterX, stickyLetterY, letterPaint)
     }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
