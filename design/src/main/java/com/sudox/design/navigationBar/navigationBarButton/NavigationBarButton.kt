@@ -121,9 +121,13 @@ class NavigationBarButton : View {
             defaultContentColor
         }
 
-        iconDrawable!!.setTint(color)
         titlePaint.color = color
+        iconDrawable!!.setTint(color)
 
         invalidate()
+    }
+
+    fun isClicked(): Boolean {
+        return clicked
     }
 }

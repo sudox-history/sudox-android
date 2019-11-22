@@ -12,7 +12,8 @@ import java.util.LinkedList
 
 class NavigationBar : ViewGroup, View.OnClickListener {
 
-    private var buttons = LinkedList<NavigationBarButton>()
+    var buttons = LinkedList<NavigationBarButton>()
+    var listener: NavigationBarListener? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.navigationBarStyle)

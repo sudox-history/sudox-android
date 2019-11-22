@@ -41,6 +41,8 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         } else {
             navigationManager.showFragment(AuthPhoneFragment(), false)
         }
+
+        navigationManager.toggleNavigationBar(true)
     }
 
     override fun onBackPressed() {}

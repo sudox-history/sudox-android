@@ -39,7 +39,7 @@ class AuthPhoneFragment : CoreFragment(), ApplicationBarListener {
 
         activity.getScreenManager().let {
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-//            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
 
         navigationManager = activity.getNavigationManager()
@@ -51,7 +51,7 @@ class AuthPhoneFragment : CoreFragment(), ApplicationBarListener {
 
     override fun onAnimationEnd(animation: Animator) {
         view?.post {
-//            authPhoneEditText.showSoftKeyboard()
+            authPhoneEditText.showSoftKeyboard()
         }
 
         super.onAnimationEnd(animation)
