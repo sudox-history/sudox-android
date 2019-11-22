@@ -25,6 +25,8 @@
         <item name="editTextLayoutStyle">@style/Sudox.EditTextLayout</item>
         <item name="sortedListViewStyle">@style/Sudox.SortedListView</item>
         <item name="countryItemViewStyle">@style/Sudox.CountryItemView</item>
+        <item name="navigationBarStyle">@style/Sudox.NavigationBar</item>
+        <item name="navigationBarButtonStyle">@style/Sudox.NavigationBar.Button</item>
 
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
@@ -144,5 +146,23 @@
         <item name="android:textSize">@dimen/recyclerview_text_size</item>
         <item name="android:fontFamily">@font/opensans_semibold</item>
         <item name="fontFamily">@font/opensans_semibold</item>
+    </style>
+
+    <style name="Sudox.NavigationBar" parent="">
+        <item name="android:background">@drawable/drawable_navbar_background</item>
+    </style>
+
+    <style name="Sudox.NavigationBar.Button" parent="">
+        <item name="android:paddingTop">@dimen/navigationbarbutton_top_padding</item>
+        <item name="android:paddingBottom">@dimen/navigationbarbutton_bottom_padding</item>
+
+        <item name="defaultContentColor">@color/navigationbarbutton_default_content_color</item>
+        <item name="focusedContentColor">@color/navigationbarbutton_focused_content_color</item>
+
+        <item name="titleFont">@font/opensans_semibold</item>
+        <item name="titleTextSize">@dimen/navigationbarbutton_title_text_size</item>
+
+        <item name="iconHeight">@dimen/navigationbarbutton_icon_height</item>
+        <item name="iconWidth">@dimen/navigationbarbutton_icon_width</item>
     </style>
 </resources>

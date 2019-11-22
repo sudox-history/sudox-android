@@ -14,11 +14,15 @@ import com.sudox.messenger.android.managers.AppApplicationBarManager
 import com.sudox.messenger.android.managers.AppNavigationManager
 import com.sudox.messenger.android.managers.AppScreenManager
 import kotlinx.android.synthetic.main.activity_app.applicationBar
+import kotlinx.android.synthetic.main.activity_app.navigationBar
 
 class AppActivity : AppCompatActivity(), CoreActivity {
 
     private val screenManager = AppScreenManager(this)
-    private val navigationManager = AppNavigationManager(this, supportFragmentManager, R.id.frameContainer)
+    private val navigationManager by lazy {
+        AppNavigationManager(this, supportFragmentManager, navigationBar, R.id.frameContainer)
+    }
+
     private val applicationBarManager by lazy {
         AppApplicationBarManager(applicationBar, navigationManager)
     }

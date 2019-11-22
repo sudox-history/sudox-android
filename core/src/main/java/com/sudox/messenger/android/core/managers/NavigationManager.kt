@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 
 interface NavigationManager {
+    fun toggleNavigationBar(toggle: Boolean)
     fun showFragment(fragment: Fragment, addToBackstack: Boolean)
     fun backToPreviousFragment()
     fun getCurrentFragment(): Fragment?

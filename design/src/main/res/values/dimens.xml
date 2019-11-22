@@ -44,4 +44,14 @@
     <dimen name="countryitemview_flag_width">27dp</dimen>
     <dimen name="countryitemview_vertical_padding">8dp</dimen>
     <dimen name="countryitemview_letters_margin">12dp</dimen>
+
+    <dimen name="navigationbar_height">58dp</dimen>
+    <dimen name="navigationbar_stroke_width">1dp</dimen>
+
+    <dimen name="navigationbarbutton_top_padding">7.5dp</dimen>
+    <dimen name="navigationbarbutton_bottom_padding">7.5dp</dimen>
+    <dimen name="navigationbarbutton_title_text_size">14sp</dimen>
+    <dimen name="navigationbarbutton_icon_width">24dp</dimen>
+    <dimen name="navigationbarbutton_icon_height">24dp</dimen>
+    <dimen name="navigationbarbutton_icon_margin">2dp</dimen>
 </resources>
