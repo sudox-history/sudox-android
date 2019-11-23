@@ -89,6 +89,28 @@ class NavigationBarTest : Assert() {
     }
 
     @Test
+    fun testSelectedItemSetting() = navigationBar!!.let  {
+        var buttonTag = -1
+
+        it.listener = object : NavigationBarListener {
+            override fun onButtonClicked(tag: Int) {
+                buttonTag = tag
+            }
+        }
+
+        it.addItem(1, android.R.string.cut, android.R.drawable.ic_secure)
+        it.addItem(2, android.R.string.cancel, android.R.drawable.ic_delete)
+        it.addItem(3, android.R.string.selectAll, android.R.drawable.ic_btn_speak_now)
+
+        it.setSelectedItem(3)
+
+        assertEquals(3, buttonTag)
+        assertFalse(it.buttons[0].isClicked())
+        assertFalse(it.buttons[1].isClicked())
+        assertTrue(it.buttons[2].isClicked())
+    }
+
+    @Test
     fun testStateSaving() {
         navigationBar!!.addItem(1, android.R.string.cut, android.R.drawable.ic_secure)
         navigationBar!!.addItem(2, android.R.string.cancel, android.R.drawable.ic_delete)

@@ -39,11 +39,13 @@ class NavigationBar : ViewGroup, View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        buttons.forEach {
-            it.setClicked(it == view)
-        }
-
+        buttons.forEach { it.setClicked(it == view) }
         listener?.onButtonClicked(view.tag as Int)
+    }
+
+    fun setSelectedItem(tag: Int) {
+        buttons.forEach { it.setClicked(it.tag == tag) }
+        listener?.onButtonClicked(tag)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
