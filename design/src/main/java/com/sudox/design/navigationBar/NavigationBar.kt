@@ -1,6 +1,7 @@
 package com.sudox.design.navigationBar
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -41,9 +42,15 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         buttons.forEach {
             it.setClicked(it == view)
         }
+
+        listener?.onButtonClicked(view.tag as Int)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        if (buttons.isEmpty()) {
+            return
+        }
+
         val topBorder = paddingTop
         val bottomBorder = topBorder + buttons.first().measuredHeight
         var leftBorder = paddingLeft
@@ -56,19 +63,40 @@ class NavigationBar : ViewGroup, View.OnClickListener {
         }
     }
 
+    override fun onRestoreInstanceState(parcelable: Parcelable) {
+        val state = parcelable as NavigationBarState
+
+        state.apply {
+            super.onRestoreInstanceState(superState)
+            readToView(this@NavigationBar)
+        }
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+
+        return NavigationBarState(superState!!).apply {
+            writeFromView(this@NavigationBar)
+        }
+    }
+
     fun addItem(itemId: Int, @StringRes titleId: Int, @DrawableRes iconId: Int) {
-        buttons.add(NavigationBarButton(context).apply {
-            setOnClickListener(this@NavigationBar)
+        buttons.add(createItem().apply {
             set(titleId, iconId)
-
             tag = itemId
-            layoutParams = LayoutParams(
-                    LayoutParams.WRAP_CONTENT,
-                    LayoutParams.MATCH_PARENT
-            )
-
-            addView(this)
         })
+    }
+
+    internal fun createItem() = NavigationBarButton(context).apply {
+        setOnClickListener(this@NavigationBar)
+
+        id = View.generateViewId()
+        layoutParams = LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.MATCH_PARENT
+        )
+
+        addView(this)
     }
 
     fun removeItem(index: Int) {

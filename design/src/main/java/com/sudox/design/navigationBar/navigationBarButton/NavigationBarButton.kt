@@ -6,8 +6,10 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.res.getColorOrThrow
@@ -20,6 +22,11 @@ import kotlin.math.max
 import kotlin.math.min
 
 class NavigationBarButton : View {
+
+    @VisibleForTesting
+    var titleId = 0
+    @VisibleForTesting
+    var iconId = 0
 
     private var defaultContentColor = 0
     private var focusedContentColor = 0
@@ -79,6 +86,23 @@ class NavigationBarButton : View {
         setMeasuredDimension(measuredWidth, measuredHeight)
     }
 
+    override fun onRestoreInstanceState(parcelable: Parcelable) {
+        val state = parcelable as NavigationBarButtonState
+
+        state.apply {
+            super.onRestoreInstanceState(superState)
+            readToView(this@NavigationBarButton)
+        }
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+
+        return NavigationBarButtonState(superState!!).apply {
+            writeFromView(this@NavigationBarButton)
+        }
+    }
+
     override fun dispatchDraw(canvas: Canvas) {
         val iconX = measuredWidth / 2 - iconDrawable!!.bounds.exactCenterX()
 
@@ -92,7 +116,10 @@ class NavigationBarButton : View {
         canvas.drawText(title!!, titleX, titleY, titlePaint)
     }
 
-    fun set(titleId: Int, iconId: Int) {
+    fun set(titleId: Int, iconId: Int, clicked: Boolean = false) {
+        this.titleId = titleId
+        this.iconId = iconId
+
         title = if (titleId != 0) {
             val text = resources.getString(titleId)
             titlePaint.getTextBounds(text, 0, text.length, titleBounds)
@@ -109,7 +136,7 @@ class NavigationBarButton : View {
             null
         }
 
-        setClicked(false)
+        setClicked(clicked)
     }
 
     fun setClicked(clicked: Boolean) {
@@ -122,7 +149,7 @@ class NavigationBarButton : View {
         }
 
         titlePaint.color = color
-        iconDrawable!!.setTint(color)
+        iconDrawable?.setTint(color)
 
         invalidate()
     }
