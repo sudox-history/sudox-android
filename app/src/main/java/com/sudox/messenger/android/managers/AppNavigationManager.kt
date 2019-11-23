@@ -28,7 +28,7 @@ class AppNavigationManager(
     private var isNavigationBarConfigured = false
 
     init {
-//        navigationBar.visibility = View.GONE
+        navigationBar.visibility = View.GONE
     }
 
     override fun toggleNavigationBar(toggle: Boolean) {
