@@ -1,12 +1,11 @@
 package com.sudox.messenger.android.managers
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.sudox.design.navigationBar.NavigationBar
-import com.sudox.messenger.android.AppActivity
 import com.sudox.messenger.android.R
 import com.sudox.messenger.android.core.managers.NavigationManager
 
@@ -14,13 +13,13 @@ internal const val CURRENT_FRAGMENT_TAG = "current_fragment_tag"
 internal const val CURRENT_FRAGMENT_KEY = "current_fragment_key"
 
 class AppNavigationManager(
-        val appActivity: AppActivity,
+        val activity: Activity,
         val fragmentManager: FragmentManager,
         val navigationBar: NavigationBar,
         val containerId: Int
 ) : NavigationManager {
 
-    override fun showFragment(fragment: Fragment, addToBackstack: Boolean) {
+    override fun replaceFragment(fragment: Fragment, addToBackstack: Boolean) {
         val transaction = fragmentManager
                 .beginTransaction()
                 .setCustomAnimations(
@@ -43,12 +42,12 @@ class AppNavigationManager(
     }
 
     override fun backToPreviousFragment() {
-        appActivity.onKeyDown(KeyEvent.KEYCODE_BACK, null)
+        activity.onKeyDown(KeyEvent.KEYCODE_BACK, null)
     }
 
     override fun restoreState(bundle: Bundle): Boolean {
         fragmentManager.getFragment(bundle, CURRENT_FRAGMENT_KEY)?.let {
-            showFragment(it, false)
+            replaceFragment(it, false)
         }
 
         return true

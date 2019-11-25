@@ -1,11 +1,11 @@
 package com.sudox.messenger.android.managers
 
 import android.os.Bundle
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.sudox.messenger.android.R
 import com.sudox.messenger.android.TestRunner
+import kotlinx.android.synthetic.main.activity_app.navigationBar
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -50,73 +50,31 @@ class AppNavigationManagerTest : Assert() {
                 }.start()
 
         val activity = activityController!!.get()
-        val frameLayout = FrameLayout(activity).apply {
-            id = Int.MAX_VALUE
-        }
-
-        activity.setContentView(frameLayout)
+        activity.setContentView(R.layout.activity_app)
 
         state?.let {
             activityController!!.restoreInstanceState(state)
         }
 
-        navigationManager = AppNavigationManager(activity.supportFragmentManager, frameLayout.id)
+        navigationManager = AppNavigationManager(
+                activity,
+                activity.supportFragmentManager,
+                activity.navigationBar,
+                R.id.frameContainer
+        )
+
         activityController!!.resume().visible()
     }
 
     @Test
-    fun testManyFragmentShowing() {
+    fun testManyFragmentReplacing() {
         val firstFragment = Fragment()
         val secondFragment = Fragment()
 
-        navigationManager!!.showFragment(firstFragment, false)
-        navigationManager!!.showFragment(secondFragment, false)
+        navigationManager!!.replaceFragment(firstFragment, false)
+        navigationManager!!.replaceFragment(secondFragment, false)
 
         assertEquals(secondFragment, navigationManager!!.getCurrentFragment())
-    }
-
-    @Test
-    fun testPreviousFragmentShowing() {
-        val firstFragment = Fragment()
-        val secondFragment = Fragment()
-
-        navigationManager!!.showFragment(firstFragment, true)
-        navigationManager!!.showFragment(secondFragment, true)
-
-        assertTrue(navigationManager!!.showPreviousFragment())
-        Robolectric.flushBackgroundThreadScheduler()
-
-        assertEquals(firstFragment, navigationManager!!.getCurrentFragment())
-    }
-
-    @Test
-    fun testThatSingleFragmentNotClosed() {
-        val firstFragment = Fragment()
-        val secondFragment = Fragment()
-
-        navigationManager!!.showFragment(firstFragment, true)
-        navigationManager!!.showFragment(secondFragment, true)
-        navigationManager!!.showPreviousFragment()
-        Robolectric.flushBackgroundThreadScheduler()
-
-        assertFalse(navigationManager!!.showPreviousFragment())
-        assertEquals(firstFragment, navigationManager!!.getCurrentFragment())
-    }
-
-    @Test
-    fun testBackstackClearing() {
-        val firstFragment = Fragment()
-        val secondFragment = Fragment()
-        val thirdFragment = Fragment()
-
-        navigationManager!!.showFragment(firstFragment, true)
-        navigationManager!!.showFragment(secondFragment, true)
-        navigationManager!!.clearBackstack()
-        navigationManager!!.showFragment(thirdFragment, true)
-        Robolectric.flushBackgroundThreadScheduler()
-
-        assertFalse(navigationManager!!.showPreviousFragment())
-        assertEquals(thirdFragment, navigationManager!!.getCurrentFragment())
     }
 
     @Test
@@ -124,7 +82,7 @@ class AppNavigationManagerTest : Assert() {
         val fragment = TestFragment()
         val bundle = Bundle()
 
-        navigationManager!!.showFragment(fragment, true)
+        navigationManager!!.replaceFragment(fragment, true)
         navigationManager!!.saveState(bundle)
         Robolectric.flushBackgroundThreadScheduler()
 

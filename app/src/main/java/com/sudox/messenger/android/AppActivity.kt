@@ -39,7 +39,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         if (savedInstanceState != null) {
             navigationManager.restoreState(savedInstanceState)
         } else {
-            navigationManager.showFragment(AuthPhoneFragment(), false)
+            navigationManager.replaceFragment(AuthPhoneFragment(), false)
         }
     }
 
