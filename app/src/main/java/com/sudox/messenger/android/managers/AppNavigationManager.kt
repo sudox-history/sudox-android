@@ -13,40 +13,12 @@ import com.sudox.messenger.android.core.managers.NavigationManager
 internal const val CURRENT_FRAGMENT_TAG = "current_fragment_tag"
 internal const val CURRENT_FRAGMENT_KEY = "current_fragment_key"
 
-internal const val PEOPLE_NAVBAR_ITEM_ID = 1
-internal const val MESSAGES_NAVBAR_ITEM_ID = 2
-internal const val WORLD_NAVBAR_ITEM_ID = 3
-internal const val PROFILE_NAVBAR_ITEM_ID = 4
-
 class AppNavigationManager(
         val appActivity: AppActivity,
         val fragmentManager: FragmentManager,
         val navigationBar: NavigationBar,
         val containerId: Int
 ) : NavigationManager {
-
-    private var isNavigationBarConfigured = false
-
-    init {
-        navigationBar.visibility = View.GONE
-    }
-
-    override fun toggleNavigationBar(toggle: Boolean) {
-        if (!isNavigationBarConfigured) {
-            isNavigationBarConfigured = true
-
-            navigationBar.addItem(PEOPLE_NAVBAR_ITEM_ID, R.string.people, R.drawable.ic_group)
-            navigationBar.addItem(MESSAGES_NAVBAR_ITEM_ID, R.string.messages, R.drawable.ic_chat_bubble)
-            navigationBar.addItem(WORLD_NAVBAR_ITEM_ID, R.string.world, R.drawable.ic_album)
-            navigationBar.addItem(PROFILE_NAVBAR_ITEM_ID, R.string.profile, R.drawable.ic_account)
-        }
-
-        if (toggle) {
-            navigationBar.visibility = View.VISIBLE
-        } else {
-            navigationBar.visibility = View.GONE
-        }
-    }
 
     override fun showFragment(fragment: Fragment, addToBackstack: Boolean) {
         val transaction = fragmentManager
