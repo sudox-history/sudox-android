@@ -18,17 +18,16 @@ import kotlinx.android.synthetic.main.activity_app.navigationBar
 
 class AppActivity : AppCompatActivity(), CoreActivity {
 
-    private val screenManager = AppScreenManager(this)
-    private val navigationManager by lazy {
-        AppNavigationManager(this, supportFragmentManager, navigationBar, R.id.frameContainer)
-    }
-
-    private val applicationBarManager by lazy {
-        AppApplicationBarManager(applicationBar, navigationManager)
-    }
+    private var screenManager: ScreenManager? = null
+    private var navigationManager: NavigationManager? = null
+    private var applicationBarManager: ApplicationBarManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        screenManager = AppScreenManager(this)
+        navigationManager = AppNavigationManager(this, supportFragmentManager, navigationBar, R.id.frameContainer)
+        applicationBarManager = AppApplicationBarManager(this, applicationBar!!)
 
         (window.decorView.background as LayerDrawable)
                 .getDrawable(1)
@@ -37,9 +36,9 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         setContentView(R.layout.activity_app)
 
         if (savedInstanceState != null) {
-            navigationManager.restoreState(savedInstanceState)
+            navigationManager!!.restoreState(savedInstanceState)
         } else {
-            navigationManager.replaceFragment(AuthPhoneFragment(), false)
+            navigationManager!!.addFragment(AuthPhoneFragment())
         }
     }
 
@@ -55,20 +54,20 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        navigationManager.saveState(outState)
+        navigationManager!!.saveState(outState)
         super.onSaveInstanceState(outState)
     }
 
     override fun getScreenManager(): ScreenManager {
-        return screenManager
+        return screenManager!!
     }
 
     override fun getNavigationManager(): NavigationManager {
-        return navigationManager
+        return navigationManager!!
     }
 
     override fun getApplicationBarManager(): ApplicationBarManager {
-        return applicationBarManager
+        return applicationBarManager!!
     }
 
     override fun getLoader(): CoreLoader {

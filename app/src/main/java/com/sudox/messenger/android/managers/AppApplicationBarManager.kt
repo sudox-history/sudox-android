@@ -1,5 +1,7 @@
 package com.sudox.messenger.android.managers
 
+import android.app.Activity
+import android.view.KeyEvent
 import android.view.View
 import com.sudox.design.applicationBar.ApplicationBar
 import com.sudox.design.applicationBar.ApplicationBarListener
@@ -10,8 +12,8 @@ import com.sudox.messenger.android.core.managers.APPBAR_NEXT_BUTTON_INDEX
 import com.sudox.messenger.android.core.managers.ApplicationBarManager
 
 class AppApplicationBarManager(
-        val applicationBar: ApplicationBar,
-        val navigationManager: AppNavigationManager
+        val activity: Activity,
+        val applicationBar: ApplicationBar
 ) : ApplicationBarManager {
 
     override fun getButtonStart(): ApplicationBarButton {
@@ -23,30 +25,30 @@ class AppApplicationBarManager(
     }
 
     override fun toggleButtonBack(toggle: Boolean) {
-        val button = applicationBar.buttonAtStart!!
-
-        if (toggle) {
-            button.setIconDrawable(R.drawable.ic_left_arrow)
-            button.setIconDirection(ApplicationBarButtonIconDirection.START)
-            button.setOnClickListener { navigationManager.backToPreviousFragment() }
-            button.visibility = View.VISIBLE
-            button.isClickable = true
-        } else {
-            button.setOnClickListener(applicationBar)
-            button.reset()
+        getButtonStart().let {
+            if (toggle) {
+                it.setIconDrawable(R.drawable.ic_left_arrow)
+                it.setIconDirection(ApplicationBarButtonIconDirection.START)
+                it.setOnClickListener { activity.onKeyDown(KeyEvent.KEYCODE_BACK, null) }
+                it.visibility = View.VISIBLE
+                it.isClickable = true
+            } else {
+                it.setOnClickListener(applicationBar)
+                it.reset()
+            }
         }
     }
 
     override fun toggleButtonNext(toggle: Boolean) {
-        val button = getButtonNext()
-
-        if (toggle) {
-            button.setIconDirection(ApplicationBarButtonIconDirection.END)
-            button.setText(R.string.next)
-            button.visibility = View.VISIBLE
-            button.isClickable = true
-        } else {
-            button.reset()
+        getButtonNext().let {
+            if (toggle) {
+                it.setIconDirection(ApplicationBarButtonIconDirection.END)
+                it.setText(R.string.next)
+                it.visibility = View.VISIBLE
+                it.isClickable = true
+            } else {
+                it.reset()
+            }
         }
     }
 
@@ -59,7 +61,9 @@ class AppApplicationBarManager(
     }
 
     override fun reset() {
-        applicationBar.buttonAtStart!!.setOnClickListener(applicationBar)
-        applicationBar.reset()
+        applicationBar.let {
+            it.buttonAtStart!!.setOnClickListener(it)
+            it.reset()
+        }
     }
 }
