@@ -65,6 +65,7 @@ class AppNavigationManager(
     }
 
     override fun showMainPart() {
+        currentFragment = null
         backstack.clear()
 
         val transaction = fragmentManager.beginTransaction()
