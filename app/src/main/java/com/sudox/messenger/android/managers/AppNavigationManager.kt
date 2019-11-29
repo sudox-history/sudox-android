@@ -90,7 +90,12 @@ class AppNavigationManager(
     }
 
     override fun showChildFragment(fragment: Fragment) {
-        val fragmentTransaction = fragmentManager.beginTransaction()
+        val fragmentTransaction = fragmentManager
+                .beginTransaction()
+                .setCustomAnimations(
+                        R.animator.animator_fragment_enter_right,
+                        R.animator.animator_fragment_exit_right
+                )
 
         fragmentManager.fragments.forEach {
             fragmentTransaction.hide(it)
@@ -121,7 +126,7 @@ class AppNavigationManager(
         val prevFragment = backstackPair.second
         val prevItemTag = backstackPair.first
 
-        if (prevItemTag > currentItemTag) {
+        if (prevItemTag >= currentItemTag) {
             fragmentTransaction.setCustomAnimations(
                     R.animator.animator_fragment_enter_right,
                     R.animator.animator_fragment_exit_right
@@ -227,7 +232,7 @@ class AppNavigationManager(
         val itemLastFragment = getItemLastFragment(tag)
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        if (tag > currentItemTag) {
+        if (tag >= currentItemTag) {
             fragmentTransaction.setCustomAnimations(
                     R.animator.animator_fragment_enter_right,
                     R.animator.animator_fragment_exit_right

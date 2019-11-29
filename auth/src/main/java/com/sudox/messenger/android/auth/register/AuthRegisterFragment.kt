@@ -20,6 +20,34 @@ import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterNicknam
 class AuthRegisterFragment : CoreFragment(), ApplicationBarListener {
 
     private var navigationManager: NavigationManager? = null
+    private var coreActivity: CoreActivity? = null
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        coreActivity = activity as CoreActivity
+        navigationManager = coreActivity!!.getNavigationManager()
+
+        return inflater.inflate(R.layout.fragment_auth_register, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        authRegisterNicknameEditText.setNicknameTag("4566")
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden) {
+            coreActivity!!.getApplicationBarManager().let {
+                it.setListener(this)
+                it.toggleButtonBack(true)
+                it.toggleButtonNext(true)
+                it.setTitleText(R.string.sign_in)
+            }
+
+            coreActivity!!.getScreenManager().let {
+                it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            }
+        }
+    }
 
     override fun onButtonClicked(tag: Int) {
         if (tag == APPBAR_NEXT_BUTTON_TAG) {
@@ -27,30 +55,6 @@ class AuthRegisterFragment : CoreFragment(), ApplicationBarListener {
         } else {
             authRegisterEditTextLayout.setErrorText(R.string.sudox_not_working_in_this_country)
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val activity = activity as CoreActivity
-
-        activity.getApplicationBarManager().let {
-            it.setListener(this)
-            it.toggleButtonBack(true)
-            it.toggleButtonNext(true)
-            it.setTitleText(R.string.sign_in)
-        }
-
-        activity.getScreenManager().let {
-            it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-        }
-
-        navigationManager = activity.getNavigationManager()
-
-        return inflater.inflate(R.layout.fragment_auth_register, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        authRegisterNicknameEditText.setNicknameTag("4566")
     }
 
     override fun onAnimationEnd(animation: Animator) {

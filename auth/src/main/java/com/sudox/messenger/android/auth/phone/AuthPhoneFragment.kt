@@ -26,26 +26,30 @@ import java.util.Locale
 class AuthPhoneFragment : CoreFragment(), ApplicationBarListener {
 
     private var navigationManager: NavigationManager? = null
+    private var coreActivity: CoreActivity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val activity = activity as CoreActivity
-
-        activity.getApplicationBarManager().let {
-            it.setListener(this)
-            it.toggleButtonBack(true)
-            it.toggleButtonNext(true)
-            it.setTitleText(R.string.sign_in)
-        }
-
-        activity.getScreenManager().let {
-            it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-        }
-
-        navigationManager = activity.getNavigationManager()
+        coreActivity = activity as CoreActivity
+        navigationManager = coreActivity!!.getNavigationManager()
 
         return inflater.inflate(R.layout.fragment_auth_phone, container, false).apply {
             initPhoneEditText(this)
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden) {
+            coreActivity!!.getApplicationBarManager().let {
+                it.setListener(this)
+                it.toggleButtonBack(true)
+                it.toggleButtonNext(true)
+                it.setTitleText(R.string.sign_in)
+            }
+
+            coreActivity!!.getScreenManager().let {
+                it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+            }
         }
     }
 

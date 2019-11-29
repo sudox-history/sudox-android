@@ -21,7 +21,6 @@ class AuthCountryFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         coreActivity = activity as CoreActivity
-
         coreActivity!!.getScreenManager().setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
         coreActivity!!.getApplicationBarManager().let {
             it.toggleButtonBack(true)
