@@ -42,7 +42,7 @@ class AuthCountryFragment : Fragment() {
     }
 
     private fun onCountryClicked(country: Country) {
-        coreActivity!!.getNavigationManager().backToPreviousFragment()
+        coreActivity!!.getNavigationManager().popBackstack()
         targetFragment!!.onActivityResult(0, 0, Intent().apply {
             putExtra(COUNTRY_EXTRA_NAME, country)
         })

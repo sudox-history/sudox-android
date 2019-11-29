@@ -21,6 +21,7 @@ apply from: '../configs/robolectric.gradle'
 dependencies {
     api project(path: ':auth')
     api project(path: ':design')
+    api project(path: ':people')
     api project(path: ':core')
 
     implementation libraries.core_ktx

@@ -4,7 +4,6 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
-import com.sudox.messenger.android.auth.phone.AuthPhoneFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreLoader
 import com.sudox.messenger.android.core.managers.ApplicationBarManager
@@ -25,20 +24,21 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        screenManager = AppScreenManager(this)
-        navigationManager = AppNavigationManager(this, supportFragmentManager, navigationBar, R.id.frameContainer)
-        applicationBarManager = AppApplicationBarManager(this, applicationBar!!)
-
         (window.decorView.background as LayerDrawable)
                 .getDrawable(1)
                 .alpha = 1
 
         setContentView(R.layout.activity_app)
 
+        screenManager = AppScreenManager(this)
+        applicationBarManager = AppApplicationBarManager(this, applicationBar!!)
+        navigationManager = AppNavigationManager(supportFragmentManager, navigationBar, R.id.frameContainer)
+
         if (savedInstanceState != null) {
             navigationManager!!.restoreState(savedInstanceState)
         } else {
-            navigationManager!!.addFragment(AuthPhoneFragment())
+            navigationManager!!.configureNavigationBar()
+            navigationManager!!.showMainPart()
         }
     }
 
@@ -46,7 +46,10 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            super.onBackPressed()
+            if (!navigationManager!!.popBackstack()) {
+                super.onBackPressed()
+            }
+
             return true
         }
 

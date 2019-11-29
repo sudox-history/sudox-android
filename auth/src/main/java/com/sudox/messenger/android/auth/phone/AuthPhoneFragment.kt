@@ -64,7 +64,7 @@ class AuthPhoneFragment : CoreFragment(), ApplicationBarListener {
     }
 
     override fun onButtonClicked(tag: Int) {
-        navigationManager!!.replaceFragment(AuthCodeFragment(), true)
+        navigationManager!!.showChildFragment(AuthCodeFragment())
     }
 
     private fun initPhoneEditText(view: View) = view.let {
@@ -74,9 +74,9 @@ class AuthPhoneFragment : CoreFragment(), ApplicationBarListener {
         it.authPhoneEditText.setCountry(country.regionCode, country.countryCode, country.flagImageId)
         it.authPhoneEditText.regionFlagIdCallback = ::handleCountryChangingAttempt
         it.authPhoneEditText.countryCodeSelector.setOnClickListener {
-            navigationManager!!.replaceFragment(AuthCountryFragment().apply {
+            navigationManager!!.showChildFragment(AuthCountryFragment().apply {
                 setTargetFragment(this@AuthPhoneFragment, 0)
-            }, true)
+            })
         }
     }
 

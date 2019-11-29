@@ -12,13 +12,21 @@ import com.sudox.design.showSoftKeyboard
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.core.managers.APPBAR_NEXT_BUTTON_TAG
+import com.sudox.messenger.android.core.managers.NavigationManager
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterEditTextLayout
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterNicknameEditText
 
 class AuthRegisterFragment : CoreFragment(), ApplicationBarListener {
 
+    private var navigationManager: NavigationManager? = null
+
     override fun onButtonClicked(tag: Int) {
-        authRegisterEditTextLayout.setErrorText(R.string.sudox_not_working_in_this_country)
+        if (tag == APPBAR_NEXT_BUTTON_TAG) {
+            navigationManager!!.showMainPart()
+        } else {
+            authRegisterEditTextLayout.setErrorText(R.string.sudox_not_working_in_this_country)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -35,6 +43,8 @@ class AuthRegisterFragment : CoreFragment(), ApplicationBarListener {
             it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
         }
+
+        navigationManager = activity.getNavigationManager()
 
         return inflater.inflate(R.layout.fragment_auth_register, container, false)
     }

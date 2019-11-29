@@ -2,4 +2,5 @@ include ':app',
         ':api',
         ':design',
         ':auth',
-        ':core'
+        ':core',
+        ':people'

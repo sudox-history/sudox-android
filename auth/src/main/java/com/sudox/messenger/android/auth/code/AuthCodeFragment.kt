@@ -57,6 +57,6 @@ class AuthCodeFragment : CoreFragment(), ApplicationBarListener {
     }
 
     override fun onButtonClicked(tag: Int) {
-        navigationManager!!.replaceFragment(AuthRegisterFragment(), true)
+        navigationManager!!.showChildFragment(AuthRegisterFragment())
     }
 }
