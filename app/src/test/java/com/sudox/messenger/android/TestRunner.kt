@@ -8,7 +8,7 @@ class TestRunner(testClass: Class<*>) : RobolectricTestRunner(testClass) {
 
     override fun buildGlobalConfig(): Config {
         return Config.Builder()
-                .setApplication(TestApplication::class.java)
+                .setApplication(AppLoader::class.java)
                 .setPackageName("com.sudox.messenger.android")
                 .setSdk(Build.VERSION_CODES.LOLLIPOP)
                 .build()

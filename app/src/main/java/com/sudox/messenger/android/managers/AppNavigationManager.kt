@@ -122,8 +122,29 @@ class AppNavigationManager(
             return false
         }
 
-        val backstackPair = backstack.removeLast()
         val fragmentTransaction = fragmentManager.beginTransaction()
+        val backstackIterator = backstack.descendingIterator()
+        var backstackPair: Pair<Int, Fragment>? = null
+
+        while (backstackIterator.hasNext()) {
+            val pair = backstackIterator.next()
+
+            if (pair.second == currentFragment) {
+                backstackIterator.remove()
+                continue
+            }
+
+            if (pair.first == currentItemTag) {
+                backstackIterator.remove()
+                backstackPair = pair
+                break
+            }
+        }
+
+        if (backstackPair == null) {
+            backstackPair = backstack.removeLast()!!
+        }
+
         val prevFragment = backstackPair.second
         val prevItemTag = backstackPair.first
 
@@ -139,7 +160,7 @@ class AppNavigationManager(
             )
         }
 
-        if (isFragmentLoaded(prevFragment)) {
+        if (isFragmentLoaded(currentFragment!!)) {
             fragmentTransaction.hide(currentFragment!!)
         } else {
             fragmentTransaction.remove(currentFragment!!)
@@ -230,7 +251,7 @@ class AppNavigationManager(
         }
 
         var backFromChildToRootFragment = false
-        val itemLastFragment = getItemLastFragment(tag)
+        var itemLastFragment = getItemLastFragment(tag)
         val fragmentTransaction = fragmentManager.beginTransaction()
 
         if (tag >= currentItemTag) {
@@ -253,6 +274,8 @@ class AppNavigationManager(
             val loadedFragment = loadedFragments[tag]
             val backstackIterator = backstack.iterator()
 
+            fragmentTransaction.remove(currentFragment!!)
+
             while (backstackIterator.hasNext()) {
                 val pair = backstackIterator.next()
 
@@ -267,6 +290,7 @@ class AppNavigationManager(
                 backstackIterator.remove()
             }
 
+            itemLastFragment = loadedFragment!!
             backFromChildToRootFragment = true
         }
 
