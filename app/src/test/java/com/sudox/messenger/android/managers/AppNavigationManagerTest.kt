@@ -269,6 +269,53 @@ class AppNavigationManagerTest : Assert() {
     }
 
     @Test
+    fun checkBackstackPolicy() {
+        navigationManager!!.configureNavigationBar()
+        navigationManager!!.showMainPart()
+        navigationBar!!.setSelectedItem(MESSAGES_NAVBAR_ITEM_ID)
+        navigationBar!!.setSelectedItem(WORLD_NAVBAR_ITEM_ID)
+        navigationBar!!.setSelectedItem(PROFILE_NAVBAR_ITEM_ID)
+        navigationBar!!.setSelectedItem(PEOPLE_NAVBAR_ITEM_ID)
+        navigationManager!!.showChildFragment(ChildFragment())
+        navigationBar!!.setSelectedItem(MESSAGES_NAVBAR_ITEM_ID)
+        navigationBar!!.setSelectedItem(WORLD_NAVBAR_ITEM_ID)
+        navigationBar!!.setSelectedItem(PROFILE_NAVBAR_ITEM_ID)
+
+        assertTrue(navigationManager!!.popBackstack())
+        assertEquals(5, fragmentManager!!.fragments.size)
+        assertFalse(fragmentManager!!.fragments[0].isVisible)
+        assertFalse(fragmentManager!!.fragments[1].isVisible)
+        assertTrue(fragmentManager!!.fragments[2].isVisible)
+        assertFalse(fragmentManager!!.fragments[3].isVisible)
+        assertFalse(fragmentManager!!.fragments[4].isVisible)
+
+        assertTrue(navigationManager!!.popBackstack())
+        assertEquals(5, fragmentManager!!.fragments.size)
+        assertFalse(fragmentManager!!.fragments[0].isVisible)
+        assertTrue(fragmentManager!!.fragments[1].isVisible)
+        assertFalse(fragmentManager!!.fragments[2].isVisible)
+        assertFalse(fragmentManager!!.fragments[3].isVisible)
+        assertFalse(fragmentManager!!.fragments[4].isVisible)
+
+        assertTrue(navigationManager!!.popBackstack())
+        assertEquals(5, fragmentManager!!.fragments.size)
+        assertFalse(fragmentManager!!.fragments[0].isVisible)
+        assertFalse(fragmentManager!!.fragments[1].isVisible)
+        assertFalse(fragmentManager!!.fragments[2].isVisible)
+        assertFalse(fragmentManager!!.fragments[3].isVisible)
+        assertTrue(fragmentManager!!.fragments[4].isVisible)
+
+        assertTrue(navigationManager!!.popBackstack())
+        assertEquals(4, fragmentManager!!.fragments.size)
+        assertTrue(fragmentManager!!.fragments[0].isVisible)
+        assertFalse(fragmentManager!!.fragments[1].isVisible)
+        assertFalse(fragmentManager!!.fragments[2].isVisible)
+        assertFalse(fragmentManager!!.fragments[3].isVisible)
+
+        assertFalse(navigationManager!!.popBackstack())
+    }
+
+    @Test
     fun testStateSaving() {
         navigationManager!!.configureNavigationBar()
         navigationManager!!.showMainPart()

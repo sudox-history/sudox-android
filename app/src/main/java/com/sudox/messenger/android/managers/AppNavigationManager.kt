@@ -294,7 +294,18 @@ class AppNavigationManager(
             backFromChildToRootFragment = true
         }
 
-        if (!backFromChildToRootFragment && currentFragment != null && !isBackstackContainsCurrentFragment()) {
+        if (!backFromChildToRootFragment && currentFragment != null) {
+            val iterator = backstack.iterator()
+
+            while (iterator.hasNext()) {
+                val pair = iterator.next()
+
+                if (pair.first == currentItemTag && pair.second == currentFragment!!) {
+                    iterator.remove()
+                    break
+                }
+            }
+
             backstack.add(Pair(currentItemTag, currentFragment!!))
         }
 
