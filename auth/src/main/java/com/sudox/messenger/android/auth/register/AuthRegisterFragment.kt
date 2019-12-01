@@ -34,6 +34,8 @@ class AuthRegisterFragment : CoreFragment(), ApplicationBarListener {
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+
         if (!hidden) {
             coreActivity!!.getApplicationBarManager().let {
                 it.setListener(this)

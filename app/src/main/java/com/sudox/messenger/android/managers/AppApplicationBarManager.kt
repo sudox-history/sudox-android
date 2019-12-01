@@ -55,7 +55,7 @@ class AppApplicationBarManager(
     }
 
     override fun toggleButtonBack(toggle: Boolean) {
-        buttonAtEnd.let {
+        buttonAtStart.let {
             if (toggle) {
                 it.setIconDrawable(R.drawable.ic_left_arrow)
                 it.setOnClickListener { activity.onKeyDown(KeyEvent.KEYCODE_BACK, null) }

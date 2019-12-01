@@ -3,6 +3,7 @@ package com.sudox.messenger.android.core
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import androidx.fragment.app.Fragment
+import com.sudox.design.hideSoftKeyboard
 
 abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
 
@@ -11,6 +12,20 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     override fun onResume() {
         onHiddenChanged(false)
         super.onResume()
+    }
+
+    override fun onDetach() {
+        animator?.removeListener(this)
+        onHiddenChanged(true)
+        super.onDetach()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (hidden) {
+            activity!!.hideSoftKeyboard()
+        }
+
+        super.onHiddenChanged(hidden)
     }
 
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? {
@@ -31,11 +46,6 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
 
     override fun onAnimationEnd(animation: Animator) {
         animator?.removeListener(this)
-    }
-
-    override fun onDetach() {
-        animator?.removeListener(this)
-        super.onDetach()
     }
 
     override fun onAnimationRepeat(animation: Animator) {}

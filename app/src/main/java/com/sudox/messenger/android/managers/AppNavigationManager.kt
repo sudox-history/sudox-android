@@ -50,7 +50,12 @@ class AppNavigationManager(
         loadedFragments.clear()
         backstack.clear()
 
-        val fragmentTransaction = fragmentManager.beginTransaction()
+        val fragmentTransaction = fragmentManager
+                .beginTransaction()
+                .setCustomAnimations(
+                        R.animator.animator_fragment_enter_right,
+                        R.animator.animator_fragment_exit_right
+                )
 
         fragmentManager.fragments.forEach {
             fragmentTransaction.remove(it)
