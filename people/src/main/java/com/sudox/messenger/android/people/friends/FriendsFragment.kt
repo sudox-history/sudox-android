@@ -23,7 +23,7 @@ class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListene
         val coreActivity = activity as CoreActivity
 
         coreActivity.getApplicationBarManager().let {
-            it.reset()
+            it.reset(false)
             it.setListener(this)
             it.toggleIconButtonAtEnd(R.drawable.ic_search)
         }

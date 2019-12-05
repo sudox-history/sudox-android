@@ -93,8 +93,8 @@ class AppApplicationBarManager(
         applicationBar.setTitleText(text)
     }
 
-    override fun reset() {
+    override fun reset(resetTitle: Boolean) {
         buttonAtStart.setOnClickListener(applicationBar)
-        applicationBar.reset()
+        applicationBar.reset(resetTitle)
     }
 }

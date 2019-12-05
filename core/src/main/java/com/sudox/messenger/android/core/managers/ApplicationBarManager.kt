@@ -18,5 +18,5 @@ interface ApplicationBarManager {
     fun setListener(listener: ApplicationBarListener?)
     fun setTitleText(@StringRes titleId: Int)
     fun setTitleText(text: String)
-    fun reset()
+    fun reset(resetTitle: Boolean = true)
 }

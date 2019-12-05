@@ -23,7 +23,7 @@ class ActivityFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
         val coreActivity = activity as CoreActivity
 
         coreActivity.getApplicationBarManager().let {
-            it.reset()
+            it.reset(false)
             it.setListener(this)
             it.toggleIconButtonAtStart(R.drawable.ic_notifications_none)
             it.toggleIconButtonAtEnd(R.drawable.ic_search)

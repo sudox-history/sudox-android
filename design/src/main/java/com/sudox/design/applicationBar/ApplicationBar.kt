@@ -272,10 +272,14 @@ class ApplicationBar : ViewGroup, View.OnClickListener {
         }
     }
 
-    fun reset() {
+    fun reset(resetTitle: Boolean = true) {
         buttonAtStart!!.reset()
-        setTitleText(null)
-        setContentView(null)
+
+        if (resetTitle) {
+            setTitleText(null)
+            setContentView(null)
+        }
+
         resetButtonsEnd()
     }
 }
