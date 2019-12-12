@@ -20,7 +20,7 @@ class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListene
     override fun onButtonClicked(tag: Int) {
     }
 
-    override fun onPageSelected(activity: CoreActivity, position: Int) {
+    override fun onPageSelected(activity: CoreActivity) {
         activity.getApplicationBarManager().let {
             it.reset(false)
             it.setListener(this)

@@ -16,13 +16,15 @@ class PeopleFragment : CoreFragment() {
 
     private var tabLayout: TabLayout? = null
     private var viewPagerAdapter: ViewPagerAdapter? = null
+    private var coreActivity: CoreActivity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_people, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewPagerAdapter = ViewPagerAdapter(context!!, activity as CoreActivity, peopleViewPager, childFragmentManager, arrayOf(
+        coreActivity = activity as CoreActivity
+        viewPagerAdapter = ViewPagerAdapter(context!!, coreActivity!!, peopleViewPager, childFragmentManager, arrayOf(
                 ActivityFragment(),
                 FriendsFragment()
         ))
@@ -44,15 +46,13 @@ class PeopleFragment : CoreFragment() {
         super.onHiddenChanged(hidden)
 
         if (!hidden) {
-            val activity = activity as CoreActivity
-
-            activity.getScreenManager().reset()
-            activity.getApplicationBarManager().let {
+            coreActivity!!.getScreenManager().reset()
+            coreActivity!!.getApplicationBarManager().let {
                 it.reset(true)
                 it.setContentView(tabLayout)
             }
 
-            viewPagerAdapter!!.selectCurrentFragment()
+            viewPagerAdapter!!.restoreCurrentFragment()
         }
     }
 }

@@ -28,10 +28,10 @@ class ViewPagerAdapter(
     }
 
     override fun onPageSelected(position: Int) {
-        fragments[position].onPageSelected(activity, position)
+        fragments[position].onPageSelected(activity)
     }
 
-    fun selectCurrentFragment() {
+    fun restoreCurrentFragment() {
         onPageSelected(viewPager.currentItem)
     }
 
