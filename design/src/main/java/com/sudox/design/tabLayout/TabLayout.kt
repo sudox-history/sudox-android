@@ -35,6 +35,11 @@ class TabLayout : ViewGroup {
             indicatorHeight = it.getDimensionPixelSizeOrThrow(R.styleable.TabLayout_indicatorHeight)
             indicatorMargin = it.getDimensionPixelSizeOrThrow(R.styleable.TabLayout_indicatorMargin)
         }
+
+        layoutParams = LayoutParams(
+                LayoutParams.WRAP_CONTENT,
+                LayoutParams.MATCH_PARENT
+        )
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

@@ -33,11 +33,6 @@ class PeopleFragment : CoreFragment() {
         peopleViewPager.addOnPageChangeListener(viewPagerAdapter!!)
 
         tabLayout = TabLayout(context!!).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-            )
-
             setViewPager(peopleViewPager)
         }
     }
