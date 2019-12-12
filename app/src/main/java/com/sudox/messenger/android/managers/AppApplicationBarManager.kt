@@ -93,6 +93,10 @@ class AppApplicationBarManager(
         applicationBar.setTitleText(text)
     }
 
+    override fun setContentView(view: View?) {
+        applicationBar.setContentView(view)
+    }
+
     override fun reset(resetTitle: Boolean) {
         buttonAtStart.setOnClickListener(applicationBar)
         applicationBar.reset(resetTitle)

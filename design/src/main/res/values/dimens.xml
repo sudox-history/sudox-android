@@ -54,4 +54,13 @@
     <dimen name="navigationbarbutton_icon_width">24dp</dimen>
     <dimen name="navigationbarbutton_icon_height">24dp</dimen>
     <dimen name="navigationbarbutton_icon_margin">2dp</dimen>
+
+    <dimen name="tablayout_indicator_padding_left">5dp</dimen>
+    <dimen name="tablayout_indicator_padding_right">5dp</dimen>
+    <dimen name="tablayout_indicator_height">2dp</dimen>
+    <dimen name="tablayout_indicator_margin">4dp</dimen>
+
+    <dimen name="tablayoutbutton_text_size">16sp</dimen>
+    <dimen name="tablayoutbutton_padding_right">20dp</dimen>
+    <dimen name="tablayoutbutton_padding_left">20dp</dimen>
 </resources>

@@ -1,7 +1,7 @@
 package com.sudox.messenger.android.managers
 
 import android.app.Activity
-import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+import android.content.pm.ActivityInfo.SCREEN_ORIENTATION_USER
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED
 import com.sudox.messenger.android.core.managers.ScreenManager
 
@@ -25,6 +25,6 @@ class AppScreenManager(val activity: Activity) : ScreenManager {
 
     override fun reset() {
         setInputMode(SOFT_INPUT_STATE_UNCHANGED)
-        setOrientation(SCREEN_ORIENTATION_UNSPECIFIED)
+        setOrientation(SCREEN_ORIENTATION_USER)
     }
 }
