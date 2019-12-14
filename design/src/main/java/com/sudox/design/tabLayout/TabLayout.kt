@@ -166,11 +166,7 @@ class TabLayout : ViewGroup, ViewPager.OnPageChangeListener, View.OnClickListene
         )
     }
 
-    override fun onPageSelected(position: Int) {
-        tabButtons!!.forEachIndexed { index, it ->
-            it.setActive(position == index)
-        }
-    }
+    override fun onPageSelected(position: Int) {}
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
         this.positionOffset = positionOffset
