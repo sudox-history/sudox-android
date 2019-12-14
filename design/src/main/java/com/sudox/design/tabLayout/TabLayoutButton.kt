@@ -79,13 +79,16 @@ class TabLayoutButton : View {
     }
 
     fun setActive(active: Boolean) {
-        textPaint.color = if (active) {
+        val color = if (active) {
             activeTextColor
         } else {
             defaultTextColor
         }
 
-        invalidate()
+        if (color != textPaint.color) {
+            textPaint.color = color
+            invalidate()
+        }
     }
 
     fun getTextWidth(): Int {
