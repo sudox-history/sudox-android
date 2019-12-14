@@ -88,6 +88,14 @@ class TabLayoutButton : View {
         invalidate()
     }
 
+    fun getTextWidth(): Int {
+        return textBounds.width()
+    }
+
+    fun getTextBottom(): Int {
+        return height / 2 - textBounds.centerY()
+    }
+
     fun setText(text: String?) {
         this.text = text
 
