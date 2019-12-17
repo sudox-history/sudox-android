@@ -15,18 +15,21 @@ import com.sudox.design.R
 import kotlin.math.min
 
 class TabLayout : ViewGroup, ViewPager.OnPageChangeListener, View.OnClickListener {
-    
+
     private var viewPager: ViewPager? = null
+    private var tabButtons: Array<TabLayoutButton>? = null
+
+    private var previousState = 0
+    private var scrollChangedByUser = false
+    private var positionOffset = 0F
+    private var position = 0
+
     private var indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var indicatorPaddingRight = 0
     private var indicatorPaddingLeft = 0
     private var indicatorHeight = 0
     private var indicatorMargin = 0
     private var indicatorTop = 0F
-
-    private var tabButtons: Array<TabLayoutButton>? = null
-    private var positionOffset = 0F
-    private var position = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.tabLayoutStyle)
@@ -48,33 +51,27 @@ class TabLayout : ViewGroup, ViewPager.OnPageChangeListener, View.OnClickListene
     }
 
     fun setViewPager(viewPager: ViewPager) {
-        if (this.viewPager == viewPager) {
-            return
-        }
+        if (this.viewPager != viewPager) {
+            removeAllViewsInLayout()
 
-        removeAllViewsInLayout()
+            this.viewPager = viewPager
+            this.viewPager!!.addOnPageChangeListener(this)
+            this.tabButtons = Array(viewPager.adapter!!.count) {
+                TabLayoutButton(context!!).apply {
+                    addView(this)
 
-        this.viewPager = viewPager
-        this.viewPager!!.addOnPageChangeListener(this)
-        this.tabButtons = Array(viewPager.adapter!!.count) {
-            TabLayoutButton(context!!).apply {
-                addView(this)
+                    setOnClickListener(this@TabLayout)
+                    setText(viewPager.adapter!!.getPageTitle(it).toString())
 
-                setOnClickListener(this@TabLayout)
-                setText(viewPager.adapter!!.getPageTitle(it).toString())
-
-                layoutParams = LayoutParams(
-                        LayoutParams.WRAP_CONTENT,
-                        LayoutParams.MATCH_PARENT
-                )
+                    layoutParams = LayoutParams(
+                            LayoutParams.WRAP_CONTENT,
+                            LayoutParams.MATCH_PARENT
+                    )
+                }
             }
+
+            onPageSelected(viewPager.currentItem)
         }
-
-        onPageSelected(viewPager.currentItem)
-    }
-
-    override fun onClick(view: View) {
-        viewPager!!.setCurrentItem(tabButtons!!.indexOf(view), true)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -110,47 +107,39 @@ class TabLayout : ViewGroup, ViewPager.OnPageChangeListener, View.OnClickListene
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        var rightBorder: Int
-        var leftBorder = paddingLeft
-        val topBorder = paddingTop
-        val bottomBorder = measuredHeight
+        if (tabButtons != null) {
+            var rightBorder: Int
+            var leftBorder = paddingLeft
+            val topBorder = paddingTop
+            val bottomBorder = measuredHeight
 
-        tabButtons?.forEach {
-            rightBorder = leftBorder + it.measuredWidth
-            it.layout(leftBorder, topBorder, rightBorder, bottomBorder)
-            leftBorder = rightBorder
+            tabButtons!!.forEach {
+                rightBorder = leftBorder + it.measuredWidth
+                it.layout(leftBorder, topBorder, rightBorder, bottomBorder)
+                leftBorder = rightBorder
+            }
+
+            indicatorTop = tabButtons!!.maxBy {
+                it.getTextBottom()
+            }!!.getTextBottom() + indicatorMargin.toFloat()
         }
-
-        indicatorTop = tabButtons!!.maxBy {
-            it.getTextBottom()
-        }!!.getTextBottom() + indicatorMargin.toFloat()
     }
 
     @Suppress("MagicNumber")
     override fun dispatchDraw(canvas: Canvas) {
-        super.dispatchDraw(canvas)
-
         val currentTabButton = tabButtons!![position]
         val currentTabIndicatorWidth = currentTabButton.getTextWidth() + indicatorPaddingRight + indicatorPaddingLeft
-        var currentTabIndicatorLeft =  with(currentTabButton) { left + (right - left) / 2 - currentTabIndicatorWidth / 2F }
+        var currentTabIndicatorLeft = with(currentTabButton) { left + (right - left) / 2 - currentTabIndicatorWidth / 2F }
         var currentTabIndicatorRight = currentTabIndicatorLeft + currentTabIndicatorWidth.toFloat()
 
         if (position < viewPager!!.adapter!!.count - 1) {
             val nextTabButton = tabButtons!![position + 1]
             val nextTabButtonIndicatorWidth = nextTabButton.getTextWidth() + indicatorPaddingRight + indicatorPaddingLeft
-            val nextTabIndicatorLeft =  with(nextTabButton) { left + (right - left) / 2 - nextTabButtonIndicatorWidth / 2F }
+            val nextTabIndicatorLeft = with(nextTabButton) { left + (right - left) / 2 - nextTabButtonIndicatorWidth / 2F }
             val nextTabIndicatorRight = nextTabIndicatorLeft + nextTabButtonIndicatorWidth
 
             currentTabIndicatorLeft += positionOffset * (nextTabIndicatorLeft - currentTabIndicatorLeft)
             currentTabIndicatorRight += positionOffset * (nextTabIndicatorRight - currentTabIndicatorRight)
-
-            if (positionOffset >= 0.5F) {
-                currentTabButton.setActive(false)
-                nextTabButton.setActive(true)
-            } else {
-                currentTabButton.setActive(true)
-                nextTabButton.setActive(false)
-            }
         }
 
         val indicatorBottom = indicatorTop + indicatorHeight.toFloat()
@@ -164,16 +153,50 @@ class TabLayout : ViewGroup, ViewPager.OnPageChangeListener, View.OnClickListene
                 indicatorCornerRadius,
                 indicatorPaint
         )
+
+        super.dispatchDraw(canvas)
     }
 
-    override fun onPageSelected(position: Int) {}
-
+    @Suppress("MagicNumber")
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
         this.positionOffset = positionOffset
         this.position = position
 
+        if (scrollChangedByUser && position < viewPager!!.adapter!!.count - 1) {
+            val currentTabButton = tabButtons!![position]
+            val nextTabButton = tabButtons!![position + 1]
+
+            if (positionOffset >= 0.5F) {
+                currentTabButton.setActive(false)
+                nextTabButton.setActive(true)
+            } else {
+                currentTabButton.setActive(true)
+                nextTabButton.setActive(false)
+            }
+        }
+
         invalidate()
     }
 
-    override fun onPageScrollStateChanged(state: Int) {}
+    override fun onPageSelected(position: Int) {
+        if (!scrollChangedByUser) {
+            tabButtons!!.forEachIndexed { index, it ->
+                it.setActive(index == position)
+            }
+        }
+    }
+
+    override fun onPageScrollStateChanged(state: Int) {
+        if (previousState == ViewPager.SCROLL_STATE_DRAGGING && state == ViewPager.SCROLL_STATE_SETTLING) {
+            scrollChangedByUser = true
+        } else if (previousState == ViewPager.SCROLL_STATE_SETTLING && state == ViewPager.SCROLL_STATE_IDLE) {
+            scrollChangedByUser = false
+        }
+
+        previousState = state
+    }
+
+    override fun onClick(view: View) {
+        viewPager!!.setCurrentItem(tabButtons!!.indexOf(view), true)
+    }
 }

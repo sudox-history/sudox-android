@@ -79,24 +79,19 @@ class TabLayoutButton : View {
     }
 
     fun setActive(active: Boolean) {
-        val color = if (active) {
-            activeTextColor
-        } else {
-            defaultTextColor
-        }
+        if (isActive() != active) {
+            textPaint.color = if (active) {
+                activeTextColor
+            } else {
+                defaultTextColor
+            }
 
-        if (color != textPaint.color) {
-            textPaint.color = color
             invalidate()
         }
     }
 
-    fun getTextWidth(): Int {
-        return textBounds.width()
-    }
-
-    fun getTextBottom(): Int {
-        return height / 2 - textBounds.centerY()
+    fun isActive(): Boolean {
+        return textPaint.color == activeTextColor
     }
 
     fun setText(text: String?) {
@@ -108,5 +103,17 @@ class TabLayoutButton : View {
 
         requestLayout()
         invalidate()
+    }
+
+    fun getText(): String? {
+        return text
+    }
+
+    fun getTextWidth(): Int {
+        return textBounds.width()
+    }
+
+    fun getTextBottom(): Int {
+        return height / 2 - textBounds.centerY()
     }
 }
