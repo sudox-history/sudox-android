@@ -61,7 +61,7 @@ class AuthRegisterFragment : CoreFragment(), ApplicationBarListener {
 
     override fun onAnimationEnd(animation: Animator) {
         view?.post {
-            authRegisterNicknameEditText.showSoftKeyboard()
+            authRegisterNicknameEditText?.showSoftKeyboard()
         }
 
         super.onAnimationEnd(animation)
