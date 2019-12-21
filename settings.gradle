@@ -4,3 +4,5 @@ include ':app',
         ':auth',
         ':core',
         ':people'
+include ':activity'
+include ':moments'

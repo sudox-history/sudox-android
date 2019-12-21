@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MomentItemView">
+        <attr name="nameTextMarginRelativeToPhoto" format="dimension" />
+        <attr name="nameTextAppearance" format="dimension" />
+
+        <attr name="viewIndicatorRadius" format="dimension" />
+        <attr name="viewIndicatorActiveStrokeWidth" format="dimension" />
+        <attr name="viewIndicatorDefaultStrokeWidth" format="dimension" />
+        <attr name="viewIndicatorActiveColor" format="color" />
+        <attr name="viewIndicatorDefaultColor" format="color" />
+
+        <attr name="photoWidth" format="dimension" />
+        <attr name="photoHeight" format="dimension" />
+
+        <attr name="addIndicatorStrokeColor" format="color" />
+        <attr name="addIndicatorStrokeWidth" format="dimension" />
+        <attr name="addIndicatorCropRadius" format="dimension" />
+        <attr name="addIndicatorRadius" format="dimension" />
+        <attr name="addIndicatorIconTint" format="color" />
+        <attr name="addIndicatorIconHeight" format="dimension" />
+        <attr name="addIndicatorIconWidth" format="dimension" />
+        <attr name="addIndicatorIcon" format="reference" />
+    </declare-styleable>
+
+    <attr name="momentItemViewStyle" format="reference" />
+</resources>

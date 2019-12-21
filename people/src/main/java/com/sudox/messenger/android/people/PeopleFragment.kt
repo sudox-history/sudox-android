@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.design.tabLayout.TabLayout
+import com.sudox.messenger.android.activity.ActivityFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerAdapter
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
-import com.sudox.messenger.android.people.activity.ActivityFragment
 import com.sudox.messenger.android.people.friends.FriendsFragment
 import kotlinx.android.synthetic.main.fragment_people.peopleViewPager
 

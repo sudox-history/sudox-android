@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.App" parent="Sudox">
+        <item name="momentItemViewStyle">@style/Sudox.People.MomentItemView</item>
+    </style>
+</resources>
