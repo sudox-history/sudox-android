@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityContentList"
     style="@style/Sudox.Screen"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.sudox.messenger.android.moments.MomentItemView
-        android:id="@+id/momentView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <com.sudox.messenger.android.moments.MomentItemView
-        android:id="@+id/momentView1"
-        android:layout_marginLeft="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <com.sudox.messenger.android.moments.MomentItemView
-        android:id="@+id/momentView2"
-        android:layout_marginLeft="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+    android:layout_height="match_parent" />
