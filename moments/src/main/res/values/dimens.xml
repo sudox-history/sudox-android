@@ -2,7 +2,7 @@
 <resources>
     <dimen name="momentitemview_name_text_size">12sp</dimen>
     <dimen name="momentitemview_name_text_margin_relative_photo">8dp</dimen>
-    <dimen name="momentitemview_view_indicator_radius">32dp</dimen>
+    <dimen name="momentitemview_view_indicator_radius">34dp</dimen>
     <dimen name="momentitemview_view_indicator_active_stroke_width">2dp</dimen>
     <dimen name="momentitemview_view_indicator_default_stroke_width">1dp</dimen>
     <dimen name="momentitemview_add_indicator_stroke_width">1dp</dimen>

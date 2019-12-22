@@ -9,4 +9,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <com.sudox.messenger.android.moments.MomentItemView
+        android:id="@+id/momentView1"
+        android:layout_marginLeft="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.sudox.messenger.android.moments.MomentItemView
+        android:id="@+id/momentView2"
+        android:layout_marginLeft="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
