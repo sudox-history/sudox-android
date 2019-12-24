@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="momentadapter_horizontal_margin">8dp</dimen>
+    <dimen name="momentadapter_vertical_margim">0dp</dimen>
+
     <dimen name="momentitemview_name_text_size">12sp</dimen>
     <dimen name="momentitemview_name_text_margin_relative_photo">8dp</dimen>
     <dimen name="momentitemview_view_indicator_radius">34dp</dimen>

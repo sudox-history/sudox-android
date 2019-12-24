@@ -2,6 +2,7 @@ package com.sudox.messenger.android.moments
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
@@ -196,6 +197,10 @@ class MomentItemView : ViewGroup {
 
         requestLayout()
         invalidate()
+    }
+
+    fun setUserPhoto(bitmap: Bitmap) {
+        photoView.setImageBitmap(bitmap)
     }
 
     fun setUserPhoto(drawable: Drawable) {
