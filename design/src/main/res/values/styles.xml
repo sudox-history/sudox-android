@@ -185,4 +185,11 @@
         <item name="textTypeface">@font/opensans_bold</item>
         <item name="textSize">@dimen/tablayoutbutton_text_size</item>
     </style>
+
+    <style name="Sudox.SectionedListView" parent="">
+        <item name="sectionNameMargin">@dimen/sectionedlistview_section_name_margin</item>
+        <item name="sectionNameTextSize">@dimen/sectionedlistview_section_name_text_size</item>
+        <item name="sectionNameTextColor">@color/sectionedlistview_section_name_text_color</item>
+        <item name="sectionNameTypeface">@font/opensans_bold</item>
+    </style>
 </resources>

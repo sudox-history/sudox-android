@@ -63,4 +63,7 @@
     <dimen name="tablayoutbutton_text_size">16sp</dimen>
     <dimen name="tablayoutbutton_padding_right">20dp</dimen>
     <dimen name="tablayoutbutton_padding_left">20dp</dimen>
+
+    <dimen name="sectionedlistview_section_name_text_size">15sp</dimen>
+    <dimen name="sectionedlistview_section_name_margin">15dp</dimen>
 </resources>
