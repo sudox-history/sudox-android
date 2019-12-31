@@ -13,13 +13,20 @@ private const val MOMENTS_SECTION = 0
 private const val FRIENDS_NEWS_SECTION = 1
 
 class ActivityAdapter(
-        val context: Context
+        val context: Context,
+        recyclerView: RecyclerView
 ) : SectionedListAdapter<ActivityAdapter.BaseViewHolder>() {
 
+    private var viewPool = RecyclerView.RecycledViewPool()
     private var momentsRecyclerView = createMomentsRecyclerView(context)
 
     var momentsAdapter = momentsRecyclerView.adapter as MomentsAdapter
     // TODO: Click callback
+
+    init {
+        recyclerView.setRecycledViewPool(viewPool)
+        momentsRecyclerView.setRecycledViewPool(viewPool)
+    }
 
     override fun createItemViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return if (viewType == MOMENTS_SECTION) {

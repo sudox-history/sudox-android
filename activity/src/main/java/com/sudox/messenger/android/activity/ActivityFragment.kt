@@ -27,7 +27,7 @@ class ActivityFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
         val secondPhoto = getDrawable(context!!, R.drawable.drawable_photo_2)!!
         val thirdPhoto = getDrawable(context!!, R.drawable.drawable_photo_3)!!
 
-        activityContentList.adapter = ActivityAdapter(context!!).apply {
+        activityContentList.adapter = ActivityAdapter(context!!, activityContentList).apply {
             momentsAdapter.moments.apply {
                 add(MomentVO(userName = "Yaroslav", userPhoto = secondPhoto, isStartViewed = true, publishTime = 2L,
                         isFullyViewed = true))
