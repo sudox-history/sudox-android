@@ -1,11 +1,11 @@
-package com.sudox.design.sortedList.decorations
+package com.sudox.design.lists.sortedList.decorations
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.sudox.design.sortedList.SortedListView
+import com.sudox.design.lists.sortedList.SortedListView
 import kotlin.math.max
 import kotlin.math.min
 

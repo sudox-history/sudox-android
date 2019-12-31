@@ -29,6 +29,7 @@
         <item name="navigationBarButtonStyle">@style/Sudox.NavigationBar.Button</item>
         <item name="tabLayoutStyle">@style/Sudox.TabLayout</item>
         <item name="tabLayoutButtonStyle">@style/Sudox.TabLayout.Button</item>
+        <item name="sectionedListViewStyle">@style/Sudox.SectionedListView</item>
 
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
@@ -187,7 +188,8 @@
     </style>
 
     <style name="Sudox.SectionedListView" parent="">
-        <item name="sectionNameMargin">@dimen/sectionedlistview_section_name_margin</item>
+        <item name="sectionNameTopPadding">@dimen/sectionedlistview_section_name_top_padding</item>
+        <item name="sectionNameBottomPadding">@dimen/sectionedlistview_section_name_bottom_padding</item>
         <item name="sectionNameTextSize">@dimen/sectionedlistview_section_name_text_size</item>
         <item name="sectionNameTextColor">@color/sectionedlistview_section_name_text_color</item>
         <item name="sectionNameTypeface">@font/opensans_bold</item>

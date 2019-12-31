@@ -2,23 +2,12 @@ package com.sudox.messenger.android.moments
 
 import android.content.Context
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.sudox.design.sortedList.decorations.MarginItemDecoration
 
-class MomentAdapter(
-        recyclerView: RecyclerView,
+class MomentsAdapter(
         val moments: ArrayList<MomentVO>,
         val context: Context
-) : RecyclerView.Adapter<MomentAdapter.ViewHolder>() {
-
-    init {
-        val horizontalMargin = context.resources.getDimensionPixelSize(R.dimen.momentadapter_horizontal_margin)
-        val verticalMargin = context.resources.getDimensionPixelSize(R.dimen.momentadapter_vertical_margim)
-
-        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        recyclerView.addItemDecoration(MarginItemDecoration(verticalMargin, horizontalMargin))
-    }
+) : RecyclerView.Adapter<MomentsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(MomentItemView(context))

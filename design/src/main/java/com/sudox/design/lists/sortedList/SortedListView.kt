@@ -1,4 +1,4 @@
-package com.sudox.design.sortedList
+package com.sudox.design.lists.sortedList
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,13 +8,12 @@ import android.util.AttributeSet
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
-import androidx.core.content.res.getFontOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.R
-import com.sudox.design.sortedList.decorations.StickyLettersDecoration
-import com.sudox.design.sortedList.decorations.StickyLettersProvider
+import com.sudox.design.lists.sortedList.decorations.StickyLettersDecoration
+import com.sudox.design.lists.sortedList.decorations.StickyLettersProvider
 
 class SortedListView : RecyclerView {
 

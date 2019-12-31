@@ -1,4 +1,4 @@
-package com.sudox.design.sortedList.decorations
+package com.sudox.design.lists.sortedList.decorations
 
 import android.graphics.Rect
 import android.view.View

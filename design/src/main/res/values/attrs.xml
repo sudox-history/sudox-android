@@ -99,7 +99,8 @@
         <attr name="sectionNameTextSize" format="dimension" />
         <attr name="sectionNameTextColor" format="color" />
         <attr name="sectionNameTypeface" format="reference" />
-        <attr name="sectionNameMargin" format="dimension" />
+        <attr name="sectionNameBottomPadding" format="dimension" />
+        <attr name="sectionNameTopPadding" format="dimension" />
     </declare-styleable>
 
     <attr name="flagMargin" format="dimension" />

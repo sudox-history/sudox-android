@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.design.countriesProvider.entries.Country
-import com.sudox.design.sortedList.SortedListView
+import com.sudox.design.lists.sortedList.SortedListView
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.core.CoreActivity
 
