@@ -42,6 +42,6 @@ ext.registerModule = { isApp, needExtensions, needApt ->
     }
 
     dependencies {
-        implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.50'
+        implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.61'
     }
 }
