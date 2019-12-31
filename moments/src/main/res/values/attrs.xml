@@ -3,6 +3,7 @@
     <declare-styleable name="MomentItemView">
         <attr name="nameTextMarginRelativeToPhoto" format="dimension" />
         <attr name="nameTextAppearance" format="dimension" />
+        <attr name="myMomentNameText" format="string" />
 
         <attr name="viewIndicatorRadius" format="dimension" />
         <attr name="viewIndicatorActiveStrokeWidth" format="dimension" />

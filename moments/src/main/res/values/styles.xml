@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Sudox.People.MomentItemView" parent="">
-        <item name="nameTextAppearance">@style/Sudox.People.MomentItemView.NameTextAppearance</item>
+    <style name="Sudox.Moments.MomentItemView" parent="">
+        <item name="nameTextAppearance">@style/Sudox.Moments.MomentItemView.NameTextAppearance</item>
         <item name="nameTextMarginRelativeToPhoto">@dimen/momentitemview_name_text_margin_relative_photo</item>
+        <item name="myMomentNameText">@string/your_story</item>
 
         <item name="viewIndicatorRadius">@dimen/momentitemview_view_indicator_radius</item>
         <item name="viewIndicatorActiveStrokeWidth">@dimen/momentitemview_view_indicator_active_stroke_width</item>
@@ -24,7 +25,7 @@
         <item name="addIndicatorIcon">@drawable/ic_add</item>
     </style>
 
-    <style name="Sudox.People.MomentItemView.NameTextAppearance" parent="">
+    <style name="Sudox.Moments.MomentItemView.NameTextAppearance" parent="">
         <item name="android:textSize">@dimen/momentitemview_name_text_size</item>
         <item name="android:textColor">@color/momentitemview_name_text_color</item>
         <item name="android:fontFamily">@font/opensans_semibold</item>

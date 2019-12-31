@@ -2,6 +2,6 @@
 <resources>
 
     <style name="Sudox.App" parent="Sudox">
-        <item name="momentItemViewStyle">@style/Sudox.People.MomentItemView</item>
+        <item name="momentItemViewStyle">@style/Sudox.Moments.MomentItemView</item>
     </style>
 </resources>

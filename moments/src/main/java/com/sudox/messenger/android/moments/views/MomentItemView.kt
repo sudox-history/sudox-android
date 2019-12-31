@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.moments
+package com.sudox.messenger.android.moments.views
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,13 +17,16 @@ import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
+import androidx.core.content.res.getStringOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.design.circleImageView.CircleImageView
+import com.sudox.messenger.android.moments.R
 import kotlin.math.min
 
 class MomentItemView : ViewGroup {
 
+    private var myMomentNameText: String? = null
     private var nameTextMarginRelativeToPhoto = 0
 
     private var viewIndicatorRadius = 0
@@ -56,6 +59,7 @@ class MomentItemView : ViewGroup {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.MomentItemView, defStyleAttr, 0).use {
             nameTextMarginRelativeToPhoto = it.getDimensionPixelSize(R.styleable.MomentItemView_nameTextMarginRelativeToPhoto, 0)
+            myMomentNameText = it.getStringOrThrow(R.styleable.MomentItemView_myMomentNameText)
 
             setTextAppearance(nameView, it.getResourceIdOrThrow(R.styleable.MomentItemView_nameTextAppearance))
 
@@ -180,6 +184,10 @@ class MomentItemView : ViewGroup {
     fun setCreatedByMe(createdByMe: Boolean) {
         this.isCreatedByMe = createdByMe
 
+        if (createdByMe) {
+            setUserName(myMomentNameText!!)
+        }
+
         requestLayout()
         invalidate()
     }
@@ -187,7 +195,7 @@ class MomentItemView : ViewGroup {
     fun setViewed(viewed: Boolean) {
         this.isViewed = viewed
 
-        if (viewed) {
+        if (!viewed) {
             viewIndicatorPaint.strokeWidth = viewIndicatorActiveStrokeWidth.toFloat()
             viewIndicatorPaint.color = viewIndicatorActiveColor
         } else {
@@ -199,15 +207,15 @@ class MomentItemView : ViewGroup {
         invalidate()
     }
 
-    fun setUserPhoto(bitmap: Bitmap) {
+    fun setUserPhoto(bitmap: Bitmap?) {
         photoView.setImageBitmap(bitmap)
     }
 
-    fun setUserPhoto(drawable: Drawable) {
+    fun setUserPhoto(drawable: Drawable?) {
         photoView.setImageDrawable(drawable)
     }
 
-    fun setUserName(name: String) {
+    fun setUserName(name: String?) {
         nameView.text = name
     }
 }
