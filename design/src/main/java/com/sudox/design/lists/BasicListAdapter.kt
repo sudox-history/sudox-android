@@ -9,17 +9,21 @@ abstract class BasicListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Ada
     abstract fun createItemViewHolder(parent: ViewGroup, viewType: Int): VH
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val itemViewHolder = createItemViewHolder(parent, viewType)
+        val holder = createItemViewHolder(parent, viewType)
 
         if (parent is BasicRecyclerView) {
-            val itemView = itemViewHolder.itemView
+            val itemView = holder.itemView
+
+            if (itemView is ViewGroup) {
+                itemView.clipToPadding = false
+            }
 
             itemView.updatePadding(
-                        left = itemView.paddingLeft + parent.initialPaddingLeft,
-                        right = itemView.paddingRight + parent.initialPaddingRight
-                )
+                    left = itemView.paddingLeft + parent.initialPaddingLeft,
+                    right = itemView.paddingRight + parent.initialPaddingRight
+            )
         }
 
-        return itemViewHolder
+        return holder
     }
 }
