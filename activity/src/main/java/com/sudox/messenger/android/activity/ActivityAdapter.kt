@@ -17,11 +17,10 @@ class ActivityAdapter(
         recyclerView: RecyclerView
 ) : SectionedListAdapter<ActivityAdapter.BaseViewHolder>() {
 
-    private var viewPool = RecyclerView.RecycledViewPool()
-    private var momentsRecyclerView = createMomentsRecyclerView(context)
-
+    var viewPool = RecyclerView.RecycledViewPool()
+    var momentsRecyclerView = createMomentsRecyclerView(context)
     var momentsAdapter = momentsRecyclerView.adapter as MomentsAdapter
-    // TODO: Click callback
+    // TODO: Click callback+
 
     init {
         recyclerView.setRecycledViewPool(viewPool)
