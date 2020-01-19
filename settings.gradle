@@ -1,3 +1,5 @@
+rootProject.name = "Sudox Android"
+
 include ':app',
         ':api',
         ':design',
