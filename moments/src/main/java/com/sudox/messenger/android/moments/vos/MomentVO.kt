@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 data class MomentVO(
         val isStartViewed: Boolean,
         val isFullyViewed: Boolean,
-        val publishTime: Long,
-        val userName: String,
-        val userPhoto: Drawable
+        val publisherName: String,
+        val publisherPhoto: Drawable,
+        val publishTime: Long
 )

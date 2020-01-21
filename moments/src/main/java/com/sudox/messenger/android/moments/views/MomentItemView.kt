@@ -207,11 +207,11 @@ class MomentItemView : ViewGroup {
         invalidate()
     }
 
-    fun setUserPhoto(bitmap: Bitmap?) {
+    fun setPublisherPhoto(bitmap: Bitmap?) {
         photoView.setImageBitmap(bitmap)
     }
 
-    fun setUserPhoto(drawable: Drawable?) {
+    fun setPublisherPhoto(drawable: Drawable?) {
         photoView.setImageDrawable(drawable)
     }
 

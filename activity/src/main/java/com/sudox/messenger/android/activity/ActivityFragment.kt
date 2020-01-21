@@ -29,27 +29,27 @@ class ActivityFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
 
         activityContentList.adapter = ActivityAdapter(context!!, activityContentList).apply {
             momentsAdapter.moments.apply {
-                add(MomentVO(userName = "Yaroslav", userPhoto = secondPhoto, isStartViewed = true, publishTime = 2L,
-                        isFullyViewed = true))
-                add(MomentVO(userName = "Vladislav", userPhoto = thirdPhoto, isStartViewed = true, publishTime = 1L,
-                        isFullyViewed = true))
-                add(MomentVO(userName = "Pozdnyachkov", userPhoto = thirdPhoto, isStartViewed = true, publishTime = 3L,
-                        isFullyViewed = true))
-                add(MomentVO(userName = "Second Yaroslav", userPhoto = secondPhoto, isStartViewed = true, publishTime = 4L,
-                        isFullyViewed = false))
-                add(MomentVO(userName = "Third Yaroslav", userPhoto = secondPhoto, isStartViewed = true, publishTime = 5L,
-                        isFullyViewed = false))
-                add(MomentVO(userName = "Fourth Yaroslav", userPhoto = secondPhoto, isStartViewed = false, publishTime = 6L,
-                        isFullyViewed = false))
+                add(MomentVO(isStartViewed = true, isFullyViewed = true, publisherName = "Yaroslav", publisherPhoto = secondPhoto,
+                        publishTime = 2L))
+                add(MomentVO(isStartViewed = true, isFullyViewed = true, publisherName = "Vladislav", publisherPhoto = thirdPhoto,
+                        publishTime = 1L))
+                add(MomentVO(isStartViewed = true, isFullyViewed = true, publisherName = "Pozdnyachkov", publisherPhoto = thirdPhoto,
+                        publishTime = 3L))
+                add(MomentVO(isStartViewed = true, isFullyViewed = false, publisherName = "Second Yaroslav", publisherPhoto = secondPhoto,
+                        publishTime = 4L))
+                add(MomentVO(isStartViewed = true, isFullyViewed = false, publisherName = "Third Yaroslav", publisherPhoto = secondPhoto,
+                        publishTime = 5L))
+                add(MomentVO(isStartViewed = false, isFullyViewed = false, publisherName = "Fourth Yaroslav", publisherPhoto = secondPhoto,
+                        publishTime = 6L))
             }
 
             momentsAdapter.showMomentCallback = {
                 momentsAdapter.moments.add(MomentVO(
-                        userName = "TE Yaroslav",
-                        userPhoto = secondPhoto,
                         isStartViewed = false,
-                        publishTime = counter++,
-                        isFullyViewed = false))
+                        isFullyViewed = false,
+                        publisherName = "TE Yaroslav",
+                        publisherPhoto = secondPhoto,
+                        publishTime = counter++))
             }
 
             momentsAdapter.addMomentCallback = {

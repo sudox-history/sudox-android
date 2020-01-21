@@ -3,6 +3,7 @@ include ':app',
         ':design',
         ':auth',
         ':core',
-        ':people'
-include ':activity'
-include ':moments'
+        ':people',
+        ':activity',
+        ':moments',
+        ':news'

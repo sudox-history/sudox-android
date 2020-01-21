@@ -28,11 +28,11 @@ class MomentsCallbackTest : Assert() {
     @Test
     fun testSorting() {
         val list = SortedList(MomentVO::class.java, callback!!)
-        val first = MomentVO(true, isFullyViewed = false, publishTime = 2L, userName = "1", userPhoto = drawable!!)
-        val second = MomentVO(true, isFullyViewed = false, publishTime = 1L, userName = "2", userPhoto = drawable!!)
-        val third = MomentVO(true, isFullyViewed = true, publishTime = 3L, userName = "3", userPhoto = drawable!!)
-        val fourth = MomentVO(true, isFullyViewed = true, publishTime = 2L, userName = "4", userPhoto = drawable!!)
-        val fifth = MomentVO(true, isFullyViewed = true, publishTime = 1L, userName = "5", userPhoto = drawable!!)
+        val first = MomentVO(true, isFullyViewed = false, publisherName = "1", publisherPhoto = drawable!!, publishTime = 2L)
+        val second = MomentVO(true, isFullyViewed = false, publisherName = "2", publisherPhoto = drawable!!, publishTime = 1L)
+        val third = MomentVO(true, isFullyViewed = true, publisherName = "3", publisherPhoto = drawable!!, publishTime = 3L)
+        val fourth = MomentVO(true, isFullyViewed = true, publisherName = "4", publisherPhoto = drawable!!, publishTime = 2L)
+        val fifth = MomentVO(true, isFullyViewed = true, publisherName = "5", publisherPhoto = drawable!!, publishTime = 1L)
 
         list.add(fifth)
         list.add(third)

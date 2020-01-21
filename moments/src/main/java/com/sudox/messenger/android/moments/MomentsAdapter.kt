@@ -16,7 +16,7 @@ class MomentsAdapter(
     var showMomentCallback: ((MomentVO) -> (Unit))? = null
     var addMomentCallback: (() -> (Unit))? = null
 
-    private var userPhoto: Drawable? = null
+    private var publisherPhoto: Drawable? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = MomentItemView(context)
@@ -36,15 +36,15 @@ class MomentsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.view.let {
             if (position == 0) {
-                it.setUserPhoto(userPhoto)
+                it.setPublisherPhoto(publisherPhoto)
                 it.setCreatedByMe(true)
                 it.setViewed(true)
             } else {
                 val moment = moments[position - 1]
 
                 it.setCreatedByMe(false)
-                it.setUserName(moment.userName)
-                it.setUserPhoto(moment.userPhoto)
+                it.setUserName(moment.publisherName)
+                it.setPublisherPhoto(moment.publisherPhoto)
                 it.setViewed(moment.isStartViewed)
             }
         }
@@ -55,7 +55,7 @@ class MomentsAdapter(
     }
 
     fun setUserPhoto(userPhoto: Drawable) {
-        this.userPhoto = userPhoto
+        this.publisherPhoto = userPhoto
         this.notifyItemChanged(0)
     }
 
