@@ -11,7 +11,6 @@ import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.auth.phone.AuthPhoneFragment
 import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.android.people.ChildFragment
-import com.sudox.messenger.android.people.MessagesFragment
 import com.sudox.messenger.android.people.PeopleFragment
 import com.sudox.messenger.android.people.ProfileFragment
 import com.sudox.messenger.android.people.WorldFragment
@@ -272,12 +271,12 @@ class AppNavigationManagerTest : Assert() {
     fun checkBackstackPolicy() {
         navigationManager!!.configureNavigationBar()
         navigationManager!!.showMainPart()
-        navigationBar!!.setSelectedItem(MESSAGES_NAVBAR_ITEM_ID)
+        navigationBar!!.setSelectedItem(DIALOGS_NAVBAR_ITEM_ID)
         navigationBar!!.setSelectedItem(WORLD_NAVBAR_ITEM_ID)
         navigationBar!!.setSelectedItem(PROFILE_NAVBAR_ITEM_ID)
         navigationBar!!.setSelectedItem(PEOPLE_NAVBAR_ITEM_ID)
         navigationManager!!.showChildFragment(ChildFragment())
-        navigationBar!!.setSelectedItem(MESSAGES_NAVBAR_ITEM_ID)
+        navigationBar!!.setSelectedItem(DIALOGS_NAVBAR_ITEM_ID)
         navigationBar!!.setSelectedItem(WORLD_NAVBAR_ITEM_ID)
         navigationBar!!.setSelectedItem(PROFILE_NAVBAR_ITEM_ID)
 

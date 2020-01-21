@@ -2,10 +2,11 @@ package com.sudox.messenger.android.messages.vos
 
 import android.graphics.drawable.Drawable
 
-data class MessagePreviewVO(
+data class DialogItemViewVO(
         val isUserOnline : Boolean,
-        val userPhoto: Drawable,
-        val userName: String,
+        val isViewed: Boolean,
+        val dialogPhoto: Drawable,
+        val dialogName: String,
         val previewMessage: String,
         val dateReceived: String,
         val messagesCount: Int,

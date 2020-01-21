@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DialogItemView">
+        <attr name="imageRadius" format="dimension" />
+        <attr name="countMessagesBackground"/>
+        <attr name="userActiveColor" format="color"/>
+    </declare-styleable>
+
+    <attr name="dialogItemView" format="reference" />
+</resources>

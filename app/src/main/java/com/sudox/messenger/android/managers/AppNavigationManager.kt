@@ -9,7 +9,7 @@ import com.sudox.design.navigationBar.NavigationBarListener
 import com.sudox.messenger.android.R
 import com.sudox.messenger.android.auth.phone.AuthPhoneFragment
 import com.sudox.messenger.android.core.managers.NavigationManager
-import com.sudox.messenger.android.people.MessagesFragment
+import com.sudox.messenger.android.messages.DialogsFragment
 import com.sudox.messenger.android.people.PeopleFragment
 import com.sudox.messenger.android.people.ProfileFragment
 import com.sudox.messenger.android.people.WorldFragment
@@ -18,7 +18,7 @@ import java.util.UUID
 
 internal const val UNSPECIFIED_NAVBAR_ITEM_ID = 0
 internal const val PEOPLE_NAVBAR_ITEM_ID = 1
-internal const val MESSAGES_NAVBAR_ITEM_ID = 2
+internal const val DIALOGS_NAVBAR_ITEM_ID = 2
 internal const val WORLD_NAVBAR_ITEM_ID = 3
 internal const val PROFILE_NAVBAR_ITEM_ID = 4
 
@@ -76,7 +76,7 @@ class AppNavigationManager(
         val transaction = fragmentManager.beginTransaction()
 
         loadedFragments[PEOPLE_NAVBAR_ITEM_ID] = PeopleFragment()
-        loadedFragments[MESSAGES_NAVBAR_ITEM_ID] = MessagesFragment()
+        loadedFragments[DIALOGS_NAVBAR_ITEM_ID] = DialogsFragment()
         loadedFragments[WORLD_NAVBAR_ITEM_ID] = WorldFragment()
         loadedFragments[PROFILE_NAVBAR_ITEM_ID] = ProfileFragment()
 
@@ -327,7 +327,7 @@ class AppNavigationManager(
             navigationBarConfigured = true
 
             navigationBar.addItem(PEOPLE_NAVBAR_ITEM_ID, R.string.people, R.drawable.ic_group)
-            navigationBar.addItem(MESSAGES_NAVBAR_ITEM_ID, R.string.messages, R.drawable.ic_chat_bubble)
+            navigationBar.addItem(DIALOGS_NAVBAR_ITEM_ID, R.string.messages, R.drawable.ic_chat_bubble)
             navigationBar.addItem(WORLD_NAVBAR_ITEM_ID, R.string.world, R.drawable.ic_album)
             navigationBar.addItem(PROFILE_NAVBAR_ITEM_ID, R.string.profile, R.drawable.ic_account)
         }

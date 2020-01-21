@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">messages</string>
+    <string name="messages">Messages</string>
+    <string name="rooms">Rooms</string>
 </resources>
