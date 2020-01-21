@@ -43,7 +43,7 @@ class MomentsAdapter(
                 val moment = moments[position - 1]
 
                 it.setCreatedByMe(false)
-                it.setUserName(moment.publisherName)
+                it.setPublisherName(moment.publisherName)
                 it.setPublisherPhoto(moment.publisherPhoto)
                 it.setViewed(moment.isStartViewed)
             }
@@ -54,8 +54,8 @@ class MomentsAdapter(
         return moments.size() + 1
     }
 
-    fun setUserPhoto(userPhoto: Drawable) {
-        this.publisherPhoto = userPhoto
+    fun setPublisherPhoto(publisherPhoto: Drawable) {
+        this.publisherPhoto = publisherPhoto
         this.notifyItemChanged(0)
     }
 

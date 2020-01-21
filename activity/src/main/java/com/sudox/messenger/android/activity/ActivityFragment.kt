@@ -56,7 +56,7 @@ class ActivityFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
                 momentsAdapter.moments.removeItemAt(0)
             }
 
-            momentsAdapter.setUserPhoto(firstPhoto)
+            momentsAdapter.setPublisherPhoto(firstPhoto)
         }
 
         activityContentList.layoutManager = LinearLayoutManager(context)

@@ -185,7 +185,7 @@ class MomentItemView : ViewGroup {
         this.isCreatedByMe = createdByMe
 
         if (createdByMe) {
-            setUserName(myMomentNameText!!)
+            setPublisherName(myMomentNameText!!)
         }
 
         requestLayout()
@@ -215,7 +215,7 @@ class MomentItemView : ViewGroup {
         photoView.setImageDrawable(drawable)
     }
 
-    fun setUserName(name: String?) {
+    fun setPublisherName(name: String?) {
         nameView.text = name
     }
 }
