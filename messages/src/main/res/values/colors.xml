@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dialogitemview_image_active_color">#00BFA5</color>
+
+    <color name="dialogitemview_message_status_color">#00BFA5</color>
+    <color name="dialogitemview_user_active_color">#00BFA5</color>
+    <color name="dialogitemview_message_count_color">#00BFA5</color>
+    <color name="dialogitemview_message_dialog_name_color">#000000</color>
+    <color name="dialogitemview_read_message_content_color">#808080</color>
+    <color name="dialogitemview_new_message_content_color">#000000</color>
+    <color name="dialogitemview_message_sent_by_user_hint_color">#BDBDBD</color>
+</resources>

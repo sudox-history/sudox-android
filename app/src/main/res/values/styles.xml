@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.App" parent="Sudox">
+        <item name="dialogItemViewStyle">@style/Sudox.Messages.DialogItemView</item>
+    </style>
+</resources>
