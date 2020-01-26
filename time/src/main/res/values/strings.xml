@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="date_mask_with_year_and_time">%d %s %d at %s</string>
+    <string name="date_mask_without_year_and_with_time">%d %s at %s</string>
+
+    <string name="date_mask_with_year">%d %s %d</string>
+    <string name="date_mask_without_year_and_time">%d %s</string>
+
+    <string name="at_mask">%s at %s</string>
+
+    <string name="second_mask">%d s</string>
+    <string name="minute_mask">%d m</string>
+    <string name="hour_mask">%d h</string>
+
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+
+    <string name="time_ago_mask">%s ago</string>
+    <string name="time_after_mask">After %s</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="today">Today</string>
+    <string name="just">Just</string>
+
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+
+    <string name="january_short">jan</string>
+    <string name="february_short">feb</string>
+    <string name="march_short">mar</string>
+    <string name="april_short">apr</string>
+    <string name="may_short">may</string>
+    <string name="june_short">jun</string>
+    <string name="july_short">jul</string>
+    <string name="august_short">aug</string>
+    <string name="september_short">sep</string>
+    <string name="october_short">oct</string>
+    <string name="november_short">nov</string>
+    <string name="december_short">dec</string>
+
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+
+    <string name="monday_short">mon</string>
+    <string name="tuesday_short">tue</string>
+    <string name="wednesday_short">wed</string>
+    <string name="thursday_short">thu</string>
+    <string name="friday_short">fri</string>
+    <string name="saturday_short">sat</string>
+    <string name="sunday_short">sun</string>
+
+    <plurals name="seconds">
+        <item quantity="one">%d second</item>
+        <item quantity="other">%d seconds</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+
+    <plurals name="hours">
+        <item quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+</resources>

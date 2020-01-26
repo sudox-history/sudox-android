@@ -6,3 +6,4 @@ include ':app',
         ':auth',
         ':core',
         ':people'
+include ':time'

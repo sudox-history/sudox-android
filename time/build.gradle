@@ -1,0 +1,13 @@
+apply from: '../configs/dependencies.gradle'
+apply from: '../configs/common.gradle'
+
+registerModule(false, false, false)
+
+apply from: '../configs/robolectric.gradle'
+
+dependencies {
+    implementation libraries.core_ktx
+
+    testImplementation libraries.junit
+    testImplementation libraries.robolectric
+}
