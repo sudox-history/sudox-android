@@ -14,6 +14,8 @@
         <attr name="innerDateToTopMargin" format="dimension"/>
         <attr name="innerDateToCountMargin" format="dimension"/>
         <attr name="innerMessageStatusMargin" format="dimension"/>
+        <attr name="innerContentToRightBorderMargin" format="dimension"/>
+        <attr name="innerNewContentToRightBorderMargin" format="dimension"/>
 
         <attr name="messageStatusColor" format="color"/>
         <attr name="userActiveColor" format="color"/>
@@ -24,6 +26,9 @@
         <attr name="messageSentByUserHintColor" format="color"/>
 
         <attr name="dialogNameTextAppearance" format="dimension"/>
+        <attr name="dialogContentTextAppearance" format="dimension"/>
+        <attr name="dialogNewContentTextAppearance" format="dimension"/>
+        <attr name="dialogDateTextAppearance" format="dimension"/>
     </declare-styleable>
 
     <attr name="dialogItemViewStyle" format="reference" />
