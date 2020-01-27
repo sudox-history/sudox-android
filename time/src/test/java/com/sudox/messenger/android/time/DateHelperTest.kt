@@ -13,7 +13,6 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.android.controller.ActivityController
 import org.robolectric.annotation.Config
-import java.util.Locale
 import java.util.TimeZone
 
 @RunWith(RobolectricTestRunner::class)
@@ -30,7 +29,7 @@ class DateHelperTest : Assert() {
         activity = activityController.get()
         view = View(activity)
 
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT"))
     }
 
     @After
@@ -77,25 +76,7 @@ class DateHelperTest : Assert() {
     }
 
     @Test
-    fun checkFullDaysOfWeekNamesWhenFirstDayIsMonday() {
-        Locale.setDefault(Locale("EN", "GB"))
-
-        assertNull(getFullNameOfDayOfWeek(activity, 0))
-        assertNull(getFullNameOfDayOfWeek(activity, 8))
-
-        assertEquals(activity.getString(R.string.monday), getFullNameOfDayOfWeek(activity, 1))
-        assertEquals(activity.getString(R.string.tuesday), getFullNameOfDayOfWeek(activity, 2))
-        assertEquals(activity.getString(R.string.wednesday), getFullNameOfDayOfWeek(activity, 3))
-        assertEquals(activity.getString(R.string.thursday), getFullNameOfDayOfWeek(activity, 4))
-        assertEquals(activity.getString(R.string.friday), getFullNameOfDayOfWeek(activity, 5))
-        assertEquals(activity.getString(R.string.saturday), getFullNameOfDayOfWeek(activity, 6))
-        assertEquals(activity.getString(R.string.sunday), getFullNameOfDayOfWeek(activity, 7))
-    }
-
-    @Test
-    fun checkFullDaysOfWeekNamesWhenFirstDayIsSunday() {
-        Locale.setDefault(Locale("EN", "US"))
-
+    fun checkFullDaysOfWeekNames() {
         assertNull(getFullNameOfDayOfWeek(activity, 0))
         assertNull(getFullNameOfDayOfWeek(activity, 8))
 
@@ -109,25 +90,7 @@ class DateHelperTest : Assert() {
     }
 
     @Test
-    fun checkShortDaysOfWeekNamesWhenFirstDayIsMonday() {
-        Locale.setDefault(Locale("EN", "GB"))
-
-        assertNull(getShortNameOfDayOfWeek(activity, 0))
-        assertNull(getShortNameOfDayOfWeek(activity, 8))
-
-        assertEquals(activity.getString(R.string.monday_short), getShortNameOfDayOfWeek(activity, 1))
-        assertEquals(activity.getString(R.string.tuesday_short), getShortNameOfDayOfWeek(activity, 2))
-        assertEquals(activity.getString(R.string.wednesday_short), getShortNameOfDayOfWeek(activity, 3))
-        assertEquals(activity.getString(R.string.thursday_short), getShortNameOfDayOfWeek(activity, 4))
-        assertEquals(activity.getString(R.string.friday_short), getShortNameOfDayOfWeek(activity, 5))
-        assertEquals(activity.getString(R.string.saturday_short), getShortNameOfDayOfWeek(activity, 6))
-        assertEquals(activity.getString(R.string.sunday_short), getShortNameOfDayOfWeek(activity, 7))
-    }
-
-    @Test
-    fun checkShortDaysOfWeekNamesWhenFirstDayIsSunday() {
-        Locale.setDefault(Locale("EN", "US"))
-
+    fun checkShortDaysOfWeekNames() {
         assertNull(getShortNameOfDayOfWeek(activity, 0))
         assertNull(getShortNameOfDayOfWeek(activity, 8))
 

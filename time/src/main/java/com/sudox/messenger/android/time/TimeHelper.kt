@@ -38,8 +38,27 @@ fun formatTime(
 
     var result: String? = null
 
-    if (current[Calendar.YEAR] == requested[Calendar.YEAR]) {
-        val daysDiff = current[Calendar.DAY_OF_YEAR] - requested[Calendar.DAY_OF_YEAR]
+    val years = current[Calendar.YEAR]
+    val yearsDiff = years - requested[Calendar.YEAR]
+
+    if (yearsDiff >= -1 && yearsDiff <= 1) {
+        var daysDiff = current[Calendar.DAY_OF_YEAR] - requested[Calendar.DAY_OF_YEAR]
+
+        if (yearsDiff == 1 &&
+                current[Calendar.MONTH] == 0 &&
+                current[Calendar.DAY_OF_MONTH] == 1 &&
+                requested[Calendar.MONTH] == 11 &&
+                requested[Calendar.DAY_OF_MONTH] == 31
+        ) {
+            daysDiff = 1
+        } else if (yearsDiff == -1 &&
+                current[Calendar.MONTH] == 11 &&
+                current[Calendar.DAY_OF_MONTH] == 31 &&
+                requested[Calendar.MONTH] == 0 &&
+                requested[Calendar.DAY_OF_MONTH] == 1
+        ) {
+            daysDiff = -1
+        }
 
         if (daysDiff == 0) {
             val hoursDiff = current[Calendar.HOUR_OF_DAY] - requested[Calendar.HOUR_OF_DAY]
@@ -68,7 +87,7 @@ fun formatTime(
                             R.string.minute_mask
                     )
                 }
-            } else if (hoursDiff <= 12 && hoursDiff >= -12) {
+            } else if ((fullFormat && hoursDiff <= 12 && hoursDiff >= -12) || (!fullFormat && hoursDiff > 0)) {
                 result = calculateDiff(
                         requested,
                         current,
@@ -82,7 +101,7 @@ fun formatTime(
             } else if (fullFormat) {
                 result = context.getString(R.string.at_mask, context.getString(R.string.today), requestedTime)
             } else {
-                result = context.getString(R.string.today)
+                result = requestedTime
             }
         } else if (daysDiff == 1) {
             result = if (fullFormat) {
@@ -97,13 +116,13 @@ fun formatTime(
                 context.getString(R.string.tomorrow)
             }
         } else if (current[Calendar.WEEK_OF_YEAR] == requested[Calendar.WEEK_OF_YEAR]) {
-            val dayOfWeekDiff = current[Calendar.WEEK_OF_YEAR] - requested[Calendar.WEEK_OF_YEAR]
+            val dayOfWeekDiff = current[Calendar.DAY_OF_WEEK] - requested[Calendar.DAY_OF_WEEK]
 
             if (dayOfWeekDiff >= 0 || (dayOfWeekDiff < 0 && calculateFutureTime)) {
-                if (fullFormat) {
-                    context.getString(R.string.at_mask, getFullMonthName(context, requested[Calendar.WEEK_OF_YEAR]), requestedTime)
+                result = if (fullFormat) {
+                    context.getString(R.string.at_mask, getFullNameOfDayOfWeek(context, requested[Calendar.DAY_OF_WEEK]), requestedTime)
                 } else {
-                    getShortMonthName(context, requested[Calendar.WEEK_OF_YEAR])
+                    getShortNameOfDayOfWeek(context, requested[Calendar.DAY_OF_WEEK])
                 }
             }
         }
@@ -115,20 +134,21 @@ fun formatTime(
     return result ?: with(context) {
         if (current[Calendar.YEAR] != requested[Calendar.YEAR]) {
             if (fullFormat) {
-                getString(R.string.date_mask_with_year_and_time,
+                getString(R.string.at_mask, getString(R.string.date_mask_with_year,
                         requested[Calendar.DAY_OF_MONTH],
                         monthName,
-                        requested[Calendar.YEAR],
-                        requestedTime
-                )
+                        requested[Calendar.YEAR]
+                ), requestedTime)
             } else {
-                getString(R.string.date_mask_with_year, requested[Calendar.DAY_OF_MONTH], monthName, current[Calendar.YEAR])
+                getString(R.string.date_mask_with_year, requested[Calendar.DAY_OF_MONTH], monthName, requested[Calendar.YEAR])
             }
         } else {
             if (fullFormat) {
-                getString(R.string.date_mask_without_year_and_with_time, requested[Calendar.DAY_OF_MONTH], monthName, requestedTime)
+                getString(R.string.at_mask, getString(R.string.date_mask_without_year,
+                        requested[Calendar.DAY_OF_MONTH], monthName
+                ), requestedTime)
             } else {
-                getString(R.string.date_mask_without_year_and_time, requested[Calendar.DAY_OF_MONTH], monthName)
+                getString(R.string.date_mask_without_year, requested[Calendar.DAY_OF_MONTH], monthName)
             }
         }
     }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="date_mask_with_year_and_time">%d %s %d at %s</string>
-    <string name="date_mask_without_year_and_with_time">%d %s at %s</string>
+<!--    <string name="date_mask_with_year_and_time">%d %s %d at %s</string>-->
+<!--    <string name="date_mask_without_year_and_with_time">%d %s at %s</string>-->
 
     <string name="date_mask_with_year">%d %s %d</string>
-    <string name="date_mask_without_year_and_time">%d %s</string>
+    <string name="date_mask_without_year">%d %s</string>
 
     <string name="at_mask">%s at %s</string>
 
