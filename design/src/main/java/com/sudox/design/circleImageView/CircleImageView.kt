@@ -23,9 +23,11 @@ class CircleImageView : AppCompatImageView {
         xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT)
     }
 
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        scaleType = ScaleType.CENTER_CROP
+    }
 
     override fun onDraw(canvas: Canvas) {
         val imageLayer = canvas.saveLayer(0f, 0f, width.toFloat(), height.toFloat(), simplePaint)

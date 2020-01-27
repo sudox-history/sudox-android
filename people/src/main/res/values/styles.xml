@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Sudox.People.FriendRequestsItemView" parent="">
+        <item name="avatarRadius">23dp</item>
+
+        <item name="nameTextAppearance">@style/Sudox.People.FriendRequestsItemView.NameTextAppearance</item>
+        <item name="nameTextMarginRelativePhoto">16dp</item>
+
+        <item name="onlineStatusTextAppearance">@style/Sudox.People.FriendRequestsItemView.OnlineStatusTextAppearance</item>
+
+        <item name="acceptButtonMarginRelativeReject">17dp</item>
+        <item name="acceptButtonDrawable">@drawable/accept_friend_request</item>
+        <item name="acceptButtonSide">24dp</item>
+
+        <item name="rejectButtonDrawable">@drawable/reject_friend_request</item>
+        <item name="rejectButtonSide">24dp</item>
+    </style>
+
+    <style name="Sudox.People.FriendRequestsItemView.NameTextAppearance" parent="">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_bold</item>
+    </style>
+
+    <style name="Sudox.People.FriendRequestsItemView.OnlineStatusTextAppearance" parent="">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#00BFA5</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+</resources>

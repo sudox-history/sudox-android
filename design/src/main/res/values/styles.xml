@@ -5,6 +5,10 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="Sudox.Button" parent="Widget.AppCompat.Button">
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+    </style>
+
     <style name="Sudox.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/drawable_splash_background</item>
 
@@ -34,6 +38,12 @@
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
         <item name="colorAccent">@color/accent_color</item>
+
+        <item name="android:buttonStyle">@style/Sudox.Button</item>
+        <item name="buttonStyle">@style/Sudox.Button</item>
+
+        <item name="android:imageButtonStyle">@style/Sudox.Button</item>
+        <item name="imageButtonStyle">@style/Sudox.Button</item>
     </style>
 
     <style name="Sudox.Screen" parent="">

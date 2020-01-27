@@ -37,15 +37,14 @@ class SectionedListDecorator(
         }
 
         val sectionName = adapter.getSectionName(position)
+        val sectionMargin = adapter.getSectionItemsMargin(position)
 
         if (sectionName != null) {
             listView.sectionNamePaint.getTextBounds(sectionName, 0, sectionName.length, sectionNameBounds)
 
-            if (position == 0) {
-                outRect.top = listView.sectionNameTopPadding
-            }
-
-            outRect.bottom = outRect.top + sectionNameBounds.height() + listView.sectionNameBottomPadding
+            outRect.top = listView.sectionNameTopPadding
         }
+
+        outRect.bottom += sectionMargin
     }
 }
