@@ -21,12 +21,18 @@
         <item name="innerDateToCountMargin">@dimen/dialogitemview_inner_date_to_count_margin</item>
         <item name="innerMessageStatusMargin">@dimen/dialogitemview_inner_message_status_margin
         </item>
-        <item name="innerContentToRightBorderMargin">
-            @dimen/dialogitemview_inner_content_to_right_border_margin
+        <item name="innerContentToRightViewMargin">
+            @dimen/dialogitemview_inner_content_to_right_view_margin
         </item>
-        <item name="innerNewContentToRightBorderMargin">
-            @dimen/dialogitemview_inner_new_content_to_right_border_margin
+        <item name="countMessagesInnerHorizontalMargin">
+            @dimen/dialogitemview_count_messages_inner_horizontal_margin
         </item>
+        <item name="countMessagesInnerVerticalMargin">
+            @dimen/dialogitemview_count_messages_inner_vertical_margin
+        </item>
+
+        <item name="countMessagesHeight">@dimen/dialogitemview_count_messages_height</item>
+        <item name="countMessagesRadius">@dimen/dialogitemview_count_messages_radius</item>
 
         <item name="messageStatusColor">@color/dialogitemview_message_status_color</item>
         <item name="userActiveColor">@color/dialogitemview_user_active_color</item>
@@ -50,6 +56,9 @@
         <item name="dialogDateTextAppearance">
             @style/Sudox.Messages.DialogItemView.DialogDateTextAppearance
         </item>
+        <item name="dialogMessageCountTextAppearance">
+            @style/Sudox.Messages.DialogItemView.DialogMessageCountTextAppearance
+        </item>
     </style>
 
     <style name="Sudox.Messages.DialogItemView.DialogNameTextAppearance" parent="">
@@ -72,9 +81,17 @@
         <item name="android:fontFamily">@font/opensans_regular</item>
         <item name="fontFamily">@font/opensans_regular</item>
     </style>
+
     <style name="Sudox.Messages.DialogItemView.DialogDateTextAppearance" parent="">
-        <item name="android:textSize">@dimen/dialogitemview_dialog_name_text_size</item>
+        <item name="android:textSize">@dimen/dialogitemview_date_text_size</item>
         <item name="android:textColor">@color/dialogitemview_read_message_content_color</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
+    </style>
+
+    <style name="Sudox.Messages.DialogItemView.DialogMessageCountTextAppearance" parent="">
+        <item name="android:textSize">@dimen/dialogitemview_date_text_size</item>
+        <item name="android:textColor">@color/dialogitemview_message_count_text_color</item>
         <item name="android:fontFamily">@font/opensans_semibold</item>
         <item name="fontFamily">@font/opensans_semibold</item>
     </style>
