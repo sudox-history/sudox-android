@@ -12,6 +12,7 @@ dependencies {
     implementation libraries.swiperefreshlayout
     implementation libraries.libphonenumber
     implementation libraries.recyclerview
+    implementation libraries.flexbox
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric

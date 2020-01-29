@@ -204,4 +204,9 @@
         <item name="sectionNameTextColor">@color/sectionedlistview_section_name_text_color</item>
         <item name="sectionNameTypeface">@font/opensans_bold</item>
     </style>
+
+<!--    <style name="Sudox.Flexbox.Attachments" parent="">-->
+<!--        <item name="flexDirection">column</item>-->
+<!--        <item name="justifyContent">flex_end</item>-->
+<!--    </style>-->
 </resources>
