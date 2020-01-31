@@ -103,6 +103,13 @@
         <attr name="sectionNameTopPadding" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="ResizableImageButton">
+        <attr name="iconWidth" />
+        <attr name="iconDrawable" format="reference" />
+        <attr name="iconDrawableTint" format="color" />
+        <attr name="iconHeight" />
+    </declare-styleable>
+
     <attr name="flagMargin" format="dimension" />
     <attr name="flagHeight" format="dimension" />
     <attr name="flagWidth" format="dimension" />

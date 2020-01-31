@@ -3,6 +3,6 @@
 
     <style name="Sudox.App" parent="Sudox">
         <item name="momentItemViewStyle">@style/Sudox.Moments.MomentItemView</item>
-        <item name="friendRequestsItemStyle">@style/Sudox.People.FriendRequestsItemView</item>
+        <item name="friendItemViewStyle">@style/Sudox.Friends.FriendItemView</item>
     </style>
 </resources>
