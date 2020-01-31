@@ -5,19 +5,21 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.use
 import com.sudox.design.R
+import com.sudox.design.applicationBar.applicationBarButton.ApplicationBarButtonState
 import kotlin.math.min
 
 class ResizableImageButton : View {
 
     internal var iconDrawableRes = 0
+    internal var iconDrawable: Drawable? = null
 
-    private var iconDrawable: Drawable? = null
     private var iconDrawableTint = 0
     private var iconHeight = 0
     private var iconWidth = 0
@@ -42,7 +44,7 @@ class ResizableImageButton : View {
         val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
         val availableHeight = MeasureSpec.getSize(heightMeasureSpec)
 
-        val needWidth = paddingLeft + iconDrawable!!.bounds.width() + paddingRight
+        val needWidth = paddingLeft + (iconDrawable?.bounds?.width() ?: 0) + paddingRight
         val measuredWidth = if (widthMode == MeasureSpec.EXACTLY) {
             availableWidth
         } else if (widthMode == MeasureSpec.AT_MOST) {
@@ -51,7 +53,7 @@ class ResizableImageButton : View {
             needWidth
         }
 
-        val needHeight = paddingTop + iconDrawable!!.bounds.height() + paddingBottom
+        val needHeight = paddingTop + (iconDrawable?.bounds?.height() ?: 0)  + paddingBottom
         val measuredHeight = if (heightMode == MeasureSpec.EXACTLY) {
             availableHeight
         } else if (heightMode == MeasureSpec.AT_MOST) {
@@ -72,6 +74,23 @@ class ResizableImageButton : View {
             canvas.translate(iconX, iconY)
             iconDrawable!!.draw(canvas)
             canvas.restore()
+        }
+    }
+
+    override fun onRestoreInstanceState(parcelable: Parcelable) {
+        val state = parcelable as ResizableImageButtonState
+
+        state.apply {
+            super.onRestoreInstanceState(superState)
+            readToView(this@ResizableImageButton)
+        }
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()
+
+        return ResizableImageButtonState(superState!!).apply {
+            writeFromView(this@ResizableImageButton)
         }
     }
 
