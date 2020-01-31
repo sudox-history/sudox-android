@@ -9,7 +9,7 @@ import com.sudox.messenger.android.activity.ActivityFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerAdapter
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
-import com.sudox.messenger.android.people.friends.FriendsFragment
+import com.sudox.messenger.android.friends.FriendsFragment
 import kotlinx.android.synthetic.main.fragment_people.peopleViewPager
 
 class PeopleFragment : CoreFragment() {

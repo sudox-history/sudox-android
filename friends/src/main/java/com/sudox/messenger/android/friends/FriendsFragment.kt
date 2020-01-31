@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.people.friends
+package com.sudox.messenger.android.friends
 
 import android.content.Context
 import android.os.Bundle
@@ -6,31 +6,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.applicationBar.ApplicationBarListener
-import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
-import com.sudox.messenger.android.people.R
-import kotlinx.android.synthetic.main.fragment_friends.*
+import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
+import kotlinx.android.synthetic.main.fragment_friends.item
 
 class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListener {
-    private var recyclerView: RecyclerView? = null
-    private var viewAdapter: RecyclerView.Adapter<*>? = null
-    private var viewManager: RecyclerView.LayoutManager? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_friends, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewManager = LinearLayoutManager(context!!)
-        viewAdapter = FriendAdapter(context!!)
+        item.toggleAcceptAndRejectButtons(true)
+        item.setUserPhoto(context!!.getDrawable(R.drawable.drawable_photo_2))
+        item.setUserName("Yaroslav")
+        item.setUserOnline()
 
-        friendContentList.apply {
-            layoutManager = viewManager
-            adapter = viewAdapter
-        }
+//        friendContentList.apply {
+//            layoutManager = LinearLayoutManager(context!!)
+//            adapter = FriendsAdapter(context!!)
+//        }
     }
 
     override fun onButtonClicked(tag: Int) {

@@ -7,6 +7,8 @@
 
     <style name="Sudox.Button" parent="Widget.AppCompat.Button">
         <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
     </style>
 
     <style name="Sudox.Base" parent="Theme.AppCompat.Light.NoActionBar">
@@ -204,9 +206,4 @@
         <item name="sectionNameTextColor">@color/sectionedlistview_section_name_text_color</item>
         <item name="sectionNameTypeface">@font/opensans_bold</item>
     </style>
-
-<!--    <style name="Sudox.Flexbox.Attachments" parent="">-->
-<!--        <item name="flexDirection">column</item>-->
-<!--        <item name="justifyContent">flex_end</item>-->
-<!--    </style>-->
 </resources>
