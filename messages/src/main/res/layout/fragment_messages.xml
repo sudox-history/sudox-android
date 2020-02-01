@@ -8,6 +8,7 @@
     <com.sudox.messenger.android.messages.views.DialogItemView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:id="@+id/testDialogItem1"/>
 
     <com.sudox.messenger.android.messages.views.DialogItemView

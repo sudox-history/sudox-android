@@ -4,6 +4,8 @@
     <dimen name="dialogitemview_image_height">56dp</dimen>
     <dimen name="dialogitemview_image_active_radius">7dp</dimen>
     <dimen name="dialogitemview_image_active_inner_radius">6dp</dimen>
+    <dimen name="dialogitemview_message_status_size">17dp</dimen>
+
 
     <dimen name="dialogitemview_inner_image_to_text_margin">16dp</dimen>
     <dimen name="dialogitemview_inner_dialog_name_to_top_margin">8dp</dimen>

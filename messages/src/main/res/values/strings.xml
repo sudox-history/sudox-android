@@ -1,4 +1,5 @@
 <resources>
     <string name="messages">Messages</string>
     <string name="rooms">Rooms</string>
+    <string name="message_sent_by_user"><font color='#BDBDBD'>You: </font></string>
 </resources>

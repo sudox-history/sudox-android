@@ -7,6 +7,8 @@
         <attr name="imageActiveRadius" format="dimension"/>
         <attr name="imageActiveInnerRadius" format="dimension"/>
         <attr name="messageStatusIcon" format="reference"/>
+        <attr name="messageStatusDoneIcon" format="reference"/>
+        <attr name="messageStatusSize" format="dimension"/>
 
         <attr name="innerImageToTextMargin" format="dimension"/>
         <attr name="innerDialogNameToTopMargin" format="dimension"/>

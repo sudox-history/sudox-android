@@ -7,8 +7,9 @@
         <item name="imageActiveColor">@color/dialogitemview_image_active_color</item>
         <item name="imageActiveRadius">@dimen/dialogitemview_image_active_radius</item>
         <item name="imageActiveInnerRadius">@dimen/dialogitemview_image_active_inner_radius</item>
-        <item name="messageStatusIcon">@drawable/ic_message</item>
-
+        <item name="messageStatusIcon">@drawable/ic_done_messages</item>
+        <item name="messageStatusDoneIcon">@drawable/ic_done_all_messages</item>
+        <item name="messageStatusSize">@dimen/dialogitemview_message_status_size</item>
 
         <item name="innerImageToTextMargin">@dimen/dialogitemview_inner_image_to_text_margin</item>
         <item name="innerDialogNameToTopMargin">

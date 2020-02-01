@@ -34,6 +34,7 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
         testDialogItem2.setCountMessages(202)
         testDialogItem2.setLastDate("пн")
         testDialogItem2.setDialogName("ЯроСЛАУ")
+        testDialogItem2.setLastMessageByUser(true, true)
         testDialogItem2.setDialogImage(getDrawable(context!!, R.drawable.drawable_photo_2)!!)
 
     }
