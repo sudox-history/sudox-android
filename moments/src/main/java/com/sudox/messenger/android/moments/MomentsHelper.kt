@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.sudox.design.lists.sortedList.decorations.MarginItemDecoration
+import com.sudox.design.lists.decorators.MarginItemDecoration
 
 fun createMomentsRecyclerView(context: Context): RecyclerView {
     val horizontalMargin = context.resources.getDimensionPixelSize(R.dimen.momentadapter_horizontal_margin)
