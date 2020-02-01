@@ -3,4 +3,5 @@
     <string name="friends">Friends</string>
     <string name="seen_mask">Seen %s</string>
     <string name="online">Online</string>
+    <string name="friends_requests">Friend requests</string>
 </resources>

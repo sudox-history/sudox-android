@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="friends_requests_margin">10dp</dimen>
+
     <dimen name="frienditemview_photo_width">48dp</dimen>
     <dimen name="frienditemview_photo_height">48dp</dimen>
     <dimen name="frienditemview_name_text_size">14sp</dimen>

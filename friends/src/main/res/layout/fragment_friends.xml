@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sudox.design.lists.sectionedList.SectionedListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/friendContentList"
+    style="@style/Sudox.Screen"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.sudox.messenger.android.friends.views.FriendItemView
-        android:id="@+id/item"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp" />
-
-</LinearLayout>
+    android:layout_height="match_parent" />

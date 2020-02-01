@@ -17,13 +17,14 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.getStringOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
+import androidx.lifecycle.LiveData
 import com.sudox.design.circleImageView.CircleImageView
 import com.sudox.design.resizableImageButton.ResizableImageButton
 import com.sudox.messenger.android.friends.R
 import kotlin.math.max
 import kotlin.math.min
 
-class FriendItemView : ViewGroup {
+class FriendItemView : ViewGroup, View.OnClickListener {
 
     private var onlineTextColor = 0
     private var offlineTextColor = 0
@@ -34,8 +35,9 @@ class FriendItemView : ViewGroup {
     private var marginBetweenNameAndStatus = 0
     private var marginBetweenButtons = 0
 
-    private var acceptImageButton: ResizableImageButton? = null
-    private var rejectImageButton: ResizableImageButton? = null
+    var acceptImageButton: ResizableImageButton? = null
+    var rejectImageButton: ResizableImageButton? = null
+
     private var statusTextView = AppCompatTextView(context).apply { addView(this) }
     private var photoImageView = CircleImageView(context).apply { addView(this) }
     private var nameTextView = AppCompatTextView(context).apply { addView(this) }
@@ -180,29 +182,62 @@ class FriendItemView : ViewGroup {
         acceptImageButton!!.layout(acceptButtonLeftBorder, buttonsTopBorder, acceptButtonRightBorder, buttonsBottomBorder)
     }
 
+    override fun onClick(view: View) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    /**
+     * Устанавливает имя пользователя
+     *
+     * @param name Имя пользователя
+     */
     fun setUserName(name: String) {
         nameTextView.text = name
     }
 
+    /**
+     * Устанавливает фото пользователя
+     *
+     * @param drawable Drawable с фотографией
+     */
     fun setUserPhoto(drawable: Drawable?) {
         photoImageView.setImageDrawable(drawable)
     }
 
+    /**
+     * Устанавливает фото пользователя
+     *
+     * @param bitmap Bitmap с фотографией
+     */
     fun setUserPhoto(bitmap: Bitmap?) {
         photoImageView.setImageBitmap(bitmap)
     }
 
-    fun setUserOffline(visitTime: Long) {
+    /**
+     * Устанавливает статус пользователя как оффлайн.
+     * Форматирует и устанавливает строку с временем в статус.
+     *
+     * @param seenTime Последнее время онлайна
+     */
+    fun setUserOffline(seenTime: Long) {
         // TODO: Replace with formatTime
         statusTextView.setTextColor(offlineTextColor)
-        statusTextView.text = visitTime.toString()
+        statusTextView.text = seenTime.toString()
     }
 
+    /**
+     * Устанавливает статус пользователя как онлайн.
+     */
     fun setUserOnline() {
         statusTextView.setTextColor(onlineTextColor)
         statusTextView.text = onlineText
     }
 
+    /**
+     * Включает и отключает отображение кнопок управления запросом на добавление.
+     *
+     * @param toggle Состояние кнопок (если true, то отображаются, если false - не отображаются)
+     */
     fun toggleAcceptAndRejectButtons(toggle: Boolean) {
         if (toggle) {
             acceptImageButton!!.visibility = View.VISIBLE
