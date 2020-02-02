@@ -17,19 +17,23 @@ class FriendsRequestsCallback(
     }
 
     override fun onMoved(fromPosition: Int, toPosition: Int) {
-        adapter.notifyItemMoved(fromPosition, toPosition)
+        adapter.notifyDataSetChanged()
+//        adapter.notifyItemMoved(fromPosition + 1, toPosition + 1)
     }
 
     override fun onChanged(position: Int, count: Int) {
-        adapter.notifyItemRangeChanged(position, count)
+        adapter.notifyDataSetChanged()
+//        adapter.notifyItemRangeChanged(position + 1, count + 1)
     }
 
     override fun onInserted(position: Int, count: Int) {
-        adapter.notifyItemRangeInserted(position, count)
+        adapter.notifyDataSetChanged()
+//        adapter.notifyItemRangeInserted(position + 1, count)
     }
 
     override fun onRemoved(position: Int, count: Int) {
-        adapter.notifyItemRangeRemoved(position, count)
+        adapter.notifyDataSetChanged()
+//        adapter.notifyItemRangeRemoved(position + 1, count)
     }
 
     override fun compare(oldItem: FriendVO, newItem: FriendVO): Int {

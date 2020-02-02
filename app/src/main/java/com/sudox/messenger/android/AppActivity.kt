@@ -38,7 +38,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             navigationManager!!.restoreState(savedInstanceState)
         } else {
             navigationManager!!.configureNavigationBar()
-            navigationManager!!.showAuthPart()
+            navigationManager!!.showMainPart()
         }
     }
 

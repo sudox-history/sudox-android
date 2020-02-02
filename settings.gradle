@@ -8,3 +8,4 @@ include ':app',
         ':moments',
         ':news'
 include ':friends'
+include ':design:viewlist'
