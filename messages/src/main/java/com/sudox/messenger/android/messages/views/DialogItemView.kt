@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable
 import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -51,7 +50,8 @@ class DialogItemView : ViewGroup {
 
     private var isNewMessage = false
     private var isSentByUserMessage = false
-    private var isSentByUserDoneAll = false
+    private var isStatusDelivered = false
+    private var isStatusDone = false
 
     private val countMessagesPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var paintCountColor = 0
@@ -108,11 +108,7 @@ class DialogItemView : ViewGroup {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        Log.d("ONMEASURE", "I AM")
-        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
-        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
         val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
-        val availableHeight = MeasureSpec.getSize(heightMeasureSpec)
 
         measureChild(dateView, widthMeasureSpec, heightMeasureSpec)
         measureChild(nameView, widthMeasureSpec, heightMeasureSpec)
@@ -134,7 +130,6 @@ class DialogItemView : ViewGroup {
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        Log.d("ONLAYOUT", "I AM")
         val width = r - l
         val rightBorder = width - paddingRight
 
@@ -208,10 +203,7 @@ class DialogItemView : ViewGroup {
 
     fun setIsNewMessage(isNew: Boolean) {
         this.isNewMessage = isNew
-        viewSettings()
-
-        requestLayout()
-        invalidate()
+        contentViewSettings()
     }
 
     fun setCountMessages(number: Int) {
@@ -230,10 +222,15 @@ class DialogItemView : ViewGroup {
         nameView.text = name
     }
 
-    fun setLastMessageByUser(isSentByUser: Boolean, isStatusDoneAll: Boolean = false) {
+    fun setLastMessageByUserHint(isSentByUser: Boolean) {
         isSentByUserMessage = isSentByUser
-        isSentByUserDoneAll = isStatusDoneAll
-        viewSettings()
+        statusIconAndHintViewSettings()
+    }
+
+    fun setMessageStatus(isDelivered: Boolean, isDone: Boolean){
+        isStatusDelivered = isDelivered
+        isStatusDone = isDone
+        statusIconAndHintViewSettings()
     }
 
     fun setLastDate(date: String) {
@@ -241,18 +238,21 @@ class DialogItemView : ViewGroup {
     }
 
     private fun viewSettings() {
+        contentViewSettings()
+        dialogNameViewSettings()
+        dialogImageSettings()
+        dateViewSettings()
+        counterViewSettings()
+        statusIconAndHintViewSettings()
+    }
+
+    private fun contentViewSettings(){
         //text appearance
         if (isNewMessage) {
             setTextAppearance(contentTextView, dialogContentNewTextAppearance)
         } else {
             setTextAppearance(contentTextView, dialogContentTextAppearance)
         }
-        //dialog name view settings
-        nameView.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        nameView.gravity = Gravity.LEFT
-        nameView.ellipsize = TextUtils.TruncateAt.END
-        nameView.isSingleLine = true
-        nameView.maxLines = 1
 
         //dialog content view settings
         contentTextView.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
@@ -263,18 +263,32 @@ class DialogItemView : ViewGroup {
         } else {
             contentTextView.maxLines = 1
         }
+    }
 
+    private fun dialogNameViewSettings(){
+        //dialog name view settings
+        nameView.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        nameView.gravity = Gravity.LEFT
+        nameView.ellipsize = TextUtils.TruncateAt.END
+        nameView.isSingleLine = true
+        nameView.maxLines = 1
+    }
 
+    private fun dialogImageSettings(){
         //dialog image settings
         photoView.layoutParams = LayoutParams(imageWidth, imageHeight)
         photoView.scaleType = ImageView.ScaleType.CENTER_CROP
+    }
 
+    private fun dateViewSettings(){
         //date view settings
         dateView.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         dateView.gravity = Gravity.CENTER
         dateView.isSingleLine = true
         dateView.maxLines = 1
+    }
 
+    private fun counterViewSettings(){
         //counter view settings
         countMessagesView.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         countMessagesView.gravity = Gravity.CENTER_VERTICAL
@@ -282,19 +296,21 @@ class DialogItemView : ViewGroup {
         countMessagesView.isSingleLine = true
         countMessagesView.maxLines = 1
         countMessagesView.includeFontPadding = false
+    }
 
-        //sent by user hint settings
+    private fun statusIconAndHintViewSettings(){
+        //sent by user hint and icon settings
         if (isSentByUserMessage) {
             val text = SpannableStringBuilder()
                     .color(messageSentByUserHintColor) { append(resources.getString(R.string.message_sent_by_user)) }
                     .append(contentTextView.text)
             contentTextView.text = text //resources.getString(R.string.message_sent_by_user) + contentTextView.text
-            iconDoneView.layoutParams = LayoutParams(messageStatusSize, messageStatusSize)
-            if (isSentByUserDoneAll) {
-                iconDoneView.setImageDrawable(messageStatusDoneIcon)
-            } else {
-                iconDoneView.setImageDrawable(messageStatusIcon)
-            }
+        }
+        iconDoneView.layoutParams = LayoutParams(messageStatusSize, messageStatusSize)
+        if (isStatusDone) {
+            iconDoneView.setImageDrawable(messageStatusDoneIcon)
+        } else if (isStatusDelivered) {
+            iconDoneView.setImageDrawable(messageStatusIcon)
         }
     }
 }

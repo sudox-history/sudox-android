@@ -34,9 +34,15 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
         testDialogItem2.setCountMessages(202)
         testDialogItem2.setLastDate("пн")
         testDialogItem2.setDialogName("ЯроСЛАУ")
-        testDialogItem2.setLastMessageByUser(true, true)
+        testDialogItem2.setLastMessageByUserHint(true)
         testDialogItem2.setDialogImage(getDrawable(context!!, R.drawable.drawable_photo_2)!!)
 
+        var flag = false
+        button.setOnClickListener {
+            testDialogItem2.setContentText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus enim ligula")
+            testDialogItem2.setMessageStatus(true, flag)
+            flag = !flag
+        }
     }
 
     override fun getPageTitle(context: Context): CharSequence? {
