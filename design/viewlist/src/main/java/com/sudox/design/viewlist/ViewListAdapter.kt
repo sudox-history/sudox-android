@@ -91,10 +91,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     fun notifyItemRangeRemovedAfterHeader(type: Int, position: Int, itemCount: Int) {
         // Cannot be -1, because item created and consequently header also created
         val headerPosition = findHeaderPosition(type)
-        val startPosition = headerPosition + position + 1
+        var startPosition = headerPosition + position + 1
 
         if (getItemsCountAfterHeader(type) == 0) {
             notifyItemRemoved(headerPosition)
+            startPosition--
         }
 
         notifyItemRangeRemoved(startPosition, itemCount)

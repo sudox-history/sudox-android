@@ -30,13 +30,25 @@ class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListene
             adapter = FriendsAdapter(this).apply {
                 acceptRequestCallback = {
                     semaphore.acquire()
-                    onlineVO.removeItemAt(0)
+
+                    if (onlineVO.size() > 0) {
+                        onlineVO.removeItemAt(0)
+                    } else if (offlineVO.size() > 0) {
+                        offlineVO.removeItemAt(0)
+                    }
+
                     semaphore.release()
                 }
 
                 rejectRequestCallback = {
                     semaphore.acquire()
-                    onlineVO.add(FriendVO(3, ('Z' - namesCount++).toString(), 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
+
+                    if (onlineVO.size() < 3) {
+                        onlineVO.add(FriendVO(3, ('Z' - namesCount++).toString(), 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
+                    } else if (offlineVO.size() < 3) {
+                        offlineVO.add(FriendVO(3, ('Z' - namesCount++).toString(), 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
+                    }
+
                     semaphore.release()
                 }
 
