@@ -28,7 +28,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ViewHolder) {
-            val header = getHeaderText(position)
+            val header = getHeaderTextByPosition(position)
 
             if (header != null) {
                 holder.view.text = header
@@ -47,7 +47,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (getHeaderText(position) != null) {
+        return if (getHeaderTextByPosition(position) != null) {
             HEADER_VIEW_TYPE
         } else if (getFooterText(position) != null) {
             FOOTER_VIEW_TYPE
@@ -58,6 +58,98 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
     override fun getItemCount(): Int {
         return getHeadersCount() + getItemsCount() + getFooterCount()
+    }
+
+    /**
+     * Уведомляет RecyclerView о вставке элемента.
+     * При необходимости уведомляет RecyclerView о появлении шапки
+     *
+     * @param type Тип шапки
+     * @param position Позиция относительно шапки, начиная с которой будет вставляться элемент
+     * @param itemCount Количество элементов для вставки
+     */
+    fun notifyItemRangeInsertedAfterHeader(type: Int, position: Int, itemCount: Int) {
+        var headerPosition = findHeaderPosition(type)
+        val itemPosition = position + 1
+
+        if (headerPosition == -1) {
+            headerPosition = getPositionForNewHeader(type)
+            notifyItemInserted(headerPosition)
+        }
+
+        notifyItemRangeInserted(itemPosition + headerPosition, itemCount)
+    }
+
+    /**
+     * Уведомляет RecyclerView об удалении элемента.
+     * При необходимости уведомляет RecyclerView об удалении шапки.
+     *
+     * @param type Тип шапки
+     * @param position Позиция относительно шапки, начиная с которой будут удаляться элементы
+     * @param itemCount Количество элементов для удаления
+     */
+    fun notifyItemRangeRemovedAfterHeader(type: Int, position: Int, itemCount: Int) {
+        // Cannot be -1, because item created and consequently header also created
+        val headerPosition = findHeaderPosition(type)
+        val startPosition = headerPosition + position + 1
+
+        if (getItemsCountAfterHeader(type) == 0) {
+            notifyItemRemoved(headerPosition)
+        }
+
+        notifyItemRangeRemoved(startPosition, itemCount)
+    }
+
+    /**
+     * Уведомляет RecyclerView о изменении данных в элементах
+     *
+     * @param type Тип шапки
+     * @param position Позиция относительно шапки, начиная с которой были изменены элементы
+     * @param count Количество измененных элементов
+     */
+    fun notifyItemRangeChangedAfterHeader(type: Int, position: Int, count: Int) {
+        // Cannot be -1, because item created and consequently header also created
+        val headerPosition = findHeaderPosition(type)
+        val startPosition = headerPosition + position + 1
+
+        notifyItemRangeChanged(startPosition, count)
+    }
+
+    /**
+     * Уведомляет RecyclerView о перемещении элемента.
+     *
+     * @param type Тип шапки
+     * @param fromPosition Позиция, относительно шапки, с которой переместился элемент
+     * @param toPosition Позиция, относительно шапки, на которую переместился элемент
+     */
+    fun notifyItemMovedAfterHeader(type: Int, fromPosition: Int, toPosition: Int) {
+        // Cannot be -1, because item created and consequently header also created
+        val headerPosition = findHeaderPosition(type)
+        val itemFromPosition = headerPosition + fromPosition + 1
+        val itemToPosition = headerPosition + toPosition + 1
+
+        notifyItemMoved(itemFromPosition, itemToPosition)
+    }
+
+    /**
+     * Ищет позицию шапки, на которой находится указанный текст
+     *
+     * @param type Тип заголовка для поиска
+     * @result Позиция найденной View, -1 если View не найдена ...
+     */
+    fun findHeaderPosition(type: Int): Int {
+        val needText = getHeaderTextByType(type)
+
+        for (i in 0 until viewList.childCount) {
+            val child = viewList.getChildAt(i)
+            val holder = viewList.getChildViewHolder(child)
+
+            if (holder is ViewHolder && holder.view.text == needText) {
+                return holder.adapterPosition
+            }
+        }
+
+        return -1
     }
 
     /**
@@ -81,7 +173,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         var footersAndHeadersCount = 0
 
         for (i in position downTo 0) {
-            if (getHeaderText(i) != null || getFooterText(i) != null) {
+            if (getHeaderTextByPosition(i) != null || getFooterText(i) != null) {
                 footersAndHeadersCount++
             }
         }
@@ -141,13 +233,29 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     open fun getItemType(position: Int): Int = 0
 
     /**
+     * Возвращает текст шапки по его типу
+     *
+     * @param type Тип шапки
+     * @return Текст шапки
+     */
+    open fun getHeaderTextByType(type: Int): String? = null
+
+    /**
      * Возвращает название шапки на определенной позиции
      *
      * @param position Позиция, на которой нужно определить шапку
      * @return Если шапка существует, то вернет строку с её названием,
      * в противном случае возвращает null
      */
-    open fun getHeaderText(position: Int): String? = null
+    open fun getHeaderTextByPosition(position: Int): String? = null
+
+    /**
+     * Определяет позицию для новой шапки нужного типа
+     *
+     * @param type Тип шапки
+     * @return Позиция новой шапки
+     */
+    open fun getPositionForNewHeader(type: Int): Int = 0
 
     /**
      * Возвращает текст футера на определенной позиции
@@ -182,8 +290,17 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     open fun getFooterCount(): Int = 0
 
     /**
+     * Возвращает количество элементов после шапки
+     * Учитывать футеры при подсчете не нужно!
+     *
+     * @param type Тип шапки
+     * @result Количество элементов после шапки
+     */
+    open fun getItemsCountAfterHeader(type: Int): Int = 0
+
+    /**
      * Возвращает количество активных элементов.
-     * Должен вернуиь именно количество активных элементов!
+     * Должен вернуть именно количество активных элементов!
      *
      * @result Количество активных элементов
      */

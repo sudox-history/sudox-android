@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
+import com.sudox.messenger.android.friends.callbacks.FriendsCallback
 import com.sudox.messenger.android.friends.callbacks.FriendsRequestsCallback
 import com.sudox.messenger.android.friends.views.FriendItemView
 import com.sudox.messenger.android.friends.vos.FriendVO
@@ -20,9 +21,9 @@ class FriendsAdapter(
        private val viewList: ViewList
 ) : ViewListAdapter<FriendsAdapter.ViewHolder>(viewList) {
 
-    val onlineVO = SortedList<FriendVO>(FriendVO::class.java, FriendsRequestsCallback(this))
-    val offlineVO = SortedList<FriendVO>(FriendVO::class.java, FriendsRequestsCallback(this))
-    val maybeYouKnowVO = SortedList<FriendVO>(FriendVO::class.java, FriendsRequestsCallback(this))
+    val onlineVO = SortedList<FriendVO>(FriendVO::class.java, FriendsCallback(this, ONLINE_FRIEND_ITEM_TYPE))
+    val offlineVO = SortedList<FriendVO>(FriendVO::class.java, FriendsCallback(this, OFFLINE_FRIEND_ITEM_TYPE))
+    val maybeYouKnowVO = SortedList<FriendVO>(FriendVO::class.java, FriendsCallback(this, MAYBE_YOU_KNOW_ITEM_TYPE))
     val requestsVO = SortedList<FriendVO>(FriendVO::class.java, FriendsRequestsCallback(this))
     var acceptRequestCallback: ((FriendVO) -> (Unit))? = null
     var rejectRequestCallback: ((FriendVO) -> (Unit))? = null
@@ -51,7 +52,7 @@ class FriendsAdapter(
 
         holder.view.setUserName(vo.name)
         holder.view.setUserPhoto(vo.photo)
-        holder.view.toggleAcceptAndRejectButtons(vo.requestTime != IS_NOT_REQUEST_TIME)
+        holder.view.toggleAcceptAndRejectButtons(holder.itemViewType == FRIEND_REQUEST_ITEM_TYPE)
 
         if (vo.requestTime != IS_NOT_REQUEST_TIME) {
             holder.view.acceptImageButton!!.setOnClickListener { acceptRequestCallback?.invoke(vo) }
@@ -68,7 +69,52 @@ class FriendsAdapter(
         }
     }
 
-    override fun getHeaderText(position: Int): String? {
+    override fun getPositionForNewHeader(type: Int): Int {
+        if (type == FRIEND_REQUEST_ITEM_TYPE) {
+            return 0
+        }
+
+        var position = 0
+
+        if (requestsVO.size() > 0) {
+            position += requestsVO.size() + 1
+        }
+
+        if (type == MAYBE_YOU_KNOW_ITEM_TYPE) {
+            return position
+        }
+
+        if (onlineVO.size() > 0) {
+            position += onlineVO.size() + 1
+        }
+
+        if (type == ONLINE_FRIEND_ITEM_TYPE) {
+            return position
+        }
+
+        // Ну а вдруг ;)
+        if (offlineVO.size() > 0) {
+            position += offlineVO.size() + 1
+        }
+
+        return position
+    }
+
+    override fun getHeaderTextByType(type: Int): String? {
+        return if (type == FRIEND_REQUEST_ITEM_TYPE) {
+            viewList.context.getString(R.string.friends_requests)
+        } else if (type == ONLINE_FRIEND_ITEM_TYPE) {
+            viewList.context.getString(R.string.online)
+        } else if (type == OFFLINE_FRIEND_ITEM_TYPE) {
+            viewList.context.getString(R.string.offline)
+        } else if (type == MAYBE_YOU_KNOW_ITEM_TYPE) {
+            viewList.context.getString(R.string.maybe_you_know)
+        } else {
+            null
+        }
+    }
+
+    override fun getHeaderTextByPosition(position: Int): String? {
         if (position == 0) {
             if (requestsVO.size() > 0) {
                 return viewList.context.getString(R.string.friends_requests)
@@ -148,10 +194,6 @@ class FriendsAdapter(
         return count
     }
 
-    override fun getItemsCount(): Int {
-        return requestsVO.size() + maybeYouKnowVO.size() + onlineVO.size() + offlineVO.size()
-    }
-
     override fun getItemType(position: Int): Int {
         val itemPosition = recalculatePosition(position)
         var itemsCount = requestsVO.size()
@@ -179,6 +221,24 @@ class FriendsAdapter(
         }
 
         TODO("Empty list ;(")
+    }
+
+    override fun getItemsCountAfterHeader(type: Int): Int {
+        return if (type == FRIEND_REQUEST_ITEM_TYPE) {
+            requestsVO.size()
+        } else if (type == MAYBE_YOU_KNOW_ITEM_TYPE) {
+            maybeYouKnowVO.size()
+        } else if (type == ONLINE_FRIEND_ITEM_TYPE) {
+            onlineVO.size()
+        } else if (type == OFFLINE_FRIEND_ITEM_TYPE) {
+            offlineVO.size()
+        } else {
+            0
+        }
+    }
+
+    override fun getItemsCount(): Int {
+        return requestsVO.size() + maybeYouKnowVO.size() + onlineVO.size() + offlineVO.size()
     }
 
     class ViewHolder(val view: FriendItemView) : RecyclerView.ViewHolder(view)

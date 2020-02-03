@@ -4,8 +4,9 @@ import androidx.recyclerview.widget.SortedList
 import com.sudox.messenger.android.friends.FriendsAdapter
 import com.sudox.messenger.android.friends.vos.FriendVO
 
-class FriendsRequestsCallback(
-        val adapter: FriendsAdapter
+class FriendsCallback(
+        val adapter: FriendsAdapter,
+        val type: Int
 ) : SortedList.Callback<FriendVO>() {
 
     override fun areContentsTheSame(oldItem: FriendVO, newItem: FriendVO): Boolean {
@@ -17,22 +18,22 @@ class FriendsRequestsCallback(
     }
 
     override fun onMoved(fromPosition: Int, toPosition: Int) {
-        adapter.notifyItemMoved(fromPosition + 1, toPosition + 1)
+        adapter.notifyItemMovedAfterHeader(type, fromPosition, toPosition)
     }
 
     override fun onChanged(position: Int, count: Int) {
-        adapter.notifyItemRangeChanged(position + 1, count + 1)
+        adapter.notifyItemRangeChangedAfterHeader(type, position, count)
     }
 
     override fun onInserted(position: Int, count: Int) {
-        adapter.notifyItemRangeInserted(position + 1, count)
+        adapter.notifyItemRangeInsertedAfterHeader(type, position, count)
     }
 
     override fun onRemoved(position: Int, count: Int) {
-        adapter.notifyItemRangeRemoved(position + 1, count)
+        adapter.notifyItemRangeRemovedAfterHeader(type, position, count)
     }
 
     override fun compare(oldItem: FriendVO, newItem: FriendVO): Int {
-        return -oldItem.requestTime.compareTo(newItem.requestTime)
+        return oldItem.name.compareTo(newItem.name)
     }
 }
