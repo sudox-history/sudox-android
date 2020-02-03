@@ -5,8 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
-import com.sudox.messenger.android.friends.callbacks.FriendsCallback
-import com.sudox.messenger.android.friends.callbacks.FriendsRequestsCallback
+import com.sudox.messenger.android.friends.callbacks.FriendsSortingCallback
 import com.sudox.messenger.android.friends.views.FriendItemView
 import com.sudox.messenger.android.friends.vos.FriendVO
 import com.sudox.messenger.android.friends.vos.IS_NOT_REQUEST_TIME
@@ -21,10 +20,10 @@ class FriendsAdapter(
        private val viewList: ViewList
 ) : ViewListAdapter<FriendsAdapter.ViewHolder>(viewList) {
 
-    val onlineVO = SortedList<FriendVO>(FriendVO::class.java, FriendsCallback(this, ONLINE_FRIEND_ITEM_TYPE))
-    val offlineVO = SortedList<FriendVO>(FriendVO::class.java, FriendsCallback(this, OFFLINE_FRIEND_ITEM_TYPE))
-    val maybeYouKnowVO = SortedList<FriendVO>(FriendVO::class.java, FriendsCallback(this, MAYBE_YOU_KNOW_ITEM_TYPE))
-    val requestsVO = SortedList<FriendVO>(FriendVO::class.java, FriendsRequestsCallback(this))
+    val onlineVO = SortedList<FriendVO>(FriendVO::class.java, FriendsSortingCallback(this, ONLINE_FRIEND_ITEM_TYPE))
+    val offlineVO = SortedList<FriendVO>(FriendVO::class.java, FriendsSortingCallback(this, OFFLINE_FRIEND_ITEM_TYPE))
+    val maybeYouKnowVO = SortedList<FriendVO>(FriendVO::class.java, FriendsSortingCallback(this, MAYBE_YOU_KNOW_ITEM_TYPE))
+    val requestsVO = SortedList<FriendVO>(FriendVO::class.java, FriendsSortingCallback(this, FRIEND_REQUEST_ITEM_TYPE))
     var acceptRequestCallback: ((FriendVO) -> (Unit))? = null
     var rejectRequestCallback: ((FriendVO) -> (Unit))? = null
 
