@@ -68,7 +68,7 @@ class FriendsAdapter(
         }
     }
 
-    override fun getPositionForNewHeader(type: Int): Int {
+    override fun getPositionForNewHeader(type: Int, itemCount: Int): Int {
         if (type == FRIEND_REQUEST_ITEM_TYPE) {
             return 0
         }
@@ -83,17 +83,16 @@ class FriendsAdapter(
             return position
         }
 
-        if (onlineVO.size() > 0) {
-            position += onlineVO.size() + 1
+        if (maybeYouKnowVO.size() > 0) {
+            position += 2
         }
 
         if (type == ONLINE_FRIEND_ITEM_TYPE) {
             return position
         }
 
-        // Ну а вдруг ;)
-        if (offlineVO.size() > 0) {
-            position += offlineVO.size() + 1
+        if (onlineVO.size() > 0) {
+            position += onlineVO.size() + 1
         }
 
         return position
