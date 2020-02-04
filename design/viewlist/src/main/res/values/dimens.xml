@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="viewlist_header_text_size">15sp</dimen>
+    <dimen name="viewlist_header_padding_bottom">15dp</dimen>
+    <dimen name="viewlist_header_padding_top">25dp</dimen>
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.ViewList" parent="">
+        <item name="headerTextAppearance">@style/Sudox.ViewList.Header</item>
+        <item name="footerTextAppearance">@style/Sudox.ViewList.Footer</item>
+    </style>
+
+    <style name="Sudox.ViewList.Header" parent="">
+        <item name="android:paddingBottom">@dimen/viewlist_header_padding_bottom</item>
+        <item name="android:paddingTop">@dimen/viewlist_header_padding_top</item>
+        <item name="android:textColor">@color/viewlist_header_text_color</item>
+        <item name="android:textSize">@dimen/viewlist_header_text_size</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_bold</item>
+    </style>
+
+    <style name="Sudox.ViewList.Footer" parent="">
+        <!--   TODO: Add styles    -->
+    </style>
+</resources>

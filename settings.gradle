@@ -9,3 +9,4 @@ include ':app',
         ':news'
 include ':friends'
 include ':design:viewlist'
+include ':design:common'

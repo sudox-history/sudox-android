@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ViewList">
+        <attr name="headerTextAppearance" format="reference" />
+        <attr name="footerTextAppearance" format="reference" />
+    </declare-styleable>
+
+    <attr name="viewListStyle" />
+</resources>
