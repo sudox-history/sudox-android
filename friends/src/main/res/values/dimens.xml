@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="friends_requests_margin">10dp</dimen>
-
     <dimen name="frienditemview_photo_width">48dp</dimen>
     <dimen name="frienditemview_photo_height">48dp</dimen>
     <dimen name="frienditemview_name_text_size">14sp</dimen>
@@ -11,4 +9,6 @@
     <dimen name="frienditemview_buttons_icon_width">24dp</dimen>
     <dimen name="frienditemview_buttons_icon_height">24dp</dimen>
     <dimen name="frienditemview_margin_between_buttons">22dp</dimen>
+
+    <dimen name="friends_list_items_margin">10dp</dimen>
 </resources>

@@ -222,6 +222,10 @@ class FriendsAdapter(
         TODO("Empty list ;(")
     }
 
+    override fun getItemMargin(position: Int): Int {
+        return viewList.context.resources.getDimensionPixelSize(R.dimen.friends_list_items_margin)
+    }
+
     override fun getItemsCountAfterHeader(type: Int): Int {
         return if (type == FRIEND_REQUEST_ITEM_TYPE) {
             requestsVO.size()

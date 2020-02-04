@@ -5,12 +5,15 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 
 class ViewList : RecyclerView {
 
     internal var headerTextAppearance = 0
     internal var footerTextAppearance = 0
+    internal var initialPaddingRight = 0
+    internal var initialPaddingLeft = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.viewListStyle)
@@ -21,5 +24,9 @@ class ViewList : RecyclerView {
             headerTextAppearance = it.getResourceIdOrThrow(R.styleable.ViewList_headerTextAppearance)
             footerTextAppearance = it.getResourceIdOrThrow(R.styleable.ViewList_footerTextAppearance)
         }
+
+        initialPaddingRight = paddingRight
+        initialPaddingLeft = paddingLeft
+        updatePadding(left = 0, right = 0)
     }
 }

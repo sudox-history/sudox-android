@@ -26,6 +26,15 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder.itemView is ViewGroup) {
+            (holder.itemView as ViewGroup).clipToPadding = false
+        }
+
+        holder.itemView.updatePadding(
+                left = viewList.initialPaddingLeft,
+                right = viewList.initialPaddingRight
+        )
+
         if (holder is ViewHolder) {
             val header = getHeaderTextByPosition(position)
 
@@ -48,7 +57,16 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             }
         }
 
-        bindItemHolder(holder, position)
+        val itemMargin = getItemMargin(position)
+        val itemPaddingTop = itemMargin / 2
+        val itemPaddingBottom = itemMargin / 2
+
+        bindItemHolder(holder, position).apply {
+            holder.itemView.updatePadding(
+                    top = itemPaddingTop,
+                    bottom = itemPaddingBottom
+            )
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
