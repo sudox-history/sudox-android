@@ -1,8 +1,9 @@
 package com.sudox.design.viewlist
 
 import android.view.ViewGroup
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.widget.TextViewCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 
 private const val HEADER_VIEW_TYPE = -1
@@ -12,15 +13,13 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         private val viewList: ViewList
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private var initialTopPadding = -1
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == HEADER_VIEW_TYPE && getHeadersCount() > 0) {
-            ViewHolder(AppCompatTextView(viewList.context).apply {
-                TextViewCompat.setTextAppearance(this, viewList.headerTextAppearance)
-            })
+            ViewHolder(AppCompatTextView(ContextThemeWrapper(viewList.context, viewList.headerTextAppearance)))
         } else if (viewType == FOOTER_VIEW_TYPE && getFooterCount() > 0) {
-            ViewHolder(AppCompatTextView(viewList.context).apply {
-                TextViewCompat.setTextAppearance(this, viewList.footerTextAppearance)
-            })
+            ViewHolder(AppCompatTextView(ContextThemeWrapper(viewList.context, viewList.footerTextAppearance)))
         } else {
             createItemHolder(parent, viewType)
         }
@@ -32,6 +31,12 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
             if (header != null) {
                 holder.view.text = header
+
+                if (position == 0 && initialTopPadding == -1) {
+                    initialTopPadding = holder.view.paddingTop
+                    holder.view.updatePadding(top = 0)
+                }
+
                 return
             }
 
