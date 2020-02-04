@@ -68,7 +68,7 @@ class FriendsAdapter(
         }
     }
 
-    override fun getPositionForNewHeader(type: Int, itemCount: Int): Int {
+    override fun getPositionForNewHeader(type: Int): Int {
         if (type == FRIEND_REQUEST_ITEM_TYPE) {
             return 0
         }

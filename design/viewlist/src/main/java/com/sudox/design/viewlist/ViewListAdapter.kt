@@ -96,7 +96,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         val itemPosition = position + 1
 
         if (headerPosition == -1) {
-            headerPosition = getPositionForNewHeader(type, itemCount)
+            headerPosition = getPositionForNewHeader(type)
             notifyItemInserted(headerPosition)
         }
 
@@ -277,10 +277,9 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      * Определяет позицию для новой шапки нужного типа
      *
      * @param type Тип шапки
-     * @param itemCount Количество элементов, которые будут после шапки
      * @return Позиция новой шапки
      */
-    open fun getPositionForNewHeader(type: Int, itemCount: Int): Int = 0
+    open fun getPositionForNewHeader(type: Int): Int = 0
 
     /**
      * Возвращает текст футера на определенной позиции
