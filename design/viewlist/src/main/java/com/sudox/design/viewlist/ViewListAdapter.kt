@@ -4,10 +4,11 @@ import android.view.ViewGroup
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.updatePadding
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-private const val HEADER_VIEW_TYPE = -1
-private const val FOOTER_VIEW_TYPE = -2
+const val HEADER_VIEW_TYPE = -1
+const val FOOTER_VIEW_TYPE = -2
 
 abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         private val viewList: ViewList
@@ -30,10 +31,14 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             (holder.itemView as ViewGroup).clipToPadding = false
         }
 
-        holder.itemView.updatePadding(
-                left = viewList.initialPaddingLeft,
-                right = viewList.initialPaddingRight
-        )
+        val orientation = (viewList.layoutManager as? LinearLayoutManager)?.orientation ?: 0
+
+        if (orientation == LinearLayoutManager.VERTICAL) {
+            holder.itemView.updatePadding(
+                    left = viewList.initialPaddingLeft,
+                    right = viewList.initialPaddingRight
+            )
+        }
 
         if (holder is ViewHolder) {
             val header = getHeaderTextByPosition(position)
@@ -57,15 +62,29 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             }
         }
 
-        val itemMargin = getItemMargin(position)
-        val itemPaddingTop = itemMargin / 2
-        val itemPaddingBottom = itemMargin / 2
-
         bindItemHolder(holder, position).apply {
-            holder.itemView.updatePadding(
-                    top = itemPaddingTop,
-                    bottom = itemPaddingBottom
-            )
+            if (!canCreateMarginViaDecorators(position)) {
+                val itemMargin = getItemMargin(position) / 2
+                val positionAfterHeader = recalculatePositionRelativeHeader(position)
+
+                if (orientation == LinearLayoutManager.VERTICAL) {
+                    if (positionAfterHeader == 0) {
+                        holder.itemView.updatePadding(bottom = itemMargin)
+                    } else if (positionAfterHeader == getItemsCountAfterHeader(holder.itemViewType) - 1) {
+                        holder.itemView.updatePadding(top = itemMargin)
+                    } else {
+                        holder.itemView.updatePadding(top = itemMargin, bottom = itemMargin)
+                    }
+                } else {
+                    if (positionAfterHeader == 0) {
+                        holder.itemView.updatePadding(right = itemMargin)
+                    } else if (positionAfterHeader == getItemsCountAfterHeader(holder.itemViewType) - 1) {
+                        holder.itemView.updatePadding(left = itemMargin)
+                    } else {
+                        holder.itemView.updatePadding(left = itemMargin, right = itemMargin)
+                    }
+                }
+            }
         }
     }
 
@@ -321,6 +340,15 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      * @result Количество элементов после шапки
      */
     open fun getItemsCountAfterHeader(type: Int): Int = 0
+
+    /**
+     * Определяет тип способа добавления отступа
+     *
+     * @property position Позиция элемента
+     * @result Вернет true если отступ нужно добавить с помощью декоратора,
+     * false если с помощью внутренних отступов.
+     */
+    open fun canCreateMarginViaDecorators(position: Int): Boolean = false
 
     /**
      * Возвращает количество активных элементов.

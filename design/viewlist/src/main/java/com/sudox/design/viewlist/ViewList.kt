@@ -29,4 +29,14 @@ class ViewList : RecyclerView {
         initialPaddingLeft = paddingLeft
         updatePadding(left = 0, right = 0)
     }
+
+    override fun setAdapter(adapter: Adapter<*>?) {
+        super.setAdapter(adapter)
+
+        if (adapter != null && adapter is ViewListAdapter<*>) {
+            addItemDecoration(ViewListDecorator(adapter, this))
+        } else {
+            removeItemDecoration(getItemDecorationAt(0))
+        }
+    }
 }
