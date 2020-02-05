@@ -10,5 +10,18 @@
     <dimen name="frienditemview_buttons_icon_height">24dp</dimen>
     <dimen name="frienditemview_margin_between_buttons">22dp</dimen>
 
+    <dimen name="maybeyouknowitemview_margin_between_name_and_photo">10dp</dimen>
+    <dimen name="maybeyouknowitemview_margin_between_name_and_friends_count">0dp</dimen>
+    <dimen name="maybeyouknowitemview_friends_count_text_size">14sp</dimen>
+    <dimen name="maybeyouknowitemview_name_text_size">15sp</dimen>
+    <dimen name="maybeyouknowitemview_padding_left">16dp</dimen>
+    <dimen name="maybeyouknowitemview_padding_right">16dp</dimen>
+    <dimen name="maybeyouknowitemview_padding_bottom">22dp</dimen>
+    <dimen name="maybeyouknowitemview_padding_top">22dp</dimen>
+    <dimen name="maybeyouknowitemview_corners_radius">10dp</dimen>
+    <dimen name="maybeyouknowitemview_stroke_color">1dp</dimen>
+    <dimen name="maybeyouknowitemview_height">160dp</dimen>
+    <dimen name="maybeyouknowitemview_width">140dp</dimen>
+
     <dimen name="friends_list_items_margin">10dp</dimen>
 </resources>

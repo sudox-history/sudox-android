@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="FriendItemView">
-        <attr name="photoWidth" format="dimension" />
-        <attr name="photoHeight" format="dimension" />
-        <attr name="nameTextAppearance" format="reference" />
+        <attr name="photoWidth" />
+        <attr name="photoHeight" />
+        <attr name="nameTextAppearance" />
         <attr name="statusTextAppearance" format="reference" />
         <attr name="marginBetweenNameAndStatus" format="dimension" />
         <attr name="marginBetweenAvatarAndTexts" format="dimension" />
@@ -17,5 +17,19 @@
         <attr name="onlineText" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="MaybeYouKnowItemView">
+        <attr name="marginBetweenNameAndPhoto" format="dimension"/>
+        <attr name="marginBetweenNameAndFriendsCount" format="dimension"/>
+        <attr name="friendsCountTextAppearance" format="reference" />
+        <attr name="nameTextAppearance" />
+        <attr name="photoWidth" />
+        <attr name="photoHeight" />
+    </declare-styleable>
+
     <attr name="friendItemViewStyle" format="reference" />
+    <attr name="maybeYouKnowItemViewStyle" format="reference" />
+
+    <attr name="nameTextAppearance" format="reference" />
+    <attr name="photoWidth" />
+    <attr name="photoHeight" />
 </resources>

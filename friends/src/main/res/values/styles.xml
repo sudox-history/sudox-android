@@ -48,4 +48,36 @@
         <item name="iconDrawableTint">@color/frienditemview_reject_button_icon_tint</item>
         <item name="iconDrawable">@drawable/ic_cancel</item>
     </style>
+
+    <style name="Sudox.Friends.MaybeYouKnowItem" parent="">
+        <item name="android:background">@drawable/background_maybe_you_know_item</item>
+        <item name="android:paddingLeft">@dimen/maybeyouknowitemview_padding_left</item>
+        <item name="android:paddingRight">@dimen/maybeyouknowitemview_padding_right</item>
+        <item name="android:paddingBottom">@dimen/maybeyouknowitemview_padding_bottom</item>
+        <item name="android:paddingTop">@dimen/maybeyouknowitemview_padding_top</item>
+
+        <item name="marginBetweenNameAndPhoto">@dimen/maybeyouknowitemview_margin_between_name_and_photo</item>
+        <item name="marginBetweenNameAndFriendsCount">@dimen/maybeyouknowitemview_margin_between_name_and_friends_count</item>
+        <item name="friendsCountTextAppearance">@style/Sudox.Friends.MaybeYouKnowItem.FriendsCountTextAppearance</item>
+        <item name="nameTextAppearance">@style/Sudox.Friends.MaybeYouKnowItem.NameTextAppearance</item>
+
+        <item name="android:maxHeight">@dimen/maybeyouknowitemview_height</item>
+        <item name="android:minHeight">@dimen/maybeyouknowitemview_height</item>
+        <item name="android:maxWidth">@dimen/maybeyouknowitemview_width</item>
+        <item name="android:minWidth">@dimen/maybeyouknowitemview_width</item>
+    </style>
+
+    <style name="Sudox.Friends.MaybeYouKnowItem.NameTextAppearance" parent="">
+        <item name="android:textSize">@dimen/maybeyouknowitemview_name_text_size</item>
+        <item name="android:textColor">@color/maybeyouknowitemview_name_text_color</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_bold</item>
+    </style>
+
+    <style name="Sudox.Friends.MaybeYouKnowItem.FriendsCountTextAppearance" parent="">
+        <item name="android:textSize">@dimen/maybeyouknowitemview_friends_count_text_size</item>
+        <item name="android:textColor">@color/maybeyouknowitemview_friends_count_text_color</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
 </resources>
