@@ -20,7 +20,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         dataObserver = object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                val orientation = (viewList.layoutManager as? LinearLayoutManager)?.orientation ?: 0
+                val orientation = (viewList.layoutManager as? LinearLayoutManager)?.orientation ?: LinearLayoutManager.VERTICAL
 
                 if (positionStart == 0 &&
                         ((!viewList.canScrollVertically(-1) && orientation == LinearLayoutManager.VERTICAL) ||
@@ -56,7 +56,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             (holder.itemView as ViewGroup).clipToPadding = false
         }
 
-        val orientation = (viewList.layoutManager as? LinearLayoutManager)?.orientation ?: 0
+        val orientation = (viewList.layoutManager as? LinearLayoutManager)?.orientation ?: LinearLayoutManager.VERTICAL
 
         if (orientation == LinearLayoutManager.VERTICAL) {
             holder.itemView.updatePadding(
