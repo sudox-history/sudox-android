@@ -4,6 +4,6 @@
     <style name="Sudox.App" parent="Sudox">
         <item name="momentItemViewStyle">@style/Sudox.Moments.MomentItemView</item>
         <item name="friendItemViewStyle">@style/Sudox.Friends.FriendItemView</item>
-        <item name="maybeYouKnowItemViewStyle">@style/Sudox.Friends.MaybeYouKnowItem</item>
+        <item name="maybeYouKnowItemViewStyle">@style/Sudox.Friends.MaybeYouKnowItemView</item>
     </style>
 </resources>

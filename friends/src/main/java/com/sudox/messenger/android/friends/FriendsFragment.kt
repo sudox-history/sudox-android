@@ -10,6 +10,7 @@ import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
+import com.sudox.messenger.android.friends.adapters.FriendsAdapter
 import com.sudox.messenger.android.friends.vos.FriendVO
 import kotlinx.android.synthetic.main.fragment_friends.friendContentList
 import java.util.concurrent.Semaphore
@@ -31,10 +32,10 @@ class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListene
                 acceptRequestCallback = {
                     semaphore.acquire()
 
-                    if (onlineVO.size() > 0) {
-                        onlineVO.removeItemAt(0)
-                    } else if (offlineVO.size() > 0) {
-                        offlineVO.removeItemAt(0)
+                    if (onlineVOs.size() > 0) {
+                        onlineVOs.removeItemAt(0)
+                    } else if (offlineVOs.size() > 0) {
+                        offlineVOs.removeItemAt(0)
                     }
 
                     semaphore.release()
@@ -43,10 +44,10 @@ class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListene
                 rejectRequestCallback = {
                     semaphore.acquire()
 
-                    if (onlineVO.size() < 3) {
-                        onlineVO.add(FriendVO(3, ('Z' - namesCount++).toString(), 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
-                    } else if (offlineVO.size() < 3) {
-                        offlineVO.add(FriendVO(3, ('Z' - namesCount++).toString(), 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
+                    if (onlineVOs.size() < 3) {
+                        onlineVOs.add(FriendVO(3, ('Z' - namesCount++).toString(), 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
+                    } else if (offlineVOs.size() < 3) {
+                        offlineVOs.add(FriendVO(3, ('Z' - namesCount++).toString(), 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
                     }
 
                     semaphore.release()
@@ -55,9 +56,9 @@ class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListene
 //                onlineVO.add(FriendVO(3, "A", 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
 //                onlineVO.add(FriendVO(3, "Z", 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
 
-                requestsVO.add(FriendVO(1, "Yaroslav", 1L, counter++, context.getDrawable(R.drawable.drawable_photo_2)!!))
-                requestsVO.add(FriendVO(2, "Anton", 2L, counter++, context.getDrawable(R.drawable.drawable_photo_1)!!))
-                requestsVO.add(FriendVO(3, "Mr. Pozdnyakov", 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
+                requestsVOs.add(FriendVO(1, "Yaroslav", 1L, counter++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                requestsVOs.add(FriendVO(2, "Anton", 2L, counter++, context.getDrawable(R.drawable.drawable_photo_1)!!))
+                requestsVOs.add(FriendVO(3, "Mr. Pozdnyakov", 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
             }
         }
     }

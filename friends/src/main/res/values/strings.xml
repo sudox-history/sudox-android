@@ -6,4 +6,10 @@
     <string name="offline">Offline</string>
     <string name="friends_requests">Friend requests</string>
     <string name="maybe_you_know">Maybe you know</string>
+    <string name="mutual_friends_mask">%s mutual friends</string>
+
+    <plurals name="friends">
+        <item quantity="one">%d friend</item>
+        <item quantity="other">%d friends</item>
+    </plurals>
 </resources>

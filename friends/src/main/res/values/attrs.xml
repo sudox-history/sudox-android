@@ -18,9 +18,13 @@
     </declare-styleable>
 
     <declare-styleable name="MaybeYouKnowItemView">
-        <attr name="marginBetweenNameAndPhoto" format="dimension"/>
-        <attr name="marginBetweenNameAndFriendsCount" format="dimension"/>
-        <attr name="friendsCountTextAppearance" format="reference" />
+        <attr name="closeButtonStyle" format="reference" />
+        <attr name="closeButtonTopMargin" format="dimension" />
+        <attr name="closeButtonRightMargin" format="dimension" />
+        <attr name="marginBetweenNameAndPhoto" format="dimension" />
+        <attr name="marginBetweenNameAndMutualFriendsCount" format="dimension" />
+        <attr name="mutualFriendsCountTextAppearance" format="reference" />
+        <attr name="mutualFriendsCountMask" format="string" />
         <attr name="nameTextAppearance" />
         <attr name="photoWidth" />
         <attr name="photoHeight" />
@@ -30,6 +34,6 @@
     <attr name="maybeYouKnowItemViewStyle" format="reference" />
 
     <attr name="nameTextAppearance" format="reference" />
-    <attr name="photoWidth" />
-    <attr name="photoHeight" />
+    <attr name="photoWidth" format="dimension" />
+    <attr name="photoHeight" format="dimension" />
 </resources>

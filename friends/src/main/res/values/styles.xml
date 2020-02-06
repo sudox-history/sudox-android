@@ -49,17 +49,23 @@
         <item name="iconDrawable">@drawable/ic_cancel</item>
     </style>
 
-    <style name="Sudox.Friends.MaybeYouKnowItem" parent="">
+    <style name="Sudox.Friends.MaybeYouKnowItemView" parent="">
         <item name="android:background">@drawable/background_maybe_you_know_item</item>
         <item name="android:paddingLeft">@dimen/maybeyouknowitemview_padding_left</item>
         <item name="android:paddingRight">@dimen/maybeyouknowitemview_padding_right</item>
         <item name="android:paddingBottom">@dimen/maybeyouknowitemview_padding_bottom</item>
         <item name="android:paddingTop">@dimen/maybeyouknowitemview_padding_top</item>
 
+        <item name="mutualFriendsCountMask">@string/mutual_friends_mask</item>
+        <item name="photoWidth">@dimen/maybeyouknowitemview_photo_width</item>
+        <item name="photoHeight">@dimen/maybeyouknowitemview_photo_height</item>
         <item name="marginBetweenNameAndPhoto">@dimen/maybeyouknowitemview_margin_between_name_and_photo</item>
-        <item name="marginBetweenNameAndFriendsCount">@dimen/maybeyouknowitemview_margin_between_name_and_friends_count</item>
-        <item name="friendsCountTextAppearance">@style/Sudox.Friends.MaybeYouKnowItem.FriendsCountTextAppearance</item>
+        <item name="marginBetweenNameAndMutualFriendsCount">@dimen/maybeyouknowitemview_margin_between_name_and_mutual_friends_count</item>
+        <item name="mutualFriendsCountTextAppearance">@style/Sudox.Friends.MaybeYouKnowItem.MutualFriendsCountTextAppearance</item>
         <item name="nameTextAppearance">@style/Sudox.Friends.MaybeYouKnowItem.NameTextAppearance</item>
+        <item name="closeButtonStyle">@style/Sudox.Friends.MaybeYouKnowItem.CloseButton</item>
+        <item name="closeButtonTopMargin">@dimen/maybeyouknowitemview_close_button_top_margin</item>
+        <item name="closeButtonRightMargin">@dimen/maybeyouknowitemview_close_button_right_margin</item>
 
         <item name="android:maxHeight">@dimen/maybeyouknowitemview_height</item>
         <item name="android:minHeight">@dimen/maybeyouknowitemview_height</item>
@@ -74,10 +80,17 @@
         <item name="fontFamily">@font/opensans_bold</item>
     </style>
 
-    <style name="Sudox.Friends.MaybeYouKnowItem.FriendsCountTextAppearance" parent="">
-        <item name="android:textSize">@dimen/maybeyouknowitemview_friends_count_text_size</item>
-        <item name="android:textColor">@color/maybeyouknowitemview_friends_count_text_color</item>
+    <style name="Sudox.Friends.MaybeYouKnowItem.MutualFriendsCountTextAppearance" parent="">
+        <item name="android:textSize">@dimen/maybeyouknowitemview_mutual_friends_count_text_size</item>
+        <item name="android:textColor">@color/maybeyouknowitemview_mutual_friends_count_text_color</item>
         <item name="android:fontFamily">@font/opensans_bold</item>
         <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+
+    <style name="Sudox.Friends.MaybeYouKnowItem.CloseButton" parent="Sudox.Button">
+        <item name="iconHeight">@dimen/maybeyouknowitemview_close_button_icon_height</item>
+        <item name="iconWidth">@dimen/maybeyouknowitemview_close_button_icon_width</item>
+        <item name="iconDrawableTint">@color/maybeyouknowitemview_close_button_icon_tint</item>
+        <item name="iconDrawable">@drawable/ic_cancel</item>
     </style>
 </resources>

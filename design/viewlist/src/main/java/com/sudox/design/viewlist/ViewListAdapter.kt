@@ -62,7 +62,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             }
         }
 
-        bindItemHolder(holder, position).apply {
+        @Suppress("UNCHECKED_CAST")
+        bindItemHolder(holder as VH, position).apply {
             if (!canCreateMarginViaDecorators(position)) {
                 val itemMargin = getItemMargin(position) / 2
                 val positionAfterHeader = recalculatePositionRelativeHeader(position)
@@ -264,7 +265,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      * @param holder ViewHolder, в который нужно забить данные
      * @param position Позиция элемента, в который нужно забить данные
      */
-    abstract fun bindItemHolder(holder: RecyclerView.ViewHolder, position: Int)
+    abstract fun bindItemHolder(holder: VH, position: Int)
 
     /**
      * Возвращает тип View на определенной позиции

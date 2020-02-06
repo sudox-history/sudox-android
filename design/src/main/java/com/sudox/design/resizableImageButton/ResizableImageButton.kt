@@ -95,14 +95,16 @@ class ResizableImageButton : View {
     }
 
     fun setIconDrawable(drawable: Drawable?, fromRes: Boolean = false) {
-        drawable?.setBounds(0, 0, iconWidth, iconHeight)
-        drawable?.setTint(iconDrawableTint)
+        val newDrawable = drawable?.mutate()
+
+        newDrawable?.setBounds(0, 0, iconWidth, iconHeight)
+        newDrawable?.setTint(iconDrawableTint)
 
         if (!fromRes) {
             iconDrawableRes = 0
         }
 
-        iconDrawable = drawable
+        iconDrawable = newDrawable
         requestLayout()
         invalidate()
     }
