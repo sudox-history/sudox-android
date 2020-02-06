@@ -334,6 +334,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     open fun getFooterCount(): Int = 0
 
     /**
+     * Определяет возможность создания шапки/футера?
+     */
+    open fun canCreateHeaderOrFooter(): Boolean = true
+
+    /**
      * Возвращает количество элементов после шапки
      * Учитывать футеры при подсчете не нужно!
      *

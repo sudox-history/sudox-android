@@ -29,6 +29,10 @@ class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListene
         friendContentList.apply {
             layoutManager = LinearLayoutManager(context!!)
             adapter = FriendsAdapter(this).apply {
+                maybeYouKnowAdapter.removeUserCallback = {
+                    maybeYouKnowAdapter.maybeYouKnowVOs.removeItemAt(0)
+                }
+
                 acceptRequestCallback = {
                     semaphore.acquire()
 

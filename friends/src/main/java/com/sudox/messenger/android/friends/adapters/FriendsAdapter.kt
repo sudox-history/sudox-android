@@ -2,13 +2,13 @@ package com.sudox.messenger.android.friends.adapters
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.messenger.android.friends.R
 import com.sudox.messenger.android.friends.callbacks.FriendsSortingCallback
+import com.sudox.messenger.android.friends.createMaybeYouKnowList
 import com.sudox.messenger.android.friends.views.FriendItemView
 import com.sudox.messenger.android.friends.vos.FriendVO
 import com.sudox.messenger.android.friends.vos.IS_NOT_REQUEST_TIME
@@ -23,20 +23,13 @@ class FriendsAdapter(
        private val viewList: ViewList
 ) : ViewListAdapter<FriendsAdapter.ViewHolder>(viewList) {
 
-    val maybeYouKnowViewList = ViewList(viewList.context)
-    val maybeYouKnowAdapter = MaybeYouKnowAdapter(maybeYouKnowViewList)
+    val maybeYouKnowViewList = createMaybeYouKnowList(viewList.context)
+    val maybeYouKnowAdapter = maybeYouKnowViewList.adapter as MaybeYouKnowAdapter
     val onlineVOs = SortedList<FriendVO>(FriendVO::class.java, FriendsSortingCallback(this, ONLINE_FRIEND_ITEM_TYPE))
     val offlineVOs = SortedList<FriendVO>(FriendVO::class.java, FriendsSortingCallback(this, OFFLINE_FRIEND_ITEM_TYPE))
     val requestsVOs = SortedList<FriendVO>(FriendVO::class.java, FriendsSortingCallback(this, FRIEND_REQUEST_ITEM_TYPE))
     var acceptRequestCallback: ((FriendVO) -> (Unit))? = null
     var rejectRequestCallback: ((FriendVO) -> (Unit))? = null
-
-    init {
-        maybeYouKnowViewList.let {
-            it.layoutManager = LinearLayoutManager(viewList.context, LinearLayoutManager.HORIZONTAL, false)
-            it.adapter = maybeYouKnowAdapter
-        }
-    }
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(if (viewType == MAYBE_YOU_KNOW_ITEM_TYPE) {

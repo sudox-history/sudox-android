@@ -25,10 +25,10 @@ class MaybeYouKnowItemView : ViewGroup {
     private var closeButtonRightMargin = 0
     private var closeButtonTopMargin = 0
 
-    private var nameTextView = AppCompatTextView(context).apply { addView(this) }
-    private var friendsCountTextView = AppCompatTextView(context).apply { addView(this) }
-    private var photoImageView = CircleImageView(context).apply { addView(this) }
-    private var closeImageButton: ResizableImageButton? = null
+    var nameTextView = AppCompatTextView(context).apply { addView(this) }
+    var friendsCountTextView = AppCompatTextView(context).apply { addView(this) }
+    var photoImageView = CircleImageView(context).apply { addView(this) }
+    var closeImageButton: ResizableImageButton? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.maybeYouKnowItemViewStyle)
@@ -79,7 +79,10 @@ class MaybeYouKnowItemView : ViewGroup {
         measureChild(nameTextView, textsWidthSpec, heightMeasureSpec)
         measureChild(friendsCountTextView, textsWidthSpec, heightMeasureSpec)
 
-        setMeasuredDimension(minimumWidth + paddingRight + paddingLeft, minimumHeight + paddingTop + paddingBottom)
+        val needWidth = minimumWidth + paddingRight + paddingLeft
+        val needHeight = minimumHeight + paddingTop + paddingBottom
+
+        setMeasuredDimension(needWidth, needHeight)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -145,7 +148,7 @@ class MaybeYouKnowItemView : ViewGroup {
     }
 
     /**
-     * Устанавливает количество друзей
+     * Устанавливает количество знакомых друзей
      *
      * @param friendsCount Количество друзей
      */

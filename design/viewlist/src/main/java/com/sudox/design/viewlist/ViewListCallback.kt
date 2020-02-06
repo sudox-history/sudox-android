@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.SortedList
  */
 abstract class ViewListCallback<T>(
         val viewListAdapter: ViewListAdapter<*>,
-        val headerType: Int
+        val headerType: Int = 0
 ) : SortedList.Callback<T>() {
 
     override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
@@ -22,18 +22,34 @@ abstract class ViewListCallback<T>(
     }
 
     override fun onMoved(fromPosition: Int, toPosition: Int) {
-        viewListAdapter.notifyItemMovedAfterHeader(headerType, fromPosition, toPosition)
+        if (viewListAdapter.canCreateHeaderOrFooter()) {
+            viewListAdapter.notifyItemMovedAfterHeader(headerType, fromPosition, toPosition)
+        } else {
+            viewListAdapter.notifyItemMoved(fromPosition, toPosition)
+        }
     }
 
     override fun onChanged(position: Int, count: Int) {
-        viewListAdapter.notifyItemRangeChangedAfterHeader(headerType, position, count)
+        if (viewListAdapter.canCreateHeaderOrFooter()) {
+            viewListAdapter.notifyItemRangeChangedAfterHeader(headerType, position, count)
+        } else {
+            viewListAdapter.notifyItemRangeChanged(position, count)
+        }
     }
 
     override fun onInserted(position: Int, count: Int) {
-        viewListAdapter.notifyItemRangeInsertedAfterHeader(headerType, position, count)
+        if (viewListAdapter.canCreateHeaderOrFooter()) {
+            viewListAdapter.notifyItemRangeInsertedAfterHeader(headerType, position, count)
+        } else {
+            viewListAdapter.notifyItemRangeInserted(position, count)
+        }
     }
 
     override fun onRemoved(position: Int, count: Int) {
-        viewListAdapter.notifyItemRangeRemovedAfterHeader(headerType, position, count)
+        if (viewListAdapter.canCreateHeaderOrFooter()) {
+            viewListAdapter.notifyItemRangeRemovedAfterHeader(headerType, position, count)
+        } else {
+            viewListAdapter.notifyItemRangeRemoved(position, count)
+        }
     }
 }
