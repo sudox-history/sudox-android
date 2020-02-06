@@ -52,6 +52,7 @@
     <style name="Sudox.Screen" parent="">
         <item name="android:clipToPadding">false</item>
         <item name="android:paddingTop">@dimen/screen_top_padding</item>
+        <item name="android:paddingBottom">@dimen/screen_top_padding</item>
         <item name="android:paddingRight">@dimen/screen_right_padding</item>
         <item name="android:paddingLeft">@dimen/screen_left_padding</item>
     </style>

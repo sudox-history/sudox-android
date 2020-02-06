@@ -8,7 +8,7 @@ import com.sudox.design.lists.decorators.MarginItemDecoration
 
 fun createMomentsRecyclerView(context: Context): RecyclerView {
     val horizontalMargin = context.resources.getDimensionPixelSize(R.dimen.momentadapter_horizontal_margin)
-    val verticalMargin = context.resources.getDimensionPixelSize(R.dimen.momentadapter_vertical_margim)
+    val verticalMargin = context.resources.getDimensionPixelSize(R.dimen.momentadapter_vertical_margin)
 
     return RecyclerView(context).apply {
         addItemDecoration(MarginItemDecoration(verticalMargin, horizontalMargin))

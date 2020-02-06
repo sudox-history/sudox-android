@@ -154,7 +154,7 @@ class MaybeYouKnowItemView : ViewGroup {
      */
     fun setMutualFriendsCount(friendsCount: Int) {
         friendsCountTextView.text = context.resources.getQuantityString(
-                R.plurals.friends, friendsCount, friendsCount
+                R.plurals.mutual, friendsCount, friendsCount
         )
     }
 }

@@ -13,6 +13,7 @@ import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
 import com.sudox.messenger.android.friends.adapters.FriendsAdapter
 import com.sudox.messenger.android.friends.vos.FriendVO
 import com.sudox.messenger.android.friends.vos.MaybeYouKnowVO
+import com.sudox.messenger.android.friends.vos.SEEN_TIME_ONLINE
 import kotlinx.android.synthetic.main.fragment_friends.friendContentList
 import java.util.concurrent.Semaphore
 
@@ -89,6 +90,7 @@ class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListene
                 requestsVOs.add(FriendVO(1, "Yaroslav", 1L, counter++, context.getDrawable(R.drawable.drawable_photo_2)!!))
                 requestsVOs.add(FriendVO(2, "Anton", 2L, counter++, context.getDrawable(R.drawable.drawable_photo_1)!!))
                 requestsVOs.add(FriendVO(3, "Mr. Pozdnyakov", 3L, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
+                requestsVOs.add(FriendVO(4, "Pozdnyakov", SEEN_TIME_ONLINE, counter++, context.getDrawable(R.drawable.drawable_photo_3)!!))
             }
         }
     }
