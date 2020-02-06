@@ -47,11 +47,13 @@ class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListene
                     add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
                 }
 
+                friendClickCallback = {}
                 maybeYouKnowAdapter.userClickCallback = {
                     maybeYouKnowAdapter.maybeYouKnowVOs.add(MaybeYouKnowVO(
                             1, "Gandon", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_1)!!
                     ))
                 }
+
 
                 maybeYouKnowAdapter.removeUserCallback = {
                     maybeYouKnowAdapter.maybeYouKnowVOs.removeItemAt(0)

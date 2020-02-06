@@ -20,7 +20,7 @@ const val ONLINE_FRIEND_ITEM_TYPE = 2
 const val OFFLINE_FRIEND_ITEM_TYPE = 3
 
 class FriendsAdapter(
-       private val viewList: ViewList
+        private val viewList: ViewList
 ) : ViewListAdapter<FriendsAdapter.ViewHolder>(viewList) {
 
     val maybeYouKnowViewList = createMaybeYouKnowList(viewList.context)
@@ -30,6 +30,7 @@ class FriendsAdapter(
     val requestsVOs = SortedList<FriendVO>(FriendVO::class.java, FriendsSortingCallback(this, FRIEND_REQUEST_ITEM_TYPE))
     var acceptRequestCallback: ((FriendVO) -> (Unit))? = null
     var rejectRequestCallback: ((FriendVO) -> (Unit))? = null
+    var friendClickCallback: ((FriendVO) -> (Unit))? = null
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(if (viewType == MAYBE_YOU_KNOW_ITEM_TYPE) {
@@ -40,36 +41,50 @@ class FriendsAdapter(
     }
 
     override fun bindItemHolder(holder: ViewHolder, position: Int) {
-        if (holder.view is FriendItemView) {
-            val elementPosition = recalculatePositionRelativeHeader(position)
-            val vo = if (holder.itemViewType == FRIEND_REQUEST_ITEM_TYPE) {
-                requestsVOs[elementPosition]
-            } else if (holder.itemViewType == ONLINE_FRIEND_ITEM_TYPE) {
-                onlineVOs[elementPosition]
-            } else if (holder.itemViewType == OFFLINE_FRIEND_ITEM_TYPE) {
-                offlineVOs[elementPosition]
-            } else {
-                null
-            } ?: return
+        if (holder.view !is FriendItemView) {
+            return
+        }
 
-            holder.view.setUserName(vo.name)
-            holder.view.setUserPhoto(vo.photo)
-            holder.view.toggleAcceptAndRejectButtons(holder.itemViewType == FRIEND_REQUEST_ITEM_TYPE)
+        val vo = getNeededVO(position, holder)!!
+
+        holder.view.let {
+            it.setUserName(vo.name)
+            it.setUserPhoto(vo.photo)
+            it.toggleAcceptAndRejectButtons(holder.itemViewType == FRIEND_REQUEST_ITEM_TYPE)
+            it.setOnClickListener {
+                friendClickCallback!!(getNeededVO(holder.adapterPosition, holder)!!)
+            }
 
             if (vo.requestTime != IS_NOT_REQUEST_TIME) {
-                holder.view.acceptImageButton!!.setOnClickListener { acceptRequestCallback?.invoke(vo) }
-                holder.view.rejectImageButton!!.setOnClickListener { rejectRequestCallback?.invoke(vo) }
-            } else {
-                holder.view.acceptImageButton!!.setOnClickListener(null)
-                holder.view.rejectImageButton!!.setOnClickListener(null)
+                it.acceptImageButton!!.setOnClickListener {
+                    acceptRequestCallback!!(getNeededVO(holder.adapterPosition, holder)!!)
+                }
+
+                it.rejectImageButton!!.setOnClickListener {
+                    rejectRequestCallback!!(getNeededVO(holder.adapterPosition, holder)!!)
+                }
             }
 
-            if (vo.seenTime == SEEN_TIME_ONLINE) {
-                holder.view.setUserOnline()
+            if (vo.seenTime != SEEN_TIME_ONLINE) {
+                it.setUserOffline(vo.seenTime)
             } else {
-                holder.view.setUserOffline(vo.seenTime)
+                it.setUserOnline()
             }
         }
+    }
+
+    private fun getNeededVO(position: Int, holder: ViewHolder): FriendVO? {
+        val voPosition = recalculatePositionRelativeHeader(position)
+
+        return if (holder.itemViewType == FRIEND_REQUEST_ITEM_TYPE) {
+            requestsVOs[voPosition]
+        } else if (holder.itemViewType == ONLINE_FRIEND_ITEM_TYPE) {
+            onlineVOs[voPosition]
+        } else if (holder.itemViewType == OFFLINE_FRIEND_ITEM_TYPE) {
+            offlineVOs[voPosition]
+        } else {
+            null
+        }!!
     }
 
     override fun getPositionForNewHeader(type: Int): Int {
