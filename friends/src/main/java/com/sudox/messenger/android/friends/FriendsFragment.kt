@@ -12,12 +12,14 @@ import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
 import com.sudox.messenger.android.friends.adapters.FriendsAdapter
 import com.sudox.messenger.android.friends.vos.FriendVO
+import com.sudox.messenger.android.friends.vos.MaybeYouKnowVO
 import kotlinx.android.synthetic.main.fragment_friends.friendContentList
 import java.util.concurrent.Semaphore
 
 class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListener {
 
     private var counter = 1L
+    private var counterMaybeYouKnow = 1
     private var namesCount = 0
     private var semaphore = Semaphore(1)
 
@@ -29,6 +31,28 @@ class FriendsFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListene
         friendContentList.apply {
             layoutManager = LinearLayoutManager(context!!)
             adapter = FriendsAdapter(this).apply {
+                maybeYouKnowAdapter.maybeYouKnowVOs.apply {
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                    add(MaybeYouKnowVO(1, "Yaroslav", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_2)!!))
+                }
+
+                maybeYouKnowAdapter.userClickCallback = {
+                    maybeYouKnowAdapter.maybeYouKnowVOs.add(MaybeYouKnowVO(
+                            1, "Gandon", true, counterMaybeYouKnow++, context.getDrawable(R.drawable.drawable_photo_1)!!
+                    ))
+                }
+
                 maybeYouKnowAdapter.removeUserCallback = {
                     maybeYouKnowAdapter.maybeYouKnowVOs.removeItemAt(0)
                 }

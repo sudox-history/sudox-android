@@ -27,6 +27,7 @@ class ViewList : RecyclerView {
 
         initialPaddingRight = paddingRight
         initialPaddingLeft = paddingLeft
+
         updatePadding(left = 0, right = 0)
     }
 

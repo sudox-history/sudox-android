@@ -56,6 +56,8 @@
         <item name="android:paddingBottom">@dimen/maybeyouknowitemview_padding_bottom</item>
         <item name="android:paddingTop">@dimen/maybeyouknowitemview_padding_top</item>
 
+        <item name="android:outlineProvider">bounds</item>
+
         <item name="mutualFriendsCountMask">@string/mutual_friends_mask</item>
         <item name="photoWidth">@dimen/maybeyouknowitemview_photo_width</item>
         <item name="photoHeight">@dimen/maybeyouknowitemview_photo_height</item>

@@ -15,6 +15,28 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var initialTopPadding = -1
+    private var dataObserver: RecyclerView.AdapterDataObserver? = null
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        dataObserver = object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+
+                if (positionStart == 0 && !viewList.canScrollVertically(-1)) {
+                    viewList.scrollToPosition(0)
+                }
+            }
+        }
+
+        registerAdapterDataObserver(dataObserver!!)
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        if (dataObserver != null) {
+            unregisterAdapterDataObserver(dataObserver!!)
+            dataObserver = null
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == HEADER_VIEW_TYPE && getHeadersCount() > 0) {

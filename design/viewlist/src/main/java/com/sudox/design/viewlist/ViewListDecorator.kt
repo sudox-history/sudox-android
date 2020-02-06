@@ -22,19 +22,11 @@ class ViewListDecorator(
 
         val itemMargin = adapter.getItemMargin(position)
 
-        if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
-            if (position == 0) {
-                outRect.bottom = itemMargin / 2
+        if (position < adapter.itemCount - 1) {
+            if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
+                outRect.top = itemMargin
             } else {
-                outRect.top = itemMargin / 2
-                outRect.bottom = itemMargin / 2
-            }
-        } else {
-            if (position == 0) {
-                outRect.right = itemMargin / 2
-            } else {
-                outRect.left = itemMargin / 2
-                outRect.right = itemMargin / 2
+                outRect.right = itemMargin
             }
         }
     }

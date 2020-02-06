@@ -14,22 +14,9 @@ class MaybeYouKnowAdapter(
        private val viewList: ViewList
 ) : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>(viewList) {
 
+    var userClickCallback: ((MaybeYouKnowVO) -> (Unit))? = null
     var removeUserCallback: ((MaybeYouKnowVO) -> (Unit))? = null
-    val maybeYouKnowVOs = SortedList<MaybeYouKnowVO>(MaybeYouKnowVO::class.java, MaybeYouKnowSortingCallback(this)).apply {
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 1024, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 16384, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-        add(MaybeYouKnowVO(1, "Yaroslav", true, 5, viewList.context.getDrawable(R.drawable.drawable_photo_2)!!))
-    }
+    val maybeYouKnowVOs = SortedList<MaybeYouKnowVO>(MaybeYouKnowVO::class.java, MaybeYouKnowSortingCallback(this))
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(MaybeYouKnowItemView(viewList.context))
@@ -40,6 +27,7 @@ class MaybeYouKnowAdapter(
 
         holder.view.let {
             it.closeImageButton!!.setOnClickListener { removeUserCallback!!(maybeYouKnowVOs[holder.adapterPosition]) }
+            it.setOnClickListener { userClickCallback!!(maybeYouKnowVOs[holder.adapterPosition]) }
             it.setMutualFriendsCount(vo.mutualFriendsCount)
             it.setUserOnline(vo.isOnline)
             it.setUserPhoto(vo.photo)
