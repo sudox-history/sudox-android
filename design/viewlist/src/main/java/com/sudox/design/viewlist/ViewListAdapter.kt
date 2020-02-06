@@ -20,9 +20,12 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         dataObserver = object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                super.onItemRangeInserted(positionStart, itemCount)
+                val orientation = (viewList.layoutManager as? LinearLayoutManager)?.orientation ?: 0
 
-                if (positionStart == 0 && !viewList.canScrollVertically(-1)) {
+                if (positionStart == 0 &&
+                        ((!viewList.canScrollVertically(-1) && orientation == LinearLayoutManager.VERTICAL) ||
+                                (!viewList.canScrollHorizontally(-1) && orientation == LinearLayoutManager.HORIZONTAL))
+                ) {
                     viewList.scrollToPosition(0)
                 }
             }
