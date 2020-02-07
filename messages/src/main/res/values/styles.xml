@@ -10,6 +10,8 @@
         <item name="messageStatusIcon">@drawable/ic_done_messages</item>
         <item name="messageStatusDoneIcon">@drawable/ic_done_all_messages</item>
         <item name="messageStatusSize">@dimen/dialogitemview_message_status_size</item>
+        <item name="dialogMutedIcon">@drawable/ic_volume_off</item>
+        <item name="dialogMutedIconSize">@dimen/dialogitemview_dialog_muted_icon_size</item>
 
         <item name="innerImageToTextMargin">@dimen/dialogitemview_inner_image_to_text_margin</item>
         <item name="innerDialogNameToTopMargin">
@@ -19,12 +21,21 @@
             @dimen/dialogitemview_inner_dialog_name_to_content_margin
         </item>
         <item name="innerDateToTopMargin">@dimen/dialogitemview_inner_date_to_top_margin</item>
-        <item name="innerDateToCountMargin">@dimen/dialogitemview_inner_date_to_count_margin</item>
         <item name="innerMessageStatusMargin">@dimen/dialogitemview_inner_message_status_margin
         </item>
         <item name="innerContentToRightViewMargin">
             @dimen/dialogitemview_inner_content_to_right_view_margin
         </item>
+        <item name="innerContentToRightBorderMargin">
+            @dimen/dialogitemview_inner_content_to_right_border_margin
+        </item>
+        <item name="innerMutedIconToDateMargin">
+            @dimen/dialogitemview_inner_muted_icon_to_date_margin
+        </item>
+        <item name="innerMutedIconToTopMargin">
+            @dimen/dialogitemview_inner_muted_icon_to_top_margin
+        </item>
+
         <item name="countMessagesInnerHorizontalMargin">
             @dimen/dialogitemview_count_messages_inner_horizontal_margin
         </item>
@@ -44,6 +55,7 @@
         <item name="messageSentByUserHintColor">
             @color/dialogitemview_message_sent_by_user_hint_color
         </item>
+        <item name="dialogMutedColor">@color/dialogitemview_dialog_muted_color</item>
 
         <item name="dialogNameTextAppearance">
             @style/Sudox.Messages.DialogItemView.DialogNameTextAppearance

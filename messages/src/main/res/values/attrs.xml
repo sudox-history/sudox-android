@@ -9,14 +9,18 @@
         <attr name="messageStatusIcon" format="reference"/>
         <attr name="messageStatusDoneIcon" format="reference"/>
         <attr name="messageStatusSize" format="dimension"/>
+        <attr name="dialogMutedIcon" format="reference"/>
+        <attr name="dialogMutedIconSize" format="dimension"/>
 
         <attr name="innerImageToTextMargin" format="dimension"/>
         <attr name="innerDialogNameToTopMargin" format="dimension"/>
         <attr name="innerDialogNameToContentMargin" format="dimension"/>
         <attr name="innerDateToTopMargin" format="dimension"/>
-        <attr name="innerDateToCountMargin" format="dimension"/>
         <attr name="innerMessageStatusMargin" format="dimension"/>
         <attr name="innerContentToRightViewMargin" format="dimension"/>
+        <attr name="innerContentToRightBorderMargin" format="dimension"/>
+        <attr name="innerMutedIconToDateMargin" format="dimension"/>
+        <attr name="innerMutedIconToTopMargin" format="dimension"/>
 
         <attr name="countMessagesHeight" format="dimension"/>
         <attr name="countMessagesRadius" format="dimension"/>
@@ -30,6 +34,7 @@
         <attr name="newMessageContentColor" format="color"/>
         <attr name="readMessageContentColor" format="color"/>
         <attr name="messageSentByUserHintColor" format="color"/>
+        <attr name="dialogMutedColor" format="color"/>
 
         <attr name="dialogNameTextAppearance" format="dimension"/>
         <attr name="dialogContentTextAppearance" format="dimension"/>

@@ -10,4 +10,5 @@
     <color name="dialogitemview_new_message_content_color">#000000</color>
     <color name="dialogitemview_message_sent_by_user_hint_color">#BDBDBD</color>
     <color name="dialogitemview_message_count_text_color">#FFFFFF</color>
+    <color name="dialogitemview_dialog_muted_color">#BDBDBD</color>
 </resources>
