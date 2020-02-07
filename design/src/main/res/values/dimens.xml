@@ -55,8 +55,8 @@
     <dimen name="navigationbarbutton_icon_width">25dp</dimen>
     <dimen name="navigationbarbutton_icon_height">25dp</dimen>
 
-    <dimen name="tablayout_indicator_padding_left">6dp</dimen>
-    <dimen name="tablayout_indicator_padding_right">6dp</dimen>
+    <dimen name="tablayout_indicator_padding_left">3dp</dimen>
+    <dimen name="tablayout_indicator_padding_right">3dp</dimen>
     <dimen name="tablayout_indicator_height">3dp</dimen>
     <dimen name="tablayout_indicator_margin">5dp</dimen>
 
