@@ -40,12 +40,12 @@
     </style>
 
     <style name="Sudox.Friends.FriendItemView.Buttons.Accept" parent="Sudox.Friends.FriendItemView.Buttons">
-        <item name="iconDrawableTint">@color/frienditemview_accept_button_icon_tint</item>
+        <item name="iconTint">@color/frienditemview_accept_button_icon_tint</item>
         <item name="iconDrawable">@drawable/ic_accept</item>
     </style>
 
     <style name="Sudox.Friends.FriendItemView.Buttons.Reject" parent="Sudox.Friends.FriendItemView.Buttons">
-        <item name="iconDrawableTint">@color/frienditemview_reject_button_icon_tint</item>
+        <item name="iconTint">@color/frienditemview_reject_button_icon_tint</item>
         <item name="iconDrawable">@drawable/ic_cancel</item>
     </style>
 
@@ -92,7 +92,7 @@
     <style name="Sudox.Friends.MaybeYouKnowItem.CloseButton" parent="Sudox.Button">
         <item name="iconHeight">@dimen/maybeyouknowitemview_close_button_icon_height</item>
         <item name="iconWidth">@dimen/maybeyouknowitemview_close_button_icon_width</item>
-        <item name="iconDrawableTint">@color/maybeyouknowitemview_close_button_icon_tint</item>
+        <item name="iconTint">@color/maybeyouknowitemview_close_button_icon_tint</item>
         <item name="iconDrawable">@drawable/ic_cancel</item>
     </style>
 </resources>

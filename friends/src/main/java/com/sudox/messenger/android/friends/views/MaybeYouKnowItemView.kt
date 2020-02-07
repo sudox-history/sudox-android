@@ -15,7 +15,7 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.design.circleImageView.CircleImageView
-import com.sudox.design.resizableImageButton.ResizableImageButton
+import com.sudox.design.imagebutton.ImageButton
 import com.sudox.messenger.android.friends.R
 
 class MaybeYouKnowItemView : ViewGroup {
@@ -28,7 +28,7 @@ class MaybeYouKnowItemView : ViewGroup {
     var nameTextView = AppCompatTextView(context).apply { addView(this) }
     var friendsCountTextView = AppCompatTextView(context).apply { addView(this) }
     var photoImageView = CircleImageView(context).apply { addView(this) }
-    var closeImageButton: ResizableImageButton? = null
+    var closeImageButton: ImageButton? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.maybeYouKnowItemViewStyle)
@@ -36,7 +36,7 @@ class MaybeYouKnowItemView : ViewGroup {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.MaybeYouKnowItemView, defStyleAttr, 0).use {
-            closeImageButton = ResizableImageButton(ContextThemeWrapper(context,
+            closeImageButton = ImageButton(ContextThemeWrapper(context,
                     it.getResourceIdOrThrow(R.styleable.MaybeYouKnowItemView_closeButtonStyle)))
 
             marginBetweenNameAndPhoto = it.getDimensionPixelSize(R.styleable.MaybeYouKnowItemView_marginBetweenNameAndPhoto, 0)

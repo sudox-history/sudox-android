@@ -17,9 +17,8 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.getStringOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
-import androidx.lifecycle.LiveData
 import com.sudox.design.circleImageView.CircleImageView
-import com.sudox.design.resizableImageButton.ResizableImageButton
+import com.sudox.design.imagebutton.ImageButton
 import com.sudox.messenger.android.friends.R
 import kotlin.math.max
 import kotlin.math.min
@@ -35,8 +34,8 @@ class FriendItemView : ViewGroup, View.OnClickListener {
     private var marginBetweenNameAndStatus = 0
     private var marginBetweenButtons = 0
 
-    var acceptImageButton: ResizableImageButton? = null
-    var rejectImageButton: ResizableImageButton? = null
+    var acceptImageButton: ImageButton? = null
+    var rejectImageButton: ImageButton? = null
 
     private var statusTextView = AppCompatTextView(context).apply { addView(this) }
     private var photoImageView = CircleImageView(context).apply { addView(this) }
@@ -48,9 +47,9 @@ class FriendItemView : ViewGroup, View.OnClickListener {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.FriendItemView, defStyleAttr, 0).use {
-            acceptImageButton = ResizableImageButton(ContextThemeWrapper(
+            acceptImageButton = ImageButton(ContextThemeWrapper(
                     context, it.getResourceIdOrThrow(R.styleable.FriendItemView_acceptButtonStyle)))
-            rejectImageButton = ResizableImageButton(ContextThemeWrapper(
+            rejectImageButton = ImageButton(ContextThemeWrapper(
                     context, it.getResourceIdOrThrow(R.styleable.FriendItemView_rejectButtonStyle)))
 
             addView(acceptImageButton)

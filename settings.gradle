@@ -1,12 +1,14 @@
 include ':app',
         ':api',
         ':design',
+        ':design:viewlist',
+        ':design:common',
         ':auth',
         ':core',
         ':people',
         ':activity',
         ':moments',
-        ':news'
-include ':friends'
-include ':design:viewlist'
-include ':design:common'
+        ':news',
+        ':friends'
+include ':design:saveableview'
+include ':design:imagebutton'
