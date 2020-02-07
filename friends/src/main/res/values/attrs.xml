@@ -7,9 +7,10 @@
         <attr name="statusTextAppearance" format="reference" />
         <attr name="marginBetweenNameAndStatus" format="dimension" />
         <attr name="marginBetweenAvatarAndTexts" format="dimension" />
+        <attr name="marginBetweenButtonsAndTexts" format="dimension" />
+        <attr name="marginBetweenButtons" format="dimension" />
         <attr name="acceptButtonStyle" format="reference" />
         <attr name="rejectButtonStyle" format="reference" />
-        <attr name="marginBetweenButtons" format="dimension" />
 
         <attr name="offlineTextMask" format="string" />
         <attr name="offlineTextColor" format="color" />

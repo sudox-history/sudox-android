@@ -6,14 +6,15 @@
     <dimen name="frienditemview_status_text_size">15sp</dimen>
     <dimen name="frienditemview_margin_between_avatar_and_texts">17dp</dimen>
     <dimen name="frienditemview_margin_between_name_and_status">3dp</dimen>
+    <dimen name="frienditemview_margin_between_buttons_and_texts">38dp</dimen>
+    <dimen name="frienditemview_margin_between_buttons">15dp</dimen>
     <dimen name="frienditemview_buttons_icon_width">25dp</dimen>
     <dimen name="frienditemview_buttons_icon_height">25dp</dimen>
-    <dimen name="frienditemview_margin_between_buttons">23dp</dimen>
 
     <dimen name="maybeyouknowitemview_close_button_top_margin">7dp</dimen>
     <dimen name="maybeyouknowitemview_close_button_right_margin">8dp</dimen>
-    <dimen name="maybeyouknowitemview_close_button_icon_height">21dp</dimen>
-    <dimen name="maybeyouknowitemview_close_button_icon_width">21dp</dimen>
+    <dimen name="maybeyouknowitemview_close_button_icon_height">25dp</dimen>
+    <dimen name="maybeyouknowitemview_close_button_icon_width">25dp</dimen>
     <dimen name="maybeyouknowitemview_margin_between_name_and_photo">11dp</dimen>
     <dimen name="maybeyouknowitemview_margin_between_name_and_mutual_friends_count">1dp</dimen>
     <dimen name="maybeyouknowitemview_mutual_friends_count_text_size">15sp</dimen>

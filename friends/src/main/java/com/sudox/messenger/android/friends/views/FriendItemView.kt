@@ -21,9 +21,8 @@ import com.sudox.design.circleImageView.CircleImageView
 import com.sudox.design.imagebutton.ImageButton
 import com.sudox.messenger.android.friends.R
 import kotlin.math.max
-import kotlin.math.min
 
-class FriendItemView : ViewGroup, View.OnClickListener {
+class FriendItemView : ViewGroup {
 
     private var onlineTextColor = 0
     private var offlineTextColor = 0
@@ -32,6 +31,7 @@ class FriendItemView : ViewGroup, View.OnClickListener {
 
     private var marginBetweenAvatarAndTexts = 0
     private var marginBetweenNameAndStatus = 0
+    private var marginBetweenButtonsAndTexts = 0
     private var marginBetweenButtons = 0
 
     var acceptImageButton: ImageButton? = null
@@ -63,6 +63,7 @@ class FriendItemView : ViewGroup, View.OnClickListener {
 
             marginBetweenAvatarAndTexts = it.getDimensionPixelSize(R.styleable.FriendItemView_marginBetweenAvatarAndTexts, 0)
             marginBetweenNameAndStatus = it.getDimensionPixelSize(R.styleable.FriendItemView_marginBetweenNameAndStatus, 0)
+            marginBetweenButtonsAndTexts = it.getDimensionPixelSize(R.styleable.FriendItemView_marginBetweenButtonsAndTexts, 0)
             marginBetweenButtons = it.getDimensionPixelSize(R.styleable.FriendItemView_marginBetweenButtons, 0)
 
             photoImageView.layoutParams = LayoutParams(photoWidth, photoHeight)
@@ -91,11 +92,6 @@ class FriendItemView : ViewGroup, View.OnClickListener {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val widthMode = MeasureSpec.getMode(widthMeasureSpec)
-        val heightMode = MeasureSpec.getMode(heightMeasureSpec)
-        val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
-        val availableHeight = MeasureSpec.getSize(heightMeasureSpec)
-
         measureChild(nameTextView, widthMeasureSpec, heightMeasureSpec)
         measureChild(photoImageView, widthMeasureSpec, heightMeasureSpec)
         measureChild(statusTextView, widthMeasureSpec, heightMeasureSpec)
@@ -109,42 +105,36 @@ class FriendItemView : ViewGroup, View.OnClickListener {
             needWidth += rejectImageButton!!.measuredWidth
         }
 
-        val measuredWidth = if (widthMode == MeasureSpec.EXACTLY || widthMode == MeasureSpec.AT_MOST) {
-            val textBlockWidth = availableWidth - needWidth
+        val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
+        val textBlockWidth = availableWidth - needWidth
+        val textBlockWidthSpec = MeasureSpec.makeMeasureSpec(textBlockWidth, MeasureSpec.EXACTLY)
 
-            measureChild(nameTextView,
-                    MeasureSpec.makeMeasureSpec(textBlockWidth, MeasureSpec.EXACTLY),
-                    heightMeasureSpec
-            )
-
-            measureChild(statusTextView,
-                    MeasureSpec.makeMeasureSpec(textBlockWidth, MeasureSpec.EXACTLY),
-                    heightMeasureSpec
-            )
-
-            availableWidth
-        } else {
-            needWidth += max(nameTextView.measuredWidth, rejectImageButton!!.measuredWidth)
-            needWidth
-        }
+        measureChild(nameTextView, textBlockWidthSpec, heightMeasureSpec)
+        measureChild(statusTextView, textBlockWidthSpec, heightMeasureSpec)
 
         val needHeight = paddingTop +
                 max(max(max(nameTextView.measuredHeight + statusTextView.measuredHeight, photoImageView.measuredHeight),
                         acceptImageButton!!.measuredHeight),
                         rejectImageButton!!.measuredHeight) + paddingBottom
 
-        val measuredHeight = if (heightMode == MeasureSpec.EXACTLY) {
-            availableHeight
-        } else if (heightMode == MeasureSpec.AT_MOST) {
-            min(needHeight, availableHeight)
-        } else {
-            needHeight
-        }
-
-        setMeasuredDimension(measuredWidth, measuredHeight)
+        setMeasuredDimension(availableWidth, needHeight)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+        val rejectButtonRightBorder = measuredWidth - paddingRight
+        val rejectButtonLeftBorder = rejectButtonRightBorder - rejectImageButton!!.measuredWidth
+        val rejectButtonTopBorder = measuredHeight / 2 - rejectImageButton!!.measuredHeight / 2
+        val rejectButtonBottomBorder = rejectButtonTopBorder + rejectImageButton!!.measuredHeight
+
+        rejectImageButton!!.layout(rejectButtonLeftBorder, rejectButtonTopBorder, rejectButtonRightBorder, rejectButtonBottomBorder)
+
+        val acceptButtonRightBorder = rejectButtonLeftBorder - marginBetweenButtons
+        val acceptButtonLeftBorder = acceptButtonRightBorder - acceptImageButton!!.measuredWidth
+        val acceptButtonTopBorder = measuredHeight / 2 - acceptImageButton!!.measuredHeight / 2
+        val acceptButtonBottomBorder = rejectButtonTopBorder + acceptImageButton!!.measuredHeight
+
+        acceptImageButton!!.layout(acceptButtonLeftBorder, acceptButtonTopBorder, acceptButtonRightBorder, acceptButtonBottomBorder)
+
         val photoLeftBorder = paddingLeft
         val photoRightBorder = photoLeftBorder + photoImageView.measuredWidth
         val photoTopBorder = paddingTop
@@ -155,34 +145,20 @@ class FriendItemView : ViewGroup, View.OnClickListener {
         val nameBottomBorder = measuredHeight / 2 + marginBetweenNameAndStatus / 2
         val nameTopBorder = nameBottomBorder - nameTextView.measuredHeight
         val nameLeftBorder = photoRightBorder + marginBetweenAvatarAndTexts
-        val nameRightBorder = nameLeftBorder + nameTextView.measuredWidth
-
-        nameTextView.layout(nameLeftBorder, nameTopBorder, nameRightBorder, nameBottomBorder)
+        var nameRightBorder = nameLeftBorder + nameTextView.measuredWidth
 
         val statusTopBorder = measuredHeight / 2 - marginBetweenNameAndStatus / 2
         val statusBottomBorder = statusTopBorder + statusTextView.measuredHeight
         val statusLeftBorder = photoRightBorder + marginBetweenAvatarAndTexts
-        val statusRightBorder = statusLeftBorder + statusTextView.measuredWidth
+        var statusRightBorder = statusLeftBorder + statusTextView.measuredWidth
 
+        if (acceptImageButton!!.visibility == View.VISIBLE) {
+            nameRightBorder -= marginBetweenButtons
+            statusRightBorder -= marginBetweenButtons
+        }
+
+        nameTextView.layout(nameLeftBorder, nameTopBorder, nameRightBorder, nameBottomBorder)
         statusTextView.layout(statusLeftBorder, statusTopBorder, statusRightBorder, statusBottomBorder)
-
-        val rejectButtonRightBorder = measuredWidth
-        val rejectButtonLeftBorder = rejectButtonRightBorder - rejectImageButton!!.measuredWidth - paddingRight
-
-        val buttonsSize = rejectButtonRightBorder - rejectButtonLeftBorder
-        val buttonsTopBorder = measuredHeight / 2 - buttonsSize / 2
-        val buttonsBottomBorder = buttonsTopBorder + buttonsSize
-
-        rejectImageButton!!.layout(rejectButtonLeftBorder, buttonsTopBorder, rejectButtonRightBorder, buttonsBottomBorder)
-
-        val acceptButtonRightBorder = rejectButtonLeftBorder - (marginBetweenButtons - buttonsSize / 2)
-        val acceptButtonLeftBorder = acceptButtonRightBorder - buttonsSize
-
-        acceptImageButton!!.layout(acceptButtonLeftBorder, buttonsTopBorder, acceptButtonRightBorder, buttonsBottomBorder)
-    }
-
-    override fun onClick(view: View) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**

@@ -8,6 +8,7 @@
         <item name="photoHeight">@dimen/frienditemview_photo_height</item>
         <item name="marginBetweenNameAndStatus">@dimen/frienditemview_margin_between_name_and_status</item>
         <item name="marginBetweenAvatarAndTexts">@dimen/frienditemview_margin_between_avatar_and_texts</item>
+        <item name="marginBetweenButtonsAndTexts">@dimen/frienditemview_margin_between_buttons_and_texts</item>
         <item name="marginBetweenButtons">@dimen/frienditemview_margin_between_buttons</item>
 
         <item name="nameTextAppearance">@style/Sudox.Friends.FriendItemView.NameTextAppearance</item>
