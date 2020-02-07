@@ -153,14 +153,14 @@ class FriendItemView : ViewGroup, View.OnClickListener {
 
         photoImageView.layout(photoLeftBorder, photoTopBorder, photoRightBorder, photoBottomBorder)
 
-        val nameBottomBorder = measuredHeight / 2 - marginBetweenNameAndStatus / 2
+        val nameBottomBorder = measuredHeight / 2 + marginBetweenNameAndStatus / 2
         val nameTopBorder = nameBottomBorder - nameTextView.measuredHeight
         val nameLeftBorder = photoRightBorder + marginBetweenAvatarAndTexts
         val nameRightBorder = nameLeftBorder + nameTextView.measuredWidth
 
         nameTextView.layout(nameLeftBorder, nameTopBorder, nameRightBorder, nameBottomBorder)
 
-        val statusTopBorder = measuredHeight / 2 + marginBetweenNameAndStatus / 2
+        val statusTopBorder = measuredHeight / 2 - marginBetweenNameAndStatus / 2
         val statusBottomBorder = statusTopBorder + statusTextView.measuredHeight
         val statusLeftBorder = photoRightBorder + marginBetweenAvatarAndTexts
         val statusRightBorder = statusLeftBorder + statusTextView.measuredWidth
