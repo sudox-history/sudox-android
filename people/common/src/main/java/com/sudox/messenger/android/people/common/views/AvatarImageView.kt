@@ -3,6 +3,7 @@ package com.sudox.messenger.android.people.common.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Paint
 import android.util.AttributeSet
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
@@ -15,6 +16,8 @@ import com.sudox.messenger.android.people.common.vos.PeopleVO
  * Загружаемый ImageView для аватарки.
  */
 class AvatarImageView : LoadableCircleImageView {
+
+    private var indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     var vo: PeopleVO? = null
         set(value) {
@@ -30,6 +33,7 @@ class AvatarImageView : LoadableCircleImageView {
 
     var indicatorColor = 0
         set(value) {
+            indicatorPaint.color = value
             field = value
             invalidate()
         }
@@ -47,5 +51,12 @@ class AvatarImageView : LoadableCircleImageView {
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
+
+        if (vo?.isStatusAboutOnline() == false && vo?.isUserOnline() == true) {
+            val indicatorCenterY = measuredHeight / 2F
+            val indicatorCenterX = measuredWidth / 2F
+
+            canvas.drawCircle(indicatorCenterX, indicatorCenterY, indicatorRadius.toFloat(), indicatorPaint)
+        }
     }
 }
