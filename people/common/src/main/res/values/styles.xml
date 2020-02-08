@@ -29,6 +29,11 @@
         <item name="fontFamily">@font/opensans_bold</item>
     </style>
 
+    <style name="Sudox.People.VerticalPeopleItemView.Buttons.Close" parent="">
+        <item name="iconTint">@color/verticalpeopleitemview_close_button_icon_tint</item>
+        <item name="iconDrawable">@drawable/ic_cancel</item>
+    </style>
+
     <style name="Sudox.People.HorizontalPeopleItemView" parent="">
         <item name="avatarWidth">@dimen/horizontalpeopleitemview_avatar_width</item>
         <item name="avatarHeight">@dimen/horizontalpeopleitemview_avatar_height</item>

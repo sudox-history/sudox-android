@@ -1,6 +1,7 @@
 package com.sudox.messenger.android.people.peopletab.vos
 
 import android.content.Context
+import com.sudox.messenger.android.people.common.vos.CLOSE_BUTTON
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 import com.sudox.messenger.android.people.peopletab.R
 
@@ -19,7 +20,7 @@ class MaybeYouKnowVO(
 ) : PeopleVO {
 
     override fun getButtons(): Array<Pair<Int, Int>>? {
-        return null
+        return CLOSE_BUTTON
     }
 
     override fun getStatusMessage(context: Context): String {
