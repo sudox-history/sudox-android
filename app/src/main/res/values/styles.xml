@@ -3,7 +3,7 @@
 
     <style name="Sudox.App" parent="Sudox">
         <item name="momentItemViewStyle">@style/Sudox.Moments.MomentItemView</item>
-        <item name="friendItemViewStyle">@style/Sudox.Friends.FriendItemView</item>
-        <item name="maybeYouKnowItemViewStyle">@style/Sudox.Friends.MaybeYouKnowItemView</item>
+        <item name="avatarImageViewStyle">@style/Sudox.People.AvatarImageView</item>
+        <item name="peopleItemViewStyle">@style/Sudox.People.PeopleItemView</item>
     </style>
 </resources>

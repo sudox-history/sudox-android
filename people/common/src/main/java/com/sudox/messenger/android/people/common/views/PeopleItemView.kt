@@ -73,6 +73,12 @@ class PeopleItemView : ViewGroup {
 
             nameTextView.text = value?.userName
             statusTextView.text = value?.getStatusMessage(context)
+            statusTextView.setTextColor(if (value?.isStatusActive() == true) {
+                activeStatusTextColor
+            } else {
+                inactiveStatusTextColor
+            })
+
             photoImageView.vo = vo
 
             field = value
