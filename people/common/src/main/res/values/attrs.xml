@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="PeopleItemView">
-        <attr name="avatarWidth" format="dimension" />
-        <attr name="avatarHeight" format="dimension" />
-        <attr name="nameTextAppearance" format="reference" />
-        <attr name="statusTextAppearance" format="reference" />
-        <attr name="marginBetweenNameAndStatus" format="dimension" />
-        <attr name="marginBetweenAvatarAndTexts" format="dimension" />
+    <declare-styleable name="HorizontalPeopleItemView">
+        <attr name="avatarWidth" />
+        <attr name="avatarHeight" />
+        <attr name="nameTextAppearance" />
+        <attr name="statusTextAppearance" />
+        <attr name="marginBetweenNameAndStatus" />
+        <attr name="marginBetweenAvatarAndTexts" />
         <attr name="marginBetweenButtonsAndTexts" format="dimension" />
         <attr name="marginBetweenButtons" format="dimension" />
-        <attr name="inactiveStatusTextColor" format="color" />
-        <attr name="activeStatusTextColor" format="color" />
+        <attr name="inactiveStatusTextColor" />
+        <attr name="activeStatusTextColor" />
+    </declare-styleable>
+
+    <declare-styleable name="VerticalPeopleItemView">
+        <attr name="avatarWidth" />
+        <attr name="avatarHeight" />
+        <attr name="nameTextAppearance" />
+        <attr name="statusTextAppearance" />
+        <attr name="marginBetweenNameAndStatus" />
+        <attr name="marginBetweenAvatarAndTexts" />
+        <attr name="marginBetweenRightAndButton" format="dimension" />
+        <attr name="marginBetweenTopAndButton" format="dimension" />
+        <attr name="inactiveStatusTextColor" />
+        <attr name="activeStatusTextColor" />
     </declare-styleable>
 
     <declare-styleable name="AvatarImageView">
@@ -18,6 +31,16 @@
         <attr name="indicatorColor" format="color" />
     </declare-styleable>
 
-    <attr name="peopleItemViewStyle" format="reference" />
+    <attr name="horizontalPeopleItemViewStyle" format="reference" />
+    <attr name="verticalPeopleItemViewStyle" format="reference" />
     <attr name="avatarImageViewStyle" format="reference" />
+
+    <attr name="avatarWidth" format="dimension" />
+    <attr name="avatarHeight" format="dimension" />
+    <attr name="nameTextAppearance" format="reference" />
+    <attr name="statusTextAppearance" format="reference" />
+    <attr name="marginBetweenNameAndStatus" format="dimension" />
+    <attr name="marginBetweenAvatarAndTexts" format="dimension" />
+    <attr name="inactiveStatusTextColor" format="color" />
+    <attr name="activeStatusTextColor" format="color" />
 </resources>

@@ -18,20 +18,22 @@ import com.sudox.messenger.android.people.common.vos.PeopleVO
 import kotlin.math.max
 
 /**
- * View для отображения информации о человеке.
+ * Горизонтальная View для отображения информации о человеке.
  * Отображает базовую информацию (имя, онлайн и т.п.).
  */
-class PeopleItemView : ViewGroup {
+class HorizontalPeopleItemView : ViewGroup {
 
     var activeStatusTextColor = 0
         set(value) {
             field = value
+            vo = vo // Updating config
             invalidate()
         }
 
     var inactiveStatusTextColor = 0
         set(value) {
             field = value
+            vo = vo // Updating config
             invalidate()
         }
 
@@ -77,7 +79,7 @@ class PeopleItemView : ViewGroup {
 
             nameTextView.text = value?.userName
             statusTextView.text = value?.getStatusMessage(context)
-            statusTextView.setTextColor(if (value?.isStatusActive() == true) {
+            statusTextView.setTextColor(if (value?.isStatusAboutOnline() == true && value.isStatusActive()) {
                 activeStatusTextColor
             } else {
                 inactiveStatusTextColor
@@ -112,25 +114,25 @@ class PeopleItemView : ViewGroup {
     private var buttonsViews: List<ImageButton>? = null
 
     constructor(context: Context) : this(context, null)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.peopleItemViewStyle)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.horizontalPeopleItemViewStyle)
 
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        context.obtainStyledAttributes(attrs, R.styleable.PeopleItemView, defStyleAttr, 0).use {
-            setTextAppearance(nameTextView, it.getResourceIdOrThrow(R.styleable.PeopleItemView_nameTextAppearance))
-            setTextAppearance(statusTextView, it.getResourceIdOrThrow(R.styleable.PeopleItemView_statusTextAppearance))
+        context.obtainStyledAttributes(attrs, R.styleable.HorizontalPeopleItemView, defStyleAttr, 0).use {
+            setTextAppearance(nameTextView, it.getResourceIdOrThrow(R.styleable.HorizontalPeopleItemView_nameTextAppearance))
+            setTextAppearance(statusTextView, it.getResourceIdOrThrow(R.styleable.HorizontalPeopleItemView_statusTextAppearance))
 
             photoImageView.layoutParams = LayoutParams(
-                    it.getDimensionPixelSizeOrThrow(R.styleable.PeopleItemView_avatarWidth),
-                    it.getDimensionPixelSizeOrThrow(R.styleable.PeopleItemView_avatarHeight)
+                    it.getDimensionPixelSizeOrThrow(R.styleable.HorizontalPeopleItemView_avatarWidth),
+                    it.getDimensionPixelSizeOrThrow(R.styleable.HorizontalPeopleItemView_avatarHeight)
             )
 
-            activeStatusTextColor = it.getColorOrThrow(R.styleable.PeopleItemView_activeStatusTextColor)
-            inactiveStatusTextColor = it.getColorOrThrow(R.styleable.PeopleItemView_inactiveStatusTextColor)
-            marginBetweenAvatarAndTexts = it.getDimensionPixelSize(R.styleable.PeopleItemView_marginBetweenAvatarAndTexts, 0)
-            marginBetweenNameAndStatus = it.getDimensionPixelSize(R.styleable.PeopleItemView_marginBetweenNameAndStatus, 0)
-            marginBetweenButtonsAndTexts = it.getDimensionPixelSize(R.styleable.PeopleItemView_marginBetweenButtonsAndTexts, 0)
-            marginBetweenButtons = it.getDimensionPixelSize(R.styleable.PeopleItemView_marginBetweenButtons, 0)
+            activeStatusTextColor = it.getColorOrThrow(R.styleable.HorizontalPeopleItemView_activeStatusTextColor)
+            inactiveStatusTextColor = it.getColorOrThrow(R.styleable.HorizontalPeopleItemView_inactiveStatusTextColor)
+            marginBetweenAvatarAndTexts = it.getDimensionPixelSize(R.styleable.HorizontalPeopleItemView_marginBetweenAvatarAndTexts, 0)
+            marginBetweenNameAndStatus = it.getDimensionPixelSize(R.styleable.HorizontalPeopleItemView_marginBetweenNameAndStatus, 0)
+            marginBetweenButtonsAndTexts = it.getDimensionPixelSize(R.styleable.HorizontalPeopleItemView_marginBetweenButtonsAndTexts, 0)
+            marginBetweenButtons = it.getDimensionPixelSize(R.styleable.HorizontalPeopleItemView_marginBetweenButtons, 0)
         }
     }
 

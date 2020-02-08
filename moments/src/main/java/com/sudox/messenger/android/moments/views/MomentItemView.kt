@@ -86,8 +86,8 @@ class MomentItemView : ViewGroup {
             addIndicatorStrokePaint.strokeWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MomentItemView_addIndicatorStrokeWidth)
                     .toFloat()
 
-            val photoHeight = it.getDimensionPixelSizeOrThrow(R.styleable.MomentItemView_photoHeight)
-            val photoWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MomentItemView_photoWidth)
+            val photoHeight = it.getDimensionPixelSizeOrThrow(R.styleable.MomentItemView_avatarHeight)
+            val photoWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MomentItemView_avatarWidth)
 
             photoView.layoutParams = LayoutParams(photoWidth, photoHeight)
             photoView.scaleType = ImageView.ScaleType.CENTER_CROP

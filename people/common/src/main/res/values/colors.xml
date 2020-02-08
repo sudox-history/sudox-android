@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="peopleitemview_name_text_color">#000000</color>
-    <color name="peopleitemview_status_text_color">#808080</color>
-    <color name="peopleitemview_inactive_status_color">#808080</color>
-    <color name="peopleitemview_active_status_color">#00BFA5</color>
+    <color name="horizontalpeopleitemview_name_text_color">#000000</color>
+    <color name="horizontalpeopleitemview_inactive_status_text_color">#808080</color>
+    <color name="horizontalpeopleitemview_active_status_text_color">#00BFA5</color>
+
+    <color name="verticalpeopleitemview_name_text_color">#000000</color>
+    <color name="verticalpeopleitemview_inactive_status_text_color">#808080</color>
+    <color name="verticalpeopleitemview_active_status_text_color">#00BFA5</color>
+    <color name="verticalpeopleitemview_background_color">#FFFFFF</color>
+    <color name="verticalpeopleitemview_stroke_color">#E0E0E0</color>
 
     <color name="avatarimageview_indicator_color">#00BFA5</color>
 </resources>

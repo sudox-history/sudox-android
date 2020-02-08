@@ -16,14 +16,14 @@ data class AddedFriendVO(
 ) : PeopleVO {
 
     override fun getButtons(): Array<Pair<Int, Int>>? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return null
     }
 
     override fun getStatusMessage(context: Context): String {
         return if (isUserOnline()) {
             context.getString(R.string.online)
         } else {
-            // Todo: replace to formatTime
+            // TODO: replace to formatTime
             seenTime.toString()
         }
     }

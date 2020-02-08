@@ -4,6 +4,7 @@
     <style name="Sudox.App" parent="Sudox">
         <item name="momentItemViewStyle">@style/Sudox.Moments.MomentItemView</item>
         <item name="avatarImageViewStyle">@style/Sudox.People.AvatarImageView</item>
-        <item name="peopleItemViewStyle">@style/Sudox.People.PeopleItemView</item>
+        <item name="horizontalPeopleItemViewStyle">@style/Sudox.People.HorizontalPeopleItemView</item>
+        <item name="verticalPeopleItemViewStyle">@style/Sudox.People.VerticalPeopleItemView</item>
     </style>
 </resources>
