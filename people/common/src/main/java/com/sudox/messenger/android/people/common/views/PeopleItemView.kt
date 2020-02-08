@@ -67,7 +67,7 @@ class PeopleItemView : ViewGroup {
             if (value != null) {
                 nameTextView.text = value.userName
                 statusTextView.text = value.getStatusMessage(context)
-
+                photoImageView.startLoading(value.photoId)
             }
 
             field = value
@@ -76,7 +76,7 @@ class PeopleItemView : ViewGroup {
         }
 
     private var statusTextView = AppCompatTextView(context).apply { addView(this) }
-    private var photoImageView = CircleImageView(context).apply { addView(this) }
+    private var photoImageView = AvatarImageView(context).apply { addView(this) }
     private var nameTextView = AppCompatTextView(context).apply { addView(this) }
     private var buttonsViews: List<ImageButton>? = null
 
