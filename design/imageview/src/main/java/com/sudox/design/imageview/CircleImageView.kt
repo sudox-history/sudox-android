@@ -12,7 +12,7 @@ import kotlin.math.min
 /**
  * ImageView круглой формы.
  */
-class CircleImageView : ImageView {
+open class CircleImageView : ImageView {
 
     private val imagePaint = Paint()
     private val mergePaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT) }
