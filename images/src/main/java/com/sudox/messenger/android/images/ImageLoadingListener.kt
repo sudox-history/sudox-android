@@ -4,10 +4,14 @@ import android.graphics.Bitmap
 import com.sudox.messenger.android.images.storages.loadImageById
 import com.sudox.messenger.android.images.storages.stopImageLoading
 
+const val NOT_REQUESTED_IMAGE_ID = -1L
+
 /**
  * Слушатель загрузчика изображений.
  */
 interface ImageLoadingListener {
+
+    var requestedImageId: Long
 
     /**
      * Запускает загрузку картинки по ID из хранилища.
@@ -16,11 +20,11 @@ interface ImageLoadingListener {
      */
     @Suppress("DeferredResultUnused")
     fun startLoading(id: Long) {
-        if (getRequestedImageId() != 0L) {
+        if (requestedImageId != NOT_REQUESTED_IMAGE_ID) {
             cancelLoading()
         }
 
-        setRequestedImageId(id)
+        requestedImageId = id
         loadImageById(this, id)
     }
 
@@ -28,23 +32,9 @@ interface ImageLoadingListener {
      * Приостанавливает загрузку картинки
      */
     fun cancelLoading() {
-        stopImageLoading(this, getRequestedImageId())
-        setRequestedImageId(0)
+        stopImageLoading(this, requestedImageId)
+        requestedImageId = NOT_REQUESTED_IMAGE_ID
     }
-
-    /**
-     * Возвращает ID загружаемой картинки.
-     *
-     * @return ID загружаемой картинки.
-     */
-    fun getRequestedImageId(): Long
-
-    /**
-     * Устанавливает ID загружаемой картинки.
-     *
-     * @param id ID загружаемой картинки.
-     */
-    fun setRequestedImageId(id: Long)
 
     /**
      * Уведомляет View о том, что картинка была загружена
