@@ -36,6 +36,7 @@
         <item name="tabLayoutStyle">@style/Sudox.TabLayout</item>
         <item name="tabLayoutButtonStyle">@style/Sudox.TabLayout.Button</item>
         <item name="sectionedListViewStyle">@style/Sudox.SectionedListView</item>
+        <item name="customImageViewStyle">@style/Sudox.ImageView</item>
         <item name="viewListStyle">@style/Sudox.ViewList</item>
 
         <item name="colorPrimary">@color/primary_color</item>

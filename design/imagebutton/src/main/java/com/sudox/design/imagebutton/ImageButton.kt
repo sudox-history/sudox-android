@@ -20,24 +20,34 @@ class ImageButton : View {
                 setTint(iconTint)
                 setBounds(0, 0, iconWidth, iconHeight)
             }
+
+            invalidate()
         }
 
     var iconHeight = 0
         set(value) {
             iconDrawable?.setBounds(0, 0, iconWidth, value)
             field = value
+
+            requestLayout()
+            invalidate()
         }
 
     var iconWidth = 0
         set(value) {
             iconDrawable?.setBounds(0, 0, value, iconHeight)
             field = value
+
+            requestLayout()
+            invalidate()
         }
 
     var iconTint = 0
         set(value) {
             iconDrawable?.setTint(value)
             field = value
+
+            invalidate()
         }
 
     constructor(context: Context) : this(context, null)

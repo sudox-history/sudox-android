@@ -8,7 +8,6 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
@@ -17,8 +16,8 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.getStringOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
-import com.sudox.design.circleImageView.CircleImageView
 import com.sudox.design.imagebutton.ImageButton
+import com.sudox.design.imageview.CircleImageView
 import com.sudox.messenger.android.people.peopletab.R
 import kotlin.math.max
 
@@ -67,7 +66,6 @@ class FriendItemView : ViewGroup {
             marginBetweenButtons = it.getDimensionPixelSize(R.styleable.FriendItemView_marginBetweenButtons, 0)
 
             photoImageView.layoutParams = LayoutParams(photoWidth, photoHeight)
-            photoImageView.scaleType = ImageView.ScaleType.CENTER_CROP
 
             onlineTextColor = it.getColorOrThrow(R.styleable.FriendItemView_onlineTextColor)
             offlineTextColor = it.getColorOrThrow(R.styleable.FriendItemView_offlineTextColor)
@@ -176,7 +174,7 @@ class FriendItemView : ViewGroup {
      * @param drawable Drawable с фотографией
      */
     fun setUserPhoto(drawable: Drawable?) {
-        photoImageView.setImageDrawable(drawable)
+        photoImageView.setDrawable(drawable)
     }
 
     /**
@@ -185,7 +183,7 @@ class FriendItemView : ViewGroup {
      * @param bitmap Bitmap с фотографией
      */
     fun setUserPhoto(bitmap: Bitmap?) {
-        photoImageView.setImageBitmap(bitmap)
+        photoImageView.bitmap = bitmap
     }
 
     /**
