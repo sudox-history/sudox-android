@@ -16,6 +16,7 @@ import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.design.circleImageView.CircleImageView
 import com.sudox.design.imagebutton.ImageButton
+import com.sudox.messenger.android.people.common.views.AvatarImageView
 import com.sudox.messenger.android.people.peopletab.R
 
 class MaybeYouKnowItemView : ViewGroup {
@@ -27,7 +28,7 @@ class MaybeYouKnowItemView : ViewGroup {
 
     var nameTextView = AppCompatTextView(context).apply { addView(this) }
     var friendsCountTextView = AppCompatTextView(context).apply { addView(this) }
-    var photoImageView = CircleImageView(context).apply { addView(this) }
+    var photoImageView = AvatarImageView(context).apply { addView(this) }
     var closeImageButton: ImageButton? = null
 
     constructor(context: Context) : this(context, null)
@@ -128,7 +129,7 @@ class MaybeYouKnowItemView : ViewGroup {
      * @param drawable Drawable с фотографией
      */
     fun setUserPhoto(drawable: Drawable?) {
-        photoImageView.setImageDrawable(drawable)
+//        photoImageView.setDrawable(drawable)
     }
 
     /**
@@ -137,7 +138,8 @@ class MaybeYouKnowItemView : ViewGroup {
      * @param bitmap Bitmap с фотографией
      */
     fun setUserPhoto(bitmap: Bitmap?) {
-        photoImageView.setImageBitmap(bitmap)
+        photoImageView.startLoading(1)
+//        photoImageView.setImageBitmap(bitmap)
     }
 
     /**
@@ -153,6 +155,7 @@ class MaybeYouKnowItemView : ViewGroup {
      * @param friendsCount Количество друзей
      */
     fun setMutualFriendsCount(friendsCount: Int) {
+        photoImageView.startLoading(friendsCount.toLong())
         friendsCountTextView.text = context.resources.getQuantityString(
                 R.plurals.mutual, friendsCount, friendsCount
         )

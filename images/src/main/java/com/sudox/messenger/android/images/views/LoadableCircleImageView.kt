@@ -19,7 +19,11 @@ open class LoadableCircleImageView : CircleImageView, ImageLoadingListener {
     }
 
     override fun onLoadingStarted() {
+        this.bitmap = null
+    }
 
+    override fun onLoadingStopped() {
+        this.bitmap = null
     }
 
     override fun getRequestedImageId(): Long {

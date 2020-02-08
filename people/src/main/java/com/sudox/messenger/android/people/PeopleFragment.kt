@@ -26,7 +26,7 @@ class PeopleFragment : CoreFragment() {
         coreActivity = activity as CoreActivity
         pagerAdapter = ViewPagerAdapter(context!!, coreActivity!!, peopleViewPager, childFragmentManager, arrayOf(
                 ActivityFragment(),
-                com.sudox.messenger.android.people.peopletab.FriendsFragment()
+                FriendsFragment()
         ))
 
         peopleViewPager.adapter = pagerAdapter

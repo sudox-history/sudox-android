@@ -26,6 +26,10 @@ ext.registerModule = { isApp, needExtensions, needApt, needKotlin ->
         buildToolsVersion "29.0.2"
         compileSdkVersion 29
 
+        packagingOptions {
+            exclude("META-INF/*.kotlin_module")
+        }
+
         defaultConfig {
             minSdkVersion 21
             targetSdkVersion 29

@@ -8,7 +8,6 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.use
 import com.sudox.design.imagebutton.ImageButton
-import com.sudox.design.imageview.CircleImageView
 import com.sudox.messenger.android.people.common.R
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 

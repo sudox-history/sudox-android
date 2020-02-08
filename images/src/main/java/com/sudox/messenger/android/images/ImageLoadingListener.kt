@@ -1,8 +1,8 @@
 package com.sudox.messenger.android.images
 
 import android.graphics.Bitmap
-import com.sudox.messenger.android.images.storages.TempImagesStorage.loadImageById
-import com.sudox.messenger.android.images.storages.TempImagesStorage.stopImageLoading
+import com.sudox.messenger.android.images.storages.loadImageById
+import com.sudox.messenger.android.images.storages.stopImageLoading
 
 /**
  * Слушатель загрузчика изображений.
@@ -16,6 +16,10 @@ interface ImageLoadingListener {
      */
     @Suppress("DeferredResultUnused")
     fun startLoading(id: Long) {
+        if (getRequestedImageId() != 0L) {
+            cancelLoading()
+        }
+
         setRequestedImageId(id)
         loadImageById(this, id)
     }
@@ -51,4 +55,10 @@ interface ImageLoadingListener {
      * Уведомляет View о том, что загрузка картинки началась
      */
     fun onLoadingStarted()
+
+    /**
+     * Уведомляет View о том, что изображение либо удалено,
+     * либо его загрузка приостановлена
+     */
+    fun onLoadingStopped()
 }

@@ -8,6 +8,7 @@ dependencies {
     api project(path: ':design')
     api project(path: ':activity')
     api project(path: ':people:peopletab')
+    api project(path: ':people:common')
     api project(path: ':api')
 
     implementation libraries.core_ktx
