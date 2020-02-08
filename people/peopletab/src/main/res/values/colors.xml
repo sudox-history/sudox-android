@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accept_friend_request_button_icon_tint_color">#00BFA5</color>
+    <color name="reject_friend_request_button_icon_tint_color">#FF1744</color>
+</resources>
