@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.friends.adapters
+package com.sudox.messenger.android.people.peopletab.adapters
 
 import android.view.View
 import android.view.ViewGroup
@@ -6,13 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
-import com.sudox.messenger.android.friends.R
-import com.sudox.messenger.android.friends.callbacks.FriendsSortingCallback
-import com.sudox.messenger.android.friends.createMaybeYouKnowList
-import com.sudox.messenger.android.friends.views.FriendItemView
-import com.sudox.messenger.android.friends.vos.FriendVO
-import com.sudox.messenger.android.friends.vos.IS_NOT_REQUEST_TIME
-import com.sudox.messenger.android.friends.vos.SEEN_TIME_ONLINE
+import com.sudox.messenger.android.people.peopletab.R
+import com.sudox.messenger.android.people.peopletab.callbacks.FriendsSortingCallback
+import com.sudox.messenger.android.people.peopletab.views.FriendItemView
+import com.sudox.messenger.android.people.peopletab.vos.FriendVO
+import com.sudox.messenger.android.people.peopletab.vos.IS_NOT_REQUEST_TIME
+import com.sudox.messenger.android.people.peopletab.vos.SEEN_TIME_ONLINE
 
 const val FRIEND_REQUEST_ITEM_TYPE = 0
 const val MAYBE_YOU_KNOW_ITEM_TYPE = 1
@@ -23,7 +22,7 @@ class FriendsAdapter(
         private val viewList: ViewList
 ) : ViewListAdapter<FriendsAdapter.ViewHolder>(viewList) {
 
-    val maybeYouKnowViewList = createMaybeYouKnowList(viewList.context)
+    val maybeYouKnowViewList = com.sudox.messenger.android.people.peopletab.createMaybeYouKnowList(viewList.context)
     val maybeYouKnowAdapter = maybeYouKnowViewList.adapter as MaybeYouKnowAdapter
     val onlineVOs = SortedList<FriendVO>(FriendVO::class.java, FriendsSortingCallback(this, ONLINE_FRIEND_ITEM_TYPE))
     val offlineVOs = SortedList<FriendVO>(FriendVO::class.java, FriendsSortingCallback(this, OFFLINE_FRIEND_ITEM_TYPE))

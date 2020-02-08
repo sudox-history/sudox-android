@@ -1,10 +1,10 @@
-package com.sudox.messenger.android.friends
+package com.sudox.messenger.android.people.peopletab
 
 import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.design.viewlist.ViewList
-import com.sudox.messenger.android.friends.adapters.MaybeYouKnowAdapter
+import com.sudox.messenger.android.people.peopletab.adapters.MaybeYouKnowAdapter
 
 /**
  * Создает карусель с возможно знакомыми друзьями

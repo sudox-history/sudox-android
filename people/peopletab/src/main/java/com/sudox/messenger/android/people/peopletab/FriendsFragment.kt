@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.friends
+package com.sudox.messenger.android.people.peopletab
 
 import android.content.Context
 import android.os.Bundle
@@ -10,10 +10,10 @@ import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
-import com.sudox.messenger.android.friends.adapters.FriendsAdapter
-import com.sudox.messenger.android.friends.vos.FriendVO
-import com.sudox.messenger.android.friends.vos.MaybeYouKnowVO
-import com.sudox.messenger.android.friends.vos.SEEN_TIME_ONLINE
+import com.sudox.messenger.android.people.peopletab.adapters.FriendsAdapter
+import com.sudox.messenger.android.people.peopletab.vos.FriendVO
+import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
+import com.sudox.messenger.android.people.peopletab.vos.SEEN_TIME_ONLINE
 import kotlinx.android.synthetic.main.fragment_friends.friendContentList
 import java.util.concurrent.Semaphore
 

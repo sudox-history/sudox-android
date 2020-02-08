@@ -1,14 +1,14 @@
-package com.sudox.messenger.android.friends.adapters
+package com.sudox.messenger.android.people.peopletab.adapters
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
-import com.sudox.messenger.android.friends.R
-import com.sudox.messenger.android.friends.callbacks.MaybeYouKnowSortingCallback
-import com.sudox.messenger.android.friends.views.MaybeYouKnowItemView
-import com.sudox.messenger.android.friends.vos.MaybeYouKnowVO
+import com.sudox.messenger.android.people.peopletab.R
+import com.sudox.messenger.android.people.peopletab.callbacks.MaybeYouKnowSortingCallback
+import com.sudox.messenger.android.people.peopletab.views.MaybeYouKnowItemView
+import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
 
 class MaybeYouKnowAdapter(
        private val viewList: ViewList

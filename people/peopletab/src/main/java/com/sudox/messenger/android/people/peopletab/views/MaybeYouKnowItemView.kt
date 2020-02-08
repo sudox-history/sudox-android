@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.friends.views
+package com.sudox.messenger.android.people.peopletab.views
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -16,7 +16,7 @@ import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.design.circleImageView.CircleImageView
 import com.sudox.design.imagebutton.ImageButton
-import com.sudox.messenger.android.friends.R
+import com.sudox.messenger.android.people.peopletab.R
 
 class MaybeYouKnowItemView : ViewGroup {
 

@@ -1,9 +1,9 @@
-package com.sudox.messenger.android.friends.callbacks
+package com.sudox.messenger.android.people.peopletab.callbacks
 
 import com.sudox.design.viewlist.ViewListCallback
-import com.sudox.messenger.android.friends.adapters.FRIEND_REQUEST_ITEM_TYPE
-import com.sudox.messenger.android.friends.adapters.FriendsAdapter
-import com.sudox.messenger.android.friends.vos.FriendVO
+import com.sudox.messenger.android.people.peopletab.adapters.FRIEND_REQUEST_ITEM_TYPE
+import com.sudox.messenger.android.people.peopletab.adapters.FriendsAdapter
+import com.sudox.messenger.android.people.peopletab.vos.FriendVO
 
 class FriendsSortingCallback(
         friendsAdapter: FriendsAdapter,

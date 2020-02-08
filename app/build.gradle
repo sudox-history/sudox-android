@@ -22,7 +22,6 @@ dependencies {
     api project(path: ':auth')
     api project(path: ':design')
     api project(path: ':people')
-    api project(path: ':friends')
     api project(path: ':core')
 
     implementation libraries.core_ktx

@@ -1,8 +1,8 @@
-package com.sudox.messenger.android.friends.callbacks
+package com.sudox.messenger.android.people.peopletab.callbacks
 
 import com.sudox.design.viewlist.ViewListCallback
-import com.sudox.messenger.android.friends.adapters.MaybeYouKnowAdapter
-import com.sudox.messenger.android.friends.vos.MaybeYouKnowVO
+import com.sudox.messenger.android.people.peopletab.adapters.MaybeYouKnowAdapter
+import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
 
 class MaybeYouKnowSortingCallback(
         maybeYouKnowAdapter: MaybeYouKnowAdapter

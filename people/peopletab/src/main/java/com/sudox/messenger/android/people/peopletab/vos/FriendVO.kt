@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.friends.vos
+package com.sudox.messenger.android.people.peopletab.vos
 
 import android.graphics.drawable.Drawable
 
