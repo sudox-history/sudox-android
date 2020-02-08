@@ -21,8 +21,11 @@ interface PeopleVO {
 
     /**
      * Возвращает пары тег-стиль для функциональных кнопок
+     *
+     * @return Пары тег-стиль для функциональных кнопок.
+     * Если равен null, то значит что кнопок нет
      */
-    fun getButtons(): Array<Pair<Int, Int>>
+    fun getButtons(): Array<Pair<Int, Int>>?
 
     /**
      * Возвращает сообщение статуса
@@ -51,5 +54,7 @@ interface PeopleVO {
      *
      * @return Онлайн ли данный пользователь?
      */
-    fun isUserOnline(): Boolean
+    fun isUserOnline(): Boolean {
+        return seenTime == SEEN_TIME_ONLINE
+    }
 }

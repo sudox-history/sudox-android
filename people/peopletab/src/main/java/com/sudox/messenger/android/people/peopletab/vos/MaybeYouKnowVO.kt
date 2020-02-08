@@ -4,32 +4,26 @@ import android.content.Context
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 import com.sudox.messenger.android.people.peopletab.R
 
-const val ACCEPT_REQUEST_BUTTON_TAG = 1
-const val REJECT_REQUEST_BUTTON_TAG = 2
-
 /**
- * ViewObject для заявки в друзья.
+ * ViewObject для возможно знакомого человека.
  * Информацию по другим полям смотрите в классе PeopleVO
  *
- * @param requestMessage Текст заявки
+ * @param mutualCount Количество знакомых друзей.
  */
-data class FriendRequestVO(
+class MaybeYouKnowVO(
         override var userId: Long,
         override var userName: String,
         override var seenTime: Long,
         override var photoId: Long,
-        var requestMessage: String?
+        val mutualCount: Int
 ) : PeopleVO {
 
-    override fun getButtons(): Array<Pair<Int, Int>> {
-        return arrayOf(
-                Pair(R.style.Sudox_People_Buttons_AcceptFriendRequest, ACCEPT_REQUEST_BUTTON_TAG),
-                Pair(R.style.Sudox_People_Buttons_RejectFriendRequest, REJECT_REQUEST_BUTTON_TAG)
-        )
+    override fun getButtons(): Array<Pair<Int, Int>>? {
+        return null
     }
 
     override fun getStatusMessage(context: Context): String {
-        return requestMessage ?: context.getString(R.string.new_friend_request)
+        return context.resources.getQuantityString(R.plurals.mutual, mutualCount, mutualCount)
     }
 
     override fun isStatusAboutOnline(): Boolean {

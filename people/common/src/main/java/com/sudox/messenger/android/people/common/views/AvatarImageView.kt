@@ -11,6 +11,9 @@ import com.sudox.messenger.android.images.views.LoadableCircleImageView
 import com.sudox.messenger.android.people.common.R
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 
+/**
+ * Загружаемый ImageView для аватарки.
+ */
 class AvatarImageView : LoadableCircleImageView {
 
     var vo: PeopleVO? = null

@@ -17,6 +17,10 @@ import com.sudox.messenger.android.people.common.R
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 import kotlin.math.max
 
+/**
+ * View для отображения информации о человеке.
+ * Отображает базовую информацию (имя, онлайн и т.п.).
+ */
 class PeopleItemView : ViewGroup {
 
     var activeStatusTextColor = 0

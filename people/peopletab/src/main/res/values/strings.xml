@@ -2,4 +2,10 @@
 <resources>
     <string name="people">People</string>
     <string name="new_friend_request">New friend request</string>
+    <string name="just_chilling">Just chilling</string>
+    <string name="online">Online</string>
+
+    <plurals name="mutual">
+        <item quantity="other">%d mutual</item>
+    </plurals>
 </resources>
