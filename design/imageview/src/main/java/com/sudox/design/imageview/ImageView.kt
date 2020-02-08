@@ -13,7 +13,6 @@ import android.view.View
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.use
 import androidx.core.graphics.drawable.toBitmap
-import com.sudox.design.common.getAnimator
 
 /**
  * Более производительный и эффективный ImageView
@@ -47,9 +46,6 @@ open class ImageView : View {
             }
         }
 
-    var popOutAnimator: Animator? = null
-    var popInAnimator: Animator? = null
-
     private var bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     constructor(context: Context) : this(context, null)
@@ -59,8 +55,6 @@ open class ImageView : View {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.ImageView, defStyleAttr, 0).use {
             defaultDrawable = it.getDrawableOrThrow(R.styleable.ImageView_defaultDrawable)
-            popOutAnimator = it.getAnimator(context, R.styleable.ImageView_popOutAnimator)
-            popInAnimator = it.getAnimator(context, R.styleable.ImageView_popInAnimator)
         }
     }
 

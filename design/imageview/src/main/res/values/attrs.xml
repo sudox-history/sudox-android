@@ -2,8 +2,6 @@
 <resources>
     <declare-styleable name="ImageView">
         <attr name="defaultDrawable" format="reference" />
-        <attr name="popOutAnimator" format="reference" />
-        <attr name="popInAnimator" format="reference" />
     </declare-styleable>
 
     <attr name="customImageViewStyle" format="reference" />
