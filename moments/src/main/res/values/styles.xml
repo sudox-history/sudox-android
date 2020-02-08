@@ -12,8 +12,8 @@
         <item name="viewIndicatorDefaultStrokeWidth">@dimen/momentitemview_view_indicator_default_stroke_width</item>
         <item name="viewIndicatorDefaultColor">@color/momentitemview_view_indicator_default_color</item>
 
-        <item name="photoWidth">@dimen/momentitemview_photo_width</item>
-        <item name="photoHeight">@dimen/momentitemview_photo_height</item>
+        <item name="avatarWidth">@dimen/momentitemview_photo_width</item>
+        <item name="avatarHeight">@dimen/momentitemview_photo_height</item>
 
         <item name="addIndicatorStrokeWidth">@dimen/momentitemview_add_indicator_stroke_width</item>
         <item name="addIndicatorStrokeColor">@color/momentitemview_add_indicator_stroke_color</item>

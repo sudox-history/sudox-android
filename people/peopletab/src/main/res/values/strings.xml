@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="friends">Friends</string>
-    <string name="seen_mask">Seen %s</string>
-    <string name="online">Online</string>
-    <string name="offline">Offline</string>
-    <string name="friends_requests">Friend requests</string>
-    <string name="maybe_you_know">Maybe you know</string>
-    <string name="mutual_friends_mask">%s mutual friends</string>
-
-    <plurals name="mutual">
-        <item quantity="one">%d mutual</item>
-        <item quantity="other">%d mutual</item>
-    </plurals>
+    <string name="people">People</string>
+    <string name="new_friend_request">New friend request</string>
 </resources>
