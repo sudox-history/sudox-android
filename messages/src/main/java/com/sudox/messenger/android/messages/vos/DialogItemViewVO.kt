@@ -6,12 +6,15 @@ import java.util.*
 data class DialogItemViewVO(
         val dialogId: Int,
         val isUserOnline : Boolean,
+        val isMuted: Boolean,
         val isViewed: Boolean,
         val dialogPhoto: Drawable,
         val dialogName: String,
         val previewMessage: String,
-        val dateReceivedView: String,
-        val dateReceived: Date,
+        val dateView: String,
+        val date: Long,
         val messagesCount: Int,
-        val isLastMessageByMe: Boolean
+        val isLastMessageByMe: Boolean,
+        val isSentMessageDelivered: Boolean,
+        val isSentMessageViewed: Boolean
 )

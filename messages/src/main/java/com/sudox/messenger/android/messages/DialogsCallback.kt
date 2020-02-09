@@ -7,7 +7,7 @@ class DialogsCallback(
         var adapter: DialogsAdapter
 ) : SortedList.Callback<DialogItemViewVO>() {
     override fun areItemsTheSame(item1: DialogItemViewVO?, item2: DialogItemViewVO?): Boolean {
-        return item1?.dialogId == item2?.dialogId
+        return item1 === item2
     }
 
     override fun onMoved(fromPosition: Int, toPosition: Int) {
@@ -23,14 +23,20 @@ class DialogsCallback(
     }
 
     override fun onRemoved(position: Int, count: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        adapter.notifyItemRangeRemoved(position, count)
     }
 
-    override fun compare(o1: DialogItemViewVO?, o2: DialogItemViewVO?): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun compare(item1: DialogItemViewVO, item2: DialogItemViewVO): Int {
+        if(item1.isViewed && !item2.isViewed){
+            return 1
+        }
+        if(!item1.isViewed && item2.isViewed){
+            return -1
+        }
+        return -item1.date.compareTo(item2.date)
     }
 
     override fun areContentsTheSame(oldItem: DialogItemViewVO?, newItem: DialogItemViewVO?): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return oldItem == newItem
     }
 }
