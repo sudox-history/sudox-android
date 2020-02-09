@@ -8,9 +8,9 @@ import android.graphics.drawable.Drawable
  */
 interface ViewListHeaderVO {
 
-    val isItemsHidden: Boolean
-    val selectedToggleIndex: Int
-    val selectedFunctionButtonToggleIndex: Int
+    var isItemsHidden: Boolean
+    var selectedToggleIndex: Int
+    var selectedFunctionButtonToggleIndex: Int
 
     /**
      * Возвращает опции переключателя

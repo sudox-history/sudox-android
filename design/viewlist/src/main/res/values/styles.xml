@@ -22,6 +22,7 @@
         <item name="fontFamily">@font/opensans_bold</item>
     </style>
 
+    <!--  TODO: Button style to common module ;(  -->
     <style name="Sudox.ViewList.Header.FunctionButton" parent="">
         <item name="iconTint">@color/viewlist_header_functional_button_icon_tint</item>
         <item name="iconWidth">@dimen/viewlist_header_functional_button_icon_width</item>

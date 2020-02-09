@@ -6,11 +6,11 @@ import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import com.sudox.messenger.android.people.peopletab.R
 
 class MaybeYouKnowHeaderVO(
-        override val isItemsHidden: Boolean = false
+        override var isItemsHidden: Boolean = false
 ) : ViewListHeaderVO {
 
-    override val selectedFunctionButtonToggleIndex = 0
-    override val selectedToggleIndex = 0
+    override var selectedFunctionButtonToggleIndex = 0
+    override var selectedToggleIndex = 0
 
     override fun getToggleOptions(context: Context): Array<Pair<Int, Pair<String, Drawable?>>> {
         return arrayOf(Pair(0, Pair(context.getString(R.string.maybe_you_know), null)))

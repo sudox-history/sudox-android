@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
@@ -20,9 +21,12 @@ import kotlin.math.max
 
 class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
+    private var togglePopupMenu: PopupMenu? = null
+
     var toggleIconDrawable: Drawable? = null
         set(value) {
             field = value?.mutate()?.apply {
+                setBounds(0, 0, value.intrinsicWidth, value.intrinsicHeight)
                 setTint(toggleIconTint)
             }
 
@@ -122,6 +126,30 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
     }
 
     override fun onClick(view: View) {
+        if (view == textView) {
+            togglePopupMenu?.dismiss()
+            togglePopupMenu = PopupMenu(context, textView)
+            togglePopupMenu!!.menu
+            togglePopupMenu!!.setOnMenuItemClickListener {
+                vo!!.selectedToggleIndex = it.itemId
+                true
+            }
 
+            for ((index, option) in vo?.getToggleOptions(context)!!.withIndex()) {
+                togglePopupMenu!!.menu.add(0, index, 0, "${option.second.first} ${if (index == vo!!.selectedToggleIndex) {
+                    "(Selected)"
+                } else {
+                    ""
+                }}")
+            }
+
+            togglePopupMenu!!.show()
+        } else if (view == functionalImageButton) {
+            if (vo!!.canHideItems()) {
+                // TODO: Hide items
+            } else {
+                // TODO: Callback
+            }
+        }
     }
 }

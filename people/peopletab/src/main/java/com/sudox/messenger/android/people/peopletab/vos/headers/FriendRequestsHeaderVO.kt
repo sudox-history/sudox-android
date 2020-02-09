@@ -7,9 +7,9 @@ import com.sudox.messenger.android.people.peopletab.R
 
 class FriendRequestsHeaderVO : ViewListHeaderVO {
 
-    override val isItemsHidden: Boolean = false
-    override val selectedFunctionButtonToggleIndex = 0
-    override val selectedToggleIndex = 0
+    override var isItemsHidden: Boolean = false
+    override var selectedFunctionButtonToggleIndex = 0
+    override var selectedToggleIndex = 0
 
     override fun getToggleOptions(context: Context): Array<Pair<Int, Pair<String, Drawable?>>> {
         return arrayOf(Pair(0, Pair(context.getString(R.string.friend_requests), null)))

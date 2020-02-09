@@ -16,11 +16,11 @@ const val ONLINE_OPTION_TAG = 4
 const val NAME_OPTION_TAG = 5
 
 class AddedFriendsHeaderVO(
-        override val selectedFunctionButtonToggleIndex: Int = 0,
-        override val selectedToggleIndex: Int = 0
+        override var selectedFunctionButtonToggleIndex: Int = 0,
+        override var selectedToggleIndex: Int = 0
 ) : ViewListHeaderVO {
 
-    override val isItemsHidden: Boolean = false
+    override var isItemsHidden: Boolean = false
 
     override fun getToggleOptions(context: Context): Array<Pair<Int, Pair<String, Drawable?>>> {
         return arrayOf(
