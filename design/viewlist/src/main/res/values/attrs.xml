@@ -5,5 +5,13 @@
         <attr name="footerTextAppearance" format="reference" />
     </declare-styleable>
 
-    <attr name="viewListStyle" />
+    <declare-styleable name="ViewListHeaderView">
+        <attr name="textAppearance" format="reference" />
+        <attr name="functionalButtonStyle" format="reference" />
+        <attr name="toggleIconDrawable" format="reference" />
+        <attr name="toggleIconTint" format="color" />
+    </declare-styleable>
+
+    <attr name="viewListStyle" format="reference" />
+    <attr name="viewListHeaderStyle" format="reference" />
 </resources>

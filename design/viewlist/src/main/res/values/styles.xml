@@ -2,17 +2,30 @@
 <resources>
 
     <style name="Sudox.ViewList" parent="">
-        <item name="headerTextAppearance">@style/Sudox.ViewList.Header</item>
         <item name="footerTextAppearance">@style/Sudox.ViewList.Footer</item>
     </style>
 
     <style name="Sudox.ViewList.Header" parent="">
-        <item name="android:paddingBottom">@dimen/viewlist_header_padding_bottom</item>
         <item name="android:paddingTop">@dimen/viewlist_header_padding_top</item>
+        <item name="android:paddingBottom">@dimen/viewlist_header_padding_bottom</item>
+        <item name="functionalButtonStyle">@style/Sudox.ViewList.Header.FunctionButton</item>
+        <item name="textAppearance">@style/Sudox.ViewList.Header.TextAppearance</item>
+        <item name="toggleIconTint">@color/viewlist_header_toggle_icon_tint</item>
+        <item name="toggleIconDrawable">@drawable/ic_arrow_down</item>
+    </style>
+
+    <style name="Sudox.ViewList.Header.TextAppearance" parent="">
+        <item name="android:drawablePadding">@dimen/viewlist_header_margin_between_text_and_toggler</item>
         <item name="android:textColor">@color/viewlist_header_text_color</item>
         <item name="android:textSize">@dimen/viewlist_header_text_size</item>
         <item name="android:fontFamily">@font/opensans_bold</item>
         <item name="fontFamily">@font/opensans_bold</item>
+    </style>
+
+    <style name="Sudox.ViewList.Header.FunctionButton" parent="">
+        <item name="iconTint">@color/viewlist_header_functional_button_icon_tint</item>
+        <item name="iconWidth">@dimen/viewlist_header_functional_button_icon_width</item>
+        <item name="iconHeight">@dimen/viewlist_header_functional_button_icon_height</item>
     </style>
 
     <style name="Sudox.ViewList.Footer" parent="">

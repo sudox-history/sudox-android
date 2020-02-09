@@ -29,7 +29,7 @@ fun TypedArray.getAnimator(context: Context, index: Int): Animator? {
  * @param context Контекст приложения/активности
  * @param index Индекс элемента
  */
-inline fun <reified V : View> TypedArray.createStyledView(context: Context, index: Int): View? {
+inline fun <reified V : View> TypedArray.createStyledView(context: Context, index: Int): V? {
     val resourceId = getResourceId(index, 0)
 
     if (resourceId != 0) {
