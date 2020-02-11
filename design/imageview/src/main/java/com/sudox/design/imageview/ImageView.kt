@@ -1,6 +1,5 @@
 package com.sudox.design.imageview
 
-import android.animation.Animator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
@@ -59,8 +58,8 @@ open class ImageView : View {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val widthSize = MeasureSpec.getSize(widthMeasureSpec)
-        val heightSize = MeasureSpec.getSize(heightMeasureSpec)
+        val widthSize = layoutParams.width
+        val heightSize = layoutParams.height
 
         defaultDrawable!!.setBounds(0, 0, widthSize, heightSize)
         setMeasuredDimension(widthSize, heightSize)
@@ -79,8 +78,11 @@ open class ImageView : View {
      *
      * @param drawable Drawable для установки. Если равен null,
      * то будет установлена картинка по умолчанию
+     * @param colorTint Оттенок иконки
      */
-    fun setDrawable(drawable: Drawable?) {
-        bitmap = drawable?.toBitmap()
+    fun setDrawable(drawable: Drawable?, colorTint: Int) {
+        bitmap = drawable?.mutate()?.apply {
+            setTint(colorTint)
+        }?.toBitmap()
     }
 }

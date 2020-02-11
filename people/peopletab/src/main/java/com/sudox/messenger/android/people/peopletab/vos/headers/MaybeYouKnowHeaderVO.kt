@@ -2,6 +2,8 @@ package com.sudox.messenger.android.people.peopletab.vos.headers
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import com.sudox.design.popup.vos.PopupItemVO
+import com.sudox.design.popup.vos.PopupItemWithoutIconVO
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import com.sudox.messenger.android.people.peopletab.R
 
@@ -12,15 +14,15 @@ class MaybeYouKnowHeaderVO(
     override var selectedFunctionButtonToggleIndex = 0
     override var selectedToggleIndex = 0
 
-    override fun getToggleOptions(context: Context): Array<Pair<Int, Pair<String, Drawable?>>> {
-        return arrayOf(Pair(0, Pair(context.getString(R.string.maybe_you_know), null)))
+    override fun getToggleOptions(context: Context): List<PopupItemVO<*>> {
+        return listOf(PopupItemWithoutIconVO(0, context.getString(R.string.maybe_you_know), selectedToggleIndex == 0))
     }
 
-    override fun getFunctionButton(context: Context): Pair<Int, Drawable>? {
+    override fun getFunctionButtonIcon(context: Context): Drawable? {
         return null
     }
 
-    override fun getFunctionButtonToggleOptions(context: Context): Array<Pair<Int, Pair<String, Drawable>>>? {
+    override fun getFunctionButtonToggleOptions(context: Context): List<PopupItemVO<*>>? {
         return null
     }
 

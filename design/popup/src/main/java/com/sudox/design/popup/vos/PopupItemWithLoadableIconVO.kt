@@ -2,6 +2,7 @@ package com.sudox.design.popup.vos
 
 import android.content.Context
 import android.view.View
+import com.sudox.design.popup.views.PopupItemView
 import com.sudox.messenger.android.images.views.LoadableCircleImageView
 
 /**
@@ -21,13 +22,12 @@ class PopupItemWithLoadableIconVO(
         return LoadableCircleImageView(context)
     }
 
-    override fun <T : View> configureIconView(view: T) {
+    override fun <T : View> configureIconView(item: PopupItemView, view: T) {
         if (view is LoadableCircleImageView) {
             view.startLoading(iconPhotoId)
         }
     }
 
     override fun <T : View> detachIconView(view: T) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -3,8 +3,8 @@
     <declare-styleable name="PopupItemView">
         <attr name="marginBetweenIconAndText" format="dimension" />
         <attr name="titleTextAppearance" format="reference" />
-        <attr name="inactiveTitleTextColor" format="color" />
-        <attr name="activeTitleTextColor" format="color" />
+        <attr name="inactiveTitleColor" format="color" />
+        <attr name="activeTitleColor" format="color" />
         <attr name="iconHeight" format="dimension" />
         <attr name="iconWidth" format="dimension" />
     </declare-styleable>

@@ -2,6 +2,7 @@ package com.sudox.design.viewlist.vos
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import com.sudox.design.popup.vos.PopupItemVO
 
 /**
  * ViewObject для шапки.
@@ -16,25 +17,25 @@ interface ViewListHeaderVO {
      * Возвращает опции переключателя
      *
      * @param context Контекст приложения/активности
-     * @return Пары опций тег-пара(название пункта, иконка пункта)
+     * @return ViewObject'ы элементов Popup-окна
      */
-    fun getToggleOptions(context: Context): Array<Pair<Int, Pair<String, Drawable?>>>
+    fun getToggleOptions(context: Context): List<PopupItemVO<*>>
 
     /**
-     * Возвращает конфигурацию функциональной кнопки
+     * Возвращает иконку функциональной кнопки
      *
      * @param context Контекст приложения/активности
-     * @return Пара тег-иконка.
+     * @return Иконка функциональной кнопки
      */
-    fun getFunctionButton(context: Context): Pair<Int, Drawable>?
+    fun getFunctionButtonIcon(context: Context): Drawable?
 
     /**
      * Возвращает опции функциональной кнопки (если они есть)
      *
      * @param context Контекст приложения/активности
-     * @return Пары тег-(текст, иконка)
+     * @return ViewObject'ы элементов Popup-окна
      */
-    fun getFunctionButtonToggleOptions(context: Context): Array<Pair<Int, Pair<String, Drawable>>>?
+    fun getFunctionButtonToggleOptions(context: Context): List<PopupItemVO<*>>?
 
     /**
      * Определяет возможность скрытия элементов после шапки

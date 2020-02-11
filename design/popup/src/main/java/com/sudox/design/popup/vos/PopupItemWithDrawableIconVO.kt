@@ -3,7 +3,8 @@ package com.sudox.design.popup.vos
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.view.View
-import android.widget.ImageView
+import com.sudox.design.imageview.ImageView
+import com.sudox.design.popup.views.PopupItemView
 
 /**
  * ViewObject для элемента списка Popup-диалога с иконкой в виде Drawable
@@ -47,9 +48,13 @@ class PopupItemWithDrawableIconVO : PopupItemVO<ImageView> {
         return ImageView(context)
     }
 
-    override fun <T : View> configureIconView(view: T) {
+    override fun <T : View> configureIconView(item: PopupItemView, view: T) {
         if (view is ImageView) {
-            view.setImageDrawable(iconDrawable ?: view.context.getDrawable(iconDrawableRes))
+            view.setDrawable(iconDrawable ?: view.context.getDrawable(iconDrawableRes), if (isActive) {
+                item.activeTitleColor
+            } else {
+                item.inactiveTitleColor
+            })
         }
     }
 

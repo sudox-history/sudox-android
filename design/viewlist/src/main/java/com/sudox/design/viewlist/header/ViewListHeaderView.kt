@@ -15,10 +15,12 @@ import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.design.common.createStyledView
 import com.sudox.design.imagebutton.ImageButton
 import com.sudox.design.popup.ListPopupWindow
-import com.sudox.design.popup.vos.PopupItemWithDrawableIconVO
 import com.sudox.design.viewlist.R
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import kotlin.math.max
+
+const val VIEW_LIST_HEADER_VIEW_TEXT_TAG = 1
+const val VIEW_LIST_HEADER_VIEW_FUNCTION_BUTTON_TAG = 2
 
 class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
@@ -45,10 +47,9 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
         set(value) {
             if (value != null) {
                 val toggleOptions = value.getToggleOptions(context)
-                val functionalToggleOptions = value.getFunctionButtonToggleOptions(context)
 
-                textView.tag = toggleOptions[value.selectedToggleIndex].first
-                textView.text = toggleOptions[value.selectedToggleIndex].second.first
+                textView.tag = VIEW_LIST_HEADER_VIEW_TEXT_TAG
+                textView.text = toggleOptions[value.selectedToggleIndex].title
                 textView.isClickable = toggleOptions.size > 1
                 textView.setCompoundDrawables(null, null, if (toggleOptions.size > 1) {
                     toggleIconDrawable
@@ -56,14 +57,18 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
                     null
                 }, null)
 
-                functionalImageButton!!.isClickable = value.canHideItems() || (functionalToggleOptions?.size ?: 0) > 1
-                functionalImageButton!!.iconDrawable = if (value.canHideItems()) {
-                    toggleIconDrawable
-                } else {
-                    functionalToggleOptions?.
-                            elementAt(value.selectedFunctionButtonToggleIndex)?.
-                            second?.
-                            second
+                val functionalButtonIcon = value.getFunctionButtonIcon(context)
+
+                functionalImageButton!!.let {
+                    it.iconDrawable = functionalButtonIcon
+                            ?: if (value.canHideItems()) {
+                                toggleIconDrawable
+                            } else {
+                                null
+                            }
+
+                    it.isClickable = functionalButtonIcon != null || value.canHideItems()
+                    it.tag = VIEW_LIST_HEADER_VIEW_FUNCTION_BUTTON_TAG
                 }
             }
 
@@ -129,11 +134,8 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
     override fun onClick(view: View) {
         if (view == textView) {
             togglePopupWindow?.dismiss()
-            togglePopupWindow = ListPopupWindow(context, listOf(
-                    PopupItemWithDrawableIconVO(1, "Hello", R.drawable.ic_arrow_down, true),
-                    PopupItemWithDrawableIconVO(2, "World", R.drawable.ic_arrow_down, false)
-            )) {
-
+            togglePopupWindow = ListPopupWindow(context, vo!!.getToggleOptions(context)) {
+                
             }
 
             togglePopupWindow!!.showAsDropDown(textView)

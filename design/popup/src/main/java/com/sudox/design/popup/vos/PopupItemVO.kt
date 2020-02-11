@@ -2,6 +2,7 @@ package com.sudox.design.popup.vos
 
 import android.content.Context
 import android.view.View
+import com.sudox.design.popup.views.PopupItemView
 
 /**
  * ViewObject для элемента списка Popup-диалога
@@ -23,9 +24,10 @@ interface PopupItemVO<V : View> {
     /**
      * Конфигурирует View иконки.
      *
+     * @param item View элемента списка
      * @param view View, который нужно сконфигурировать
      */
-    fun <T : View> configureIconView(view: T)
+    fun <T : View> configureIconView(item: PopupItemView, view: T)
 
     /**
      * Останавливает все задачи внутри View

@@ -18,11 +18,50 @@ import kotlin.math.max
 
 class PopupItemView : ViewGroup {
 
-    private var iconWidth = 0
-    private var iconHeight = 0
-    private var marginBetweenIconAndTitle = 0
-    private var inactiveTitleTextColor = 0
-    private var activeTitleTextColor = 0
+    var marginBetweenIconAndTitle = 0
+        set(value) {
+            field = value
+
+            if (vo != null) {
+                vo = vo
+            }
+        }
+
+    var inactiveTitleColor = 0
+        set(value) {
+            field = value
+
+            if (vo != null) {
+                vo = vo
+            }
+        }
+
+    var activeTitleColor = 0
+        set(value) {
+            field = value
+
+            if (vo != null) {
+                vo = vo
+            }
+        }
+
+    var iconHeight = 0
+        set(value) {
+            field = value
+
+            if (vo != null) {
+                vo = vo
+            }
+        }
+
+    var iconWidth = 0
+        set(value) {
+            field = value
+
+            if (vo != null) {
+                vo = vo
+            }
+        }
 
     private var iconView: View? = null
         set(value) {
@@ -31,7 +70,7 @@ class PopupItemView : ViewGroup {
                 removeView(iconView)
             }
 
-            field = value.apply {
+            field = value?.apply {
                 layoutParams = LayoutParams(iconWidth, iconHeight)
                 addView(this)
             }
@@ -53,9 +92,9 @@ class PopupItemView : ViewGroup {
         set(value) {
             titleTextView.text = value?.title
             titleTextView.setTextColor(if (value?.isActive == true) {
-                activeTitleTextColor
+                activeTitleColor
             } else {
-                inactiveTitleTextColor
+                inactiveTitleColor
             })
 
             if (field != null && iconView != null) {
@@ -63,7 +102,7 @@ class PopupItemView : ViewGroup {
             }
 
             iconView = value?.getIconView(context)
-            value?.configureIconView(iconView!!)
+            value?.configureIconView(this, iconView!!)
 
             field = value
             requestLayout()
@@ -77,8 +116,8 @@ class PopupItemView : ViewGroup {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.PopupItemView, defStyleAttr, 0).use {
             marginBetweenIconAndTitle = it.getDimensionPixelSize(R.styleable.PopupItemView_marginBetweenIconAndText, 0)
-            inactiveTitleTextColor = it.getColorOrThrow(R.styleable.PopupItemView_inactiveTitleTextColor)
-            activeTitleTextColor = it.getColorOrThrow(R.styleable.PopupItemView_activeTitleTextColor)
+            inactiveTitleColor = it.getColorOrThrow(R.styleable.PopupItemView_inactiveTitleColor)
+            activeTitleColor = it.getColorOrThrow(R.styleable.PopupItemView_activeTitleColor)
             iconHeight = it.getDimensionPixelSizeOrThrow(R.styleable.PopupItemView_iconHeight)
             iconWidth = it.getDimensionPixelSizeOrThrow(R.styleable.PopupItemView_iconWidth)
 
