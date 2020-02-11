@@ -27,12 +27,21 @@ class DialogsCallback(
     }
 
     override fun compare(item1: DialogItemViewVO, item2: DialogItemViewVO): Int {
-        if(item1.isViewed && !item2.isViewed){
+        if (item1.isViewed && !item2.isViewed) {
             return 1
         }
-        if(!item1.isViewed && item2.isViewed){
+        if (!item1.isViewed && item2.isViewed) {
             return -1
         }
+        if (!item1.isViewed && !item2.isViewed) {
+            if (item1.isMuted && !item2.isMuted) {
+                return 1
+            }
+            if (!item1.isMuted && item2.isMuted) {
+                return -1
+            }
+        }
+
         return -item1.date.compareTo(item2.date)
     }
 

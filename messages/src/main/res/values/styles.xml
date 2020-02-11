@@ -2,6 +2,12 @@
 <resources>
 
     <style name="Sudox.Messages.DialogItemView" parent="">
+        <item name="android:paddingLeft">@dimen/dialogitemview_padding_left</item>
+        <item name="android:paddingTop">@dimen/dialogitemview_padding_top</item>
+        <item name="android:paddingRight">@dimen/dialogitemview_padding_right</item>
+        <item name="android:paddingBottom">@dimen/dialogitemview_padding_bottom</item>
+
+        <item name="android:background">?attr/selectableItemBackground</item>
         <item name="imageWidth">@dimen/dialogitemview_image_width</item>
         <item name="imageHeight">@dimen/dialogitemview_image_height</item>
         <item name="imageActiveColor">@color/dialogitemview_image_active_color</item>

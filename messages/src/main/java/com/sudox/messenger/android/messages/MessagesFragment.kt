@@ -42,34 +42,7 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
                 }
             }
         }
-
-
-        testDialogItem1.setContentText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus enim ligula")
-        testDialogItem1.setIsNewMessage(true)
-        testDialogItem1.setCountMessages(100)
-        testDialogItem1.setLastDate("пн")
-        testDialogItem1.setMuted(false)
-        testDialogItem1.setDialogName("Антон")
-        testDialogItem1.setDialogImage(getDrawable(context!!, R.drawable.drawable_photo_1)!!)
-
-
-        testDialogItem2.setContentText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus enim ligula")
-        testDialogItem2.setIsNewMessage(false)
-        testDialogItem2.setLastDate("пн")
-        testDialogItem2.setDialogName("ЯроСЛАУ")
-        testDialogItem2.setLastMessageByUserHint(true)
-        testDialogItem2.setDialogImage(getDrawable(context!!, R.drawable.drawable_photo_2)!!)
-
-        var flag = true
-        button.setOnClickListener {
-            testDialogItem2.setMessageStatus(true, flag)
-            flag = !flag
-        }
-        var mutedFlag = true
-        button2.setOnClickListener {
-            testDialogItem1.setMuted(mutedFlag)
-            mutedFlag = !mutedFlag
-        }
+        dialogsRecyclerView.setHasFixedSize(true)
     }
 
     fun generateDialog(): DialogItemViewVO {
@@ -95,14 +68,14 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
         return DialogItemViewVO(
                 dialogId = Random.nextInt(),
                 isUserOnline = false,
-                isMuted = messageViewed,
-                isViewed = Random.nextInt(2) == 1,
+                isMuted = Random.nextInt(2) == 1,
+                isViewed = messageViewed,
                 dialogPhoto = photos[Random.nextInt(photos.size)],
                 dialogName = names[Random.nextInt(names.size)],
                 previewMessage = messages[Random.nextInt(messages.size)],
                 dateView = dates[Random.nextInt(dates.size)],
                 date = Calendar.getInstance().timeInMillis + Random.nextLong(1000000),
-                messagesCount = if (!messageViewed) Random.nextInt(50) else 0,
+                messagesCount = if (!messageViewed) Random.nextInt(10,50) else 0,
                 isLastMessageByMe = lastMessage,
                 isSentMessageDelivered = lastMessage,
                 isSentMessageViewed = lastViewed

@@ -34,9 +34,10 @@ class DialogsAdapter(val context: Context) : RecyclerView.Adapter<DialogsAdapter
                 val holder = ViewHolder(view)
 
                 view.setOnClickListener {
-                    //deleteDialogCallback!!(dialogs[holder.adapterPosition])
-                    dialogs.remove(dialogs[holder.adapterPosition])
-                    notifyItemChanged(itemCount-1)
+                    if(holder.adapterPosition != -1) {
+                        dialogs.remove(dialogs[holder.adapterPosition])
+                        notifyItemChanged(itemCount - 1)
+                    }
                 }
 
                 holder
