@@ -11,7 +11,17 @@ interface ViewListHeaderVO {
 
     var isItemsHidden: Boolean
     var selectedToggleTag: Int
-    var selectedFunctionButtonToggleTag: Int
+    var selectedFunctionButtonToggleTags: HashMap<Int, Int>?
+
+    /**
+     * Выбирает опцию функциональной кнопки и сопоставляет её опциональной кнопки переключателя
+     *
+     * @param functionalToggleTag Тег опции функциональной кнопки
+     */
+    fun selectFunctionalToggleTag(functionalToggleTag: Int) {
+        selectedFunctionButtonToggleTags?.remove(selectedToggleTag)
+        selectedFunctionButtonToggleTags?.put(selectedToggleTag, functionalToggleTag)
+    }
 
     /**
      * Возвращает опции переключателя

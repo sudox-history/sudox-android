@@ -49,7 +49,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
                 val toggleOptions = value.getToggleOptions(context)
 
                 textView.tag = VIEW_LIST_HEADER_VIEW_TEXT_TAG
-                textView.text = toggleOptions[value.selectedToggleTag].title
+                textView.text = toggleOptions.find { it.tag == value.selectedToggleTag }!!.title
                 textView.isClickable = toggleOptions.size > 1
                 textView.setCompoundDrawables(null, null, if (toggleOptions.size > 1) {
                     toggleIconDrawable
@@ -60,12 +60,11 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
                 val functionalButtonIcon = value.getFunctionButtonIcon(context)
 
                 functionalImageButton!!.let {
-                    it.iconDrawable = functionalButtonIcon
-                            ?: if (value.canHideItems()) {
-                                toggleIconDrawable
-                            } else {
-                                null
-                            }
+                    it.iconDrawable = functionalButtonIcon ?: if (value.canHideItems()) {
+                        toggleIconDrawable
+                    } else {
+                        null
+                    }
 
                     it.isClickable = functionalButtonIcon != null || value.canHideItems()
                     it.tag = VIEW_LIST_HEADER_VIEW_FUNCTION_BUTTON_TAG
@@ -93,9 +92,9 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
             toggleIconTint = it.getColorOrThrow(R.styleable.ViewListHeaderView_toggleIconTint)
             toggleIconDrawable = it.getDrawableOrThrow(R.styleable.ViewListHeaderView_toggleIconDrawable)
-            functionalImageButton = it.createStyledView<ImageButton>(context, R.styleable.ViewListHeaderView_functionalButtonStyle).apply {
+            functionalImageButton = it.createStyledView<ImageButton>(context, R.styleable.ViewListHeaderView_functionalButtonStyle)!!.apply {
                 setOnClickListener(this@ViewListHeaderView)
-                addView(this)
+                this@ViewListHeaderView.addView(this)
             }
         }
     }
@@ -132,36 +131,30 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
     }
 
     override fun onClick(view: View) {
+        togglePopupWindow?.dismiss()
+        togglePopupWindow = null
+
         if (view == textView) {
-            togglePopupWindow?.dismiss()
             togglePopupWindow = ListPopupWindow(context, vo!!.getToggleOptions(context)) {
                 vo!!.selectedToggleTag = it.tag
+                vo = vo // Updating layout ...
                 togglePopupWindow!!.dismiss()
             }
 
             togglePopupWindow!!.showAsDropDown(textView)
-//            togglePopupMenu?.dismiss()
-//            togglePopupMenu = PopupMenu(context, textView)
-//            togglePopupMenu!!.setOnMenuItemClickListener {
-//                vo!!.selectedToggleIndex = it.itemId
-//                true
-//            }
-//
-//            for ((index, option) in vo?.getToggleOptions(context)!!.withIndex()) {
-//                togglePopupMenu!!.menu.add(0, index, 0, "${option.second.first} ${if (index == vo!!.selectedToggleIndex) {
-//                    "(Selected)"
-//                } else {
-//                    ""
-//                }}")
-//            }
-//
-//            togglePopupMenu!!.show()
-        } else if (view == functionalImageButton) {
-            if (vo!!.canHideItems()) {
-                // TODO: Hide items
-            } else {
-                // TODO: Callback
+        } else if (!vo!!.canHideItems()) {
+            val functionalButtonsOptions = vo!!.getFunctionButtonToggleOptions(context)
+
+            if (functionalButtonsOptions!!.size > 1) {
+                togglePopupWindow = ListPopupWindow(context, functionalButtonsOptions) {
+                    vo!!.selectFunctionalToggleTag(it.tag)
+                    togglePopupWindow!!.dismiss()
+                }
+
+                togglePopupWindow!!.showAsDropDown(functionalImageButton)
             }
+        } else {
+            // TODO: Hide items
         }
     }
 }

@@ -17,8 +17,11 @@ const val ONLINE_OPTION_TAG = 4
 const val NAME_OPTION_TAG = 5
 
 class AddedFriendsHeaderVO(
-        override var selectedFunctionButtonToggleTag: Int = 0,
-        override var selectedToggleTag: Int = 0
+        override var selectedToggleTag: Int = 0,
+        override var selectedFunctionButtonToggleTags: HashMap<Int, Int>? = hashMapOf(
+                FRIENDS_OPTION_TAG to IMPORTANCE_OPTION_TAG,
+                SUBSCRIPTIONS_OPTION_TAG to FAVORITE_OPTION_TAG
+        )
 ) : ViewListHeaderVO {
 
     override var isItemsHidden: Boolean = false
@@ -41,35 +44,37 @@ class AddedFriendsHeaderVO(
     }
 
     override fun getFunctionButtonToggleOptions(context: Context): List<PopupItemVO<*>>? {
-        return if (selectedToggleTag == 0) {
+        val functionalTag = selectedFunctionButtonToggleTags!![selectedToggleTag]!!
+
+        return if (selectedToggleTag == FRIENDS_OPTION_TAG) {
             listOf(
                     PopupItemWithDrawableIconVO(IMPORTANCE_OPTION_TAG,
                             context.getString(R.string.importance),
                             context.getDrawable(R.drawable.ic_show_chart)!!,
-                            selectedToggleTag == IMPORTANCE_OPTION_TAG),
+                            functionalTag == IMPORTANCE_OPTION_TAG),
                     PopupItemWithDrawableIconVO(ONLINE_OPTION_TAG,
                             context.getString(R.string.online),
                             context.getDrawable(R.drawable.ic_trip)!!,
-                            selectedToggleTag == ONLINE_OPTION_TAG),
+                            functionalTag == ONLINE_OPTION_TAG),
                     PopupItemWithDrawableIconVO(NAME_OPTION_TAG,
                             context.getString(R.string.name),
                             context.getDrawable(R.drawable.ic_face)!!,
-                            selectedToggleTag == NAME_OPTION_TAG)
+                            functionalTag == NAME_OPTION_TAG)
             )
         } else {
             listOf(
                     PopupItemWithDrawableIconVO(FAVORITE_OPTION_TAG,
                             context.getString(R.string.favorite),
                             context.getDrawable(R.drawable.ic_favorite)!!,
-                            selectedToggleTag == FAVORITE_OPTION_TAG),
+                            functionalTag == FAVORITE_OPTION_TAG),
                     PopupItemWithDrawableIconVO(POPULAR_OPTION_TAG,
                             context.getString(R.string.popular),
                             context.getDrawable(R.drawable.ic_show_chart)!!,
-                            selectedToggleTag == POPULAR_OPTION_TAG),
+                            functionalTag == POPULAR_OPTION_TAG),
                     PopupItemWithDrawableIconVO(NAME_OPTION_TAG,
                             context.getString(R.string.name),
                             context.getDrawable(R.drawable.ic_face)!!,
-                            selectedToggleTag == NAME_OPTION_TAG)
+                            functionalTag == NAME_OPTION_TAG)
             )
         }
     }
