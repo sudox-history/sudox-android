@@ -10,11 +10,11 @@ import com.sudox.messenger.android.people.peopletab.R
 class FriendRequestsHeaderVO : ViewListHeaderVO {
 
     override var isItemsHidden: Boolean = false
-    override var selectedFunctionButtonToggleIndex = 0
-    override var selectedToggleIndex = 0
+    override var selectedFunctionButtonToggleTag = 0
+    override var selectedToggleTag = 0
 
     override fun getToggleOptions(context: Context): List<PopupItemVO<*>> {
-        return listOf(PopupItemWithoutIconVO(0, context.getString(R.string.friend_requests), selectedToggleIndex == 0))
+        return listOf(PopupItemWithoutIconVO(0, context.getString(R.string.friend_requests), selectedToggleTag == 0))
     }
 
     override fun getFunctionButtonIcon(context: Context): Drawable? {

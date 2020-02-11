@@ -49,7 +49,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
                 val toggleOptions = value.getToggleOptions(context)
 
                 textView.tag = VIEW_LIST_HEADER_VIEW_TEXT_TAG
-                textView.text = toggleOptions[value.selectedToggleIndex].title
+                textView.text = toggleOptions[value.selectedToggleTag].title
                 textView.isClickable = toggleOptions.size > 1
                 textView.setCompoundDrawables(null, null, if (toggleOptions.size > 1) {
                     toggleIconDrawable
@@ -135,7 +135,8 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
         if (view == textView) {
             togglePopupWindow?.dismiss()
             togglePopupWindow = ListPopupWindow(context, vo!!.getToggleOptions(context)) {
-                
+                vo!!.selectedToggleTag = it.tag
+                togglePopupWindow!!.dismiss()
             }
 
             togglePopupWindow!!.showAsDropDown(textView)

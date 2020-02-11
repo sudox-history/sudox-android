@@ -10,8 +10,8 @@ import com.sudox.design.popup.vos.PopupItemVO
 interface ViewListHeaderVO {
 
     var isItemsHidden: Boolean
-    var selectedToggleIndex: Int
-    var selectedFunctionButtonToggleIndex: Int
+    var selectedToggleTag: Int
+    var selectedFunctionButtonToggleTag: Int
 
     /**
      * Возвращает опции переключателя

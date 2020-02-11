@@ -17,8 +17,8 @@ const val ONLINE_OPTION_TAG = 4
 const val NAME_OPTION_TAG = 5
 
 class AddedFriendsHeaderVO(
-        override var selectedFunctionButtonToggleIndex: Int = 0,
-        override var selectedToggleIndex: Int = 0
+        override var selectedFunctionButtonToggleTag: Int = 0,
+        override var selectedToggleTag: Int = 0
 ) : ViewListHeaderVO {
 
     override var isItemsHidden: Boolean = false
@@ -28,11 +28,11 @@ class AddedFriendsHeaderVO(
                 PopupItemWithDrawableIconVO(FRIENDS_OPTION_TAG,
                         context.getString(R.string.friends),
                         context.getDrawable(R.drawable.ic_mood)!!,
-                        selectedToggleIndex == 0),
+                        selectedToggleTag == FRIENDS_OPTION_TAG),
                 PopupItemWithDrawableIconVO(SUBSCRIPTIONS_OPTION_TAG,
                         context.getString(R.string.subscriptions),
                         context.getDrawable(R.drawable.ic_public)!!,
-                        selectedToggleIndex == 1)
+                        selectedToggleTag == SUBSCRIPTIONS_OPTION_TAG)
         )
     }
 
@@ -41,35 +41,35 @@ class AddedFriendsHeaderVO(
     }
 
     override fun getFunctionButtonToggleOptions(context: Context): List<PopupItemVO<*>>? {
-        return if (selectedToggleIndex == 0) {
+        return if (selectedToggleTag == 0) {
             listOf(
                     PopupItemWithDrawableIconVO(IMPORTANCE_OPTION_TAG,
                             context.getString(R.string.importance),
                             context.getDrawable(R.drawable.ic_show_chart)!!,
-                            selectedToggleIndex == 0),
+                            selectedToggleTag == IMPORTANCE_OPTION_TAG),
                     PopupItemWithDrawableIconVO(ONLINE_OPTION_TAG,
                             context.getString(R.string.online),
                             context.getDrawable(R.drawable.ic_trip)!!,
-                            selectedToggleIndex == 1),
+                            selectedToggleTag == ONLINE_OPTION_TAG),
                     PopupItemWithDrawableIconVO(NAME_OPTION_TAG,
                             context.getString(R.string.name),
                             context.getDrawable(R.drawable.ic_face)!!,
-                            selectedToggleIndex == 2)
+                            selectedToggleTag == NAME_OPTION_TAG)
             )
         } else {
             listOf(
                     PopupItemWithDrawableIconVO(FAVORITE_OPTION_TAG,
                             context.getString(R.string.favorite),
                             context.getDrawable(R.drawable.ic_favorite)!!,
-                            selectedToggleIndex == 0),
+                            selectedToggleTag == FAVORITE_OPTION_TAG),
                     PopupItemWithDrawableIconVO(POPULAR_OPTION_TAG,
                             context.getString(R.string.popular),
                             context.getDrawable(R.drawable.ic_show_chart)!!,
-                            selectedToggleIndex == 1),
+                            selectedToggleTag == POPULAR_OPTION_TAG),
                     PopupItemWithDrawableIconVO(NAME_OPTION_TAG,
                             context.getString(R.string.name),
                             context.getDrawable(R.drawable.ic_face)!!,
-                            selectedToggleIndex == 2)
+                            selectedToggleTag == NAME_OPTION_TAG)
             )
         }
     }

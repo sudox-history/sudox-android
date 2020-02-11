@@ -11,11 +11,11 @@ class MaybeYouKnowHeaderVO(
         override var isItemsHidden: Boolean = false
 ) : ViewListHeaderVO {
 
-    override var selectedFunctionButtonToggleIndex = 0
-    override var selectedToggleIndex = 0
+    override var selectedFunctionButtonToggleTag = 0
+    override var selectedToggleTag = 0
 
     override fun getToggleOptions(context: Context): List<PopupItemVO<*>> {
-        return listOf(PopupItemWithoutIconVO(0, context.getString(R.string.maybe_you_know), selectedToggleIndex == 0))
+        return listOf(PopupItemWithoutIconVO(0, context.getString(R.string.maybe_you_know), selectedToggleTag == 0))
     }
 
     override fun getFunctionButtonIcon(context: Context): Drawable? {
