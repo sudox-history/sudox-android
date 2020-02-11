@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.ListPopupWindow" parent="">
+        <item name="android:popupBackground">@drawable/background_listpopupwindow</item>
+        <item name="android:popupElevation">@dimen/listpopupwindow_elevation</item>
+    </style>
+
+    <style name="Sudox.PopupItemView" parent="">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:paddingLeft">@dimen/popupitemview_padding_left</item>
+        <item name="android:paddingRight">@dimen/popupitemview_padding_right</item>
+        <item name="android:paddingBottom">@dimen/popupitemview_padding_bottom</item>
+        <item name="android:paddingTop">@dimen/popupitemview_padding_top</item>
+        <item name="titleTextAppearance">@style/Sudox.PopupItemView.Title</item>
+        <item name="marginBetweenIconAndText">@dimen/popupitemview_margin_between_icon_and_text</item>
+        <item name="inactiveTitleTextColor">@color/popupitemview_inactive_title_text_color</item>
+        <item name="activeTitleTextColor">@color/popupitemview_active_title_text_color</item>
+        <item name="iconHeight">@dimen/popupitemview_icon_height</item>
+        <item name="iconWidth">@dimen/popupitemview_icon_width</item>
+    </style>
+
+    <style name="Sudox.PopupItemView.Title" parent="">
+        <item name="android:textSize">@dimen/popupitemview_title_text_size</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+</resources>

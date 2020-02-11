@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="listpopupwindow_background_color">#FFFFFF</color>
+    <color name="listpopupwindow_stroke_color">#E0E0E0</color>
+
+    <color name="popupitemview_inactive_title_text_color">#808080</color>
+    <color name="popupitemview_active_title_text_color">#00BFA5</color>
+</resources>

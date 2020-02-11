@@ -4,11 +4,10 @@ apply from: '../../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
-    api project(path: ':design:common')
-    api project(path: ':design:imagebutton')
-    api project(path: ':design:popup')
+    api project(path: ':design:imageview')
+    api project(path: ':images')
 
     implementation libraries.core_ktx
-    implementation libraries.appcompat
     implementation libraries.recyclerview
+    implementation libraries.appcompat
 }

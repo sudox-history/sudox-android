@@ -37,6 +37,10 @@
         <item name="tabLayoutButtonStyle">@style/Sudox.TabLayout.Button</item>
         <item name="sectionedListViewStyle">@style/Sudox.SectionedListView</item>
         <item name="customImageViewStyle">@style/Sudox.ImageView</item>
+
+        <item name="popupItemViewStyle">@style/Sudox.PopupItemView</item>
+        <item name="listPopupWindowStyle">@style/Sudox.ListPopupWindow</item>
+
         <item name="viewListHeaderStyle">@style/Sudox.ViewList.Header</item>
         <item name="viewListStyle">@style/Sudox.ViewList</item>
 
