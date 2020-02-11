@@ -12,15 +12,19 @@ import kotlin.math.max
  * Popup-меню, построенное на базе RecyclerView
  *
  * @param context Контекст приложения/активности
+ * @param itemClickedCallback Кэллбэк клика по элементу
  * @param items VO элементов меню
  */
 class ListPopupWindow(
         context: Context,
-        items: List<PopupItemVO<*>>
+        items: List<PopupItemVO<*>>,
+        itemClickedCallback: (PopupItemVO<*>) -> (Unit)
 ) : PopupWindow(context, null, R.attr.listPopupWindowStyle) {
 
     private var viewList = RecyclerView(context)
-    private val adapter = ListPopupAdapter(context, items)
+    private val adapter = ListPopupAdapter(context, items).apply {
+        this.itemClickedCallback = itemClickedCallback
+    }
 
     init {
         isOutsideTouchable = true

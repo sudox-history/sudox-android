@@ -11,7 +11,7 @@ class ListPopupAdapter(
         val items: List<PopupItemVO<*>>
 ) : RecyclerView.Adapter<ListPopupAdapter.ViewHolder>() {
 
-    val itemClickedCallback: ((PopupItemVO<*>) -> (Unit))? = null
+    var itemClickedCallback: ((PopupItemVO<*>) -> (Unit))? = null
     var maximumItemWidth = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

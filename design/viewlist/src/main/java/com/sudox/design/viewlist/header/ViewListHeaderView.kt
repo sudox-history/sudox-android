@@ -132,7 +132,9 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
             togglePopupWindow = ListPopupWindow(context, listOf(
                     PopupItemWithDrawableIconVO(1, "Hello", R.drawable.ic_arrow_down, true),
                     PopupItemWithDrawableIconVO(2, "World", R.drawable.ic_arrow_down, false)
-            ))
+            )) {
+
+            }
 
             togglePopupWindow!!.showAsDropDown(textView)
 //            togglePopupMenu?.dismiss()
