@@ -1,8 +1,10 @@
 package com.sudox.design.viewlist.header
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.RotateDrawable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +17,7 @@ import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.design.common.createStyledView
 import com.sudox.design.imagebutton.ImageButton
 import com.sudox.design.popup.ListPopupWindow
+import com.sudox.design.popup.vos.PopupItemVO
 import com.sudox.design.viewlist.R
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import kotlin.math.max
@@ -24,16 +27,35 @@ const val VIEW_LIST_HEADER_VIEW_FUNCTION_BUTTON_TAG = 2
 
 class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
-    private var togglePopupWindow: ListPopupWindow? = null
+    // 5000 = 180 градусов (10000 - 360 градусов)
+    private var hidingIconDrawableAnimation = ValueAnimator.ofInt(0, 5000).apply {
+        addUpdateListener { listener ->
+            functionalImageButton!!.let {
+                // P.S.: RotateDrawable будет задан от toggleIconDrawable при его мутации
+                (it.iconDrawable as RotateDrawable).level = listener.animatedValue as Int
+                it.invalidate()
+            }
+        }
+    }
+
+    private var toggleIconDrawableAnimator = ValueAnimator.ofInt(0, 5000).apply {
+        addUpdateListener {
+            toggleIconDrawable!!.level = it.animatedValue as Int
+        }
+    }
 
     var toggleIconDrawable: Drawable? = null
         set(value) {
-            field = value?.mutate()?.apply {
-                setBounds(0, 0, value.intrinsicWidth, value.intrinsicHeight)
-                setTint(toggleIconTint)
+            if (value != null) {
+                field = RotateDrawable().apply {
+                    drawable = value.mutate()
+
+                    setBounds(0, 0, value.intrinsicWidth, value.intrinsicHeight)
+                    setTint(toggleIconTint)
+                }
             }
 
-            vo = vo // Updating
+            vo = vo // Подгоняем данные под новую иконку
         }
 
     var toggleIconTint = 0
@@ -60,6 +82,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
                 val functionalButtonIcon = value.getFunctionButtonIcon(context)
 
                 functionalImageButton!!.let {
+                    // Не вызываем drawable.mutate(), т.к. оно уже будет вызвано изнутри ImageButton
                     it.iconDrawable = functionalButtonIcon ?: if (value.canHideItems()) {
                         toggleIconDrawable
                     } else {
@@ -76,6 +99,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
             invalidate()
         }
 
+    private var togglePopupWindow: ListPopupWindow? = null
     private var functionalImageButton: ImageButton? = null
     private var textView = AppCompatTextView(context).apply {
         setOnClickListener(this@ViewListHeaderView)
@@ -134,27 +158,51 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
         togglePopupWindow?.dismiss()
         togglePopupWindow = null
 
-        if (view == textView) {
-            togglePopupWindow = ListPopupWindow(context, vo!!.getToggleOptions(context)) {
-                vo!!.selectedToggleTag = it.tag
-                vo = vo // Updating layout ...
-                togglePopupWindow!!.dismiss()
-            }
+        val toggleOptions = vo!!.getToggleOptions(context)
+        val functionalButtonsOptions = vo!!.getFunctionButtonToggleOptions(context)
 
-            togglePopupWindow!!.showAsDropDown(textView)
-        } else if (!vo!!.canHideItems()) {
-            val functionalButtonsOptions = vo!!.getFunctionButtonToggleOptions(context)
-
-            if (functionalButtonsOptions!!.size > 1) {
-                togglePopupWindow = ListPopupWindow(context, functionalButtonsOptions) {
-                    vo!!.selectFunctionalToggleTag(it.tag)
-                    togglePopupWindow!!.dismiss()
-                }
-
-                togglePopupWindow!!.showAsDropDown(functionalImageButton)
-            }
+        if (view == textView && toggleOptions.size > 1) {
+            handleTextViewClick(toggleOptions)
+        } else if (!vo!!.canHideItems() && functionalButtonsOptions!!.size > 1) {
+            handleFunctionButtonClick(functionalButtonsOptions)
         } else {
-            // TODO: Hide items
+            handleItemsHidingRequest()
+        }
+    }
+
+    private fun handleTextViewClick(toggleOptions: List<PopupItemVO<*>>) {
+        if (toggleIconDrawableAnimator.isRunning) {
+            return
+        }
+
+        togglePopupWindow = ListPopupWindow(context, toggleOptions) {
+            togglePopupWindow!!.dismiss()
+            vo!!.selectedToggleTag = it.tag
+            vo = vo // Обновляем данные ...
+        }.apply {
+            setOnDismissListener { toggleIconDrawableAnimator.reverse() }
+            showAsDropDown(textView)
+        }
+
+        toggleIconDrawableAnimator.start()
+    }
+
+    private fun handleFunctionButtonClick(functionalButtonsOptions: List<PopupItemVO<*>>) {
+        togglePopupWindow = ListPopupWindow(context, functionalButtonsOptions) {
+            vo!!.selectFunctionalToggleTag(it.tag)
+            togglePopupWindow!!.dismiss()
+        }
+
+        togglePopupWindow!!.showAsDropDown(functionalImageButton)
+    }
+
+    private fun handleItemsHidingRequest() {
+        if (vo?.isItemsHidden == true) {
+            hidingIconDrawableAnimation.reverse()
+            vo?.isItemsHidden = false
+        } else {
+            hidingIconDrawableAnimation.start()
+            vo?.isItemsHidden = true
         }
     }
 }

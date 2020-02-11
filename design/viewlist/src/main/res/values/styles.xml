@@ -24,6 +24,7 @@
 
     <!--  TODO: Button style to common module ;(  -->
     <style name="Sudox.ViewList.Header.FunctionButton" parent="">
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="iconTint">@color/viewlist_header_functional_button_icon_tint</item>
         <item name="iconWidth">@dimen/viewlist_header_functional_button_icon_width</item>
         <item name="iconHeight">@dimen/viewlist_header_functional_button_icon_height</item>
