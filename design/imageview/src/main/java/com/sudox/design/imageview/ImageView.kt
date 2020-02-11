@@ -11,7 +11,6 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.use
-import androidx.core.graphics.drawable.toBitmap
 
 /**
  * Более производительный и эффективный ImageView
@@ -25,8 +24,14 @@ open class ImageView : View {
         set(value) {
             val bitmapIsNotEqualed = bitmap != value
 
+            if (field != null && !field!!.isRecycled) {
+                field!!.recycle()
+            }
+
             field = if (value != null && (value.height != layoutParams.height || value.width != layoutParams.width)) {
-                ThumbnailUtils.extractThumbnail(value, layoutParams.width, layoutParams.height)
+                val thumbnail = ThumbnailUtils.extractThumbnail(value, layoutParams.width, layoutParams.height)
+                value.recycle()
+                thumbnail
             } else {
                 value
             }
@@ -36,6 +41,7 @@ open class ImageView : View {
             }
         }
 
+    var drawable: Drawable? = null
     var defaultDrawable: Drawable? = null
         set(value) {
             field = value
@@ -61,12 +67,15 @@ open class ImageView : View {
         val widthSize = layoutParams.width
         val heightSize = layoutParams.height
 
+        drawable?.setBounds(0, 0, layoutParams.width, layoutParams.height)
         defaultDrawable!!.setBounds(0, 0, widthSize, heightSize)
         setMeasuredDimension(widthSize, heightSize)
     }
 
     override fun dispatchDraw(canvas: Canvas) {
-        if (bitmap != null) {
+        if (drawable != null) {
+            drawable!!.draw(canvas)
+        } else if (bitmap != null) {
             canvas.drawBitmap(bitmap!!, 0F, 0F, bitmapPaint)
         } else {
             defaultDrawable!!.draw(canvas)
@@ -81,8 +90,8 @@ open class ImageView : View {
      * @param colorTint Оттенок иконки
      */
     fun setDrawable(drawable: Drawable?, colorTint: Int) {
-        bitmap = drawable?.mutate()?.apply {
+        this.drawable = drawable?.mutate()?.apply {
             setTint(colorTint)
-        }?.toBitmap()
+        }
     }
 }
