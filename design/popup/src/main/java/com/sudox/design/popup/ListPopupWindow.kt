@@ -33,12 +33,13 @@ class ListPopupWindow(
         // Размер иконки у всех VO одинаковый
         val itemHolder = adapter.createViewHolder(viewList, 0)
         val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-        val voWithLongestTitle = items.maxBy { it.title }!!
 
-        itemHolder.view.let {
-            it.vo = voWithLongestTitle
-            it.measure(measureSpec, measureSpec)
-            adapter.maximumItemWidth = max(it.measuredWidth, adapter.maximumItemWidth)
+        for (item in items) {
+            itemHolder.view.let {
+                it.vo = item
+                it.measure(measureSpec, measureSpec)
+                adapter.maximumItemWidth = max(it.measuredWidth, adapter.maximumItemWidth)
+            }
         }
 
         contentView = viewList.apply {
