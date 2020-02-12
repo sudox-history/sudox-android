@@ -26,7 +26,15 @@ class ListPopupAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.view.let {
-            it.setOnClickListener { itemClickedCallback!!(items[holder.adapterPosition]) }
+            it.setOnClickListener {
+                val activeItem = items.find { item -> item.isActive }
+                val clickedItem = items[holder.adapterPosition]
+
+                if (activeItem != clickedItem) {
+                    itemClickedCallback!!(clickedItem)
+                }
+            }
+
             it.vo = items[position]
         }
     }

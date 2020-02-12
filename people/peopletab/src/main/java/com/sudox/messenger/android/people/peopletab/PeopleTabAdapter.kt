@@ -56,6 +56,10 @@ class PeopleTabAdapter(
     }
 
     override fun getItemsCountAfterHeader(type: Int): Int {
+        if (type != ADDED_FRIENDS_HEADER_TAG) {
+            return 0
+        }
+
         return if (headersVO[ADDED_FRIENDS_HEADER_TAG]!!.isItemsHidden) {
             0
         } else if (headersVO[ADDED_FRIENDS_HEADER_TAG]!!.selectedToggleTag == FRIENDS_OPTION_TAG) {
@@ -67,16 +71,6 @@ class PeopleTabAdapter(
 
     override fun getHeadersCount(): Int {
         return 1
-    }
-
-    override fun getItemsCount(): Int {
-        return if (headersVO[ADDED_FRIENDS_HEADER_TAG]!!.isItemsHidden) {
-            0
-        } else if (headersVO[ADDED_FRIENDS_HEADER_TAG]!!.selectedToggleTag == FRIENDS_OPTION_TAG) {
-            1
-        } else {
-            2
-        }
     }
 
     class ViewHolder(val view: HorizontalPeopleItemView) : RecyclerView.ViewHolder(view)

@@ -14,6 +14,9 @@ import kotlinx.android.synthetic.main.fragment_people_tab.peopleTabContentList
 
 class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListener {
 
+    private var adapter: PeopleTabAdapter? = null
+    private var toggle: Boolean = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_people_tab, container, false)
     }
@@ -21,9 +24,11 @@ class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        adapter = PeopleTabAdapter(peopleTabContentList)
+
         peopleTabContentList.let {
             it.layoutManager = LinearLayoutManager(context)
-            it.adapter = PeopleTabAdapter(peopleTabContentList)
+            it.adapter = adapter
         }
     }
 
@@ -39,5 +44,8 @@ class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListe
         }
     }
 
-    override fun onButtonClicked(tag: Int) {}
+    override fun onButtonClicked(tag: Int) {
+        toggle = !toggle
+        adapter!!.toggleLoadingForHeader(ADDED_FRIENDS_HEADER_TAG, toggle)
+    }
 }

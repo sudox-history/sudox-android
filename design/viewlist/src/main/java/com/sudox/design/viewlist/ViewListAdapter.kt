@@ -1,6 +1,7 @@
 package com.sudox.design.viewlist
 
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.updatePadding
@@ -11,10 +12,12 @@ import com.sudox.design.viewlist.vos.ViewListHeaderVO
 
 const val HEADER_VIEW_TYPE = -1
 const val FOOTER_VIEW_TYPE = -2
+const val LOADING_VIEW_TYPE = -3
 
 abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         private val viewList: ViewList,
-        private val headersVOs: HashMap<Int, ViewListHeaderVO>? = null
+        private val headersVOs: HashMap<Int, ViewListHeaderVO>? = null,
+        private val loadingStates: HashMap<Int, Boolean> = HashMap()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var initialTopPadding = -1
@@ -49,6 +52,13 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             HeaderViewHolder(ViewListHeaderView(viewList.context))
         } else if (viewType == FOOTER_VIEW_TYPE && getFooterCount() > 0) {
             FooterViewHolder(AppCompatTextView(ContextThemeWrapper(viewList.context, viewList.footerTextAppearance)))
+        } else if (viewType == LOADING_VIEW_TYPE) {
+            LoadingViewHolder(ProgressBar(viewList.context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            })
         } else {
             createItemHolder(parent, viewType)
         }
@@ -112,6 +122,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
                 return
             }
+        } else if (holder is LoadingViewHolder) {
+            return
         }
 
         @Suppress("UNCHECKED_CAST")
@@ -147,16 +159,47 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         } else if (getFooterText(position) != null) {
             FOOTER_VIEW_TYPE
         } else {
-            getItemType(position)
+            val header = getHeaderByPosition(position - 1)
+
+            if (header != null && loadingStates[getHeaderType(header)] == true) {
+                LOADING_VIEW_TYPE
+            } else {
+                getItemType(position)
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return getHeadersCount() + getItemsCount() + getFooterCount()
+        return getHeadersCount() + getFooterCount() + headersVOs!!.keys.sumBy {
+            if (loadingStates[it] != true) {
+                getItemsCountAfterHeader(it)
+            } else {
+                1
+            }
+        }
     }
 
     private fun getHeaderType(vo: ViewListHeaderVO): Int {
         return headersVOs!!.entries.find { entry -> entry.value == vo }!!.key
+    }
+
+    /**
+     * Включает/отключает загрузку после заголовка
+     *
+     * @param type Тип шапки
+     * @param toggle Включить/выключить загрузку
+     */
+    fun toggleLoadingForHeader(type: Int, toggle: Boolean) {
+        loadingStates[type] = toggle
+
+        val itemsAfterHeader = getItemsCountAfterHeader(type)
+
+        if (toggle) {
+            notifyItemRangeRemovedAfterHeader(type, 0, itemsAfterHeader)
+        } else {
+            notifyItemRemoved(findHeaderPosition(type) + 1)
+            notifyItemRangeInsertedAfterHeader(type, 0, itemsAfterHeader)
+        }
     }
 
     /**
@@ -230,14 +273,6 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
         notifyItemMoved(itemFromPosition, itemToPosition)
     }
-
-    /**
-     * Возвращает количество шапок.
-     * Должен вернуть именно количество активных шапок.!
-     *
-     * @result Количество активных шапок.
-     */
-    open fun getHeadersCount(): Int = 0
 
     /**
      * Ищет позицию шапки, на которой находится указанный текст
@@ -405,12 +440,12 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     open fun canCreateMarginViaDecorators(position: Int): Boolean = false
 
     /**
-     * Возвращает количество активных элементов.
-     * Должен вернуть именно количество активных элементов!
+     * Возвращает количество шапок.
+     * Должен вернуть именно количество активных шапок.!
      *
-     * @result Количество активных элементов
+     * @result Количество активных шапок.
      */
-    open fun getItemsCount(): Int = 0
+    open fun getHeadersCount(): Int = 0
 
     private class HeaderViewHolder(
             val view: ViewListHeaderView
@@ -418,5 +453,9 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
     private class FooterViewHolder(
             val view: AppCompatTextView
+    ) : RecyclerView.ViewHolder(view)
+
+    private class LoadingViewHolder(
+            val view: ProgressBar
     ) : RecyclerView.ViewHolder(view)
 }
