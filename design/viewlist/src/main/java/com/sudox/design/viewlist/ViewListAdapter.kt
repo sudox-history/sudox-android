@@ -79,8 +79,23 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             val vo = getHeaderByPosition(position)
 
             if (vo != null) {
-                holder.view.vo = vo
-                holder.view.itemsVisibilityTogglingCallback = ::toggleItemsVisibilityAfterHeader
+                holder.view.let {
+                    it.itemsVisibilityTogglingCallback = {
+                        val type = headersVOs!!.entries.find { entry ->
+                            entry.value == vo
+                        }!!.key
+
+                        val itemCount = getItemsCountAfterHeader(type)
+
+                        if (vo.isItemsHidden) {
+                            notifyItemRangeRemoved(holder.adapterPosition + 1, itemCount)
+                        } else {
+                            notifyItemRangeInserted(holder.adapterPosition + 1, itemCount)
+                        }
+                    }
+
+                    it.vo = vo
+                }
 
                 if (position == 0 && initialTopPadding == -1) {
                     initialTopPadding = holder.view.paddingTop
@@ -202,23 +217,6 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         val itemToPosition = headerPosition + toPosition + 1
 
         notifyItemMoved(itemFromPosition, itemToPosition)
-    }
-
-    /**
-     * Скрывает/показывает элементы после шапки
-     *
-     * @param vo ViewObject шапки
-     */
-    fun toggleItemsVisibilityAfterHeader(vo: ViewListHeaderVO) {
-        val type = headersVOs!!.entries.find { it.value == vo }!!.key
-        val headerPosition = findHeaderPosition(type)
-        val itemCount = getItemsCountAfterHeader(type)
-
-        if (vo.isItemsHidden) {
-            notifyItemRangeRemoved(headerPosition + 1, itemCount)
-        } else {
-            notifyItemRangeInserted(headerPosition + 1, itemCount)
-        }
     }
 
     /**
