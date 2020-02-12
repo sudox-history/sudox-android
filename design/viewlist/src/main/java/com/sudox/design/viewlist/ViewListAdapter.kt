@@ -80,17 +80,25 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
             if (vo != null) {
                 holder.view.let {
-                    it.itemsVisibilityTogglingCallback = {
-                        val type = headersVOs!!.entries.find { entry ->
-                            entry.value == vo
-                        }!!.key
-
-                        val itemCount = getItemsCountAfterHeader(type)
+                    it.itemsVisibilityTogglingCallback = { vo ->
+                        val type = getHeaderType(vo)
+                        val itemsCount = getItemsCountAfterHeader(type)
 
                         if (vo.isItemsHidden) {
-                            notifyItemRangeRemoved(holder.adapterPosition + 1, itemCount)
+                            notifyItemRangeRemoved(holder.adapterPosition + 1, itemsCount)
                         } else {
-                            notifyItemRangeInserted(holder.adapterPosition + 1, itemCount)
+                            notifyItemRangeInserted(holder.adapterPosition + 1, itemsCount)
+                        }
+                    }
+
+                    it.getItemsCountBeforeChanging = { vo -> getItemsCountAfterHeader(getHeaderType(vo)) }
+                    it.itemsSectionChangingCallback = { vo, itemsCountBeforeChanging ->
+                        val type = getHeaderType(vo)
+                        val itemsCount = getItemsCountAfterHeader(type)
+
+                        if (!vo.isItemsHidden) {
+                            notifyItemRangeRemoved(holder.adapterPosition + 1, itemsCountBeforeChanging)
+                            notifyItemRangeInserted(holder.adapterPosition + 1, itemsCount)
                         }
                     }
 
@@ -145,6 +153,10 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
     override fun getItemCount(): Int {
         return getHeadersCount() + getItemsCount() + getFooterCount()
+    }
+
+    private fun getHeaderType(vo: ViewListHeaderVO): Int {
+        return headersVOs!!.entries.find { entry -> entry.value == vo }!!.key
     }
 
     /**

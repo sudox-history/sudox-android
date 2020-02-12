@@ -107,6 +107,8 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
     }
 
     var itemsVisibilityTogglingCallback: ((ViewListHeaderVO) -> (Unit))? = null
+    var itemsSectionChangingCallback: ((ViewListHeaderVO, Int) -> (Unit))? = null
+    var getItemsCountBeforeChanging: ((ViewListHeaderVO) -> (Int))? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.viewListHeaderStyle)
@@ -179,7 +181,10 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
         togglePopupWindow = ListPopupWindow(context, toggleOptions) {
             togglePopupWindow!!.dismiss()
+
+            val itemsCount = getItemsCountBeforeChanging!!(vo!!)
             vo!!.selectedToggleTag = it.tag
+            itemsSectionChangingCallback!!(vo!!, itemsCount)
             vo = vo // Обновляем данные ...
         }.apply {
             setOnDismissListener { toggleIconDrawableAnimator.reverse() }

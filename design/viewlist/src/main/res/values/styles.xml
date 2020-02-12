@@ -11,7 +11,7 @@
         <item name="functionalButtonStyle">@style/Sudox.ViewList.Header.FunctionButton</item>
         <item name="textAppearance">@style/Sudox.ViewList.Header.TextAppearance</item>
         <item name="toggleIconTint">@color/viewlist_header_toggle_icon_tint</item>
-        <item name="toggleIconDrawable">@drawable/ic_arrow_down</item>
+        <item name="toggleIconDrawable">@drawable/ic_arrow_up</item>
     </style>
 
     <style name="Sudox.ViewList.Header.TextAppearance" parent="">

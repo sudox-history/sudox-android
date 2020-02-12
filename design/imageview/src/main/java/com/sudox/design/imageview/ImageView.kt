@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.media.ThumbnailUtils
 import android.util.AttributeSet
@@ -59,7 +61,7 @@ open class ImageView : View {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.ImageView, defStyleAttr, 0).use {
-            defaultDrawable = it.getDrawableOrThrow(R.styleable.ImageView_defaultDrawable)
+            defaultDrawable = it.getDrawable(R.styleable.ImageView_defaultDrawable) ?: ColorDrawable(Color.BLACK)
         }
     }
 
