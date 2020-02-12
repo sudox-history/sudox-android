@@ -106,6 +106,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
         addView(this)
     }
 
+    var sortTypeChangingCallback: ((ViewListHeaderVO, Int) -> (Unit))? = null
     var itemsVisibilityTogglingCallback: ((ViewListHeaderVO) -> (Unit))? = null
     var itemsSectionChangingCallback: ((ViewListHeaderVO, Int) -> (Unit))? = null
     var getItemsCountBeforeChanging: ((ViewListHeaderVO) -> (Int))? = null
@@ -196,8 +197,12 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
     private fun handleFunctionButtonClick(functionalButtonsOptions: List<PopupItemVO<*>>) {
         togglePopupWindow = ListPopupWindow(context, functionalButtonsOptions) {
-            vo!!.selectFunctionalToggleTag(it.tag)
             togglePopupWindow!!.dismiss()
+            vo!!.selectFunctionalToggleTag(it.tag)
+
+            if (vo!!.canSortItems()) {
+                sortTypeChangingCallback!!(vo!!, getItemsCountBeforeChanging!!(vo!!))
+            }
         }
 
         togglePopupWindow!!.showAsDropDown(functionalImageButton)

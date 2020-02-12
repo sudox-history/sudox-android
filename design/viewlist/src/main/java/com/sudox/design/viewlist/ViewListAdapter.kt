@@ -23,6 +23,9 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     private var initialTopPadding = -1
     private var dataObserver: RecyclerView.AdapterDataObserver? = null
 
+    var sectionChangedCallback: ((Int, Int, ViewListHeaderVO) -> (Unit))? = null
+    var sortingTypeChangedCallback: ((Int, Int, ViewListHeaderVO) -> (Unit))? = null
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         dataObserver = object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
@@ -104,11 +107,19 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                     it.getItemsCountBeforeChanging = { vo -> getItemsCountAfterHeader(getHeaderType(vo)) }
                     it.itemsSectionChangingCallback = { vo, itemsCountBeforeChanging ->
                         val type = getHeaderType(vo)
-                        val itemsCount = getItemsCountAfterHeader(type)
 
                         if (!vo.isItemsHidden) {
-                            notifyItemRangeRemoved(holder.adapterPosition + 1, itemsCountBeforeChanging)
-                            notifyItemRangeInserted(holder.adapterPosition + 1, itemsCount)
+                            toggleLoadingForHeader(type, true)
+                            sectionChangedCallback!!(type, itemsCountBeforeChanging, vo)
+                        }
+                    }
+
+                    it.sortTypeChangingCallback = { vo, itemsCountBeforeChanging ->
+                        val type = getHeaderType(vo)
+
+                        if (!vo.isItemsHidden) {
+                            toggleLoadingForHeader(type, true)
+                            sortingTypeChangedCallback!!(type, itemsCountBeforeChanging, vo)
                         }
                     }
 
@@ -177,6 +188,21 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                 1
             }
         }
+    }
+
+    /**
+     * Уведомляет RecyclerView о том, что новые данные в измененной секции готовы к отображению
+     *
+     * @param headerType Тип заголовка
+     * @param itemsCountBeforeChanging Количество предметов после заголовка до изменения
+     * @param itemsCount Количество элементов после изменения
+     */
+    fun notifyChangedSectionDataChanged(headerType: Int, itemsCountBeforeChanging: Int, itemsCount: Int) {
+        val firstItemPosition = findHeaderPosition(headerType) + 1
+
+        toggleLoadingForHeader(headerType, false)
+        notifyItemRangeRemoved(firstItemPosition, itemsCountBeforeChanging)
+        notifyItemRangeInserted(firstItemPosition, itemsCount)
     }
 
     private fun getHeaderType(vo: ViewListHeaderVO): Int {

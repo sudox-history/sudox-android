@@ -82,4 +82,8 @@ class AddedFriendsHeaderVO(
     override fun canHideItems(): Boolean {
         return false
     }
+
+    override fun canSortItems(): Boolean {
+        return true
+    }
 }

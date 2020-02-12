@@ -48,6 +48,13 @@ interface ViewListHeaderVO {
     fun getFunctionButtonToggleOptions(context: Context): List<PopupItemVO<*>>?
 
     /**
+     * Определяет возможность сортировки элементов после шапки
+     *
+     * @return Можно ли сортировать предметы после себя?
+     */
+    fun canSortItems(): Boolean
+
+    /**
      * Определяет возможность скрытия элементов после шапки
      *
      * @return Можно ли скрыть предметы после себя?

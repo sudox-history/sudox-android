@@ -29,4 +29,8 @@ class MaybeYouKnowHeaderVO(
     override fun canHideItems(): Boolean {
         return true
     }
+
+    override fun canSortItems(): Boolean {
+        return false
+    }
 }
