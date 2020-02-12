@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
-import com.sudox.messenger.android.people.peopletab.vos.headers.AddedFriendsHeaderVO
-import com.sudox.messenger.android.people.peopletab.vos.headers.MaybeYouKnowHeaderVO
-import kotlinx.android.synthetic.main.fragment_people_tab.workSukaPleaseView
+import kotlinx.android.synthetic.main.fragment_people_tab.peopleTabContentList
 
 class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListener {
 
@@ -22,7 +21,10 @@ class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        workSukaPleaseView.vo = MaybeYouKnowHeaderVO()
+        peopleTabContentList.let {
+            it.layoutManager = LinearLayoutManager(context)
+            it.adapter = PeopleTabAdapter(peopleTabContentList)
+        }
     }
 
     override fun getPageTitle(context: Context): CharSequence? {

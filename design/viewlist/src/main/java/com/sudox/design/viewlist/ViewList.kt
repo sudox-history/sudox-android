@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ViewList : RecyclerView {
 
-    internal var headerTextAppearance = 0
     internal var footerTextAppearance = 0
     internal var initialPaddingRight = 0
     internal var initialPaddingLeft = 0
@@ -21,7 +20,6 @@ class ViewList : RecyclerView {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
         context.obtainStyledAttributes(attrs, R.styleable.ViewList, defStyle, 0).use {
-            headerTextAppearance = it.getResourceIdOrThrow(R.styleable.ViewList_headerTextAppearance)
             footerTextAppearance = it.getResourceIdOrThrow(R.styleable.ViewList_footerTextAppearance)
         }
 

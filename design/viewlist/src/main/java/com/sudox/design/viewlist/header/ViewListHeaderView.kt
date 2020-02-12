@@ -106,6 +106,8 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
         addView(this)
     }
 
+    var itemsVisibilityTogglingCallback: ((ViewListHeaderVO) -> (Unit))? = null
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.viewListHeaderStyle)
 
@@ -197,12 +199,14 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
     }
 
     private fun handleItemsHidingRequest() {
-        if (vo?.isItemsHidden == true) {
+        if (vo!!.isItemsHidden) {
             hidingIconDrawableAnimation.reverse()
-            vo?.isItemsHidden = false
+            vo!!.isItemsHidden = false
         } else {
             hidingIconDrawableAnimation.start()
-            vo?.isItemsHidden = true
+            vo!!.isItemsHidden = true
         }
+
+        itemsVisibilityTogglingCallback!!(vo!!)
     }
 }
