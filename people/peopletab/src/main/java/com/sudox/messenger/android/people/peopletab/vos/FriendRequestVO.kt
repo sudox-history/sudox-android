@@ -12,13 +12,15 @@ const val REJECT_REQUEST_BUTTON_TAG = 2
  * Информацию по другим полям смотрите в классе PeopleVO
  *
  * @param requestMessage Текст заявки
+ * @param requestTime Время подачи заявки
  */
 data class FriendRequestVO(
         override var userId: Long,
         override var userName: String,
         override var seenTime: Long,
         override var photoId: Long,
-        var requestMessage: String?
+        var requestMessage: String?,
+        var requestTime: Long
 ) : PeopleVO {
 
     override fun getButtons(): Array<Pair<Int, Int>> {

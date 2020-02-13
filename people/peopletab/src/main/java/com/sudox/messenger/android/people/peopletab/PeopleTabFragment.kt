@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
-import kotlinx.android.synthetic.main.fragment_people_tab.peopleTabContentList
+import com.sudox.messenger.android.people.common.vos.SEEN_TIME_ONLINE
+import com.sudox.messenger.android.people.peopletab.adapters.ADDED_FRIENDS_HEADER_TAG
+import com.sudox.messenger.android.people.peopletab.adapters.MaybeYouKnowAdapter
+import com.sudox.messenger.android.people.peopletab.adapters.PeopleTabAdapter
+import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
 
 class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListener {
 
@@ -18,18 +21,30 @@ class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListe
     private var toggle: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_people_tab, container, false)
+        return createMaybeYouKnowRecyclerView(context!!).apply {
+            (adapter as MaybeYouKnowAdapter).maybeYouKnowVOs.apply {
+                add(MaybeYouKnowVO(1, "Pidor", SEEN_TIME_ONLINE, 1, 15))
+                add(MaybeYouKnowVO(1, "Pidor", SEEN_TIME_ONLINE, 1, 18))
+                add(MaybeYouKnowVO(1, "Pidor", SEEN_TIME_ONLINE, 1, 18))
+                add(MaybeYouKnowVO(1, "Pidor", SEEN_TIME_ONLINE, 1, 18))
+                add(MaybeYouKnowVO(1, "Pidor", SEEN_TIME_ONLINE, 1, 18))
+                add(MaybeYouKnowVO(1, "Pidor", SEEN_TIME_ONLINE, 1, 18))
+                add(MaybeYouKnowVO(1, "Pidor", SEEN_TIME_ONLINE, 1, 18))
+                add(MaybeYouKnowVO(1, "Pidor", SEEN_TIME_ONLINE, 1, 18))
+                add(MaybeYouKnowVO(1, "Pidor", SEEN_TIME_ONLINE, 1, 18))
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = PeopleTabAdapter(peopleTabContentList)
-
-        peopleTabContentList.let {
-            it.layoutManager = LinearLayoutManager(context)
-            it.adapter = adapter
-        }
+//        adapter = PeopleTabAdapter(peopleTabContentList)
+//
+//        peopleTabContentList.let {
+//            it.layoutManager = LinearLayoutManager(context)
+//            it.adapter = adapter
+//        }
     }
 
     override fun getPageTitle(context: Context): CharSequence? {

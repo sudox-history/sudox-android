@@ -61,7 +61,7 @@ open class ImageView : View {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.ImageView, defStyleAttr, 0).use {
-            defaultDrawable = it.getDrawable(R.styleable.ImageView_defaultDrawable) ?: ColorDrawable(Color.BLACK)
+            defaultDrawable = it.getDrawable(R.styleable.ImageView_defaultDrawable)
         }
     }
 

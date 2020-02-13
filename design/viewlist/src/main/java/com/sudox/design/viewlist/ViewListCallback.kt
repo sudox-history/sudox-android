@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.SortedList
  * @param headerType Тип заголовка (нужен для поиска позиций вставки элемента)
  */
 abstract class ViewListCallback<T>(
-        val viewListAdapter: ViewListAdapter<*>,
-        val headerType: Int = 0
+        private val viewListAdapter: ViewListAdapter<*>,
+        private val headerType: Int = 0
 ) : SortedList.Callback<T>() {
 
     override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {

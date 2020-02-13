@@ -12,7 +12,8 @@ data class AddedFriendVO(
         override var userId: Long,
         override var userName: String,
         override var seenTime: Long,
-        override var photoId: Long
+        override var photoId: Long,
+        var importance: Int = 0
 ) : PeopleVO {
 
     override fun getButtons(): Array<Pair<Int, Int>>? {

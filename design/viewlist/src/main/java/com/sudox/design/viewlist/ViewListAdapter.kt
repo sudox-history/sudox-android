@@ -181,13 +181,13 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     }
 
     override fun getItemCount(): Int {
-        return getHeadersCount() + getFooterCount() + headersVOs!!.keys.sumBy {
+        return getHeadersCount() + getFooterCount() + (headersVOs?.keys?.sumBy {
             if (loadingStates[it] != true) {
                 getItemsCountAfterHeader(it)
             } else {
                 1
             }
-        }
+        } ?: getItemsCountAfterHeader(0))
     }
 
     /**
@@ -237,15 +237,19 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      * @param itemCount Количество элементов для вставки
      */
     fun notifyItemRangeInsertedAfterHeader(type: Int, position: Int, itemCount: Int) {
-        var headerPosition = findHeaderPosition(type)
-        val itemPosition = position + 1
+        if (headersVOs?.isNotEmpty() == true) {
+            var headerPosition = findHeaderPosition(type)
+            val itemPosition = position + 1
 
-        if (headerPosition == -1) {
-            headerPosition = getPositionForNewHeader(type)
-            notifyItemInserted(headerPosition)
+            if (headerPosition == -1) {
+                headerPosition = getPositionForNewHeader(type)
+                notifyItemInserted(headerPosition)
+            }
+
+            notifyItemRangeInserted(itemPosition + headerPosition, itemCount)
+        } else {
+            notifyItemRangeInserted(position, itemCount)
         }
-
-        notifyItemRangeInserted(itemPosition + headerPosition, itemCount)
     }
 
     /**
@@ -258,15 +262,20 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      */
     fun notifyItemRangeRemovedAfterHeader(type: Int, position: Int, itemCount: Int) {
         // Cannot be -1, because item created and consequently header also created
-        val headerPosition = findHeaderPosition(type)
-        var startPosition = headerPosition + position + 1
 
-        if (getItemsCountAfterHeader(type) == 0) {
-            notifyItemRemoved(headerPosition)
-            startPosition--
+        if (headersVOs?.isNotEmpty() == true) {
+            val headerPosition = findHeaderPosition(type)
+            var startPosition = headerPosition + position + 1
+
+            if (getItemsCountAfterHeader(type) == 0) {
+                notifyItemRemoved(headerPosition)
+                startPosition--
+            }
+
+            notifyItemRangeRemoved(startPosition, itemCount)
+        } else {
+            notifyItemRangeRemoved(position, itemCount)
         }
-
-        notifyItemRangeRemoved(startPosition, itemCount)
     }
 
     /**
@@ -278,10 +287,15 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      */
     fun notifyItemRangeChangedAfterHeader(type: Int, position: Int, count: Int) {
         // Cannot be -1, because item created and consequently header also created
-        val headerPosition = findHeaderPosition(type)
-        val startPosition = headerPosition + position + 1
 
-        notifyItemRangeChanged(startPosition, count)
+        if (headersVOs?.isNotEmpty() == true) {
+            val headerPosition = findHeaderPosition(type)
+            val startPosition = headerPosition + position + 1
+
+            notifyItemRangeChanged(startPosition, count)
+        } else {
+            notifyItemRangeChanged(position, count)
+        }
     }
 
     /**
@@ -292,12 +306,16 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      * @param toPosition Позиция, относительно шапки, на которую переместился элемент
      */
     fun notifyItemMovedAfterHeader(type: Int, fromPosition: Int, toPosition: Int) {
-        // Cannot be -1, because item created and consequently header also created
-        val headerPosition = findHeaderPosition(type)
-        val itemFromPosition = headerPosition + fromPosition + 1
-        val itemToPosition = headerPosition + toPosition + 1
+        if (headersVOs?.isNotEmpty() == true) {
+            // Cannot be -1, because item created and consequently header also created
+            val headerPosition = findHeaderPosition(type)
+            val itemFromPosition = headerPosition + fromPosition + 1
+            val itemToPosition = headerPosition + toPosition + 1
 
-        notifyItemMoved(itemFromPosition, itemToPosition)
+            notifyItemMoved(itemFromPosition, itemToPosition)
+        } else {
+            notifyItemMoved(fromPosition, toPosition)
+        }
     }
 
     /**
