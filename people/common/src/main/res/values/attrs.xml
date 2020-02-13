@@ -27,6 +27,8 @@
     </declare-styleable>
 
     <declare-styleable name="AvatarImageView">
+        <attr name="indicatorCropColor" format="color" />
+        <attr name="indicatorCropRadius" format="dimension" />
         <attr name="indicatorRadius" format="dimension" />
         <attr name="indicatorColor" format="color" />
     </declare-styleable>

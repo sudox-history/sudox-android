@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
@@ -32,6 +33,18 @@ class AvatarImageView : LoadableCircleImageView {
             invalidate()
         }
 
+    var indicatorCropRadius = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
+
+    var indicatorCropColor = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
+
     var indicatorRadius = 0
         set(value) {
             field = value
@@ -51,6 +64,8 @@ class AvatarImageView : LoadableCircleImageView {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.AvatarImageView, defStyleAttr, 0).use {
+            indicatorCropColor = it.getColorOrThrow(R.styleable.AvatarImageView_indicatorCropColor)
+            indicatorCropRadius = it.getDimensionPixelSizeOrThrow(R.styleable.AvatarImageView_indicatorCropRadius)
             indicatorRadius = it.getDimensionPixelSizeOrThrow(R.styleable.AvatarImageView_indicatorRadius)
             indicatorColor = it.getColorOrThrow(R.styleable.AvatarImageView_indicatorColor)
         }
@@ -60,10 +75,16 @@ class AvatarImageView : LoadableCircleImageView {
         super.dispatchDraw(canvas)
 
         if (vo?.isStatusAboutOnline() == false && vo?.isUserOnline() == true) {
-            val indicatorCenterY = measuredHeight / 2F
-            val indicatorCenterX = measuredWidth / 2F
+            val rightBorder = measuredWidth.toFloat()
+            val bottomBorder = measuredHeight.toFloat()
+            val cropCenterX = rightBorder - indicatorCropRadius
+            val cropCenterY = bottomBorder - indicatorCropRadius
 
-            canvas.drawCircle(indicatorCenterX, indicatorCenterY, indicatorRadius.toFloat(), indicatorPaint)
+            indicatorPaint.color = indicatorCropColor
+            canvas.drawCircle(cropCenterX, cropCenterY, indicatorCropRadius.toFloat(), indicatorPaint)
+
+            indicatorPaint.color = indicatorColor
+            canvas.drawCircle(cropCenterX, cropCenterY, indicatorRadius.toFloat(), indicatorPaint)
         }
     }
 }

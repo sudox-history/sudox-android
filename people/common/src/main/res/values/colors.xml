@@ -12,4 +12,5 @@
     <color name="verticalpeopleitemview_stroke_color">#E0E0E0</color>
 
     <color name="avatarimageview_indicator_color">#00BFA5</color>
+    <color name="avatarimageview_indicator_crop_color">@color/background_color</color>
 </resources>
