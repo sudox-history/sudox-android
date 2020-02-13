@@ -22,6 +22,13 @@ class AvatarImageView : LoadableCircleImageView {
     var vo: PeopleVO? = null
         set(value) {
             field = value
+
+            if (value != null) {
+                startLoading(value.photoId)
+            } else {
+                cancelLoading()
+            }
+
             invalidate()
         }
 

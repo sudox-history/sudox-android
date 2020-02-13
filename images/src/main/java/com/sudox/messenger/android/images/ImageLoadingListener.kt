@@ -32,8 +32,10 @@ interface ImageLoadingListener {
      * Приостанавливает загрузку картинки
      */
     fun cancelLoading() {
-        stopImageLoading(this, requestedImageId)
-        requestedImageId = NOT_REQUESTED_IMAGE_ID
+        if (requestedImageId != NOT_REQUESTED_IMAGE_ID) {
+            stopImageLoading(this, requestedImageId)
+            requestedImageId = NOT_REQUESTED_IMAGE_ID
+        }
     }
 
     /**

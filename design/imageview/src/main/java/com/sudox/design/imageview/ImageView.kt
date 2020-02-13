@@ -4,14 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.media.ThumbnailUtils
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.use
 
 /**
@@ -24,31 +21,27 @@ open class ImageView : View {
 
     var bitmap: Bitmap? = null
         set(value) {
-            val bitmapIsNotEqualed = bitmap != value
-
-            if (field != null && !field!!.isRecycled) {
-                field!!.recycle()
-            }
-
             field = if (value != null && (value.height != layoutParams.height || value.width != layoutParams.width)) {
-                val thumbnail = ThumbnailUtils.extractThumbnail(value, layoutParams.width, layoutParams.height)
-                value.recycle()
-                thumbnail
+                ThumbnailUtils.extractThumbnail(value, layoutParams.width, layoutParams.height)
             } else {
                 value
             }
 
-            if (bitmapIsNotEqualed) {
-                invalidate()
-            }
+            invalidate()
         }
 
     var drawable: Drawable? = null
+        set(value) {
+            field = value
+            bitmap = null
+            invalidate()
+        }
+
     var defaultDrawable: Drawable? = null
         set(value) {
             field = value
 
-            if (bitmap == null) {
+            if (bitmap == null && drawable == null) {
                 invalidate()
             }
         }
