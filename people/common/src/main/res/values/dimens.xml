@@ -8,6 +8,8 @@
     <dimen name="horizontalpeopleitemview_margin_between_avatar_and_texts">18dp</dimen>
     <dimen name="horizontalpeopleitemview_margin_between_buttons_and_texts">38dp</dimen>
     <dimen name="horizontalpeopleitemview_margin_between_buttons">16dp</dimen>
+    <dimen name="horizontalpeopleitemview_button_height">25dp</dimen>
+    <dimen name="horizontalpeopleitemview_button_width">25dp</dimen>
 
     <dimen name="verticalpeopleitemview_avatar_width">67dp</dimen>
     <dimen name="verticalpeopleitemview_avatar_height">67dp</dimen>
@@ -25,8 +27,8 @@
     <dimen name="verticalpeopleitemview_padding_bottom">22dp</dimen>
     <dimen name="verticalpeopleitemview_padding_right">6dp</dimen>
     <dimen name="verticalpeopleitemview_padding_left">6dp</dimen>
-    <dimen name="verticalpeopleitemview_close_button_height">25dp</dimen>
-    <dimen name="verticalpeopleitemview_close_button_width">25dp</dimen>
+    <dimen name="verticalpeopleitemview_button_height">25dp</dimen>
+    <dimen name="verticalpeopleitemview_button_width">25dp</dimen>
 
     <dimen name="avatarimageview_indicator_radius">7.5dp</dimen>
     <dimen name="avatarimageview_indicator_crop_radius">9.5dp</dimen>

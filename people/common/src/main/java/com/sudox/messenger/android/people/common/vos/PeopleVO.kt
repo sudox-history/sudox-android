@@ -6,7 +6,7 @@ import com.sudox.messenger.android.people.common.R
 const val SEEN_TIME_ONLINE = 0L
 const val CLOSE_BUTTON_TAG = -1
 
-val CLOSE_BUTTON = arrayOf(Pair(R.style.Sudox_People_VerticalPeopleItemView_Buttons_Close, CLOSE_BUTTON_TAG))
+val CLOSE_BUTTON = arrayOf(Pair(R.style.Sudox_People_VerticalPeopleItemView_Button_Close, CLOSE_BUTTON_TAG))
 
 /**
  * ViewObject человека.

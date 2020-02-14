@@ -23,6 +23,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     private var initialTopPadding = -1
     private var dataObserver: RecyclerView.AdapterDataObserver? = null
 
+    /**
+     * 1-й аргумент - тип шапки
+     * 2-й аргумент - количество элементов до изменения
+     * 3-й аргумент - ViewObject шапки
+     */
     var sectionChangedCallback: ((Int, Int, ViewListHeaderVO) -> (Unit))? = null
     var sortingTypeChangedCallback: ((Int, Int, ViewListHeaderVO) -> (Unit))? = null
 
@@ -95,7 +100,10 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                 holder.view.let {
                     it.itemsVisibilityTogglingCallback = { vo ->
                         val type = getHeaderType(vo)
-                        val itemsCount = getItemsCountAfterHeader(type)
+
+                        vo.isItemsHidden = !vo.isItemsHidden
+                        val itemsCount = getItemsCountAfterHeader(type, true)
+                        vo.isItemsHidden = !vo.isItemsHidden
 
                         if (vo.isItemsHidden) {
                             notifyItemRangeRemoved(holder.adapterPosition + 1, itemsCount)
@@ -470,9 +478,10 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      * Учитывать футеры при подсчете не нужно!
      *
      * @param type Тип шапки
+     * @param ignoreHidden Игнорировать тот факт, что секция скрыта
      * @result Количество элементов после шапки
      */
-    open fun getItemsCountAfterHeader(type: Int): Int = 0
+    open fun getItemsCountAfterHeader(type: Int, ignoreHidden: Boolean = false): Int = 0
 
     /**
      * Определяет тип способа добавления отступа

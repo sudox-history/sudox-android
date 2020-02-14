@@ -25,10 +25,10 @@ class MaybeYouKnowAdapter(
     }
 
     override fun getItemMargin(position: Int): Int {
-        return viewList.context.resources.getDimensionPixelSize(R.dimen.maybeyouknow_item_margin)
+        return viewList.context.resources.getDimensionPixelSize(R.dimen.maybeyouknow_items_margin)
     }
 
-    override fun getItemsCountAfterHeader(type: Int): Int {
+    override fun getItemsCountAfterHeader(type: Int, ignoreHidden: Boolean): Int {
         return maybeYouKnowVOs.size()
     }
 

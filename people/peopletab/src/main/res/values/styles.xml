@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Sudox.People.Buttons.AcceptFriendRequest" parent="">
+    <style name="Sudox.People.Buttons.AcceptFriendRequest" parent="Sudox.People.HorizontalPeopleItemView.Button">
         <item name="iconDrawable">@drawable/ic_accept</item>
         <item name="iconTint">@color/accept_friend_request_button_icon_tint_color</item>
     </style>
 
-    <style name="Sudox.People.Buttons.RejectFriendRequest" parent="">
+    <style name="Sudox.People.Buttons.RejectFriendRequest" parent="Sudox.People.HorizontalPeopleItemView.Button">
         <item name="iconDrawable">@drawable/ic_cancel</item>
         <item name="iconTint">@color/reject_friend_request_button_icon_tint_color</item>
     </style>

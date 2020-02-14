@@ -75,7 +75,7 @@ class HorizontalPeopleItemView : ViewGroup {
 
                     addView(this)
                 }
-            }
+            }?.asReversed()
 
             nameTextView.text = value?.userName
             statusTextView.text = value?.getStatusMessage(context)

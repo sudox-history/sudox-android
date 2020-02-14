@@ -64,8 +64,8 @@ class ImageButton : View {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val needWidth = paddingLeft + (iconDrawable?.bounds?.width() ?: 0) + paddingRight
-        val needHeight = paddingTop + (iconDrawable?.bounds?.height() ?: 0) + paddingBottom
+        val needWidth = paddingLeft + iconWidth + paddingRight
+        val needHeight = paddingTop + iconHeight + paddingBottom
 
         setMeasuredDimension(
                 calculateViewSize(widthMeasureSpec, needWidth),

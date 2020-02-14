@@ -35,9 +35,12 @@
         <item name="fontFamily">@font/opensans_regular</item>
     </style>
 
-    <style name="Sudox.People.VerticalPeopleItemView.Buttons.Close" parent="Sudox.Button">
-        <item name="iconHeight">@dimen/verticalpeopleitemview_close_button_height</item>
-        <item name="iconWidth">@dimen/verticalpeopleitemview_close_button_width</item>
+    <style name="Sudox.People.VerticalPeopleItemView.Button" parent="Sudox.Button">
+        <item name="iconHeight">@dimen/verticalpeopleitemview_button_height</item>
+        <item name="iconWidth">@dimen/verticalpeopleitemview_button_width</item>
+    </style>
+
+    <style name="Sudox.People.VerticalPeopleItemView.Button.Close" parent="Sudox.People.VerticalPeopleItemView.Button">
         <item name="iconTint">@color/verticalpeopleitemview_close_button_icon_tint</item>
         <item name="iconDrawable">@drawable/ic_cancel</item>
     </style>
@@ -53,6 +56,11 @@
         <item name="marginBetweenButtons">@dimen/horizontalpeopleitemview_margin_between_buttons</item>
         <item name="inactiveStatusTextColor">@color/horizontalpeopleitemview_inactive_status_text_color</item>
         <item name="activeStatusTextColor">@color/horizontalpeopleitemview_active_status_text_color</item>
+    </style>
+
+    <style name="Sudox.People.HorizontalPeopleItemView.Button" parent="Sudox.Button">
+        <item name="iconHeight">@dimen/horizontalpeopleitemview_button_height</item>
+        <item name="iconWidth">@dimen/horizontalpeopleitemview_button_width</item>
     </style>
 
     <style name="Sudox.People.HorizontalPeopleItemView.NameTextAppearance" parent="">
