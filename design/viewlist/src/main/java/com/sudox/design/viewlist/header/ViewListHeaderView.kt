@@ -141,14 +141,14 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val textLeftBorder = paddingLeft
         val textRightBorder = textLeftBorder + textView.measuredWidth
-        val textTopBorder = measuredHeight / 2 - textView.measuredHeight / 2
+        val textTopBorder = paddingTop
         val textBottomBorder = textTopBorder + textView.measuredHeight
 
         textView.layout(textLeftBorder, textTopBorder, textRightBorder, textBottomBorder)
 
         val functionalButtonRightBorder = measuredWidth - paddingRight
         val functionalButtonLeftBorder = functionalButtonRightBorder - functionalImageButton!!.measuredWidth
-        val functionalButtonTopBorder = measuredHeight / 2 - functionalImageButton!!.measuredHeight / 2
+        val functionalButtonTopBorder = paddingTop
         val functionalButtonBottomBorder = functionalButtonTopBorder + functionalImageButton!!.measuredHeight
 
         functionalImageButton!!.layout(

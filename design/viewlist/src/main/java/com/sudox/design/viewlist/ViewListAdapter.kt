@@ -21,6 +21,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var initialTopPadding = -1
+    private var initialBottomPadding = -1
     private var dataObserver: RecyclerView.AdapterDataObserver? = null
 
     /**
@@ -105,6 +106,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                         val itemsCount = getItemsCountAfterHeader(type, true)
                         vo.isItemsHidden = !vo.isItemsHidden
 
+                        notifyItemChanged(holder.adapterPosition)
+
                         if (vo.isItemsHidden) {
                             notifyItemRangeRemoved(holder.adapterPosition + 1, itemsCount)
                         } else {
@@ -137,6 +140,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                 if (position == 0 && initialTopPadding == -1) {
                     initialTopPadding = holder.view.paddingTop
                     holder.view.updatePadding(top = 0)
+                }
+
+                if (vo.isItemsHidden) {
+                    initialBottomPadding = holder.view.paddingBottom
+                    holder.view.updatePadding(bottom = 0)
                 }
 
                 return
