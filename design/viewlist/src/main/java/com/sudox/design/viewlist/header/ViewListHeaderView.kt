@@ -73,7 +73,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
                 textView.tag = VIEW_LIST_HEADER_VIEW_TEXT_TAG
                 textView.text = toggleOptions.find { it.tag == value.selectedToggleTag }!!.title
-                textView.isClickable = toggleOptions.size > 1
+                textView.isClickable = toggleOptions.size > 1 || value.canHideItems()
                 textView.setCompoundDrawables(null, null, if (toggleOptions.size > 1) {
                     toggleIconDrawable
                 } else {
