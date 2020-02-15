@@ -7,7 +7,6 @@ import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import com.sudox.messenger.android.people.common.views.HorizontalPeopleItemView
-import com.sudox.messenger.android.people.common.vos.PeopleVO
 import com.sudox.messenger.android.people.peopletab.R
 import com.sudox.messenger.android.people.peopletab.callbacks.AddedFriendsSortingCallback
 import com.sudox.messenger.android.people.peopletab.callbacks.FriendRequestSortingCallback
@@ -22,15 +21,20 @@ import com.sudox.messenger.android.people.peopletab.vos.headers.FriendRequestsHe
 import com.sudox.messenger.android.people.peopletab.vos.headers.MaybeYouKnowHeaderVO
 import com.sudox.messenger.android.people.peopletab.vos.headers.SUBSCRIPTIONS_OPTION_TAG
 
-const val FRIEND_REQUESTS_TAG = 1
-const val MAYBE_YOU_KNOW_TAG = 2
-const val ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG = 3
+const val FRIEND_REQUESTS_HEADER_TYPE = 1
+const val MAYBE_YOU_KNOW_HEADER_TYPE = 2
+const val ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE = 3
+
+const val FRIEND_REQUEST_VIEW_TYPE = 1
+const val MAYBE_YOU_KNOW_VIEW_TYPE = 2
+const val ADDED_FRIEND_VIEW_TYPE = 3
+const val SUBSCRIPTION_VIEW_TYPE = 4
 
 class PeopleTabAdapter(
         val headersVO: HashMap<Int, ViewListHeaderVO> = hashMapOf(
-                FRIEND_REQUESTS_TAG to FriendRequestsHeaderVO(),
-                MAYBE_YOU_KNOW_TAG to MaybeYouKnowHeaderVO(),
-                ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG to AddedFriendsHeaderVO())
+                FRIEND_REQUESTS_HEADER_TYPE to FriendRequestsHeaderVO(),
+                MAYBE_YOU_KNOW_HEADER_TYPE to MaybeYouKnowHeaderVO(),
+                ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE to AddedFriendsHeaderVO())
 ) : ViewListAdapter<RecyclerView.ViewHolder>(headersVO) {
 
     val addedFriendsVOs: SortedList<AddedFriendVO>
@@ -39,7 +43,7 @@ class PeopleTabAdapter(
     val maybeYouKnowAdapter = MaybeYouKnowAdapter()
 
     init {
-        val addedFriendsHeaderVO = headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG]!!
+        val addedFriendsHeaderVO = headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]!!
         val addedFriendsSortType = addedFriendsHeaderVO.selectedFunctionButtonToggleTags!![FRIENDS_OPTION_TAG]!!
         val addedFriendsCallback = AddedFriendsSortingCallback(this, addedFriendsSortType)
 
@@ -61,26 +65,23 @@ class PeopleTabAdapter(
     }
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == MAYBE_YOU_KNOW_TAG) {
+        return if (viewType != MAYBE_YOU_KNOW_VIEW_TYPE) {
+            PeopleViewHolder(HorizontalPeopleItemView(viewList!!.context))
+        } else {
             ListViewHolder(createMaybeYouKnowRecyclerView(viewList!!.context).also { list ->
                 list.adapter = maybeYouKnowAdapter.apply {
                     viewList = list
                 }
             })
-        } else {
-            PeopleViewHolder(HorizontalPeopleItemView(viewList!!.context))
         }
     }
 
     override fun bindItemHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is PeopleViewHolder) {
-            val voPosition = recalculatePositionRelativeHeader(position)
-
-            holder.view.vo = when (getItemViewType(position)) {
-                FRIEND_REQUESTS_TAG -> friendsRequestsVO
-                else -> getAddedFriendsOrSubscriptionsList()
-            }[voPosition]
-        }
+        (holder as? PeopleViewHolder)?.view?.vo = when (getItemType(position)) {
+            FRIEND_REQUEST_VIEW_TYPE -> friendsRequestsVO
+            ADDED_FRIEND_VIEW_TYPE -> addedFriendsVOs
+            else -> subscriptionsVOs
+        }[recalculatePositionRelativeHeader(position)]
     }
 
     override fun getItemType(position: Int): Int {
@@ -88,55 +89,40 @@ class PeopleTabAdapter(
         var itemsCount = friendsRequestsVO.size()
 
         if (itemPosition < itemsCount) {
-            return FRIEND_REQUESTS_TAG
+            return FRIEND_REQUEST_VIEW_TYPE
         }
 
-        itemsCount += if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0 && !headersVO[MAYBE_YOU_KNOW_TAG]!!.isItemsHidden) {
+        itemsCount += if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0 && !headersVO[MAYBE_YOU_KNOW_HEADER_TYPE]!!.isItemsHidden) {
             1
         } else {
             0
         }
 
         if (itemPosition < itemsCount) {
-            return MAYBE_YOU_KNOW_TAG
+            return MAYBE_YOU_KNOW_VIEW_TYPE
         }
 
-        itemsCount += getAddedFriendsOrSubscriptionsList().size()
+        itemsCount += getItemsCountAfterHeader(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE)
 
         if (itemPosition < itemsCount) {
-            return ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG
+            return if (headersVO[ADDED_FRIEND_VIEW_TYPE]!!.selectedToggleTag == FRIENDS_OPTION_TAG) {
+                ADDED_FRIEND_VIEW_TYPE
+            } else {
+                SUBSCRIPTION_VIEW_TYPE
+            }
         }
 
         return 0
     }
 
-    override fun getItemsCountAfterHeader(type: Int, ignoreHidden: Boolean): Int {
-        return when (type) {
-            FRIEND_REQUESTS_TAG -> friendsRequestsVO.size()
-            MAYBE_YOU_KNOW_TAG -> if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0
-                    && (ignoreHidden || !headersVO[MAYBE_YOU_KNOW_TAG]!!.isItemsHidden)) {
-                1
-            } else {
-                0
-            }
-            else -> getAddedFriendsOrSubscriptionsList().size()
-        }
-    }
-
-    override fun getItemMargin(position: Int): Int {
-        return viewList!!.context.resources.getDimensionPixelSize(R.dimen.peopletab_items_margin)
-    }
-
     override fun getHeaderByPosition(position: Int): ViewListHeaderVO? {
-        val addedFriendsOrSubscriptionsList = getAddedFriendsOrSubscriptionsList()
-
         if (position == 0) {
             if (friendsRequestsVO.size() > 0) {
-                return headersVO[FRIEND_REQUESTS_TAG]
+                return headersVO[FRIEND_REQUESTS_HEADER_TYPE]
             } else if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
-                return headersVO[MAYBE_YOU_KNOW_TAG]
-            } else if (addedFriendsOrSubscriptionsList.size() > 0) {
-                return headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG]
+                return headersVO[MAYBE_YOU_KNOW_HEADER_TYPE]
+            } else if (addedFriendsVOs.size() > 0 || friendsRequestsVO.size() > 0) {
+                return headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
             }
         }
 
@@ -148,29 +134,29 @@ class PeopleTabAdapter(
 
         if (position == sum) {
             if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
-                return headersVO[MAYBE_YOU_KNOW_TAG]
-            } else if (addedFriendsOrSubscriptionsList.size() > 0) {
-                return headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG]
+                return headersVO[MAYBE_YOU_KNOW_HEADER_TYPE]
+            } else if (addedFriendsVOs.size() > 0 || friendsRequestsVO.size() > 0) {
+                return headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
             }
         }
 
         if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
             sum++
 
-            if (!headersVO[MAYBE_YOU_KNOW_TAG]!!.isItemsHidden) {
+            if (!headersVO[MAYBE_YOU_KNOW_HEADER_TYPE]!!.isItemsHidden) {
                 sum++
             }
         }
 
         if (sum == position) {
-            return headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG]
+            return headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
         }
 
         return null
     }
 
     override fun getPositionForNewHeader(type: Int): Int {
-        if (type == FRIEND_REQUESTS_TAG) {
+        if (type == FRIEND_REQUESTS_HEADER_TYPE) {
             return 0
         }
 
@@ -180,14 +166,14 @@ class PeopleTabAdapter(
             position += friendsRequestsVO.size() + 1
         }
 
-        if (type == MAYBE_YOU_KNOW_TAG) {
+        if (type == MAYBE_YOU_KNOW_HEADER_TYPE) {
             return position
         }
 
         if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
             position++
 
-            if (!headersVO[MAYBE_YOU_KNOW_TAG]!!.isItemsHidden) {
+            if (!headersVO[MAYBE_YOU_KNOW_HEADER_TYPE]!!.isItemsHidden) {
                 position++
             }
         }
@@ -195,30 +181,44 @@ class PeopleTabAdapter(
         return position
     }
 
-    override fun getHeadersCount(): Int {
-        var headersCount = 0
+    override fun getItemMargin(position: Int): Int {
+        return viewList!!.context.resources.getDimensionPixelSize(R.dimen.peopletab_items_margin)
+    }
 
-        if (friendsRequestsVO.size() > 0) {
-            headersCount++
+    override fun getItemsCountAfterHeader(type: Int, ignoreHidden: Boolean): Int {
+        return if (type == FRIEND_REQUESTS_HEADER_TYPE) {
+            friendsRequestsVO.size()
+        } else if (type == MAYBE_YOU_KNOW_HEADER_TYPE) {
+            if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0 && (ignoreHidden || !headersVO[MAYBE_YOU_KNOW_VIEW_TYPE]!!.isItemsHidden)) {
+                1
+            } else {
+                0
+            }
+        } else {
+            if (headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]!!.selectedToggleTag == FRIENDS_OPTION_TAG) {
+                addedFriendsVOs.size()
+            } else {
+                subscriptionsVOs.size()
+            }
+        }
+    }
+
+    override fun getHeadersCount(): Int {
+        var count = 0
+
+        if (subscriptionsVOs.size() > 0) {
+            count++
         }
 
-        if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 1) {
-            headersCount++
+        if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
+            count++
         }
 
         if (addedFriendsVOs.size() > 0 || subscriptionsVOs.size() > 0) {
-            headersCount++
+            count++
         }
 
-        return headersCount
-    }
-
-    private fun getAddedFriendsOrSubscriptionsList(): SortedList<out PeopleVO> {
-        return if (headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG]!!.selectedToggleTag == FRIENDS_OPTION_TAG) {
-            addedFriendsVOs
-        } else {
-            subscriptionsVOs
-        }
+        return count
     }
 
     class PeopleViewHolder(val view: HorizontalPeopleItemView) : RecyclerView.ViewHolder(view)

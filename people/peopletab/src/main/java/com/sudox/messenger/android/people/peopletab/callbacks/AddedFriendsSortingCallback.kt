@@ -2,7 +2,7 @@ package com.sudox.messenger.android.people.peopletab.callbacks
 
 import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.design.viewlist.ViewListCallback
-import com.sudox.messenger.android.people.peopletab.adapters.ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG
+import com.sudox.messenger.android.people.peopletab.adapters.ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE
 import com.sudox.messenger.android.people.peopletab.vos.AddedFriendVO
 import com.sudox.messenger.android.people.peopletab.vos.headers.IMPORTANCE_OPTION_TAG
 import com.sudox.messenger.android.people.peopletab.vos.headers.ONLINE_OPTION_TAG
@@ -10,7 +10,7 @@ import com.sudox.messenger.android.people.peopletab.vos.headers.ONLINE_OPTION_TA
 class AddedFriendsSortingCallback(
         viewListAdapter: ViewListAdapter<*>,
         var sortingType: Int
-) : ViewListCallback<AddedFriendVO>(viewListAdapter, ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG) {
+) : ViewListCallback<AddedFriendVO>(viewListAdapter, ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE) {
 
     override fun compare(first: AddedFriendVO, second: AddedFriendVO): Int {
         return if (sortingType == IMPORTANCE_OPTION_TAG) {

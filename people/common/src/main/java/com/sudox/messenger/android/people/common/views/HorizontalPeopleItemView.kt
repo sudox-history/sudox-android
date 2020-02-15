@@ -85,7 +85,7 @@ class HorizontalPeopleItemView : ViewGroup {
                 inactiveStatusTextColor
             })
 
-            photoImageView.vo = vo
+            photoImageView.vo = value
 
             field = value
             requestLayout()
