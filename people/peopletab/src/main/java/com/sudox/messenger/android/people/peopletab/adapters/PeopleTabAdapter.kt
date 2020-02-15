@@ -51,7 +51,13 @@ class PeopleTabAdapter(
         subscriptionsVOs = SortedList(SubscriptionVO::class.java, subscriptionsCallback)
         friendsRequestsVO = SortedList(FriendRequestVO::class.java, FriendRequestSortingCallback(this))
 
-        sectionChangedCallback = { i: Int, i1: Int, viewListHeaderVO: ViewListHeaderVO -> }
+        sectionChangedCallback = { headerType: Int, itemsCountBeforeChanging: Int, vo: ViewListHeaderVO ->
+            if (vo.selectedToggleTag == FRIENDS_OPTION_TAG) {
+                notifyChangedSectionDataChanged(headerType, itemsCountBeforeChanging, addedFriendsVOs.size())
+            } else if (vo.selectedToggleTag == SUBSCRIPTIONS_OPTION_TAG) {
+                notifyChangedSectionDataChanged(headerType, itemsCountBeforeChanging, subscriptionsVOs.size())
+            }
+        }
     }
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
