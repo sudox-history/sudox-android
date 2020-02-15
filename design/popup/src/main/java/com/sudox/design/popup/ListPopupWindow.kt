@@ -1,6 +1,7 @@
 package com.sudox.design.popup
 
 import android.content.Context
+import android.view.Gravity
 import android.view.View
 import android.widget.PopupWindow
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,10 @@ class ListPopupWindow(
         items: List<PopupItemVO<*>>,
         itemClickedCallback: (PopupItemVO<*>) -> (Unit)
 ) : PopupWindow(context, null, R.attr.listPopupWindowStyle) {
+
+    private var marginBetweenPopupAndAnchor = context
+            .resources
+            .getDimensionPixelSize(R.dimen.listpopupwindow_margin_between_popup_and_anchor)
 
     private var viewList = RecyclerView(context)
     private val adapter = ListPopupAdapter(context, items).apply {
@@ -46,5 +51,23 @@ class ListPopupWindow(
             layoutManager = LinearLayoutManager(context)
             adapter = this@ListPopupWindow.adapter
         }
+    }
+
+    /**
+     * Правильно расчитывает положение окна на оси X и открывает его
+     *
+     * @param anchor View-маяк
+     * @param gravity Где должен отображаться элемент относительно элемента маяка
+     */
+    fun showAsDropDown(anchor: View, gravity: Int) {
+        val rootView = anchor.rootView
+        val size = IntArray(2).apply { anchor.getLocationInWindow(this) }
+        val y = size[1] + anchor.measuredHeight + marginBetweenPopupAndAnchor
+
+        showAtLocation(rootView, Gravity.NO_GRAVITY, if (gravity == Gravity.END) {
+            size[0] - adapter.maximumItemWidth + anchor.measuredWidth
+        } else {
+            size[0]
+        }, y)
     }
 }

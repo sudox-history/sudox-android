@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RotateDrawable
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
@@ -189,7 +190,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
             vo = vo // Обновляем данные ...
         }.apply {
             setOnDismissListener { toggleIconDrawableAnimator.reverse() }
-            showAsDropDown(textView)
+            showAsDropDown(textView, Gravity.START)
         }
 
         toggleIconDrawableAnimator.start()
@@ -205,7 +206,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
             }
         }
 
-        togglePopupWindow!!.showAsDropDown(functionalImageButton)
+        togglePopupWindow!!.showAsDropDown(functionalImageButton!!, Gravity.END)
     }
 
     private fun handleItemsHidingRequest() {

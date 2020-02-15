@@ -27,18 +27,16 @@ const val MAYBE_YOU_KNOW_TAG = 2
 const val ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG = 3
 
 class PeopleTabAdapter(
-        val viewList: ViewList,
         val headersVO: HashMap<Int, ViewListHeaderVO> = hashMapOf(
                 FRIEND_REQUESTS_TAG to FriendRequestsHeaderVO(),
                 MAYBE_YOU_KNOW_TAG to MaybeYouKnowHeaderVO(),
                 ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG to AddedFriendsHeaderVO())
-) : ViewListAdapter<RecyclerView.ViewHolder>(viewList, headersVO) {
+) : ViewListAdapter<RecyclerView.ViewHolder>(headersVO) {
 
     val addedFriendsVOs: SortedList<AddedFriendVO>
     val friendsRequestsVO: SortedList<FriendRequestVO>
     val subscriptionsVOs: SortedList<SubscriptionVO>
-    val maybeYouKnowViewList = createMaybeYouKnowRecyclerView(viewList.context)
-    val maybeYouKnowAdapter = maybeYouKnowViewList.adapter as MaybeYouKnowAdapter
+    val maybeYouKnowAdapter = MaybeYouKnowAdapter()
 
     init {
         val addedFriendsHeaderVO = headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG]!!
@@ -56,9 +54,13 @@ class PeopleTabAdapter(
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == MAYBE_YOU_KNOW_TAG) {
-            ListViewHolder(maybeYouKnowViewList)
+            ListViewHolder(createMaybeYouKnowRecyclerView(viewList!!.context).also { list ->
+                list.adapter = maybeYouKnowAdapter.apply {
+                    viewList = list
+                }
+            })
         } else {
-            PeopleViewHolder(HorizontalPeopleItemView(viewList.context))
+            PeopleViewHolder(HorizontalPeopleItemView(viewList!!.context))
         }
     }
 
@@ -66,7 +68,7 @@ class PeopleTabAdapter(
         if (holder is PeopleViewHolder) {
             val voPosition = recalculatePositionRelativeHeader(position)
 
-            holder.view.vo =  when (getItemViewType(position)) {
+            holder.view.vo = when (getItemViewType(position)) {
                 FRIEND_REQUESTS_TAG -> friendsRequestsVO
                 else -> getAddedFriendsOrSubscriptionsList()
             }[voPosition]
@@ -104,8 +106,7 @@ class PeopleTabAdapter(
         return when (type) {
             FRIEND_REQUESTS_TAG -> friendsRequestsVO.size()
             MAYBE_YOU_KNOW_TAG -> if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0
-                    && (ignoreHidden || !headersVO[MAYBE_YOU_KNOW_TAG]!!.isItemsHidden)
-            ) {
+                    && (ignoreHidden || !headersVO[MAYBE_YOU_KNOW_TAG]!!.isItemsHidden)) {
                 1
             } else {
                 0
@@ -115,7 +116,7 @@ class PeopleTabAdapter(
     }
 
     override fun getItemMargin(position: Int): Int {
-        return viewList.context.resources.getDimensionPixelSize(R.dimen.peopletab_items_margin)
+        return viewList!!.context.resources.getDimensionPixelSize(R.dimen.peopletab_items_margin)
     }
 
     override fun getHeaderByPosition(position: Int): ViewListHeaderVO? {
@@ -197,7 +198,7 @@ class PeopleTabAdapter(
             headersCount++
         }
 
-        if (friendsRequestsVO.size() > 0 || subscriptionsVOs.size() > 0) {
+        if (addedFriendsVOs.size() > 0 || subscriptionsVOs.size() > 0) {
             headersCount++
         }
 

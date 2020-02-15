@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="listpopupwindow_margin_between_popup_and_anchor">6dp</dimen>
     <dimen name="listpopupwindow_padding_top">7dp</dimen>
     <dimen name="listpopupwindow_padding_bottom">7dp</dimen>
     <dimen name="listpopupwindow_stroke_width">1dp</dimen>

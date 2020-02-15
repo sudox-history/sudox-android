@@ -7,6 +7,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.sudox.design.viewlist.header.ViewListHeaderView
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 
@@ -15,10 +16,16 @@ const val FOOTER_VIEW_TYPE = -2
 const val LOADING_VIEW_TYPE = -3
 
 abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
-        private val viewList: ViewList,
-        private val headersVOs: HashMap<Int, ViewListHeaderVO>? = null,
-        private val loadingStates: HashMap<Int, Boolean> = HashMap()
+        open val headersVOs: HashMap<Int, ViewListHeaderVO>? = null,
+        open val loadingStates: HashMap<Int, Boolean> = HashMap()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    var viewList: ViewList? = null
+        set(value) {
+            field = value?.apply {
+                (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+            }
+        }
 
     private var initialTopPadding = -1
     private var initialBottomPadding = -1
@@ -35,13 +42,13 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         dataObserver = object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                val orientation = (viewList.layoutManager as? LinearLayoutManager)?.orientation ?: LinearLayoutManager.VERTICAL
+                val orientation = (viewList!!.layoutManager as? LinearLayoutManager)?.orientation ?: LinearLayoutManager.VERTICAL
 
                 if (positionStart == 0 &&
-                        ((!viewList.canScrollVertically(-1) && orientation == LinearLayoutManager.VERTICAL) ||
-                                (!viewList.canScrollHorizontally(-1) && orientation == LinearLayoutManager.HORIZONTAL))
+                        ((!viewList!!.canScrollVertically(-1) && orientation == LinearLayoutManager.VERTICAL) ||
+                                (!viewList!!.canScrollHorizontally(-1) && orientation == LinearLayoutManager.HORIZONTAL))
                 ) {
-                    viewList.scrollToPosition(0)
+                    viewList!!.scrollToPosition(0)
                 }
             }
         }
@@ -58,11 +65,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == HEADER_VIEW_TYPE && getHeadersCount() > 0) {
-            HeaderViewHolder(ViewListHeaderView(viewList.context))
+            HeaderViewHolder(ViewListHeaderView(viewList!!.context))
         } else if (viewType == FOOTER_VIEW_TYPE && getFooterCount() > 0) {
-            FooterViewHolder(AppCompatTextView(ContextThemeWrapper(viewList.context, viewList.footerTextAppearance)))
+            FooterViewHolder(AppCompatTextView(ContextThemeWrapper(viewList!!.context, viewList!!.footerTextAppearance)))
         } else if (viewType == LOADING_VIEW_TYPE) {
-            LoadingViewHolder(ProgressBar(viewList.context).apply {
+            LoadingViewHolder(ProgressBar(viewList!!.context).apply {
                 layoutParams = ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
@@ -78,12 +85,12 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             (holder.itemView as ViewGroup).clipToPadding = false
         }
 
-        val orientation = (viewList.layoutManager as? LinearLayoutManager)?.orientation ?: LinearLayoutManager.VERTICAL
+        val orientation = (viewList!!.layoutManager as? LinearLayoutManager)?.orientation ?: LinearLayoutManager.VERTICAL
 
         if (orientation == LinearLayoutManager.VERTICAL) {
             holder.itemView.updatePadding(
-                    left = viewList.initialPaddingLeft,
-                    right = viewList.initialPaddingRight
+                    left = viewList!!.initialPaddingLeft,
+                    right = viewList!!.initialPaddingRight
             )
         }
 
@@ -142,9 +149,14 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                     holder.view.updatePadding(top = 0)
                 }
 
-                if (vo.isItemsHidden) {
+                if (initialBottomPadding == -1) {
                     initialBottomPadding = holder.view.paddingBottom
+                }
+
+                if (vo.isItemsHidden) {
                     holder.view.updatePadding(bottom = 0)
+                } else {
+                    holder.view.updatePadding(bottom = initialBottomPadding)
                 }
 
                 return
@@ -343,9 +355,9 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     fun findHeaderPosition(type: Int): Int {
         val need = headersVOs!![type]
 
-        for (i in 0 until viewList.childCount) {
-            val child = viewList.getChildAt(i)
-            val holder = viewList.getChildViewHolder(child)
+        for (i in 0 until viewList!!.childCount) {
+            val child = viewList!!.getChildAt(i)
+            val holder = viewList!!.getChildViewHolder(child)
 
             if (holder is HeaderViewHolder && holder.view.vo == need) {
                 return holder.adapterPosition

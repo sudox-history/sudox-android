@@ -12,7 +12,6 @@ import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
 import com.sudox.messenger.android.people.common.vos.SEEN_TIME_ONLINE
 import com.sudox.messenger.android.people.peopletab.adapters.ADDED_FRIENDS_AND_SUBSCRIPTIONS_TAG
-import com.sudox.messenger.android.people.peopletab.adapters.MaybeYouKnowAdapter
 import com.sudox.messenger.android.people.peopletab.adapters.PeopleTabAdapter
 import com.sudox.messenger.android.people.peopletab.vos.AddedFriendVO
 import com.sudox.messenger.android.people.peopletab.vos.FriendRequestVO
@@ -31,7 +30,9 @@ class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = PeopleTabAdapter(peopleTabContentList).apply {
+        adapter = PeopleTabAdapter().apply {
+            viewList = peopleTabContentList
+
             friendsRequestsVO.apply {
                 add(FriendRequestVO(4, "Pidor Request", 145, 2, null, 2L))
                 add(FriendRequestVO(5, "Pidor Request", 145, 2, "Hello, Pidor", 1L))
