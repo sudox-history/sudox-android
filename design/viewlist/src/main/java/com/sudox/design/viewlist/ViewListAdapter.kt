@@ -355,12 +355,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     fun findHeaderPosition(type: Int): Int {
         val need = headersVOs!![type]
 
-        for (i in 0 until viewList!!.childCount) {
-            val child = viewList!!.getChildAt(i)
-            val holder = viewList!!.getChildViewHolder(child)
+        for (i in 0 until itemCount) {
+            val vo = getHeaderByPosition(i)
 
-            if (holder is HeaderViewHolder && holder.view.vo == need) {
-                return holder.adapterPosition
+            if (vo == need) {
+                return i
             }
         }
 

@@ -50,6 +50,8 @@ class PeopleTabAdapter(
 
         subscriptionsVOs = SortedList(SubscriptionVO::class.java, subscriptionsCallback)
         friendsRequestsVO = SortedList(FriendRequestVO::class.java, FriendRequestSortingCallback(this))
+
+        sectionChangedCallback = { i: Int, i1: Int, viewListHeaderVO: ViewListHeaderVO -> }
     }
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
