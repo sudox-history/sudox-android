@@ -27,7 +27,7 @@ open class ImageView : View {
                 value
             }
 
-            invalidate()
+            postInvalidate()
         }
 
     var drawable: Drawable? = null
