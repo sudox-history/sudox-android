@@ -26,7 +26,7 @@ class FriendRequestsHeaderVO : ViewListHeaderVO {
     }
 
     override fun canHideItems(): Boolean {
-        return false
+        return true
     }
 
     override fun canSortItems(): Boolean {

@@ -86,17 +86,13 @@ class PeopleTabAdapter(
 
     override fun getItemType(position: Int): Int {
         val itemPosition = recalculatePosition(position)
-        var itemsCount = friendsRequestsVO.size()
+        var itemsCount = getItemsCountAfterHeaderConsiderVisibility(FRIEND_REQUESTS_HEADER_TYPE)
 
         if (itemPosition < itemsCount) {
             return FRIEND_REQUEST_VIEW_TYPE
         }
 
-        itemsCount += if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0 && !headersVO[MAYBE_YOU_KNOW_HEADER_TYPE]!!.isItemsHidden) {
-            1
-        } else {
-            0
-        }
+        itemsCount += getItemsCountAfterHeaderConsiderVisibility(MAYBE_YOU_KNOW_HEADER_TYPE)
 
         if (itemPosition < itemsCount) {
             return MAYBE_YOU_KNOW_VIEW_TYPE
@@ -129,7 +125,11 @@ class PeopleTabAdapter(
         var sum = 0
 
         if (friendsRequestsVO.size() > 0) {
-            sum += friendsRequestsVO.size() + 1
+            sum++
+
+            if (!headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isItemsHidden) {
+                sum += friendsRequestsVO.size()
+            }
         }
 
         if (position == sum) {
@@ -163,7 +163,11 @@ class PeopleTabAdapter(
         var position = 0
 
         if (friendsRequestsVO.size() > 0) {
-            position += friendsRequestsVO.size() + 1
+            position++
+
+            if (!headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isItemsHidden) {
+                position += friendsRequestsVO.size()
+            }
         }
 
         if (type == MAYBE_YOU_KNOW_HEADER_TYPE) {
