@@ -2,8 +2,14 @@
 <resources>
 
     <style name="Sudox.ListPopupWindow" parent="">
+        <item name="android:popupAnimationStyle">@style/Sudox.ListPopupWindow.Animation</item>
         <item name="android:popupBackground">@drawable/background_listpopupwindow</item>
         <item name="android:popupElevation">@dimen/listpopupwindow_elevation</item>
+    </style>
+
+    <style name="Sudox.ListPopupWindow.Animation" parent="">
+        <item name="android:windowEnterAnimation">@anim/popup_enter_animation</item>
+        <item name="android:windowExitAnimation">@anim/popup_exit_animation</item>
     </style>
 
     <style name="Sudox.PopupItemView" parent="">
