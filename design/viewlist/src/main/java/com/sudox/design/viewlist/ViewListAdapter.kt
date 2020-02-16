@@ -102,7 +102,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                         val type = getHeaderType(vo)
 
                         vo.isItemsHidden = !vo.isItemsHidden
-                        val itemsCount = getItemsCountAfterHeader(type, true)
+                        val itemsCount = getItemsCountAfterHeaderConsiderVisibility(type, true)
                         vo.isItemsHidden = !vo.isItemsHidden
 
                         notifyItemChanged(holder.adapterPosition)
@@ -114,7 +114,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                         }
                     }
 
-                    it.getItemsCountBeforeChanging = { vo -> getItemsCountAfterHeader(getHeaderType(vo)) }
+                    it.getItemsCountBeforeChanging = { vo -> getItemsCountAfterHeaderConsiderVisibility(getHeaderType(vo)) }
                     it.itemsSectionChangingCallback = { vo, itemsCountBeforeChanging ->
                         val type = getHeaderType(vo)
 
@@ -162,7 +162,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                 if (orientation == LinearLayoutManager.VERTICAL) {
                     if (positionAfterHeader == 0) {
                         holder.itemView.updatePadding(bottom = itemMargin)
-                    } else if (positionAfterHeader == getItemsCountAfterHeader(holder.itemViewType) - 1) {
+                    } else if (positionAfterHeader == getItemsCountAfterHeaderConsiderVisibility(holder.itemViewType) - 1) {
                         holder.itemView.updatePadding(top = itemMargin)
                     } else {
                         holder.itemView.updatePadding(top = itemMargin, bottom = itemMargin)
@@ -170,7 +170,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                 } else {
                     if (positionAfterHeader == 0) {
                         holder.itemView.updatePadding(right = itemMargin)
-                    } else if (positionAfterHeader == getItemsCountAfterHeader(holder.itemViewType) - 1) {
+                    } else if (positionAfterHeader == getItemsCountAfterHeaderConsiderVisibility(holder.itemViewType) - 1) {
                         holder.itemView.updatePadding(left = itemMargin)
                     } else {
                         holder.itemView.updatePadding(left = itemMargin, right = itemMargin)
@@ -192,8 +192,23 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
     override fun getItemCount(): Int {
         return getHeadersCount() + getFooterCount() + (headersVOs?.keys?.sumBy {
-            getItemsCountAfterHeader(it)
-        } ?: getItemsCountAfterHeader(0))
+            getItemsCountAfterHeaderConsiderVisibility(it)
+        } ?: getItemsCountAfterHeaderConsiderVisibility(0))
+    }
+
+    /**
+     * Считает количество элементов, исключая скрытые если это требуется
+     *
+     * @param type Тип шапки, после которой нужно получить количество элементов
+     * @param ignoreHidden Учитывать скрытые элементы?
+     * @return Количество элементов
+     */
+    fun getItemsCountAfterHeaderConsiderVisibility(type: Int, ignoreHidden: Boolean = false): Int {
+        if (ignoreHidden || headersVOs == null || headersVOs!![type]?.isItemsHidden == false) {
+            return getItemsCountAfterHeader(type)
+        }
+
+        return 0
     }
 
     /**
@@ -252,7 +267,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             var startPosition = headerPosition + position + 1
             val vo = headersVOs!![type]
 
-            if (vo!!.getToggleOptions(viewList!!.context).size == 1 && getItemsCountAfterHeader(type) == 0) {
+            if (vo!!.getToggleOptions(viewList!!.context).size == 1 && getItemsCountAfterHeaderConsiderVisibility(type) == 0) {
                 notifyItemRemoved(headerPosition)
                 startPosition--
             }
@@ -454,10 +469,9 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      * Учитывать футеры при подсчете не нужно!
      *
      * @param type Тип шапки
-     * @param ignoreHidden Игнорировать тот факт, что секция скрыта
      * @result Количество элементов после шапки
      */
-    open fun getItemsCountAfterHeader(type: Int, ignoreHidden: Boolean = false): Int = 0
+    open fun getItemsCountAfterHeader(type: Int): Int = 0
 
     /**
      * Определяет тип способа добавления отступа

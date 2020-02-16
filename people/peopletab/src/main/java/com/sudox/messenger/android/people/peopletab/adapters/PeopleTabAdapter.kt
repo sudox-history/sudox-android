@@ -102,7 +102,7 @@ class PeopleTabAdapter(
             return MAYBE_YOU_KNOW_VIEW_TYPE
         }
 
-        itemsCount += getItemsCountAfterHeader(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE)
+        itemsCount += getItemsCountAfterHeaderConsiderVisibility(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE)
 
         if (itemPosition < itemsCount) {
             return if (headersVO[ADDED_FRIEND_VIEW_TYPE]!!.selectedToggleTag == FRIENDS_OPTION_TAG) {
@@ -185,11 +185,11 @@ class PeopleTabAdapter(
         return viewList!!.context.resources.getDimensionPixelSize(R.dimen.peopletab_items_margin)
     }
 
-    override fun getItemsCountAfterHeader(type: Int, ignoreHidden: Boolean): Int {
+    override fun getItemsCountAfterHeader(type: Int): Int {
         return if (type == FRIEND_REQUESTS_HEADER_TYPE) {
             friendsRequestsVO.size()
         } else if (type == MAYBE_YOU_KNOW_HEADER_TYPE) {
-            if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0 && (ignoreHidden || !headersVO[MAYBE_YOU_KNOW_VIEW_TYPE]!!.isItemsHidden)) {
+            if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
                 1
             } else {
                 0
