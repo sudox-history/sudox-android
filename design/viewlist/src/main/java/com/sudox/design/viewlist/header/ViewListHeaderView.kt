@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDrawableOrThrow
+import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
@@ -20,6 +21,7 @@ import com.sudox.design.imagebutton.ImageButton
 import com.sudox.design.popup.ListPopupWindow
 import com.sudox.design.popup.vos.PopupItemVO
 import com.sudox.design.viewlist.R
+import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import kotlin.math.max
 
@@ -28,8 +30,11 @@ const val VIEW_LIST_HEADER_VIEW_FUNCTION_BUTTON_TAG = 2
 
 class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
+    private var showingAnimationDuration = 0L
+    private var hidingAnimationDuration = 0L
+
     // 5000 = 180 градусов (10000 - 360 градусов)
-    private var hidingIconDrawableAnimation = ValueAnimator.ofInt(0, 5000).apply {
+    private var hidingIconDrawableAnimator = ValueAnimator.ofInt(0, 5000).apply {
         addUpdateListener { listener ->
             functionalImageButton!!.let {
                 // P.S.: RotateDrawable будет задан от toggleIconDrawable при его мутации
@@ -126,7 +131,22 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
                 setOnClickListener(this@ViewListHeaderView)
                 this@ViewListHeaderView.addView(this)
             }
+
+            val iconAnimationDuration = it.getIntegerOrThrow(R.styleable.ViewListHeaderView_iconAnimationDuration).toLong()
+
+            toggleIconDrawableAnimator.duration = iconAnimationDuration
         }
+    }
+
+    /**
+     * Синхронизирует длительность анимаций с ViewList
+     * Необходимо вызвать если используются анимации скрытия контента
+     *
+     * @param viewList ViewList с которым нужно синхронизироваться
+     */
+    fun syncWithViewList(viewList: ViewList) {
+        showingAnimationDuration = viewList.itemAnimator?.addDuration!!
+        hidingAnimationDuration = viewList.itemAnimator?.removeDuration!!
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -211,10 +231,18 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
     private fun handleItemsHidingRequest() {
         if (vo!!.isItemsHidden) {
-            hidingIconDrawableAnimation.reverse()
+            hidingIconDrawableAnimator.let {
+                it.duration = hidingAnimationDuration
+                it.reverse()
+            }
+
             vo!!.isItemsHidden = false
         } else {
-            hidingIconDrawableAnimation.start()
+            hidingIconDrawableAnimator.let {
+                it.duration = showingAnimationDuration
+                it.start()
+            }
+
             vo!!.isItemsHidden = true
         }
 

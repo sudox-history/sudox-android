@@ -62,7 +62,9 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == HEADER_VIEW_TYPE && getHeadersCount() > 0) {
-            HeaderViewHolder(ViewListHeaderView(viewList!!.context))
+            HeaderViewHolder(ViewListHeaderView(viewList!!.context).apply {
+                syncWithViewList(viewList!!)
+            })
         } else if (viewType == FOOTER_VIEW_TYPE && getFooterCount() > 0) {
             FooterViewHolder(AppCompatTextView(ContextThemeWrapper(viewList!!.context, viewList!!.footerTextAppearance)))
         } else {
