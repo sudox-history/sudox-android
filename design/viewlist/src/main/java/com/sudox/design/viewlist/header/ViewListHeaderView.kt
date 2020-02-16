@@ -18,8 +18,8 @@ import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.design.common.createStyledView
 import com.sudox.design.imagebutton.ImageButton
+import com.sudox.design.popup.ListPopupController
 import com.sudox.design.popup.ListPopupWindow
-import com.sudox.design.popup.vos.PopupItemVO
 import com.sudox.design.viewlist.R
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
@@ -34,7 +34,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
     private var hidingAnimationDuration = 0L
 
     // 5000 = 180 градусов (10000 - 360 градусов)
-    private var hidingIconDrawableAnimator = ValueAnimator.ofInt(0, 5000).apply {
+    private var visibilityChangingAnimator = ValueAnimator.ofInt(0, 5000).apply {
         addUpdateListener { listener ->
             functionalImageButton!!.let {
                 // P.S.: RotateDrawable будет задан от toggleIconDrawable при его мутации
@@ -44,9 +44,13 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
         }
     }
 
-    private var toggleIconDrawableAnimator = ValueAnimator.ofInt(0, 5000).apply {
-        addUpdateListener {
-            toggleIconDrawable!!.level = it.animatedValue as Int
+    private var sectionChangingPopupController = ListPopupController().apply {
+        togglingAnimator = ValueAnimator.ofInt(0, 5000).apply {
+            addUpdateListener {
+                if (anchorView == textView) {
+                    toggleIconDrawable!!.level = it.animatedValue as Int
+                }
+            }
         }
     }
 
@@ -105,7 +109,6 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
             invalidate()
         }
 
-    private var togglePopupWindow: ListPopupWindow? = null
     private var functionalImageButton: ImageButton? = null
     private var textView = AppCompatTextView(context).apply {
         setOnClickListener(this@ViewListHeaderView)
@@ -132,9 +135,9 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
                 this@ViewListHeaderView.addView(this)
             }
 
-            val iconAnimationDuration = it.getIntegerOrThrow(R.styleable.ViewListHeaderView_iconAnimationDuration).toLong()
-
-            toggleIconDrawableAnimator.duration = iconAnimationDuration
+            sectionChangingPopupController
+                    .togglingAnimator!!
+                    .duration = it.getIntegerOrThrow(R.styleable.ViewListHeaderView_iconAnimationDuration).toLong()
         }
     }
 
@@ -181,71 +184,43 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        togglePopupWindow?.dismiss()
-        togglePopupWindow = null
-
         val toggleOptions = vo!!.getToggleOptions(context)
         val functionalButtonsOptions = vo!!.getFunctionButtonToggleOptions(context)
 
         if (view == textView && toggleOptions.size > 1) {
-            handleTextViewClick(toggleOptions)
+            sectionChangingPopupController.show(ListPopupWindow(context, toggleOptions, true) {
+                val itemsCount = getItemsCountBeforeChanging!!(vo!!)
+
+                vo!!.selectedToggleTag = it.tag
+                itemsSectionChangingCallback!!(vo!!, itemsCount)
+                vo = vo // Обновляем данные ...
+            }, parent as View, textView, Gravity.START, true)
         } else if (!vo!!.canHideItems() && functionalButtonsOptions!!.size > 1) {
-            handleFunctionButtonClick(functionalButtonsOptions)
+            sectionChangingPopupController.show(ListPopupWindow(context, functionalButtonsOptions, true) {
+                vo!!.selectFunctionalToggleTag(it.tag)
+
+                if (vo!!.canSortItems()) {
+                    sortTypeChangingCallback!!(vo!!, getItemsCountBeforeChanging!!(vo!!))
+                }
+            }, parent as View, functionalImageButton!!, Gravity.END, true)
         } else {
-            handleItemsHidingRequest()
-        }
-    }
+            if (vo!!.isItemsHidden) {
+                visibilityChangingAnimator.let {
+                    it.duration = hidingAnimationDuration
+                    it.reverse()
+                }
 
-    private fun handleTextViewClick(toggleOptions: List<PopupItemVO<*>>) {
-        if (toggleIconDrawableAnimator.isRunning) {
-            return
-        }
+                vo!!.isItemsHidden = false
+            } else {
+                visibilityChangingAnimator.let {
+                    it.duration = showingAnimationDuration
+                    it.start()
+                }
 
-        togglePopupWindow = ListPopupWindow(context, toggleOptions) {
-            togglePopupWindow!!.dismiss()
-
-            val itemsCount = getItemsCountBeforeChanging!!(vo!!)
-            vo!!.selectedToggleTag = it.tag
-            itemsSectionChangingCallback!!(vo!!, itemsCount)
-            vo = vo // Обновляем данные ...
-        }.apply {
-            setOnDismissListener { toggleIconDrawableAnimator.reverse() }
-            showAsDropDown(textView, Gravity.START)
-        }
-
-        toggleIconDrawableAnimator.start()
-    }
-
-    private fun handleFunctionButtonClick(functionalButtonsOptions: List<PopupItemVO<*>>) {
-        togglePopupWindow = ListPopupWindow(context, functionalButtonsOptions) {
-            togglePopupWindow!!.dismiss()
-            vo!!.selectFunctionalToggleTag(it.tag)
-
-            if (vo!!.canSortItems()) {
-                sortTypeChangingCallback!!(vo!!, getItemsCountBeforeChanging!!(vo!!))
-            }
-        }
-
-        togglePopupWindow!!.showAsDropDown(functionalImageButton!!, Gravity.END)
-    }
-
-    private fun handleItemsHidingRequest() {
-        if (vo!!.isItemsHidden) {
-            hidingIconDrawableAnimator.let {
-                it.duration = hidingAnimationDuration
-                it.reverse()
+                vo!!.isItemsHidden = true
             }
 
-            vo!!.isItemsHidden = false
-        } else {
-            hidingIconDrawableAnimator.let {
-                it.duration = showingAnimationDuration
-                it.start()
-            }
-
-            vo!!.isItemsHidden = true
+            itemsVisibilityTogglingCallback!!(vo!!)
         }
-
-        itemsVisibilityTogglingCallback!!(vo!!)
     }
 }

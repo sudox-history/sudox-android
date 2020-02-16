@@ -1,21 +1,19 @@
 package com.sudox.design.popup
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.popup.views.PopupItemView
 import com.sudox.design.popup.vos.PopupItemVO
 
 class ListPopupAdapter(
-        val context: Context,
+        val window: ListPopupWindow,
         val items: List<PopupItemVO<*>>
 ) : RecyclerView.Adapter<ListPopupAdapter.ViewHolder>() {
 
-    var itemClickedCallback: ((PopupItemVO<*>) -> (Unit))? = null
     var maximumItemWidth = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(PopupItemView(context).apply {
+        return ViewHolder(PopupItemView(window.context).apply {
             minimumWidth = this@ListPopupAdapter.maximumItemWidth
             layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -31,7 +29,7 @@ class ListPopupAdapter(
                 val clickedItem = items[holder.adapterPosition]
 
                 if (activeItem != clickedItem) {
-                    itemClickedCallback!!(clickedItem)
+                    window.invokeItemClickedEvent(clickedItem)
                 }
             }
 

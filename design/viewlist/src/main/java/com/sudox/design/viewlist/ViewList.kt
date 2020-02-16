@@ -3,11 +3,21 @@ package com.sudox.design.viewlist
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.animation.Interpolator
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 
+/**
+ * Доработанный список на базе RecyclerView
+ *
+ * В отличии от обычного RecyclerView умеет:
+ * 1) Отображать шапки и футеры
+ * 2) Переключать секции и сортировки
+ * 3) Скрывать секции
+ */
 class ViewList : RecyclerView {
 
     internal var footerTextAppearance = 0
@@ -37,5 +47,54 @@ class ViewList : RecyclerView {
         } else {
             removeItemDecoration(getItemDecorationAt(0))
         }
+    }
+
+    override fun scrollToPosition(position: Int) {
+        if (isFocusable) {
+            super.scrollToPosition(position)
+        }
+    }
+
+    override fun smoothScrollToPosition(position: Int) {
+        if (isFocusable) {
+            super.smoothScrollToPosition(position)
+        }
+    }
+
+    override fun scrollBy(x: Int, y: Int) {
+        if (isFocusable) {
+            super.scrollBy(x, y)
+        }
+    }
+
+    override fun smoothScrollBy(dx: Int, dy: Int, interpolator: Interpolator?) {
+        if (isFocusable) {
+            super.smoothScrollBy(dx, dy, interpolator)
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(e: MotionEvent?): Boolean {
+        if (!isFocusable) {
+            return false
+        }
+
+        return super.onTouchEvent(e)
+    }
+
+    override fun onInterceptTouchEvent(e: MotionEvent?): Boolean {
+        if (!isFocusable) {
+            return false
+        }
+
+        return super.onInterceptTouchEvent(e)
+    }
+
+    override fun onGenericMotionEvent(event: MotionEvent?): Boolean {
+        if (!isFocusable) {
+            return false
+        }
+
+        return super.onGenericMotionEvent(event)
     }
 }

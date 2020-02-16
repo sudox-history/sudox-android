@@ -14,22 +14,22 @@ import kotlin.math.max
  *
  * @param context Контекст приложения/активности
  * @param itemClickedCallback Кэллбэк клика по элементу
+ * @param hideAfterSelection Скрывать после выбора элемента?
  * @param items VO элементов меню
  */
 class ListPopupWindow(
-        context: Context,
-        items: List<PopupItemVO<*>>,
-        itemClickedCallback: (PopupItemVO<*>) -> (Unit)
+        val context: Context,
+        val items: List<PopupItemVO<*>>,
+        val hideAfterSelection: Boolean,
+        val itemClickedCallback: (PopupItemVO<*>) -> (Unit)
 ) : PopupWindow(context, null, R.attr.listPopupWindowStyle) {
 
     private var marginBetweenPopupAndAnchor = context
             .resources
             .getDimensionPixelSize(R.dimen.listpopupwindow_margin_between_popup_and_anchor)
 
+    private val adapter = ListPopupAdapter(this, items)
     private var viewList = RecyclerView(context)
-    private val adapter = ListPopupAdapter(context, items).apply {
-        this.itemClickedCallback = itemClickedCallback
-    }
 
     init {
         isOutsideTouchable = true
@@ -69,5 +69,13 @@ class ListPopupWindow(
         } else {
             size[0]
         }, y)
+    }
+
+    internal fun invokeItemClickedEvent(clickedItem: PopupItemVO<*>) {
+        if (hideAfterSelection) {
+            dismiss()
+        }
+
+        itemClickedCallback(clickedItem)
     }
 }
