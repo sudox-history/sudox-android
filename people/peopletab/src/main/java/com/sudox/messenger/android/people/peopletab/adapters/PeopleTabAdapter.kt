@@ -37,10 +37,20 @@ class PeopleTabAdapter(
                 ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE to AddedFriendsHeaderVO())
 ) : ViewListAdapter<RecyclerView.ViewHolder>(headersVO) {
 
+    var viewPool = RecyclerView.RecycledViewPool()
     val addedFriendsVOs: SortedList<AddedFriendVO>
     val friendsRequestsVO: SortedList<FriendRequestVO>
     val subscriptionsVOs: SortedList<SubscriptionVO>
     val maybeYouKnowAdapter = MaybeYouKnowAdapter()
+
+    override var viewList: ViewList? = null
+        set(value) {
+            field = value?.apply {
+                setRecycledViewPool(viewPool)
+                setItemViewCacheSize(20)
+                setHasFixedSize(true)
+            }
+        }
 
     init {
         val addedFriendsHeaderVO = headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]!!
@@ -69,6 +79,7 @@ class PeopleTabAdapter(
             PeopleViewHolder(HorizontalPeopleItemView(viewList!!.context))
         } else {
             ListViewHolder(createMaybeYouKnowRecyclerView(viewList!!.context).also { list ->
+                list.setRecycledViewPool(viewPool)
                 list.adapter = maybeYouKnowAdapter.apply {
                     viewList = list
                 }

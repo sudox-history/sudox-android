@@ -19,7 +19,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         open val headersVOs: HashMap<Int, ViewListHeaderVO>? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var viewList: ViewList? = null
+    open var viewList: ViewList? = null
         set(value) {
             field = value?.apply {
                 (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false

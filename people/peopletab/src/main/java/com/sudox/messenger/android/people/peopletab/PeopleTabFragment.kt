@@ -33,7 +33,9 @@ class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListe
         super.onViewCreated(view, savedInstanceState)
 
         adapter = PeopleTabAdapter().apply {
-            viewList = peopleTabContentList
+            viewList = peopleTabContentList.apply {
+
+            }
 
             friendsRequestsVO.apply {
                 add(FriendRequestVO(4, "Pidor Request 1", 145, 2, null, 2L))

@@ -3,6 +3,7 @@ package com.sudox.messenger.android.people.peopletab.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
+import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.messenger.android.people.common.views.VerticalPeopleItemView
 import com.sudox.messenger.android.people.peopletab.R
@@ -10,6 +11,14 @@ import com.sudox.messenger.android.people.peopletab.callbacks.MaybeYouKnowSortin
 import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
 
 class MaybeYouKnowAdapter : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>(null) {
+
+    override var viewList: ViewList? = null
+        set(value) {
+            field = value?.apply {
+                setItemViewCacheSize(20)
+                setHasFixedSize(true)
+            }
+        }
 
     val maybeYouKnowVOs = SortedList<MaybeYouKnowVO>(MaybeYouKnowVO::class.java, MaybeYouKnowSortingCallback(this))
 
