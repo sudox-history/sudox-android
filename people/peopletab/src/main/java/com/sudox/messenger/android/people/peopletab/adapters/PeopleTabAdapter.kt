@@ -85,22 +85,35 @@ class PeopleTabAdapter(
     }
 
     override fun getItemType(position: Int): Int {
-        val itemPosition = recalculatePosition(position)
-        var itemsCount = getItemsCountAfterHeaderConsiderVisibility(FRIEND_REQUESTS_HEADER_TYPE)
+        var current = 0
 
-        if (itemPosition < itemsCount) {
+        if (friendsRequestsVO.size() > 0) {
+            current += getItemsCountAfterHeaderConsiderVisibility(FRIEND_REQUESTS_HEADER_TYPE) + 1
+
+            if (headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isContentLoading) {
+                current++
+            }
+        }
+
+        if (position < current) {
             return FRIEND_REQUEST_VIEW_TYPE
         }
 
-        itemsCount += getItemsCountAfterHeaderConsiderVisibility(MAYBE_YOU_KNOW_HEADER_TYPE)
+        if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
+            current += getItemsCountAfterHeaderConsiderVisibility(MAYBE_YOU_KNOW_HEADER_TYPE) + 1
+        }
 
-        if (itemPosition < itemsCount) {
+        if (position < current) {
             return MAYBE_YOU_KNOW_VIEW_TYPE
         }
 
-        itemsCount += getItemsCountAfterHeaderConsiderVisibility(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE)
+        val addedFriendsOrSubscriptionsCount = getItemsCountAfterHeaderConsiderVisibility(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE)
 
-        if (itemPosition < itemsCount) {
+        if (addedFriendsOrSubscriptionsCount > 0) {
+            current += addedFriendsOrSubscriptionsCount + 1
+        }
+
+        if (position < current) {
             return if (headersVO[ADDED_FRIEND_VIEW_TYPE]!!.selectedToggleTag == FRIENDS_OPTION_TAG) {
                 ADDED_FRIEND_VIEW_TYPE
             } else {
@@ -129,6 +142,10 @@ class PeopleTabAdapter(
 
             if (!headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isItemsHidden) {
                 sum += friendsRequestsVO.size()
+            }
+
+            if (headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isContentLoading) {
+                sum++
             }
         }
 

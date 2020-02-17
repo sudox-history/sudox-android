@@ -21,7 +21,8 @@ class AddedFriendsHeaderVO(
         override var selectedFunctionButtonToggleTags: HashMap<Int, Int>? = hashMapOf(
                 FRIENDS_OPTION_TAG to IMPORTANCE_OPTION_TAG,
                 SUBSCRIPTIONS_OPTION_TAG to FAVORITE_OPTION_TAG
-        )
+        ),
+        override var isContentLoading: Boolean = false
 ) : ViewListHeaderVO {
 
     override var isItemsHidden: Boolean = false

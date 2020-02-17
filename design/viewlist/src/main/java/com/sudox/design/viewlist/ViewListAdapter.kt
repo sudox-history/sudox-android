@@ -1,6 +1,7 @@
 package com.sudox.design.viewlist
 
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.updatePadding
@@ -12,6 +13,7 @@ import com.sudox.design.viewlist.vos.ViewListHeaderVO
 
 const val HEADER_VIEW_TYPE = -1
 const val FOOTER_VIEW_TYPE = -2
+const val LOADER_VIEW_TYPE = -3
 
 abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         open val headersVOs: HashMap<Int, ViewListHeaderVO>? = null
@@ -67,6 +69,10 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             })
         } else if (viewType == FOOTER_VIEW_TYPE && getFooterCount() > 0) {
             FooterViewHolder(AppCompatTextView(ContextThemeWrapper(viewList!!.context, viewList!!.footerTextAppearance)))
+        } else if (viewType == LOADER_VIEW_TYPE) {
+            LoaderViewHolder(ProgressBar(viewList!!.context).apply {
+                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            })
         } else {
             createItemHolder(parent, viewType)
         }
@@ -151,6 +157,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
                 return
             }
+        } else if (holder is LoaderViewHolder) {
+            return
         }
 
         @Suppress("UNCHECKED_CAST")
@@ -186,14 +194,38 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         } else if (getFooterText(position) != null) {
             FOOTER_VIEW_TYPE
         } else {
-            getItemType(position)
+            val nearbyHeader = getNearestHeader(position) ?: return getItemType(position)
+            val nearbyHeaderType = getHeaderType(nearbyHeader)
+            val loaderPosition = findHeaderPosition(nearbyHeaderType) + getItemsCountAfterHeaderConsiderVisibility(nearbyHeaderType) + 1
+
+            if (loaderPosition == position) {
+                LOADER_VIEW_TYPE
+            } else {
+                getItemType(position)
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return getHeadersCount() + getFooterCount() + (headersVOs?.keys?.sumBy {
-            getItemsCountAfterHeaderConsiderVisibility(it)
+        return getHeadersCount() + getFooterCount() + (headersVOs?.entries?.sumBy {
+            getItemsCountAfterHeaderConsiderVisibility(it.key) + if (it.value.isContentLoading) {
+                1
+            } else {
+                0
+            }
         } ?: getItemsCountAfterHeaderConsiderVisibility(0))
+    }
+
+    private fun getNearestHeader(position: Int): ViewListHeaderVO? {
+        for (i in position - 1 downTo 0) {
+            val header = getHeaderByPosition(i)
+
+            if (header != null) {
+                return header
+            }
+        }
+
+        return null
     }
 
     /**
@@ -299,6 +331,28 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     }
 
     /**
+     * Включает/выключает загрузку в секции
+     *
+     * @param type Тип шапки над секцией
+     * @param toggle Отобразить загрузку?
+     */
+    fun toggleLoading(type: Int, toggle: Boolean) {
+        if (headersVOs!![type]!!.isContentLoading == toggle) {
+            return
+        }
+
+        headersVOs!![type]!!.isContentLoading = toggle
+
+        val loaderPosition = findHeaderPosition(type) + getItemsCountAfterHeaderConsiderVisibility(type) + 1
+
+        if (toggle) {
+            notifyItemInserted(loaderPosition)
+        } else {
+            notifyItemRemoved(loaderPosition)
+        }
+    }
+
+    /**
      * Уведомляет RecyclerView о перемещении элемента.
      *
      * @param type Тип шапки
@@ -339,35 +393,6 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     }
 
     /**
-     * Пересчитывает позицию относительно адаптера в позицию, относительно элементов (т.е. исключает количество футеров и шапок,
-     * предшествующих данной позиции)
-     *
-     * @param position Позиция для пересчета
-     * @return Позиция, относительно элементов
-     */
-    fun recalculatePosition(position: Int): Int {
-        return position - getFootersAndHeadersCountBehindPosition(position)
-    }
-
-    /**
-     * Возвращает количество футеров и шапок, предшествующих данной позиции
-     *
-     * @param position Позиция, относительно которой нужно посчитать количество шапок и футеров
-     * @return Количество шапок и футеров, относительно позиции
-     */
-    fun getFootersAndHeadersCountBehindPosition(position: Int): Int {
-        var footersAndHeadersCount = 0
-
-        for (i in position downTo 0) {
-            if (getHeaderByPosition(i) != null || getFooterText(i) != null) {
-                footersAndHeadersCount++
-            }
-        }
-
-        return footersAndHeadersCount
-    }
-
-    /**
      * Пересчитывает позицию относительно адаптера в позицию, относительно шапки (считает количество предшествующих
      * элементов после шапки)
      *
@@ -380,15 +405,20 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         }
 
         var lastHeaderPosition = 0
+        var notCalculable = 0
 
         for (i in position downTo 0) {
-            if (getItemViewType(i) == HEADER_VIEW_TYPE) {
+            val type = getItemViewType(i)
+
+            if (type == LOADER_VIEW_TYPE || type == FOOTER_VIEW_TYPE) {
+                notCalculable++
+            } else if (type == HEADER_VIEW_TYPE) {
                 lastHeaderPosition = i
                 break
             }
         }
 
-        return position - lastHeaderPosition - 1
+        return position - notCalculable - lastHeaderPosition - 1
     }
 
     /**
@@ -496,5 +526,9 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
     private class FooterViewHolder(
             val view: AppCompatTextView
+    ) : RecyclerView.ViewHolder(view)
+
+    private class LoaderViewHolder(
+            val view: ProgressBar
     ) : RecyclerView.ViewHolder(view)
 }

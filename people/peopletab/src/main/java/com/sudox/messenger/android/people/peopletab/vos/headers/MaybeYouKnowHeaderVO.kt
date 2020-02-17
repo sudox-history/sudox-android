@@ -12,6 +12,7 @@ class MaybeYouKnowHeaderVO(
 ) : ViewListHeaderVO {
 
     override var selectedFunctionButtonToggleTags: HashMap<Int, Int>? = null
+    override var isContentLoading: Boolean = false
     override var selectedToggleTag = 0
 
     override fun getToggleOptions(context: Context): List<PopupItemVO<*>> {

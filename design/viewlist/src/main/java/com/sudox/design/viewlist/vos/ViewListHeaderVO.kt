@@ -10,6 +10,7 @@ import com.sudox.design.popup.vos.PopupItemVO
 interface ViewListHeaderVO {
 
     var isItemsHidden: Boolean
+    var isContentLoading: Boolean
     var selectedToggleTag: Int
     var selectedFunctionButtonToggleTags: HashMap<Int, Int>?
 

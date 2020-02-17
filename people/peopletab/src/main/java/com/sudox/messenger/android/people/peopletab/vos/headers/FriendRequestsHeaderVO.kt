@@ -7,9 +7,11 @@ import com.sudox.design.popup.vos.PopupItemWithoutIconVO
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import com.sudox.messenger.android.people.peopletab.R
 
-class FriendRequestsHeaderVO : ViewListHeaderVO {
+class FriendRequestsHeaderVO(
+        override var isItemsHidden: Boolean = false,
+        override var isContentLoading: Boolean = false
+) : ViewListHeaderVO {
 
-    override var isItemsHidden: Boolean = false
     override var selectedFunctionButtonToggleTags: HashMap<Int, Int>? = null
     override var selectedToggleTag = 0
 
