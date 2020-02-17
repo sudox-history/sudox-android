@@ -1,9 +1,11 @@
 package com.sudox.design.viewlist
 
+import android.util.SparseArray
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.util.forEach
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +18,7 @@ const val FOOTER_VIEW_TYPE = -2
 const val LOADER_VIEW_TYPE = -3
 
 abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
-        open val headersVOs: HashMap<Int, ViewListHeaderVO>? = null
+        open val headersVOs: SparseArray<ViewListHeaderVO>? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     open var viewList: ViewList? = null
@@ -105,10 +107,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             if (vo != null) {
                 holder.view.let {
                     it.itemsVisibilityTogglingCallback = { vo ->
-                        val type = getHeaderType(vo)
-
                         vo.isItemsHidden = !vo.isItemsHidden
-                        val itemsCount = getItemsCountAfterHeaderConsiderVisibility(type, true)
+                        val itemsCount = getItemsCountAfterHeaderConsiderVisibility(vo.type, true)
                         vo.isItemsHidden = !vo.isItemsHidden
 
                         notifyItemChanged(holder.adapterPosition)
@@ -120,20 +120,16 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                         }
                     }
 
-                    it.getItemsCountBeforeChanging = { vo -> getItemsCountAfterHeaderConsiderVisibility(getHeaderType(vo)) }
+                    it.getItemsCountBeforeChanging = { vo -> getItemsCountAfterHeaderConsiderVisibility(vo.type) }
                     it.itemsSectionChangingCallback = { vo, itemsCountBeforeChanging ->
-                        val type = getHeaderType(vo)
-
                         if (!vo.isItemsHidden) {
-                            sectionChangedCallback!!(type, itemsCountBeforeChanging, vo)
+                            sectionChangedCallback!!(vo.type, itemsCountBeforeChanging, vo)
                         }
                     }
 
                     it.sortTypeChangingCallback = { vo, itemsCountBeforeChanging ->
-                        val type = getHeaderType(vo)
-
                         if (!vo.isItemsHidden) {
-                            sortingTypeChangedCallback!!(type, itemsCountBeforeChanging, vo)
+                            sortingTypeChangedCallback!!(vo.type, itemsCountBeforeChanging, vo)
                         }
                     }
 
@@ -195,8 +191,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             FOOTER_VIEW_TYPE
         } else {
             val nearbyHeader = getNearestHeader(position) ?: return getItemType(position)
-            val nearbyHeaderType = getHeaderType(nearbyHeader)
-            val loaderPosition = findHeaderPosition(nearbyHeaderType) + getItemsCountAfterHeaderConsiderVisibility(nearbyHeaderType) + 1
+            val loaderPosition = findHeaderPosition(nearbyHeader.type) +
+                    getItemsCountAfterHeaderConsiderVisibility(nearbyHeader.type) + 1
 
             if (loaderPosition == position) {
                 LOADER_VIEW_TYPE
@@ -207,13 +203,21 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     }
 
     override fun getItemCount(): Int {
-        return getHeadersCount() + getFooterCount() + (headersVOs?.entries?.sumBy {
-            getItemsCountAfterHeaderConsiderVisibility(it.key) + if (it.value.isContentLoading) {
-                1
-            } else {
-                0
+        if (headersVOs != null) {
+            var itemsCount = 0
+
+            headersVOs?.forEach { key, value ->
+                itemsCount += getItemsCountAfterHeaderConsiderVisibility(key) + if (value.isContentLoading) {
+                    1
+                } else {
+                    0
+                }
             }
-        } ?: getItemsCountAfterHeaderConsiderVisibility(0))
+
+            return itemsCount
+        } else {
+            return getItemsCountAfterHeaderConsiderVisibility(0)
+        }
     }
 
     private fun getNearestHeader(position: Int): ViewListHeaderVO? {
@@ -226,6 +230,15 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         }
 
         return null
+    }
+
+    /**
+     * Добавляет VO шапки в хеш-таблицу
+     *
+     * @param vo VO шапки, которую нужно добавить
+     */
+    fun addHeaderVO(vo: ViewListHeaderVO) {
+        headersVOs?.append(vo.type, vo)
     }
 
     /**
@@ -255,10 +268,6 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         notifyItemRangeInsertedAfterHeader(headerType, 0, itemsCount)
     }
 
-    private fun getHeaderType(vo: ViewListHeaderVO): Int {
-        return headersVOs!!.entries.find { entry -> entry.value == vo }!!.key
-    }
-
     /**
      * Уведомляет RecyclerView о вставке элемента.
      * При необходимости уведомляет RecyclerView о появлении шапки
@@ -268,7 +277,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      * @param itemCount Количество элементов для вставки
      */
     fun notifyItemRangeInsertedAfterHeader(type: Int, position: Int, itemCount: Int) {
-        if (headersVOs?.isNotEmpty() == true) {
+        if ((headersVOs?.size() ?: 0) > 0) {
             var headerPosition = findHeaderPosition(type)
             val itemPosition = position + 1
 
@@ -294,7 +303,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     fun notifyItemRangeRemovedAfterHeader(type: Int, position: Int, itemCount: Int) {
         // Cannot be -1, because item created and consequently header also created
 
-        if (headersVOs?.isNotEmpty() == true) {
+        if ((headersVOs?.size() ?: 0) > 0) {
             val headerPosition = findHeaderPosition(type)
             var startPosition = headerPosition + position + 1
             val vo = headersVOs!![type]
@@ -320,7 +329,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     fun notifyItemRangeChangedAfterHeader(type: Int, position: Int, count: Int) {
         // Cannot be -1, because item created and consequently header also created
 
-        if (headersVOs?.isNotEmpty() == true) {
+        if ((headersVOs?.size() ?: 0) > 0) {
             val headerPosition = findHeaderPosition(type)
             val startPosition = headerPosition + position + 1
 
@@ -360,7 +369,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      * @param toPosition Позиция, относительно шапки, на которую переместился элемент
      */
     fun notifyItemMovedAfterHeader(type: Int, fromPosition: Int, toPosition: Int) {
-        if (headersVOs?.isNotEmpty() == true) {
+        if ((headersVOs?.size() ?: 0) > 0) {
             // Cannot be -1, because item created and consequently header also created
             val headerPosition = findHeaderPosition(type)
             val itemFromPosition = headerPosition + fromPosition + 1

@@ -1,5 +1,6 @@
 package com.sudox.messenger.android.people.peopletab.adapters
 
+import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
@@ -31,10 +32,7 @@ const val ADDED_FRIEND_VIEW_TYPE = 3
 const val SUBSCRIPTION_VIEW_TYPE = 4
 
 class PeopleTabAdapter(
-        val headersVO: HashMap<Int, ViewListHeaderVO> = hashMapOf(
-                FRIEND_REQUESTS_HEADER_TYPE to FriendRequestsHeaderVO(),
-                MAYBE_YOU_KNOW_HEADER_TYPE to MaybeYouKnowHeaderVO(),
-                ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE to AddedFriendsHeaderVO())
+        val headersVO: SparseArray<ViewListHeaderVO> = SparseArray()
 ) : ViewListAdapter<RecyclerView.ViewHolder>(headersVO) {
 
     var viewPool = RecyclerView.RecycledViewPool()
@@ -42,6 +40,12 @@ class PeopleTabAdapter(
     val friendsRequestsVO: SortedList<FriendRequestVO>
     val subscriptionsVOs: SortedList<SubscriptionVO>
     val maybeYouKnowAdapter = MaybeYouKnowAdapter()
+
+    init {
+        addHeaderVO(FriendRequestsHeaderVO())
+        addHeaderVO(MaybeYouKnowHeaderVO())
+        addHeaderVO(AddedFriendsHeaderVO())
+    }
 
     override var viewList: ViewList? = null
         set(value) {

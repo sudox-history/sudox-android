@@ -2,6 +2,7 @@ package com.sudox.design.viewlist.vos
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.SparseIntArray
 import com.sudox.design.popup.vos.PopupItemVO
 
 /**
@@ -9,10 +10,11 @@ import com.sudox.design.popup.vos.PopupItemVO
  */
 interface ViewListHeaderVO {
 
+    var type: Int
     var isItemsHidden: Boolean
     var isContentLoading: Boolean
     var selectedToggleTag: Int
-    var selectedFunctionButtonToggleTags: HashMap<Int, Int>?
+    var selectedFunctionButtonToggleTags: SparseIntArray?
 
     /**
      * Выбирает опцию функциональной кнопки и сопоставляет её опциональной кнопки переключателя
@@ -20,7 +22,7 @@ interface ViewListHeaderVO {
      * @param functionalToggleTag Тег опции функциональной кнопки
      */
     fun selectFunctionalToggleTag(functionalToggleTag: Int) {
-        selectedFunctionButtonToggleTags?.remove(selectedToggleTag)
+        selectedFunctionButtonToggleTags?.delete(selectedToggleTag)
         selectedFunctionButtonToggleTags?.put(selectedToggleTag, functionalToggleTag)
     }
 

@@ -2,10 +2,12 @@ package com.sudox.messenger.android.people.peopletab.vos.headers
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.SparseIntArray
 import com.sudox.design.popup.vos.PopupItemVO
 import com.sudox.design.popup.vos.PopupItemWithDrawableIconVO
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import com.sudox.messenger.android.people.peopletab.R
+import com.sudox.messenger.android.people.peopletab.adapters.ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE
 
 const val FRIENDS_OPTION_TAG = 0
 const val SUBSCRIPTIONS_OPTION_TAG = 1
@@ -18,14 +20,21 @@ const val NAME_OPTION_TAG = 5
 
 class AddedFriendsHeaderVO(
         override var selectedToggleTag: Int = 0,
-        override var selectedFunctionButtonToggleTags: HashMap<Int, Int>? = hashMapOf(
-                FRIENDS_OPTION_TAG to IMPORTANCE_OPTION_TAG,
-                SUBSCRIPTIONS_OPTION_TAG to FAVORITE_OPTION_TAG
-        ),
+        override var selectedFunctionButtonToggleTags: SparseIntArray? = null,
         override var isContentLoading: Boolean = false
 ) : ViewListHeaderVO {
 
+    override var type: Int = ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE
     override var isItemsHidden: Boolean = false
+
+    init {
+        if (selectedFunctionButtonToggleTags == null) {
+            selectedFunctionButtonToggleTags = SparseIntArray().apply {
+                append(FRIENDS_OPTION_TAG, IMPORTANCE_OPTION_TAG)
+                append(SUBSCRIPTIONS_OPTION_TAG, FAVORITE_OPTION_TAG)
+            }
+        }
+    }
 
     override fun getToggleOptions(context: Context): List<PopupItemVO<*>> {
         return listOf(
@@ -45,7 +54,7 @@ class AddedFriendsHeaderVO(
     }
 
     override fun getFunctionButtonToggleOptions(context: Context): List<PopupItemVO<*>>? {
-        val functionalTag = selectedFunctionButtonToggleTags!![selectedToggleTag]!!
+        val functionalTag = selectedFunctionButtonToggleTags!![selectedToggleTag]
 
         return if (selectedToggleTag == FRIENDS_OPTION_TAG) {
             listOf(
