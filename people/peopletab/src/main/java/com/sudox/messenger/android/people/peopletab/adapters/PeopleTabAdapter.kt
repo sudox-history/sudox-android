@@ -1,6 +1,5 @@
 package com.sudox.messenger.android.people.peopletab.adapters
 
-import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
@@ -22,17 +21,20 @@ import com.sudox.messenger.android.people.peopletab.vos.headers.FriendRequestsHe
 import com.sudox.messenger.android.people.peopletab.vos.headers.MaybeYouKnowHeaderVO
 import com.sudox.messenger.android.people.peopletab.vos.headers.SUBSCRIPTIONS_OPTION_TAG
 
-const val FRIEND_REQUESTS_HEADER_TYPE = 1
-const val MAYBE_YOU_KNOW_HEADER_TYPE = 2
-const val ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE = 3
+const val FRIEND_REQUESTS_HEADER_TYPE = 0
+const val MAYBE_YOU_KNOW_HEADER_TYPE = 1
+const val ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE = 2
 
-const val FRIEND_REQUEST_VIEW_TYPE = 1
-const val MAYBE_YOU_KNOW_VIEW_TYPE = 2
-const val ADDED_FRIEND_VIEW_TYPE = 3
-const val SUBSCRIPTION_VIEW_TYPE = 4
+const val FRIEND_REQUEST_VIEW_TYPE = 0
+const val MAYBE_YOU_KNOW_LIST_VIEW_TYPE = 1
+const val ADDED_FRIEND_VIEW_TYPE = 2
+const val SUBSCRIPTION_VIEW_TYPE = 3
 
 class PeopleTabAdapter(
-        val headersVO: SparseArray<ViewListHeaderVO> = SparseArray()
+        val headersVO: Array<ViewListHeaderVO> = arrayOf(
+                FriendRequestsHeaderVO(),
+                MaybeYouKnowHeaderVO(),
+                AddedFriendsHeaderVO())
 ) : ViewListAdapter<RecyclerView.ViewHolder>(headersVO) {
 
     var viewPool = RecyclerView.RecycledViewPool()
@@ -40,12 +42,6 @@ class PeopleTabAdapter(
     val friendsRequestsVO: SortedList<FriendRequestVO>
     val subscriptionsVOs: SortedList<SubscriptionVO>
     val maybeYouKnowAdapter = MaybeYouKnowAdapter()
-
-    init {
-        addHeaderVO(FriendRequestsHeaderVO())
-        addHeaderVO(MaybeYouKnowHeaderVO())
-        addHeaderVO(AddedFriendsHeaderVO())
-    }
 
     override var viewList: ViewList? = null
         set(value) {
@@ -57,13 +53,13 @@ class PeopleTabAdapter(
         }
 
     init {
-        val addedFriendsHeaderVO = headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]!!
-        val addedFriendsSortType = addedFriendsHeaderVO.selectedFunctionButtonToggleTags!![FRIENDS_OPTION_TAG]!!
+        val addedFriendsHeaderVO = headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
+        val addedFriendsSortType = addedFriendsHeaderVO.selectedFunctionButtonToggleTags!![FRIENDS_OPTION_TAG]
         val addedFriendsCallback = AddedFriendsSortingCallback(this, addedFriendsSortType)
 
         addedFriendsVOs = SortedList(AddedFriendVO::class.java, addedFriendsCallback)
 
-        val subscriptionsSortType = addedFriendsHeaderVO.selectedFunctionButtonToggleTags!![SUBSCRIPTIONS_OPTION_TAG]!!
+        val subscriptionsSortType = addedFriendsHeaderVO.selectedFunctionButtonToggleTags!![SUBSCRIPTIONS_OPTION_TAG]
         val subscriptionsCallback = SubscriptionsSortingCallback(this, subscriptionsSortType)
 
         subscriptionsVOs = SortedList(SubscriptionVO::class.java, subscriptionsCallback)
@@ -79,7 +75,7 @@ class PeopleTabAdapter(
     }
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType != MAYBE_YOU_KNOW_VIEW_TYPE) {
+        return if (viewType != MAYBE_YOU_KNOW_LIST_VIEW_TYPE) {
             PeopleViewHolder(HorizontalPeopleItemView(viewList!!.context))
         } else {
             ListViewHolder(createMaybeYouKnowRecyclerView(viewList!!.context).also { list ->
@@ -105,7 +101,7 @@ class PeopleTabAdapter(
         if (friendsRequestsVO.size() > 0) {
             current += getItemsCountAfterHeaderConsiderVisibility(FRIEND_REQUESTS_HEADER_TYPE) + 1
 
-            val headerVO = headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!
+            val headerVO = headersVO[FRIEND_REQUESTS_HEADER_TYPE]
 
             if (!headerVO.isItemsHidden && headerVO.isContentLoading) {
                 current++
@@ -121,7 +117,7 @@ class PeopleTabAdapter(
         }
 
         if (position < current) {
-            return MAYBE_YOU_KNOW_VIEW_TYPE
+            return MAYBE_YOU_KNOW_LIST_VIEW_TYPE
         }
 
         val addedFriendsOrSubscriptionsCount = getItemsCountAfterHeaderConsiderVisibility(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE)
@@ -131,7 +127,7 @@ class PeopleTabAdapter(
         }
 
         if (position < current) {
-            return if (headersVO[ADDED_FRIEND_VIEW_TYPE]!!.selectedToggleTag == FRIENDS_OPTION_TAG) {
+            return if (headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE].selectedToggleTag == FRIENDS_OPTION_TAG) {
                 ADDED_FRIEND_VIEW_TYPE
             } else {
                 SUBSCRIPTION_VIEW_TYPE
@@ -157,11 +153,11 @@ class PeopleTabAdapter(
         if (friendsRequestsVO.size() > 0) {
             sum++
 
-            if (!headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isItemsHidden) {
+            if (!headersVO[FRIEND_REQUESTS_HEADER_TYPE].isItemsHidden) {
                 sum += friendsRequestsVO.size()
             }
 
-            if (headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isLoaderShowing()) {
+            if (headersVO[FRIEND_REQUESTS_HEADER_TYPE].isLoaderShowing()) {
                 sum++
             }
         }
@@ -177,7 +173,7 @@ class PeopleTabAdapter(
         if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
             sum++
 
-            if (!headersVO[MAYBE_YOU_KNOW_HEADER_TYPE]!!.isItemsHidden) {
+            if (!headersVO[MAYBE_YOU_KNOW_HEADER_TYPE].isItemsHidden) {
                 sum++
             }
         }
@@ -199,7 +195,7 @@ class PeopleTabAdapter(
         if (friendsRequestsVO.size() > 0) {
             position++
 
-            if (!headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isItemsHidden) {
+            if (!headersVO[FRIEND_REQUESTS_HEADER_TYPE].isItemsHidden) {
                 position += friendsRequestsVO.size()
             }
         }
@@ -211,7 +207,7 @@ class PeopleTabAdapter(
         if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
             position++
 
-            if (!headersVO[MAYBE_YOU_KNOW_HEADER_TYPE]!!.isItemsHidden) {
+            if (!headersVO[MAYBE_YOU_KNOW_HEADER_TYPE].isItemsHidden) {
                 position++
             }
         }
@@ -233,11 +229,21 @@ class PeopleTabAdapter(
                 0
             }
         } else {
-            if (headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]!!.selectedToggleTag == FRIENDS_OPTION_TAG) {
+            if (headersVO[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE].selectedToggleTag == FRIENDS_OPTION_TAG) {
                 addedFriendsVOs.size()
             } else {
                 subscriptionsVOs.size()
             }
+        }
+    }
+
+    override fun getHeaderTypeByItemType(itemType: Int): Int {
+        return if (itemType == FRIEND_REQUEST_VIEW_TYPE) {
+            FRIEND_REQUESTS_HEADER_TYPE
+        } else if (itemType == MAYBE_YOU_KNOW_LIST_VIEW_TYPE) {
+            MAYBE_YOU_KNOW_HEADER_TYPE
+        } else {
+            ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE
         }
     }
 

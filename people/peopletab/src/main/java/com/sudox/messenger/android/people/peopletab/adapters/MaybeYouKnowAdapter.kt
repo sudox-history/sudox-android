@@ -10,6 +10,8 @@ import com.sudox.messenger.android.people.peopletab.R
 import com.sudox.messenger.android.people.peopletab.callbacks.MaybeYouKnowSortingCallback
 import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
 
+const val MAYBE_YOU_KNOW_ITEM_VIEW_TYPE = 4
+
 class MaybeYouKnowAdapter : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>(null) {
 
     override var viewList: ViewList? = null
@@ -32,6 +34,10 @@ class MaybeYouKnowAdapter : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>(null
 
     override fun getItemMargin(position: Int): Int {
         return viewList!!.context.resources.getDimensionPixelSize(R.dimen.maybeyouknow_items_margin)
+    }
+
+    override fun getItemType(position: Int): Int {
+        return MAYBE_YOU_KNOW_ITEM_VIEW_TYPE
     }
 
     override fun getItemsCountAfterHeader(type: Int): Int {

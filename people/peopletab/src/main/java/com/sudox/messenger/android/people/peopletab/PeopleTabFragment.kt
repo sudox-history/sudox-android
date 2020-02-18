@@ -42,17 +42,15 @@ class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListe
             }
 
             subscriptionsVOs.apply {
-                friendsRequestsVO.apply {
-                    addAll(*Array(10000) {
-                        SubscriptionVO(1, "TheMax", SEEN_TIME_ONLINE, 45, "Suka, rabotai", 1, 1)
-                    })
-                }
+                addAll(*Array(10000) {
+                    SubscriptionVO(1, "TheMax", SEEN_TIME_ONLINE, 45, "Suka, rabotai", 1, 1)
+                })
+            }
 
-                addedFriendsVOs.apply {
-                    addAll(*Array(10000) {
-                        AddedFriendVO(1, "Pidor Added 1", 145, 2, 1)
-                    })
-                }
+            addedFriendsVOs.apply {
+                addAll(*Array(10000) {
+                    AddedFriendVO(1, "Pidor Added 1", 145, 2, 1)
+                })
             }
 
             maybeYouKnowAdapter.maybeYouKnowVOs.apply {
