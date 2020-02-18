@@ -147,15 +147,15 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                     initialBottomPadding = holder.view.paddingBottom
                 }
 
-//                if (position == 0) {
-//                    holder.view.updatePadding(top = 0)
-//                }
-//
-//                if (vo.isItemsHidden) {
-//                    holder.view.updatePadding(bottom = 0)
-//                } else {
-//                    holder.view.updatePadding(bottom = initialBottomPadding)
-//                }
+                if (position == 0) {
+                    holder.view.updatePadding(top = 0)
+                }
+
+                if (vo.isItemsHidden) {
+                    holder.view.updatePadding(bottom = 0)
+                } else {
+                    holder.view.updatePadding(bottom = initialBottomPadding)
+                }
 
                 return
             }
