@@ -6,11 +6,9 @@ import android.widget.ProgressBar
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.util.forEach
-import androidx.core.util.keyIterator
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import com.sudox.design.viewlist.header.ViewListHeaderView
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 
@@ -23,11 +21,6 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     open var viewList: ViewList? = null
-        set(value) {
-            field = value?.apply {
-                (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-            }
-        }
 
     private var initialTopPadding = -1
     private var initialBottomPadding = -1

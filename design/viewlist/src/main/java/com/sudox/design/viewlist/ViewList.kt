@@ -9,6 +9,7 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 
 /**
  * Доработанный список на базе RecyclerView
@@ -35,6 +36,8 @@ class ViewList : RecyclerView {
 
         initialPaddingRight = paddingRight
         initialPaddingLeft = paddingLeft
+
+        (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
         updatePadding(left = 0, right = 0)
     }
