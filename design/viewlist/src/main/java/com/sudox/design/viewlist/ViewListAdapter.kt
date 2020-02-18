@@ -190,9 +190,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
         } else if (getFooterText(position) != null) {
             FOOTER_VIEW_TYPE
         } else {
-            val nearbyHeader = getNearestHeader(position) ?: return getItemType(position)
-            val loaderPosition = findHeaderPosition(nearbyHeader.type) +
-                    getItemsCountAfterHeaderConsiderVisibility(nearbyHeader.type) + 1
+            val nearbyHeaderPair = getNearestHeader(position) ?: return getItemType(position)
+            val loaderPosition = nearbyHeaderPair.first + getItemsCountAfterHeaderConsiderVisibility(nearbyHeaderPair.second.type) + 1
 
             if (loaderPosition == position) {
                 LOADER_VIEW_TYPE
@@ -203,8 +202,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
     }
 
     override fun getItemCount(): Int {
-        if (headersVOs != null) {
-            var itemsCount = 0
+        return if (headersVOs != null) {
+            var itemsCount = headersVOs!!.size()
 
             headersVOs?.forEach { key, value ->
                 itemsCount += getItemsCountAfterHeaderConsiderVisibility(key) + if (value.isContentLoading) {
@@ -214,18 +213,18 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                 }
             }
 
-            return itemsCount
+            itemsCount
         } else {
-            return getItemsCountAfterHeaderConsiderVisibility(0)
+            getItemsCountAfterHeaderConsiderVisibility(0)
         }
     }
 
-    private fun getNearestHeader(position: Int): ViewListHeaderVO? {
+    private fun getNearestHeader(position: Int): Pair<Int, ViewListHeaderVO>? {
         for (i in position - 1 downTo 0) {
             val header = getHeaderByPosition(i)
 
             if (header != null) {
-                return header
+                return Pair(i, header)
             }
         }
 
@@ -413,21 +412,15 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             return position
         }
 
-        var lastHeaderPosition = 0
-        var notCalculable = 0
-
         for (i in position downTo 0) {
-            val type = getItemViewType(i)
+            val header = getHeaderByPosition(i)
 
-            if (type == LOADER_VIEW_TYPE || type == FOOTER_VIEW_TYPE) {
-                notCalculable++
-            } else if (type == HEADER_VIEW_TYPE) {
-                lastHeaderPosition = i
-                break
+            if (header != null) {
+                return position - i - 1
             }
         }
 
-        return position - notCalculable - lastHeaderPosition - 1
+        return position
     }
 
     /**
