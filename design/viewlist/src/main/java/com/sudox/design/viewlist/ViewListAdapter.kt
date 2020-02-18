@@ -6,6 +6,7 @@ import android.widget.ProgressBar
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.util.forEach
+import androidx.core.util.keyIterator
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -108,7 +109,13 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                 holder.view.let {
                     it.itemsVisibilityTogglingCallback = { vo ->
                         vo.isItemsHidden = !vo.isItemsHidden
-                        val itemsCount = getItemsCountAfterHeaderConsiderVisibility(vo.type, true)
+
+                        val itemsCount = getItemsCountAfterHeaderConsiderVisibility(vo.type, true) + if (vo.isContentLoading) {
+                            1
+                        } else {
+                            0
+                        }
+
                         vo.isItemsHidden = !vo.isItemsHidden
 
                         notifyItemChanged(holder.adapterPosition)
@@ -136,20 +143,19 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
                     it.vo = vo
                 }
 
-                if (position == 0 && initialTopPadding == -1) {
-                    initialTopPadding = holder.view.paddingTop
-                    holder.view.updatePadding(top = 0)
-                }
-
                 if (initialBottomPadding == -1) {
                     initialBottomPadding = holder.view.paddingBottom
                 }
 
-                if (vo.isItemsHidden) {
-                    holder.view.updatePadding(bottom = 0)
-                } else {
-                    holder.view.updatePadding(bottom = initialBottomPadding)
-                }
+//                if (position == 0) {
+//                    holder.view.updatePadding(top = 0)
+//                }
+//
+//                if (vo.isItemsHidden) {
+//                    holder.view.updatePadding(bottom = 0)
+//                } else {
+//                    holder.view.updatePadding(bottom = initialBottomPadding)
+//                }
 
                 return
             }
@@ -193,7 +199,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
             val nearbyHeaderPair = getNearestHeader(position) ?: return getItemType(position)
             val loaderPosition = nearbyHeaderPair.first + getItemsCountAfterHeaderConsiderVisibility(nearbyHeaderPair.second.type) + 1
 
-            if (loaderPosition == position) {
+            if (!nearbyHeaderPair.second.isItemsHidden && loaderPosition == position) {
                 LOADER_VIEW_TYPE
             } else {
                 getItemType(position)
@@ -203,13 +209,13 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
 
     override fun getItemCount(): Int {
         return if (headersVOs != null) {
-            var itemsCount = headersVOs!!.size()
+            var itemsCount = getHeadersCount()
 
             headersVOs?.forEach { key, value ->
-                itemsCount += getItemsCountAfterHeaderConsiderVisibility(key) + if (value.isContentLoading) {
-                    1
-                } else {
-                    0
+                itemsCount += getItemsCountAfterHeaderConsiderVisibility(key)
+
+                if (value.isLoaderShowing()) {
+                    itemsCount++
                 }
             }
 
@@ -345,19 +351,15 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
      * @param toggle Отобразить загрузку?
      */
     fun toggleLoading(type: Int, toggle: Boolean) {
-        if (headersVOs!![type]!!.isContentLoading == toggle) {
-            return
+        val loaderPosition = findHeaderPosition(type) + getItemsCountAfterHeaderConsiderVisibility(type) + 1
+
+        if (toggle && headersVOs!![type]!!.canShowLoader()) {
+            notifyItemInserted(loaderPosition)
+        } else if (!toggle && headersVOs!![type]!!.canHideLoader()) {
+            notifyItemRemoved(loaderPosition)
         }
 
         headersVOs!![type]!!.isContentLoading = toggle
-
-        val loaderPosition = findHeaderPosition(type) + getItemsCountAfterHeaderConsiderVisibility(type) + 1
-
-        if (toggle) {
-            notifyItemInserted(loaderPosition)
-        } else {
-            notifyItemRemoved(loaderPosition)
-        }
     }
 
     /**

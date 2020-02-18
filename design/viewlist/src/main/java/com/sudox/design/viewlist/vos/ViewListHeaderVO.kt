@@ -17,6 +17,27 @@ interface ViewListHeaderVO {
     var selectedFunctionButtonToggleTags: SparseIntArray?
 
     /**
+     * Проверяет возможность отображения элемента загрузчика
+     */
+    fun canShowLoader(): Boolean {
+        return !isContentLoading && (!canHideItems() || !isItemsHidden)
+    }
+
+    /**
+     * Проверяет возможность скрытия элемента загрузчика
+     */
+    fun canHideLoader(): Boolean {
+        return isContentLoading && (!canHideItems() || !isItemsHidden)
+    }
+
+    /**
+     * Проверяет отображение загрузчика
+     */
+    fun isLoaderShowing(): Boolean {
+        return isContentLoading && ((canHideItems() && !isItemsHidden) || (!canHideItems()))
+    }
+
+    /**
      * Выбирает опцию функциональной кнопки и сопоставляет её опциональной кнопки переключателя
      *
      * @param functionalToggleTag Тег опции функциональной кнопки

@@ -105,7 +105,9 @@ class PeopleTabAdapter(
         if (friendsRequestsVO.size() > 0) {
             current += getItemsCountAfterHeaderConsiderVisibility(FRIEND_REQUESTS_HEADER_TYPE) + 1
 
-            if (headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isContentLoading) {
+            val headerVO = headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!
+
+            if (!headerVO.isItemsHidden && headerVO.isContentLoading) {
                 current++
             }
         }
@@ -159,7 +161,7 @@ class PeopleTabAdapter(
                 sum += friendsRequestsVO.size()
             }
 
-            if (headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isContentLoading) {
+            if (headersVO[FRIEND_REQUESTS_HEADER_TYPE]!!.isLoaderShowing()) {
                 sum++
             }
         }
