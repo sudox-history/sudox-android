@@ -2,7 +2,6 @@ package com.sudox.design.viewlist.vos
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.util.SparseIntArray
 import com.sudox.design.popup.vos.PopupItemVO
 
 /**
@@ -13,8 +12,9 @@ interface ViewListHeaderVO {
     var type: Int
     var isItemsHidden: Boolean
     var isContentLoading: Boolean
+    var isInClearLoading: Boolean
     var selectedToggleTag: Int
-    var selectedFunctionButtonToggleTags: SparseIntArray?
+    var selectedFunctionButtonToggleTags: IntArray?
 
     /**
      * Проверяет возможность отображения элемента загрузчика
@@ -43,8 +43,17 @@ interface ViewListHeaderVO {
      * @param functionalToggleTag Тег опции функциональной кнопки
      */
     fun selectFunctionalToggleTag(functionalToggleTag: Int) {
-        selectedFunctionButtonToggleTags?.delete(selectedToggleTag)
-        selectedFunctionButtonToggleTags?.put(selectedToggleTag, functionalToggleTag)
+        selectedFunctionButtonToggleTags!![selectedToggleTag] = functionalToggleTag
+    }
+
+    /**
+     * Возвращает опцию функциональной кнопки, сопоставленную опции кнопки переключателя
+     *
+     * @param toggleTag Опция кнопки переключателя (по-умолчанию выбирается выбранная)
+     * @return Опция функциональной кнопки
+     */
+    fun getSelectedFunctionalToggleTag(toggleTag: Int = selectedToggleTag): Int {
+        return selectedFunctionButtonToggleTags!![toggleTag]
     }
 
     /**

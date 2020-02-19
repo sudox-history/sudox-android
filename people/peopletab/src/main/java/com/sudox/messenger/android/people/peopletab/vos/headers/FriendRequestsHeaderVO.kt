@@ -11,11 +11,12 @@ import com.sudox.messenger.android.people.peopletab.adapters.FRIEND_REQUESTS_HEA
 
 class FriendRequestsHeaderVO(
         override var isItemsHidden: Boolean = false,
-        override var isContentLoading: Boolean = false
+        override var isContentLoading: Boolean = false,
+        override var isInClearLoading: Boolean = false
 ) : ViewListHeaderVO {
 
     override var type: Int = FRIEND_REQUESTS_HEADER_TYPE
-    override var selectedFunctionButtonToggleTags: SparseIntArray? = null
+    override var selectedFunctionButtonToggleTags: IntArray? = null
     override var selectedToggleTag = 0
 
     override fun getToggleOptions(context: Context): List<PopupItemVO<*>> {

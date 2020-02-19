@@ -235,7 +235,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
      * @return Количество элементов
      */
     fun getItemsCountAfterHeaderConsiderVisibility(type: Int, ignoreHidden: Boolean = false): Int {
-        if (ignoreHidden || headersVOs == null || !headersVOs!![type].isItemsHidden) {
+        if (ignoreHidden || headersVOs == null || (!headersVOs!![type].isItemsHidden && !headersVOs!![type].isInClearLoading)) {
             return getItemsCountAfterHeader(type)
         }
 
@@ -244,6 +244,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
 
     /**
      * Уведомляет RecyclerView о том, что новые данные в измененной секции готовы к отображению
+     * P.S.: Отключает загрузку если она в "чистом" режиме!
      *
      * @param headerType Тип заголовка
      * @param itemsCountBeforeChanging Количество предметов после заголовка до изменения
@@ -273,6 +274,10 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             }
 
             notifyItemRangeInserted(itemPosition + headerPosition, itemCount)
+
+            if (headersVOs!![type].isInClearLoading) {
+                toggleLoading(type, false)
+            }
         } else {
             notifyItemRangeInserted(position, itemCount)
         }
@@ -293,6 +298,10 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             val headerPosition = findHeaderPosition(type)
             var startPosition = headerPosition + position + 1
             val vo = headersVOs!![type]
+
+            if (vo.isInClearLoading) {
+                return
+            }
 
             if (vo.getToggleOptions(viewList!!.context).size == 1 && getItemsCountAfterHeaderConsiderVisibility(type) == 0) {
                 notifyItemRemoved(headerPosition)
@@ -330,17 +339,29 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
      *
      * @param type Тип шапки над секцией
      * @param toggle Отобразить загрузку?
+     * @param clearLoading Это чистая загрузка? (скрывает все элементы списка)
      */
-    fun toggleLoading(type: Int, toggle: Boolean) {
-        val loaderPosition = findHeaderPosition(type) + getItemsCountAfterHeaderConsiderVisibility(type) + 1
+    fun toggleLoading(type: Int, toggle: Boolean, clearLoading: Boolean = false) {
+        val headerPosition = findHeaderPosition(type)
+        val itemsInSection = getItemsCountAfterHeaderConsiderVisibility(type, !toggle)
+        val loaderPosition = headerPosition + itemsInSection + 1
 
         if (toggle && headersVOs!![type].canShowLoader()) {
             notifyItemInserted(loaderPosition)
+
+            if (clearLoading && itemsInSection > 0) {
+                notifyItemRangeRemoved(headerPosition + 1, itemsInSection)
+            }
         } else if (!toggle && headersVOs!![type].canHideLoader()) {
             notifyItemRemoved(loaderPosition)
         }
 
         headersVOs!![type].isContentLoading = toggle
+        headersVOs!![type].isInClearLoading = if (toggle) {
+            clearLoading
+        } else {
+            false
+        }
     }
 
     /**

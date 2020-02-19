@@ -14,8 +14,9 @@ class MaybeYouKnowHeaderVO(
 ) : ViewListHeaderVO {
 
     override var type: Int = MAYBE_YOU_KNOW_HEADER_TYPE
-    override var selectedFunctionButtonToggleTags: SparseIntArray? = null
+    override var selectedFunctionButtonToggleTags: IntArray? = null
     override var isContentLoading: Boolean = false
+    override var isInClearLoading: Boolean = false
     override var selectedToggleTag = 0
 
     override fun getToggleOptions(context: Context): List<PopupItemVO<*>> {

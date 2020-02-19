@@ -20,21 +20,16 @@ const val NAME_OPTION_TAG = 5
 
 class AddedFriendsHeaderVO(
         override var selectedToggleTag: Int = 0,
-        override var selectedFunctionButtonToggleTags: SparseIntArray? = null,
+        override var selectedFunctionButtonToggleTags: IntArray? = intArrayOf(
+                IMPORTANCE_OPTION_TAG,
+                FAVORITE_OPTION_TAG
+        ),
+        override var isInClearLoading: Boolean = false,
         override var isContentLoading: Boolean = false
 ) : ViewListHeaderVO {
 
     override var type: Int = ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE
     override var isItemsHidden: Boolean = false
-
-    init {
-        if (selectedFunctionButtonToggleTags == null) {
-            selectedFunctionButtonToggleTags = SparseIntArray().apply {
-                append(FRIENDS_OPTION_TAG, IMPORTANCE_OPTION_TAG)
-                append(SUBSCRIPTIONS_OPTION_TAG, FAVORITE_OPTION_TAG)
-            }
-        }
-    }
 
     override fun getToggleOptions(context: Context): List<PopupItemVO<*>> {
         return listOf(

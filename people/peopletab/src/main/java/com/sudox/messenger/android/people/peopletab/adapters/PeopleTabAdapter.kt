@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
+import com.sudox.design.viewlist.sortItems
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import com.sudox.messenger.android.people.common.views.HorizontalPeopleItemView
 import com.sudox.messenger.android.people.peopletab.R
@@ -54,12 +55,12 @@ class PeopleTabAdapter(
 
     init {
         val addedFriendsHeaderVO = headersVOs[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
-        val addedFriendsSortType = addedFriendsHeaderVO.selectedFunctionButtonToggleTags!![FRIENDS_OPTION_TAG]
+        val addedFriendsSortType = addedFriendsHeaderVO.getSelectedFunctionalToggleTag(FRIENDS_OPTION_TAG)
         val addedFriendsCallback = AddedFriendsSortingCallback(this, addedFriendsSortType)
 
         addedFriendsVOs = SortedList(AddedFriendVO::class.java, addedFriendsCallback)
 
-        val subscriptionsSortType = addedFriendsHeaderVO.selectedFunctionButtonToggleTags!![SUBSCRIPTIONS_OPTION_TAG]
+        val subscriptionsSortType = addedFriendsHeaderVO.getSelectedFunctionalToggleTag(SUBSCRIPTIONS_OPTION_TAG)
         val subscriptionsCallback = SubscriptionsSortingCallback(this, subscriptionsSortType)
 
         subscriptionsVOs = SortedList(SubscriptionVO::class.java, subscriptionsCallback)
@@ -71,6 +72,22 @@ class PeopleTabAdapter(
             } else if (vo.selectedToggleTag == SUBSCRIPTIONS_OPTION_TAG) {
                 notifyChangedSectionDataChanged(headerType, itemsCountBeforeChanging, subscriptionsVOs.size())
             }
+        }
+
+        sortingTypeChangedCallback = { headerType: Int, itemsCountBeforeChanging: Int, vo: ViewListHeaderVO ->
+            toggleLoading(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE, true, clearLoading = true)
+
+            viewList!!.handler.postDelayed({
+                addedFriendsCallback.sortingType = vo.getSelectedFunctionalToggleTag()
+
+                if (vo.selectedToggleTag == FRIENDS_OPTION_TAG) {
+                    addedFriendsVOs.sortItems()
+                    notifyChangedSectionDataChanged(headerType, itemsCountBeforeChanging, addedFriendsVOs.size())
+                } else if (vo.selectedToggleTag == SUBSCRIPTIONS_OPTION_TAG) {
+                    subscriptionsVOs.sortItems()
+                    notifyChangedSectionDataChanged(headerType, itemsCountBeforeChanging, subscriptionsVOs.size())
+                }
+            }, 3000L)
         }
     }
 
