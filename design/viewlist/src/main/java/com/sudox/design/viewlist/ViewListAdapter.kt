@@ -374,6 +374,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
     fun notifyItemMovedAfterHeader(type: Int, fromPosition: Int, toPosition: Int) {
         if (headersVOs?.isNotEmpty() == true) {
             // Cannot be -1, because item created and consequently header also created
+
+            if (headersVOs!![type].isInClearLoading) {
+                return
+            }
+
             val headerPosition = findHeaderPosition(type)
             val itemFromPosition = headerPosition + fromPosition + 1
             val itemToPosition = headerPosition + toPosition + 1

@@ -87,14 +87,9 @@ class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListe
             it.reset(false)
             it.setListener(this)
             it.toggleIconButtonAtEnd(R.drawable.ic_search)
-
-            adapter!!.toggleLoading(FRIEND_REQUESTS_HEADER_TYPE, true)
-            adapter!!.toggleLoading(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE, true)
         }
     }
 
     override fun onButtonClicked(tag: Int) {
-        adapter!!.toggleLoading(FRIEND_REQUESTS_HEADER_TYPE, false)
-        adapter!!.toggleLoading(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE, false)
     }
 }
