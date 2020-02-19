@@ -14,10 +14,9 @@ const val HEADER_VIEW_TYPE = -1
 const val FOOTER_VIEW_TYPE = -2
 const val LOADER_VIEW_TYPE = -3
 
-abstract class ViewListAdapter<VH : RecyclerView.ViewHolder>(
-        open val headersVOs: Array<ViewListHeaderVO>? = null
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    open val headersVOs: Array<ViewListHeaderVO>? = null
     open var viewList: ViewList? = null
 
     private var initialTopPadding = -1

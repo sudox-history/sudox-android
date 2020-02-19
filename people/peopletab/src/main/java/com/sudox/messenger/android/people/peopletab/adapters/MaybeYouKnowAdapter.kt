@@ -12,7 +12,7 @@ import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
 
 const val MAYBE_YOU_KNOW_ITEM_VIEW_TYPE = 4
 
-class MaybeYouKnowAdapter : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>(null) {
+class MaybeYouKnowAdapter : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>() {
 
     override var viewList: ViewList? = null
         set(value) {
