@@ -28,13 +28,15 @@ import kotlin.math.max
 const val VIEW_LIST_HEADER_VIEW_TEXT_TAG = 1
 const val VIEW_LIST_HEADER_VIEW_FUNCTION_BUTTON_TAG = 2
 
+// 5000 = 180 градусов (10000 - 360 градусов)
+const val LEVEL_OF_ROTATED_DRAWABLE = 5000
+
 class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
     private var showingAnimationDuration = 0L
     private var hidingAnimationDuration = 0L
 
-    // 5000 = 180 градусов (10000 - 360 градусов)
-    private var visibilityChangingAnimator = ValueAnimator.ofInt(0, 5000).apply {
+    private var visibilityChangingAnimator = ValueAnimator.ofInt(0, LEVEL_OF_ROTATED_DRAWABLE).apply {
         addUpdateListener { listener ->
             functionalImageButton!!.let {
                 // P.S.: RotateDrawable будет задан от toggleIconDrawable при его мутации
@@ -45,7 +47,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
     }
 
     private var sectionChangingPopupController = ListPopupController().apply {
-        togglingAnimator = ValueAnimator.ofInt(0, 5000).apply {
+        togglingAnimator = ValueAnimator.ofInt(0, LEVEL_OF_ROTATED_DRAWABLE).apply {
             addUpdateListener {
                 if (anchorView == textView) {
                     toggleIconDrawable!!.level = it.animatedValue as Int
@@ -90,6 +92,10 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
                 }, null)
 
                 val functionalButtonIcon = value.getFunctionButtonIcon(context)
+
+                if (value.isItemsHidden) {
+                    toggleIconDrawable!!.level = LEVEL_OF_ROTATED_DRAWABLE
+                }
 
                 functionalImageButton!!.let {
                     // Не вызываем drawable.mutate(), т.к. оно уже будет вызвано изнутри ImageButton

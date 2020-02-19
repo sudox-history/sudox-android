@@ -6,6 +6,7 @@ registerModule(false, true, false, true)
 dependencies {
     api project(path: ':design:common')
     api project(path: ':design:imagebutton')
+    api project(path: ':design:saveableview')
     api project(path: ':design:popup')
 
     implementation libraries.core_ktx

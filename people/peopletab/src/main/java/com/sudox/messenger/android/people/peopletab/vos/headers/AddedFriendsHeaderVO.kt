@@ -2,7 +2,7 @@ package com.sudox.messenger.android.people.peopletab.vos.headers
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.util.SparseIntArray
+import android.os.Parcel
 import com.sudox.design.popup.vos.PopupItemVO
 import com.sudox.design.popup.vos.PopupItemWithDrawableIconVO
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
@@ -18,18 +18,16 @@ const val IMPORTANCE_OPTION_TAG = 3
 const val ONLINE_OPTION_TAG = 4
 const val NAME_OPTION_TAG = 5
 
-class AddedFriendsHeaderVO(
-        override var selectedToggleTag: Int = 0,
-        override var selectedFunctionButtonToggleTags: IntArray? = intArrayOf(
-                IMPORTANCE_OPTION_TAG,
-                FAVORITE_OPTION_TAG
-        ),
-        override var isInClearLoading: Boolean = false,
-        override var isContentLoading: Boolean = false
-) : ViewListHeaderVO {
+class AddedFriendsHeaderVO : ViewListHeaderVO {
 
-    override var type: Int = ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE
-    override var isItemsHidden: Boolean = false
+    override var type = ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE
+
+    @Suppress("unused")
+    constructor(source: Parcel) : super(source)
+    constructor() : super() {
+        selectedFunctionButtonToggleTags = intArrayOf(IMPORTANCE_OPTION_TAG, FAVORITE_OPTION_TAG)
+        selectedToggleTag = FRIENDS_OPTION_TAG
+    }
 
     override fun getToggleOptions(context: Context): List<PopupItemVO<*>> {
         return listOf(

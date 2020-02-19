@@ -32,7 +32,7 @@ const val ADDED_FRIEND_VIEW_TYPE = 2
 const val SUBSCRIPTION_VIEW_TYPE = 3
 
 class PeopleTabAdapter(
-        override val headersVOs: Array<ViewListHeaderVO> = arrayOf(
+        override var headersVOs: Array<ViewListHeaderVO>? = arrayOf(
                 FriendRequestsHeaderVO(),
                 MaybeYouKnowHeaderVO(),
                 AddedFriendsHeaderVO())
@@ -54,7 +54,7 @@ class PeopleTabAdapter(
         }
 
     init {
-        val addedFriendsHeaderVO = headersVOs[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
+        val addedFriendsHeaderVO = headersVOs!![ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
         val addedFriendsSortType = addedFriendsHeaderVO.getSelectedFunctionalToggleTag(FRIENDS_OPTION_TAG)
         val addedFriendsCallback = AddedFriendsSortingCallback(this, addedFriendsSortType)
 
@@ -118,7 +118,7 @@ class PeopleTabAdapter(
         if (friendsRequestsVOs.size() > 0) {
             current += getItemsCountAfterHeaderConsiderVisibility(FRIEND_REQUESTS_HEADER_TYPE) + 1
 
-            val headerVO = headersVOs[FRIEND_REQUESTS_HEADER_TYPE]
+            val headerVO = headersVOs!![FRIEND_REQUESTS_HEADER_TYPE]
 
             if (!headerVO.isItemsHidden && headerVO.isContentLoading) {
                 current++
@@ -144,7 +144,7 @@ class PeopleTabAdapter(
         }
 
         if (position < current) {
-            return if (headersVOs[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE].selectedToggleTag == FRIENDS_OPTION_TAG) {
+            return if (headersVOs!![ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE].selectedToggleTag == FRIENDS_OPTION_TAG) {
                 ADDED_FRIEND_VIEW_TYPE
             } else {
                 SUBSCRIPTION_VIEW_TYPE
@@ -157,11 +157,11 @@ class PeopleTabAdapter(
     override fun getHeaderByPosition(position: Int): ViewListHeaderVO? {
         if (position == 0) {
             if (friendsRequestsVOs.size() > 0) {
-                return headersVOs[FRIEND_REQUESTS_HEADER_TYPE]
+                return headersVOs!![FRIEND_REQUESTS_HEADER_TYPE]
             } else if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
-                return headersVOs[MAYBE_YOU_KNOW_HEADER_TYPE]
+                return headersVOs!![MAYBE_YOU_KNOW_HEADER_TYPE]
             } else if (addedFriendsVOs.size() > 0 || friendsRequestsVOs.size() > 0) {
-                return headersVOs[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
+                return headersVOs!![ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
             }
         }
 
@@ -170,33 +170,33 @@ class PeopleTabAdapter(
         if (friendsRequestsVOs.size() > 0) {
             sum++
 
-            if (!headersVOs[FRIEND_REQUESTS_HEADER_TYPE].isItemsHidden) {
+            if (!headersVOs!![FRIEND_REQUESTS_HEADER_TYPE].isItemsHidden) {
                 sum += friendsRequestsVOs.size()
             }
 
-            if (headersVOs[FRIEND_REQUESTS_HEADER_TYPE].isLoaderShowing()) {
+            if (headersVOs!![FRIEND_REQUESTS_HEADER_TYPE].isLoaderShowing()) {
                 sum++
             }
         }
 
         if (position == sum) {
             if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
-                return headersVOs[MAYBE_YOU_KNOW_HEADER_TYPE]
+                return headersVOs!![MAYBE_YOU_KNOW_HEADER_TYPE]
             } else if (addedFriendsVOs.size() > 0 || friendsRequestsVOs.size() > 0) {
-                return headersVOs[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
+                return headersVOs!![ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
             }
         }
 
         if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
             sum++
 
-            if (!headersVOs[MAYBE_YOU_KNOW_HEADER_TYPE].isItemsHidden) {
+            if (!headersVOs!![MAYBE_YOU_KNOW_HEADER_TYPE].isItemsHidden) {
                 sum++
             }
         }
 
         if (sum == position) {
-            return headersVOs[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
+            return headersVOs!![ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
         }
 
         return null
@@ -212,7 +212,7 @@ class PeopleTabAdapter(
         if (friendsRequestsVOs.size() > 0) {
             position++
 
-            if (!headersVOs[FRIEND_REQUESTS_HEADER_TYPE].isItemsHidden) {
+            if (!headersVOs!![FRIEND_REQUESTS_HEADER_TYPE].isItemsHidden) {
                 position += friendsRequestsVOs.size()
             }
         }
@@ -224,7 +224,7 @@ class PeopleTabAdapter(
         if (maybeYouKnowAdapter.maybeYouKnowVOs.size() > 0) {
             position++
 
-            if (!headersVOs[MAYBE_YOU_KNOW_HEADER_TYPE].isItemsHidden) {
+            if (!headersVOs!![MAYBE_YOU_KNOW_HEADER_TYPE].isItemsHidden) {
                 position++
             }
         }
@@ -246,7 +246,7 @@ class PeopleTabAdapter(
                 0
             }
         } else {
-            if (headersVOs[ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE].selectedToggleTag == FRIENDS_OPTION_TAG) {
+            if (headersVOs!![ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE].selectedToggleTag == FRIENDS_OPTION_TAG) {
                 addedFriendsVOs.size()
             } else {
                 subscriptionsVOs.size()

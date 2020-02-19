@@ -16,7 +16,7 @@ const val LOADER_VIEW_TYPE = -3
 
 abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    open val headersVOs: Array<ViewListHeaderVO>? = null
+    open var headersVOs: Array<ViewListHeaderVO>? = null
     open var viewList: ViewList? = null
 
     private var initialTopPadding = -1

@@ -2,19 +2,48 @@ package com.sudox.design.viewlist.vos
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.os.Parcel
+import android.os.Parcelable
+import androidx.core.os.ParcelCompat.readBoolean
+import androidx.core.os.ParcelCompat.writeBoolean
 import com.sudox.design.popup.vos.PopupItemVO
 
 /**
  * ViewObject для шапки.
  */
-interface ViewListHeaderVO {
+abstract class ViewListHeaderVO() : Parcelable {
 
-    var type: Int
-    var isItemsHidden: Boolean
-    var isContentLoading: Boolean
-    var isInClearLoading: Boolean
-    var selectedToggleTag: Int
-    var selectedFunctionButtonToggleTags: IntArray?
+    open var type: Int = 0
+    open var isItemsHidden: Boolean = false
+    open var isContentLoading: Boolean = false
+    open var isInClearLoading: Boolean = false
+    open var selectedToggleTag: Int = 0
+    open var selectedFunctionButtonToggleTags: IntArray? = null
+
+    @Suppress("unused")
+    constructor(source: Parcel) : this() {
+        source.let {
+            isItemsHidden = readBoolean(source)
+            isContentLoading = readBoolean(source)
+            isInClearLoading = readBoolean(source)
+            selectedToggleTag = it.readInt()
+            selectedFunctionButtonToggleTags = it.createIntArray()
+        }
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.let {
+            writeBoolean(it, isItemsHidden)
+            writeBoolean(it, isContentLoading)
+            writeBoolean(it, isInClearLoading)
+            it.writeInt(selectedToggleTag)
+            it.writeIntArray(selectedFunctionButtonToggleTags)
+        }
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
 
     /**
      * Проверяет возможность отображения элемента загрузчика
@@ -62,7 +91,7 @@ interface ViewListHeaderVO {
      * @param context Контекст приложения/активности
      * @return ViewObject'ы элементов Popup-окна
      */
-    fun getToggleOptions(context: Context): List<PopupItemVO<*>>
+    abstract fun getToggleOptions(context: Context): List<PopupItemVO<*>>
 
     /**
      * Возвращает иконку функциональной кнопки
@@ -70,7 +99,7 @@ interface ViewListHeaderVO {
      * @param context Контекст приложения/активности
      * @return Иконка функциональной кнопки
      */
-    fun getFunctionButtonIcon(context: Context): Drawable?
+    abstract fun getFunctionButtonIcon(context: Context): Drawable?
 
     /**
      * Возвращает опции функциональной кнопки (если они есть)
@@ -78,19 +107,31 @@ interface ViewListHeaderVO {
      * @param context Контекст приложения/активности
      * @return ViewObject'ы элементов Popup-окна
      */
-    fun getFunctionButtonToggleOptions(context: Context): List<PopupItemVO<*>>?
+    abstract fun getFunctionButtonToggleOptions(context: Context): List<PopupItemVO<*>>?
 
     /**
      * Определяет возможность сортировки элементов после шапки
      *
      * @return Можно ли сортировать предметы после себя?
      */
-    fun canSortItems(): Boolean
+    abstract fun canSortItems(): Boolean
 
     /**
      * Определяет возможность скрытия элементов после шапки
      *
      * @return Можно ли скрыть предметы после себя?
      */
-    fun canHideItems(): Boolean
+    abstract fun canHideItems(): Boolean
+
+    companion object CREATOR : Parcelable.Creator<ViewListHeaderVO> {
+        override fun createFromParcel(source: Parcel): ViewListHeaderVO {
+            return Class.forName(source.readString()!!)
+                    .getDeclaredConstructor(Parcel::class.java)
+                    .newInstance(source) as ViewListHeaderVO
+        }
+
+        override fun newArray(size: Int): Array<ViewListHeaderVO?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

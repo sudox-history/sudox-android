@@ -2,6 +2,7 @@ package com.sudox.design.viewlist
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.animation.Interpolator
@@ -30,14 +31,14 @@ class ViewList : RecyclerView {
 
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
+        (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+
         context.obtainStyledAttributes(attrs, R.styleable.ViewList, defStyle, 0).use {
             footerTextAppearance = it.getResourceIdOrThrow(R.styleable.ViewList_footerTextAppearance)
         }
 
         initialPaddingRight = paddingRight
         initialPaddingLeft = paddingLeft
-
-        (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
         updatePadding(left = 0, right = 0)
     }
@@ -99,5 +100,18 @@ class ViewList : RecyclerView {
         }
 
         return super.onGenericMotionEvent(event)
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        return ViewListState(super.onSaveInstanceState()!!).apply {
+            readFromView(this@ViewList)
+        }
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        (state as ViewListState).apply {
+            super.onRestoreInstanceState(superState)
+            writeToView(this@ViewList)
+        }
     }
 }
