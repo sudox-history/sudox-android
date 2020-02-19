@@ -19,6 +19,7 @@ abstract class ViewListHeaderVO() : Parcelable {
     open var isInClearLoading: Boolean = false
     open var selectedToggleTag: Int = 0
     open var selectedFunctionButtonToggleTags: IntArray? = null
+    open var nestedRecyclerViewParcelable: Parcelable? = null
 
     @Suppress("unused")
     constructor(source: Parcel) : this() {
@@ -28,6 +29,7 @@ abstract class ViewListHeaderVO() : Parcelable {
             isInClearLoading = readBoolean(source)
             selectedToggleTag = it.readInt()
             selectedFunctionButtonToggleTags = it.createIntArray()
+            nestedRecyclerViewParcelable = it.readParcelable(javaClass.classLoader)
         }
     }
 
@@ -38,6 +40,7 @@ abstract class ViewListHeaderVO() : Parcelable {
             writeBoolean(it, isInClearLoading)
             it.writeInt(selectedToggleTag)
             it.writeIntArray(selectedFunctionButtonToggleTags)
+            it.writeParcelable(nestedRecyclerViewParcelable, 0)
         }
     }
 

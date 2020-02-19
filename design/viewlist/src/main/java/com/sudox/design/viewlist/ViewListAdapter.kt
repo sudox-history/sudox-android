@@ -16,6 +16,7 @@ const val LOADER_VIEW_TYPE = -3
 
 abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    open var nestedRecyclerViews = HashMap<Int, RecyclerView>()
     open var headersVOs: Array<ViewListHeaderVO>? = null
     open var viewList: ViewList? = null
 
@@ -67,7 +68,13 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
                 layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             })
         } else {
-            createItemHolder(parent, viewType)
+            val holder = createItemHolder(parent, viewType)
+
+            if (holder.itemView is RecyclerView) {
+                nestedRecyclerViews[getHeaderTypeByItemType(viewType)] = holder.itemView as RecyclerView
+            }
+
+            holder
         }
     }
 
@@ -151,6 +158,17 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             }
         } else if (holder is LoaderViewHolder) {
             return
+        }
+
+        if (holder.itemView is RecyclerView) {
+            val headerPair = getNearestHeader(position) ?: return
+            val headerVO = headerPair.second
+
+            if (headerVO.nestedRecyclerViewParcelable != null) {
+                (holder.itemView as RecyclerView)
+                        .layoutManager!!
+                        .onRestoreInstanceState(headerVO.nestedRecyclerViewParcelable)
+            }
         }
 
         @Suppress("UNCHECKED_CAST")
@@ -430,6 +448,27 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
         }
 
         return position
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        if (holder.itemView is RecyclerView) {
+            val headerPair = getNearestHeader(holder.adapterPosition) ?: return
+
+            headerPair.second.nestedRecyclerViewParcelable = (holder.itemView as RecyclerView)
+                    .layoutManager!!
+                    .onSaveInstanceState()
+
+            nestedRecyclerViews.remove(headerPair.first)
+        }
+    }
+
+    /**
+     * Сохраняет состояние вложенных RecyclerView
+     */
+    fun saveNestedRecyclerViewsState() {
+        nestedRecyclerViews.forEach {
+            headersVOs!![it.key].nestedRecyclerViewParcelable = it.value.layoutManager!!.onSaveInstanceState()
+        }
     }
 
     /**

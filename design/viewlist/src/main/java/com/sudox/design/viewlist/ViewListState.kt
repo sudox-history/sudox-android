@@ -20,7 +20,10 @@ class ViewListState : SaveableViewState<ViewList> {
     }
 
     override fun readFromView(view: ViewList) {
-        headersVOs = (view.adapter as? ViewListAdapter<*>)?.headersVOs
+        (view.adapter as? ViewListAdapter<*>)?.let {
+            it.saveNestedRecyclerViewsState()
+            headersVOs = it.headersVOs
+        }
     }
 
     override fun writeToView(view: ViewList) {
