@@ -2,6 +2,9 @@ package com.sudox.messenger.android.people.common.views
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.text.LineBreaker
+import android.os.Build
+import android.text.Layout
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.ViewGroup
@@ -93,6 +96,11 @@ class HorizontalPeopleItemView : ViewGroup {
         }
 
     private var nameTextView = AppCompatTextView(context).apply {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            breakStrategy = Layout.BREAK_STRATEGY_SIMPLE
+            hyphenationFrequency = Layout.HYPHENATION_FREQUENCY_NONE
+        }
+
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         ellipsize = TextUtils.TruncateAt.END
         isSingleLine = true
@@ -102,6 +110,11 @@ class HorizontalPeopleItemView : ViewGroup {
     }
 
     private var statusTextView = AppCompatTextView(context).apply {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            breakStrategy = Layout.BREAK_STRATEGY_SIMPLE
+            hyphenationFrequency = Layout.HYPHENATION_FREQUENCY_NONE
+        }
+
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         ellipsize = TextUtils.TruncateAt.END
         isSingleLine = true
