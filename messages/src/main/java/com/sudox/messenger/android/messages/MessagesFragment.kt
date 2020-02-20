@@ -47,7 +47,7 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
         dialogsRecyclerView.setHasFixedSize(true)
     }
 
-    fun generateDialog(): RoomMessagesDialogVO {
+    fun generateDialog(): BaseMessagesDialogVO {
         val photos = listOf(getDrawable(context!!, R.drawable.drawable_photo_1)!!, getDrawable(context!!, R.drawable.drawable_photo_2)!!, getDrawable(context!!, R.drawable.drawable_photo_3)!!)
         val names = listOf("Ярослав", "Макс", "Никита", "Андрей", "Ярик", "Антон", "Дима")
         val messages = listOf(
@@ -67,7 +67,7 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
                 lastViewed = true
             }
         }
-        return RoomMessagesDialogVO(
+        return BaseMessagesDialogVO(
                 dialogId = Random.nextInt(),
                 isUserOnline = false,
                 isMuted = Random.nextInt(2) == 1,
@@ -80,8 +80,7 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
                 messagesCount = if (!messageViewed) Random.nextInt(10,50) else 0,
                 isLastMessageByMe = lastMessage,
                 isSentMessageDelivered = lastMessage,
-                isSentMessageViewed = lastViewed,
-                isIconEnabled = Random.nextInt(2) == 1
+                isSentMessageViewed = lastViewed
         )
     }
 
