@@ -1,8 +1,6 @@
 package com.sudox.messenger.android.auth.country
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.countriesProvider.entries.Country
@@ -24,7 +22,6 @@ class AuthCountryAdapter(
         })
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.let {
         val country = countries[holder.adapterPosition]
 

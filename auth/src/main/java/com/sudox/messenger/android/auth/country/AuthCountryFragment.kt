@@ -9,24 +9,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.design.countriesProvider.entries.Country
-import com.sudox.design.sortedList.SortedListView
+import com.sudox.design.lists.sortedList.SortedListView
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.core.CoreActivity
+import com.sudox.messenger.android.core.CoreFragment
 
 internal const val COUNTRY_EXTRA_NAME = "country"
 
-class AuthCountryFragment : Fragment() {
+class AuthCountryFragment : CoreFragment() {
 
     private var coreActivity: CoreActivity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         coreActivity = activity as CoreActivity
-        coreActivity!!.getScreenManager().setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-        coreActivity!!.getApplicationBarManager().let {
-            it.toggleButtonBack(true)
-            it.toggleButtonNext(false)
-            it.setTitleText(R.string.countries)
-        }
 
         return inflater.inflate(R.layout.fragment_auth_country, container, false).apply {
             val provider = coreActivity!!.getLoader().getCountriesProvider()
@@ -38,6 +33,19 @@ class AuthCountryFragment : Fragment() {
                 clickCallback = ::onCountryClicked
             }
         }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden) {
+            coreActivity!!.getScreenManager().setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            coreActivity!!.getApplicationBarManager().let {
+                it.toggleButtonBack(true)
+                it.toggleButtonNext(false)
+                it.setTitleText(R.string.countries)
+            }
+        }
+
+        super.onHiddenChanged(hidden)
     }
 
     private fun onCountryClicked(country: Country) {

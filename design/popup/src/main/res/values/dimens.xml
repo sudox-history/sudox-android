@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="listpopupwindow_margin_between_popup_and_anchor">6dp</dimen>
+    <dimen name="listpopupwindow_padding_top">7dp</dimen>
+    <dimen name="listpopupwindow_padding_bottom">7dp</dimen>
+    <dimen name="listpopupwindow_stroke_width">1dp</dimen>
+    <dimen name="listpopupwindow_corner_radius">5dp</dimen>
+    <dimen name="listpopupwindow_elevation">3dp</dimen>
+
+    <dimen name="popupitemview_title_text_size">16sp</dimen>
+    <dimen name="popupitemview_margin_between_icon_and_text">11dp</dimen>
+    <dimen name="popupitemview_padding_right">38dp</dimen>
+    <dimen name="popupitemview_padding_left">11dp</dimen>
+    <dimen name="popupitemview_padding_bottom">7dp</dimen>
+    <dimen name="popupitemview_padding_top">7dp</dimen>
+    <dimen name="popupitemview_icon_height">25dp</dimen>
+    <dimen name="popupitemview_icon_width">25dp</dimen>
+</resources>

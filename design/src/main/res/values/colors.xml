@@ -5,7 +5,7 @@
 
     <color name="primary_color">#FFFFFF</color>
     <color name="primary_dark_color">#FFFFFF</color>
-    <color name="accent_color">#000000</color>
+    <color name="accent_color">#00BFA5</color>
     <color name="text_color">#000000</color>
 
     <color name="edittext_text_color">#000000</color>
@@ -33,4 +33,6 @@
 
     <color name="tablayoutbutton_active_text_color">#00BFA5</color>
     <color name="tablayoutbutton_default_text_color">#000000</color>
+
+    <color name="sectionedlistview_section_name_text_color">#000000</color>
 </resources>

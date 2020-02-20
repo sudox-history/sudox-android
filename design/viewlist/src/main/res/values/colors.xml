@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="viewlist_header_text_color">#000000</color>
+    <color name="viewlist_header_functional_button_icon_tint">#000000</color>
+    <color name="viewlist_header_toggle_icon_tint">#000000</color>
+</resources>

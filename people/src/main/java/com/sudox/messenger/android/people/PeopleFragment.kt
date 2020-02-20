@@ -5,17 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.design.tabLayout.TabLayout
+import com.sudox.messenger.android.activity.ActivityFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerAdapter
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
-import com.sudox.messenger.android.people.activity.ActivityFragment
-import com.sudox.messenger.android.people.friends.FriendsFragment
+import com.sudox.messenger.android.people.peopletab.PeopleTabFragment
 import kotlinx.android.synthetic.main.fragment_people.peopleViewPager
 
 class PeopleFragment : CoreFragment() {
 
     private var tabLayout: TabLayout? = null
-    private var viewPagerAdapter: ViewPagerAdapter? = null
+    private var pagerAdapter: ViewPagerAdapter? = null
     private var coreActivity: CoreActivity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -24,17 +24,16 @@ class PeopleFragment : CoreFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         coreActivity = activity as CoreActivity
-        viewPagerAdapter = ViewPagerAdapter(context!!, coreActivity!!, peopleViewPager, childFragmentManager, arrayOf(
+        pagerAdapter = ViewPagerAdapter(context!!, coreActivity!!, peopleViewPager, childFragmentManager, arrayOf(
                 ActivityFragment(),
-                FriendsFragment()
+                PeopleTabFragment()
         ))
 
-        peopleViewPager.adapter = viewPagerAdapter
-        peopleViewPager.addOnPageChangeListener(viewPagerAdapter!!)
+        peopleViewPager.adapter = pagerAdapter
+        peopleViewPager.addOnPageChangeListener(pagerAdapter!!)
 
-        tabLayout = TabLayout(context!!).apply {
-            setViewPager(peopleViewPager)
-        }
+        tabLayout = TabLayout(context!!)
+        tabLayout!!.setViewPager(peopleViewPager)
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -47,7 +46,7 @@ class PeopleFragment : CoreFragment() {
                 it.setContentView(tabLayout)
             }
 
-            viewPagerAdapter!!.restoreCurrentFragment()
+            pagerAdapter!!.restoreCurrentFragment()
         }
     }
 }

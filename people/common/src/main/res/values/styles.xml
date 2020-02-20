@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.People.VerticalPeopleItemView" parent="">
+        <item name="android:background">@drawable/background_verticalpeopleitemview</item>
+        <item name="android:paddingLeft">@dimen/verticalpeopleitemview_padding_left</item>
+        <item name="android:paddingRight">@dimen/verticalpeopleitemview_padding_right</item>
+        <item name="android:paddingBottom">@dimen/verticalpeopleitemview_padding_bottom</item>
+        <item name="android:paddingTop">@dimen/verticalpeopleitemview_padding_top</item>
+        <item name="android:minHeight">@dimen/verticalpeopleitemview_height</item>
+        <item name="android:minWidth">@dimen/verticalpeopleitemview_width</item>
+
+        <item name="avatarWidth">@dimen/verticalpeopleitemview_avatar_width</item>
+        <item name="avatarHeight">@dimen/verticalpeopleitemview_avatar_height</item>
+        <item name="nameTextAppearance">@style/Sudox.People.VerticalPeopleItemView.NameTextAppearance</item>
+        <item name="statusTextAppearance">@style/Sudox.People.VerticalPeopleItemView.StatusTextAppearance</item>
+        <item name="marginBetweenNameAndStatus">@dimen/verticalpeopleitemview_margin_between_name_and_status</item>
+        <item name="marginBetweenAvatarAndTexts">@dimen/verticalpeopleitemview_margin_between_avatar_and_texts</item>
+        <item name="marginBetweenRightAndButton">@dimen/verticalpeopleitemview_margin_between_right_and_button</item>
+        <item name="marginBetweenTopAndButton">@dimen/verticalpeopleitemview_margin_between_top_and_button</item>
+        <item name="inactiveStatusTextColor">@color/verticalpeopleitemview_inactive_status_text_color</item>
+        <item name="activeStatusTextColor">@color/verticalpeopleitemview_active_status_text_color</item>
+    </style>
+
+    <style name="Sudox.People.VerticalPeopleItemView.NameTextAppearance" parent="">
+        <item name="android:textSize">@dimen/verticalpeopleitemview_name_text_size</item>
+        <item name="android:textColor">@color/verticalpeopleitemview_name_text_color</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_bold</item>
+    </style>
+
+    <style name="Sudox.People.VerticalPeopleItemView.StatusTextAppearance" parent="">
+        <item name="android:textSize">@dimen/verticalpeopleitemview_status_text_size</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+
+    <style name="Sudox.People.VerticalPeopleItemView.Button" parent="Sudox.Button">
+        <item name="iconHeight">@dimen/verticalpeopleitemview_button_height</item>
+        <item name="iconWidth">@dimen/verticalpeopleitemview_button_width</item>
+    </style>
+
+    <style name="Sudox.People.VerticalPeopleItemView.Button.Close" parent="Sudox.People.VerticalPeopleItemView.Button">
+        <item name="iconTint">@color/verticalpeopleitemview_close_button_icon_tint</item>
+        <item name="iconDrawable">@drawable/ic_cancel</item>
+    </style>
+
+    <style name="Sudox.People.HorizontalPeopleItemView" parent="">
+        <item name="avatarWidth">@dimen/horizontalpeopleitemview_avatar_width</item>
+        <item name="avatarHeight">@dimen/horizontalpeopleitemview_avatar_height</item>
+        <item name="nameTextAppearance">@style/Sudox.People.HorizontalPeopleItemView.NameTextAppearance</item>
+        <item name="statusTextAppearance">@style/Sudox.People.HorizontalPeopleItemView.StatusTextAppearance</item>
+        <item name="marginBetweenNameAndStatus">@dimen/horizontalpeopleitemview_margin_between_name_and_status</item>
+        <item name="marginBetweenAvatarAndTexts">@dimen/horizontalpeopleitemview_margin_between_avatar_and_texts</item>
+        <item name="marginBetweenButtonsAndTexts">@dimen/horizontalpeopleitemview_margin_between_buttons_and_texts</item>
+        <item name="marginBetweenButtons">@dimen/horizontalpeopleitemview_margin_between_buttons</item>
+        <item name="inactiveStatusTextColor">@color/horizontalpeopleitemview_inactive_status_text_color</item>
+        <item name="activeStatusTextColor">@color/horizontalpeopleitemview_active_status_text_color</item>
+    </style>
+
+    <style name="Sudox.People.HorizontalPeopleItemView.Button" parent="Sudox.Button">
+        <item name="iconHeight">@dimen/horizontalpeopleitemview_button_height</item>
+        <item name="iconWidth">@dimen/horizontalpeopleitemview_button_width</item>
+    </style>
+
+    <style name="Sudox.People.HorizontalPeopleItemView.NameTextAppearance" parent="">
+        <item name="android:textSize">@dimen/horizontalpeopleitemview_name_text_size</item>
+        <item name="android:textColor">@color/horizontalpeopleitemview_name_text_color</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_bold</item>
+    </style>
+
+    <style name="Sudox.People.HorizontalPeopleItemView.StatusTextAppearance" parent="">
+        <item name="android:textSize">@dimen/horizontalpeopleitemview_status_text_size</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+
+    <style name="Sudox.People.AvatarImageView" parent="Sudox.ImageView">
+        <item name="indicatorCropRadius">@dimen/avatarimageview_indicator_crop_radius</item>
+        <item name="indicatorCropColor">@color/avatarimageview_indicator_crop_color</item>
+        <item name="indicatorRadius">@dimen/avatarimageview_indicator_radius</item>
+        <item name="indicatorColor">@color/avatarimageview_indicator_color</item>
+    </style>
+</resources>

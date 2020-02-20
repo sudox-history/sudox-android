@@ -1,0 +1,13 @@
+apply from: '../../configs/dependencies.gradle'
+apply from: '../../configs/common.gradle'
+
+registerModule(false, true, false, true)
+
+dependencies {
+    api project(path: ':design:imageview')
+    api project(path: ':images')
+
+    implementation libraries.core_ktx
+    implementation libraries.recyclerview
+    implementation libraries.appcompat
+}

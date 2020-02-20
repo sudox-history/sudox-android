@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ImageButton">
+        <attr name="iconDrawable" format="reference" />
+        <attr name="iconHeight" format="dimension" />
+        <attr name="iconWidth" format="dimension" />
+        <attr name="iconTint" format="color" />
+    </declare-styleable>
+
+    <attr name="customImageButtonStyle" format="reference" />
+</resources>

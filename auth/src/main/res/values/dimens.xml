@@ -2,10 +2,10 @@
 <resources>
     <item name="auth_padding_top_percent" format="float" type="dimen">0.07</item>
 
-    <dimen name="auth_title_text_size">20sp</dimen>
-    <dimen name="auth_description_text_size">14sp</dimen>
-    <dimen name="auth_description_drawable_padding">15dp</dimen>
-    <dimen name="auth_description_margin_top">16dp</dimen>
+    <dimen name="auth_title_text_size">21sp</dimen>
+    <dimen name="auth_description_text_size">15sp</dimen>
+    <dimen name="auth_description_drawable_padding">16dp</dimen>
+    <dimen name="auth_description_margin_top">17dp</dimen>
 
-    <dimen name="auth_first_edit_text_margin">35dp</dimen>
+    <dimen name="auth_first_edit_text_margin">36dp</dimen>
 </resources>

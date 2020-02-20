@@ -1,7 +1,7 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(true, true, false)
+registerModule(true, true, false, true)
 
 android {
     buildTypes {
@@ -23,6 +23,7 @@ dependencies {
     api project(path: ':design')
     api project(path: ':people')
     api project(path: ':core')
+    api project(path: ':messages')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat

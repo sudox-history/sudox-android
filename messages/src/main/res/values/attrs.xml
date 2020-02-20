@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DialogItemView">
+        <attr name="imageWidth" format="dimension"/>
+        <attr name="imageHeight" format="dimension"/>
+        <attr name="imageActiveColor" format="color"/>
+        <attr name="imageActiveRadius" format="dimension"/>
+        <attr name="imageActiveInnerRadius" format="dimension"/>
+        <attr name="messageStatusIcon" format="reference"/>
+        <attr name="messageStatusDoneIcon" format="reference"/>
+        <attr name="messageStatusSize" format="dimension"/>
+        <attr name="dialogMutedIcon" format="reference"/>
+        <attr name="dialogMutedIconSize" format="dimension"/>
+
+        <attr name="dialogIconMarginRight" format="dimension"/>
+
+        <attr name="innerImageToTextMargin" format="dimension"/>
+        <attr name="innerDialogNameToTopMargin" format="dimension"/>
+        <attr name="innerDialogNameToContentMargin" format="dimension"/>
+        <attr name="innerDateToTopMargin" format="dimension"/>
+        <attr name="innerMessageStatusMargin" format="dimension"/>
+        <attr name="innerContentToRightViewMargin" format="dimension"/>
+        <attr name="innerContentToRightBorderMargin" format="dimension"/>
+        <attr name="innerMutedIconToDateMargin" format="dimension"/>
+        <attr name="innerMutedIconToTopMargin" format="dimension"/>
+
+        <attr name="countMessagesHeight" format="dimension"/>
+        <attr name="countMessagesRadius" format="dimension"/>
+        <attr name="countMessagesInnerHorizontalMargin" format="dimension"/>
+        <attr name="countMessagesInnerVerticalMargin" format="dimension"/>
+
+        <attr name="messageStatusColor" format="color"/>
+        <attr name="userActiveColor" format="color"/>
+        <attr name="messageCountColor" format="color"/>
+        <attr name="dialogNameColor" format="color"/>
+        <attr name="newMessageContentColor" format="color"/>
+        <attr name="readMessageContentColor" format="color"/>
+        <attr name="messageSentByUserHintColor" format="color"/>
+        <attr name="dialogMutedColor" format="color"/>
+
+        <attr name="dialogNameTextAppearance" format="dimension"/>
+        <attr name="dialogContentTextAppearance" format="dimension"/>
+        <attr name="dialogNewContentTextAppearance" format="dimension"/>
+        <attr name="dialogDateTextAppearance" format="dimension"/>
+        <attr name="dialogMessageCountTextAppearance" format="dimension"/>
+    </declare-styleable>
+    <attr name="dialogItemViewStyle" format="reference" />
+</resources>

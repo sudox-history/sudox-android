@@ -1,7 +1,7 @@
 package com.sudox.design.countriesProvider
 
 import android.content.Context
-import com.sudox.design.sortedList.decorations.StickyLettersProvider
+import com.sudox.design.lists.sortedList.decorations.StickyLettersProvider
 
 class CountriesLettersProvider(val provider: CountriesProvider) : StickyLettersProvider {
 

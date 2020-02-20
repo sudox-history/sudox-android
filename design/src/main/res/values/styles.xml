@@ -5,6 +5,12 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <style name="Sudox.Button" parent="Widget.AppCompat.Button">
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
+
     <style name="Sudox.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/drawable_splash_background</item>
 
@@ -29,15 +35,30 @@
         <item name="navigationBarButtonStyle">@style/Sudox.NavigationBar.Button</item>
         <item name="tabLayoutStyle">@style/Sudox.TabLayout</item>
         <item name="tabLayoutButtonStyle">@style/Sudox.TabLayout.Button</item>
+        <item name="sectionedListViewStyle">@style/Sudox.SectionedListView</item>
+        <item name="customImageViewStyle">@style/Sudox.ImageView</item>
+
+        <item name="popupItemViewStyle">@style/Sudox.PopupItemView</item>
+        <item name="listPopupWindowStyle">@style/Sudox.ListPopupWindow</item>
+
+        <item name="viewListHeaderStyle">@style/Sudox.ViewList.Header</item>
+        <item name="viewListStyle">@style/Sudox.ViewList</item>
 
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
         <item name="colorAccent">@color/accent_color</item>
+
+        <item name="android:buttonStyle">@style/Sudox.Button</item>
+        <item name="buttonStyle">@style/Sudox.Button</item>
+
+        <item name="android:imageButtonStyle">@style/Sudox.Button</item>
+        <item name="imageButtonStyle">@style/Sudox.Button</item>
     </style>
 
     <style name="Sudox.Screen" parent="">
         <item name="android:clipToPadding">false</item>
         <item name="android:paddingTop">@dimen/screen_top_padding</item>
+        <item name="android:paddingBottom">@dimen/screen_top_padding</item>
         <item name="android:paddingRight">@dimen/screen_right_padding</item>
         <item name="android:paddingLeft">@dimen/screen_left_padding</item>
     </style>
@@ -184,5 +205,13 @@
         <item name="defaultTextColor">@color/tablayoutbutton_default_text_color</item>
         <item name="textTypeface">@font/opensans_bold</item>
         <item name="textSize">@dimen/tablayoutbutton_text_size</item>
+    </style>
+
+    <style name="Sudox.SectionedListView" parent="">
+        <item name="sectionNameTopPadding">@dimen/sectionedlistview_section_name_top_padding</item>
+        <item name="sectionNameBottomPadding">@dimen/sectionedlistview_section_name_bottom_padding</item>
+        <item name="sectionNameTextSize">@dimen/sectionedlistview_section_name_text_size</item>
+        <item name="sectionNameTextColor">@color/sectionedlistview_section_name_text_color</item>
+        <item name="sectionNameTypeface">@font/opensans_bold</item>
     </style>
 </resources>

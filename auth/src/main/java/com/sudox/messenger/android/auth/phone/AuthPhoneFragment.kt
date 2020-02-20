@@ -57,7 +57,7 @@ class AuthPhoneFragment : CoreFragment(), ApplicationBarListener {
 
     override fun onAnimationEnd(animation: Animator) {
         view?.post {
-            authPhoneEditText.showSoftKeyboard()
+            authPhoneEditText?.showSoftKeyboard()
         }
 
         super.onAnimationEnd(animation)

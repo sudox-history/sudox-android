@@ -95,6 +95,14 @@
         <attr name="textTypeface" />
     </declare-styleable>
 
+    <declare-styleable name="SectionedListView">
+        <attr name="sectionNameTextSize" format="dimension" />
+        <attr name="sectionNameTextColor" format="color" />
+        <attr name="sectionNameTypeface" format="reference" />
+        <attr name="sectionNameBottomPadding" format="dimension" />
+        <attr name="sectionNameTopPadding" format="dimension" />
+    </declare-styleable>
+
     <attr name="flagMargin" format="dimension" />
     <attr name="flagHeight" format="dimension" />
     <attr name="flagWidth" format="dimension" />
@@ -120,4 +128,5 @@
     <attr name="navigationBarButtonStyle" format="reference" />
     <attr name="tabLayoutStyle" format="reference" />
     <attr name="tabLayoutButtonStyle" format="reference" />
+    <attr name="sectionedListViewStyle" format="reference" />
 </resources>

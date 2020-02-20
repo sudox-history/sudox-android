@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="momentadapter_horizontal_margin">9dp</dimen>
+    <dimen name="momentadapter_vertical_margin">1dp</dimen>
+
+    <dimen name="momentitemview_name_text_size">13sp</dimen>
+    <dimen name="momentitemview_name_text_margin_relative_photo">9dp</dimen>
+    <dimen name="momentitemview_view_indicator_radius">35dp</dimen>
+    <dimen name="momentitemview_view_indicator_active_stroke_width">2dp</dimen>
+    <dimen name="momentitemview_view_indicator_default_stroke_width">1dp</dimen>
+    <dimen name="momentitemview_add_indicator_stroke_width">2dp</dimen>
+    <dimen name="momentitemview_add_indicator_crop_radius">14dp</dimen>
+    <dimen name="momentitemview_add_indicator_icon_height">13dp</dimen>
+    <dimen name="momentitemview_add_indicator_icon_width">13dp</dimen>
+    <dimen name="momentitemview_add_indicator_radius">11dp</dimen>
+    <dimen name="momentitemview_photo_height">55dp</dimen>
+    <dimen name="momentitemview_photo_width">55dp</dimen>
+</resources>

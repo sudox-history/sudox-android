@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <stroke
+        android:width="@dimen/verticalpeopleitemview_stroke_width"
+        android:color="@color/verticalpeopleitemview_stroke_color" />
+
+    <corners android:radius="@dimen/verticalpeopleitemview_corners_radius" />
+    <solid android:color="@color/verticalpeopleitemview_background_color" />
+</shape>

@@ -3,6 +3,7 @@ package com.sudox.messenger.android
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreLoader
@@ -24,6 +25,10 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (BuildConfig.DEBUG) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+
         (window.decorView.background as LayerDrawable)
                 .getDrawable(1)
                 .alpha = 1
@@ -38,7 +43,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             navigationManager!!.restoreState(savedInstanceState)
         } else {
             navigationManager!!.configureNavigationBar()
-            navigationManager!!.showAuthPart()
+            navigationManager!!.showMainPart()
         }
     }
 

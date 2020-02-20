@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="horizontalpeopleitemview_avatar_width">47dp</dimen>
+    <dimen name="horizontalpeopleitemview_avatar_height">47dp</dimen>
+    <dimen name="horizontalpeopleitemview_name_text_size">15dp</dimen>
+    <dimen name="horizontalpeopleitemview_status_text_size">15dp</dimen>
+    <dimen name="horizontalpeopleitemview_margin_between_name_and_status">0dp</dimen>
+    <dimen name="horizontalpeopleitemview_margin_between_avatar_and_texts">18dp</dimen>
+    <dimen name="horizontalpeopleitemview_margin_between_buttons_and_texts">38dp</dimen>
+    <dimen name="horizontalpeopleitemview_margin_between_buttons">16dp</dimen>
+    <dimen name="horizontalpeopleitemview_button_height">25dp</dimen>
+    <dimen name="horizontalpeopleitemview_button_width">25dp</dimen>
+
+    <dimen name="verticalpeopleitemview_avatar_width">67dp</dimen>
+    <dimen name="verticalpeopleitemview_avatar_height">67dp</dimen>
+    <dimen name="verticalpeopleitemview_name_text_size">16dp</dimen>
+    <dimen name="verticalpeopleitemview_status_text_size">15dp</dimen>
+    <dimen name="verticalpeopleitemview_margin_between_top_and_button">6dp</dimen>
+    <dimen name="verticalpeopleitemview_margin_between_right_and_button">6dp</dimen>
+    <dimen name="verticalpeopleitemview_margin_between_avatar_and_texts">11dp</dimen>
+    <dimen name="verticalpeopleitemview_margin_between_name_and_status">0dp</dimen>
+    <dimen name="verticalpeopleitemview_corners_radius">11dp</dimen>
+    <dimen name="verticalpeopleitemview_stroke_width">1dp</dimen>
+    <dimen name="verticalpeopleitemview_width">129dp</dimen>
+    <dimen name="verticalpeopleitemview_height">115dp</dimen>
+    <dimen name="verticalpeopleitemview_padding_top">22dp</dimen>
+    <dimen name="verticalpeopleitemview_padding_bottom">22dp</dimen>
+    <dimen name="verticalpeopleitemview_padding_right">6dp</dimen>
+    <dimen name="verticalpeopleitemview_padding_left">6dp</dimen>
+    <dimen name="verticalpeopleitemview_button_height">25dp</dimen>
+    <dimen name="verticalpeopleitemview_button_width">25dp</dimen>
+
+    <dimen name="avatarimageview_indicator_radius">7.5dp</dimen>
+    <dimen name="avatarimageview_indicator_crop_radius">9.5dp</dimen>
+</resources>

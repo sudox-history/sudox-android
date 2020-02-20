@@ -1,9 +1,25 @@
 rootProject.name = "Sudox Android"
 
-include ':app',
-        ':api',
-        ':design',
-        ':auth',
-        ':core',
-        ':people'
-include ':time'
+include ':app'
+include ':api'
+
+include ':design'
+include ':design:viewlist'
+include ':design:saveableview'
+include ':design:imagebutton'
+include ':design:imageview'
+include ':design:common'
+include ':design:popup'
+
+include ':auth'
+include ':core'
+
+include ':people'
+include ':people:peopletab'
+include ':people:common'
+
+include ':images'
+include ':messages'
+include ':activity'
+include ':moments'
+include ':news'

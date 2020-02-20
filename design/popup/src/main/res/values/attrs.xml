@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PopupItemView">
+        <attr name="marginBetweenIconAndText" format="dimension" />
+        <attr name="titleTextAppearance" format="reference" />
+        <attr name="inactiveTitleColor" format="color" />
+        <attr name="activeTitleColor" format="color" />
+        <attr name="iconHeight" format="dimension" />
+        <attr name="iconWidth" format="dimension" />
+    </declare-styleable>
+
+    <attr name="listPopupWindowStyle" format="reference" />
+    <attr name="popupItemViewStyle" format="reference" />
+</resources>

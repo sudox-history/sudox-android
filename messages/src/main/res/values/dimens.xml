@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dialogitemview_padding_left">16dp</dimen>
+    <dimen name="dialogitemview_padding_top">7.5dp</dimen>
+    <dimen name="dialogitemview_padding_right">16dp</dimen>
+    <dimen name="dialogitemview_padding_bottom">7.5dp</dimen>
+
+    <dimen name="dialogitemview_image_width">56dp</dimen>
+    <dimen name="dialogitemview_image_height">56dp</dimen>
+    <dimen name="dialogitemview_image_active_radius">7dp</dimen>
+    <dimen name="dialogitemview_image_active_inner_radius">6dp</dimen>
+    <dimen name="dialogitemview_message_status_size">17dp</dimen>
+    <dimen name="dialogitemview_dialog_muted_icon_size">11dp</dimen>
+
+    <dimen name="dialogitemview_inner_image_to_text_margin">16dp</dimen>
+    <dimen name="dialogitemview_inner_dialog_name_to_top_margin">8dp</dimen>
+    <dimen name="dialogitemview_inner_dialog_name_to_content_margin">1dp</dimen>
+    <dimen name="dialogitemview_inner_date_to_top_margin">4dp</dimen>
+    <dimen name="dialogitemview_inner_message_status_margin">5dp</dimen>
+    <dimen name="dialogitemview_inner_content_to_right_view_margin">10dp</dimen>
+    <dimen name="dialogitemview_inner_content_to_right_border_margin">52dp</dimen>
+    <dimen name="dialogitemview_inner_muted_icon_to_date_margin">6dp</dimen>
+    <dimen name="dialogitemview_inner_muted_icon_to_top_margin">7dp</dimen>
+
+    <dimen name="dialogitemview_count_messages_height">20dp</dimen>
+    <dimen name="dialogitemview_count_messages_radius">12dp</dimen>
+    <dimen name="dialogitemview_count_messages_inner_horizontal_margin">7dp</dimen>
+    <dimen name="dialogitemview_count_messages_inner_vertical_margin">1.5dp</dimen>
+
+    <dimen name="dialogitemview_dialog_name_text_size">15sp</dimen>
+    <dimen name="dialogitemview_date_text_size">12sp</dimen>
+    <dimen name="dialogitemview_content_text_size">14sp</dimen>
+</resources>
