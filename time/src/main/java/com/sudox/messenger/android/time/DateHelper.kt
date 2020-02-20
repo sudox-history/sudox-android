@@ -6,6 +6,13 @@ import java.util.Calendar
 
 internal var calendarsPool = Pools.SimplePool<Calendar>(4)
 
+/**
+ * Выдает сокращенное название месяца
+ *
+ * @param context Контекст приложения/активности
+ * @param number Номер месяца
+ * @return Скоращенное название месяца
+ */
 fun getShortMonthName(context: Context, number: Int): String? {
     return when (number) {
         1 -> context.getString(R.string.january_short)
@@ -24,6 +31,13 @@ fun getShortMonthName(context: Context, number: Int): String? {
     }
 }
 
+/**
+ * Выдает полное название месяца
+ *
+ * @param context Контекст приложения/активности
+ * @param number Номер месяца
+ * @return Полное название месяца
+ */
 fun getFullMonthName(context: Context, number: Int): String? {
     return when (number) {
         1 -> context.getString(R.string.january)
@@ -42,6 +56,13 @@ fun getFullMonthName(context: Context, number: Int): String? {
     }
 }
 
+/**
+ * Выдает сокращенное название дня недели
+ *
+ * @param context Контекст приложения/активности
+ * @param number Номер дня недели
+ * @return Сокращенное название дня недели
+ */
 fun getShortNameOfDayOfWeek(context: Context, number: Int): String? {
     if (number < 1 || number > 7) {
         return null
@@ -59,6 +80,13 @@ fun getShortNameOfDayOfWeek(context: Context, number: Int): String? {
     }
 }
 
+/**
+ * Выдает полное название дня недели
+ *
+ * @param context Контекст приложения/активности
+ * @param number Номер дня недели
+ * @return Полное название дня недели
+ */
 fun getFullNameOfDayOfWeek(context: Context, number: Int): String? {
     if (number < 1 || number > 7) {
         return null

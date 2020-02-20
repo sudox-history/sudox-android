@@ -7,6 +7,16 @@ import androidx.annotation.StringRes
 import java.util.Calendar
 import kotlin.math.abs
 
+/**
+ * Форматирует время в зависимости от заданных параметров
+ *
+ * @param context Контекст приложения/активности
+ * @param relative Относительно чего расчитывать разницу во времени
+ * @param twelveHoursFormat Использовать 12-и часовой формат?
+ * @param calculateFutureTime Учитывать будущее время?
+ * @param fullFormat Форматировать в полном формате?
+ * @param time Время для форматирования
+ */
 fun formatTime(
         context: Context,
         relative: Long = System.currentTimeMillis(),
