@@ -507,6 +507,15 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
      */
     open fun getHeaderByPosition(position: Int): ViewListHeaderVO? = null
 
+    /**
+     * Возвращает тип выбранной сортировки
+     *
+     * @param type Тип заголовка
+     * @return Тип выбранной сортировки
+     */
+    open fun getSortingTypeByHeader(type: Int, toggleTag: Int): Int {
+        return headersVOs!![type].getSelectedFunctionalToggleTag(toggleTag)
+    }
 
     /**
      * Выдает тип заголовка по типу элемента после него

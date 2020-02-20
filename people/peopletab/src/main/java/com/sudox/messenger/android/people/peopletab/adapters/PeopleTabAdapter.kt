@@ -39,9 +39,9 @@ class PeopleTabAdapter(
 ) : ViewListAdapter<RecyclerView.ViewHolder>() {
 
     var viewPool = RecyclerView.RecycledViewPool()
-    val addedFriendsVOs: SortedList<AddedFriendVO>
-    val friendsRequestsVOs: SortedList<FriendRequestVO>
-    val subscriptionsVOs: SortedList<SubscriptionVO>
+    val addedFriendsVOs: SortedList<AddedFriendVO> = SortedList(AddedFriendVO::class.java, AddedFriendsSortingCallback(this))
+    val friendsRequestsVOs: SortedList<FriendRequestVO> = SortedList(FriendRequestVO::class.java, FriendRequestSortingCallback(this))
+    val subscriptionsVOs: SortedList<SubscriptionVO> = SortedList(SubscriptionVO::class.java, SubscriptionsSortingCallback(this))
     val maybeYouKnowAdapter = MaybeYouKnowAdapter()
 
     override var viewList: ViewList? = null
@@ -54,18 +54,6 @@ class PeopleTabAdapter(
         }
 
     init {
-        val addedFriendsHeaderVO = headersVOs!![ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE]
-        val addedFriendsSortType = addedFriendsHeaderVO.getSelectedFunctionalToggleTag(FRIENDS_OPTION_TAG)
-        val addedFriendsCallback = AddedFriendsSortingCallback(this, addedFriendsSortType)
-
-        addedFriendsVOs = SortedList(AddedFriendVO::class.java, addedFriendsCallback)
-
-        val subscriptionsSortType = addedFriendsHeaderVO.getSelectedFunctionalToggleTag(SUBSCRIPTIONS_OPTION_TAG)
-        val subscriptionsCallback = SubscriptionsSortingCallback(this, subscriptionsSortType)
-
-        subscriptionsVOs = SortedList(SubscriptionVO::class.java, subscriptionsCallback)
-        friendsRequestsVOs = SortedList(FriendRequestVO::class.java, FriendRequestSortingCallback(this))
-
         sectionChangedCallback = { headerType: Int, itemsCountBeforeChanging: Int, vo: ViewListHeaderVO ->
             if (vo.selectedToggleTag == FRIENDS_OPTION_TAG) {
                 notifyChangedSectionDataChanged(headerType, itemsCountBeforeChanging, addedFriendsVOs.size())
@@ -78,8 +66,6 @@ class PeopleTabAdapter(
             toggleLoading(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE, true, clearLoading = true)
 
             viewList!!.handler.postDelayed({
-                addedFriendsCallback.sortingType = vo.getSelectedFunctionalToggleTag()
-
                 if (vo.selectedToggleTag == FRIENDS_OPTION_TAG) {
                     addedFriendsVOs.sortItems()
                     notifyChangedSectionDataChanged(headerType, itemsCountBeforeChanging, addedFriendsVOs.size())
