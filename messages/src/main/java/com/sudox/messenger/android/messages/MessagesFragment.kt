@@ -95,5 +95,4 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
     override fun onButtonClicked(tag: Int) {
 
     }
-
 }

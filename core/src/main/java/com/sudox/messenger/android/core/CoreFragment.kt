@@ -10,7 +10,10 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     private var animator: Animator? = null
 
     override fun onResume() {
-        onHiddenChanged(false)
+        if (!isHidden) {
+            onHiddenChanged(false)
+        }
+
         super.onResume()
     }
 
