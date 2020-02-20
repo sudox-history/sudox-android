@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.SortedList
 import com.sudox.messenger.android.messages.views.DialogItemView
 import com.sudox.messenger.android.messages.vos.DialogItemViewVO
 import kotlinx.android.synthetic.main.dialogs_count.view.*
+import java.util.*
 
 class DialogsAdapter(val context: Context) : RecyclerView.Adapter<DialogsAdapter.ViewHolder>() {
 
@@ -35,9 +36,19 @@ class DialogsAdapter(val context: Context) : RecyclerView.Adapter<DialogsAdapter
 
                 view.setOnClickListener {
                     if(holder.adapterPosition != -1) {
-                        dialogs.remove(dialogs[holder.adapterPosition])
-                        notifyItemChanged(itemCount - 1)
+                        dialogs[holder.adapterPosition].isMuted = !dialogs[holder.adapterPosition].isMuted
+                        notifyItemChanged(holder.adapterPosition)
                     }
+                }
+
+                view.setOnLongClickListener {
+                    if(holder.adapterPosition != -1) {
+                        //dialogs.remove(dialogs[holder.adapterPosition])
+                        dialogs.removeItemAt(holder.adapterPosition)
+                        notifyItemChanged(holder.adapterPosition)
+                        notifyItemChanged(itemCount-1)
+                    }
+                    true
                 }
 
                 holder
@@ -60,16 +71,7 @@ class DialogsAdapter(val context: Context) : RecyclerView.Adapter<DialogsAdapter
                 0 -> {
                     val dialog = dialogs[position]
                     it as DialogItemView
-                    //TODO setUserOnline
-                    it.setMuted(dialog.isMuted)
-                    it.setIsNewMessage(!dialog.isViewed)
-                    it.setDialogImage(dialog.dialogPhoto)
-                    it.setDialogName(dialog.dialogName)
-                    it.setContentText(dialog.previewMessage)
-                    it.setLastDate(dialog.dateView)
-                    it.setCountMessages(dialog.messagesCount)
-                    it.setLastMessageByUserHint(dialog.isLastMessageByMe)
-                    it.setMessageStatus(dialog.isSentMessageDelivered, dialog.isSentMessageViewed)
+                    it.vo = dialog
                 }
                 1 -> {
                     it.dialogCountTextView.text = "${dialogs.size()} chats"

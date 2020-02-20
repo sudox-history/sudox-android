@@ -13,7 +13,9 @@ import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
+import com.sudox.messenger.android.messages.vos.BaseMessagesDialogVO
 import com.sudox.messenger.android.messages.vos.DialogItemViewVO
+import com.sudox.messenger.android.messages.vos.RoomMessagesDialogVO
 import kotlinx.android.synthetic.main.fragment_messages.*
 import java.sql.Time
 import java.util.*
@@ -45,7 +47,7 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
         dialogsRecyclerView.setHasFixedSize(true)
     }
 
-    fun generateDialog(): DialogItemViewVO {
+    fun generateDialog(): RoomMessagesDialogVO {
         val photos = listOf(getDrawable(context!!, R.drawable.drawable_photo_1)!!, getDrawable(context!!, R.drawable.drawable_photo_2)!!, getDrawable(context!!, R.drawable.drawable_photo_3)!!)
         val names = listOf("Ярослав", "Макс", "Никита", "Андрей", "Ярик", "Антон", "Дима")
         val messages = listOf(
@@ -65,7 +67,7 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
                 lastViewed = true
             }
         }
-        return DialogItemViewVO(
+        return RoomMessagesDialogVO(
                 dialogId = Random.nextInt(),
                 isUserOnline = false,
                 isMuted = Random.nextInt(2) == 1,
@@ -78,7 +80,8 @@ class MessagesFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
                 messagesCount = if (!messageViewed) Random.nextInt(10,50) else 0,
                 isLastMessageByMe = lastMessage,
                 isSentMessageDelivered = lastMessage,
-                isSentMessageViewed = lastViewed
+                isSentMessageViewed = lastViewed,
+                isIconEnabled = Random.nextInt(2) == 1
         )
     }
 

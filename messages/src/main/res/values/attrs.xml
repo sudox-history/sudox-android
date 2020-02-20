@@ -12,6 +12,8 @@
         <attr name="dialogMutedIcon" format="reference"/>
         <attr name="dialogMutedIconSize" format="dimension"/>
 
+        <attr name="dialogIconMarginRight" format="dimension"/>
+
         <attr name="innerImageToTextMargin" format="dimension"/>
         <attr name="innerDialogNameToTopMargin" format="dimension"/>
         <attr name="innerDialogNameToContentMargin" format="dimension"/>
@@ -42,6 +44,11 @@
         <attr name="dialogDateTextAppearance" format="dimension"/>
         <attr name="dialogMessageCountTextAppearance" format="dimension"/>
     </declare-styleable>
-
     <attr name="dialogItemViewStyle" format="reference" />
+
+
+    <declare-styleable name="DialogItemView.BroadCastTitleIcon">
+        <attr name="dialogIconTitleWidth" format="dimension"/>
+        <attr name="dialogIconTitleHeight" format="dimension"/>
+    </declare-styleable>
 </resources>
