@@ -45,10 +45,4 @@
         <attr name="dialogMessageCountTextAppearance" format="dimension"/>
     </declare-styleable>
     <attr name="dialogItemViewStyle" format="reference" />
-
-
-    <declare-styleable name="DialogItemView.BroadCastTitleIcon">
-        <attr name="dialogIconTitleWidth" format="dimension"/>
-        <attr name="dialogIconTitleHeight" format="dimension"/>
-    </declare-styleable>
 </resources>

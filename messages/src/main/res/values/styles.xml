@@ -41,7 +41,6 @@
         <item name="innerMutedIconToTopMargin">
             @dimen/dialogitemview_inner_muted_icon_to_top_margin
         </item>
-        <item name="dialogIconMarginRight">@dimen/dialogitemview_broadcast_icon_margin_right</item>
 
         <item name="countMessagesInnerHorizontalMargin">
             @dimen/dialogitemview_count_messages_inner_horizontal_margin
@@ -114,11 +113,5 @@
         <item name="android:textColor">@color/dialogitemview_message_count_text_color</item>
         <item name="android:fontFamily">@font/opensans_semibold</item>
         <item name="fontFamily">@font/opensans_semibold</item>
-    </style>
-
-    <style name="Sudox.Messages.DialogItemView.BroadCastTitleIcon" parent="">
-        <item name="android:src">@drawable/ic_voice_chat</item>
-        <item name="dialogIconTitleWidth">@dimen/dialogitemview_dialog_icon_width</item>
-        <item name="dialogIconTitleHeight">@dimen/dialogitemview_dialog_icon_height</item>
     </style>
 </resources>

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.sudox.design.tabLayout.TabLayout
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
@@ -25,7 +24,7 @@ class DialogsFragment : CoreFragment() {
         coreActivity = activity as CoreActivity
         viewPagerAdapter = ViewPagerAdapter(context!!, coreActivity!!, dialogsViewPager, childFragmentManager, arrayOf(
                 MessagesFragment(),
-                RoomsFragment()
+                TalksFragment()
         ))
 
         dialogsViewPager.adapter = viewPagerAdapter

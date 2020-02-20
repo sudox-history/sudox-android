@@ -15,9 +15,5 @@ data class BaseMessagesDialogVO(
         override var messagesCount: Int,
         override var isLastMessageByMe: Boolean,
         override var isSentMessageDelivered: Boolean,
-        override var isSentMessageViewed: Boolean) : DialogItemViewVO {
-
-    override fun getDialogTitleIcon(): Int? {
-        return null
-    }
-}
+        override var isSentMessageViewed: Boolean,
+        override var lastMessageUsername: String? = null) : DialogItemViewVO

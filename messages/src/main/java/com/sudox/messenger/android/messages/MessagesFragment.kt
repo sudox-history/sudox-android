@@ -1,7 +1,6 @@
 package com.sudox.messenger.android.messages
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +13,7 @@ import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
 import com.sudox.messenger.android.messages.vos.BaseMessagesDialogVO
-import com.sudox.messenger.android.messages.vos.DialogItemViewVO
-import com.sudox.messenger.android.messages.vos.RoomMessagesDialogVO
 import kotlinx.android.synthetic.main.fragment_messages.*
-import java.sql.Time
 import java.util.*
 import kotlin.random.Random
 

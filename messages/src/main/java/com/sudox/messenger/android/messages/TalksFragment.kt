@@ -12,13 +12,12 @@ import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
-import com.sudox.messenger.android.messages.vos.RoomMessagesDialogVO
-import kotlinx.android.synthetic.main.fragment_messages.*
+import com.sudox.messenger.android.messages.vos.BaseMessagesDialogVO
 import kotlinx.android.synthetic.main.fragment_rooms.*
 import java.util.*
 import kotlin.random.Random
 
-class RoomsFragment: CoreFragment(), ViewPagerFragment, ApplicationBarListener {
+class TalksFragment: CoreFragment(), ViewPagerFragment, ApplicationBarListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_rooms, container, false)
     }
@@ -44,7 +43,7 @@ class RoomsFragment: CoreFragment(), ViewPagerFragment, ApplicationBarListener {
         dialogsRoomRecyclerView.setHasFixedSize(true)
     }
 
-    fun generateDialog(): RoomMessagesDialogVO {
+    fun generateDialog(): BaseMessagesDialogVO {
         val photos = listOf(AppCompatResources.getDrawable(context!!, R.drawable.drawable_photo_1)!!, AppCompatResources.getDrawable(context!!, R.drawable.drawable_photo_2)!!, AppCompatResources.getDrawable(context!!, R.drawable.drawable_photo_3)!!)
         val names = listOf("Ярослав", "Макс", "Никита", "Андрей", "Ярик", "Антон", "Дима")
         val messages = listOf(
@@ -64,7 +63,7 @@ class RoomsFragment: CoreFragment(), ViewPagerFragment, ApplicationBarListener {
                 lastViewed = true
             }
         }
-        return RoomMessagesDialogVO(
+        return BaseMessagesDialogVO(
                 dialogId = Random.nextInt(),
                 isUserOnline = false,
                 isMuted = Random.nextInt(2) == 1,
@@ -77,8 +76,7 @@ class RoomsFragment: CoreFragment(), ViewPagerFragment, ApplicationBarListener {
                 messagesCount = if (!messageViewed) Random.nextInt(10,50) else 0,
                 isLastMessageByMe = lastMessage,
                 isSentMessageDelivered = lastMessage,
-                isSentMessageViewed = lastViewed,
-                isIconEnabled = Random.nextInt(2) == 1
+                isSentMessageViewed = lastViewed
         )
     }
     override fun onPageSelected(activity: CoreActivity) {

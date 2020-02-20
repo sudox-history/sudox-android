@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable
 import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,6 @@ import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.design.circleImageView.CircleImageView
 import com.sudox.messenger.android.messages.R
 import com.sudox.messenger.android.messages.vos.DialogItemViewVO
-import com.sudox.messenger.android.messages.vos.RoomMessagesDialogVO
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -34,9 +32,12 @@ class DialogItemView : ViewGroup {
     private val countMessagesView = AppCompatTextView(context).apply { addView(this) }
     private val iconDoneView = AppCompatImageView(context).apply { addView(this) }
     private val iconMutedView = AppCompatImageView(context).apply { addView(this) }
-    private var iconTitleView: AppCompatImageView? = null
 
-    private var iconMarginRight = 0
+    private var contentText = ""
+        set(value) {
+            field = value
+            contentViewSettingsUpdate()
+        }
 
     private var messageSentByUserHintColor = 0
     private var messageStatusSize = 0
@@ -64,6 +65,11 @@ class DialogItemView : ViewGroup {
     private var innerMutedIconToDateMargin = 0
     private var innerMutedIconToTopMargin = 0
 
+    private var lastMessageUserName: String? = null
+        set(value) {
+            field = value
+            hintSentByUserViewSettingsUpdate()
+        }
     private var isNewMessage = false
         set(value) {
             field = value
@@ -92,8 +98,6 @@ class DialogItemView : ViewGroup {
             mutedViewSettingsUpdate()
         }
 
-    private var isIconTitleEnabled = false
-
     private var messageCounter = 0
         set(value) {
             field = value
@@ -115,8 +119,8 @@ class DialogItemView : ViewGroup {
         set(value) {
             field = value
 
-            contentTextView.text = value?.previewMessage
-            isNewMessage = !value!!.isViewed
+            contentText = value!!.previewMessage
+            isNewMessage = !value.isViewed
             messageCounter = value.messagesCount
 
             photoView.setImageDrawable(value.dialogPhoto)
@@ -129,22 +133,7 @@ class DialogItemView : ViewGroup {
             dateView.text = value.dateView
             isMuted = value.isMuted
 
-            removeView(iconTitleView)
-            if (value.getDialogTitleIcon() != null) {
-                value as RoomMessagesDialogVO
-                isIconTitleEnabled = value.isIconEnabled
-                if (value.isIconEnabled) {
-                    iconTitleView = AppCompatImageView(ContextThemeWrapper(context, value.getDialogTitleIcon()!!)).apply {
-                        context.obtainStyledAttributes(R.styleable.DialogItemView_BroadCastTitleIcon).use {
-                            layoutParams = LayoutParams(
-                                    it.getDimensionPixelSizeOrThrow(R.styleable.DialogItemView_BroadCastTitleIcon_dialogIconTitleWidth),
-                                    it.getDimensionPixelSizeOrThrow(R.styleable.DialogItemView_BroadCastTitleIcon_dialogIconTitleHeight)
-                            )
-                        }
-                        addView(this)
-                    }
-                }
-            }
+            lastMessageUserName = value.lastMessageUsername
 
             invalidate()
             requestLayout()
@@ -195,7 +184,6 @@ class DialogItemView : ViewGroup {
             countMessagesRadius = it.getDimensionPixelSizeOrThrow(R.styleable.DialogItemView_countMessagesRadius)
 
             paintCountColor = it.getColorOrThrow(R.styleable.DialogItemView_messageCountColor)
-            iconMarginRight = it.getDimensionPixelSizeOrThrow(R.styleable.DialogItemView_dialogIconMarginRight)
         }
 
         viewSettingsUpdate()
@@ -211,10 +199,6 @@ class DialogItemView : ViewGroup {
         measureChild(countMessagesView, widthMeasureSpec, heightMeasureSpec)
         measureChild(iconMutedView, widthMeasureSpec, heightMeasureSpec)
         measureChild(contentTextView, widthMeasureSpec, heightMeasureSpec)
-
-        if (iconTitleView != null && isIconTitleEnabled) {
-            measureChild(iconTitleView, widthMeasureSpec, heightMeasureSpec)
-        }
 
         val contentTextWidth: Int
         val tempMaxStatusWidth = max(dateView.measuredWidth
@@ -234,9 +218,7 @@ class DialogItemView : ViewGroup {
             contentTextView.measuredWidth
         }
         measureChild(contentTextView, MeasureSpec.makeMeasureSpec(contentTextWidth, MeasureSpec.EXACTLY), heightMeasureSpec)
-        measureChild(nameView, MeasureSpec.makeMeasureSpec(contentTextWidth -
-                if (iconTitleView != null && isIconTitleEnabled) iconTitleView!!.measuredWidth +
-                        iconMarginRight else 0, MeasureSpec.EXACTLY), heightMeasureSpec)
+        measureChild(nameView, MeasureSpec.makeMeasureSpec(contentTextWidth, MeasureSpec.EXACTLY), heightMeasureSpec)
         val needHeight = paddingTop + max(innerDialogNameToTopMargin +
                 nameView.measuredHeight + innerDialogNameToContentMargin +
                 contentTextView.measuredHeight, photoView.measuredHeight) + paddingBottom
@@ -265,17 +247,6 @@ class DialogItemView : ViewGroup {
         val contentTopBorder = dialogNameBottomBorder + innerDialogNameToContentMargin
         val contentRightBorder = contentLeftBorder + contentTextView.measuredWidth
         val contentBottomBorder = contentTopBorder + contentTextView.measuredHeight
-
-        if (iconTitleView != null && isIconTitleEnabled) {
-            val iconTitleViewLeftBorder = dialogNameLeftBorder
-            val iconTitleViewTopBorder = dialogNameTopBorder
-            val iconTitleViewBottomBorder = dialogNameBottomBorder
-            dialogNameLeftBorder += iconTitleView!!.measuredWidth + iconMarginRight
-            dialogNameRightBorder += iconTitleView!!.measuredWidth + iconMarginRight
-            var iconTitleViewRightBorder = iconTitleViewLeftBorder + iconTitleView!!.measuredWidth
-
-            iconTitleView!!.layout(iconTitleViewLeftBorder, iconTitleViewTopBorder, iconTitleViewRightBorder, iconTitleViewBottomBorder)
-        }
 
         val dateLeftBorder = rightBorder - dateView.measuredWidth
         val dateTopBorder = paddingTop + innerDateToTopMargin
@@ -349,6 +320,7 @@ class DialogItemView : ViewGroup {
 
     private fun contentViewSettingsUpdate() {
         //text appearance
+        contentTextView.text = contentText
         if (isNewMessage and !isMuted) {
             setTextAppearance(contentTextView, dialogContentNewTextAppearance)
         } else {
@@ -426,10 +398,18 @@ class DialogItemView : ViewGroup {
 
     private fun hintSentByUserViewSettingsUpdate() {
         //sent by user hint settings
-        if (isSentByUserMessage) {
+        if (isSentByUserMessage || lastMessageUserName != null) {
             val text = SpannableStringBuilder()
-                    .color(messageSentByUserHintColor) { append(resources.getString(R.string.message_sent_by_user)) }
-                    .append(contentTextView.text)
+                    .color(messageSentByUserHintColor) {
+                        append(
+                                if (isSentByUserMessage) {
+                                    resources.getString(R.string.message_sent_by_user)
+                                } else {
+                                    lastMessageUserName
+                                }
+                        )
+                    }
+                    .append(contentText)
             contentTextView.text = text
         }
     }

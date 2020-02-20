@@ -30,9 +30,4 @@
     <dimen name="dialogitemview_dialog_name_text_size">15sp</dimen>
     <dimen name="dialogitemview_date_text_size">12sp</dimen>
     <dimen name="dialogitemview_content_text_size">14sp</dimen>
-
-
-    <dimen name="dialogitemview_broadcast_icon_margin_right">2dp</dimen>
-    <dimen name="dialogitemview_dialog_icon_height">18dp</dimen>
-    <dimen name="dialogitemview_dialog_icon_width">18dp</dimen>
 </resources>
