@@ -12,6 +12,9 @@ import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
 
 const val MAYBE_YOU_KNOW_ITEM_VIEW_TYPE = 4
 
+/**
+ * Адаптер для блока "Maybe you know".
+ */
 class MaybeYouKnowAdapter : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>() {
 
     override var viewList: ViewList? = null

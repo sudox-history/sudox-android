@@ -18,6 +18,9 @@ const val IMPORTANCE_OPTION_TAG = 3
 const val ONLINE_OPTION_TAG = 4
 const val NAME_OPTION_TAG = 5
 
+/**
+ * ViewObject для шапки секции добавленных друзей или подписок.
+ */
 class AddedFriendsHeaderVO : ViewListHeaderVO {
 
     override var type = ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE

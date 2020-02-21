@@ -8,6 +8,11 @@ import com.sudox.messenger.android.people.peopletab.vos.headers.FRIENDS_OPTION_T
 import com.sudox.messenger.android.people.peopletab.vos.headers.IMPORTANCE_OPTION_TAG
 import com.sudox.messenger.android.people.peopletab.vos.headers.ONLINE_OPTION_TAG
 
+/**
+ * Кэллбэк для сортированного списка добавленных друзей
+ *
+ * @param viewListAdapter Адаптер ViewList'а, в которой находятся элементы для сортировки
+ */
 class AddedFriendsSortingCallback(
         viewListAdapter: ViewListAdapter<*>
 ) : ViewListCallback<AddedFriendVO>(viewListAdapter, ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE) {

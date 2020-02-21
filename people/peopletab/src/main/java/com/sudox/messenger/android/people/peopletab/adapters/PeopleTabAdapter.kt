@@ -31,12 +31,16 @@ const val MAYBE_YOU_KNOW_LIST_VIEW_TYPE = 1
 const val ADDED_FRIEND_VIEW_TYPE = 2
 const val SUBSCRIPTION_VIEW_TYPE = 3
 
-class PeopleTabAdapter(
-        override var headersVOs: Array<ViewListHeaderVO>? = arrayOf(
-                FriendRequestsHeaderVO(),
-                MaybeYouKnowHeaderVO(),
-                AddedFriendsHeaderVO())
-) : ViewListAdapter<RecyclerView.ViewHolder>() {
+/**
+ * Адаптер для вкладки "People".
+ */
+class PeopleTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
+
+    override var headersVOs: Array<ViewListHeaderVO>? = arrayOf(
+            FriendRequestsHeaderVO(),
+            MaybeYouKnowHeaderVO(),
+            AddedFriendsHeaderVO()
+    )
 
     var viewPool = RecyclerView.RecycledViewPool()
     val addedFriendsVOs: SortedList<AddedFriendVO> = SortedList(AddedFriendVO::class.java, AddedFriendsSortingCallback(this))

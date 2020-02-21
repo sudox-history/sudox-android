@@ -8,6 +8,11 @@ import com.sudox.messenger.android.people.peopletab.vos.headers.FAVORITE_OPTION_
 import com.sudox.messenger.android.people.peopletab.vos.headers.POPULAR_OPTION_TAG
 import com.sudox.messenger.android.people.peopletab.vos.headers.SUBSCRIPTIONS_OPTION_TAG
 
+/**
+ * Кэллбэк для сортированного списка подписок.
+ *
+ * @param viewListAdapter Адаптер ViewList'а, в которой находятся элементы для сортировки
+ */
 class SubscriptionsSortingCallback(
         viewListAdapter: ViewListAdapter<*>
 ) : ViewListCallback<SubscriptionVO>(viewListAdapter, ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE) {

@@ -9,6 +9,9 @@ import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import com.sudox.messenger.android.people.peopletab.R
 import com.sudox.messenger.android.people.peopletab.adapters.MAYBE_YOU_KNOW_HEADER_TYPE
 
+/**
+ * ViewObject для шапки секции "Maybe you know".
+ */
 class MaybeYouKnowHeaderVO : ViewListHeaderVO {
 
     override var type = MAYBE_YOU_KNOW_HEADER_TYPE

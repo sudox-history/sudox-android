@@ -11,9 +11,6 @@ import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
 import com.sudox.messenger.android.people.common.vos.SEEN_TIME_ONLINE
-import com.sudox.messenger.android.people.peopletab.adapters.ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE
-import com.sudox.messenger.android.people.peopletab.adapters.FRIEND_REQUESTS_HEADER_TYPE
-import com.sudox.messenger.android.people.peopletab.adapters.MAYBE_YOU_KNOW_HEADER_TYPE
 import com.sudox.messenger.android.people.peopletab.adapters.PeopleTabAdapter
 import com.sudox.messenger.android.people.peopletab.vos.AddedFriendVO
 import com.sudox.messenger.android.people.peopletab.vos.FriendRequestVO
