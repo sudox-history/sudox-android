@@ -5,6 +5,7 @@ import android.text.format.DateFormat
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import java.util.Calendar
+import java.util.Locale
 import kotlin.math.abs
 
 /**
@@ -15,6 +16,7 @@ import kotlin.math.abs
  * @param twelveHoursFormat Использовать 12-и часовой формат?
  * @param calculateFutureTime Учитывать будущее время?
  * @param fullFormat Форматировать в полном формате?
+ * @param dateToLowerCase Преобразовать дату в нижний регистр?
  * @param time Время для форматирования
  */
 fun formatTime(
@@ -23,6 +25,7 @@ fun formatTime(
         twelveHoursFormat: Boolean = !DateFormat.is24HourFormat(context),
         calculateFutureTime: Boolean = true,
         fullFormat: Boolean = false,
+        dateToLowerCase: Boolean = false,
         time: Long
 ): String {
     val current = (calendarsPool.acquire() ?: Calendar.getInstance()).apply { timeInMillis = relative }
@@ -109,21 +112,39 @@ fun formatTime(
                         R.string.hour_mask
                 )
             } else if (fullFormat) {
-                result = context.getString(R.string.at_mask, context.getString(R.string.today), requestedTime)
+                var todayString = context.getString(R.string.today)
+
+                if (dateToLowerCase) {
+                    todayString = todayString.toLowerCase(Locale.getDefault())
+                }
+
+                result = context.getString(R.string.at_mask, todayString, requestedTime)
             } else {
                 result = requestedTime
             }
         } else if (daysDiff == 1) {
+            var yesterdayString = context.getString(R.string.yesterday)
+
+            if (dateToLowerCase) {
+                yesterdayString = yesterdayString.toLowerCase(Locale.getDefault())
+            }
+
             result = if (fullFormat) {
-                context.getString(R.string.at_mask, context.getString(R.string.yesterday), requestedTime)
+                context.getString(R.string.at_mask, yesterdayString, requestedTime)
             } else {
-                context.getString(R.string.yesterday)
+                yesterdayString
             }
         } else if (daysDiff == -1 && calculateFutureTime) {
+            var tomorrowString = context.getString(R.string.tomorrow)
+
+            if (dateToLowerCase) {
+                tomorrowString = tomorrowString.toLowerCase(Locale.getDefault())
+            }
+
             result = if (fullFormat) {
-                context.getString(R.string.at_mask, context.getString(R.string.tomorrow), requestedTime)
+                context.getString(R.string.at_mask, tomorrowString, requestedTime)
             } else {
-                context.getString(R.string.tomorrow)
+                tomorrowString
             }
         } else if (current[Calendar.WEEK_OF_YEAR] == requested[Calendar.WEEK_OF_YEAR]) {
             val dayOfWeekDiff = current[Calendar.DAY_OF_WEEK] - requested[Calendar.DAY_OF_WEEK]

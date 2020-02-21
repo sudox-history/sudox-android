@@ -25,7 +25,12 @@ data class AddedFriendVO(
         return if (isUserOnline()) {
             context.getString(R.string.online)
         } else {
-            context.getString(R.string.seen_mask, formatTime(context, fullFormat = true, time = seenTime))
+            context.getString(R.string.seen_mask, formatTime(
+                    context,
+                    fullFormat = true,
+                    dateToLowerCase = true,
+                    time = seenTime)
+            )
         }
     }
 
