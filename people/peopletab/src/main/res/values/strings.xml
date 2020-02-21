@@ -2,6 +2,7 @@
 <resources>
     <string name="people">People</string>
     <string name="friends">Friends</string>
+    <string name="seen_mask">Seen %s</string>
     <string name="new_friend_request">New friend request</string>
     <string name="importance">Importance</string>
     <string name="subscriptions">Subscriptions</string>

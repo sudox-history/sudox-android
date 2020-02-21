@@ -3,6 +3,7 @@ package com.sudox.messenger.android.people.peopletab.vos
 import android.content.Context
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 import com.sudox.messenger.android.people.peopletab.R
+import com.sudox.messenger.android.time.formatTime
 
 /**
  * ViewObject для добавленного друга.
@@ -24,8 +25,7 @@ data class AddedFriendVO(
         return if (isUserOnline()) {
             context.getString(R.string.online)
         } else {
-            // TODO: replace to formatTime
-            seenTime.toString()
+            context.getString(R.string.seen_mask, formatTime(context, fullFormat = true, time = seenTime))
         }
     }
 

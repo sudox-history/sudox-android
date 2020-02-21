@@ -20,11 +20,11 @@ import kotlin.math.abs
 fun formatTime(
         context: Context,
         relative: Long = System.currentTimeMillis(),
-        twelveHoursFormat: Boolean = DateFormat.is24HourFormat(context),
+        twelveHoursFormat: Boolean = !DateFormat.is24HourFormat(context),
         calculateFutureTime: Boolean = true,
         fullFormat: Boolean = false,
         time: Long
-): String? {
+): String {
     val current = (calendarsPool.acquire() ?: Calendar.getInstance()).apply { timeInMillis = relative }
     val requested = (calendarsPool.acquire() ?: Calendar.getInstance()).apply { timeInMillis = time }
     val monthName = if (fullFormat) {

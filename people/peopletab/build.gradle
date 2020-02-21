@@ -7,6 +7,7 @@ apply from: '../../configs/robolectric.gradle'
 
 dependencies {
     api project(path: ':core')
+    api project(path: ':time')
     api project(path: ':design')
     api project(path: ':design:viewlist')
     api project(path: ':design:imagebutton')

@@ -25,7 +25,7 @@ class AddedFriendsSortingCallback(
         } else if (sortingType == ONLINE_OPTION_TAG) {
             if (first.isUserOnline() && !second.isUserOnline()) {
                 -1
-            } else if (second.isUserOnline() && first.isUserOnline()) {
+            } else if (second.isUserOnline() && !first.isUserOnline()) {
                 1
             } else if (second.isUserOnline() && first.isUserOnline()) {
                 first.userName.compareTo(second.userName)
