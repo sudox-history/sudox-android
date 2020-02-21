@@ -34,7 +34,6 @@
         <item name="navigationBarStyle">@style/Sudox.NavigationBar</item>
         <item name="navigationBarButtonStyle">@style/Sudox.NavigationBar.Button</item>
         <item name="tabLayoutStyle">@style/Sudox.TabLayout</item>
-        <item name="tabLayoutButtonStyle">@style/Sudox.TabLayout.Button</item>
         <item name="sectionedListViewStyle">@style/Sudox.SectionedListView</item>
         <item name="customImageViewStyle">@style/Sudox.ImageView</item>
 
@@ -187,24 +186,6 @@
 
         <item name="iconHeight">@dimen/navigationbarbutton_icon_height</item>
         <item name="iconWidth">@dimen/navigationbarbutton_icon_width</item>
-    </style>
-
-    <style name="Sudox.TabLayout" parent="">
-        <item name="indicatorColor">@color/tablayout_indicator_color</item>
-        <item name="indicatorHeight">@dimen/tablayout_indicator_height</item>
-        <item name="indicatorMargin">@dimen/tablayout_indicator_margin</item>
-        <item name="indicatorPaddingLeft">@dimen/tablayout_indicator_padding_left</item>
-        <item name="indicatorPaddingRight">@dimen/tablayout_indicator_padding_right</item>
-    </style>
-
-    <style name="Sudox.TabLayout.Button" parent="">
-        <item name="android:paddingRight">@dimen/tablayoutbutton_padding_right</item>
-        <item name="android:paddingLeft">@dimen/tablayoutbutton_padding_left</item>
-
-        <item name="activeTextColor">@color/tablayoutbutton_active_text_color</item>
-        <item name="defaultTextColor">@color/tablayoutbutton_default_text_color</item>
-        <item name="textTypeface">@font/opensans_bold</item>
-        <item name="textSize">@dimen/tablayoutbutton_text_size</item>
     </style>
 
     <style name="Sudox.SectionedListView" parent="">

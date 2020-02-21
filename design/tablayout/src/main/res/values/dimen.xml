@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="tablayout_tab_name_text_size">17sp</dimen>
+    <dimen name="tablayout_tab_name_text_padding_left">7.5dp</dimen>
+    <dimen name="tablayout_tab_name_text_padding_right">7.5dp</dimen>
+    <dimen name="tablayout_margin_between_tabs">20dp</dimen>
+    <dimen name="tablayout_indicator_padding">7.5dp</dimen>
+    <dimen name="tablayout_indicator_width">2dp</dimen>
+</resources>

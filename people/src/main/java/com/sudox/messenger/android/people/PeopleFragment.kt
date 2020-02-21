@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sudox.design.tabLayout.TabLayout
+import com.sudox.design.tablayout.TabLayout
 import com.sudox.messenger.android.activity.ActivityFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerAdapter
 import com.sudox.messenger.android.core.CoreActivity
@@ -33,7 +33,7 @@ class PeopleFragment : CoreFragment() {
         peopleViewPager.addOnPageChangeListener(pagerAdapter!!)
 
         tabLayout = TabLayout(context!!)
-        tabLayout!!.setViewPager(peopleViewPager)
+        tabLayout!!.syncWithViewPager(peopleViewPager)
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

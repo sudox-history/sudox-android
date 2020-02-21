@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.sudox.design.tabLayout.TabLayout
+import com.sudox.design.tablayout.TabLayout
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerAdapter
@@ -31,7 +31,7 @@ class DialogsFragment : CoreFragment() {
         dialogsViewPager.addOnPageChangeListener(viewPagerAdapter!!)
 
         tabLayout = TabLayout(context!!).apply {
-            setViewPager(dialogsViewPager)
+            syncWithViewPager(dialogsViewPager)
         }
     }
 

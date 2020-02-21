@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.TabLayout" parent="">
+        <item name="activeColor">@color/tablayout_active_color</item>
+        <item name="inactiveColor">@color/tablayout_inactive_color</item>
+        <item name="tabNameStyle">@style/Sudox.TabLayout.TabName</item>
+        <item name="marginBetweenTabs">@dimen/tablayout_margin_between_tabs</item>
+        <item name="indicatorPadding">@dimen/tablayout_indicator_padding</item>
+        <item name="indicatorWidth">@dimen/tablayout_indicator_width</item>
+    </style>
+
+    <style name="Sudox.TabLayout.TabName" parent="">
+        <item name="android:textSize">@dimen/tablayout_tab_name_text_size</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="android:paddingLeft">@dimen/tablayout_tab_name_text_padding_left</item>
+        <item name="android:paddingRight">@dimen/tablayout_tab_name_text_padding_right</item>
+        <item name="fontFamily">@font/opensans_bold</item>
+    </style>
+</resources>

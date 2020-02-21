@@ -79,22 +79,6 @@
         <attr name="iconHeight" />
     </declare-styleable>
 
-    <declare-styleable name="TabLayout">
-        <attr name="indicatorColor" format="color" />
-        <attr name="indicatorHeight" format="dimension" />
-        <attr name="indicatorMargin" format="dimension" />
-        <attr name="indicatorPaddingRight" format="dimension" />
-        <attr name="indicatorPaddingLeft" format="dimension" />
-    </declare-styleable>
-
-    <declare-styleable name="TabLayoutButton">
-        <attr name="activeTextColor" format="color" />
-        <attr name="defaultTextColor" format="color" />
-
-        <attr name="textSize" />
-        <attr name="textTypeface" />
-    </declare-styleable>
-
     <declare-styleable name="SectionedListView">
         <attr name="sectionNameTextSize" format="dimension" />
         <attr name="sectionNameTextColor" format="color" />
@@ -126,7 +110,5 @@
     <attr name="sortedListViewStyle" format="reference" />
     <attr name="navigationBarStyle" format="reference" />
     <attr name="navigationBarButtonStyle" format="reference" />
-    <attr name="tabLayoutStyle" format="reference" />
-    <attr name="tabLayoutButtonStyle" format="reference" />
     <attr name="sectionedListViewStyle" format="reference" />
 </resources>
