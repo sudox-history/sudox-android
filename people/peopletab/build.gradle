@@ -3,6 +3,8 @@ apply from: '../../configs/common.gradle'
 
 registerModule(false, true, false, true)
 
+apply from: '../../configs/robolectric.gradle'
+
 dependencies {
     api project(path: ':core')
     api project(path: ':design')
@@ -16,4 +18,8 @@ dependencies {
     implementation libraries.appcompat
     implementation libraries.lifecycle_extensions
     implementation libraries.recyclerview
+
+    testImplementation libraries.junit
+    testImplementation libraries.robolectric
+    testImplementation libraries.mockito
 }

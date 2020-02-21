@@ -27,11 +27,13 @@ class AddedFriendsSortingCallback(
                 -1
             } else if (second.isUserOnline() && first.isUserOnline()) {
                 1
+            } else if (second.isUserOnline() && first.isUserOnline()) {
+                first.userName.compareTo(second.userName)
             } else {
-                first.seenTime.compareTo(second.seenTime)
+                -first.seenTime.compareTo(second.seenTime)
             }
         } else {
-            -first.userName.compareTo(second.userName)
+            first.userName.compareTo(second.userName)
         }
     }
 }
