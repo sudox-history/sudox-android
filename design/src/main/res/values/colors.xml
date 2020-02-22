@@ -29,10 +29,7 @@
     <color name="navigationbarbutton_default_content_color">#606060</color>
     <color name="navigationbarbutton_focused_content_color">#00BFA5</color>
 
-    <color name="tablayout_indicator_color">#00BFA5</color>
-
     <color name="tablayoutbutton_active_text_color">#00BFA5</color>
-    <color name="tablayoutbutton_default_text_color">#000000</color>
 
     <color name="sectionedlistview_section_name_text_color">#000000</color>
 </resources>

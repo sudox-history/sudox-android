@@ -3,6 +3,5 @@
     <string name="app_name">Sudox</string>
     <string name="people">People</string>
     <string name="messages">Messages</string>
-    <string name="world">World</string>
     <string name="profile">Profile</string>
 </resources>

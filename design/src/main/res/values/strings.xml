@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="austria">Austria</string>
-    <string name="belgium">Belgium</string>
     <string name="russia">Russia</string>
-    <string name="romania">Romania</string>
     <string name="poland">Poland</string>
     <string name="hungary">Hungary</string>
     <string name="ukraine">Ukraine</string>
