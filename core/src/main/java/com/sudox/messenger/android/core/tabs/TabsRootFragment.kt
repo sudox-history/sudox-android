@@ -11,6 +11,13 @@ import com.sudox.messenger.android.core.CoreFragment
 
 const val VIEW_PAGER_ID_KEY = "view_pager_id"
 
+/**
+ * Основной фрагмент-контроллер для фрагментов-вкладок.
+ *
+ * Отвечает за:
+ * 1) Сохранение состояния  ViewPager'а и его инициализацию
+ * 2) Инъекцию зависимостей в дочерние фрагменты-вкладки
+ */
 abstract class TabsRootFragment : CoreFragment() {
 
     private var tabLayout: TabLayout? = null

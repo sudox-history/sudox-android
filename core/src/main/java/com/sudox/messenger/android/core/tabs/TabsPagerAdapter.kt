@@ -6,10 +6,18 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 
+/**
+ * Адаптер для ViewPager'а TabsRootFragment
+ * Отвечает за инициализацию отображения фрагментов-вкладок и выдачу их названий
+ *
+ * @param context Контекст приложения/активности
+ * @param fragments Дочерние фрагменты-вкладки
+ * @param fragmentManager Менеджер фрагментов
+ */
 class TabsPagerAdapter(
-        val context: Context,
-        val fragments: Array<TabsChildFragment>,
-        val fragmentManager: FragmentManager
+        private val context: Context,
+        private val fragments: Array<TabsChildFragment>,
+        fragmentManager: FragmentManager
 ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT), ViewPager.OnPageChangeListener {
 
     override fun getItem(position: Int): Fragment {
