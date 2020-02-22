@@ -40,8 +40,8 @@ class PeopleFragment : CoreFragment() {
         super.onHiddenChanged(hidden)
 
         if (!hidden) {
-            coreActivity!!.getScreenManager().reset()
-            coreActivity!!.getApplicationBarManager().let {
+            screenManager!!.reset()
+            applicationBarManager!!.let {
                 it.reset(true)
                 it.setContentView(tabLayout)
             }

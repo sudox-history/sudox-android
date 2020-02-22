@@ -10,22 +10,14 @@ import android.view.WindowManager
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.showSoftKeyboard
 import com.sudox.messenger.android.auth.R
-import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.managers.APPBAR_NEXT_BUTTON_TAG
-import com.sudox.messenger.android.core.managers.NavigationManager
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterEditTextLayout
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterNicknameEditText
 
 class AuthRegisterFragment : CoreFragment(), ApplicationBarListener {
 
-    private var navigationManager: NavigationManager? = null
-    private var coreActivity: CoreActivity? = null
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        coreActivity = activity as CoreActivity
-        navigationManager = coreActivity!!.getNavigationManager()
-
         return inflater.inflate(R.layout.fragment_auth_register, container, false)
     }
 
@@ -37,14 +29,14 @@ class AuthRegisterFragment : CoreFragment(), ApplicationBarListener {
         super.onHiddenChanged(hidden)
 
         if (!hidden) {
-            coreActivity!!.getApplicationBarManager().let {
+            applicationBarManager!!.let {
                 it.setListener(this)
                 it.toggleButtonBack(true)
                 it.toggleButtonNext(true)
                 it.setTitleText(R.string.sign_in)
             }
 
-            coreActivity!!.getScreenManager().let {
+            screenManager!!.let {
                 it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                 it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
             }

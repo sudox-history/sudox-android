@@ -1,12 +1,8 @@
 package com.sudox.messenger.android.core
 
-import com.sudox.messenger.android.core.managers.ApplicationBarManager
-import com.sudox.messenger.android.core.managers.NavigationManager
-import com.sudox.messenger.android.core.managers.ScreenManager
+import com.sudox.messenger.android.core.inject.CoreComponent
 
 interface CoreActivity {
-    fun getScreenManager(): ScreenManager
-    fun getNavigationManager(): NavigationManager
-    fun getApplicationBarManager(): ApplicationBarManager
+    fun getCoreComponent(): CoreComponent
     fun getLoader(): CoreLoader
 }

@@ -65,7 +65,7 @@ class ActivityFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
     override fun onButtonClicked(tag: Int) {}
 
     override fun onPageSelected(activity: CoreActivity) {
-        activity.getApplicationBarManager().let {
+        applicationBarManager!!.let {
             it.reset(false)
             it.setListener(this)
             it.toggleIconButtonAtStart(R.drawable.ic_notifications_none)

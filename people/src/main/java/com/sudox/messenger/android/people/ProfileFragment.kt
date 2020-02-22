@@ -11,7 +11,7 @@ import com.sudox.messenger.android.core.CoreFragment
 class ProfileFragment : CoreFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        (activity as CoreActivity).getScreenManager().reset()
+        screenManager!!.reset()
 
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }

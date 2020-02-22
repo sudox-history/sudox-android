@@ -80,7 +80,7 @@ class TalksFragment: CoreFragment(), ViewPagerFragment, ApplicationBarListener {
         )
     }
     override fun onPageSelected(activity: CoreActivity) {
-        activity.getApplicationBarManager().let {
+        applicationBarManager!!.let {
             it.reset(false)
             it.setListener(this)
             it.toggleIconButtonAtEnd(R.drawable.ic_search)

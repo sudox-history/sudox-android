@@ -14,15 +14,13 @@ class DialogsFragment : CoreFragment() {
 
     private var tabLayout: TabLayout? = null
     private var viewPagerAdapter: ViewPagerAdapter? = null
-    private var coreActivity: CoreActivity? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_dialogs, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        coreActivity = activity as CoreActivity
-        viewPagerAdapter = ViewPagerAdapter(context!!, coreActivity!!, dialogsViewPager, childFragmentManager, arrayOf(
+        viewPagerAdapter = ViewPagerAdapter(context!!, activity as CoreActivity, dialogsViewPager, childFragmentManager, arrayOf(
                 MessagesFragment(),
                 TalksFragment()
         ))
@@ -39,8 +37,8 @@ class DialogsFragment : CoreFragment() {
         super.onHiddenChanged(hidden)
 
         if (!hidden) {
-            coreActivity!!.getScreenManager().reset()
-            coreActivity!!.getApplicationBarManager().let {
+            screenManager!!.reset()
+            applicationBarManager!!.let {
                 it.reset(true)
                 it.setContentView(tabLayout)
             }
