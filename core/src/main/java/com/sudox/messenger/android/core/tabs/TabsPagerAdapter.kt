@@ -1,10 +1,10 @@
 package com.sudox.messenger.android.core.tabs
 
 import android.content.Context
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.sudox.messenger.android.core.CoreFragment
 
 /**
  * Адаптер для ViewPager'а TabsRootFragment
@@ -16,20 +16,24 @@ import androidx.viewpager.widget.ViewPager
  */
 class TabsPagerAdapter(
         private val context: Context,
-        private val fragments: Array<TabsChildFragment>,
+        private val fragments: Array<CoreFragment>,
         fragmentManager: FragmentManager
 ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT), ViewPager.OnPageChangeListener {
 
-    override fun getItem(position: Int): Fragment {
+    override fun getItem(position: Int): CoreFragment {
         return fragments[position]
     }
 
     override fun getPageTitle(position: Int): CharSequence? {
-        return fragments[position].getTitle(context)
+        @Suppress("CAST_NEVER_SUCCEEDS")
+        // P.S.: В данный адаптер попадают только фрагменты, реализующие интерфейс TabsChildFragment
+        return (fragments[position] as TabsChildFragment).getTitle(context)
     }
 
     override fun onPageSelected(position: Int) {
-        fragments[position].prepareToShowing()
+        @Suppress("CAST_NEVER_SUCCEEDS")
+        // P.S.: В данный адаптер попадают только фрагменты, реализующие интерфейс TabsChildFragment
+        (fragments[position] as TabsChildFragment).prepareToShowing(fragments[position])
     }
 
     override fun getCount(): Int {

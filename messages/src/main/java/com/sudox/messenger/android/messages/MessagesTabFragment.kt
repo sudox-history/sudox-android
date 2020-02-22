@@ -9,13 +9,14 @@ import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.applicationBar.ApplicationBarListener
+import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.messages.vos.BaseMessagesDialogVO
 import kotlinx.android.synthetic.main.fragment_messages.dialogsRecyclerView
 import java.util.Calendar
 import kotlin.random.Random
 
-class MessagesTabFragment : TabsChildFragment(), ApplicationBarListener {
+class MessagesTabFragment : CoreFragment(), TabsChildFragment, ApplicationBarListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_messages, container, false)
@@ -81,8 +82,8 @@ class MessagesTabFragment : TabsChildFragment(), ApplicationBarListener {
         return context.getString(R.string.messages)
     }
 
-    override fun prepareToShowing() {
-        super.prepareToShowing()
+    override fun prepareToShowing(coreFragment: CoreFragment) {
+        super.prepareToShowing(coreFragment)
 
         applicationBarManager!!.let {
             it.setListener(this)

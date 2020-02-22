@@ -25,8 +25,8 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     var screenManager: ScreenManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         injectAll(activity as CoreActivity)
+        super.onCreate(savedInstanceState)
     }
 
     /**
@@ -75,10 +75,12 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
 
     override fun onAnimationCancel(animation: Animator) {
         animator?.removeListener(this)
+        animator = null
     }
 
     override fun onAnimationEnd(animation: Animator) {
         animator?.removeListener(this)
+        animator = null
     }
 
     override fun onAnimationRepeat(animation: Animator) {}

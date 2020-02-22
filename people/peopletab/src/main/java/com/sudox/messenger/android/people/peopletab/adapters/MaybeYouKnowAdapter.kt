@@ -47,7 +47,7 @@ class MaybeYouKnowAdapter : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>() {
         return maybeYouKnowVOs.size()
     }
 
-    override fun canCreateMarginViaDecorators(position: Int): Boolean {
+    override fun canCreateMarginViaDecorators(): Boolean {
         return true
     }
 

@@ -173,7 +173,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
 
         @Suppress("UNCHECKED_CAST")
         bindItemHolder(holder as VH, position).apply {
-            if (!canCreateMarginViaDecorators(position)) {
+            if (!canCreateMarginViaDecorators()) {
                 val itemMargin = getItemMargin(position) / 2
                 val positionAfterHeader = recalculatePositionRelativeHeader(position)
 
@@ -574,11 +574,10 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
     /**
      * Определяет тип способа добавления отступа
      *
-     * @property position Позиция элемента
      * @result Вернет true если отступ нужно добавить с помощью декоратора,
      * false если с помощью внутренних отступов.
      */
-    open fun canCreateMarginViaDecorators(position: Int): Boolean = false
+    open fun canCreateMarginViaDecorators(): Boolean = false
 
     /**
      * Возвращает количество шапок.

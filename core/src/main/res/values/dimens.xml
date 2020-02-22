@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="viewlistfragment_left_padding">17dp</dimen>
+    <dimen name="viewlistfragment_right_padding">17dp</dimen>
+    <dimen name="viewlistfragment_bottom_padding">11dp</dimen>
+    <dimen name="viewlistfragment_top_padding">11dp</dimen>
+</resources>

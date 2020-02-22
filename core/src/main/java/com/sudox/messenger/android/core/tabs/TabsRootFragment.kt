@@ -70,5 +70,5 @@ abstract class TabsRootFragment : CoreFragment() {
      *
      * @return Массив с дочерними фрагментами-вкладками
      */
-    abstract fun getFragments(): Array<TabsChildFragment>
+    abstract fun getFragments(): Array<CoreFragment>
 }

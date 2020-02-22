@@ -9,6 +9,7 @@ import android.view.animation.Interpolator
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.view.updatePadding
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 
@@ -36,11 +37,22 @@ class ViewList : RecyclerView {
         context.obtainStyledAttributes(attrs, R.styleable.ViewList, defStyle, 0).use {
             footerTextAppearance = it.getResourceIdOrThrow(R.styleable.ViewList_footerTextAppearance)
         }
+    }
 
-        initialPaddingRight = paddingRight
-        initialPaddingLeft = paddingLeft
+    override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
+        if ((layoutManager as? LinearLayoutManager)?.orientation == VERTICAL) {
+            if (left > 0) {
+                initialPaddingLeft = left
+            }
 
-        updatePadding(left = 0, right = 0)
+            if (right > 0) {
+                initialPaddingRight = right
+            }
+
+            super.setPadding(0, top, 0, bottom)
+        } else {
+            super.setPadding(left, top, right, bottom)
+        }
     }
 
     override fun setAdapter(adapter: Adapter<*>?) {
@@ -48,7 +60,7 @@ class ViewList : RecyclerView {
 
         if (adapter != null && adapter is ViewListAdapter<*>) {
             addItemDecoration(ViewListDecorator(adapter, this))
-        } else {
+        } else if (itemDecorationCount > 0) {
             removeItemDecoration(getItemDecorationAt(0))
         }
     }

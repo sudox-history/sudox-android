@@ -54,6 +54,7 @@
         <item name="imageButtonStyle">@style/Sudox.Button</item>
     </style>
 
+    <!--  TODO: Remove it  -->
     <style name="Sudox.Screen" parent="">
         <item name="android:clipToPadding">false</item>
         <item name="android:paddingTop">@dimen/screen_top_padding</item>
