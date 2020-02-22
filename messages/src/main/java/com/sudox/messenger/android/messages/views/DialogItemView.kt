@@ -250,7 +250,6 @@ class DialogItemView : ViewGroup {
 
         val dateLeftBorder = rightBorder - dateView.measuredWidth
         val dateTopBorder = paddingTop + innerDateToTopMargin
-        val dateRightBorder = rightBorder
         val dateBottomBorder = dateTopBorder + dateView.measuredHeight
 
         val counterLeftBorder = rightBorder - countMessagesView.measuredWidth - innerCounterHorizontalMargin
@@ -277,7 +276,7 @@ class DialogItemView : ViewGroup {
         photoView.layout(photoLeftBorder, photoTopBorder, photoRightBorder, photoBottomBorder)
         nameView.layout(dialogNameLeftBorder, dialogNameTopBorder, dialogNameRightBorder, dialogNameBottomBorder)
         contentTextView.layout(contentLeftBorder, contentTopBorder, contentRightBorder, contentBottomBorder)
-        dateView.layout(dateLeftBorder, dateTopBorder, dateRightBorder, dateBottomBorder)
+        dateView.layout(dateLeftBorder, dateTopBorder, rightBorder, dateBottomBorder)
     }
 
     override fun dispatchDraw(canvas: Canvas) {
