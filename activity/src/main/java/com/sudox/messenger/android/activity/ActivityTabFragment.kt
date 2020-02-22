@@ -8,13 +8,11 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.design.applicationBar.ApplicationBarListener
-import com.sudox.messenger.android.core.CoreActivity
-import com.sudox.messenger.android.core.CoreFragment
-import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
+import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.moments.vos.MomentVO
 import kotlinx.android.synthetic.main.fragment_activity.activityContentList
 
-class ActivityFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListener {
+class ActivityTabFragment : TabsChildFragment(), ApplicationBarListener {
 
     private var counter = 7L
 
@@ -62,18 +60,19 @@ class ActivityFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListen
         activityContentList.layoutManager = LinearLayoutManager(context)
     }
 
-    override fun onButtonClicked(tag: Int) {}
+    override fun getTitle(context: Context): String? {
+        return context.getString(R.string.activity)
+    }
 
-    override fun onPageSelected(activity: CoreActivity) {
+    override fun prepareToShowing() {
+        super.prepareToShowing()
+
         applicationBarManager!!.let {
-            it.reset(false)
             it.setListener(this)
             it.toggleIconButtonAtStart(R.drawable.ic_notifications_none)
             it.toggleIconButtonAtEnd(R.drawable.ic_search)
         }
     }
 
-    override fun getPageTitle(context: Context): CharSequence? {
-        return context.getString(R.string.activity)
-    }
+    override fun onButtonClicked(tag: Int) {}
 }

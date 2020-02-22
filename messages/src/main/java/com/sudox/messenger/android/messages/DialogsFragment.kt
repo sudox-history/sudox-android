@@ -1,49 +1,11 @@
 package com.sudox.messenger.android.messages
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.sudox.design.tablayout.TabLayout
-import com.sudox.messenger.android.core.CoreActivity
-import com.sudox.messenger.android.core.CoreFragment
-import com.sudox.messenger.android.core.viewPager.ViewPagerAdapter
-import kotlinx.android.synthetic.main.fragment_dialogs.*
+import com.sudox.messenger.android.core.tabs.TabsChildFragment
+import com.sudox.messenger.android.core.tabs.TabsRootFragment
 
-class DialogsFragment : CoreFragment() {
+class DialogsFragment : TabsRootFragment() {
 
-    private var tabLayout: TabLayout? = null
-    private var viewPagerAdapter: ViewPagerAdapter? = null
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_dialogs, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewPagerAdapter = ViewPagerAdapter(context!!, activity as CoreActivity, dialogsViewPager, childFragmentManager, arrayOf(
-                MessagesFragment(),
-                TalksFragment()
-        ))
-
-        dialogsViewPager.adapter = viewPagerAdapter
-        dialogsViewPager.addOnPageChangeListener(viewPagerAdapter!!)
-
-        tabLayout = TabLayout(context!!).apply {
-            syncWithViewPager(dialogsViewPager)
-        }
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-
-        if (!hidden) {
-            screenManager!!.reset()
-            applicationBarManager!!.let {
-                it.reset(true)
-                it.setContentView(tabLayout)
-            }
-
-            viewPagerAdapter!!.restoreCurrentFragment()
-        }
+    override fun getFragments(): Array<TabsChildFragment> {
+        return arrayOf(MessagesTabFragment(), TalksTabFragment())
     }
 }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.core.viewPager.ViewPagerFragment
 import com.sudox.messenger.android.people.common.vos.SEEN_TIME_ONLINE
 import com.sudox.messenger.android.people.peopletab.adapters.PeopleTabAdapter
@@ -18,7 +19,7 @@ import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
 import com.sudox.messenger.android.people.peopletab.vos.SubscriptionVO
 import kotlinx.android.synthetic.main.fragment_people_tab.peopleTabContentList
 
-class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListener {
+class PeopleTabFragment : TabsChildFragment(), ApplicationBarListener {
 
     private var adapter: PeopleTabAdapter? = null
 
@@ -75,16 +76,17 @@ class PeopleTabFragment : CoreFragment(), ViewPagerFragment, ApplicationBarListe
         }
     }
 
-    override fun getPageTitle(context: Context): CharSequence? {
-        return context.getString(R.string.people)
-    }
+    override fun prepareToShowing() {
+        super.prepareToShowing()
 
-    override fun onPageSelected(activity: CoreActivity) {
         applicationBarManager!!.let {
-            it.reset(false)
             it.setListener(this)
             it.toggleIconButtonAtEnd(R.drawable.ic_search)
         }
+    }
+
+    override fun getTitle(context: Context): String? {
+        return context.getString(R.string.people)
     }
 
     override fun onButtonClicked(tag: Int) {

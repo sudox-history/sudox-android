@@ -9,6 +9,8 @@ import com.sudox.design.tablayout.TabLayout
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 
+const val VIEW_PAGER_ID_KEY = "view_pager_id"
+
 abstract class TabsRootFragment : CoreFragment() {
 
     private var tabLayout: TabLayout? = null
@@ -23,8 +25,9 @@ abstract class TabsRootFragment : CoreFragment() {
                 fragment.injectAll(activity as CoreActivity)
             }
 
-            pager.adapter = TabsPagerAdapter(context!!, fragments, childFragmentManager)
-            pager.id = View.generateViewId()
+            pagerAdapter = TabsPagerAdapter(context!!, fragments, childFragmentManager)
+            pager.adapter = pagerAdapter
+            pager.id = savedInstanceState?.getInt(VIEW_PAGER_ID_KEY, View.generateViewId()) ?: View.generateViewId()
 
             tabLayout = TabLayout(context!!).apply {
                 syncWithViewPager(pager)
@@ -32,6 +35,11 @@ abstract class TabsRootFragment : CoreFragment() {
         }
 
         return viewPager!!
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(VIEW_PAGER_ID_KEY, viewPager!!.id)
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

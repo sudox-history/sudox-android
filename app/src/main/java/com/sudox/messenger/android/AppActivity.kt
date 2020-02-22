@@ -23,8 +23,6 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     private var coreComponent: CoreComponent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
         if (BuildConfig.DEBUG) {
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
@@ -43,6 +41,8 @@ class AppActivity : AppCompatActivity(), CoreActivity {
                 .builder()
                 .coreModule(CoreModule(applicationBarManager, navigationManager!!, screenManager))
                 .build()
+
+        super.onCreate(savedInstanceState)
 
         if (savedInstanceState != null) {
             navigationManager!!.restoreState(savedInstanceState)

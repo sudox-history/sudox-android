@@ -17,5 +17,7 @@ abstract class TabsChildFragment : CoreFragment() {
      * Вызывается после того, как фрагмент будет выбран ViewPager'ом
      * Нужно подготовить фрагмент к отображению.
      */
-    abstract fun prepareToShowing()
+    open fun prepareToShowing() {
+        applicationBarManager!!.reset(false)
+    }
 }
