@@ -33,8 +33,10 @@ abstract class TabsRootFragment : CoreFragment() {
             }
 
             pagerAdapter = TabsPagerAdapter(context!!, fragments, childFragmentManager)
+
             pager.adapter = pagerAdapter
             pager.id = savedInstanceState?.getInt(VIEW_PAGER_ID_KEY, View.generateViewId()) ?: View.generateViewId()
+            pager.addOnPageChangeListener(pagerAdapter!!)
 
             tabLayout = TabLayout(context!!).apply {
                 syncWithViewPager(pager)
