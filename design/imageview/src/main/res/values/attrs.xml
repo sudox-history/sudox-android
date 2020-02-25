@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="ImageView">
         <attr name="defaultDrawable" format="reference" />
+        <attr name="changingAnimationDuration" format="integer" />
     </declare-styleable>
 
     <attr name="customImageViewStyle" format="reference" />
