@@ -26,7 +26,8 @@ open class ImageView : View {
     private var oldBitmap: Bitmap? = null
     private var bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var oldBitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private var changingAnimator = ValueAnimator.ofInt(0, 255).apply {
+
+    val changingAnimator: ValueAnimator = ValueAnimator.ofInt(0, 255).apply {
         addUpdateListener {
             bitmapPaint.alpha = animatedValue as Int
             invalidate()
@@ -105,7 +106,7 @@ open class ImageView : View {
      * @param bitmap Bitmap для установки. Если равен null, то будет установлена картинка по умолчанию
      * @param showChangingAnimation Отображать анимацию изменения?
      */
-    fun setBitmap(bitmap: Bitmap?, showChangingAnimation: Boolean) {
+    open fun setBitmap(bitmap: Bitmap?, showChangingAnimation: Boolean) {
         this.oldBitmap = if (showChangingAnimation) {
             this.bitmap
         } else {

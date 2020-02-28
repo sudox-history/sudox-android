@@ -1,19 +1,12 @@
 package com.sudox.messenger.android.images.providers
 
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.util.LongSparseArray
 import androidx.core.util.containsKey
 import androidx.core.util.set
-import com.sudox.messenger.android.images.R
-import com.sudox.messenger.android.images.views.IMAGE_NOT_SHOWING_ID
+import com.sudox.messenger.android.images.ImagesLoaderThread
 import com.sudox.messenger.android.images.views.LoadableImageView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 
 /**
  * Поставщик картинок.
@@ -26,61 +19,61 @@ import kotlinx.coroutines.newSingleThreadContext
 object ImagesProvider {
 
     private val bitmapUsingCount = LongSparseArray<Int>()
-    private val imageLoadingContext = newSingleThreadContext("Sudox Images Provider")
-    private val imageLoadingScope = CoroutineScope(imageLoadingContext)
     private val loadedImagesCache = LongSparseArray<Bitmap>()
+    private val imagesLoaderThread = ImagesLoaderThread().apply { start() }
 
     /**
      * Загружает изображение из хранилища и устанавливает его в заданный ImageView
      * Если изображение уже было загружено, то оно будет установлено без анимации сразу из потока,
      * с которого был вызван данный метод.
      *
-     * @return Если работа выполняется асинхронно, то будет возвращен обьект задачи.
+     * P.S.: Проигрывает анимацию изменения/установки картинки только если ImageView видна.
      */
-    fun loadImage(imageView: LoadableImageView, id: Long): Job? {
-        var cachedBitmap = loadedImagesCache[id]
-        val imageViewInstance = imageView.getInstance()
+    fun loadImage(imageView: LoadableImageView) {
+        // Пробуем прогрузить картинку вне отдельного потока во избежание включения анимации после Prefetch в RecyclerView
+        if (!loadFromCache(imageView, imageView.showingImageId)) {
+            imagesLoaderThread.requestLoading(imageView)
+        }
+    }
+
+    /**
+     * Загружает изображение в ImageView, обновляет счетчик ссылок на Bitmap'ы
+     *
+     * @param imageView ImageView, в который нужно загрузить картинку
+     * @param bitmap Bitmap который нужно загрузить в ImageView
+     */
+    fun loadImage(imageView: LoadableImageView, bitmap: Bitmap) {
+        if (!loadedImagesCache.containsKey(imageView.showingImageId)) {
+            loadedImagesCache[imageView.showingImageId] = bitmap
+        }
+
+        imageView.getInstance().let {
+            it.setBitmap(bitmap, it.isShown)
+        }
+
+        incrementCounter(imageView.showingImageId)
+    }
+
+    /**
+     * Пробует загрузить картинку из кэша.
+     *
+     * @param imageView ImageView, в который нужно загрузить картинку
+     * @param id ID картинки, которую нужно загрузить в ImageView
+     * @return Если картинка была загружена, то вернет true, в иных случаях всегда возвращает false.
+     */
+    fun loadFromCache(imageView: LoadableImageView, id: Long): Boolean {
+        val cachedBitmap = loadedImagesCache[id]
 
         if (cachedBitmap != null) {
-            imageViewInstance.setBitmap(cachedBitmap, false)
+            imageView.getInstance().let {
+                it.setBitmap(cachedBitmap, it.isShown)
+            }
+
             incrementCounter(id)
-            return null
+            return true
         }
 
-        return imageLoadingScope.launch {
-            cachedBitmap = loadedImagesCache[id]
-
-            if (cachedBitmap != null) {
-                imageViewInstance.setBitmap(cachedBitmap, true)
-                incrementCounter(id)
-                return@launch
-            }
-
-            if (imageView.showingImageId != IMAGE_NOT_SHOWING_ID && imageView.showingImageId != id) {
-                unloadBitmap(imageView)
-            }
-
-            if (isActive) {
-                @Suppress("BlockingMethodInNonBlockingContext")
-                Thread.sleep(1000)
-
-                // TODO: Replace to API method!
-                val bitmap = (imageViewInstance.context.getDrawable(if (id == 1L) {
-                    R.drawable.drawable_photo_2
-                } else if (id == 2L) {
-                    R.drawable.drawable_photo_1
-                } else {
-                    R.drawable.drawable_photo_3
-                }) as BitmapDrawable).bitmap
-
-                if (!loadedImagesCache.containsKey(id)) {
-                    loadedImagesCache[id] = bitmap
-                }
-
-                imageViewInstance.setBitmap(bitmap, true)
-                incrementCounter(id)
-            }
-        }
+        return false
     }
 
     /**
@@ -117,5 +110,15 @@ object ImagesProvider {
         } else {
             bitmapUsingCount[id]++
         }
+    }
+
+    /**
+     * Останавливает загрузку изображения.
+     * P.S.: Не будет работать если изображение загрузилось в UI-потоке с кеша.
+     *
+     * @param instance ImageView, загрузку в котором нужно остановить.
+     */
+    fun cancelLoading(instance: LoadableImageView) {
+        imagesLoaderThread.removeRequest(instance)
     }
 }

@@ -102,6 +102,14 @@ class PeopleTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
         }[recalculatePositionRelativeHeader(position)]
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+
+        if (holder is PeopleViewHolder) {
+            holder.view.vo = null
+        }
+    }
+
     override fun getItemType(position: Int): Int {
         var current = 0
 
