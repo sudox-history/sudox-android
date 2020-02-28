@@ -5,10 +5,10 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
+import com.sudox.messenger.android.images.views.IMAGE_NOT_SHOWING_ID
 import com.sudox.messenger.android.images.views.LoadableCircleImageView
 import com.sudox.messenger.android.people.common.R
 import com.sudox.messenger.android.people.common.vos.PeopleVO
@@ -16,6 +16,7 @@ import com.sudox.messenger.android.people.common.vos.PeopleVO
 /**
  * Загружаемый ImageView для аватарки.
  */
+@Suppress("EXPERIMENTAL_API_USAGE")
 class AvatarImageView : LoadableCircleImageView {
 
     private var indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -23,13 +24,7 @@ class AvatarImageView : LoadableCircleImageView {
     var vo: PeopleVO? = null
         set(value) {
             field = value
-
-            if (value != null) {
-                startLoading(value.photoId)
-            } else {
-                cancelLoading()
-            }
-
+            loadImage(value?.photoId ?: IMAGE_NOT_SHOWING_ID)
             invalidate()
         }
 

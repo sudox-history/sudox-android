@@ -18,6 +18,11 @@ import androidx.core.content.res.use
  */
 open class ImageView : View {
 
+    var bitmap: Bitmap? = null
+        private set
+    var drawable: Drawable? = null
+        private set
+
     private var oldBitmap: Bitmap? = null
     private var bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var oldBitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -27,29 +32,6 @@ open class ImageView : View {
             invalidate()
         }
     }
-
-    var bitmap: Bitmap? = null
-        set(value) {
-            oldBitmap = field
-            field = value
-
-            if (field != null) {
-                drawable = null
-            }
-
-            post { changingAnimator.start() }
-        }
-
-    var drawable: Drawable? = null
-        set(value) {
-            field = value
-
-            if (field != null) {
-                bitmap = null
-            }
-
-            postInvalidate()
-        }
 
     var defaultDrawable: Drawable? = null
         set(value) {
@@ -108,6 +90,41 @@ open class ImageView : View {
     fun setDrawable(drawable: Drawable?, colorTint: Int) {
         this.drawable = drawable?.mutate()?.apply {
             setTint(colorTint)
+        }
+
+        if (drawable != null) {
+            bitmap = null
+        }
+
+        postInvalidate()
+    }
+
+    /**
+     * Устанавливает Bitmap как картинку.
+     *
+     * @param bitmap Bitmap для установки. Если равен null, то будет установлена картинка по умолчанию
+     * @param showChangingAnimation Отображать анимацию изменения?
+     */
+    fun setBitmap(bitmap: Bitmap?, showChangingAnimation: Boolean) {
+        this.oldBitmap = if (showChangingAnimation) {
+            this.bitmap
+        } else {
+            null
+        }
+
+        if (bitmap != null) {
+            this.drawable = null
+        }
+
+        this.bitmap = bitmap
+
+        post {
+            if (showChangingAnimation) {
+                changingAnimator.start()
+            } else {
+                changingAnimator.cancel()
+                invalidate()
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ import com.sudox.messenger.android.images.views.LoadableCircleImageView
  *
  * @param iconPhotoId ID фотографии, которую нужно загрузить
  */
+@Suppress("EXPERIMENTAL_API_USAGE")
 class PopupItemWithLoadableIconVO(
         override var tag: Int,
         override val title: String,
@@ -24,7 +25,7 @@ class PopupItemWithLoadableIconVO(
 
     override fun <T : View> configureIconView(item: PopupItemView, view: T) {
         if (view is LoadableCircleImageView) {
-            view.startLoading(iconPhotoId)
+            view.loadImage(iconPhotoId)
         }
     }
 

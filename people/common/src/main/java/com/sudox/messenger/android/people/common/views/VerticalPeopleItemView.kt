@@ -65,6 +65,10 @@ class VerticalPeopleItemView : ViewGroup {
 
     var vo: PeopleVO? = null
         set(value) {
+            if (field == null && value == null) {
+                return
+            }
+
             if (button != null) {
                 removeView(button)
             }

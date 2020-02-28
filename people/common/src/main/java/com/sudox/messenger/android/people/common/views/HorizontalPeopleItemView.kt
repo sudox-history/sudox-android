@@ -2,7 +2,6 @@ package com.sudox.messenger.android.people.common.views
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.text.LineBreaker
 import android.os.Build
 import android.text.Layout
 import android.text.TextUtils
