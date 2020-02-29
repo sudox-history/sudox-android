@@ -1,6 +1,5 @@
 package com.sudox.messenger.android.images.views
 
-import android.util.Log
 import com.sudox.design.imageview.ImageView
 import com.sudox.messenger.android.images.providers.ImagesProvider
 import kotlinx.coroutines.Job
@@ -24,14 +23,14 @@ interface LoadableImageView {
      * то будет установлено изображение по-умолчанию.
      */
     fun loadImage(id: Long) {
-        showingImageId = id
         loadingJob?.cancel()
         loadingJob = null
 
         if (id != IMAGE_NOT_SHOWING_ID) {
+            showingImageId = id
             loadingJob = ImagesProvider.loadImage(this, id)
-        } else {
-            getInstance().setBitmap(null, false)
+        } else if (showingImageId != IMAGE_NOT_SHOWING_ID) {
+            ImagesProvider.unloadBitmap(this)
         }
     }
 

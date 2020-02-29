@@ -22,11 +22,13 @@ open class ImageView : View {
         private set
     var drawable: Drawable? = null
         private set
+    var oldBitmap: Bitmap? = null
+        private set
 
-    private var oldBitmap: Bitmap? = null
     private var bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var oldBitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private var changingAnimator = ValueAnimator.ofInt(0, 255).apply {
+
+    var changingAnimator: ValueAnimator = ValueAnimator.ofInt(0, 255).apply {
         addUpdateListener {
             bitmapPaint.alpha = animatedValue as Int
             invalidate()

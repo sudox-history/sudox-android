@@ -42,7 +42,7 @@ object ImagesProvider {
         val imageViewInstance = imageView.getInstance()
 
         if (cachedBitmap != null) {
-            imageViewInstance.setBitmap(cachedBitmap, false)
+            imageViewInstance.setBitmap(cachedBitmap, imageViewInstance.isShown)
             incrementCounter(id)
             return null
         }
@@ -51,7 +51,7 @@ object ImagesProvider {
             cachedBitmap = loadedImagesCache[id]
 
             if (cachedBitmap != null) {
-                imageViewInstance.setBitmap(cachedBitmap, true)
+                imageViewInstance.setBitmap(cachedBitmap, imageViewInstance.isShown)
                 incrementCounter(id)
                 return@launch
             }
@@ -65,19 +65,21 @@ object ImagesProvider {
                 Thread.sleep(1000)
 
                 // TODO: Replace to API method!
-                val bitmap = (imageViewInstance.context.getDrawable(if (id == 1L) {
+                val bitmap = with((imageViewInstance.context.getDrawable(if (id == 1L) {
                     R.drawable.drawable_photo_2
                 } else if (id == 2L) {
                     R.drawable.drawable_photo_1
                 } else {
                     R.drawable.drawable_photo_3
-                }) as BitmapDrawable).bitmap
+                }) as BitmapDrawable).bitmap) {
+                    copy(config, false)
+                }
 
                 if (!loadedImagesCache.containsKey(id)) {
                     loadedImagesCache[id] = bitmap
                 }
 
-                imageViewInstance.setBitmap(bitmap, true)
+                imageViewInstance.setBitmap(bitmap, imageViewInstance.isShown)
                 incrementCounter(id)
             }
         }
@@ -90,7 +92,7 @@ object ImagesProvider {
      * @param imageView ImageView, с которого нужно разгрузить Bitmap.
      */
     fun unloadBitmap(imageView: LoadableImageView) = imageView.let {
-        val id = it.showingImageId
+        val id = imageView.showingImageId
         val count = bitmapUsingCount[id]
 
         if (count != null) {

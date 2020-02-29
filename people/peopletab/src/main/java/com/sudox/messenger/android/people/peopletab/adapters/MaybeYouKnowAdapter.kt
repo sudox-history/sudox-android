@@ -35,6 +35,14 @@ class MaybeYouKnowAdapter : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>() {
         holder.view.vo = maybeYouKnowVOs[position]
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+
+        if (holder is ViewHolder) {
+            holder.view.vo = null
+        }
+    }
+
     override fun getItemMargin(position: Int): Int {
         return viewList!!.context.resources.getDimensionPixelSize(R.dimen.maybeyouknow_items_margin)
     }
