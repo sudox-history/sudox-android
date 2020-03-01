@@ -29,10 +29,10 @@ class PeopleTabFragment : ViewListFragment<PeopleTabAdapter>(), TabsChildFragmen
             friendsRequestsVOs.apply {
                 add(FriendRequestVO(4, "Pidor Request 1", 145, 1, null, 2L))
                 add(FriendRequestVO(5, "Pidor Request 2", 145, 1, "Hello, Pidor", 1L))
-                add(FriendRequestVO(5, "Pidor Request 3", 145, 1, "Hello, Pidor", 1L))
+                add(FriendRequestVO(5, "Pidor Request 3", 145, 2, "Hello, Pidor", 1L))
                 add(FriendRequestVO(5, "Pidor Request 4", 145, 1, "Hello, Pidor", 1L))
                 add(FriendRequestVO(5, "Pidor Request 5", 145, 1, "Hello, Pidor", 1L))
-                add(FriendRequestVO(5, "Pidor Request 6", 145, 1, "Hello, Pidor", 1L))
+                add(FriendRequestVO(5, "Pidor Request 6", 145, 2, "Hello, Pidor", 1L))
                 add(FriendRequestVO(6, "Pidor Request 7", 146, 1, null, 3L))
             }
 
