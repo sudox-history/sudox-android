@@ -9,11 +9,10 @@ import com.sudox.messenger.android.images.R
 import com.sudox.messenger.android.images.views.IMAGE_NOT_SHOWING_ID
 import com.sudox.messenger.android.images.views.LoadableImageView
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.ObsoleteCoroutinesApi
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
+import java.util.Stack
 
 /**
  * Поставщик картинок.
@@ -28,59 +27,76 @@ object ImagesProvider {
     private val bitmapUsingCount = LongSparseArray<Int>()
     private val imageLoadingContext = newSingleThreadContext("Sudox Images Provider")
     private val imageLoadingScope = CoroutineScope(imageLoadingContext)
+    private val loadingImageViews = HashMap<Long, Stack<LoadableImageView>>()
     private val loadedImagesCache = LongSparseArray<Bitmap>()
 
     /**
      * Загружает изображение из хранилища и устанавливает его в заданный ImageView
      * Если изображение уже было загружено, то оно будет установлено без анимации сразу из потока,
      * с которого был вызван данный метод.
-     *
-     * @return Если работа выполняется асинхронно, то будет возвращен обьект задачи.
      */
-    fun loadImage(imageView: LoadableImageView, id: Long): Job? {
-        var cachedBitmap = loadedImagesCache[id]
+    fun loadImage(imageView: LoadableImageView, id: Long) {
+        val cachedBitmap = loadedImagesCache[id]
         val imageViewInstance = imageView.getInstance()
 
         if (cachedBitmap != null) {
             imageViewInstance.setBitmap(cachedBitmap, imageViewInstance.isShown)
             incrementCounter(id)
-            return null
+            return
         }
 
-        return imageLoadingScope.launch {
-            cachedBitmap = loadedImagesCache[id]
+        (loadingImageViews[id] ?: Stack<LoadableImageView>().apply {
+            loadingImageViews[id] = this
+        }).push(imageView)
 
-            if (cachedBitmap != null) {
-                imageViewInstance.setBitmap(cachedBitmap, imageViewInstance.isShown)
-                incrementCounter(id)
-                return@launch
+        imageLoadingScope.launch {
+            (loadingImageViews[id] ?: return@launch).forEach {
+                if (it.showingImageId != IMAGE_NOT_SHOWING_ID && it.showingImageId != id) {
+                    unloadBitmap(it)
+                }
             }
 
-            if (imageView.showingImageId != IMAGE_NOT_SHOWING_ID && imageView.showingImageId != id) {
-                unloadBitmap(imageView)
+            @Suppress("BlockingMethodInNonBlockingContext")
+            Thread.sleep(1000)
+
+            // TODO: Replace to API method!
+            val stack = loadingImageViews[id] ?: return@launch
+            val bitmap = with((imageViewInstance.context.getDrawable(if (id == 1L) {
+                R.drawable.drawable_photo_2
+            } else if (id == 2L) {
+                R.drawable.drawable_photo_1
+            } else {
+                R.drawable.drawable_photo_3
+            }) as BitmapDrawable).bitmap) {
+                copy(config, false)
             }
 
-            if (isActive) {
-                @Suppress("BlockingMethodInNonBlockingContext")
-                Thread.sleep(1000)
+            if (!loadedImagesCache.containsKey(id)) {
+                loadedImagesCache[id] = bitmap
+            }
 
-                // TODO: Replace to API method!
-                val bitmap = with((imageViewInstance.context.getDrawable(if (id == 1L) {
-                    R.drawable.drawable_photo_2
-                } else if (id == 2L) {
-                    R.drawable.drawable_photo_1
-                } else {
-                    R.drawable.drawable_photo_3
-                }) as BitmapDrawable).bitmap) {
-                    copy(config, false)
+            repeat(stack.size) {
+                stack.pop().getInstance().let {
+                    it.setBitmap(bitmap, it.isShown)
                 }
 
-                if (!loadedImagesCache.containsKey(id)) {
-                    loadedImagesCache[id] = bitmap
-                }
-
-                imageViewInstance.setBitmap(bitmap, imageViewInstance.isShown)
                 incrementCounter(id)
+            }
+        }
+    }
+
+    /**
+     * Убирает ImageView из очереди на загрузку.
+     * Если картинка грузится из кэша, то работать не будет!
+     *
+     * @param imageView ImageView, в которой нужно остановить загрузку
+     */
+    fun stopLoading(imageView: LoadableImageView) {
+        loadingImageViews[imageView.showingImageId]?.let {
+            it.remove(imageView)
+
+            if (it.size == 0) {
+                loadingImageViews.remove(imageView.showingImageId)
             }
         }
     }

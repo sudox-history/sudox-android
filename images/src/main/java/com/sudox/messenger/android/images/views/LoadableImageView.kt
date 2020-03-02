@@ -28,9 +28,12 @@ interface LoadableImageView {
 
         if (id != IMAGE_NOT_SHOWING_ID) {
             showingImageId = id
-            loadingJob = ImagesProvider.loadImage(this, id)
+            ImagesProvider.loadImage(this, id)
         } else if (showingImageId != IMAGE_NOT_SHOWING_ID) {
-            ImagesProvider.unloadBitmap(this)
+            ImagesProvider.let {
+                it.unloadBitmap(this)
+                it.stopLoading(this)
+            }
         }
     }
 
