@@ -45,9 +45,14 @@ object ImagesProvider {
             return
         }
 
-        (loadingImageViews[id] ?: Stack<LoadableImageView>().apply {
-            loadingImageViews[id] = this
-        }).push(imageView)
+        loadingImageViews[id]?.let {
+            it.push(imageView)
+            return
+        }
+
+        loadingImageViews[id] = Stack<LoadableImageView>().apply {
+            push(imageView)
+        }
 
         imageLoadingScope.launch {
             (loadingImageViews[id] ?: return@launch).forEach {
@@ -82,6 +87,8 @@ object ImagesProvider {
 
                 incrementCounter(id)
             }
+
+            loadingImageViews.remove(id)
         }
     }
 
