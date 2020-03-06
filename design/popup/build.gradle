@@ -4,7 +4,6 @@ apply from: '../../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
-    api project(path: ':design:imageview')
     api project(path: ':images')
 
     implementation libraries.core_ktx

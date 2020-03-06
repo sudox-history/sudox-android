@@ -8,7 +8,6 @@ include ':design:tablayout'
 include ':design:viewlist'
 include ':design:saveableview'
 include ':design:imagebutton'
-include ':design:imageview'
 include ':design:common'
 include ':design:popup'
 

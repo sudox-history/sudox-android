@@ -4,8 +4,6 @@ apply from: '../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
-    api project(path: ':design:imageview')
-
     implementation libraries.core_ktx
     implementation libraries.appcompat
     implementation libraries.coroutines

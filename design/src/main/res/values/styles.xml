@@ -35,7 +35,6 @@
         <item name="navigationBarButtonStyle">@style/Sudox.NavigationBar.Button</item>
         <item name="tabLayoutStyle">@style/Sudox.TabLayout</item>
         <item name="sectionedListViewStyle">@style/Sudox.SectionedListView</item>
-        <item name="customImageViewStyle">@style/Sudox.ImageView</item>
 
         <item name="popupItemViewStyle">@style/Sudox.PopupItemView</item>
         <item name="listPopupWindowStyle">@style/Sudox.ListPopupWindow</item>

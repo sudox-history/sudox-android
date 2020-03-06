@@ -11,7 +11,6 @@ dependencies {
     api project(path: ':design')
     api project(path: ':design:viewlist')
     api project(path: ':design:imagebutton')
-    api project(path: ':design:imageview')
     api project(path: ':people:common')
     api project(path: ':api')
 

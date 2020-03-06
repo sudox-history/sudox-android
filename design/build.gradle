@@ -8,7 +8,6 @@ apply from: '../configs/robolectric.gradle'
 dependencies {
     api project(path: ':design:common')
     api project(path: ':design:viewlist')
-    api project(path: ':design:imageview')
     api project(path: ':design:tablayout')
 
     implementation libraries.core_ktx

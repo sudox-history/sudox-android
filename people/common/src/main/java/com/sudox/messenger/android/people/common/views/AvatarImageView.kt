@@ -5,26 +5,24 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
-import com.sudox.messenger.android.images.views.IMAGE_NOT_SHOWING_ID
-import com.sudox.messenger.android.images.views.LoadableCircleImageView
 import com.sudox.messenger.android.people.common.R
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 
 /**
  * Загружаемый ImageView для аватарки.
  */
-@Suppress("EXPERIMENTAL_API_USAGE")
-class AvatarImageView : LoadableCircleImageView {
+class AvatarImageView : AppCompatImageView {
 
     private var indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     var vo: PeopleVO? = null
         set(value) {
             field = value
-            loadImage(value?.photoId ?: IMAGE_NOT_SHOWING_ID)
+            // TODO: Glide
             invalidate()
         }
 

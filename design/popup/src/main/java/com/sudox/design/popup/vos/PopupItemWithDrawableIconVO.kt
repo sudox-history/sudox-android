@@ -1,9 +1,10 @@
 package com.sudox.design.popup.vos
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.view.View
-import com.sudox.design.imageview.ImageView
+import android.widget.ImageView
 import com.sudox.design.popup.views.PopupItemView
 
 /**
@@ -50,11 +51,17 @@ class PopupItemWithDrawableIconVO : PopupItemVO<ImageView> {
 
     override fun <T : View> configureIconView(item: PopupItemView, view: T) {
         if (view is ImageView) {
-            view.setDrawable(iconDrawable ?: view.context.getDrawable(iconDrawableRes), if (isActive) {
+            view.imageTintList = ColorStateList.valueOf(if (isActive) {
                 item.activeTitleColor
             } else {
                 item.inactiveTitleColor
             })
+
+            if (iconDrawable != null) {
+                view.setImageDrawable(iconDrawable)
+            } else {
+                view.setImageResource(iconDrawableRes)
+            }
         }
     }
 
