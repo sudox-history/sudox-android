@@ -1,10 +1,13 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, true, false, true)
+registerModule(false, true, true, true)
 
 dependencies {
     implementation libraries.core_ktx
     implementation libraries.appcompat
     implementation libraries.coroutines
+
+    implementation libraries.glide
+    kapt libraries.glide_compiler
 }

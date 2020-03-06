@@ -1,7 +1,7 @@
 apply from: '../../configs/dependencies.gradle'
 apply from: '../../configs/common.gradle'
 
-registerModule(false, true, false, true)
+registerModule(false, true, true, true)
 
 dependencies {
     api project(path: ':core')
@@ -15,4 +15,7 @@ dependencies {
     implementation libraries.appcompat
     implementation libraries.lifecycle_extensions
     implementation libraries.recyclerview
+
+    implementation libraries.glide
+    kapt libraries.glide_compiler
 }

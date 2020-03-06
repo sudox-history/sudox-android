@@ -9,11 +9,13 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
+import com.sudox.messenger.android.images.Images
+import com.sudox.messenger.android.images.entries.GlideImageRequest
 import com.sudox.messenger.android.people.common.R
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 
 /**
- * Загружаемый ImageView для аватарки.
+ * ImageView для аватарок.
  */
 class AvatarImageView : AppCompatImageView {
 
@@ -22,8 +24,17 @@ class AvatarImageView : AppCompatImageView {
     var vo: PeopleVO? = null
         set(value) {
             field = value
-            // TODO: Glide
-            invalidate()
+
+            Images.with(this).let {
+                if (value != null) {
+                    it.load(GlideImageRequest(field!!.photoId))
+                            .centerCrop()
+                            .circleCrop()
+                            .into(this)
+                } else {
+                    it.clear(this)
+                }
+            }
         }
 
     var indicatorCropRadius = 0
