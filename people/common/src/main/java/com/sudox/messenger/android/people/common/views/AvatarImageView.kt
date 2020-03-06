@@ -5,19 +5,20 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
-import com.sudox.messenger.android.images.Images
-import com.sudox.messenger.android.images.entries.GlideImageRequest
+import com.sudox.messenger.android.images.views.GlideCircleImageView
 import com.sudox.messenger.android.people.common.R
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 
 /**
  * ImageView для аватарок.
+ *
+ * Отображает первые буквы двух слов если пользователь не установил аватарку.
+ * Также отображает кружок-индикатор статуса пользователя если это требует ViewObject.
  */
-class AvatarImageView : AppCompatImageView {
+class AvatarImageView : GlideCircleImageView {
 
     private var indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -25,15 +26,10 @@ class AvatarImageView : AppCompatImageView {
         set(value) {
             field = value
 
-            Images.with(this).let {
-                if (value != null) {
-                    it.load(GlideImageRequest(field!!.photoId))
-                            .centerCrop()
-                            .circleCrop()
-                            .into(this)
-                } else {
-                    it.clear(this)
-                }
+            if (value != null) {
+                loadImage(value.photoId)
+            } else {
+                cancelLoading()
             }
         }
 

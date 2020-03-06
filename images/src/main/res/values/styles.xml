@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.GlideImageView" parent="">
+        <item name="placeholderDrawable">@color/placeholder_imageview_color</item>
+        <item name="crossFadeDuration">@integer/imageview_crossfade_duration</item>
+    </style>
+</resources>

@@ -10,6 +10,7 @@ import com.sudox.messenger.android.images.R
 import com.sudox.messenger.android.images.entries.GlideImageRequest
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
+import kotlin.random.Random
 
 /**
  * Fetch'ер изображений для Glide.
@@ -36,6 +37,7 @@ class GlideImagesFetcher(
         val bytes = stream.toByteArray()
         stream.close()
 
+        Thread.sleep(Random.nextLong(500, 1000))
         callback.onDataReady(ByteBuffer.wrap(bytes))
     }
 

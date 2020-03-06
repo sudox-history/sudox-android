@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GlideImageView">
+        <attr name="placeholderDrawable" format="reference" />
+        <attr name="crossFadeDuration" format="integer" />
+    </declare-styleable>
+
+    <attr name="glideImageViewStyle" format="reference" />
+</resources>

@@ -76,7 +76,7 @@
         <item name="fontFamily">@font/opensans_regular</item>
     </style>
 
-    <style name="Sudox.People.AvatarImageView" parent="">
+    <style name="Sudox.People.AvatarImageView" parent="Sudox.GlideImageView">
         <item name="indicatorCropRadius">@dimen/avatarimageview_indicator_crop_radius</item>
         <item name="indicatorCropColor">@color/avatarimageview_indicator_crop_color</item>
         <item name="indicatorRadius">@dimen/avatarimageview_indicator_radius</item>

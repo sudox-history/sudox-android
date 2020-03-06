@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Sudox.App" parent="Sudox">
+        <item name="glideImageViewStyle">@style/Sudox.GlideImageView</item>
         <item name="dialogItemViewStyle">@style/Sudox.Messages.DialogItemView</item>
         <item name="momentItemViewStyle">@style/Sudox.Moments.MomentItemView</item>
         <item name="avatarImageViewStyle">@style/Sudox.People.AvatarImageView</item>
