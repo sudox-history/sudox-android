@@ -14,6 +14,7 @@ data class AddedFriendVO(
         override var userName: String,
         override var seenTime: Long,
         override var photoId: Long,
+        var status: String? = null,
         var importance: Int
 ) : PeopleVO {
 
@@ -22,7 +23,9 @@ data class AddedFriendVO(
     }
 
     override fun getStatusMessage(context: Context): String {
-        return if (isUserOnline()) {
+        return if (status != null) {
+            status!!
+        } else if (isUserOnline()) {
             context.getString(R.string.online)
         } else {
             context.getString(R.string.seen_mask, formatTime(
@@ -35,10 +38,10 @@ data class AddedFriendVO(
     }
 
     override fun isStatusAboutOnline(): Boolean {
-        return true
+        return false
     }
 
     override fun isStatusActive(): Boolean {
-        return isUserOnline()
+        return isUserOnline() && status == null
     }
 }

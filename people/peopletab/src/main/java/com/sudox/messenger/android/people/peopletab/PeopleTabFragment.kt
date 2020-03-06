@@ -27,40 +27,20 @@ class PeopleTabFragment : ViewListFragment<PeopleTabAdapter>(), TabsChildFragmen
     override fun getAdapter(viewList: ViewList): PeopleTabAdapter {
         return PeopleTabAdapter().apply {
             friendsRequestsVOs.apply {
-                add(FriendRequestVO(4, "Pidor Request 1", 145, 1, null, 2L))
-                add(FriendRequestVO(5, "Pidor Request 2", 145, 1, "Hello, Pidor", 1L))
-                add(FriendRequestVO(5, "Pidor Request 3", 145, 2, "Hello, Pidor", 1L))
-                add(FriendRequestVO(5, "Pidor Request 4", 145, 1, "Hello, Pidor", 1L))
-                add(FriendRequestVO(5, "Pidor Request 5", 145, 1, "Hello, Pidor", 1L))
-                add(FriendRequestVO(5, "Pidor Request 6", 145, 2, "Hello, Pidor", 1L))
-                add(FriendRequestVO(6, "Pidor Request 7", 146, 1, null, 3L))
-            }
-
-            subscriptionsVOs.apply {
-                add(SubscriptionVO(1, "TheMax", SEEN_TIME_ONLINE, 3, "Suka, rabotai", 1, 1))
-                add(SubscriptionVO(1, "Not online", 45, 3, "Suka, rabotai", 2, 2))
-            }
-
-            addedFriendsVOs.apply {
-                add(AddedFriendVO(1, "Pidor Added 1", 145, 3, 1))
-                add(AddedFriendVO(2, "Pidor Added 2", 145, 3, 2))
-                add(AddedFriendVO(3, "Pidor Added 3", 145, 3, 3))
-                add(AddedFriendVO(4, "Pidor Added 4", SEEN_TIME_ONLINE, 3, 4))
-                add(AddedFriendVO(5, "Pidor Added 5", 145, 3, 5))
-                add(AddedFriendVO(6, "Pidor Added 6", 145, 3, 6))
+                add(FriendRequestVO(2, "undefined.7887", SEEN_TIME_ONLINE, 2L, "Привет, как дела?", 1L))
             }
 
             maybeYouKnowAdapter.maybeYouKnowVOs.apply {
-                add(MaybeYouKnowVO(1, "Pidor 1", SEEN_TIME_ONLINE, 3, 15))
-                add(MaybeYouKnowVO(2, "Pidor 2", SEEN_TIME_ONLINE, 3, 18))
-                add(MaybeYouKnowVO(3, "Pidor 3", SEEN_TIME_ONLINE, 3, 18))
-                add(MaybeYouKnowVO(4, "Pidor 4", SEEN_TIME_ONLINE, 3, 18))
-                add(MaybeYouKnowVO(5, "Pidor 5", SEEN_TIME_ONLINE, 3, 18))
-                add(MaybeYouKnowVO(6, "Pidor 6", SEEN_TIME_ONLINE, 3, 18))
-                add(MaybeYouKnowVO(7, "Pidor 7", SEEN_TIME_ONLINE, 3, 18))
-                add(MaybeYouKnowVO(8, "Pidor 8", SEEN_TIME_ONLINE, 3, 18))
-                add(MaybeYouKnowVO(9, "Pidor 9", SEEN_TIME_ONLINE, 3, 18))
+                add(MaybeYouKnowVO(5, "andy", SEEN_TIME_ONLINE, 5, 21))
+                add(MaybeYouKnowVO(1, "kerjen", 1L, 1, 18))
             }
+
+            addedFriendsVOs.apply {
+                add(AddedFriendVO(4, "Максим Митюшкин", SEEN_TIME_ONLINE, 4, "Я строю новый ЦОД каждый день", 1))
+                add(AddedFriendVO(6, "Jeremy Clarkson", 1583520378000L, 6, "I am a still small voice of calm and reason.", 1))
+            }
+
+            subscriptionsVOs.apply {}
         }
     }
 

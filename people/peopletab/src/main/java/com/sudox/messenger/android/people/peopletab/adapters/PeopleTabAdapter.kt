@@ -265,7 +265,7 @@ class PeopleTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
     override fun getHeadersCount(): Int {
         var count = 0
 
-        if (subscriptionsVOs.size() > 0) {
+        if (friendsRequestsVOs.size() > 0) {
             count++
         }
 

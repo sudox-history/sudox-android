@@ -29,8 +29,14 @@ class GlideImagesFetcher(
             R.drawable.drawable_photo_1
         } else if (model.imageId == 2L) {
             R.drawable.drawable_photo_2
-        } else {
+        } else if (model.imageId == 3L) {
             R.drawable.drawable_photo_3
+        } else if (model.imageId == 4L) {
+            R.drawable.drawable_photo_4
+        } else if (model.imageId == 5L) {
+            R.drawable.drawable_photo_5
+        } else {
+            R.drawable.drawable_photo_6
         }) as BitmapDrawable).bitmap
 
         val stream = ByteArrayOutputStream().apply { bitmap.compress(Bitmap.CompressFormat.PNG, 100, this) }
