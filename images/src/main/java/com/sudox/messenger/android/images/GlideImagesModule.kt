@@ -6,6 +6,7 @@ import com.bumptech.glide.GlideBuilder
 import com.bumptech.glide.Registry
 import com.bumptech.glide.annotation.GlideModule
 import com.bumptech.glide.load.DecodeFormat
+import com.bumptech.glide.load.engine.executor.GlideExecutor
 import com.bumptech.glide.module.AppGlideModule
 import com.bumptech.glide.request.RequestOptions
 import com.sudox.messenger.android.images.entries.GlideImageRequest
@@ -27,6 +28,11 @@ class GlideImagesModule : AppGlideModule() {
 
     override fun applyOptions(context: Context, builder: GlideBuilder) {
         builder.setDefaultRequestOptions(RequestOptions().format(DecodeFormat.PREFER_ARGB_8888))
+                .setSourceExecutor(GlideExecutor.newSourceBuilder()
+                        .setName("Sudox Images Thread")
+                        .setThreadCount(1)
+                        .build()
+                )
     }
 
     override fun isManifestParsingEnabled(): Boolean {
