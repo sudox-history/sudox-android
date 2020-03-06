@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="Sudox.ImageView" parent="">
-        <item name="changingAnimationDuration">@integer/imageview_changing_animation_duration</item>
-        <item name="defaultDrawable">@color/imageview_default_color</item>
-    </style>
-</resources>
