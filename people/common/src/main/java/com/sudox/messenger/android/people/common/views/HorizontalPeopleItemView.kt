@@ -210,7 +210,7 @@ open class HorizontalPeopleItemView : ViewGroup {
 
         val maxButtonHeight = buttonsViews?.maxBy { it.measuredHeight }?.measuredHeight ?: 0
         val textsHeightSum = nameTextView.measuredHeight + statusTextView.measuredHeight
-        val needHeight = paddingTop + max(max(textsHeightSum, photoImageView.measuredHeight), maxButtonHeight)
+        val needHeight = paddingTop + max(max(textsHeightSum, photoImageView.measuredHeight), maxButtonHeight) + paddingBottom
 
         setMeasuredDimension(availableWidth, needHeight)
     }

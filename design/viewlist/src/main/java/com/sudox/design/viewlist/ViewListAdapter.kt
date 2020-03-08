@@ -148,10 +148,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
                     holder.view.updatePadding(top = 0)
                 }
 
-                if (vo.isItemsHidden) {
-                    holder.view.updatePadding(bottom = 0)
-                } else {
-                    holder.view.updatePadding(bottom = initialBottomPadding)
+                if (!vo.isItemsHidden) {
+                    holder.view.updatePadding(bottom = initialBottomPadding - getItemMargin(position + 1) / 2)
                 }
 
                 return
@@ -175,24 +173,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
         bindItemHolder(holder as VH, position).apply {
             if (!canCreateMarginViaDecorators()) {
                 val itemMargin = getItemMargin(position) / 2
-                val positionAfterHeader = recalculatePositionRelativeHeader(position)
 
                 if (orientation == LinearLayoutManager.VERTICAL) {
-                    if (positionAfterHeader == 0) {
-                        holder.itemView.updatePadding(bottom = itemMargin)
-                    } else if (positionAfterHeader == getItemsCountAfterHeaderConsiderVisibility(getHeaderTypeByItemType(holder.itemViewType)) - 1) {
-                        holder.itemView.updatePadding(top = itemMargin)
-                    } else {
-                        holder.itemView.updatePadding(top = itemMargin, bottom = itemMargin)
-                    }
+                    holder.itemView.updatePadding(top = itemMargin, bottom = itemMargin)
                 } else {
-                    if (positionAfterHeader == 0) {
-                        holder.itemView.updatePadding(right = itemMargin)
-                    } else if (positionAfterHeader == getItemsCountAfterHeaderConsiderVisibility(getHeaderTypeByItemType(holder.itemViewType)) - 1) {
-                        holder.itemView.updatePadding(left = itemMargin)
-                    } else {
-                        holder.itemView.updatePadding(left = itemMargin, right = itemMargin)
-                    }
+                    holder.itemView.updatePadding(left = itemMargin, right = itemMargin)
                 }
             }
         }
