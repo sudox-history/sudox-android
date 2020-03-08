@@ -25,8 +25,8 @@
     <dimen name="verticalpeopleitemview_padding_bottom">6dp</dimen>
     <dimen name="verticalpeopleitemview_padding_right">6dp</dimen>
     <dimen name="verticalpeopleitemview_padding_left">6dp</dimen>
-    <dimen name="verticalpeopleitemview_button_height">25dp</dimen>
-    <dimen name="verticalpeopleitemview_button_width">25dp</dimen>
+    <dimen name="verticalpeopleitemview_button_height">21dp</dimen>
+    <dimen name="verticalpeopleitemview_button_width">21dp</dimen>
 
     <dimen name="avatarimageview_indicator_radius">5dp</dimen>
     <dimen name="avatarimageview_indicator_crop_radius">8dp</dimen>
