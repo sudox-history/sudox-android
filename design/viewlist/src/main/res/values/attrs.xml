@@ -7,7 +7,6 @@
     <declare-styleable name="ViewListHeaderView">
         <attr name="textAppearance" format="reference" />
         <attr name="iconAnimationDuration" format="integer" />
-        <attr name="functionalButtonStyle" format="reference" />
         <attr name="toggleIconDrawable" format="reference" />
         <attr name="toggleIconTint" format="color" />
     </declare-styleable>

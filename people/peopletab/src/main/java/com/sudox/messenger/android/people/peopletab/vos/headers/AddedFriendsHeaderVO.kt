@@ -1,7 +1,6 @@
 package com.sudox.messenger.android.people.peopletab.vos.headers
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Parcel
 import com.sudox.design.popup.vos.PopupItemVO
 import com.sudox.design.popup.vos.PopupItemWithDrawableIconVO
@@ -45,8 +44,8 @@ class AddedFriendsHeaderVO : ViewListHeaderVO {
         )
     }
 
-    override fun getFunctionButtonIcon(context: Context): Drawable? {
-        return context.getDrawable(R.drawable.ic_filter_list)!!
+    override fun getFunctionButtonIconId(): Int {
+        return R.drawable.ic_filter_list
     }
 
     override fun getFunctionButtonToggleOptions(context: Context): List<PopupItemVO<*>>? {

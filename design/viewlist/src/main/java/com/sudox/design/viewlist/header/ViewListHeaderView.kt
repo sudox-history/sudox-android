@@ -3,21 +3,23 @@ package com.sudox.design.viewlist.header
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RotateDrawable
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
+import androidx.core.widget.ImageViewCompat
+import androidx.core.widget.TextViewCompat
 import androidx.core.widget.TextViewCompat.setTextAppearance
-import com.sudox.design.common.createStyledView
-import com.sudox.design.imagebutton.ImageButton
 import com.sudox.design.popup.ListPopupController
 import com.sudox.design.popup.ListPopupWindow
 import com.sudox.design.viewlist.R
@@ -27,30 +29,23 @@ import kotlin.math.max
 
 const val VIEW_LIST_HEADER_VIEW_TEXT_TAG = 1
 const val VIEW_LIST_HEADER_VIEW_FUNCTION_BUTTON_TAG = 2
-
-// 5000 = 180 градусов (10000 - 360 градусов)
 const val LEVEL_OF_ROTATED_DRAWABLE = 5000
 
 class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
-    private var showingAnimationDuration = 0L
-    private var hidingAnimationDuration = 0L
-
     private var visibilityChangingAnimator = ValueAnimator.ofInt(0, LEVEL_OF_ROTATED_DRAWABLE).apply {
         addUpdateListener { listener ->
-            functionalImageButton!!.let {
-                // P.S.: RotateDrawable будет задан от toggleIconDrawable при его мутации
-                (it.iconDrawable as RotateDrawable).level = listener.animatedValue as Int
-                it.invalidate()
-            }
+            functionalImageButton.setImageLevel(listener.animatedValue as Int)
         }
     }
 
+    private var hidingAnimationDuration = 0L
+    private var showingAnimationDuration = 0L
     private var sectionChangingPopupController = ListPopupController().apply {
         togglingAnimator = ValueAnimator.ofInt(0, LEVEL_OF_ROTATED_DRAWABLE).apply {
             addUpdateListener {
                 if (anchorView == textView) {
-                    toggleIconDrawable!!.level = it.animatedValue as Int
+                    textView.compoundDrawables[2]!!.level = it.animatedValue as Int
                 }
             }
         }
@@ -59,11 +54,9 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
     var toggleIconDrawable: Drawable? = null
         set(value) {
             if (value != null) {
-                field = RotateDrawable().apply {
-                    drawable = value.mutate()
-
-                    setBounds(0, 0, value.intrinsicWidth, value.intrinsicHeight)
-                    setTint(toggleIconTint)
+                field = RotateDrawable().also {
+                    it.setBounds(0, 0, value.intrinsicWidth, value.intrinsicHeight)
+                    it.drawable = value
                 }
             }
 
@@ -72,9 +65,11 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
     var toggleIconTint = 0
         set(value) {
-            toggleIconDrawable?.setTint(toggleIconTint)
-            vo = vo // Updating
+            ImageViewCompat.setImageTintList(functionalImageButton, ColorStateList.valueOf(value))
+            TextViewCompat.setCompoundDrawableTintList(textView, ColorStateList.valueOf(value))
+
             field = value
+            invalidate()
         }
 
     var vo: ViewListHeaderVO? = null
@@ -91,21 +86,22 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
                     null
                 }, null)
 
-                val functionalButtonIcon = value.getFunctionButtonIcon(context)
-
                 if (value.isItemsHidden) {
-                    toggleIconDrawable!!.level = LEVEL_OF_ROTATED_DRAWABLE
+                    functionalImageButton.setImageLevel(LEVEL_OF_ROTATED_DRAWABLE)
                 }
 
-                functionalImageButton!!.let {
-                    // Не вызываем drawable.mutate(), т.к. оно уже будет вызвано изнутри ImageButton
-                    it.iconDrawable = functionalButtonIcon ?: if (value.canHideItems()) {
-                        toggleIconDrawable
+                functionalImageButton.let {
+                    val functionalButtonIconId = value.getFunctionButtonIconId()
+
+                    if (value.canHideItems()) {
+                        it.setImageDrawable(toggleIconDrawable)
+                    } else if (functionalButtonIconId != 0) {
+                        it.setImageResource(functionalButtonIconId)
                     } else {
-                        null
+                        it.setImageDrawable(null)
                     }
 
-                    it.isClickable = functionalButtonIcon != null || value.canHideItems()
+                    it.isClickable = functionalButtonIconId != 0 || value.canHideItems()
                     it.tag = VIEW_LIST_HEADER_VIEW_FUNCTION_BUTTON_TAG
                 }
             }
@@ -115,8 +111,14 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
             invalidate()
         }
 
-    private var functionalImageButton: ImageButton? = null
+    private var functionalImageButton = AppCompatImageButton(context).apply {
+        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        setOnClickListener(this@ViewListHeaderView)
+        addView(this)
+    }
+
     private var textView = AppCompatTextView(context).apply {
+        layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         setOnClickListener(this@ViewListHeaderView)
         addView(this)
     }
@@ -136,10 +138,6 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
             toggleIconTint = it.getColorOrThrow(R.styleable.ViewListHeaderView_toggleIconTint)
             toggleIconDrawable = it.getDrawableOrThrow(R.styleable.ViewListHeaderView_toggleIconDrawable)
-            functionalImageButton = it.createStyledView<ImageButton>(context, R.styleable.ViewListHeaderView_functionalButtonStyle)!!.apply {
-                setOnClickListener(this@ViewListHeaderView)
-                this@ViewListHeaderView.addView(this)
-            }
 
             sectionChangingPopupController
                     .togglingAnimator!!
@@ -163,7 +161,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
         measureChild(functionalImageButton, widthMeasureSpec, heightMeasureSpec)
 
         val needWidth = MeasureSpec.getSize(widthMeasureSpec)
-        val needHeight = paddingTop + paddingBottom + max(textView.measuredHeight, functionalImageButton!!.measuredHeight)
+        val needHeight = paddingTop + paddingBottom + max(textView.measuredHeight, functionalImageButton.measuredHeight)
 
         setMeasuredDimension(needWidth, needHeight)
     }
@@ -177,11 +175,11 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
         textView.layout(textLeftBorder, textTopBorder, textRightBorder, textBottomBorder)
 
         val functionalButtonRightBorder = measuredWidth - paddingRight
-        val functionalButtonLeftBorder = functionalButtonRightBorder - functionalImageButton!!.measuredWidth
+        val functionalButtonLeftBorder = functionalButtonRightBorder - functionalImageButton.measuredWidth
         val functionalButtonTopBorder = paddingTop
-        val functionalButtonBottomBorder = functionalButtonTopBorder + functionalImageButton!!.measuredHeight
+        val functionalButtonBottomBorder = functionalButtonTopBorder + functionalImageButton.measuredHeight
 
-        functionalImageButton!!.layout(
+        functionalImageButton.layout(
                 functionalButtonLeftBorder,
                 functionalButtonTopBorder,
                 functionalButtonRightBorder,
@@ -208,7 +206,7 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
                 if (vo!!.canSortItems()) {
                     sortTypeChangingCallback!!(vo!!, getItemsCountBeforeChanging!!(vo!!))
                 }
-            }, parent as View, functionalImageButton!!, Gravity.END, true)
+            }, parent as View, functionalImageButton, Gravity.END, true)
         } else {
             if (vo!!.isItemsHidden) {
                 visibilityChangingAnimator.let {

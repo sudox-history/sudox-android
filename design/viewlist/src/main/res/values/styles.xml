@@ -8,9 +8,8 @@
     <style name="Sudox.ViewList.Header" parent="">
         <item name="android:paddingTop">@dimen/viewlist_header_padding_top</item>
         <item name="android:paddingBottom">@dimen/viewlist_header_padding_bottom</item>
-        <item name="functionalButtonStyle">@style/Sudox.ViewList.Header.FunctionButton</item>
-        <item name="textAppearance">@style/Sudox.ViewList.Header.TextAppearance</item>
         <item name="iconAnimationDuration">@integer/popup_animation_duration</item>
+        <item name="textAppearance">@style/Sudox.ViewList.Header.TextAppearance</item>
         <item name="toggleIconTint">@color/viewlist_header_toggle_icon_tint</item>
         <item name="toggleIconDrawable">@drawable/ic_arrow_up</item>
     </style>
@@ -21,14 +20,6 @@
         <item name="android:textSize">@dimen/viewlist_header_text_size</item>
         <item name="android:fontFamily">@font/opensans_bold</item>
         <item name="fontFamily">@font/opensans_bold</item>
-    </style>
-
-    <!--  TODO: Button style to common module ;(  -->
-    <style name="Sudox.ViewList.Header.FunctionButton" parent="">
-        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-        <item name="iconTint">@color/viewlist_header_functional_button_icon_tint</item>
-        <item name="iconWidth">@dimen/viewlist_header_functional_button_icon_width</item>
-        <item name="iconHeight">@dimen/viewlist_header_functional_button_icon_height</item>
     </style>
 
     <style name="Sudox.ViewList.Footer" parent="">

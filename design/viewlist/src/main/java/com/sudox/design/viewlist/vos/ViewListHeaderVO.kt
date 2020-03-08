@@ -1,7 +1,6 @@
 package com.sudox.design.viewlist.vos
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.core.os.ParcelCompat.readBoolean
@@ -97,12 +96,12 @@ abstract class ViewListHeaderVO() : Parcelable {
     abstract fun getToggleOptions(context: Context): List<PopupItemVO<*>>
 
     /**
-     * Возвращает иконку функциональной кнопки
+     * Возвращает ID иконки функциональной кнопки
+     * Если не нужна, то нужно вернуть 0
      *
-     * @param context Контекст приложения/активности
-     * @return Иконка функциональной кнопки
+     * @return ID иконки функциональной кнопки
      */
-    abstract fun getFunctionButtonIcon(context: Context): Drawable?
+    abstract fun getFunctionButtonIconId(): Int
 
     /**
      * Возвращает опции функциональной кнопки (если они есть)

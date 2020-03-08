@@ -1,7 +1,6 @@
 package com.sudox.messenger.android.people.peopletab.vos.headers
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Parcel
 import com.sudox.design.popup.vos.PopupItemVO
 import com.sudox.design.popup.vos.PopupItemWithoutIconVO
@@ -24,8 +23,8 @@ class MaybeYouKnowHeaderVO : ViewListHeaderVO {
         return listOf(PopupItemWithoutIconVO(0, context.getString(R.string.maybe_you_know), selectedToggleTag == 0))
     }
 
-    override fun getFunctionButtonIcon(context: Context): Drawable? {
-        return null
+    override fun getFunctionButtonIconId(): Int {
+        return 0
     }
 
     override fun getFunctionButtonToggleOptions(context: Context): List<PopupItemVO<*>>? {
