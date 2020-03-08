@@ -2,41 +2,43 @@ package com.sudox.messenger.android.people.common.views
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Build
 import android.text.Layout
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.ViewGroup
-import androidx.appcompat.view.ContextThemeWrapper
+import android.widget.ImageButton
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
+import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.TextViewCompat.setTextAppearance
-import com.sudox.design.imagebutton.ImageButton
 import com.sudox.messenger.android.people.common.R
 import com.sudox.messenger.android.people.common.vos.PeopleVO
+import java.util.ArrayList
 import kotlin.math.max
 
 /**
  * Горизонтальная View для отображения информации о человеке.
  * Отображает базовую информацию (имя, онлайн и т.п.).
  */
-class HorizontalPeopleItemView : ViewGroup {
+open class HorizontalPeopleItemView : ViewGroup {
 
     var activeStatusTextColor = 0
         set(value) {
             field = value
             vo = vo // Updating config
-            invalidate()
         }
 
     var inactiveStatusTextColor = 0
         set(value) {
             field = value
             vo = vo // Updating config
-            invalidate()
         }
 
     var marginBetweenAvatarAndTexts = 0
@@ -67,34 +69,69 @@ class HorizontalPeopleItemView : ViewGroup {
             invalidate()
         }
 
+    var buttonsWidth: Int = 0
+        set(value) {
+            field = value
+            vo = vo
+        }
+
+    var buttonsHeight: Int = 0
+        set(value) {
+            field = value
+            vo = vo
+        }
+
     var vo: PeopleVO? = null
         set(value) {
-            buttonsViews?.forEach { removeView(it) }
-            buttonsViews = value?.getButtons()?.map {
-                ImageButton(ContextThemeWrapper(context, it.first)).apply {
-                    layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-                    tag = it.second
+            val buttons = value?.getButtons()
+            val needRemove = (buttonsViews?.size ?: 0) - (buttons?.size ?: 0)
+            val needAdd = (buttons?.size ?: 0) - (buttonsViews?.size ?: 0)
 
-                    addView(this)
+            if (needRemove > 0) {
+                repeat(needRemove) {
+                    removeViewInLayout(with(buttonsViews!!) {
+                        removeAt(lastIndex)
+                    })
                 }
-            }?.asReversed()
+            } else if (needAdd > 0) {
+                if (buttonsViews == null) {
+                    buttonsViews = ArrayList()
+                }
+
+                repeat(needAdd) {
+                    buttonsViews!!.add(AppCompatImageButton(context).apply {
+                        addViewInLayout(this, -1, LayoutParams(buttonsWidth, buttonsHeight))
+                    })
+                }
+            }
+
+            buttonsViews?.forEachIndexed { index, imageButton ->
+                buttons!![index].let {
+                    imageButton.tag = it.first
+                    imageButton.layoutParams = LayoutParams(buttonsWidth, buttonsHeight)
+                    imageButton.setImageResource(it.second)
+                    ImageViewCompat.setImageTintList(imageButton, ColorStateList.valueOf(getColor(context, it.third)))
+                }
+            }
 
             nameTextView.text = value?.userName
-            statusTextView.text = value?.getStatusMessage(context)
-            statusTextView.setTextColor(if (value?.isStatusAboutOnline() == true && value.isStatusActive()) {
-                activeStatusTextColor
-            } else {
-                inactiveStatusTextColor
-            })
-
             photoImageView.vo = value
+            statusTextView.let {
+                it.setTextColor(if (value?.isStatusAboutOnline() == true && value.isStatusActive()) {
+                    activeStatusTextColor
+                } else {
+                    inactiveStatusTextColor
+                })
+
+                it.text = value?.getStatusMessage(context)
+            }
 
             field = value
             requestLayout()
             invalidate()
         }
 
-    private var nameTextView = AppCompatTextView(context).apply {
+    internal var nameTextView = AppCompatTextView(context).apply {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             breakStrategy = Layout.BREAK_STRATEGY_SIMPLE
             hyphenationFrequency = Layout.HYPHENATION_FREQUENCY_NONE
@@ -108,7 +145,7 @@ class HorizontalPeopleItemView : ViewGroup {
         addView(this)
     }
 
-    private var statusTextView = AppCompatTextView(context).apply {
+    internal var statusTextView = AppCompatTextView(context).apply {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             breakStrategy = Layout.BREAK_STRATEGY_SIMPLE
             hyphenationFrequency = Layout.HYPHENATION_FREQUENCY_NONE
@@ -122,8 +159,8 @@ class HorizontalPeopleItemView : ViewGroup {
         addView(this)
     }
 
-    private var photoImageView = AvatarImageView(context).apply { addView(this) }
-    private var buttonsViews: List<ImageButton>? = null
+    internal var photoImageView = AvatarImageView(context).apply { addView(this) }
+    internal var buttonsViews: ArrayList<ImageButton>? = null
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.horizontalPeopleItemViewStyle)
@@ -145,6 +182,8 @@ class HorizontalPeopleItemView : ViewGroup {
             marginBetweenNameAndStatus = it.getDimensionPixelSize(R.styleable.HorizontalPeopleItemView_marginBetweenNameAndStatus, 0)
             marginBetweenButtonsAndTexts = it.getDimensionPixelSize(R.styleable.HorizontalPeopleItemView_marginBetweenButtonsAndTexts, 0)
             marginBetweenButtons = it.getDimensionPixelSize(R.styleable.HorizontalPeopleItemView_marginBetweenButtons, 0)
+            buttonsHeight = it.getDimensionPixelSizeOrThrow(R.styleable.HorizontalPeopleItemView_buttonsHeight)
+            buttonsWidth = it.getDimensionPixelSizeOrThrow(R.styleable.HorizontalPeopleItemView_buttonsWidth)
         }
     }
 
@@ -166,8 +205,8 @@ class HorizontalPeopleItemView : ViewGroup {
         val textBlockWidth = availableWidth - needWidth
         val textBlockWidthSpec = MeasureSpec.makeMeasureSpec(textBlockWidth, MeasureSpec.EXACTLY)
 
-        measureChild(nameTextView, textBlockWidthSpec, heightMeasureSpec)
-        measureChild(statusTextView, textBlockWidthSpec, heightMeasureSpec)
+        nameTextView.measure(textBlockWidthSpec, heightMeasureSpec)
+        statusTextView.measure(textBlockWidthSpec, heightMeasureSpec)
 
         val maxButtonHeight = buttonsViews?.maxBy { it.measuredHeight }?.measuredHeight ?: 0
         val textsHeightSum = nameTextView.measuredHeight + statusTextView.measuredHeight
@@ -206,7 +245,7 @@ class HorizontalPeopleItemView : ViewGroup {
         val statusLeftBorder = photoRightBorder + marginBetweenAvatarAndTexts
         var statusRightBorder = statusLeftBorder + statusTextView.measuredWidth
 
-        if (buttonsViews?.isNotEmpty() == true) {
+        if (!buttonsViews.isNullOrEmpty()) {
             nameRightBorder -= marginBetweenButtonsAndTexts
             statusRightBorder -= marginBetweenButtonsAndTexts
         }

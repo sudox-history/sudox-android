@@ -18,7 +18,7 @@ data class AddedFriendVO(
         var importance: Int
 ) : PeopleVO {
 
-    override fun getButtons(): Array<Pair<Int, Int>>? {
+    override fun getButtons(): Array<Triple<Int, Int, Int>>? {
         return null
     }
 

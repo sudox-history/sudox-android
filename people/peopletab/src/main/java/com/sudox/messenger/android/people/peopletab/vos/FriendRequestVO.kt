@@ -23,10 +23,10 @@ data class FriendRequestVO(
         var requestTime: Long
 ) : PeopleVO {
 
-    override fun getButtons(): Array<Pair<Int, Int>> {
+    override fun getButtons(): Array<Triple<Int, Int, Int>> {
         return arrayOf(
-                Pair(R.style.Sudox_People_Buttons_AcceptFriendRequest, ACCEPT_REQUEST_BUTTON_TAG),
-                Pair(R.style.Sudox_People_Buttons_RejectFriendRequest, REJECT_REQUEST_BUTTON_TAG)
+                Triple(ACCEPT_REQUEST_BUTTON_TAG, R.drawable.ic_accept, R.color.accept_friend_request_button_icon_tint_color),
+                Triple(REJECT_REQUEST_BUTTON_TAG, R.drawable.ic_cancel, R.color.reject_friend_request_button_icon_tint_color)
         )
     }
 

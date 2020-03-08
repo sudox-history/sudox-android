@@ -11,19 +11,13 @@
         <attr name="marginBetweenButtons" format="dimension" />
         <attr name="inactiveStatusTextColor" />
         <attr name="activeStatusTextColor" />
+        <attr name="buttonsHeight" />
+        <attr name="buttonsWidth" />
     </declare-styleable>
 
     <declare-styleable name="VerticalPeopleItemView">
-        <attr name="avatarWidth" />
-        <attr name="avatarHeight" />
-        <attr name="nameTextAppearance" />
-        <attr name="statusTextAppearance" />
-        <attr name="marginBetweenNameAndStatus" />
-        <attr name="marginBetweenAvatarAndTexts" />
         <attr name="marginBetweenRightAndButton" format="dimension" />
         <attr name="marginBetweenTopAndButton" format="dimension" />
-        <attr name="inactiveStatusTextColor" />
-        <attr name="activeStatusTextColor" />
     </declare-styleable>
 
     <declare-styleable name="AvatarImageView">
@@ -45,4 +39,6 @@
     <attr name="marginBetweenAvatarAndTexts" format="dimension" />
     <attr name="inactiveStatusTextColor" format="color" />
     <attr name="activeStatusTextColor" format="color" />
+    <attr name="buttonsHeight" format="dimension" />
+    <attr name="buttonsWidth" format="dimension" />
 </resources>

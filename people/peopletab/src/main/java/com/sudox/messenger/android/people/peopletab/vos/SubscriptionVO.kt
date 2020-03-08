@@ -22,7 +22,7 @@ data class SubscriptionVO(
         var popular: Int
 ) : PeopleVO {
 
-    override fun getButtons(): Array<Pair<Int, Int>>? {
+    override fun getButtons(): Array<Triple<Int, Int, Int>>? {
         return null
     }
 

@@ -6,7 +6,7 @@ import com.sudox.messenger.android.people.common.R
 const val SEEN_TIME_ONLINE = 0L
 const val CLOSE_BUTTON_TAG = -1
 
-val CLOSE_BUTTON = arrayOf(Pair(R.style.Sudox_People_VerticalPeopleItemView_Button_Close, CLOSE_BUTTON_TAG))
+val CLOSE_BUTTON = arrayOf(Triple(CLOSE_BUTTON_TAG, R.drawable.ic_cancel, R.color.verticalpeopleitemview_close_button_icon_tint))
 
 /**
  * ViewObject человека.
@@ -24,12 +24,12 @@ interface PeopleVO {
     var photoId: Long
 
     /**
-     * Возвращает пары тег-стиль для функциональных кнопок
+     * Возвращает триплеты тег-иконка-оттенок для функциональных кнопок
      *
-     * @return Пары тег-стиль для функциональных кнопок.
+     * @return Триплет тег-иконка-оттенок для функциональных кнопок.
      * Если равен null, то значит что кнопок нет
      */
-    fun getButtons(): Array<Pair<Int, Int>>?
+    fun getButtons(): Array<Triple<Int, Int, Int>>?
 
     /**
      * Возвращает сообщение статуса

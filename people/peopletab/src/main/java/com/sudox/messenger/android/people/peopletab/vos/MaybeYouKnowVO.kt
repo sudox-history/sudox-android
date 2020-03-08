@@ -19,7 +19,7 @@ class MaybeYouKnowVO(
         val mutualCount: Int
 ) : PeopleVO {
 
-    override fun getButtons(): Array<Pair<Int, Int>>? {
+    override fun getButtons(): Array<Triple<Int, Int, Int>>? {
         return CLOSE_BUTTON
     }
 
