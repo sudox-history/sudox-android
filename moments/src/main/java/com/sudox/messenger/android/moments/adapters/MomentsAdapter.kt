@@ -10,7 +10,7 @@ import com.sudox.messenger.android.moments.R
 import com.sudox.messenger.android.moments.callbacks.MomentsSortingCallback
 import com.sudox.messenger.android.moments.vos.MomentVO
 
-const val MOMENTS_ITEM_VIEW_TYPE = 0
+const val MOMENTS_ITEM_VIEW_TYPE = 2
 
 /**
  * Адаптер для моментов.
@@ -26,7 +26,7 @@ class MomentsAdapter : ViewListAdapter<MomentsAdapter.ViewHolder>() {
         }
 
     val momentsVOs = SortedList<MomentVO>(MomentVO::class.java, MomentsSortingCallback(this))
-    val addMomentVO: MomentVO? = null
+    var addMomentVO: MomentVO? = null
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(CircularUpdatableView(parent.context))

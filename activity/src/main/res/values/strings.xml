@@ -2,5 +2,5 @@
 <resources>
     <string name="activity">Activity</string>
     <string name="moments">Moments</string>
-    <string name="friends_news">Friends\' news</string>
+    <string name="news">News</string>
 </resources>

@@ -4,9 +4,13 @@ import android.content.Context
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
+import com.sudox.messenger.android.activity.adapters.ActivityTabAdapter
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.fragments.ViewListFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
+import com.sudox.messenger.android.moments.vos.AddMomentVO
+import com.sudox.messenger.android.moments.vos.MomentVO
+import com.sudox.messenger.android.people.common.vos.SimplePeopleVO
 
 class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFragment, ApplicationBarListener {
 
@@ -25,7 +29,17 @@ class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFra
     }
 
     override fun getAdapter(viewList: ViewList): ViewListAdapter<*>? {
-        return null
+        return ActivityTabAdapter().apply {
+            momentsAdapter.apply {
+                addMomentVO = AddMomentVO(SimplePeopleVO(1, "kerjen", 1))
+
+                momentsVOs.add(MomentVO(SimplePeopleVO(2, "undefined.7887", 2), 1L, false))
+                momentsVOs.add(MomentVO(SimplePeopleVO(3, "isp", 3), 2L, true))
+                momentsVOs.add(MomentVO(SimplePeopleVO(4, "Максим Митюшкин", 4), 3L, true))
+                momentsVOs.add(MomentVO(SimplePeopleVO(5, "andy", 5), 4L, false))
+                momentsVOs.add(MomentVO(SimplePeopleVO(6, "Jeremy Clarkson", 6), 5L, false))
+            }
+        }
     }
 
     override fun onButtonClicked(tag: Int) {

@@ -9,17 +9,22 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.graphics.withTranslation
 import com.sudox.messenger.android.moments.R
-import com.sudox.messenger.android.people.common.vos.SimplePeopleVO
+import com.sudox.messenger.android.people.common.vos.PeopleVO
 
-class AddMomentVO(peopleVO: SimplePeopleVO) : MomentVO(peopleVO, 0, false) {
-
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+class AddMomentVO(
+        peopleVO: PeopleVO
+) : MomentVO(peopleVO, 0, true) {
 
     private var addIconClipColor = 0
     private var addIconStrokeColor = 0
     private var addIconStrokeRadius = 0F
     private var addIconClipRadius = 0F
     private var addIconDrawable: Drawable? = null
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    override fun getTitle(context: Context): String? {
+        return context.getString(R.string.your_story)
+    }
 
     override fun getContentOnCircleAngle(): Double {
         return 7 * Math.PI / 4

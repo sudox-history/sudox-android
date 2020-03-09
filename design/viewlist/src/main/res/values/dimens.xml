@@ -4,6 +4,6 @@
     <dimen name="viewlist_header_margin_between_text_and_toggler">4dp</dimen>
     <dimen name="viewlist_header_functional_button_icon_width">24dp</dimen>
     <dimen name="viewlist_header_functional_button_icon_height">24dp</dimen>
-    <dimen name="viewlist_header_padding_bottom">16dp</dimen>
+    <dimen name="viewlist_header_padding_bottom">11dp</dimen>
     <dimen name="viewlist_header_padding_top">22dp</dimen>
 </resources>
