@@ -219,13 +219,17 @@ open class HorizontalPeopleItemView : ViewGroup {
         var buttonsRightBorder = measuredWidth - paddingRight
         var buttonsLeftBorder: Int
 
-        buttonsViews?.forEach {
-            val topBorder = measuredHeight / 2 - it.measuredHeight / 2
-            val bottomBorder = topBorder + it.measuredHeight
+        if (!buttonsViews.isNullOrEmpty()) {
+            for (i in buttonsViews!!.size - 1 downTo 0) {
+                buttonsViews!![i].let {
+                    val topBorder = measuredHeight / 2 - it.measuredHeight / 2
+                    val bottomBorder = topBorder + it.measuredHeight
 
-            buttonsLeftBorder = buttonsRightBorder - it.measuredWidth
-            it.layout(buttonsLeftBorder, topBorder, buttonsRightBorder, bottomBorder)
-            buttonsRightBorder = buttonsLeftBorder - marginBetweenButtons
+                    buttonsLeftBorder = buttonsRightBorder - it.measuredWidth
+                    it.layout(buttonsLeftBorder, topBorder, buttonsRightBorder, bottomBorder)
+                    buttonsRightBorder = buttonsLeftBorder - marginBetweenButtons
+                }
+            }
         }
 
         val photoLeftBorder = paddingLeft
