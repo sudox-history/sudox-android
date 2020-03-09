@@ -37,7 +37,7 @@ interface PeopleVO {
      * @param context Контекст активности/приложения
      * @return Сообщение статуса
      */
-    fun getStatusMessage(context: Context): String
+    fun getStatusMessage(context: Context): String?
 
     /**
      * Определяет тип сообщения статуса.

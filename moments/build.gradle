@@ -8,6 +8,8 @@ apply from: '../configs/robolectric.gradle'
 dependencies {
     api project(path: ':core')
     api project(path: ':design')
+    api project(path: ':design:circularupdatableview')
+    api project(path: ':people:common')
     api project(path: ':api')
 
     implementation libraries.core_ktx

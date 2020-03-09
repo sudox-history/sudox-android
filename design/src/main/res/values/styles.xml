@@ -22,6 +22,11 @@
         <item name="android:editTextStyle">@style/Sudox.EditText</item>
         <item name="editTextStyle">@style/Sudox.EditText</item>
 
+        <item name="android:imageButtonStyle">@style/Sudox.Button</item>
+        <item name="android:buttonStyle">@style/Sudox.Button</item>
+        <item name="imageButtonStyle">@style/Sudox.Button</item>
+        <item name="buttonStyle">@style/Sudox.Button</item>
+
         <item name="applicationBarStyle">@style/Sudox.ApplicationBar</item>
         <item name="applicationBarButtonStyle">@style/Sudox.ApplicationBar.Button</item>
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
@@ -35,6 +40,7 @@
         <item name="navigationBarButtonStyle">@style/Sudox.NavigationBar.Button</item>
         <item name="tabLayoutStyle">@style/Sudox.TabLayout</item>
         <item name="sectionedListViewStyle">@style/Sudox.SectionedListView</item>
+        <item name="circularUpdatableViewStyle">@style/Sudox.CircularUpdatableView</item>
 
         <item name="popupItemViewStyle">@style/Sudox.PopupItemView</item>
         <item name="listPopupWindowStyle">@style/Sudox.ListPopupWindow</item>
@@ -45,12 +51,6 @@
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_dark_color</item>
         <item name="colorAccent">@color/accent_color</item>
-
-        <item name="android:buttonStyle">@style/Sudox.Button</item>
-        <item name="buttonStyle">@style/Sudox.Button</item>
-
-        <item name="android:imageButtonStyle">@style/Sudox.Button</item>
-        <item name="imageButtonStyle">@style/Sudox.Button</item>
     </style>
 
     <!--  TODO: Remove it  -->

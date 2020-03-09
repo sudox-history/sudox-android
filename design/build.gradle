@@ -9,6 +9,7 @@ dependencies {
     api project(path: ':design:common')
     api project(path: ':design:viewlist')
     api project(path: ':design:tablayout')
+    api project(path: ':design:circularupdatableview')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
