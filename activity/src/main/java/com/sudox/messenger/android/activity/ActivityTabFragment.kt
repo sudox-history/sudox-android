@@ -13,7 +13,7 @@ import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.fragments.ViewListFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
-import com.sudox.messenger.android.moments.vos.MomentVO
+import com.sudox.messenger.android.moments.vos.AddMomentVO
 import com.sudox.messenger.android.people.common.vos.SimplePeopleVO
 
 class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFragment, ApplicationBarListener {
@@ -22,7 +22,7 @@ class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFra
         return LinearLayout(context).apply {
             addView(CircularUpdatableView(context!!).apply {
                 layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                vo = MomentVO(SimplePeopleVO(1L, "kerjen", 1L), 1L, false)
+                vo = AddMomentVO(SimplePeopleVO(1L, "kerjen", 1L))
             })
         }
     }

@@ -2,3 +2,8 @@ apply from: '../../configs/dependencies.gradle'
 apply from: '../../configs/common.gradle'
 
 registerModule(false, true, false, true)
+
+dependencies {
+    implementation libraries.core_ktx
+    implementation libraries.appcompat
+}

@@ -2,7 +2,6 @@ package com.sudox.messenger.android.moments.vos
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.view.View
 import android.view.ViewGroup
 import com.sudox.design.circularupdatableview.vos.CircularUpdatableViewVO
@@ -11,7 +10,7 @@ import com.sudox.messenger.android.moments.R
 import com.sudox.messenger.android.people.common.views.AvatarImageView
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 
-class MomentVO(
+open class MomentVO(
         val peopleVO: PeopleVO,
         val publishTime: Long,
         val isViewed: Boolean
@@ -30,7 +29,6 @@ class MomentVO(
     }
 
     override fun drawContentOnCircle(context: Context, canvas: Canvas, centerX: Float, centerY: Float) {
-        canvas.drawText("Hello", centerX, centerY, Paint())
     }
 
     override fun unbindViewInCenter(view: View) {
@@ -40,8 +38,8 @@ class MomentVO(
     override fun bindViewInCenter(view: View) {
         (view as AvatarImageView).let {
             it.layoutParams = ViewGroup.LayoutParams(
-                    view.context.resources.getDimensionPixelSize(R.dimen.moment_photo_width),
-                    view.context.resources.getDimensionPixelSize(R.dimen.moment_photo_height)
+                    view.context.resources.getDimensionPixelSize(R.dimen.momentvo_photo_width),
+                    view.context.resources.getDimensionPixelSize(R.dimen.momentvo_photo_height)
             )
 
             it.vo = peopleVO

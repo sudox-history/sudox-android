@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="momentitemview_view_indicator_active_color">#00BFA5</color>
-    <color name="momentitemview_view_indicator_default_color">#CCCCCC</color>
-    <color name="momentitemview_add_indicator_stroke_color">#CCCCCC</color>
-    <color name="momentitemview_add_indicator_icon_tint">#00BFA5</color>
-    <color name="momentitemview_name_text_color">#606060</color>
+    <color name="addmomentvo_add_icon_clip_color">#FFFFFF</color>
+    <color name="addmomentvo_add_icon_stroke_color">#CCCCCC</color>
+    <color name="addmomentvo_add_icon_tint_color">#00BFA5</color>
 </resources>
