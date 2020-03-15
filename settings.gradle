@@ -8,6 +8,7 @@ include ':design:tablayout'
 include ':design:viewlist'
 include ':design:saveableview'
 include ':design:circularupdatableview'
+include ':design:quiltview'
 include ':design:common'
 include ':design:popup'
 

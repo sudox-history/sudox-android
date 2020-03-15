@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Profile" />
-
-    <Button
-        android:id="@+id/profileButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/profileEditText"
+    <com.sudox.design.quiltview.QuiltView
+        android:id="@+id/quiltView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
-</LinearLayout>
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:id="@+id/glideView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_2" />
+
+        <!--    <com.sudox.messenger.android.images.views.GlideImageView-->
+        <!--        android:id="@+id/glideView2"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:scaleType="centerCrop"-->
+        <!--        android:src="@drawable/drawable_photo_1" />-->
+
+    </com.sudox.design.quiltview.QuiltView>
+</ScrollView>
