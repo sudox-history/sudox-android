@@ -55,8 +55,8 @@ class ViewListHeaderView : ViewGroup, View.OnClickListener {
         set(value) {
             if (value != null) {
                 field = RotateDrawable().also {
-                    it.setBounds(0, 0, value.intrinsicWidth, value.intrinsicHeight)
                     it.drawable = value
+                    it.setBounds(0, 0, value.intrinsicWidth, value.intrinsicHeight)
                 }
             }
 
