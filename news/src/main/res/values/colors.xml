@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="newsitemview_content_text_color">#424242</color>
+
     <color name="news_more_options_button_icon_tint">#808080</color>
 </resources>

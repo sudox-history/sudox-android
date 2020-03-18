@@ -7,6 +7,7 @@ dependencies {
     api project(path: ':core')
     api project(path: ':design')
     api project(path: ':people:common')
+    api project(path: ':text')
     api project(path: ':time')
     api project(path: ':api')
 

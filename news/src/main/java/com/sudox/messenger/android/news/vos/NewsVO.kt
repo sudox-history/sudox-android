@@ -11,15 +11,15 @@ const val MORE_OPTIONS_BUTTON_TAG = 1
  * ViewObject для новости и её автора.
  * Информацию по переменным, связанными с пользователем, смотрите в PeopleVO.
  *
- * @param contentText Текст новости
  * @param publishTime Время публикации новости.
+ * @param contentText Текст новости
  */
 class NewsVO(
         override var userId: Long,
         override var userName: String,
         override var photoId: Long,
-        var contentText: String?,
-        var publishTime: Long
+        var publishTime: Long,
+        var contentText: String?
 ) : SimplePeopleVO(userId, userName, photoId) {
 
     override fun getButtons(): Array<Triple<Int, Int, Int>>? {

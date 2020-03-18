@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.sudox.messenger.android.news.views.NewsItemView
-        android:id="@+id/newsItemView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+<!--    <com.sudox.messenger.android.news.views.NewsItemView-->
+<!--        android:id="@+id/newsItemView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content" />-->
 
 <!--    <com.sudox.design.quiltview.QuiltView-->
 <!--        android:id="@+id/quiltView"-->

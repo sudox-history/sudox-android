@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.NewsItemView" parent="">
+        <item name="marginBetweenPeopleAndContentText">@dimen/newsitemview_margin_between_people_and_content_text</item>
+        <item name="contentTextAppearance">@style/Sudox.NewsItemView.ContentTextAppearance</item>
+    </style>
+
+    <style name="Sudox.NewsItemView.ContentTextAppearance" parent="">
+        <item name="android:textColor">@color/newsitemview_content_text_color</item>
+        <item name="android:textSize">@dimen/newsitemview_content_text_size</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+</resources>
