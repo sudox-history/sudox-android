@@ -4,11 +4,12 @@ import android.content.Context
 
 /**
  * Предельно простая реализация PeopleVO.
+ * Не отображает статус и кнопки, а также индикатор онлайна на аватарке пользователя.
  *
  * Можно использовать для связи с другими в VO в тех случаях, когда
  * PeopleItemView не используется.
  */
-class SimplePeopleVO(
+open class SimplePeopleVO(
         override var userId: Long,
         override var userName: String,
         override var photoId: Long

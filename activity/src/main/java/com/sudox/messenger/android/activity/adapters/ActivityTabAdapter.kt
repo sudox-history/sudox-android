@@ -9,6 +9,8 @@ import com.sudox.messenger.android.activity.vos.headers.MomentsHeaderVO
 import com.sudox.messenger.android.activity.vos.headers.NewsHeaderVO
 import com.sudox.messenger.android.moments.adapters.MomentsAdapter
 import com.sudox.messenger.android.moments.createMomentsRecyclerView
+import com.sudox.messenger.android.news.views.NewsItemView
+import com.sudox.messenger.android.news.vos.NewsVO
 
 const val MOMENTS_HEADER_TYPE = 0
 const val NEWS_HEADER_TYPE = 1
@@ -44,11 +46,14 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
                 }
             })
         } else {
-            TODO()
+            NewsViewHolder(NewsItemView(parent.context))
         }
     }
 
     override fun bindItemHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is NewsViewHolder) {
+            holder.view.vo = NewsVO(1L, "Maxim Mityushkin", 1L, "Ура! Посты работают!", System.currentTimeMillis() - 10000L)
+        }
     }
 
     override fun getItemType(position: Int): Int {
@@ -73,7 +78,7 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
         return if (type == MOMENTS_HEADER_TYPE) {
             1
         } else {
-            0
+            1
         }
     }
 
@@ -87,5 +92,9 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
 
     class MomentsViewHolder(
             val view: ViewList
+    ) : RecyclerView.ViewHolder(view)
+
+    class NewsViewHolder(
+            val view: NewsItemView
     ) : RecyclerView.ViewHolder(view)
 }
