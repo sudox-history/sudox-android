@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="quiltview_margin_between_views">6dp</dimen>
-    <dimen name="quiltview_min_view_width">100dp</dimen>
-    <dimen name="quiltview_max_view_width">360dp</dimen>
-    <dimen name="quiltview_min_view_height">100dp</dimen>
-    <dimen name="quiltview_max_view_height">500dp</dimen>
-</resources>

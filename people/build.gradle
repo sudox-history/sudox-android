@@ -6,7 +6,6 @@ registerModule(false, true, false, true)
 dependencies {
     api project(path: ':core')
     api project(path: ':design')
-    api project(path: ':design:quiltview')
     api project(path: ':activity')
     api project(path: ':people:peopletab')
     api project(path: ':people:common')
