@@ -4,6 +4,8 @@ apply from: '../configs/common.gradle'
 registerModule(false, true, true, true)
 
 dependencies {
+    api project(":design:roundedview")
+
     implementation libraries.core_ktx
     implementation libraries.appcompat
     implementation libraries.coroutines

@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.sudox.design.roundedview.RoundedImageView
 import com.sudox.messenger.android.images.Images
 import com.sudox.messenger.android.images.R
 import com.sudox.messenger.android.images.entries.GlideImageRequest
@@ -19,7 +19,7 @@ const val NOT_SHOWING_IMAGE_ID = -1
 /**
  * ImageView с возможность загрузки изображения по ID с сервера
  */
-open class GlideImageView : AppCompatImageView {
+open class GlideImageView : RoundedImageView {
 
     private var placeholderDrawable: Drawable? = null
     private var crossFadeDuration = 0

@@ -3,29 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--    <com.sudox.messenger.android.news.views.NewsItemView-->
-<!--        android:id="@+id/newsItemView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content" />-->
+    <com.sudox.design.mityushkinlayout.MityushkinLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-<!--    <com.sudox.design.quiltview.QuiltView-->
-<!--        android:id="@+id/quiltView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:id="@+id/glideView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_2" />
 
-<!--        <com.sudox.messenger.android.images.views.GlideImageView-->
-<!--            android:id="@+id/glideView"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_2" />-->
-
-<!--        &lt;!&ndash;    <com.sudox.messenger.android.images.views.GlideImageView&ndash;&gt;-->
-<!--        &lt;!&ndash;        android:id="@+id/glideView2"&ndash;&gt;-->
-<!--        &lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
-<!--        &lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
-<!--        &lt;!&ndash;        android:scaleType="centerCrop"&ndash;&gt;-->
-<!--        &lt;!&ndash;        android:src="@drawable/drawable_photo_1" />&ndash;&gt;-->
-
-<!--    </com.sudox.design.quiltview.QuiltView>-->
+    </com.sudox.design.mityushkinlayout.MityushkinLayout>
 </ScrollView>
