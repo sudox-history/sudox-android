@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="yankintemplatesadapter_child_border_radius">4dp</dimen>
+    <dimen name="yankintemplatesadapter_corner_border_radius">11dp</dimen>
     <dimen name="yankintemplatesadapter_margin_between_views">6dp</dimen>
     <dimen name="yankintemplatesadapter_max_single_view_width">360dp</dimen>
     <dimen name="yankintemplatesadapter_max_single_view_height">500dp</dimen>

@@ -5,14 +5,69 @@
 
     <com.sudox.design.mityushkinlayout.MityushkinLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <com.sudox.messenger.android.images.views.GlideImageView
-            android:id="@+id/glideView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:src="@drawable/drawable_photo_2" />
+
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_1" />
+
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_1" />
+
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_1" />
+
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_1" />
+
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_1" />
+
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_1" />
+
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_1" />
+
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_1" />
+
+        <com.sudox.messenger.android.images.views.GlideImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drawable_photo_1" />
 
     </com.sudox.design.mityushkinlayout.MityushkinLayout>
 </ScrollView>

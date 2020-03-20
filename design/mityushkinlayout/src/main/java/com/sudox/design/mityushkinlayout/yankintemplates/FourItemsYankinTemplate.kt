@@ -5,6 +5,7 @@ import android.view.View
 import com.sudox.design.mityushkinlayout.MityushkinLayout
 import com.sudox.design.mityushkinlayout.MityushkinLayoutAdapter
 import com.sudox.design.mityushkinlayout.MityushkinLayoutTemplate
+import com.sudox.design.roundedview.RoundedView
 
 object FourItemsYankinTemplate : MityushkinLayoutTemplate {
 
@@ -19,6 +20,39 @@ object FourItemsYankinTemplate : MityushkinLayoutTemplate {
             val thirdImageRight = thirdImageLeft + childWidth
             val fourthImageLeft = thirdImageRight + it.marginBetweenViews
             val fourthImageRight = fourthImageLeft + childWidth
+
+            val firstChild = layout.getChildAt(0)
+            val secondChild = layout.getChildAt(1)
+            val thirdChild = layout.getChildAt(2)
+            val fourthChild = layout.getChildAt(3)
+
+            if (firstChild is RoundedView) {
+                firstChild.topLeftCropRadius = it.childBorderRadius
+                firstChild.topRightCropRadius = it.cornerBorderRadius
+                firstChild.bottomLeftCropRadius = it.childBorderRadius
+                firstChild.bottomRightCropRadius = it.childBorderRadius
+            }
+
+            if (secondChild is RoundedView) {
+                secondChild.topLeftCropRadius = it.childBorderRadius
+                secondChild.topRightCropRadius = it.childBorderRadius
+                secondChild.bottomLeftCropRadius = it.cornerBorderRadius
+                secondChild.bottomRightCropRadius = it.childBorderRadius
+            }
+
+            if (thirdChild is RoundedView) {
+                thirdChild.topLeftCropRadius = it.childBorderRadius
+                thirdChild.topRightCropRadius = it.childBorderRadius
+                thirdChild.bottomLeftCropRadius = it.childBorderRadius
+                thirdChild.bottomRightCropRadius = it.childBorderRadius
+            }
+
+            if (fourthChild is RoundedView) {
+                fourthChild.topLeftCropRadius = it.childBorderRadius
+                fourthChild.topRightCropRadius = it.childBorderRadius
+                fourthChild.bottomLeftCropRadius = it.childBorderRadius
+                fourthChild.bottomRightCropRadius = it.cornerBorderRadius
+            }
 
             return arrayOf(
                     Rect(0, 0, widthSize, it.threeAndMoreViewsHeight),

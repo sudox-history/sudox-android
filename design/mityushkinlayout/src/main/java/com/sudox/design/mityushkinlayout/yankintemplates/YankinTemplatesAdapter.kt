@@ -7,6 +7,8 @@ import com.sudox.design.mityushkinlayout.R
 
 class YankinTemplatesAdapter : MityushkinLayoutAdapter {
 
+    internal var childBorderRadius = 0F
+    internal var cornerBorderRadius = 0F
     internal var marginBetweenViews = 0
     internal var maxSingleViewHeight = 0
     internal var minSingleViewHeight = 0
@@ -16,6 +18,8 @@ class YankinTemplatesAdapter : MityushkinLayoutAdapter {
 
     override fun onAttached(layout: MityushkinLayout) {
         layout.context.resources.apply {
+            childBorderRadius = getDimensionPixelSize(R.dimen.yankintemplatesadapter_child_border_radius).toFloat()
+            cornerBorderRadius = getDimensionPixelSize(R.dimen.yankintemplatesadapter_corner_border_radius).toFloat()
             marginBetweenViews = getDimensionPixelSize(R.dimen.yankintemplatesadapter_margin_between_views)
             maxSingleViewHeight = getDimensionPixelSize(R.dimen.yankintemplatesadapter_max_single_view_height)
             minSingleViewHeight = getDimensionPixelSize(R.dimen.yankintemplatesadapter_min_single_view_height)

@@ -5,7 +5,7 @@ import android.view.View
 import com.sudox.design.mityushkinlayout.MityushkinLayout
 import com.sudox.design.mityushkinlayout.MityushkinLayoutAdapter
 import com.sudox.design.mityushkinlayout.MityushkinLayoutTemplate
-import kotlin.math.floor
+import com.sudox.design.roundedview.RoundedView
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -16,8 +16,15 @@ object SingleItemYankinTemplate : MityushkinLayoutTemplate {
         (adapter as YankinTemplatesAdapter).let {
             val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
             val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
-
             val child = layout.getChildAt(0)
+
+            if (child is RoundedView) {
+                child.topLeftCropRadius = it.childBorderRadius
+                child.topRightCropRadius = it.cornerBorderRadius
+                child.bottomLeftCropRadius = it.cornerBorderRadius
+                child.bottomRightCropRadius = it.cornerBorderRadius
+            }
+
             val width = min(if (widthMode != View.MeasureSpec.EXACTLY) {
                 child.measuredWidth
             } else {

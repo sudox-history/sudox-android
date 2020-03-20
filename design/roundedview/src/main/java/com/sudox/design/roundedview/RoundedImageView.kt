@@ -13,7 +13,7 @@ import androidx.appcompat.widget.AppCompatImageView
 /**
  * ImageView, способная обрезать контент за пределами границ определенной фигуры
  */
-open class RoundedImageView : AppCompatImageView {
+open class RoundedImageView : AppCompatImageView, RoundedView {
 
     private val clipPath = Path()
     private val imagePaint = Paint()
@@ -24,7 +24,7 @@ open class RoundedImageView : AppCompatImageView {
         isAntiAlias = true
     }
 
-    var topLeftCropRadius = 0F
+    override var topLeftCropRadius = 0F
         set(value) {
             if (value == field) {
                 return
@@ -35,7 +35,7 @@ open class RoundedImageView : AppCompatImageView {
             invalidate()
         }
 
-    var topRightCropRadius = 0F
+    override var topRightCropRadius = 0F
         set(value) {
             if (value == field) {
                 return
@@ -46,7 +46,7 @@ open class RoundedImageView : AppCompatImageView {
             invalidate()
         }
 
-    var bottomLeftCropRadius = 0F
+    override var bottomLeftCropRadius = 0F
         set(value) {
             if (value == field) {
                 return
@@ -57,7 +57,7 @@ open class RoundedImageView : AppCompatImageView {
             invalidate()
         }
 
-    var bottomRightCropRadius = 0F
+    override var bottomRightCropRadius = 0F
         set(value) {
             if (value == field) {
                 return
@@ -80,14 +80,14 @@ open class RoundedImageView : AppCompatImageView {
         val right = left + measuredWidth.toFloat()
         val bottom = top + measuredHeight.toFloat()
         val radii = floatArrayOf(
-                topLeftCropRadius * 2,
-                topLeftCropRadius * 2,
-                topRightCropRadius * 2,
-                topRightCropRadius * 2,
-                bottomRightCropRadius * 2,
-                bottomRightCropRadius * 2,
-                bottomLeftCropRadius * 2,
-                bottomLeftCropRadius * 2
+                topLeftCropRadius,
+                topLeftCropRadius,
+                topRightCropRadius,
+                topRightCropRadius,
+                bottomRightCropRadius,
+                bottomRightCropRadius,
+                bottomLeftCropRadius,
+                bottomLeftCropRadius
         )
 
         if (topLeftCropRadius != 0F || topRightCropRadius != 0F || bottomLeftCropRadius != 0F || bottomRightCropRadius != 0F) {

@@ -36,9 +36,22 @@ class MityushkinLayout : ViewGroup {
                 measureChild(getChildAt(i), unspecifiedSpec, unspecifiedSpec)
             }
 
-            rectangles = adapter?.getTemplate(childCount)?.layout(widthMeasureSpec, heightMeasureSpec, adapter!!, this)
+            val availableWidthSpec = MeasureSpec.makeMeasureSpec(
+                    MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight,
+                    MeasureSpec.EXACTLY
+            )
+
+            rectangles = adapter?.getTemplate(childCount)?.layout(availableWidthSpec, heightMeasureSpec, adapter!!, this)
 
             if (rectangles != null) {
+                for (i in 0 until childCount) {
+                    val rect = rectangles!![i]
+                    val widthSpec = MeasureSpec.makeMeasureSpec(rect.width(), MeasureSpec.EXACTLY)
+                    val heightSpec = MeasureSpec.makeMeasureSpec(rect.height(), MeasureSpec.EXACTLY)
+
+                    getChildAt(i).measure(widthSpec, heightSpec)
+                }
+
                 val height = paddingTop + paddingBottom + rectangles!!.last().bottom
                 val width = if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.EXACTLY) {
                     MeasureSpec.getSize(widthMeasureSpec)
@@ -56,7 +69,7 @@ class MityushkinLayout : ViewGroup {
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         if (rectangles != null) {
-            val leftBorder = ((measuredWidth - paddingLeft) / 2 - rectangles!!.last().right / 2) + paddingLeft
+            val leftBorder = ((measuredWidth - paddingLeft - paddingRight) / 2 - rectangles!!.last().right / 2) + paddingLeft
 
             rectangles!!.forEachIndexed { index, rect ->
                 getChildAt(index).layout(
