@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.images.views
+package com.sudox.messenger.android.media.images.views
 
 import android.content.Context
 import android.util.AttributeSet

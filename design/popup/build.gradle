@@ -4,7 +4,7 @@ apply from: '../../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
-    api project(path: ':images')
+    api project(path: ':media:images')
 
     implementation libraries.core_ktx
     implementation libraries.recyclerview

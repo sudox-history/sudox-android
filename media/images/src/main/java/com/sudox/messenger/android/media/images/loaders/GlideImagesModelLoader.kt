@@ -1,11 +1,11 @@
-package com.sudox.messenger.android.images.loaders
+package com.sudox.messenger.android.media.images.loaders
 
 import android.content.Context
 import com.bumptech.glide.load.Options
 import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.signature.ObjectKey
-import com.sudox.messenger.android.images.entries.GlideImageRequest
-import com.sudox.messenger.android.images.fetchers.GlideImagesFetcher
+import com.sudox.messenger.android.media.images.entries.GlideImageRequest
+import com.sudox.messenger.android.media.images.fetchers.GlideImagesFetcher
 import java.nio.ByteBuffer
 
 /**

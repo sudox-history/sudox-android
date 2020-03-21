@@ -7,7 +7,7 @@ dependencies {
     api project(path: ':core')
     api project(path: ':design')
     api project(path: ':design:viewlist')
-    api project(path: ':images')
+    api project(path: ':media:images')
     api project(path: ':api')
 
     implementation libraries.core_ktx

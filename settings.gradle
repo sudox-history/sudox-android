@@ -20,7 +20,9 @@ include ':people'
 include ':people:peopletab'
 include ':people:common'
 
-include ':images'
+include ':media'
+include ':media:images'
+
 include ':messages'
 include ':activity'
 include ':moments'

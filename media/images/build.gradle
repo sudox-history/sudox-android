@@ -1,5 +1,5 @@
-apply from: '../configs/dependencies.gradle'
-apply from: '../configs/common.gradle'
+apply from: '../../configs/dependencies.gradle'
+apply from: '../../configs/common.gradle'
 
 registerModule(false, true, true, true)
 

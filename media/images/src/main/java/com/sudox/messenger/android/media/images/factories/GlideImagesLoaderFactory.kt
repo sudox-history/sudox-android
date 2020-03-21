@@ -1,11 +1,11 @@
-package com.sudox.messenger.android.images.factories
+package com.sudox.messenger.android.media.images.factories
 
 import android.content.Context
 import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
-import com.sudox.messenger.android.images.loaders.GlideImagesModelLoader
-import com.sudox.messenger.android.images.entries.GlideImageRequest
+import com.sudox.messenger.android.media.images.loaders.GlideImagesModelLoader
+import com.sudox.messenger.android.media.images.entries.GlideImageRequest
 import java.nio.ByteBuffer
 
 /**

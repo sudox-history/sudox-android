@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.images.views
+package com.sudox.messenger.android.media.images.views
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,9 +9,9 @@ import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.sudox.design.roundedview.RoundedImageView
-import com.sudox.messenger.android.images.Images
-import com.sudox.messenger.android.images.R
-import com.sudox.messenger.android.images.entries.GlideImageRequest
+import com.sudox.messenger.android.media.images.Images
+import com.sudox.messenger.android.media.images.R
+import com.sudox.messenger.android.media.images.entries.GlideImageRequest
 
 @Suppress("unused")
 const val NOT_SHOWING_IMAGE_ID = -1

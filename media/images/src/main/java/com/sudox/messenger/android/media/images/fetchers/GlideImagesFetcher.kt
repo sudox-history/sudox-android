@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.images.fetchers
+package com.sudox.messenger.android.media.images.fetchers
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,8 +6,8 @@ import android.graphics.drawable.BitmapDrawable
 import com.bumptech.glide.Priority
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.data.DataFetcher
-import com.sudox.messenger.android.images.R
-import com.sudox.messenger.android.images.entries.GlideImageRequest
+import com.sudox.messenger.android.media.images.R
+import com.sudox.messenger.android.media.images.entries.GlideImageRequest
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import kotlin.random.Random

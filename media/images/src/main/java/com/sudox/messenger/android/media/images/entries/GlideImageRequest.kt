@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.images.entries
+package com.sudox.messenger.android.media.images.entries
 
 /**
  * Обьект для запроса загрузки изображения.
