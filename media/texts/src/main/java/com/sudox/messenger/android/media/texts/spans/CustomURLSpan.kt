@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.text.spans
+package com.sudox.messenger.android.media.texts.spans
 
 import android.text.TextPaint
 import android.text.style.URLSpan

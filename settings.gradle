@@ -22,10 +22,10 @@ include ':people:common'
 
 include ':media'
 include ':media:images'
+include ':media:texts'
 
 include ':messages'
 include ':activity'
 include ':moments'
-include ':text'
 include ':time'
 include ':news'

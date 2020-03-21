@@ -9,9 +9,9 @@ dependencies {
     api project(path: ':design:mityushkinlayout')
     api project(path: ':people:peopletab')
     api project(path: ':people:common')
+    api project(path: ':media:texts')
     api project(path: ':activity')
     api project(path: ':news')
-    api project(path: ':text')
     api project(path: ':api')
 
     implementation libraries.core_ktx

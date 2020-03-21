@@ -12,7 +12,7 @@ import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.messenger.android.news.R
 import com.sudox.messenger.android.news.vos.NewsVO
 import com.sudox.messenger.android.people.common.views.HorizontalPeopleItemView
-import com.sudox.messenger.android.text.LinkifiedTextView
+import com.sudox.messenger.android.media.texts.LinkifiedTextView
 
 class NewsItemView : ViewGroup {
 

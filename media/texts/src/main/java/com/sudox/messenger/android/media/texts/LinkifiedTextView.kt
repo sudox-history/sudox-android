@@ -1,7 +1,6 @@
-package com.sudox.messenger.android.text
+package com.sudox.messenger.android.media.texts
 
 import android.content.Context
-import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.URLSpan
 import android.text.util.Linkify
@@ -9,7 +8,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.util.LinkifyCompat
 import androidx.core.widget.addTextChangedListener
-import com.sudox.messenger.android.text.spans.CustomURLSpan
+import com.sudox.messenger.android.media.texts.spans.CustomURLSpan
 
 val HASH_TAG_REGEX = """#[\w\\=-\\._:]{0,20}""".toPattern()
 val MENTION_REGEX = """@[\w\\=-\\._:]{0,20}""".toPattern()
