@@ -9,10 +9,11 @@ import android.view.ViewGroup
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
+import com.sudox.messenger.android.media.MediaAttachmentsLayout
+import com.sudox.messenger.android.media.texts.LinkifiedTextView
 import com.sudox.messenger.android.news.R
 import com.sudox.messenger.android.news.vos.NewsVO
 import com.sudox.messenger.android.people.common.views.HorizontalPeopleItemView
-import com.sudox.messenger.android.media.texts.LinkifiedTextView
 
 class NewsItemView : ViewGroup {
 
@@ -20,18 +21,23 @@ class NewsItemView : ViewGroup {
         set(value) {
             peopleItemView.vo = value
             contentTextView.text = value?.contentText
+            attachmentsLayout.vos = value?.attachments
 
             field = value
             requestLayout()
             invalidate()
         }
 
-    var marginBetweenPeopleAndContentText = 0
+    var marginBetweenPeopleAndContent = 0
         set(value) {
             field = value
             requestLayout()
             invalidate()
         }
+
+    private var attachmentsLayout = MediaAttachmentsLayout(context).apply {
+        this@NewsItemView.addView(this)
+    }
 
     private var peopleItemView = HorizontalPeopleItemView(context).apply {
         this@NewsItemView.addView(this)
@@ -54,7 +60,7 @@ class NewsItemView : ViewGroup {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.NewsItemView, defStyleAttr, 0).use {
-            marginBetweenPeopleAndContentText = it.getDimensionPixelSize(R.styleable.NewsItemView_marginBetweenPeopleAndContentText, 0)
+            marginBetweenPeopleAndContent = it.getDimensionPixelSize(R.styleable.NewsItemView_marginBetweenPeopleAndContent, 0)
 
             setTextAppearance(contentTextView, it.getResourceIdOrThrow(R.styleable.NewsItemView_contentTextAppearance))
         }
@@ -66,11 +72,16 @@ class NewsItemView : ViewGroup {
 
         measureChild(peopleItemView, childWidthSpec, heightMeasureSpec)
         measureChild(contentTextView, childWidthSpec, heightMeasureSpec)
+        measureChild(attachmentsLayout, childWidthSpec, heightMeasureSpec)
 
         var needHeight = paddingTop + peopleItemView.measuredHeight + paddingBottom
 
         if (!contentTextView.text.isNullOrEmpty()) {
-            needHeight += contentTextView.measuredHeight + marginBetweenPeopleAndContentText
+            needHeight += contentTextView.measuredHeight + marginBetweenPeopleAndContent
+        }
+
+        if (attachmentsLayout.childCount > 0) {
+            needHeight += attachmentsLayout.measuredHeight + marginBetweenPeopleAndContent
         }
 
         setMeasuredDimension(availableWidth, needHeight)
@@ -84,13 +95,22 @@ class NewsItemView : ViewGroup {
 
         peopleItemView.layout(leftBorder, peopleItemViewTop, rightBorder, peopleItemViewBottom)
 
-        val contentTextTop = peopleItemViewBottom + marginBetweenPeopleAndContentText
+        val contentTextTop = peopleItemViewBottom + marginBetweenPeopleAndContent
         val contentTextBottom = contentTextTop + contentTextView.measuredHeight
 
         if (!contentTextView.text.isNullOrEmpty()) {
             contentTextView.layout(leftBorder, contentTextTop, rightBorder, contentTextBottom)
         } else {
             contentTextView.layout(0, 0, 0, 0)
+        }
+
+        val attachmentsTop = contentTextBottom + marginBetweenPeopleAndContent
+        val attachmentsBottom = attachmentsTop + attachmentsLayout.measuredHeight
+
+        if (attachmentsLayout.childCount > 0) {
+            attachmentsLayout.layout(leftBorder, attachmentsTop, rightBorder, attachmentsBottom)
+        } else {
+            attachmentsLayout.layout(0, 0, 0, 0)
         }
     }
 }

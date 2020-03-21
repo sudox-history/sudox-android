@@ -7,6 +7,7 @@ import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
 import com.sudox.messenger.android.activity.vos.headers.MomentsHeaderVO
 import com.sudox.messenger.android.activity.vos.headers.NewsHeaderVO
+import com.sudox.messenger.android.media.vos.impls.ImageAttachmentVO
 import com.sudox.messenger.android.moments.adapters.MomentsAdapter
 import com.sudox.messenger.android.moments.createMomentsRecyclerView
 import com.sudox.messenger.android.news.views.NewsItemView
@@ -52,7 +53,11 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
 
     override fun bindItemHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is NewsViewHolder) {
-            holder.view.vo = NewsVO(4L, "Maxim Mityushkin", 4L, System.currentTimeMillis() - 10000L, "Ура! Посты работают! \n" +
+            holder.view.vo = NewsVO(4L, "Maxim Mityushkin", 4L, arrayListOf(ImageAttachmentVO(1L).apply {
+                height = 1733
+                width = 2560
+            }),
+                    System.currentTimeMillis() - 10000L, "Ура! Посты работают! \n" +
                     "Слишком длинный текст для моего экрана, проверим как он отображается \n" +
                     "\n" +
                     "https://sudox.ru \n" +
@@ -71,7 +76,7 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
     override fun getHeaderByPosition(position: Int): ViewListHeaderVO? {
         return if (position == 0) {
             headersVOs!![MOMENTS_HEADER_TYPE]
-        } else if  (position == 2) {
+        } else if (position == 2) {
             headersVOs!![NEWS_HEADER_TYPE]
         } else {
             null

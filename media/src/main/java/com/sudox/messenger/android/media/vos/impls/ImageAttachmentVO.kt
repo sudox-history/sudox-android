@@ -14,8 +14,8 @@ class ImageAttachmentVO(
 ) : MediaAttachmentVO {
 
     override var type = MediaAttachmentType.IMAGE
-    override var height = 50
-    override var width = 50
+    override var height = 0
+    override var width = 0
     override var order = 0
 
     override fun getView(context: Context): View {

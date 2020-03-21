@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="NewsItemView">
-        <attr name="marginBetweenPeopleAndContentText" format="dimension" />
+        <attr name="marginBetweenPeopleAndContent" format="dimension" />
         <attr name="contentTextAppearance" format="reference" />
     </declare-styleable>
 

@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Sudox.NewsItemView" parent="">
-        <item name="marginBetweenPeopleAndContentText">@dimen/newsitemview_margin_between_people_and_content_text</item>
+        <item name="marginBetweenPeopleAndContent">@dimen/newsitemview_margin_between_people_and_content</item>
         <item name="contentTextAppearance">@style/Sudox.NewsItemView.ContentTextAppearance</item>
     </style>
 

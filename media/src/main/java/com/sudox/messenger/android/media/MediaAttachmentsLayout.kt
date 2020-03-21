@@ -9,19 +9,30 @@ class MediaAttachmentsLayout : MityushkinLayout {
 
     var vos: ArrayList<MediaAttachmentVO>? = null
         set(value) {
-            removeAllViewsInLayout()
+            if (field != null) {
+                for (i in 0 until childCount) {
+                    removeViewInLayout(getChildAt(i).apply {
+                        field!![i].unbindView(this)
+                    })
+                }
+            }
+
+            removeAllViewsInLayout() // TODO: Реализовать переиспользование уже добаленных View
 
             if (value != null) {
                 val isLayoutDependsFromChildSize = adapter!!.getTemplate(value.size)!!.dependsFromChildSize
 
                 for (i in 0 until value.size) {
                     val vo = value[i]
+                    val view = vo.getView(context)
 
                     if (isLayoutDependsFromChildSize) {
-                        addView(vo.getView(context), -1, LayoutParams(vo.width, vo.height))
+                        addView(view, -1, LayoutParams(vo.width, vo.height))
                     } else {
-                        addView(vo.getView(context), -1)
+                        addView(view)
                     }
+
+                    vo.bindView(view)
                 }
             }
 
