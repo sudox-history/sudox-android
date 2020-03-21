@@ -9,6 +9,8 @@ import com.sudox.design.roundedview.RoundedView
 
 object TwoItemsYankinTemplate : MityushkinLayoutTemplate {
 
+    override var dependsFromChildSize = false
+
     override fun layout(widthMeasureSpec: Int, heightMeasureSpec: Int, adapter: MityushkinLayoutAdapter, layout: MityushkinLayout): Array<Rect> {
         (adapter as YankinTemplatesAdapter).let {
             val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)

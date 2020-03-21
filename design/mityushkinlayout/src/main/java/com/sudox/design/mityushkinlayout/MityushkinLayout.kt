@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import com.sudox.design.mityushkinlayout.yankintemplates.YankinTemplatesAdapter
 
-class MityushkinLayout : ViewGroup {
+open class MityushkinLayout : ViewGroup {
 
     var adapter: MityushkinLayoutAdapter? = null
         set(value) {

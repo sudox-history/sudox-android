@@ -3,71 +3,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.sudox.design.mityushkinlayout.MityushkinLayout
+    <com.sudox.messenger.android.media.MediaAttachmentsLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
-        <com.sudox.messenger.android.media.images.views.GlideImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/drawable_photo_2" />
+<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/drawable_photo_2" />-->
 
-        <com.sudox.messenger.android.media.images.views.GlideImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/drawable_photo_1" />
+<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/drawable_photo_1" />-->
 
-        <com.sudox.messenger.android.media.images.views.GlideImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/drawable_photo_1" />
+<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/drawable_photo_1" />-->
 
-        <com.sudox.messenger.android.media.images.views.GlideImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/drawable_photo_1" />
+<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/drawable_photo_1" />-->
 
-        <com.sudox.messenger.android.media.images.views.GlideImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/drawable_photo_1" />
+<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/drawable_photo_1" />-->
 
-        <com.sudox.messenger.android.media.images.views.GlideImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/drawable_photo_1" />
+<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/drawable_photo_1" />-->
 
-        <com.sudox.messenger.android.media.images.views.GlideImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/drawable_photo_1" />
+<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/drawable_photo_1" />-->
 
-        <com.sudox.messenger.android.media.images.views.GlideImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/drawable_photo_1" />
+<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/drawable_photo_1" />-->
 
-        <com.sudox.messenger.android.media.images.views.GlideImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/drawable_photo_1" />
+<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/drawable_photo_1" />-->
 
-        <com.sudox.messenger.android.media.images.views.GlideImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/drawable_photo_1" />
+<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:scaleType="centerCrop"-->
+<!--            android:src="@drawable/drawable_photo_1" />-->
 
-    </com.sudox.design.mityushkinlayout.MityushkinLayout>
+    </com.sudox.messenger.android.media.MediaAttachmentsLayout>
 </ScrollView>

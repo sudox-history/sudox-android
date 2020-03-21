@@ -4,6 +4,8 @@ import android.graphics.Rect
 
 interface MityushkinLayoutTemplate {
 
+    var dependsFromChildSize: Boolean
+
     /**
      * Определяет границы фигур в Layout'е
      *

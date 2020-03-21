@@ -4,6 +4,9 @@ apply from: '../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
+    api project(":design:mityushkinlayout")
+    api project(":media:images")
+
     implementation libraries.core_ktx
     implementation libraries.appcompat
 }
