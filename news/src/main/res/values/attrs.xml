@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="NewsItemView">
-        <attr name="marginBetweenPeopleAndContent" format="dimension" />
+        <attr name="defaultActionColor" format="color" />
+        <attr name="actionButtonStyle" format="reference" />
         <attr name="contentTextAppearance" format="reference" />
+        <attr name="marginBetweenPeopleAndContent" format="dimension" />
+        <attr name="marginBetweenContentAndActions" format="dimension" />
+        <attr name="dislikeActionActiveColor" format="color" />
+        <attr name="likeActionActiveColor" format="color" />
+        <attr name="commentIcon" format="reference" />
+        <attr name="dislikeIcon" format="reference" />
+        <attr name="shareIcon" format="reference" />
+        <attr name="likeIcon" format="reference" />
     </declare-styleable>
 
     <attr name="newsItemViewStyle" format="reference" />

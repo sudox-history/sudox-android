@@ -53,15 +53,15 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
 
     override fun bindItemHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is NewsViewHolder) {
-            holder.view.vo = NewsVO(4L, "Maxim Mityushkin", 4L, arrayListOf(ImageAttachmentVO(1L).apply {
+            holder.view.vo = NewsVO(4L, "Maxim Mityushkin", 4L, false, false, 0, 0, 0, 0, arrayListOf(ImageAttachmentVO(1L).apply {
                 height = 1733
                 width = 2560
-            }),
-                    System.currentTimeMillis() - 10000L, "Ура! Посты работают! \n" +
+            }), System.currentTimeMillis() - 10000L, "Ура! Посты работают! \n" +
                     "Слишком длинный текст для моего экрана, проверим как он отображается \n" +
                     "\n" +
                     "https://sudox.ru \n" +
-                    "#sudox #android")
+                    "#sudox #android"
+            )
         }
     }
 

@@ -2,8 +2,23 @@
 <resources>
 
     <style name="Sudox.NewsItemView" parent="">
+        <item name="actionButtonStyle">@style/Sudox.NewsItemView.ActionButton</item>
+        <item name="marginBetweenContentAndActions">@dimen/newsitemview_margin_betweencontent_and_actions</item>
         <item name="marginBetweenPeopleAndContent">@dimen/newsitemview_margin_between_people_and_content</item>
+        <item name="dislikeActionActiveColor">@color/newsitemview_dislike_action_active_color</item>
+        <item name="likeActionActiveColor">@color/newsitemview_like_action_active_color</item>
         <item name="contentTextAppearance">@style/Sudox.NewsItemView.ContentTextAppearance</item>
+        <item name="defaultActionColor">@color/newsitemview_default_action_color</item>
+        <item name="commentIcon">@drawable/ic_chat_bubble</item>
+        <item name="dislikeIcon">@drawable/ic_thumb_down</item>
+        <item name="likeIcon">@drawable/ic_thumb_up</item>
+        <item name="shareIcon">@drawable/ic_share</item>
+    </style>
+
+    <style name="Sudox.NewsItemView.ActionButton" parent="">
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textSize">@dimen/newsitemview_action_button_text_size</item>
     </style>
 
     <style name="Sudox.NewsItemView.ContentTextAppearance" parent="">
@@ -12,4 +27,6 @@
         <item name="android:fontFamily">@font/opensans_regular</item>
         <item name="fontFamily">@font/opensans_regular</item>
     </style>
+
+    <color name="newsitemview_like_action_active_color">#00BFA5</color>
 </resources>

@@ -17,8 +17,6 @@ class MediaAttachmentsLayout : MityushkinLayout {
                 }
             }
 
-            removeAllViewsInLayout() // TODO: Реализовать переиспользование уже добаленных View
-
             if (value != null) {
                 val isLayoutDependsFromChildSize = adapter!!.getTemplate(value.size)!!.dependsFromChildSize
 
