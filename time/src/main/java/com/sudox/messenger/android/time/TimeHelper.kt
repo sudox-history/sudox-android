@@ -86,7 +86,8 @@ fun formatTime(
                             calculateFutureTime,
                             Calendar.SECOND,
                             R.plurals.seconds,
-                            R.string.second_mask
+                            R.string.second_mask,
+                            dateToLowerCase
                     )
                 } else {
                     result = calculateDiff(
@@ -97,7 +98,8 @@ fun formatTime(
                             calculateFutureTime,
                             Calendar.MINUTE,
                             R.plurals.minutes,
-                            R.string.minute_mask
+                            R.string.minute_mask,
+                            dateToLowerCase
                     )
                 }
             } else if ((fullFormat && hoursDiff <= 12 && hoursDiff >= -12) || (!fullFormat && hoursDiff > 0)) {
@@ -109,7 +111,8 @@ fun formatTime(
                         calculateFutureTime,
                         Calendar.HOUR_OF_DAY,
                         R.plurals.hours,
-                        R.string.hour_mask
+                        R.string.hour_mask,
+                        dateToLowerCase
                 )
             } else if (fullFormat) {
                 var todayString = context.getString(R.string.today)
@@ -192,16 +195,17 @@ private fun calculateDiff(requested: Calendar,
                           calculateFutureTime: Boolean,
                           timeUnit: Int,
                           @PluralsRes pluralId: Int,
-                          @StringRes timeMaskId: Int
+                          @StringRes timeMaskId: Int,
+                          dateToLowerCase: Boolean
 ): String? {
     val value = requested[timeUnit]
     var valueDiff = current[timeUnit] - value
 
-    with(context.resources) {
+    var result = with(context.resources) {
         if (valueDiff == 0 && timeUnit == Calendar.SECOND) {
-            return context.getString(R.string.just)
+            context.getString(R.string.just)
         } else if (valueDiff > 0) {
-            return if (fullFormat) {
+            if (fullFormat) {
                 getString(R.string.time_ago_mask, getQuantityString(pluralId, valueDiff, valueDiff))
             } else {
                 getString(timeMaskId, valueDiff)
@@ -209,15 +213,21 @@ private fun calculateDiff(requested: Calendar,
         } else if (calculateFutureTime) {
             valueDiff = abs(valueDiff)
 
-            return if (fullFormat) {
+            if (fullFormat) {
                 getString(R.string.time_after_mask, getQuantityString(pluralId, valueDiff, valueDiff))
             } else {
                 getString(timeMaskId, valueDiff)
             }
+        } else {
+            null
         }
     }
 
-    return null
+    if (result != null && dateToLowerCase) {
+        result = result.toLowerCase(Locale.getDefault())
+    }
+
+    return result
 }
 
 private fun addLeadingZerosToTime(time: Int): String {

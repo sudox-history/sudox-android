@@ -43,6 +43,6 @@ class NewsVO(
     }
 
     override fun getStatusMessage(context: Context): String? {
-        return formatTime(context, fullFormat = true, time = publishTime)
+        return formatTime(context, fullFormat = true, time = publishTime, dateToLowerCase = true)
     }
 }
