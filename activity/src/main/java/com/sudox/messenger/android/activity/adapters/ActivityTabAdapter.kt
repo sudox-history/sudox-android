@@ -2,6 +2,7 @@ package com.sudox.messenger.android.activity.adapters
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
@@ -10,6 +11,7 @@ import com.sudox.messenger.android.activity.vos.headers.NewsHeaderVO
 import com.sudox.messenger.android.media.vos.impls.ImageAttachmentVO
 import com.sudox.messenger.android.moments.adapters.MomentsAdapter
 import com.sudox.messenger.android.moments.createMomentsRecyclerView
+import com.sudox.messenger.android.news.callbacks.NewsSortingCallback
 import com.sudox.messenger.android.news.views.NewsItemView
 import com.sudox.messenger.android.news.vos.NewsVO
 
@@ -19,6 +21,9 @@ const val NEWS_HEADER_TYPE = 1
 const val MOMENTS_ITEM_VIEW_TYPE = 0
 const val NEWS_ITEM_VIEW_TYPE = 1
 
+/**
+ * Адаптер для экрана Activity
+ */
 class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
 
     override var headersVOs: Array<ViewListHeaderVO>? = arrayOf(
@@ -27,6 +32,7 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
     )
 
     var viewPool = RecyclerView.RecycledViewPool()
+    val newsVOs = SortedList<NewsVO>(NewsVO::class.java, NewsSortingCallback(this, NEWS_HEADER_TYPE))
     val momentsAdapter = MomentsAdapter()
 
     override var viewList: ViewList? = null
@@ -53,15 +59,24 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
 
     override fun bindItemHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is NewsViewHolder) {
-            holder.view.vo = NewsVO(4L, "Maxim Mityushkin", 4L, true, false, 200101, 0, 0, 0, arrayListOf(ImageAttachmentVO(1L).apply {
-                height = 1733
-                width = 2560
-            }), System.currentTimeMillis() - 10000L, "Ура! Посты работают! \n" +
-                    "Слишком длинный текст для моего экрана, проверим как он отображается \n" +
-                    "\n" +
-                    "https://sudox.ru \n" +
-                    "#sudox #android"
-            )
+            holder.view.vo = newsVOs[recalculatePositionRelativeHeader(position)]
+//            holder.view.vo = NewsVO(4L, "Maxim Mityushkin", 4L, true, false, 200101, 0, 0, 0, arrayListOf(ImageAttachmentVO(1L).apply {
+//                height = 1733
+//                width = 2560
+//            }), System.currentTimeMillis() - 10000L, "Ура! Посты работают! \n" +
+//                    "Слишком длинный текст для моего экрана, проверим как он отображается \n" +
+//                    "\n" +
+//                    "https://sudox.ru \n" +
+//                    "#sudox #android"
+//            )
+        }
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+
+        if (holder is MomentsAdapter.ViewHolder) {
+            holder.view.vo = null
         }
     }
 
@@ -83,20 +98,38 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    override fun getItemsCountAfterHeader(type: Int): Int {
-        return if (type == MOMENTS_HEADER_TYPE) {
-            1
-        } else {
-            1
-        }
+    override fun getPositionForNewHeader(type: Int): Int {
+        // Всегда запрашивается только блок постов.
+        return 2
     }
 
     override fun getItemMargin(position: Int): Int {
         return 0
     }
 
+    override fun getItemsCountAfterHeader(type: Int): Int {
+        return if (type != MOMENTS_HEADER_TYPE) {
+            newsVOs.size()
+        } else {
+            1
+        }
+    }
+
+    override fun getHeaderTypeByItemType(itemType: Int): Int {
+        return if (itemType == MOMENTS_ITEM_VIEW_TYPE) {
+            MOMENTS_HEADER_TYPE
+        } else {
+            NEWS_HEADER_TYPE
+        }
+    }
+
     override fun getHeadersCount(): Int {
-        return 2
+        if (newsVOs.size() > 0) {
+            return 2
+        }
+
+        // Блок историй отображается всегда
+        return 1
     }
 
     class MomentsViewHolder(

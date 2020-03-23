@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.SortedList
  *
  * @param viewListAdapter Адаптер сортированного списка
  * @param headerType Тип заголовка (нужен для поиска позиций вставки элемента)
+ * @param offset Отступ от данной позиции при добавлении/удалении (работает только если нельзя создать шапку)
  */
 abstract class ViewListCallback<T>(
         val viewListAdapter: ViewListAdapter<*>,
-        val headerType: Int = 0
+        val headerType: Int = 0,
+        val offset: Int = 0
 ) : SortedList.Callback<T>() {
 
     override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
@@ -25,7 +27,7 @@ abstract class ViewListCallback<T>(
         if (viewListAdapter.canCreateHeaderOrFooter()) {
             viewListAdapter.notifyItemMovedAfterHeader(headerType, fromPosition, toPosition)
         } else {
-            viewListAdapter.notifyItemMoved(fromPosition, toPosition)
+            viewListAdapter.notifyItemMoved(fromPosition + offset, toPosition + offset)
         }
     }
 
@@ -33,7 +35,7 @@ abstract class ViewListCallback<T>(
         if (viewListAdapter.canCreateHeaderOrFooter()) {
             viewListAdapter.notifyItemRangeChangedAfterHeader(headerType, position, count)
         } else {
-            viewListAdapter.notifyItemRangeChanged(position, count)
+            viewListAdapter.notifyItemRangeChanged(position + offset, count)
         }
     }
 
@@ -41,7 +43,11 @@ abstract class ViewListCallback<T>(
         if (viewListAdapter.canCreateHeaderOrFooter()) {
             viewListAdapter.notifyItemRangeInsertedAfterHeader(headerType, position, count)
         } else {
-            viewListAdapter.notifyItemRangeInserted(position, count)
+            if (viewListAdapter.itemCount == 2) {
+                viewListAdapter.notifyItemChanged(0)
+            }
+
+            viewListAdapter.notifyItemRangeInserted(position + offset, count)
         }
     }
 
@@ -49,7 +55,7 @@ abstract class ViewListCallback<T>(
         if (viewListAdapter.canCreateHeaderOrFooter()) {
             viewListAdapter.notifyItemRangeRemovedAfterHeader(headerType, position, count)
         } else {
-            viewListAdapter.notifyItemRangeRemoved(position, count)
+            viewListAdapter.notifyItemRangeRemoved(position + offset, count)
         }
     }
 }

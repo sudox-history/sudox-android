@@ -25,7 +25,7 @@ class MomentsAdapter : ViewListAdapter<MomentsAdapter.ViewHolder>() {
             }
         }
 
-    val momentsVOs = SortedList<MomentVO>(MomentVO::class.java, MomentsSortingCallback(this))
+    val momentsVOs = SortedList<MomentVO>(MomentVO::class.java, MomentsSortingCallback(this, 1))
     var addMomentVO: MomentVO? = null
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -58,6 +58,10 @@ class MomentsAdapter : ViewListAdapter<MomentsAdapter.ViewHolder>() {
 
     override fun getItemsCountAfterHeader(type: Int): Int {
         return momentsVOs.size() + 1
+    }
+
+    override fun canCreateHeaderOrFooter(): Boolean {
+        return false
     }
 
     override fun canCreateMarginViaDecorators(): Boolean {

@@ -1,6 +1,7 @@
 package com.sudox.messenger.android.activity
 
 import android.content.Context
+import android.os.Handler
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
@@ -29,15 +30,38 @@ class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFra
     }
 
     override fun getAdapter(viewList: ViewList): ViewListAdapter<*>? {
+        val handler = Handler()
+
         return ActivityTabAdapter().apply {
             momentsAdapter.apply {
                 addMomentVO = AddMomentVO(SimplePeopleVO(1, "kerjen", 1))
 
-                momentsVOs.add(MomentVO(SimplePeopleVO(2, "undefined.7887", 2), 1L, false))
-                momentsVOs.add(MomentVO(SimplePeopleVO(3, "isp", 3), 2L, true))
-                momentsVOs.add(MomentVO(SimplePeopleVO(4, "Максим Митюшкин", 4), 3L, true))
-                momentsVOs.add(MomentVO(SimplePeopleVO(5, "andy", 5), 4L, false))
-                momentsVOs.add(MomentVO(SimplePeopleVO(6, "Jeremy Clarkson", 6), 5L, false))
+                handler.postDelayed({
+                    momentsVOs.add(MomentVO(SimplePeopleVO(2, "undefined.7887", 2), 1L, false))
+                    momentsVOs.add(MomentVO(SimplePeopleVO(3, "isp", 3), 2L, true))
+                    momentsVOs.add(MomentVO(SimplePeopleVO(4, "Максим Митюшкин", 4), 3L, true))
+                    momentsVOs.add(MomentVO(SimplePeopleVO(5, "andy", 5), 4L, false))
+                    momentsVOs.add(MomentVO(SimplePeopleVO(6, "Jeremy Clarkson", 6), 5L, false))
+
+                    handler.postDelayed({
+                        momentsVOs.removeItemAt(0)
+                        momentsVOs.removeItemAt(0)
+                        momentsVOs.removeItemAt(0)
+                        momentsVOs.removeItemAt(0)
+
+                        handler.postDelayed({
+                            momentsVOs.removeItemAt(0)
+
+                            handler.postDelayed({
+                                momentsVOs.add(MomentVO(SimplePeopleVO(2, "undefined.7887", 2), 1L, false))
+                                momentsVOs.add(MomentVO(SimplePeopleVO(3, "isp", 3), 2L, true))
+                                momentsVOs.add(MomentVO(SimplePeopleVO(4, "Максим Митюшкин", 4), 3L, true))
+                                momentsVOs.add(MomentVO(SimplePeopleVO(5, "andy", 5), 4L, false))
+                                momentsVOs.add(MomentVO(SimplePeopleVO(6, "Jeremy Clarkson", 6), 5L, false))
+                            }, 2000L)
+                        }, 2000L)
+                    }, 4000L)
+                }, 1000L)
             }
         }
     }
