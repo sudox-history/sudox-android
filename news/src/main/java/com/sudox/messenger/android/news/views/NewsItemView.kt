@@ -219,11 +219,12 @@ class NewsItemView : ViewGroup {
         peopleItemView.layout(leftBorder, peopleItemViewTop, rightBorder, peopleItemViewBottom)
 
         val contentTextTop = peopleItemViewBottom + marginBetweenPeopleAndContent
-        val contentTextBottom = contentTextTop + contentTextView.measuredHeight
+        var contentTextBottom = contentTextTop + contentTextView.measuredHeight
 
         if (!contentTextView.text.isNullOrEmpty()) {
             contentTextView.layout(leftBorder, contentTextTop, rightBorder, contentTextBottom)
         } else {
+            contentTextBottom = peopleItemViewBottom
             contentTextView.layout(0, 0, 0, 0)
         }
 

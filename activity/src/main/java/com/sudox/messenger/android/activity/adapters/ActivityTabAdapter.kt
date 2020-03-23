@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
+import com.sudox.messenger.android.activity.R
 import com.sudox.messenger.android.activity.vos.headers.MomentsHeaderVO
 import com.sudox.messenger.android.activity.vos.headers.NewsHeaderVO
 import com.sudox.messenger.android.moments.adapters.MomentsAdapter
@@ -94,7 +95,11 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemMargin(position: Int): Int {
-        return 0
+        return if (position > 2) {
+            viewList!!.context.resources.getDimensionPixelSize(R.dimen.activitytabadapter_margin_between_news)
+        } else {
+            0
+        }
     }
 
     override fun getItemsCountAfterHeader(type: Int): Int {
