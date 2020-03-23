@@ -8,6 +8,8 @@
         <item name="marginBetweenButtonIconAndText">@dimen/newsitemview_action_button_margin_between_icon_and_text</item>
         <item name="dislikeActionActiveColor">@color/newsitemview_dislike_action_active_color</item>
         <item name="likeActionActiveColor">@color/newsitemview_like_action_active_color</item>
+        <item name="actionBarPaddingRight">@dimen/newsitemview_action_bar_padding_right</item>
+        <item name="actionBarPaddingLeft">@dimen/newsitemview_action_bar_padding_left</item>
         <item name="dislikeActiveIcon">@drawable/ic_thumb_up</item>
         <item name="likeActiveIcon">@drawable/ic_thumb_up</item>
         <item name="contentTextAppearance">@style/Sudox.NewsItemView.ContentTextAppearance</item>

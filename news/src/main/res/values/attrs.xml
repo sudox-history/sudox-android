@@ -7,6 +7,8 @@
         <attr name="marginBetweenButtonIconAndText" format="dimension" />
         <attr name="marginBetweenPeopleAndContent" format="dimension" />
         <attr name="marginBetweenContentAndActions" format="dimension" />
+        <attr name="actionBarPaddingRight" format="dimension" />
+        <attr name="actionBarPaddingLeft" format="dimension" />
         <attr name="dislikeActionActiveColor" format="color" />
         <attr name="dislikeActiveIcon" format="reference" />
         <attr name="likeActionActiveColor" format="color" />

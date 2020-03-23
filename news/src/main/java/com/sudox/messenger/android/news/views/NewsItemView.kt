@@ -140,6 +140,8 @@ class NewsItemView : ViewGroup {
     private var dislikeDrawable: Drawable? = null
     private var likeActiveDrawable: Drawable? = null
     private var dislikeActiveDrawable: Drawable? = null
+    private var actionBarPaddingLeft = 0
+    private var actionBarPaddingRight = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.newsItemViewStyle)
@@ -149,6 +151,8 @@ class NewsItemView : ViewGroup {
         context.obtainStyledAttributes(attrs, R.styleable.NewsItemView, defStyleAttr, 0).use {
             setTextAppearance(contentTextView, it.getResourceIdOrThrow(R.styleable.NewsItemView_contentTextAppearance))
 
+            actionBarPaddingLeft = it.getDimensionPixelSize(R.styleable.NewsItemView_actionBarPaddingLeft, 0)
+            actionBarPaddingRight = it.getDimensionPixelSize(R.styleable.NewsItemView_actionBarPaddingRight, 0)
             marginBetweenPeopleAndContent = it.getDimensionPixelSize(R.styleable.NewsItemView_marginBetweenPeopleAndContent, 0)
             marginBetweenContentAndActions = it.getDimensionPixelSize(R.styleable.NewsItemView_marginBetweenContentAndActions, 0)
             dislikeActionActiveColor = it.getColorOrThrow(R.styleable.NewsItemView_dislikeActionActiveColor)
@@ -284,7 +288,10 @@ class NewsItemView : ViewGroup {
             activeButtonsCount++
         }
 
-        val marginBetweenButtons = ((measuredWidth - activeButtonsWidth - paddingLeft - paddingRight) / (activeButtonsCount - 1).toFloat()).roundToInt()
+        val marginBetweenButtons = ((measuredWidth - activeButtonsWidth - paddingLeft - paddingRight -
+                actionBarPaddingLeft - actionBarPaddingRight) / (activeButtonsCount - 1).toFloat()).roundToInt()
+
+        leftBorder += actionBarPaddingLeft
 
         if (vo!!.likesCount != IS_ACTION_DISABLED) {
             likeButton.layout(leftBorder, buttonsTop, leftBorder + likeButton.measuredWidth, buttonsBottom)

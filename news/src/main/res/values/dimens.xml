@@ -4,5 +4,7 @@
     <dimen name="newsitemview_margin_between_people_and_content">10dp</dimen>
     <dimen name="newsitemview_action_button_margin_between_icon_and_text">6dp</dimen>
     <dimen name="newsitemview_action_button_text_size">13sp</dimen>
+    <dimen name="newsitemview_action_bar_padding_right">6dp</dimen>
+    <dimen name="newsitemview_action_bar_padding_left">6dp</dimen>
     <dimen name="newsitemview_content_text_size">15sp</dimen>
 </resources>
