@@ -39,8 +39,8 @@ class NewsItemView : ViewGroup {
                 commentButton.text = formatNumber(context, value.commentsCount)
                 shareButton.text = formatNumber(context, value.sharesCount)
 
-                bindButton(likeButton, likeActionActiveColor, value.isLikeSet, value.likesCount)
-                bindButton(dislikeButton, dislikeActionActiveColor, value.isDislikeSet, value.dislikesCount)
+                bindButton(likeButton, likeDrawable!!, likeActiveDrawable!!, likeActionActiveColor, value.isLikeSet, value.likesCount)
+                bindButton(dislikeButton, dislikeDrawable!!, dislikeActiveDrawable!!, dislikeActionActiveColor, value.isDislikeSet, value.dislikesCount)
             }
 
             field = value
@@ -136,6 +136,11 @@ class NewsItemView : ViewGroup {
         this@NewsItemView.addView(this)
     }
 
+    private var likeDrawable: Drawable? = null
+    private var dislikeDrawable: Drawable? = null
+    private var likeActiveDrawable: Drawable? = null
+    private var dislikeActiveDrawable: Drawable? = null
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.newsItemViewStyle)
 
@@ -150,11 +155,16 @@ class NewsItemView : ViewGroup {
             likeActionActiveColor = it.getColorOrThrow(R.styleable.NewsItemView_likeActionActiveColor)
             defaultActionColor = it.getColorOrThrow(R.styleable.NewsItemView_defaultActionColor)
 
+            likeDrawable = it.getDrawableOrThrow(R.styleable.NewsItemView_likeIcon)
+            dislikeDrawable = it.getDrawableOrThrow(R.styleable.NewsItemView_dislikeIcon)
+            likeActiveDrawable = it.getDrawableOrThrow(R.styleable.NewsItemView_likeActiveIcon)
+            dislikeActiveDrawable = it.getDrawableOrThrow(R.styleable.NewsItemView_dislikeActiveIcon)
+
             val buttonsStyleId = it.getResourceIdOrThrow(R.styleable.NewsItemView_actionButtonStyle)
             val marginBetweenButtonIconAndText = it.getDimensionPixelSizeOrThrow(R.styleable.NewsItemView_marginBetweenButtonIconAndText)
 
-            configureButton(likeButton, it.getDrawableOrThrow(R.styleable.NewsItemView_likeIcon), buttonsStyleId, marginBetweenButtonIconAndText)
-            configureButton(dislikeButton, it.getDrawableOrThrow(R.styleable.NewsItemView_dislikeIcon), buttonsStyleId, marginBetweenButtonIconAndText)
+            configureButton(likeButton, likeDrawable!!, buttonsStyleId, marginBetweenButtonIconAndText)
+            configureButton(dislikeButton, dislikeDrawable!!, buttonsStyleId, marginBetweenButtonIconAndText)
             configureButton(commentButton, it.getDrawableOrThrow(R.styleable.NewsItemView_commentIcon), buttonsStyleId, marginBetweenButtonIconAndText)
             configureButton(shareButton, it.getDrawableOrThrow(R.styleable.NewsItemView_shareIcon), buttonsStyleId, marginBetweenButtonIconAndText)
         }
@@ -169,15 +179,27 @@ class NewsItemView : ViewGroup {
         it.setTextColor(defaultActionColor)
     }
 
-    private fun bindButton(view: AppCompatTextView, activeColor: Int, isActive: Boolean, count: Int) = view.let {
+    private fun bindButton(view: AppCompatTextView,
+                           defaultDrawable: Drawable,
+                           activeDrawable: Drawable,
+                           activeColor: Int,
+                           isActive: Boolean,
+                           count: Int
+    ) = view.let {
         it.text = formatNumber(context, count)
 
-        val color = if (!isActive) {
-            defaultActionColor
+        val color: Int
+        val drawable: Drawable
+
+        if (isActive) {
+            drawable = activeDrawable
+            color = activeColor
         } else {
-            activeColor
+            drawable = defaultDrawable
+            color = defaultActionColor
         }
 
+        it.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         setCompoundDrawableTintList(it, ColorStateList.valueOf(color))
         it.setTextColor(color)
     }

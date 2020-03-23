@@ -8,7 +8,9 @@
         <attr name="marginBetweenPeopleAndContent" format="dimension" />
         <attr name="marginBetweenContentAndActions" format="dimension" />
         <attr name="dislikeActionActiveColor" format="color" />
+        <attr name="dislikeActiveIcon" format="reference" />
         <attr name="likeActionActiveColor" format="color" />
+        <attr name="likeActiveIcon" format="reference" />
         <attr name="commentIcon" format="reference" />
         <attr name="dislikeIcon" format="reference" />
         <attr name="shareIcon" format="reference" />
