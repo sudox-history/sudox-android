@@ -268,7 +268,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
      */
     fun notifyItemRangeInsertedAfterHeader(type: Int, position: Int, itemCount: Int) {
         if (headersVOs?.isNotEmpty() == true) {
-            var headerPosition = findHeaderPosition(type)
+            var headerPosition = findHeaderPosition(type, itemCount)
             val itemPosition = position + 1
 
             if (headerPosition == -1) {
@@ -298,7 +298,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
         // Cannot be -1, because item created and consequently header also created
 
         if (headersVOs?.isNotEmpty() == true) {
-            val headerPosition = findHeaderPosition(type)
+            val headerPosition = findHeaderPosition(type, itemCount)
             var startPosition = headerPosition + position + 1
             val vo = headersVOs!![type]
 
@@ -328,7 +328,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
         // Cannot be -1, because item created and consequently header also created
 
         if (headersVOs?.isNotEmpty() == true) {
-            val headerPosition = findHeaderPosition(type)
+            val headerPosition = findHeaderPosition(type, itemCount)
             val startPosition = headerPosition + position + 1
 
             notifyItemRangeChanged(startPosition, count)
@@ -345,7 +345,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
      * @param clearLoading Это чистая загрузка? (скрывает все элементы списка)
      */
     fun toggleLoading(type: Int, toggle: Boolean, clearLoading: Boolean = false) {
-        val headerPosition = findHeaderPosition(type)
+        val headerPosition = findHeaderPosition(type, itemCount)
         val itemsInSection = getItemsCountAfterHeaderConsiderVisibility(type, !toggle)
         val loaderPosition = headerPosition + itemsInSection + 1
 
@@ -382,7 +382,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
                 return
             }
 
-            val headerPosition = findHeaderPosition(type)
+            val headerPosition = findHeaderPosition(type, itemCount)
             val itemFromPosition = headerPosition + fromPosition + 1
             val itemToPosition = headerPosition + toPosition + 1
 
@@ -396,12 +396,13 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
      * Ищет позицию шапки, на которой находится указанный текст
      *
      * @param type Тип заголовка для поиска
+     * @param removedItemsCount Количество удаленных элементов
      * @result Позиция найденной View, -1 если View не найдена ...
      */
-    fun findHeaderPosition(type: Int): Int {
+    fun findHeaderPosition(type: Int, removedItemsCount: Int = 0): Int {
         val need = headersVOs!![type]
 
-        for (i in 0 until itemCount) {
+        for (i in 0 until itemCount + removedItemsCount) {
             val vo = getHeaderByPosition(i)
 
             if (vo == need) {

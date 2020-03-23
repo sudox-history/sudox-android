@@ -9,8 +9,10 @@ import com.sudox.messenger.android.activity.adapters.ActivityTabAdapter
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.fragments.ViewListFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
+import com.sudox.messenger.android.media.vos.impls.ImageAttachmentVO
 import com.sudox.messenger.android.moments.vos.AddMomentVO
 import com.sudox.messenger.android.moments.vos.MomentVO
+import com.sudox.messenger.android.news.vos.NewsVO
 import com.sudox.messenger.android.people.common.vos.SimplePeopleVO
 
 class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFragment, ApplicationBarListener {
@@ -37,6 +39,26 @@ class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFra
                 addMomentVO = AddMomentVO(SimplePeopleVO(1, "kerjen", 1))
 
                 handler.postDelayed({
+                    newsVOs.add(NewsVO(4L, "Maxim Mityushkin", 4L, true, false, 200101, 0, 0, 0, arrayListOf(ImageAttachmentVO(1L).apply {
+                        height = 1733
+                        width = 2560
+                    }), System.currentTimeMillis() - 10000L, "Ура! Посты работают! \n" +
+                            "Слишком длинный текст для моего экрана, проверим как он отображается \n" +
+                            "\n" +
+                            "https://sudox.ru \n" +
+                            "#sudox #android"
+                    ))
+
+                    newsVOs.add(NewsVO(4L, "Maxim Mityushkin", 4L, true, false, 200101, 0, 0, 0, arrayListOf(ImageAttachmentVO(1L).apply {
+                        height = 1733
+                        width = 2560
+                    }), System.currentTimeMillis() - 10000L, "Ура! Посты работают! \n" +
+                            "Слишком длинный текст для моего экрана, проверим как он отображается \n" +
+                            "\n" +
+                            "https://sudox.ru \n" +
+                            "#sudox #android"
+                    ))
+
                     momentsVOs.add(MomentVO(SimplePeopleVO(2, "undefined.7887", 2), 1L, false))
                     momentsVOs.add(MomentVO(SimplePeopleVO(3, "isp", 3), 2L, true))
                     momentsVOs.add(MomentVO(SimplePeopleVO(4, "Максим Митюшкин", 4), 3L, true))
@@ -48,6 +70,8 @@ class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFra
                         momentsVOs.removeItemAt(0)
                         momentsVOs.removeItemAt(0)
                         momentsVOs.removeItemAt(0)
+                        newsVOs.removeItemAt(0)
+                        newsVOs.removeItemAt(0)
 
                         handler.postDelayed({
                             momentsVOs.removeItemAt(0)
