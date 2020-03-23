@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="thousands_suffix">K</string>
+    <string name="millions_suffix">M</string>
+    <string name="billions_suffix">B</string>
+</resources>

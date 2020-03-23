@@ -5,6 +5,7 @@
         <item name="actionButtonStyle">@style/Sudox.NewsItemView.ActionButton</item>
         <item name="marginBetweenContentAndActions">@dimen/newsitemview_margin_betweencontent_and_actions</item>
         <item name="marginBetweenPeopleAndContent">@dimen/newsitemview_margin_between_people_and_content</item>
+        <item name="marginBetweenButtonIconAndText">@dimen/newsitemview_action_button_margin_between_icon_and_text</item>
         <item name="dislikeActionActiveColor">@color/newsitemview_dislike_action_active_color</item>
         <item name="likeActionActiveColor">@color/newsitemview_like_action_active_color</item>
         <item name="contentTextAppearance">@style/Sudox.NewsItemView.ContentTextAppearance</item>
@@ -27,6 +28,4 @@
         <item name="android:fontFamily">@font/opensans_regular</item>
         <item name="fontFamily">@font/opensans_regular</item>
     </style>
-
-    <color name="newsitemview_like_action_active_color">#00BFA5</color>
 </resources>

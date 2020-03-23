@@ -4,6 +4,7 @@
         <attr name="defaultActionColor" format="color" />
         <attr name="actionButtonStyle" format="reference" />
         <attr name="contentTextAppearance" format="reference" />
+        <attr name="marginBetweenButtonIconAndText" format="dimension" />
         <attr name="marginBetweenPeopleAndContent" format="dimension" />
         <attr name="marginBetweenContentAndActions" format="dimension" />
         <attr name="dislikeActionActiveColor" format="color" />

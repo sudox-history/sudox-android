@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
+import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
@@ -18,6 +19,7 @@ import androidx.core.widget.TextViewCompat.setCompoundDrawableTintList
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.messenger.android.media.MediaAttachmentsLayout
 import com.sudox.messenger.android.media.texts.LinkifiedTextView
+import com.sudox.messenger.android.media.texts.helpers.formatNumber
 import com.sudox.messenger.android.news.R
 import com.sudox.messenger.android.news.vos.IS_ACTION_DISABLED
 import com.sudox.messenger.android.news.vos.NewsVO
@@ -30,6 +32,15 @@ class NewsItemView : ViewGroup {
             peopleItemView.vo = value
             contentTextView.text = value?.contentText
             attachmentsLayout.vos = value?.attachments
+
+            if (value != null) {
+                dislikeButton.text = formatNumber(context, value.dislikesCount)
+                commentButton.text = formatNumber(context, value.commentsCount)
+                shareButton.text = formatNumber(context, value.sharesCount)
+
+                bindButton(likeButton, likeActionActiveColor, value.isLikeSet, value.likesCount)
+                bindButton(dislikeButton, dislikeActionActiveColor, value.isDislikeSet, value.dislikesCount)
+            }
 
             field = value
             requestLayout()
@@ -134,19 +145,35 @@ class NewsItemView : ViewGroup {
             defaultActionColor = it.getColorOrThrow(R.styleable.NewsItemView_defaultActionColor)
 
             val buttonsStyleId = it.getResourceIdOrThrow(R.styleable.NewsItemView_actionButtonStyle)
+            val marginBetweenButtonIconAndText = it.getDimensionPixelSizeOrThrow(R.styleable.NewsItemView_marginBetweenButtonIconAndText)
 
-            configureButton(likeButton, it.getDrawableOrThrow(R.styleable.NewsItemView_likeIcon), buttonsStyleId)
-            configureButton(dislikeButton, it.getDrawableOrThrow(R.styleable.NewsItemView_dislikeIcon), buttonsStyleId)
-            configureButton(commentButton, it.getDrawableOrThrow(R.styleable.NewsItemView_commentIcon), buttonsStyleId)
-            configureButton(shareButton, it.getDrawableOrThrow(R.styleable.NewsItemView_shareIcon), buttonsStyleId)
+            configureButton(likeButton, it.getDrawableOrThrow(R.styleable.NewsItemView_likeIcon), buttonsStyleId, marginBetweenButtonIconAndText)
+            configureButton(dislikeButton, it.getDrawableOrThrow(R.styleable.NewsItemView_dislikeIcon), buttonsStyleId, marginBetweenButtonIconAndText)
+            configureButton(commentButton, it.getDrawableOrThrow(R.styleable.NewsItemView_commentIcon), buttonsStyleId, marginBetweenButtonIconAndText)
+            configureButton(shareButton, it.getDrawableOrThrow(R.styleable.NewsItemView_shareIcon), buttonsStyleId, marginBetweenButtonIconAndText)
         }
     }
 
-    private fun configureButton(view: AppCompatTextView, iconDrawable: Drawable, styleId: Int) = view.let {
-        it.setTextColor(defaultActionColor)
+    private fun configureButton(view: AppCompatTextView, iconDrawable: Drawable, styleId: Int, marginBetweenButtonIconAndText: Int) = view.let {
+        it.compoundDrawablePadding = marginBetweenButtonIconAndText
         it.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null)
+
+        setTextAppearance(it, styleId)
         setCompoundDrawableTintList(it, ColorStateList.valueOf(defaultActionColor))
-        setTextAppearance(view, styleId)
+        it.setTextColor(defaultActionColor)
+    }
+
+    private fun bindButton(view: AppCompatTextView, activeColor: Int, isActive: Boolean, count: Int) = view.let {
+        it.text = formatNumber(context, count)
+
+        val color = if (!isActive) {
+            defaultActionColor
+        } else {
+            activeColor
+        }
+
+        setCompoundDrawableTintList(it, ColorStateList.valueOf(color))
+        it.setTextColor(color)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
