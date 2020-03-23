@@ -24,6 +24,7 @@ import com.sudox.messenger.android.news.R
 import com.sudox.messenger.android.news.vos.IS_ACTION_DISABLED
 import com.sudox.messenger.android.news.vos.NewsVO
 import com.sudox.messenger.android.people.common.views.HorizontalPeopleItemView
+import kotlin.math.roundToInt
 
 class NewsItemView : ViewGroup {
 
@@ -112,6 +113,11 @@ class NewsItemView : ViewGroup {
     }
 
     private var attachmentsLayout = MediaAttachmentsLayout(context).apply {
+        layoutParams = LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.WRAP_CONTENT
+        )
+
         this@NewsItemView.addView(this)
     }
 
@@ -194,12 +200,10 @@ class NewsItemView : ViewGroup {
             needHeight += attachmentsLayout.measuredHeight + marginBetweenPeopleAndContent
         }
 
-        val buttonWidthSpec = MeasureSpec.makeMeasureSpec((availableWidth - paddingLeft - paddingRight) / 4, MeasureSpec.EXACTLY)
-
-        likeButton.measure(buttonWidthSpec, heightMeasureSpec)
-        dislikeButton.measure(buttonWidthSpec, heightMeasureSpec)
-        commentButton.measure(buttonWidthSpec, heightMeasureSpec)
-        shareButton.measure(buttonWidthSpec, heightMeasureSpec)
+        measureChild(likeButton, widthMeasureSpec, heightMeasureSpec)
+        measureChild(dislikeButton, widthMeasureSpec, heightMeasureSpec)
+        measureChild(commentButton, widthMeasureSpec, heightMeasureSpec)
+        measureChild(shareButton, widthMeasureSpec, heightMeasureSpec)
 
         needHeight += likeButton.measuredHeight + marginBetweenContentAndActions // Все кнопки одинаковы по высоте
 
@@ -234,20 +238,44 @@ class NewsItemView : ViewGroup {
         } + marginBetweenContentAndActions
 
         val buttonsBottom = buttonsTop + likeButton.measuredHeight
+        var activeButtonsWidth = 0
+        var activeButtonsCount = 0
+
+        if (vo!!.likesCount != IS_ACTION_DISABLED) {
+            activeButtonsWidth += likeButton.measuredWidth
+            activeButtonsCount++
+        }
+
+        if (vo!!.commentsCount != IS_ACTION_DISABLED) {
+            activeButtonsWidth += commentButton.measuredWidth
+            activeButtonsCount++
+        }
+
+        if (vo!!.sharesCount != IS_ACTION_DISABLED) {
+            activeButtonsWidth += shareButton.measuredWidth
+            activeButtonsCount++
+        }
+
+        if (vo!!.dislikesCount != IS_ACTION_DISABLED) {
+            activeButtonsWidth += dislikeButton.measuredWidth
+            activeButtonsCount++
+        }
+
+        val marginBetweenButtons = ((measuredWidth - activeButtonsWidth - paddingLeft - paddingRight) / (activeButtonsCount - 1).toFloat()).roundToInt()
 
         if (vo!!.likesCount != IS_ACTION_DISABLED) {
             likeButton.layout(leftBorder, buttonsTop, leftBorder + likeButton.measuredWidth, buttonsBottom)
-            leftBorder += likeButton.measuredWidth
+            leftBorder += likeButton.measuredWidth + marginBetweenButtons
         }
 
         if (vo!!.commentsCount != IS_ACTION_DISABLED) {
             commentButton.layout(leftBorder, buttonsTop, leftBorder + commentButton.measuredWidth, buttonsBottom)
-            leftBorder += commentButton.measuredWidth
+            leftBorder += commentButton.measuredWidth + marginBetweenButtons
         }
 
         if (vo!!.sharesCount != IS_ACTION_DISABLED) {
             shareButton.layout(leftBorder, buttonsTop, leftBorder + shareButton.measuredWidth, buttonsBottom)
-            leftBorder += shareButton.measuredWidth
+            leftBorder += shareButton.measuredWidth + marginBetweenButtons
         }
 
         if (vo!!.dislikesCount != IS_ACTION_DISABLED) {
