@@ -7,6 +7,7 @@ import android.text.Layout
 import android.util.AttributeSet
 import android.view.ContextThemeWrapper
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getResourceIdOrThrow
@@ -30,6 +31,14 @@ class AppBar : ViewGroup {
 
             val leftButtons = value?.getButtonsAtLeft()
             val rightButtons = value?.getButtonsAtRight()
+
+            viewAtLeft = value?.getViewAtLeft(context)?.apply {
+                this@AppBar.addView(this)
+            }
+
+            viewAtRight = value?.getViewAtRight(context)?.apply {
+                this@AppBar.addView(this)
+            }
 
             buttonsAtLeft = if (leftButtons != null) {
                 Array(leftButtons.size) {
@@ -67,6 +76,15 @@ class AppBar : ViewGroup {
             invalidate()
         }
 
+    var marginBetweenViewsAndButtons: Int = 0
+        set(value) {
+            field = value
+            requestLayout()
+            invalidate()
+        }
+
+    private var viewAtLeft: View? = null
+    private var viewAtRight: View? = null
     private var buttonsAtLeft: Array<AppCompatTextView>? = null
     private var buttonsAtRight: Array<AppCompatTextView>? = null
     private var titleTextView = createTextView()
@@ -78,6 +96,7 @@ class AppBar : ViewGroup {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.AppBar, defStyleAttr, 0).use {
             buttonsStyleId = it.getResourceIdOrThrow(R.styleable.AppBar_buttonsStyle)
+            marginBetweenViewsAndButtons = it.getDimensionPixelSize(R.styleable.AppBar_marginBetweenViewsAndButtons, 0)
 
             setTextAppearance(titleTextView, it.getResourceIdOrThrow(R.styleable.AppBar_titleTextAppearance))
         }
@@ -122,8 +141,39 @@ class AppBar : ViewGroup {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         measureChild(titleTextView, widthMeasureSpec, heightMeasureSpec)
 
-        buttonsAtLeft?.forEach { measureChild(it, widthMeasureSpec, heightMeasureSpec) }
-        buttonsAtRight?.forEach { measureChild(it, widthMeasureSpec, heightMeasureSpec) }
+        var freeWidth = MeasureSpec.getSize(widthMeasureSpec) - titleTextView.measuredWidth - paddingRight - paddingLeft
+
+        buttonsAtLeft?.forEach {
+            measureChild(it, widthMeasureSpec, heightMeasureSpec)
+            freeWidth -= it.measuredWidth
+        }
+
+        buttonsAtRight?.forEach {
+            measureChild(it, widthMeasureSpec, heightMeasureSpec)
+            freeWidth -= it.measuredWidth
+        }
+
+        if (viewAtRight != null) {
+            if (buttonsAtRight != null) {
+                freeWidth -= marginBetweenViewsAndButtons
+            }
+
+            val widthSpec = MeasureSpec.makeMeasureSpec(freeWidth, MeasureSpec.AT_MOST)
+
+            measureChild(viewAtRight, widthSpec, heightMeasureSpec)
+            freeWidth -= viewAtRight!!.measuredWidth
+        }
+
+        if (viewAtLeft != null) {
+            if (buttonsAtLeft != null) {
+                freeWidth -= marginBetweenViewsAndButtons
+            }
+
+            val widthSpec = MeasureSpec.makeMeasureSpec(freeWidth, MeasureSpec.AT_MOST)
+
+            measureChild(viewAtLeft, widthSpec, heightMeasureSpec)
+            freeWidth -= viewAtLeft!!.measuredWidth
+        }
 
         setMeasuredDimension(
                 MeasureSpec.getSize(widthMeasureSpec),
@@ -164,6 +214,28 @@ class AppBar : ViewGroup {
                 it.layout(leftBorderRightButton, buttonsTopBorder, rightBorderRightButton, buttonsBottomBorder)
                 rightBorderRightButton = leftBorderRightButton
             }
+        }
+
+        if (viewAtLeft != null) {
+            if (buttonsAtLeft != null) {
+                rightBorderLeftButton += marginBetweenViewsAndButtons
+            }
+
+            val topBorder = measuredHeight / 2 - viewAtLeft!!.measuredHeight / 2
+            val bottomBorder = topBorder + viewAtLeft!!.measuredHeight
+
+            viewAtLeft!!.layout(rightBorderLeftButton, topBorder, rightBorderLeftButton + viewAtLeft!!.measuredWidth, bottomBorder)
+        }
+
+        if (viewAtRight != null) {
+            if (buttonsAtRight != null) {
+                leftBorderRightButton -= marginBetweenViewsAndButtons
+            }
+
+            val topBorder = measuredHeight / 2 - viewAtRight!!.measuredHeight / 2
+            val bottomBorder = topBorder + viewAtRight!!.measuredHeight
+
+            viewAtRight!!.layout(leftBorderRightButton - viewAtRight!!.measuredWidth, topBorder, leftBorderRightButton, bottomBorder)
         }
     }
 }

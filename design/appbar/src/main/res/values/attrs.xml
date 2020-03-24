@@ -3,6 +3,7 @@
     <declare-styleable name="AppBar">
         <attr name="buttonsStyle" format="reference" />
         <attr name="titleTextAppearance" format="reference" />
+        <attr name="marginBetweenViewsAndButtons" format="dimension" />
     </declare-styleable>
 
     <attr name="appbarStyle" format="reference" />

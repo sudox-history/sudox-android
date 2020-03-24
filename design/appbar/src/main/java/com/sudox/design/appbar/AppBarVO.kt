@@ -30,7 +30,7 @@ interface AppBarVO {
      * @param context Контекст приложения/активности
      * @return View обьекта слева
      */
-    fun getViewAtLeft(context: Context): View
+    fun getViewAtLeft(context: Context): View?
 
     /**
      * Возвращает View справа.
@@ -38,7 +38,7 @@ interface AppBarVO {
      * @param context Контекст приложения/активности
      * @return View обьекта справа
      */
-    fun getViewAtRight(context: Context): View
+    fun getViewAtRight(context: Context): View?
 
     /**
      * Возвращает ID заголовка.
