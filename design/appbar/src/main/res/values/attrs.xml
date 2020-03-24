@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AppBar">
+        <attr name="buttonsStyle" format="reference" />
+        <attr name="titleTextAppearance" format="reference" />
+    </declare-styleable>
+
+    <attr name="appbarStyle" format="reference" />
+</resources>

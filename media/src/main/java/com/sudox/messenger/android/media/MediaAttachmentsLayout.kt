@@ -11,7 +11,7 @@ class MediaAttachmentsLayout : MityushkinLayout {
         set(value) {
             if (field != null) {
                 for (i in 0 until childCount) {
-                    removeViewInLayout(getChildAt(i).apply {
+                    removeViewInLayout(getChildAt(0).apply {
                         field!![i].unbindView(this)
                     })
                 }

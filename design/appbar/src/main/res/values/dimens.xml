@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="appbar_padding_left">17dp</dimen>
+    <dimen name="appbar_padding_right">17dp</dimen>
+    <dimen name="appbar_title_text_size">17sp</dimen>
+    <dimen name="appbar_button_text_size">15sp</dimen>
+</resources>

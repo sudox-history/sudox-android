@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.AppBar" parent="">
+        <item name="android:paddingLeft">@dimen/appbar_padding_left</item>
+        <item name="android:paddingRight">@dimen/appbar_padding_right</item>
+
+        <item name="titleTextAppearance">@style/Sudox.AppBar.TitleTextAppearance</item>
+        <item name="buttonsStyle">@style/Sudox.AppBar.Buttons</item>
+    </style>
+
+    <style name="Sudox.AppBar.TitleTextAppearance" parent="">
+        <item name="fontFamily">@font/opensans_bold</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="android:textSize">@dimen/appbar_title_text_size</item>
+        <item name="android:textColor">@color/appbar_title_text_color</item>
+    </style>
+
+    <style name="Sudox.AppBar.Buttons" parent="">
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textSize">@dimen/appbar_button_text_size</item>
+        <item name="android:textColor">@color/appbar_button_text_color</item>
+        <item name="android:background">?selectableItemBackgroundBorderless</item>
+    </style>
+</resources>

@@ -5,6 +5,7 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+    <!--  TODO: Вынести в design-common  -->
     <style name="Sudox.Button" parent="Widget.AppCompat.Button">
         <item name="android:background">?selectableItemBackgroundBorderless</item>
         <item name="android:minHeight">0dp</item>
@@ -29,6 +30,8 @@
 
         <item name="applicationBarStyle">@style/Sudox.ApplicationBar</item>
         <item name="applicationBarButtonStyle">@style/Sudox.ApplicationBar.Button</item>
+
+        <item name="appbarStyle">@style/Sudox.AppBar</item>
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
         <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
         <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>
