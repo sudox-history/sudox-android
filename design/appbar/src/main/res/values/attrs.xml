@@ -7,4 +7,5 @@
     </declare-styleable>
 
     <attr name="appbarStyle" format="reference" />
+    <attr name="appbarLayoutStyle" format="reference" />
 </resources>

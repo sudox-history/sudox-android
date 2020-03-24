@@ -32,6 +32,8 @@
         <item name="applicationBarButtonStyle">@style/Sudox.ApplicationBar.Button</item>
 
         <item name="appbarStyle">@style/Sudox.AppBar</item>
+        <item name="appbarLayoutStyle">@style/Sudox.AppBarLayout</item>
+
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
         <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
         <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>

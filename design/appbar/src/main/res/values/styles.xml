@@ -10,6 +10,10 @@
         <item name="buttonsStyle">@style/Sudox.AppBar.Buttons</item>
     </style>
 
+    <style name="Sudox.AppBarLayout" parent="">
+        <item name="android:background">@drawable/background_appbarlayout</item>
+    </style>
+
     <style name="Sudox.AppBar.TitleTextAppearance" parent="">
         <item name="fontFamily">@font/opensans_bold</item>
         <item name="android:fontFamily">@font/opensans_bold</item>

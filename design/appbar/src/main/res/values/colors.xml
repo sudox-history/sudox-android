@@ -2,4 +2,6 @@
 <resources>
     <color name="appbar_title_text_color">#000000</color>
     <color name="appbar_button_text_color">#000000</color>
+    <color name="appbar_background_color">#FFFFFF</color>
+    <color name="appbar_background_stroke_color">#E6E6E6</color>
 </resources>
