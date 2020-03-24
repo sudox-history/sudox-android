@@ -14,7 +14,7 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 
-class AppBar : ViewGroup {
+class AppBar : ViewGroup, View.OnClickListener {
 
     var vo: AppBarVO? = null
         set(value) {
@@ -82,6 +82,8 @@ class AppBar : ViewGroup {
             requestLayout()
             invalidate()
         }
+
+    var callback: ((Int) -> (Unit))? = null
 
     private var viewAtLeft: View? = null
     private var viewAtRight: View? = null
@@ -237,5 +239,9 @@ class AppBar : ViewGroup {
 
             viewAtRight!!.layout(leftBorderRightButton - viewAtRight!!.measuredWidth, topBorder, leftBorderRightButton, bottomBorder)
         }
+    }
+
+    override fun onClick(view: View) {
+        callback?.invoke(view.tag as Int)
     }
 }
