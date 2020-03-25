@@ -32,7 +32,7 @@ class NavigationBar : ViewGroup, View.OnClickListener {
                 it.measure(buttonWidthSpec, heightMeasureSpec)
             }
 
-            setMeasuredDimension(availableWidth, availableHeight)
+            setMeasuredDimension(availableWidth, minimumHeight)
         } else {
             setMeasuredDimension(0, 0)
         }

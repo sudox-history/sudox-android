@@ -177,6 +177,7 @@
 
     <style name="Sudox.NavigationBar" parent="">
         <item name="android:background">@drawable/drawable_navbar_background</item>
+        <item name="android:minHeight">@dimen/navigationbar_height</item>
     </style>
 
     <style name="Sudox.NavigationBar.Button" parent="">
