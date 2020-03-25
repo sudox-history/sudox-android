@@ -48,7 +48,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             navigationManager!!.restoreState(savedInstanceState)
         } else {
             navigationManager!!.configureNavigationBar()
-            navigationManager!!.showMainPart()
+            navigationManager!!.showAuthPart()
         }
     }
 
@@ -71,8 +71,11 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         navigationManager!!.saveState(outState)
     }
 
-    override fun setAppBarViewObject(vo: AppBarVO?) {
-        appLayout!!.contentLayout.layoutChild.appBarLayout.appBar!!.vo = vo
+    override fun setAppBarViewObject(vo: AppBarVO?, callback: ((Int) -> (Unit))?) {
+        appLayout!!.contentLayout.layoutChild.appBarLayout.appBar!!.let {
+            it.callback = callback
+            it.vo = vo
+        }
     }
 
     override fun getCoreComponent(): CoreComponent {

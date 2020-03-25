@@ -4,6 +4,9 @@ import android.content.Context
 import android.view.View
 
 const val NOT_USED_PARAMETER = 0
+const val BACK_BUTTON_TAG = 1
+
+val BACK_BUTTON = arrayOf(Triple(BACK_BUTTON_TAG, R.drawable.ic_left_arrow, NOT_USED_PARAMETER))
 
 /**
  * ViewObject состояния AppBar'а

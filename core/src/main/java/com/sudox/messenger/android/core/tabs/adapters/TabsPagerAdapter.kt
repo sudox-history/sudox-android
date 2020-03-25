@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.core.tabs
+package com.sudox.messenger.android.core.tabs.adapters
 
 import android.content.Context
 import androidx.fragment.app.FragmentManager
@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.core.tabs.TabsChildFragment
 
 /**
  * Адаптер для ViewPager'а TabsRootFragment

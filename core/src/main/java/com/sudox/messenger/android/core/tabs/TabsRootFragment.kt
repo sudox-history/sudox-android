@@ -8,6 +8,7 @@ import androidx.viewpager.widget.ViewPager
 import com.sudox.design.tablayout.TabLayout
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.core.tabs.adapters.TabsPagerAdapter
 
 const val VIEW_PAGER_ID_KEY = "view_pager_id"
 

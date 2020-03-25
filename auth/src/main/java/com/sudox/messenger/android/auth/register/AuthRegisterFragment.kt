@@ -11,7 +11,6 @@ import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.showSoftKeyboard
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.core.CoreFragment
-import com.sudox.messenger.android.core.managers.APPBAR_NEXT_BUTTON_TAG
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterEditTextLayout
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterNicknameEditText
 
@@ -44,11 +43,11 @@ class AuthRegisterFragment : CoreFragment(), ApplicationBarListener {
     }
 
     override fun onButtonClicked(tag: Int) {
-        if (tag == APPBAR_NEXT_BUTTON_TAG) {
-            navigationManager!!.showMainPart()
-        } else {
-            authRegisterEditTextLayout.setErrorText(R.string.sudox_not_working_in_this_country)
-        }
+//        if (tag == APPBAR_NEXT_BUTTON_TAG) {
+//            navigationManager!!.showMainPart()
+//        } else {
+//            authRegisterEditTextLayout.setErrorText(R.string.sudox_not_working_in_this_country)
+//        }
     }
 
     override fun onAnimationEnd(animation: Animator) {

@@ -3,8 +3,10 @@ package com.sudox.messenger.android.core
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import com.sudox.design.appbar.AppBarVO
+import com.sudox.design.appbar.BACK_BUTTON_TAG
 import com.sudox.design.hideSoftKeyboard
 import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.android.core.managers.ScreenManager
@@ -21,6 +23,7 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     @Inject
     @JvmField
     var screenManager: ScreenManager? = null
+    var appBarVO: AppBarVO? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injectAll(activity as CoreActivity)
@@ -28,13 +31,15 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     }
 
     /**
-     * Выдает ViewObject для конфигурирования AppBar'а
-     * Если равен null, то AppBar будет скрыт.
+     * Вызывается при клике по кнопке, находящейся в AppBar'е
+     * Стандартная реализация также отрабатывает нажатие кнопки назад
      *
-     * @return ViewObject AppBar'а
+     * @param tag Тег кнопки, по которой был произведен клик
      */
-    open fun getAppBarViewObject(): AppBarVO? {
-        return null
+    open fun onAppBarClicked(tag: Int) {
+        if (tag == BACK_BUTTON_TAG) {
+            activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
+        }
     }
 
     /**
@@ -65,7 +70,7 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
         if (!hidden) {
             // P.S.: CoreFragment можно использовать только если Activity является наследником CoreActivity
             if (this !is TabsChildFragment || !isAppBarConfiguredByRoot()) {
-                (activity as CoreActivity).setAppBarViewObject(getAppBarViewObject())
+                (activity as CoreActivity).setAppBarViewObject(appBarVO, ::onAppBarClicked)
             }
         } else {
             activity!!.hideSoftKeyboard()

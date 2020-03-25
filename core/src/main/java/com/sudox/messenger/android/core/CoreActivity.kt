@@ -10,8 +10,9 @@ interface CoreActivity {
      * Если передать null, то AppBar должен скрыться.
      *
      * @param vo ViewObject, который необходимо задать AppBar'у
+     * @param callback Кэллбэк для обработки кликов
      */
-    fun setAppBarViewObject(vo: AppBarVO?)
+    fun setAppBarViewObject(vo: AppBarVO?, callback: ((Int) -> (Unit))?)
 
     /**
      * Возвращает основной компонент ядра.

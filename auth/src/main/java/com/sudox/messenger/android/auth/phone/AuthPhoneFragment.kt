@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import com.sudox.design.appbar.AppBarVO
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.countriesProvider.countries
 import com.sudox.design.countriesProvider.entries.Country
@@ -21,7 +22,11 @@ import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayou
 import kotlinx.android.synthetic.main.fragment_auth_phone.view.authPhoneEditText
 import java.util.Locale
 
-class AuthPhoneFragment : CoreFragment(), ApplicationBarListener {
+class AuthPhoneFragment : CoreFragment() {
+
+    init {
+        appBarVO = AuthPhoneAppBarVO()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_auth_phone, container, false).apply {
@@ -29,17 +34,18 @@ class AuthPhoneFragment : CoreFragment(), ApplicationBarListener {
         }
     }
 
+    override fun onAppBarClicked(tag: Int) {
+        super.onAppBarClicked(tag)
+
+        if (tag == AUTH_PHONE_NEXT_BUTTON_TAG) {
+            navigationManager!!.showChildFragment(AuthCodeFragment())
+        }
+    }
+
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
 
         if (!hidden) {
-//            applicationBarManager!!.let {
-//                it.setListener(this)
-//                it.toggleButtonBack(true)
-//                it.toggleButtonNext(true)
-//                it.setTitleText(R.string.sign_in)
-//            }
-
             screenManager!!.let {
                 it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                 it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
@@ -59,10 +65,6 @@ class AuthPhoneFragment : CoreFragment(), ApplicationBarListener {
         data!!.getParcelableExtra<Country>(COUNTRY_EXTRA_NAME)!!.let {
             authPhoneEditText.setCountry(it.regionCode, it.countryCode, it.flagImageId)
         }
-    }
-
-    override fun onButtonClicked(tag: Int) {
-        navigationManager!!.showChildFragment(AuthCodeFragment())
     }
 
     private fun initPhoneEditText(view: View) = view.let {

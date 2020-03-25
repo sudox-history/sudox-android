@@ -125,6 +125,8 @@ class AppBar : ViewGroup, View.OnClickListener {
 
     private fun createButton(triple: Triple<Int, Int, Int>): AppCompatTextView {
         return createTextView(buttonsStyleId).apply {
+            setOnClickListener(this@AppBar)
+
             if (triple.second != NOT_USED_PARAMETER) {
                 setCompoundDrawablesWithIntrinsicBounds(triple.second, 0, 0, 0)
             }

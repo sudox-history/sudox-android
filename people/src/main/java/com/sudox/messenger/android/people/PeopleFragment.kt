@@ -11,8 +11,4 @@ class PeopleFragment : TabsRootFragment() {
     override fun getFragments(): Array<CoreFragment> {
         return arrayOf(ActivityTabFragment(), PeopleTabFragment())
     }
-
-    override fun getAppBarViewObject(): AppBarVO? {
-        return PeopleAppBarVO
-    }
 }
