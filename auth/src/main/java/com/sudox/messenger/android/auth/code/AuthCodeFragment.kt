@@ -8,14 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.text.HtmlCompat
-import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.register.AuthRegisterFragment
 import com.sudox.messenger.android.core.CoreFragment
 import kotlinx.android.synthetic.main.fragment_auth_code.authCodeDescriptionTextView
 import kotlinx.android.synthetic.main.fragment_auth_code.authCodeEditText
 
-class AuthCodeFragment : CoreFragment(), ApplicationBarListener {
+class AuthCodeFragment : CoreFragment() {
+
+    init {
+        appBarVO = AuthCodeAppBarVO()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_auth_code, container, false)
@@ -25,6 +28,10 @@ class AuthCodeFragment : CoreFragment(), ApplicationBarListener {
         val string = getString(R.string.check_sms, "+7 (901) 347-00-12")
         val spannable = HtmlCompat.fromHtml(string, HtmlCompat.FROM_HTML_MODE_COMPACT)
 
+        authCodeEditText.codeFilledCallback = {
+            navigationManager!!.showChildFragment(AuthRegisterFragment())
+        }
+
         authCodeDescriptionTextView.text = spannable
     }
 
@@ -32,13 +39,6 @@ class AuthCodeFragment : CoreFragment(), ApplicationBarListener {
         super.onHiddenChanged(hidden)
 
         if (!hidden) {
-//            applicationBarManager!!.let {
-//                it.setListener(this)
-//                it.toggleButtonBack(true)
-//                it.toggleButtonNext(true)
-//                it.setTitleText(R.string.sign_in)
-//            }
-
             screenManager!!.let {
                 it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                 it.setInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
@@ -52,9 +52,5 @@ class AuthCodeFragment : CoreFragment(), ApplicationBarListener {
         }
 
         super.onAnimationEnd(animation)
-    }
-
-    override fun onButtonClicked(tag: Int) {
-        navigationManager!!.showChildFragment(AuthRegisterFragment())
     }
 }

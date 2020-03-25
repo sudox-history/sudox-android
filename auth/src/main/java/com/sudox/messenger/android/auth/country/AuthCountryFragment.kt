@@ -17,6 +17,10 @@ internal const val COUNTRY_EXTRA_NAME = "country"
 
 class AuthCountryFragment : CoreFragment() {
 
+    init {
+        appBarVO = AuthCountryAppBarVO()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val coreActivity = activity as CoreActivity
 
