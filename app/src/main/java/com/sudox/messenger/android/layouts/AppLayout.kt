@@ -1,9 +1,11 @@
 package com.sudox.messenger.android.layouts
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.widget.NestedScrollView
+import com.sudox.messenger.android.layouts.child.AppLayoutChild
 
 class AppLayout : NestedScrollView {
 
@@ -21,6 +23,19 @@ class AppLayout : NestedScrollView {
     init {
         setOnScrollChangeListener { _: NestedScrollView, _: Int, scrollY: Int, _: Int, oldScrollY: Int ->
 
+        }
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        return AppLayoutState(super.onSaveInstanceState()!!).apply {
+            readFromView(this@AppLayout)
+        }
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        (state as AppLayoutState).apply {
+            super.onRestoreInstanceState(superState)
+            writeToView(this@AppLayout)
         }
     }
 }

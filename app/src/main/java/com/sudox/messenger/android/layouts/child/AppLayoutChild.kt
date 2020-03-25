@@ -1,12 +1,14 @@
-package com.sudox.messenger.android.layouts
+package com.sudox.messenger.android.layouts.child
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.sudox.design.appbar.AppBar
 import com.sudox.design.appbar.AppBarLayout
+import com.sudox.design.viewlist.ViewListState
 
 class AppLayoutChild : ViewGroup {
 
@@ -43,5 +45,18 @@ class AppLayoutChild : ViewGroup {
         val bottomBorder = appBarLayout.measuredHeight + frameLayout.measuredHeight
 
         frameLayout.layout(0, appBarLayout.measuredWidth, frameLayout.measuredWidth, bottomBorder)
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        return AppLayoutChildState(super.onSaveInstanceState()!!).apply {
+            readFromView(this@AppLayoutChild)
+        }
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        (state as AppLayoutChildState).apply {
+            super.onRestoreInstanceState(superState)
+            writeToView(this@AppLayoutChild)
+        }
     }
 }
