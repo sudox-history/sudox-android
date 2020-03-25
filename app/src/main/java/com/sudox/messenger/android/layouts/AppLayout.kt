@@ -1,12 +1,16 @@
 package com.sudox.messenger.android.layouts
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import com.sudox.design.navigationBar.NavigationBar
 import com.sudox.design.saveableview.SaveableViewGroup
 import com.sudox.messenger.android.layouts.content.ContentLayout
+
+const val LAYOUT_VIEW_ID_KEY = "layout_view_id"
+const val FRAME_VIEW_ID_KEY = "frame_view_id"
 
 class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
 
@@ -27,6 +31,34 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
     init {
         addView(contentLayout)
         addView(navigationBar)
+    }
+
+    /**
+     * Инициализирует данную ViewGroup для отображения в качестве корневого элемента приложения.
+     *
+     * @param savedInstanceState Сохраненое состояние
+     */
+    fun init(savedInstanceState: Bundle?) {
+        if (savedInstanceState?.containsKey(LAYOUT_VIEW_ID_KEY) == true) {
+            id = savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
+
+            contentLayout
+                    .layoutChild
+                    .frameLayout
+                    .id = savedInstanceState.getInt(FRAME_VIEW_ID_KEY)
+        } else {
+            id = View.generateViewId()
+        }
+    }
+
+    /**
+     * Сохраняет необходимые ID в Bundle
+     *
+     * @param outState Bundle, в который нужно сохранить I
+     */
+    fun saveIds(outState: Bundle) = outState.let {
+        it.putInt(FRAME_VIEW_ID_KEY, contentLayout.layoutChild.frameLayout.id)
+        it.putInt(LAYOUT_VIEW_ID_KEY, id)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

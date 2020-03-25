@@ -3,7 +3,6 @@ package com.sudox.messenger.android
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.sudox.design.appbar.AppBarVO
 import com.sudox.messenger.android.core.CoreActivity
@@ -14,9 +13,6 @@ import com.sudox.messenger.android.core.inject.DaggerCoreComponent
 import com.sudox.messenger.android.layouts.AppLayout
 import com.sudox.messenger.android.managers.AppNavigationManager
 import com.sudox.messenger.android.managers.AppScreenManager
-
-const val LAYOUT_VIEW_ID_KEY = "layout_view_id"
-const val FRAME_VIEW_ID_KEY = "frame_view_id"
 
 class AppActivity : AppCompatActivity(), CoreActivity {
 
@@ -30,27 +26,16 @@ class AppActivity : AppCompatActivity(), CoreActivity {
                 .alpha = 1
 
         appLayout = AppLayout(this).apply {
-            if (savedInstanceState?.containsKey(LAYOUT_VIEW_ID_KEY) == true) {
-                id = savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
+            init(savedInstanceState)
 
-                contentLayout
-                        .layoutChild
-                        .frameLayout
-                        .id = savedInstanceState.getInt(FRAME_VIEW_ID_KEY)
-            } else {
-                id = View.generateViewId()
-            }
-        }
-
-        appLayout!!.let {
             navigationManager = AppNavigationManager(
                     supportFragmentManager,
-                    it.navigationBar,
-                    it.contentLayout.layoutChild.frameLayout.id
+                    contentLayout.layoutChild.frameLayout.id,
+                    navigationBar
             )
-        }
 
-        setContentView(appLayout)
+            setContentView(this)
+        }
 
         coreComponent = DaggerCoreComponent
                 .builder()
@@ -80,11 +65,9 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState.apply {
-            putInt(LAYOUT_VIEW_ID_KEY, appLayout!!.id)
-            putInt(FRAME_VIEW_ID_KEY, appLayout!!.contentLayout.layoutChild.frameLayout.id)
-        })
+        super.onSaveInstanceState(outState)
 
+        appLayout!!.saveIds(outState)
         navigationManager!!.saveState(outState)
     }
 

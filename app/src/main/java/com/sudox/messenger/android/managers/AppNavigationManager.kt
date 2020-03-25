@@ -33,8 +33,8 @@ internal const val CURRENT_ITEM_TAG_EXTRA_KEY = "current_item_tag"
 
 class AppNavigationManager(
         val fragmentManager: FragmentManager,
-        val navigationBar: NavigationBar,
-        val containerId: Int
+        val containerId: Int,
+        val navigationBar: NavigationBar
 ) : NavigationManager, NavigationBarListener {
 
     private var backstack = LinkedList<Pair<Int, Fragment>>()
