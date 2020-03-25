@@ -11,16 +11,16 @@ import com.sudox.messenger.android.core.CoreLoader
 import com.sudox.messenger.android.core.inject.CoreComponent
 import com.sudox.messenger.android.core.inject.CoreModule
 import com.sudox.messenger.android.core.inject.DaggerCoreComponent
-import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.android.layouts.AppLayout
 import com.sudox.messenger.android.managers.AppNavigationManager
 import com.sudox.messenger.android.managers.AppScreenManager
 
 const val LAYOUT_VIEW_ID_KEY = "layout_view_id"
+const val FRAME_VIEW_ID_KEY = "frame_view_id"
 
 class AppActivity : AppCompatActivity(), CoreActivity {
 
-    private var navigationManager: NavigationManager? = null
+    private var navigationManager: AppNavigationManager? = null
     private var coreComponent: CoreComponent? = null
     private var appLayout: AppLayout? = null
 
@@ -30,14 +30,17 @@ class AppActivity : AppCompatActivity(), CoreActivity {
                 .alpha = 1
 
         appLayout = AppLayout(this).apply {
-            id = if (savedInstanceState?.containsKey(LAYOUT_VIEW_ID_KEY) == true) {
-                savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
+            if (savedInstanceState?.containsKey(LAYOUT_VIEW_ID_KEY) == true) {
+                id = savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
+
+                contentLayout
+                        .layoutChild
+                        .frameLayout
+                        .id = savedInstanceState.getInt(FRAME_VIEW_ID_KEY)
             } else {
-                View.generateViewId()
+                id = View.generateViewId()
             }
         }
-
-        setContentView(appLayout)
 
         appLayout!!.let {
             navigationManager = AppNavigationManager(
@@ -46,6 +49,8 @@ class AppActivity : AppCompatActivity(), CoreActivity {
                     it.contentLayout.layoutChild.frameLayout.id
             )
         }
+
+        setContentView(appLayout)
 
         coreComponent = DaggerCoreComponent
                 .builder()
@@ -77,6 +82,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState.apply {
             putInt(LAYOUT_VIEW_ID_KEY, appLayout!!.id)
+            putInt(FRAME_VIEW_ID_KEY, appLayout!!.contentLayout.layoutChild.frameLayout.id)
         })
 
         navigationManager!!.saveState(outState)

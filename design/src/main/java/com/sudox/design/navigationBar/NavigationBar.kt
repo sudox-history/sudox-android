@@ -23,7 +23,6 @@ class NavigationBar : ViewGroup, View.OnClickListener {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         if (buttons.isNotEmpty()) {
             val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
-            val availableHeight = MeasureSpec.getSize(heightMeasureSpec)
 
             val buttonWidth = (availableWidth - paddingLeft - paddingRight) / buttons.size
             val buttonWidthSpec = MeasureSpec.makeMeasureSpec(buttonWidth, MeasureSpec.EXACTLY)

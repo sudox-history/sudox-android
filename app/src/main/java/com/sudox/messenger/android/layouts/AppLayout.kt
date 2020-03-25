@@ -17,6 +17,7 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
 
     val navigationBar = NavigationBar(context).apply {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        id = View.generateViewId()
     }
 
     constructor(context: Context) : super(context)
