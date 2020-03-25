@@ -21,6 +21,9 @@ class AppBarLayout : ViewGroup {
             invalidate()
         }
 
+    var pixelsToLastChild = 0
+        private set
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.appbarLayoutStyle)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
@@ -34,6 +37,12 @@ class AppBarLayout : ViewGroup {
                 measureChild(this, widthMeasureSpec, heightMeasureSpec)
                 measuredHeight
             }
+        }
+
+        pixelsToLastChild = height
+
+        if (childCount > 1) {
+            pixelsToLastChild -= getChildAt(childCount - 1).measuredHeight
         }
 
         setMeasuredDimension(width, height)

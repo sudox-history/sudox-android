@@ -177,10 +177,7 @@ class AppBar : ViewGroup, View.OnClickListener {
             freeWidth -= viewAtLeft!!.measuredWidth
         }
 
-        setMeasuredDimension(
-                MeasureSpec.getSize(widthMeasureSpec),
-                MeasureSpec.getSize(heightMeasureSpec)
-        )
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), minimumHeight)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

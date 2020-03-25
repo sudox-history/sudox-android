@@ -4,6 +4,7 @@
     <style name="Sudox.AppBar" parent="">
         <item name="android:paddingLeft">@dimen/appbar_padding_left</item>
         <item name="android:paddingRight">@dimen/appbar_padding_right</item>
+        <item name="android:minHeight">@dimen/appbar_height</item>
 
         <item name="marginBetweenViewsAndButtons">@dimen/appbar_margin_between_views_and_buttons</item>
         <item name="titleTextAppearance">@style/Sudox.AppBar.TitleTextAppearance</item>
