@@ -34,6 +34,6 @@ interface TabsChildFragment {
      * Сконфигурирован ли AppBar корневым фрагментом?
      */
     fun isAppBarConfiguredByRoot(): Boolean {
-        return true
+        return false
     }
 }

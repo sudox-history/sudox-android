@@ -2,11 +2,10 @@ package com.sudox.messenger.android.activity
 
 import android.content.Context
 import android.os.Handler
-import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.messenger.android.activity.adapters.ActivityTabAdapter
-import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.activity.vos.ActivityTabAppBarVO
 import com.sudox.messenger.android.core.fragments.ViewListFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.media.vos.impls.ImageAttachmentVO
@@ -15,10 +14,10 @@ import com.sudox.messenger.android.moments.vos.MomentVO
 import com.sudox.messenger.android.news.vos.NewsVO
 import com.sudox.messenger.android.people.common.vos.SimplePeopleVO
 
-class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFragment, ApplicationBarListener {
+class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFragment {
 
-    override fun getTitle(context: Context): String? {
-        return context.getString(R.string.activity)
+    init {
+        appBarVO = ActivityTabAppBarVO()
     }
 
     override fun getAdapter(viewList: ViewList): ViewListAdapter<*>? {
@@ -91,6 +90,7 @@ class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFra
         }
     }
 
-    override fun onButtonClicked(tag: Int) {
+    override fun getTitle(context: Context): String? {
+        return context.getString(R.string.activity)
     }
 }

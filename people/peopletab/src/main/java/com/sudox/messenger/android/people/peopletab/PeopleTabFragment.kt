@@ -10,8 +10,13 @@ import com.sudox.messenger.android.people.peopletab.adapters.PeopleTabAdapter
 import com.sudox.messenger.android.people.peopletab.vos.AddedFriendVO
 import com.sudox.messenger.android.people.peopletab.vos.FriendRequestVO
 import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
+import com.sudox.messenger.android.people.peopletab.vos.appbar.PeopleTabAppBarVO
 
 class PeopleTabFragment : ViewListFragment<PeopleTabAdapter>(), TabsChildFragment, ApplicationBarListener {
+
+    init {
+        appBarVO = PeopleTabAppBarVO()
+    }
 
     override fun getAdapter(viewList: ViewList): PeopleTabAdapter {
         return PeopleTabAdapter().apply {
