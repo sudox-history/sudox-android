@@ -3,7 +3,6 @@ package com.sudox.messenger.android.people.peopletab
 import android.content.Context
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.viewlist.ViewList
-import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.fragments.ViewListFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.people.common.vos.SEEN_TIME_ONLINE
@@ -11,18 +10,8 @@ import com.sudox.messenger.android.people.peopletab.adapters.PeopleTabAdapter
 import com.sudox.messenger.android.people.peopletab.vos.AddedFriendVO
 import com.sudox.messenger.android.people.peopletab.vos.FriendRequestVO
 import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
-import com.sudox.messenger.android.people.peopletab.vos.SubscriptionVO
 
 class PeopleTabFragment : ViewListFragment<PeopleTabAdapter>(), TabsChildFragment, ApplicationBarListener {
-
-    override fun prepareToShowing(coreFragment: CoreFragment) {
-        super.prepareToShowing(coreFragment)
-
-        applicationBarManager!!.let {
-            it.setListener(this)
-            it.toggleIconButtonAtEnd(R.drawable.ic_search)
-        }
-    }
 
     override fun getAdapter(viewList: ViewList): PeopleTabAdapter {
         return PeopleTabAdapter().apply {

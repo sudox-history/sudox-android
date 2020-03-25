@@ -21,16 +21,6 @@ class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFra
         return context.getString(R.string.activity)
     }
 
-    override fun prepareToShowing(coreFragment: CoreFragment) {
-        super.prepareToShowing(coreFragment)
-
-        applicationBarManager!!.let {
-            it.setListener(this)
-            it.toggleIconButtonAtStart(R.drawable.ic_notifications_none)
-            it.toggleIconButtonAtEnd(R.drawable.ic_search)
-        }
-    }
-
     override fun getAdapter(viewList: ViewList): ViewListAdapter<*>? {
         val handler = Handler()
 

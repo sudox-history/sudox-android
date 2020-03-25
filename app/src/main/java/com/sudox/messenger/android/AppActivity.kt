@@ -3,43 +3,53 @@ package com.sudox.messenger.android
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.WindowManager
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.sudox.design.appbar.AppBarVO
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreLoader
 import com.sudox.messenger.android.core.inject.CoreComponent
 import com.sudox.messenger.android.core.inject.CoreModule
 import com.sudox.messenger.android.core.inject.DaggerCoreComponent
 import com.sudox.messenger.android.core.managers.NavigationManager
-import com.sudox.messenger.android.managers.AppApplicationBarManager
+import com.sudox.messenger.android.layouts.AppLayout
 import com.sudox.messenger.android.managers.AppNavigationManager
 import com.sudox.messenger.android.managers.AppScreenManager
-import kotlinx.android.synthetic.main.activity_app.applicationBar
-import kotlinx.android.synthetic.main.activity_app.navigationBar
+
+const val LAYOUT_VIEW_ID_KEY = "layout_view_id"
 
 class AppActivity : AppCompatActivity(), CoreActivity {
 
     private var navigationManager: NavigationManager? = null
     private var coreComponent: CoreComponent? = null
+    private var appLayout: AppLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (BuildConfig.DEBUG) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        }
-
         (window.decorView.background as LayerDrawable)
                 .getDrawable(1)
                 .alpha = 1
 
-        setContentView(R.layout.activity_app)
+        appLayout = AppLayout(this).apply {
+            id = if (savedInstanceState?.containsKey(LAYOUT_VIEW_ID_KEY) == true) {
+                savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
+            } else {
+                View.generateViewId()
+            }
+        }
 
-        val screenManager = AppScreenManager(this)
-        val applicationBarManager = AppApplicationBarManager(this, applicationBar!!)
+        setContentView(appLayout)
 
-        navigationManager = AppNavigationManager(supportFragmentManager, navigationBar, R.id.frameContainer)
+        appLayout!!.let {
+            navigationManager = AppNavigationManager(
+                    supportFragmentManager,
+                    it.navigationBar,
+                    it.contentLayout.layoutChild.frameLayout.id
+            )
+        }
+
         coreComponent = DaggerCoreComponent
                 .builder()
-                .coreModule(CoreModule(applicationBarManager, navigationManager!!, screenManager))
+                .coreModule(CoreModule(navigationManager!!, AppScreenManager(this)))
                 .build()
 
         super.onCreate(savedInstanceState)
@@ -65,8 +75,15 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState.apply {
+            putInt(LAYOUT_VIEW_ID_KEY, appLayout!!.id)
+        })
+
         navigationManager!!.saveState(outState)
-        super.onSaveInstanceState(outState)
+    }
+
+    override fun setAppBarViewObject(vo: AppBarVO?) {
+        appLayout!!.contentLayout.layoutChild.appBarLayout.appBar!!.vo = vo
     }
 
     override fun getCoreComponent(): CoreComponent {

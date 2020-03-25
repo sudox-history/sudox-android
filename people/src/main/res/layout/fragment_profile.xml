@@ -1,73 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nestedScroll"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <com.sudox.messenger.android.media.MediaAttachmentsLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:orientation="vertical">
 
-<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_2" />-->
+        <com.sudox.design.appbar.AppBarLayout
+            android:id="@+id/appbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_1" />-->
-
-<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_1" />-->
-
-<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_1" />-->
-
-<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_1" />-->
-
-<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_1" />-->
-
-<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_1" />-->
-
-<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_1" />-->
-
-<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_1" />-->
-
-<!--        <com.sudox.messenger.android.media.images.views.GlideImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/drawable_photo_1" />-->
-
-    </com.sudox.messenger.android.media.MediaAttachmentsLayout>
-</ScrollView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -32,7 +32,7 @@ abstract class TabsRootFragment : CoreFragment() {
                 fragment.injectAll(activity as CoreActivity)
             }
 
-            pagerAdapter = TabsPagerAdapter(context!!, fragments, childFragmentManager)
+            pagerAdapter = TabsPagerAdapter(activity as CoreActivity, fragments, childFragmentManager)
 
             pager.adapter = pagerAdapter
             pager.id = savedInstanceState?.getInt(VIEW_PAGER_ID_KEY, View.generateViewId()) ?: View.generateViewId()
@@ -56,11 +56,6 @@ abstract class TabsRootFragment : CoreFragment() {
 
         if (!hidden) {
             screenManager!!.reset()
-            applicationBarManager!!.let {
-                it.reset(true)
-                it.setContentView(tabLayout)
-            }
-
             pagerAdapter!!.onPageSelected(viewPager!!.currentItem)
         }
     }

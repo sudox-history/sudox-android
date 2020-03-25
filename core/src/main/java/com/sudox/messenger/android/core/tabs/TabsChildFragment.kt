@@ -1,6 +1,8 @@
 package com.sudox.messenger.android.core.tabs
 
+import android.app.Activity
 import android.content.Context
+import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 
 interface TabsChildFragment {
@@ -16,8 +18,12 @@ interface TabsChildFragment {
     /**
      * Вызывается после того, как фрагмент будет выбран ViewPager'ом
      * Нужно подготовить фрагмент к отображению.
+     *
+     * @param activity Основная активность приложения
+     * @param fragment Фрагмент, который нужно подготовить
      */
-    fun prepareToShowing(coreFragment: CoreFragment) {
-        coreFragment.applicationBarManager!!.reset(false)
+    fun prepareToShowing(activity: CoreActivity, fragment: CoreFragment) {
+        // P.S.: CoreFragment можно использовать только если Activity является наследником CoreActivity
+        activity.setAppBarViewObject(fragment.getAppBarViewObject())
     }
 }

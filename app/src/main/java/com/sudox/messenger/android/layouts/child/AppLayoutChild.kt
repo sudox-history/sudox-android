@@ -4,13 +4,12 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.sudox.design.appbar.AppBar
 import com.sudox.design.appbar.AppBarLayout
-import com.sudox.design.viewlist.ViewListState
+import com.sudox.design.saveableview.SaveableViewGroup
 
-class AppLayoutChild : ViewGroup {
+class AppLayoutChild : SaveableViewGroup<AppLayoutChild, AppLayoutChildState> {
 
     val appBarLayout = AppBarLayout(context).apply {
         id = View.generateViewId()
@@ -33,30 +32,35 @@ class AppLayoutChild : ViewGroup {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        measureChild(appBarLayout, widthMeasureSpec, heightMeasureSpec)
-        measureChild(frameLayout, widthMeasureSpec, heightMeasureSpec)
+        var height = MeasureSpec.getSize(heightMeasureSpec)
 
-        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), appBarLayout.measuredHeight + frameLayout.measuredHeight)
+        measureChild(appBarLayout, widthMeasureSpec, heightMeasureSpec)
+
+        if (appBarLayout.visibility == View.VISIBLE) {
+            height -= appBarLayout.measuredHeight
+        }
+
+        measureChild(frameLayout, widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
+
+        setMeasuredDimension(
+                MeasureSpec.getSize(widthMeasureSpec),
+                MeasureSpec.getSize(heightMeasureSpec)
+        )
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        appBarLayout.layout(0, 0, appBarLayout.measuredWidth, appBarLayout.measuredHeight)
+        val topBorder = if (appBarLayout.visibility == View.VISIBLE) {
+            appBarLayout.layout(0, 0, appBarLayout.measuredWidth, appBarLayout.measuredHeight)
+            appBarLayout.measuredHeight
+        } else {
+            appBarLayout.layout(0, 0, 0, 0)
+            0
+        }
 
-        val bottomBorder = appBarLayout.measuredHeight + frameLayout.measuredHeight
-
-        frameLayout.layout(0, appBarLayout.measuredWidth, frameLayout.measuredWidth, bottomBorder)
+        frameLayout.layout(0, topBorder, frameLayout.measuredWidth, topBorder + frameLayout.measuredHeight)
     }
 
-    override fun onSaveInstanceState(): Parcelable? {
-        return AppLayoutChildState(super.onSaveInstanceState()!!).apply {
-            readFromView(this@AppLayoutChild)
-        }
-    }
-
-    override fun onRestoreInstanceState(state: Parcelable?) {
-        (state as AppLayoutChildState).apply {
-            super.onRestoreInstanceState(superState)
-            writeToView(this@AppLayoutChild)
-        }
+    override fun createStateInstance(superState: Parcelable): AppLayoutChildState {
+        return AppLayoutChildState(superState)
     }
 }

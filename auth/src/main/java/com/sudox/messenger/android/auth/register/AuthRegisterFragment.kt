@@ -29,12 +29,12 @@ class AuthRegisterFragment : CoreFragment(), ApplicationBarListener {
         super.onHiddenChanged(hidden)
 
         if (!hidden) {
-            applicationBarManager!!.let {
-                it.setListener(this)
-                it.toggleButtonBack(true)
-                it.toggleButtonNext(true)
-                it.setTitleText(R.string.sign_in)
-            }
+//            applicationBarManager!!.let {
+//                it.setListener(this)
+//                it.toggleButtonBack(true)
+//                it.toggleButtonNext(true)
+//                it.setTitleText(R.string.sign_in)
+//            }
 
             screenManager!!.let {
                 it.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)

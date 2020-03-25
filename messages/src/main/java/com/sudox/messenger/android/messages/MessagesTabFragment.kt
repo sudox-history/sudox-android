@@ -82,15 +82,6 @@ class MessagesTabFragment : CoreFragment(), TabsChildFragment, ApplicationBarLis
         return context.getString(R.string.messages)
     }
 
-    override fun prepareToShowing(coreFragment: CoreFragment) {
-        super.prepareToShowing(coreFragment)
-
-        applicationBarManager!!.let {
-            it.setListener(this)
-            it.toggleIconButtonAtEnd(R.drawable.ic_search)
-        }
-    }
-
     override fun onButtonClicked(tag: Int) {
     }
 }

@@ -6,23 +6,23 @@ import com.sudox.design.saveableview.SaveableViewState
 
 class AppLayoutState : SaveableViewState<AppLayout> {
 
-    private var layoutChildId = 0
+    private var contentLayoutId = 0
 
     constructor(superState: Parcelable) : super(superState)
     constructor(source: Parcel) : super(source) {
-        layoutChildId = source.readInt()
+        contentLayoutId = source.readInt()
     }
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
-        out.writeInt(layoutChildId)
+        out.writeInt(contentLayoutId)
     }
 
     override fun readFromView(view: AppLayout) {
-        layoutChildId = view.layoutChild.id
+        contentLayoutId = view.contentLayout.id
     }
 
     override fun writeToView(view: AppLayout) {
-        view.layoutChild.id = layoutChildId
+        view.contentLayout.id = contentLayoutId
     }
 }

@@ -35,11 +35,11 @@ class AuthCountryFragment : CoreFragment() {
     override fun onHiddenChanged(hidden: Boolean) {
         if (!hidden) {
             screenManager!!.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            applicationBarManager!!.let {
-                it.toggleButtonBack(true)
-                it.toggleButtonNext(false)
-                it.setTitleText(R.string.countries)
-            }
+//            applicationBarManager!!.let {
+//                it.toggleButtonBack(true)
+//                it.toggleButtonNext(false)
+//                it.setTitleText(R.string.countries)
+//            }
         }
 
         super.onHiddenChanged(hidden)

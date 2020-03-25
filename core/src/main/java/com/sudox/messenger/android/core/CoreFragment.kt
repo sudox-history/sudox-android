@@ -4,8 +4,8 @@ import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.sudox.design.appbar.AppBarVO
 import com.sudox.design.hideSoftKeyboard
-import com.sudox.messenger.android.core.managers.ApplicationBarManager
 import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.android.core.managers.ScreenManager
 import javax.inject.Inject
@@ -19,14 +19,21 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     var navigationManager: NavigationManager? = null
     @Inject
     @JvmField
-    var applicationBarManager: ApplicationBarManager? = null
-    @Inject
-    @JvmField
     var screenManager: ScreenManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injectAll(activity as CoreActivity)
         super.onCreate(savedInstanceState)
+    }
+
+    /**
+     * Выдает ViewObject для конфигурирования AppBar'а
+     * Если равен null, то AppBar будет скрыт.
+     *
+     * @return ViewObject AppBar'а
+     */
+    fun getAppBarViewObject(): AppBarVO? {
+        return null
     }
 
     /**
@@ -54,7 +61,10 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
-        if (hidden) {
+        if (!hidden) {
+            // P.S.: CoreFragment можно использовать только если Activity является наследником CoreActivity
+            (activity as CoreActivity).setAppBarViewObject(getAppBarViewObject())
+        } else {
             activity!!.hideSoftKeyboard()
         }
 

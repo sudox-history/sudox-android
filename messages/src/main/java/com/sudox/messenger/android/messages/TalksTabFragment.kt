@@ -80,15 +80,6 @@ class TalksTabFragment : CoreFragment(), TabsChildFragment, ApplicationBarListen
         )
     }
 
-    override fun prepareToShowing(coreFragment: CoreFragment) {
-        super.prepareToShowing(coreFragment)
-
-        applicationBarManager!!.let {
-            it.setListener(this)
-            it.toggleIconButtonAtEnd(R.drawable.ic_search)
-        }
-    }
-
     override fun getTitle(context: Context): String? {
         return context.getString(R.string.rooms)
     }
