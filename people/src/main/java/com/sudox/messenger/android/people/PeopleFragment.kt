@@ -1,5 +1,6 @@
 package com.sudox.messenger.android.people
 
+import com.sudox.design.appbar.AppBarVO
 import com.sudox.messenger.android.activity.ActivityTabFragment
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.tabs.TabsRootFragment
@@ -9,5 +10,9 @@ class PeopleFragment : TabsRootFragment() {
 
     override fun getFragments(): Array<CoreFragment> {
         return arrayOf(ActivityTabFragment(), PeopleTabFragment())
+    }
+
+    override fun getAppBarViewObject(): AppBarVO? {
+        return PeopleAppBarVO
     }
 }

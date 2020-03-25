@@ -8,6 +8,7 @@ import com.sudox.design.appbar.AppBarVO
 import com.sudox.design.hideSoftKeyboard
 import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.android.core.managers.ScreenManager
+import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import javax.inject.Inject
 
 abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
@@ -32,7 +33,7 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
      *
      * @return ViewObject AppBar'а
      */
-    fun getAppBarViewObject(): AppBarVO? {
+    open fun getAppBarViewObject(): AppBarVO? {
         return null
     }
 
@@ -63,7 +64,9 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     override fun onHiddenChanged(hidden: Boolean) {
         if (!hidden) {
             // P.S.: CoreFragment можно использовать только если Activity является наследником CoreActivity
-            (activity as CoreActivity).setAppBarViewObject(getAppBarViewObject())
+            if (this !is TabsChildFragment || !isAppBarConfiguredByRoot()) {
+                (activity as CoreActivity).setAppBarViewObject(getAppBarViewObject())
+            }
         } else {
             activity!!.hideSoftKeyboard()
         }
