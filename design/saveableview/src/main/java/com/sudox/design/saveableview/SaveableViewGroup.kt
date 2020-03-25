@@ -22,14 +22,14 @@ abstract class SaveableViewGroup<V : ViewGroup, S : SaveableViewState<V>> : View
     override fun onRestoreInstanceState(parcelable: Parcelable) {
         (parcelable as S).let {
             super.onRestoreInstanceState(it.superState)
-            it.writeToView(this as V)
+            it.writeToView(this@SaveableViewGroup as V)
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun onSaveInstanceState(): Parcelable {
         return createStateInstance(super.onSaveInstanceState()!!).apply {
-            readFromView(this as V)
+            readFromView(this@SaveableViewGroup as V)
         }
     }
 
