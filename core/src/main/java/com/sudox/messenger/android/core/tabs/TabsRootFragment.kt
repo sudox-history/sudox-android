@@ -21,34 +21,37 @@ const val VIEW_PAGER_ID_KEY = "view_pager_id"
  */
 abstract class TabsRootFragment : CoreFragment() {
 
+    private var pageCallback: TabsRootPageCallback? = null
     private var pagerAdapter: TabsPagerAdapter? = null
     private var viewPager: ViewPager2? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewPager = ViewPager2(context!!).also { pager ->
-            val fragments = getFragments()
+        val fragments = getFragments()
 
-            for (fragment in fragments) {
-                fragment.injectAll(activity as CoreActivity)
-            }
+        for (fragment in fragments) {
+            fragment.injectAll(activity as CoreActivity)
+        }
 
-            pagerAdapter = TabsPagerAdapter(activity as CoreActivity, fragments, this)
+        pagerAdapter = TabsPagerAdapter(fragments, this)
+        pageCallback = TabsRootPageCallback(activity as CoreActivity, fragments)
+        viewPager = ViewPager2(context!!).also {
+            it.adapter = pagerAdapter
+            it.offscreenPageLimit = fragments.size
+            it.id = savedInstanceState?.getInt(VIEW_PAGER_ID_KEY, View.generateViewId()) ?: View.generateViewId()
+            it.registerOnPageChangeCallback(pageCallback!!)
+        }
 
-            pager.adapter = pagerAdapter
-            pager.id = savedInstanceState?.getInt(VIEW_PAGER_ID_KEY, View.generateViewId()) ?: View.generateViewId()
-//            pager.addOnPageChangeListener(pagerAdapter!!)
-
-            if (appBarLayoutVO !is TabsChildAppBarLayoutVO) {
-                appBarLayoutVO = TabsChildAppBarLayoutVO(appBarLayoutVO)
-            }
+        if (appBarLayoutVO !is TabsChildAppBarLayoutVO) {
+            appBarLayoutVO = TabsChildAppBarLayoutVO(appBarLayoutVO)
         }
 
         return viewPager!!
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(VIEW_PAGER_ID_KEY, viewPager!!.id)
+        super.onSaveInstanceState(outState.apply {
+            putInt(VIEW_PAGER_ID_KEY, viewPager!!.id)
+        })
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -60,12 +63,13 @@ abstract class TabsRootFragment : CoreFragment() {
 //            (activity as CoreActivity).setAppBarLayoutViewObject(appBarLayoutVO)
 //            (appBarLayoutVO as TabsChildAppBarLayoutVO).tabLayout!!.syncWithViewPager(viewPager!!)
 
-            pagerAdapter!!.onPageSelected(viewPager!!.currentItem)
+            pageCallback!!.onPageSelected(viewPager!!.currentItem)
         }
     }
 
     /**
      * Возвращает массив с дочерними фрагментами-вкладками
+     * Желательно вернуть фрагменты, отнаследованные от TabsChildFragment
      *
      * @return Массив с дочерними фрагментами-вкладками
      */
