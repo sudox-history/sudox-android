@@ -212,9 +212,9 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
                 }
             }
 
-            itemsCount
+            itemsCount + getFooterCount()
         } else {
-            getItemsCountAfterHeaderConsiderVisibility(0)
+            getItemsCountAfterHeaderConsiderVisibility(0) + getFooterCount()
         }
     }
 

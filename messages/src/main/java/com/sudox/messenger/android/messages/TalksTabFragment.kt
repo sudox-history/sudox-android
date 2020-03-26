@@ -5,43 +5,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.applicationBar.ApplicationBarListener
+import com.sudox.design.viewlist.ViewList
 import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.core.fragments.ViewListFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.messages.vos.BaseMessagesDialogVO
-import kotlinx.android.synthetic.main.fragment_rooms.dialogsRoomRecyclerView
 import java.util.Calendar
 import kotlin.random.Random
 
-class TalksTabFragment : CoreFragment(), TabsChildFragment, ApplicationBarListener {
+class TalksTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragment, ApplicationBarListener {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_rooms, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        dialogsRoomRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            adapter = DialogsAdapter(context!!).apply {
-                dialogs.apply {
-                    add(generateDialog())
-                    add(generateDialog())
-                    add(generateDialog())
-                }
-
-                addDialogCallback = {
-                    dialogs.add(generateDialog())
-                }
-            }
-        }
-
-        dialogsRoomRecyclerView.setHasFixedSize(true)
-    }
+    var dialogsAdapter: DialogsAdapter? = null
 
     fun generateDialog(): BaseMessagesDialogVO {
         val photos = listOf(AppCompatResources.getDrawable(context!!, R.drawable.drawable_photo_1)!!, AppCompatResources.getDrawable(context!!, R.drawable.drawable_photo_2)!!, AppCompatResources.getDrawable(context!!, R.drawable.drawable_photo_3)!!)
@@ -85,7 +65,8 @@ class TalksTabFragment : CoreFragment(), TabsChildFragment, ApplicationBarListen
 
         applicationBarManager!!.let {
             it.setListener(this)
-            it.toggleIconButtonAtEnd(R.drawable.ic_search)
+            //it.toggleIconButtonAtEnd(R.drawable.ic_search)
+            it.toggleIconButtonAtEnd(R.drawable.ic_add)
         }
     }
 
@@ -94,5 +75,20 @@ class TalksTabFragment : CoreFragment(), TabsChildFragment, ApplicationBarListen
     }
 
     override fun onButtonClicked(tag: Int) {
+        dialogsAdapter?.apply {
+            dialogs.add(generateDialog())
+        }
+    }
+
+    override fun getAdapter(viewList: ViewList): DialogsAdapter? {
+        dialogsAdapter = DialogsAdapter(context!!).apply {
+            dialogs.apply {
+                add(generateDialog())
+                add(generateDialog())
+                add(generateDialog())
+            }
+            addDialogCallback = { dialogs.add(generateDialog()) }
+        }
+        return dialogsAdapter
     }
 }
