@@ -14,6 +14,7 @@ class AppLayoutChild : SaveableViewGroup<AppLayoutChild, AppLayoutChildState> {
     val appBarLayout = AppBarLayout(context).apply {
         id = View.generateViewId()
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        translationZ = Float.MAX_VALUE
         appBar = AppBar(context)
     }
 
@@ -32,20 +33,12 @@ class AppLayoutChild : SaveableViewGroup<AppLayoutChild, AppLayoutChildState> {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var height = MeasureSpec.getSize(heightMeasureSpec)
+        appBarLayout.measure(widthMeasureSpec, heightMeasureSpec)
+        frameLayout.measure(widthMeasureSpec, heightMeasureSpec)
 
-        measureChild(appBarLayout, widthMeasureSpec, heightMeasureSpec)
+        val needHeight = appBarLayout.measuredHeight + frameLayout.measuredHeight
 
-        if (appBarLayout.visibility == View.VISIBLE) {
-            height -= appBarLayout.measuredHeight
-        }
-
-        measureChild(frameLayout, widthMeasureSpec, MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY))
-
-        setMeasuredDimension(
-                MeasureSpec.getSize(widthMeasureSpec),
-                MeasureSpec.getSize(heightMeasureSpec)
-        )
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), needHeight)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -57,7 +50,7 @@ class AppLayoutChild : SaveableViewGroup<AppLayoutChild, AppLayoutChildState> {
             0
         }
 
-        frameLayout.layout(0, topBorder, frameLayout.measuredWidth, topBorder + frameLayout.measuredHeight)
+        frameLayout.layout(0, topBorder, frameLayout.measuredWidth, measuredHeight)
     }
 
     override fun createStateInstance(superState: Parcelable): AppLayoutChildState {

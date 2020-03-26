@@ -1,12 +1,12 @@
 package com.sudox.messenger.android.core.tabs.adapters
 
-import android.content.Context
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
+import com.sudox.messenger.android.core.tabs.TabsRootFragment
 
 /**
  * Адаптер для ViewPager'а TabsRootFragment
@@ -14,32 +14,44 @@ import com.sudox.messenger.android.core.tabs.TabsChildFragment
  *
  * @param activity Основная активность приложения
  * @param fragments Дочерние фрагменты-вкладки
- * @param fragmentManager Менеджер фрагментов
+ * @param rootFragment Основной фрагмент
  */
 class TabsPagerAdapter(
         private val activity: CoreActivity,
         private val fragments: Array<CoreFragment>,
-        fragmentManager: FragmentManager
-) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT), ViewPager.OnPageChangeListener {
+        private val rootFragment: TabsRootFragment
+) : FragmentStateAdapter(rootFragment), ViewPager.OnPageChangeListener {
 
-    override fun getItem(position: Int): CoreFragment {
+    override fun getItemCount(): Int {
+        return fragments.size
+    }
+
+    override fun createFragment(position: Int): Fragment {
         return fragments[position]
     }
 
-    override fun getPageTitle(position: Int): CharSequence? {
-        @Suppress("CAST_NEVER_SUCCEEDS")
-        // P.S.: В данный адаптер попадают только фрагменты, реализующие интерфейс TabsChildFragment
-        return (fragments[position] as TabsChildFragment).getTitle(activity as Context)
-    }
+//    override fun getItem(position: Int): CoreFragment {
+//        return fragments[position]
+//    }
+//
+//    override fun getPageTitle(position: Int): CharSequence? {
+//        @Suppress("CAST_NEVER_SUCCEEDS")
+//        // P.S.: В данный адаптер попадают только фрагменты, реализующие интерфейс TabsChildFragment
+//        return (fragments[position] as TabsChildFragment).getTitle(activity as Context)
+//    }
+//
+//    override fun onPageSelected(position: Int) {
+
+//    }
+//
+//    override fun getCount(): Int {
+//        return fragments.size
+//    }
 
     override fun onPageSelected(position: Int) {
         @Suppress("CAST_NEVER_SUCCEEDS")
         // P.S.: В данный адаптер попадают только фрагменты, реализующие интерфейс TabsChildFragment
         (fragments[position] as TabsChildFragment).prepareToShowing(activity, fragments[position])
-    }
-
-    override fun getCount(): Int {
-        return fragments.size
     }
 
     override fun onPageScrollStateChanged(state: Int) {

@@ -5,9 +5,12 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.widget.NestedScrollView
+import androidx.viewpager.widget.ViewPager
 import com.sudox.messenger.android.layouts.child.AppLayoutChild
 
 class ContentLayout : NestedScrollView {
+
+    private var appbarScrolled = 0
 
     val layoutChild = AppLayoutChild(context).apply {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
@@ -21,11 +24,12 @@ class ContentLayout : NestedScrollView {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
+        val appbarLayout = layoutChild.appBarLayout
+
         setOnScrollChangeListener { _: NestedScrollView, _: Int, scrollY: Int, _: Int, oldScrollY: Int ->
-
+            appbarLayout.translationY = (scrollY).toFloat()
+            requestLayout()
         }
-
-        isFillViewport = true
     }
 
     override fun onSaveInstanceState(): Parcelable? {

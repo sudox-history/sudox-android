@@ -10,6 +10,7 @@ dependencies {
     implementation libraries.recyclerview
     implementation libraries.core_ktx
     implementation libraries.appcompat
+    implementation libraries.viewpager2
 
     implementation libraries.dagger
     kapt libraries.dagger_compiler

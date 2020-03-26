@@ -8,7 +8,6 @@ import android.view.MotionEvent
 import android.view.animation.Interpolator
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator

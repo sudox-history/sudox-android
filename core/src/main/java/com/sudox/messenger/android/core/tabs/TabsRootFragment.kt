@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.tabs.adapters.TabsPagerAdapter
@@ -22,21 +22,21 @@ const val VIEW_PAGER_ID_KEY = "view_pager_id"
 abstract class TabsRootFragment : CoreFragment() {
 
     private var pagerAdapter: TabsPagerAdapter? = null
-    private var viewPager: ViewPager? = null
+    private var viewPager: ViewPager2? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        viewPager = ViewPager(context!!).also { pager ->
+        viewPager = ViewPager2(context!!).also { pager ->
             val fragments = getFragments()
 
             for (fragment in fragments) {
                 fragment.injectAll(activity as CoreActivity)
             }
 
-            pagerAdapter = TabsPagerAdapter(activity as CoreActivity, fragments, childFragmentManager)
+            pagerAdapter = TabsPagerAdapter(activity as CoreActivity, fragments, this)
 
             pager.adapter = pagerAdapter
             pager.id = savedInstanceState?.getInt(VIEW_PAGER_ID_KEY, View.generateViewId()) ?: View.generateViewId()
-            pager.addOnPageChangeListener(pagerAdapter!!)
+//            pager.addOnPageChangeListener(pagerAdapter!!)
 
             if (appBarLayoutVO !is TabsChildAppBarLayoutVO) {
                 appBarLayoutVO = TabsChildAppBarLayoutVO(appBarLayoutVO)
@@ -57,8 +57,8 @@ abstract class TabsRootFragment : CoreFragment() {
         if (!hidden) {
             screenManager!!.reset()
 
-            (activity as CoreActivity).setAppBarLayoutViewObject(appBarLayoutVO)
-            (appBarLayoutVO as TabsChildAppBarLayoutVO).tabLayout!!.syncWithViewPager(viewPager!!)
+//            (activity as CoreActivity).setAppBarLayoutViewObject(appBarLayoutVO)
+//            (appBarLayoutVO as TabsChildAppBarLayoutVO).tabLayout!!.syncWithViewPager(viewPager!!)
 
             pagerAdapter!!.onPageSelected(viewPager!!.currentItem)
         }
