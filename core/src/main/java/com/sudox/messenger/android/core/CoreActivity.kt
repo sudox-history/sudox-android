@@ -1,18 +1,27 @@
 package com.sudox.messenger.android.core
 
-import com.sudox.design.appbar.AppBarVO
+import com.sudox.design.appbar.vos.AppBarLayoutVO
+import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.messenger.android.core.inject.CoreComponent
 
 interface CoreActivity {
 
     /**
      * Задает ViewObject'ы AppBar'у
-     * Если передать null, то AppBar должен скрыться.
+     * Если передать null, то нужный элемент должен скрыться.
      *
-     * @param vo ViewObject, который необходимо задать AppBar'у
+     * @param appBarVO ViewObject, который необходимо задать AppBar'у
      * @param callback Кэллбэк для обработки кликов
      */
-    fun setAppBarViewObject(vo: AppBarVO?, callback: ((Int) -> (Unit))?)
+    fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?)
+
+    /**
+     * Задает ViewObject'ы AppBarLayout'у
+     * Если передать null, то нужный элемент должен скрыться.
+     *
+     * @param appBarLayoutVO ViewObject, который необходимо задать AppBarLayout'у
+     */
+    fun setAppBarLayoutViewObject(appBarLayoutVO: AppBarLayoutVO?)
 
     /**
      * Возвращает основной компонент ядра.

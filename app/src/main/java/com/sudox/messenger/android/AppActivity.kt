@@ -4,7 +4,8 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
-import com.sudox.design.appbar.AppBarVO
+import com.sudox.design.appbar.vos.AppBarLayoutVO
+import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreLoader
 import com.sudox.messenger.android.core.inject.CoreComponent
@@ -48,7 +49,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             navigationManager!!.restoreState(savedInstanceState)
         } else {
             navigationManager!!.configureNavigationBar()
-            navigationManager!!.showAuthPart()
+            navigationManager!!.showMainPart()
         }
     }
 
@@ -71,11 +72,15 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         navigationManager!!.saveState(outState)
     }
 
-    override fun setAppBarViewObject(vo: AppBarVO?, callback: ((Int) -> (Unit))?) {
+    override fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?) {
         appLayout!!.contentLayout.layoutChild.appBarLayout.appBar!!.let {
             it.callback = callback
-            it.vo = vo
+            it.vo = appBarVO
         }
+    }
+
+    override fun setAppBarLayoutViewObject(appBarLayoutVO: AppBarLayoutVO?) {
+        appLayout!!.contentLayout.layoutChild.appBarLayout.vo = appBarLayoutVO
     }
 
     override fun getCoreComponent(): CoreComponent {

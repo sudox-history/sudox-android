@@ -3,6 +3,7 @@ package com.sudox.design.appbar
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
+import com.sudox.design.appbar.vos.AppBarLayoutVO
 
 class AppBarLayout : ViewGroup {
 
@@ -14,6 +15,20 @@ class AppBarLayout : ViewGroup {
 
             if (value != null) {
                 addView(value, 0)
+            }
+
+            field = value
+            requestLayout()
+            invalidate()
+        }
+
+    var vo: AppBarLayoutVO? = null
+        set(value) {
+            removeAllViewsInLayout()
+            addView(appBar)
+
+            value?.getViews(context)?.forEach {
+                addView(it)
             }
 
             field = value

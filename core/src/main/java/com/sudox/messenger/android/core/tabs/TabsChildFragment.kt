@@ -23,8 +23,8 @@ interface TabsChildFragment {
      */
     fun prepareToShowing(activity: CoreActivity, fragment: CoreFragment) {
         if (!isAppBarConfiguredByRoot()) {
-            // P.S.: CoreFragment можно использовать только если Activity является наследником CoreActivity
             fragment.apply {
+                // P.S.: CoreFragment можно использовать только если Activity является наследником CoreActivity
                 activity.setAppBarViewObject(appBarVO, ::onAppBarClicked)
             }
         }

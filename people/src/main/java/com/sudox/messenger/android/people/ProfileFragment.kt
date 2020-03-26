@@ -11,7 +11,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.appbar.AppBar
-import com.sudox.design.appbar.AppBarVO
+import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.messenger.android.core.CoreFragment
 import kotlinx.android.synthetic.main.fragment_profile.appbarLayout
 import kotlinx.android.synthetic.main.fragment_profile.nestedScroll

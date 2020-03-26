@@ -2,8 +2,8 @@ package com.sudox.messenger.android.activity.vos
 
 import android.content.Context
 import android.view.View
-import com.sudox.design.appbar.AppBarVO
-import com.sudox.design.appbar.NOT_USED_PARAMETER
+import com.sudox.design.appbar.vos.AppBarVO
+import com.sudox.design.appbar.vos.NOT_USED_PARAMETER
 import com.sudox.messenger.android.activity.R
 
 const val NOTIFICATION_BUTTON_TAG = 2

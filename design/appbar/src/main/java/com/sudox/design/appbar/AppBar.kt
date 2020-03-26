@@ -13,6 +13,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
+import com.sudox.design.appbar.vos.AppBarVO
+import com.sudox.design.appbar.vos.NOT_USED_PARAMETER
 
 class AppBar : ViewGroup, View.OnClickListener {
 

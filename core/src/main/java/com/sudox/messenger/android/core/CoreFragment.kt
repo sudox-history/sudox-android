@@ -5,8 +5,9 @@ import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
-import com.sudox.design.appbar.AppBarVO
-import com.sudox.design.appbar.BACK_BUTTON_TAG
+import com.sudox.design.appbar.vos.AppBarLayoutVO
+import com.sudox.design.appbar.vos.AppBarVO
+import com.sudox.design.appbar.vos.BACK_BUTTON_TAG
 import com.sudox.design.hideSoftKeyboard
 import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.android.core.managers.ScreenManager
@@ -17,13 +18,15 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
 
     private var animator: Animator? = null
 
+    var appBarLayoutVO: AppBarLayoutVO? = null
+    var appBarVO: AppBarVO? = null
+
     @Inject
     @JvmField
     var navigationManager: NavigationManager? = null
     @Inject
     @JvmField
     var screenManager: ScreenManager? = null
-    var appBarVO: AppBarVO? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injectAll(activity as CoreActivity)

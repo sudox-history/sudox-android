@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.ViewPager
-import com.sudox.design.tablayout.TabLayout
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.tabs.adapters.TabsPagerAdapter
+import com.sudox.messenger.android.core.tabs.vos.TabsChildAppBarLayoutVO
 
 const val VIEW_PAGER_ID_KEY = "view_pager_id"
 
@@ -21,7 +21,6 @@ const val VIEW_PAGER_ID_KEY = "view_pager_id"
  */
 abstract class TabsRootFragment : CoreFragment() {
 
-    private var tabLayout: TabLayout? = null
     private var pagerAdapter: TabsPagerAdapter? = null
     private var viewPager: ViewPager? = null
 
@@ -39,8 +38,8 @@ abstract class TabsRootFragment : CoreFragment() {
             pager.id = savedInstanceState?.getInt(VIEW_PAGER_ID_KEY, View.generateViewId()) ?: View.generateViewId()
             pager.addOnPageChangeListener(pagerAdapter!!)
 
-            tabLayout = TabLayout(context!!).apply {
-                syncWithViewPager(pager)
+            if (appBarLayoutVO !is TabsChildAppBarLayoutVO) {
+                appBarLayoutVO = TabsChildAppBarLayoutVO(appBarLayoutVO)
             }
         }
 
@@ -57,6 +56,10 @@ abstract class TabsRootFragment : CoreFragment() {
 
         if (!hidden) {
             screenManager!!.reset()
+
+            (activity as CoreActivity).setAppBarLayoutViewObject(appBarLayoutVO)
+            (appBarLayoutVO as TabsChildAppBarLayoutVO).tabLayout!!.syncWithViewPager(viewPager!!)
+
             pagerAdapter!!.onPageSelected(viewPager!!.currentItem)
         }
     }

@@ -1,7 +1,8 @@
-package com.sudox.design.appbar
+package com.sudox.design.appbar.vos
 
 import android.content.Context
 import android.view.View
+import com.sudox.design.appbar.R
 
 const val NOT_USED_PARAMETER = 0
 const val BACK_BUTTON_TAG = 1

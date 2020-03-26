@@ -2,9 +2,9 @@ package com.sudox.messenger.android.auth.register
 
 import android.content.Context
 import android.view.View
-import com.sudox.design.appbar.AppBarVO
-import com.sudox.design.appbar.BACK_BUTTON
-import com.sudox.design.appbar.NOT_USED_PARAMETER
+import com.sudox.design.appbar.vos.AppBarVO
+import com.sudox.design.appbar.vos.BACK_BUTTON
+import com.sudox.design.appbar.vos.NOT_USED_PARAMETER
 import com.sudox.messenger.android.auth.R
 
 const val AUTH_REGISTER_FINISH_BUTTON_TAG = 2

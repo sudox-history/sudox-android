@@ -2,8 +2,8 @@ package com.sudox.messenger.android.auth.code
 
 import android.content.Context
 import android.view.View
-import com.sudox.design.appbar.AppBarVO
-import com.sudox.design.appbar.BACK_BUTTON
+import com.sudox.design.appbar.vos.AppBarVO
+import com.sudox.design.appbar.vos.BACK_BUTTON
 import com.sudox.messenger.android.auth.R
 
 class AuthCodeAppBarVO : AppBarVO {

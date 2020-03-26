@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.sudox.design.appbar.AppBarVO
-import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.countriesProvider.countries
 import com.sudox.design.countriesProvider.entries.Country
 import com.sudox.messenger.android.auth.R
