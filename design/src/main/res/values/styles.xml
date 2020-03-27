@@ -12,7 +12,7 @@
         <item name="android:minWidth">0dp</item>
     </style>
 
-    <style name="Sudox.Base" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="Sudox.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/drawable_splash_background</item>
 
         <item name="android:includeFontPadding">false</item>
