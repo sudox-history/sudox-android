@@ -3,6 +3,7 @@ package com.sudox.messenger.android.core.tabs.adapters
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.core.tabs.TabsRootFragment
 
 /**
@@ -23,5 +24,15 @@ class TabsPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return fragments[position]
+    }
+
+    /**
+     * Выдает заголовок фрагмента на определенной позиции
+     *
+     * @param position Позиция фрагмента, у которого нужно вернуть заголовок
+     * @return Заголовок искомого фрагмента
+     */
+    fun getTitle(position: Int): String? {
+        return (fragments[position] as TabsChildFragment).getTitle(rootFragment.context!!)
     }
 }

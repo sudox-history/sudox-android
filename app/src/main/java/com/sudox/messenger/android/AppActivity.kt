@@ -31,7 +31,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
             navigationManager = AppNavigationManager(
                     supportFragmentManager,
-                    contentLayout.layoutChild.frameLayout.id,
+                    contentLayout.frameLayout.id,
                     navigationBar
             )
 
@@ -73,14 +73,14 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?) {
-        appLayout!!.contentLayout.layoutChild.appBarLayout.appBar!!.let {
+        appLayout!!.contentLayout.appBarLayout.appBar!!.let {
             it.callback = callback
             it.vo = appBarVO
         }
     }
 
     override fun setAppBarLayoutViewObject(appBarLayoutVO: AppBarLayoutVO?) {
-        appLayout!!.contentLayout.layoutChild.appBarLayout.vo = appBarLayoutVO
+        appLayout!!.contentLayout.appBarLayout.vo = appBarLayoutVO
     }
 
     override fun getCoreComponent(): CoreComponent {

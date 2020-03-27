@@ -138,7 +138,7 @@ class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFra
         }
     }
 
-    override fun getTitle(context: Context): String? {
+    override fun getTitle(context: Context): String {
         return context.getString(R.string.activity)
     }
 }

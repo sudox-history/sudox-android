@@ -80,7 +80,7 @@ class TalksTabFragment : CoreFragment(), TabsChildFragment, ApplicationBarListen
         )
     }
 
-    override fun getTitle(context: Context): String? {
+    override fun getTitle(context: Context): String {
         return context.getString(R.string.rooms)
     }
 

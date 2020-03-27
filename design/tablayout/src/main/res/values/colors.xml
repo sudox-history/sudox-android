@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="tablayout_active_color">#00BFA5</color>
-    <color name="tablayout_inactive_color">#000000</color>
+    <color name="tab_title_text_color">#808080</color>
+    <color name="tab_title_selected_text_color">#00BFA5</color>
+    <color name="tab_indicator_color">#00BFA5</color>
 </resources>

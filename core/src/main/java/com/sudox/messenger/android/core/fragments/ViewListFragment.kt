@@ -48,7 +48,10 @@ abstract class ViewListFragment<AT : ViewListAdapter<*>> : CoreFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(VIEW_LIST_ID_KEY, viewList!!.id)
+
+        if (viewList != null) {
+            outState.putInt(VIEW_LIST_ID_KEY, viewList!!.id)
+        }
     }
 
     /**

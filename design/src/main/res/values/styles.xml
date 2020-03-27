@@ -12,7 +12,7 @@
         <item name="android:minWidth">0dp</item>
     </style>
 
-    <style name="Sudox.Base" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Sudox.Base" parent="Theme.MaterialComponents.NoActionBar">
         <item name="android:windowBackground">@drawable/drawable_splash_background</item>
 
         <item name="android:includeFontPadding">false</item>
@@ -31,8 +31,9 @@
         <item name="applicationBarStyle">@style/Sudox.ApplicationBar</item>
         <item name="applicationBarButtonStyle">@style/Sudox.ApplicationBar.Button</item>
 
-        <item name="appbarStyle">@style/Sudox.AppBar</item>
-        <item name="appbarLayoutStyle">@style/Sudox.AppBarLayout</item>
+        <item name="appBarStyle">@style/Sudox.AppBar</item>
+        <item name="appBarLayoutStyle">@style/Sudox.AppBarLayout</item>
+        <item name="tabStyle">@style/Sudox.TabLayout</item>
 
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
         <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
@@ -43,8 +44,6 @@
         <item name="countryItemViewStyle">@style/Sudox.CountryItemView</item>
         <item name="navigationBarStyle">@style/Sudox.NavigationBar</item>
         <item name="navigationBarButtonStyle">@style/Sudox.NavigationBar.Button</item>
-        <item name="tabLayoutStyle">@style/Sudox.TabLayout</item>
-        <item name="sectionedListViewStyle">@style/Sudox.SectionedListView</item>
         <item name="circularUpdatableViewStyle">@style/Sudox.CircularUpdatableView</item>
 
         <item name="popupItemViewStyle">@style/Sudox.PopupItemView</item>
@@ -192,13 +191,5 @@
 
         <item name="iconHeight">@dimen/navigationbarbutton_icon_height</item>
         <item name="iconWidth">@dimen/navigationbarbutton_icon_width</item>
-    </style>
-
-    <style name="Sudox.SectionedListView" parent="">
-        <item name="sectionNameTopPadding">@dimen/sectionedlistview_section_name_top_padding</item>
-        <item name="sectionNameBottomPadding">@dimen/sectionedlistview_section_name_bottom_padding</item>
-        <item name="sectionNameTextSize">@dimen/sectionedlistview_section_name_text_size</item>
-        <item name="sectionNameTextColor">@color/sectionedlistview_section_name_text_color</item>
-        <item name="sectionNameTypeface">@font/opensans_bold</item>
     </style>
 </resources>

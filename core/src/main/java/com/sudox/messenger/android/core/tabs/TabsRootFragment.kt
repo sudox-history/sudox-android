@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayoutMediator
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.core.tabs.adapters.TabsConfigurationStrategy
 import com.sudox.messenger.android.core.tabs.adapters.TabsPagerAdapter
 import com.sudox.messenger.android.core.tabs.vos.TabsChildAppBarLayoutVO
 
@@ -60,8 +62,11 @@ abstract class TabsRootFragment : CoreFragment() {
         if (!hidden) {
             screenManager!!.reset()
 
-//            (activity as CoreActivity).setAppBarLayoutViewObject(appBarLayoutVO)
-//            (appBarLayoutVO as TabsChildAppBarLayoutVO).tabLayout!!.syncWithViewPager(viewPager!!)
+            (activity as CoreActivity).setAppBarLayoutViewObject(appBarLayoutVO)
+
+            (appBarLayoutVO as TabsChildAppBarLayoutVO).apply {
+                TabLayoutMediator(tabLayout!!, viewPager!!, TabsConfigurationStrategy(pagerAdapter!!)).attach()
+            }
 
             pageCallback!!.onPageSelected(viewPager!!.currentItem)
         }

@@ -16,6 +16,7 @@ dependencies {
     implementation libraries.appcompat
     implementation libraries.annotations
     implementation libraries.libphonenumber
+    implementation libraries.material_components
     implementation libraries.recyclerview
 
     testImplementation libraries.junit

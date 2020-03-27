@@ -2,10 +2,9 @@ package com.sudox.design.appbar
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.ViewGroup
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 
-class AppBarLayout : ViewGroup {
+class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
 
     var appBar: AppBar? = null
         set(value) {
@@ -39,9 +38,8 @@ class AppBarLayout : ViewGroup {
     var pixelsToLastChild = 0
         private set
 
-    constructor(context: Context) : this(context, null)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.appbarLayoutStyle)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)

@@ -6,6 +6,5 @@
         <attr name="marginBetweenViewsAndButtons" format="dimension" />
     </declare-styleable>
 
-    <attr name="appbarStyle" format="reference" />
-    <attr name="appbarLayoutStyle" format="reference" />
+    <attr name="appBarStyle" format="reference" />
 </resources>

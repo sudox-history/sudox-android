@@ -1,20 +1,30 @@
 package com.sudox.messenger.android.layouts.content
 
 import android.content.Context
-import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.widget.NestedScrollView
-import androidx.viewpager.widget.ViewPager
-import com.sudox.messenger.android.layouts.child.AppLayoutChild
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.sudox.design.appbar.AppBar
+import com.sudox.design.appbar.AppBarLayout
 
-class ContentLayout : NestedScrollView {
+class ContentLayout : CoordinatorLayout {
 
-    private var appbarScrolled = 0
-
-    val layoutChild = AppLayoutChild(context).apply {
-        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+    @Suppress("unused")
+    val appBarLayout = AppBarLayout(context).apply {
         id = View.generateViewId()
+        layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        appBar = AppBar(context)
+
+        this@ContentLayout.addView(this)
+    }
+
+    val frameLayout = FrameLayout(context).apply {
+        id = View.generateViewId()
+        layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            behavior = com.google.android.material.appbar.AppBarLayout.ScrollingViewBehavior()
+        }
 
         this@ContentLayout.addView(this)
     }
@@ -22,26 +32,4 @@ class ContentLayout : NestedScrollView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    init {
-        val appbarLayout = layoutChild.appBarLayout
-
-        setOnScrollChangeListener { _: NestedScrollView, _: Int, scrollY: Int, _: Int, oldScrollY: Int ->
-            appbarLayout.translationY = (scrollY).toFloat()
-            requestLayout()
-        }
-    }
-
-    override fun onSaveInstanceState(): Parcelable? {
-        return ContentLayoutState(super.onSaveInstanceState()!!).apply {
-            readFromView(this@ContentLayout)
-        }
-    }
-
-    override fun onRestoreInstanceState(state: Parcelable?) {
-        (state as ContentLayoutState).apply {
-            super.onRestoreInstanceState(superState)
-            writeToView(this@ContentLayout)
-        }
-    }
 }

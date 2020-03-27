@@ -43,7 +43,6 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
             id = savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
 
             contentLayout
-                    .layoutChild
                     .frameLayout
                     .id = savedInstanceState.getInt(FRAME_VIEW_ID_KEY)
         } else {
@@ -57,7 +56,7 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
      * @param outState Bundle, в который нужно сохранить I
      */
     fun saveIds(outState: Bundle) = outState.let {
-        it.putInt(FRAME_VIEW_ID_KEY, contentLayout.layoutChild.frameLayout.id)
+        it.putInt(FRAME_VIEW_ID_KEY, contentLayout.frameLayout.id)
         it.putInt(LAYOUT_VIEW_ID_KEY, id)
     }
 

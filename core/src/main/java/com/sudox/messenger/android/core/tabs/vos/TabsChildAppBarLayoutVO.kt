@@ -2,8 +2,9 @@ package com.sudox.messenger.android.core.tabs.vos
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
+import com.google.android.material.tabs.TabLayout
 import com.sudox.design.appbar.vos.AppBarLayoutVO
-import com.sudox.design.tablayout.TabLayout
 
 class TabsChildAppBarLayoutVO(
         val rootVO: AppBarLayoutVO?
@@ -13,7 +14,12 @@ class TabsChildAppBarLayoutVO(
 
     override fun getViews(context: Context): Array<View>? {
         if (tabLayout == null) {
-            tabLayout = TabLayout(context)
+            tabLayout = TabLayout(context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            }
         }
 
         val rootViews = rootVO?.getViews(context)

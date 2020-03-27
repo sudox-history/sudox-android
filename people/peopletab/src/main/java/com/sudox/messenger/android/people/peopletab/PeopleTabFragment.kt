@@ -38,7 +38,7 @@ class PeopleTabFragment : ViewListFragment<PeopleTabAdapter>(), TabsChildFragmen
         }
     }
 
-    override fun getTitle(context: Context): String? {
+    override fun getTitle(context: Context): String {
         return context.getString(R.string.people)
     }
 
