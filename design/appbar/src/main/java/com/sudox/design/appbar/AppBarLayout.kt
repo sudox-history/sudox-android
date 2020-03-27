@@ -24,10 +24,26 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
     var vo: AppBarLayoutVO? = null
         set(value) {
             removeAllViewsInLayout()
-            addView(appBar)
 
-            value?.getViews(context)?.forEach {
-                addView(it)
+            val views = value?.getViews(context)
+            val viewsCount = views?.size ?: 0
+
+            addViewInLayout(appBar, -1, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
+                scrollFlags = if (viewsCount > 0) {
+                    LayoutParams.SCROLL_FLAG_SCROLL or LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+                } else {
+                    LayoutParams.SCROLL_FLAG_NO_SCROLL
+                }
+            })
+
+            value?.getViews(context)?.forEachIndexed { index, view ->
+                addViewInLayout(view, -1, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                    scrollFlags = if (index == views!!.lastIndex) {
+                        LayoutParams.SCROLL_FLAG_SNAP
+                    } else {
+                        LayoutParams.SCROLL_FLAG_SCROLL
+                    }
+                })
             }
 
             field = value
