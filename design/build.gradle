@@ -11,6 +11,7 @@ dependencies {
     api project(path: ':design:viewlist')
     api project(path: ':design:tablayout')
     api project(path: ':design:circularupdatableview')
+    api project(path: ':design:bottomnavigationview')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat

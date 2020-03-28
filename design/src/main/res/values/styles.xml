@@ -33,6 +33,7 @@
 
         <item name="appBarStyle">@style/Sudox.AppBar</item>
         <item name="appBarLayoutStyle">@style/Sudox.AppBarLayout</item>
+        <item name="bottomNavigationStyle">@style/Sudox.BottomNavigationView</item>
         <item name="tabStyle">@style/Sudox.TabLayout</item>
 
         <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>

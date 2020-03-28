@@ -22,11 +22,11 @@ class AppLayoutState : SaveableViewState<AppLayout> {
 
     override fun readFromView(view: AppLayout) {
         contentLayoutId = view.contentLayout.id
-        navigationBarId = view.navigationBar.id
+        navigationBarId = view.bottomNavigationView.id
     }
 
     override fun writeToView(view: AppLayout) {
         view.contentLayout.id = contentLayoutId
-        view.navigationBar.id = navigationBarId
+        view.bottomNavigationView.id = navigationBarId
     }
 }

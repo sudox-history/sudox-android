@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.BottomNavigationView" parent="">
+        <item name="android:background">@drawable/background_bottomnavigationview</item>
+        <item name="itemTextAppearanceActive">@style/Sudox.BottomNavigationView.TextAppearance</item>
+        <item name="itemTextAppearanceInactive">@style/Sudox.BottomNavigationView.TextAppearance</item>
+        <item name="itemTextColor">@color/color_bottomnavigationviewitem</item>
+        <item name="itemIconTint">@color/color_bottomnavigationviewitem</item>
+    </style>
+
+    <style name="Sudox.BottomNavigationView.TextAppearance" parent="">
+        <item name="android:textSize">@dimen/bottomnavigationview_text_size</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
+    </style>
+</resources>
