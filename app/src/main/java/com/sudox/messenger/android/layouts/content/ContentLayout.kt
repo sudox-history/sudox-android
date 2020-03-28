@@ -22,7 +22,7 @@ class ContentLayout : CoordinatorLayout {
 
     val frameLayout = FrameLayout(context).apply {
         id = View.generateViewId()
-        layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+        layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).apply {
             behavior = com.google.android.material.appbar.AppBarLayout.ScrollingViewBehavior()
         }
 

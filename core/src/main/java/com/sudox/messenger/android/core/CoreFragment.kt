@@ -72,8 +72,14 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     override fun onHiddenChanged(hidden: Boolean) {
         if (!hidden) {
             // P.S.: CoreFragment можно использовать только если Activity является наследником CoreActivity
+            val coreActivity = activity as CoreActivity
+
             if (this !is TabsChildFragment || !isAppBarConfiguredByRoot()) {
-                (activity as CoreActivity).setAppBarViewObject(appBarVO, ::onAppBarClicked)
+                coreActivity.setAppBarViewObject(appBarVO, ::onAppBarClicked)
+            }
+
+            if (this !is TabsChildFragment) {
+                coreActivity.setAppBarLayoutViewObject(appBarLayoutVO)
             }
         } else {
             activity!!.hideSoftKeyboard()

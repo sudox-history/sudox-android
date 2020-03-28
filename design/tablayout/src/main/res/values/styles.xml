@@ -10,6 +10,7 @@
         <item name="tabPaddingStart">@dimen/tab_half_of_margin</item>
         <item name="tabTextAppearance">@style/Sudox.TabLayout.TitleTextAppearance</item>
         <item name="tabSelectedTextColor">@color/tab_title_selected_text_color</item>
+        <item name="tabGravity">center</item>
     </style>
 
     <style name="Sudox.TabLayout.TitleTextAppearance" parent="">

@@ -37,7 +37,7 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
             })
 
             value?.getViews(context)?.forEachIndexed { index, view ->
-                addViewInLayout(view, -1, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                addViewInLayout(view, -1, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
                     scrollFlags = if (index == views!!.lastIndex) {
                         LayoutParams.SCROLL_FLAG_SNAP
                     } else {
@@ -51,44 +51,6 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
             invalidate()
         }
 
-    var pixelsToLastChild = 0
-        private set
-
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val width = MeasureSpec.getSize(widthMeasureSpec)
-        var height = paddingTop + paddingBottom
-
-        for (i in 0 until childCount) {
-            height += with(getChildAt(i)) {
-                measureChild(this, widthMeasureSpec, heightMeasureSpec)
-                measuredHeight
-            }
-        }
-
-        pixelsToLastChild = height
-
-        if (childCount > 1) {
-            pixelsToLastChild -= getChildAt(childCount - 1).measuredHeight
-        }
-
-        setMeasuredDimension(width, height)
-    }
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        var topBorder = paddingTop
-        var bottomBorder: Int
-
-        for (i in 0 until childCount) {
-            val child = getChildAt(i)
-            val leftBorder = measuredWidth / 2 - child.measuredWidth / 2
-            val rightBorder = leftBorder + child.measuredWidth
-
-            bottomBorder = topBorder + child.measuredHeight
-            child.layout(leftBorder, topBorder, rightBorder, bottomBorder)
-            topBorder = bottomBorder
-        }
-    }
 }
