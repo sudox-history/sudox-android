@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.design.appbar.vos.NOT_USED_PARAMETER
-import com.sudox.messenger.android.people.R
+import com.sudox.messenger.android.people.activitytab.R
 
 const val NOTIFICATION_BUTTON_TAG = 2
 const val SEARCH_BUTTON_TAG = 3
