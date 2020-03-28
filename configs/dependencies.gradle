@@ -15,6 +15,8 @@ ext.libraries = [
         'junit-exts'          : "androidx.test.ext:junit:1.1.1",
         'mockito'             : "org.mockito:mockito-core:3.3.0",
         'material_components' : "com.google.android.material:material:1.2.0-alpha05",
+        'navigation_fragment' : "androidx.navigation:navigation-fragment-ktx:2.3.0-alpha04",
+        'navigation_ui'       : "androidx.navigation:navigation-ui:2.3.0-alpha04",
         'coordinator_layout'  : "androidx.coordinatorlayout:coordinatorlayout:1.1.0",
         'viewpager2'          : "androidx.viewpager2:viewpager2:1.0.0",
         'junit'               : "junit:junit:4.12"

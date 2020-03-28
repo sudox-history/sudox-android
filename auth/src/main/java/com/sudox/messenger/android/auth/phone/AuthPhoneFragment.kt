@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import com.sudox.design.countriesProvider.countries
 import com.sudox.design.countriesProvider.entries.Country
+import com.sudox.messenger.android.auth.FROM_AUTH_PHONE_TO_CODE_ACTION_ID
+import com.sudox.messenger.android.auth.FROM_AUTH_PHONE_TO_COUNTRIES_ACTION_ID
 import com.sudox.messenger.android.auth.R
-import com.sudox.messenger.android.auth.code.AuthCodeFragment
-import com.sudox.messenger.android.auth.country.AuthCountryFragment
 import com.sudox.messenger.android.auth.country.COUNTRY_EXTRA_NAME
 import com.sudox.messenger.android.core.CoreFragment
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditText
@@ -36,7 +36,7 @@ class AuthPhoneFragment : CoreFragment() {
         super.onAppBarClicked(tag)
 
         if (tag == AUTH_PHONE_NEXT_BUTTON_TAG) {
-            navigationManager!!.showChildFragment(AuthCodeFragment())
+            newNavigationManager!!.doAction(FROM_AUTH_PHONE_TO_CODE_ACTION_ID)
         }
     }
 
@@ -72,9 +72,7 @@ class AuthPhoneFragment : CoreFragment() {
         it.authPhoneEditText.setCountry(country.regionCode, country.countryCode, country.flagImageId)
         it.authPhoneEditText.regionFlagIdCallback = ::handleCountryChangingAttempt
         it.authPhoneEditText.countryCodeSelector.setOnClickListener {
-            navigationManager!!.showChildFragment(AuthCountryFragment().apply {
-                setTargetFragment(this@AuthPhoneFragment, 0)
-            })
+            newNavigationManager!!.doAction(FROM_AUTH_PHONE_TO_COUNTRIES_ACTION_ID)
         }
     }
 

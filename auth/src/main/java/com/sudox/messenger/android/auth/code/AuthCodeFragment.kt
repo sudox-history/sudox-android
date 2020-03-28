@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.text.HtmlCompat
+import com.sudox.messenger.android.auth.FROM_AUTH_CODE_TO_REGISTER_ACTION_ID
 import com.sudox.messenger.android.auth.R
-import com.sudox.messenger.android.auth.register.AuthRegisterFragment
 import com.sudox.messenger.android.core.CoreFragment
 import kotlinx.android.synthetic.main.fragment_auth_code.authCodeDescriptionTextView
 import kotlinx.android.synthetic.main.fragment_auth_code.authCodeEditText
@@ -29,7 +29,7 @@ class AuthCodeFragment : CoreFragment() {
         val spannable = HtmlCompat.fromHtml(string, HtmlCompat.FROM_HTML_MODE_COMPACT)
 
         authCodeEditText.codeFilledCallback = {
-            navigationManager!!.showChildFragment(AuthRegisterFragment())
+            newNavigationManager!!.doAction(FROM_AUTH_CODE_TO_REGISTER_ACTION_ID)
         }
 
         authCodeDescriptionTextView.text = spannable

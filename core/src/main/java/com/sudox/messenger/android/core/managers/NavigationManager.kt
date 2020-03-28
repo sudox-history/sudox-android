@@ -1,14 +1,13 @@
 package com.sudox.messenger.android.core.managers
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-
 interface NavigationManager {
-    fun showAuthPart()
-    fun showMainPart()
-    fun configureNavigationBar()
-    fun showChildFragment(fragment: Fragment)
-    fun popBackstack(): Boolean
-    fun restoreState(bundle: Bundle): Boolean
-    fun saveState(bundle: Bundle)
+
+    /**
+     * Выполняет действие навигации.
+     * P.S.: Реализация просто переводит данный ID в ID гугловской навигации,
+     * дабы обеспечить её работу в многомодульном проекте.
+     *
+     * @param id ID фрагмента
+     */
+    fun doAction(id: Int)
 }

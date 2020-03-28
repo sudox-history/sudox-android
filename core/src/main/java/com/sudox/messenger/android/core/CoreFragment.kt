@@ -5,11 +5,13 @@ import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.design.appbar.vos.BACK_BUTTON_TAG
 import com.sudox.design.hideSoftKeyboard
 import com.sudox.messenger.android.core.managers.NavigationManager
+import com.sudox.messenger.android.core.managers.OldNavigationManager
 import com.sudox.messenger.android.core.managers.ScreenManager
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import javax.inject.Inject
@@ -23,10 +25,13 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
 
     @Inject
     @JvmField
-    var navigationManager: NavigationManager? = null
+    var navigationManager: OldNavigationManager? = null
     @Inject
     @JvmField
     var screenManager: ScreenManager? = null
+    @Inject
+    @JvmField
+    var newNavigationManager: NavigationManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injectAll(activity as CoreActivity)
@@ -41,7 +46,7 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
      */
     open fun onAppBarClicked(tag: Int) {
         if (tag == BACK_BUTTON_TAG) {
-            activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
+            activity!!.onBackPressed()
         }
     }
 

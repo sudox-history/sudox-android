@@ -12,6 +12,8 @@ dependencies {
     implementation libraries.appcompat
     implementation libraries.viewpager2
     implementation libraries.material_components
+    implementation libraries.navigation_fragment
+    implementation libraries.navigation_ui
 
     implementation libraries.dagger
     kapt libraries.dagger_compiler
