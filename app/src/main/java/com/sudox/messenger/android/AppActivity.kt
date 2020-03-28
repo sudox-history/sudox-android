@@ -3,7 +3,7 @@ package com.sudox.messenger.android
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.messenger.android.core.CoreActivity
@@ -19,9 +19,6 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     private var appLayout: AppLayout? = null
     private var coreComponent: CoreComponent? = null
-    private val navController: NavController by lazy {
-        appLayout!!.contentLayout.fragment.navController
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (window.decorView.background as LayerDrawable)
@@ -30,20 +27,24 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
         coreComponent = DaggerCoreComponent
                 .builder()
-                .coreModule(CoreModule(AppNavigationManager(lazy { navController }), AppScreenManager(this)))
+                .coreModule(CoreModule(AppNavigationManager(), AppScreenManager(this)))
                 .build()
 
         super.onCreate(savedInstanceState)
 
         appLayout = AppLayout(this).apply {
-            init(savedInstanceState, supportFragmentManager)
+            init(savedInstanceState)
+
+            if (savedInstanceState == null) {
+                contentLayout.init(supportFragmentManager)
+            }
         }
 
         setContentView(appLayout)
     }
 
     override fun onBackPressed() {
-        if (!navController.popBackStack()) {
+        if (!findNavController(appLayout!!.contentLayout.frameLayout.id).popBackStack()) {
             super.onBackPressed()
         }
     }
