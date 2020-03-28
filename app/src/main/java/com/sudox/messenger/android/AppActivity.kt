@@ -19,6 +19,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     private var appLayout: AppLayout? = null
     private var coreComponent: CoreComponent? = null
+    private var navigationManager = AppNavigationManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (window.decorView.background as LayerDrawable)
@@ -27,7 +28,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
         coreComponent = DaggerCoreComponent
                 .builder()
-                .coreModule(CoreModule(AppNavigationManager(), AppScreenManager(this)))
+                .coreModule(CoreModule(navigationManager, AppScreenManager(this)))
                 .build()
 
         super.onCreate(savedInstanceState)
@@ -42,6 +43,8 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             it.graph = it.navInflater.inflate(R.navigation.navigation_main).apply {
                 startDestination = R.id.authPhoneFragment
             }
+
+            navigationManager.linkWithBottomNavigationView(it, appLayout!!.bottomNavigationView)
         }
     }
 
