@@ -1,4 +1,4 @@
-package com.sudox.messenger.android.activity.adapters
+package com.sudox.messenger.android.people.activitytab.adapters
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -6,9 +6,9 @@ import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
-import com.sudox.messenger.android.activity.R
-import com.sudox.messenger.android.activity.vos.headers.MomentsHeaderVO
-import com.sudox.messenger.android.activity.vos.headers.NewsHeaderVO
+import com.sudox.messenger.android.people.R
+import com.sudox.messenger.android.people.activitytab.vos.headers.MomentsHeaderVO
+import com.sudox.messenger.android.people.activitytab.vos.headers.NewsHeaderVO
 import com.sudox.messenger.android.moments.adapters.MomentsAdapter
 import com.sudox.messenger.android.moments.createMomentsRecyclerView
 import com.sudox.messenger.android.news.callbacks.NewsSortingCallback

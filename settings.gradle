@@ -18,6 +18,7 @@ include ':auth'
 include ':core'
 
 include ':people'
+include ':people:activitytab'
 include ':people:peopletab'
 include ':people:common'
 
@@ -26,7 +27,6 @@ include ':media:images'
 include ':media:texts'
 
 include ':messages'
-include ':activity'
 include ':moments'
 include ':time'
 include ':news'

@@ -1,26 +1,27 @@
-package com.sudox.messenger.android.activity
+package com.sudox.messenger.android.people.activitytab
 
 import android.content.Context
 import android.os.Handler
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
-import com.sudox.messenger.android.activity.adapters.ActivityTabAdapter
-import com.sudox.messenger.android.activity.vos.ActivityTabAppBarVO
+import com.sudox.messenger.android.people.activitytab.adapters.ActivityTabAdapter
+import com.sudox.messenger.android.people.activitytab.vos.ActivityTabAppBarVO
 import com.sudox.messenger.android.core.fragments.ViewListFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.media.vos.impls.ImageAttachmentVO
 import com.sudox.messenger.android.moments.vos.AddMomentVO
 import com.sudox.messenger.android.moments.vos.MomentVO
 import com.sudox.messenger.android.news.vos.NewsVO
+import com.sudox.messenger.android.people.R
 import com.sudox.messenger.android.people.common.vos.SimplePeopleVO
 
-class ActivityTabFragment : ViewListFragment<ViewListAdapter<*>>(), TabsChildFragment {
+class ActivityTabFragment : ViewListFragment<ActivityTabAdapter>(), TabsChildFragment {
 
     init {
         appBarVO = ActivityTabAppBarVO()
     }
 
-    override fun getAdapter(viewList: ViewList): ViewListAdapter<*>? {
+    override fun getAdapter(viewList: ViewList): ActivityTabAdapter? {
         val handler = Handler()
 
         return ActivityTabAdapter().apply {

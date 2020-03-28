@@ -1,10 +1,10 @@
-package com.sudox.messenger.android.activity.vos
+package com.sudox.messenger.android.people.activitytab.vos
 
 import android.content.Context
 import android.view.View
 import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.design.appbar.vos.NOT_USED_PARAMETER
-import com.sudox.messenger.android.activity.R
+import com.sudox.messenger.android.people.R
 
 const val NOTIFICATION_BUTTON_TAG = 2
 const val SEARCH_BUTTON_TAG = 3

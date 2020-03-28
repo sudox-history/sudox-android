@@ -1,11 +1,11 @@
-package com.sudox.messenger.android.activity.vos.headers
+package com.sudox.messenger.android.people.activitytab.vos.headers
 
 import android.content.Context
 import com.sudox.design.popup.vos.PopupItemVO
 import com.sudox.design.popup.vos.PopupItemWithoutIconVO
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
-import com.sudox.messenger.android.activity.R
-import com.sudox.messenger.android.activity.adapters.MOMENTS_HEADER_TYPE
+import com.sudox.messenger.android.people.R
+import com.sudox.messenger.android.people.activitytab.adapters.MOMENTS_HEADER_TYPE
 
 /**
  * ViewObject для секции моментов
