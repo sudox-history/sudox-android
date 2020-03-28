@@ -18,7 +18,7 @@ class AppScreenManager(val activity: Activity) : ScreenManager {
     override fun setOrientation(orientation: Int) {
         activity.let {
             if (it.window.attributes.screenOrientation != orientation) {
-                it.requestedOrientation = orientation
+//                it.requestedOrientation = orientation
             }
         }
     }

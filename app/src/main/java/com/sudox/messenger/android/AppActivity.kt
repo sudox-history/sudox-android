@@ -33,14 +33,16 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         super.onCreate(savedInstanceState)
 
         appLayout = AppLayout(this).apply {
-            init(savedInstanceState)
-
-            if (savedInstanceState == null) {
-                contentLayout.init(supportFragmentManager)
-            }
+            init(savedInstanceState, supportFragmentManager)
         }
 
         setContentView(appLayout)
+
+        appLayout!!.contentLayout.fragment!!.navController.let {
+            it.graph = it.navInflater.inflate(R.navigation.navigation_main).apply {
+                startDestination = R.id.authPhoneFragment
+            }
+        }
     }
 
     override fun onBackPressed() {

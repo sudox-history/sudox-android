@@ -15,7 +15,7 @@ import com.sudox.messenger.android.R
 
 class ContentLayout : CoordinatorLayout {
 
-    val fragment = NavHostFragment.create(R.navigation.navigation_main)
+    var fragment: NavHostFragment? = null
 
     @Suppress("unused")
     val appBarLayout = AppBarLayout(context).apply {
@@ -45,11 +45,13 @@ class ContentLayout : CoordinatorLayout {
      * @param fragmentManager Менеджер фрагментов
      */
     fun init(fragmentManager: FragmentManager) {
+        fragment = fragmentManager.primaryNavigationFragment as NavHostFragment? ?: NavHostFragment()
+
         fragmentManager
                 .beginTransaction()
-                .replace(frameLayout.id, fragment)
+                .replace(frameLayout.id, fragment!!)
                 .setPrimaryNavigationFragment(fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit()
+                .commitNow()
     }
 }
