@@ -7,6 +7,8 @@ dependencies {
     api project(path: ':core')
     api project(path: ':design')
     api project(path: ':api')
+    api project(path: ':people')
+    api project(path: ':time')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat

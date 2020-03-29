@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="ViewList">
         <attr name="footerTextAppearance" format="reference" />
+        <attr name="footerMargin" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="ViewListHeaderView">

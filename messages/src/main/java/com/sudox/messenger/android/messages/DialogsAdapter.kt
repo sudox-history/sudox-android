@@ -6,78 +6,76 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
+import com.sudox.design.viewlist.ViewList
+import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.messenger.android.messages.views.DialogItemView
 import com.sudox.messenger.android.messages.vos.DialogItemViewVO
+import com.sudox.messenger.android.messages.vos.DialogVO
 import kotlinx.android.synthetic.main.dialogs_count.view.*
 import java.util.*
 
-class DialogsAdapter(val context: Context) : RecyclerView.Adapter<DialogsAdapter.ViewHolder>() {
+class DialogsAdapter(val context: Context) : ViewListAdapter<DialogsAdapter.ViewHolder>() {
 
-    val dialogs = SortedList<DialogItemViewVO>(DialogItemViewVO::class.java, DialogsCallback(this))
-    var deleteDialogCallback: ((DialogItemViewVO) -> (Unit))? = null
+    val dialogs = SortedList<DialogVO>(DialogVO::class.java, DialogsCallback(this))
     var addDialogCallback: (() -> (Unit))? = null
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return when (viewType) {
-            1 -> {
-                val view = LayoutInflater.from(context).inflate(R.layout.dialogs_count, parent, false)
-
-                view.setOnClickListener {
-                    addDialogCallback!!()
-                    notifyItemChanged(itemCount-1)
-                }
-
-                ViewHolder(view)
-            }
-            else -> {
-                val view = DialogItemView(context)
-                val holder = ViewHolder(view)
-
-                view.setOnClickListener {
-                    if(holder.adapterPosition != -1) {
-                        dialogs[holder.adapterPosition].isMuted = !dialogs[holder.adapterPosition].isMuted
-                        notifyItemChanged(holder.adapterPosition)
-                    }
-                }
-
-                view.setOnLongClickListener {
-                    if(holder.adapterPosition != -1) {
-                        //dialogs.remove(dialogs[holder.adapterPosition])
-                        dialogs.removeItemAt(holder.adapterPosition)
-                        notifyItemChanged(holder.adapterPosition)
-                        notifyItemChanged(itemCount-1)
-                    }
-                    true
-                }
-
-                holder
+    override var viewList: ViewList? = null
+        set(value) {
+            field = value?.apply {
+                setItemViewCacheSize(20)
+                setHasFixedSize(true)
             }
         }
+
+    override fun getItemMargin(position: Int): Int {
+        return viewList!!.context.resources.getDimensionPixelSize(R.dimen.dialogitemview_vertical_items_margin)
     }
 
-    override fun getItemCount(): Int {
-        return dialogs.size() + 1
+    override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
+        val view = DialogItemView(context)
+        val holder = ViewHolder(view)
+        view.setOnClickListener {
+            if (holder.adapterPosition != -1) {
+                dialogs[holder.adapterPosition].isMuted = !dialogs[holder.adapterPosition].isMuted
+                notifyItemChanged(holder.adapterPosition)
+            }
+        }
+
+        view.setOnLongClickListener {
+            if (holder.adapterPosition != -1) {
+                dialogs.removeItemAt(holder.adapterPosition)
+                notifyItemChanged(holder.adapterPosition)
+                notifyItemChanged(itemCount - 1)
+            }
+            true
+        }
+
+        return holder
     }
 
-
-    override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - 1) 1 else 0
+    override fun getItemsCountAfterHeader(type: Int): Int {
+        return dialogs.size()
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun bindItemHolder(holder: ViewHolder, position: Int) {
         holder.view.let {
-            when (getItemViewType(position)) {
-                0 -> {
-                    val dialog = dialogs[position]
-                    it as DialogItemView
-                    it.vo = dialog
-                }
-                1 -> {
-                    it.dialogCountTextView.text = "${dialogs.size()} chats"
-                }
-            }
+            val dialog = dialogs[position]
+            it as DialogItemView
+            it.vo = dialog
         }
+    }
+
+    override fun getFooterText(position: Int): String? {
+        return if (position == itemCount-1) {
+            viewList!!.context.resources.getQuantityString(R.plurals.chats_count, dialogs.size(), dialogs.size())
+        } else {
+            null
+        }
+    }
+
+    override fun getFooterCount(): Int {
+        return 1
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
