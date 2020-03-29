@@ -52,7 +52,9 @@ abstract class TabsRootFragment : CoreFragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState.apply {
-            putInt(VIEW_PAGER_ID_KEY, viewPager!!.id)
+            if (viewPager != null) {
+                putInt(VIEW_PAGER_ID_KEY, viewPager!!.id)
+            }
         })
     }
 

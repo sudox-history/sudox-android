@@ -41,7 +41,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
         appLayout!!.contentLayout.fragment!!.navController.let {
             it.graph = it.navInflater.inflate(R.navigation.navigation_main).apply {
-                startDestination = R.id.authPhoneFragment
+                startDestination = R.id.peopleFragment
             }
 
             navigationManager.linkWithBottomNavigationView(it, appLayout!!.bottomNavigationView)
