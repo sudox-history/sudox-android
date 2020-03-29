@@ -2,11 +2,12 @@ package com.sudox.messenger.android.messages
 
 import androidx.recyclerview.widget.SortedList
 import com.sudox.messenger.android.messages.vos.DialogItemViewVO
+import com.sudox.messenger.android.messages.vos.DialogVO
 
 class DialogsCallback(
         var adapter: DialogsAdapter
-) : SortedList.Callback<DialogItemViewVO>() {
-    override fun areItemsTheSame(item1: DialogItemViewVO?, item2: DialogItemViewVO?): Boolean {
+) : SortedList.Callback<DialogVO>() {
+    override fun areItemsTheSame(item1: DialogVO?, item2: DialogVO?): Boolean {
         return item1 === item2
     }
 
@@ -26,7 +27,7 @@ class DialogsCallback(
         adapter.notifyItemRangeRemoved(position, count)
     }
 
-    override fun compare(item1: DialogItemViewVO, item2: DialogItemViewVO): Int {
+    override fun compare(item1: DialogVO, item2: DialogVO): Int {
         if (item1.isViewed && !item2.isViewed) {
             return 1
         }
@@ -42,10 +43,10 @@ class DialogsCallback(
             }
         }
 
-        return -item1.date.compareTo(item2.date)
+        return -item1.time.compareTo(item2.time)
     }
 
-    override fun areContentsTheSame(oldItem: DialogItemViewVO?, newItem: DialogItemViewVO?): Boolean {
+    override fun areContentsTheSame(oldItem: DialogVO?, newItem: DialogVO?): Boolean {
         return oldItem == newItem
     }
 }

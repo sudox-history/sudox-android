@@ -10,12 +10,13 @@ import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.messenger.android.messages.views.DialogItemView
 import com.sudox.messenger.android.messages.vos.DialogItemViewVO
+import com.sudox.messenger.android.messages.vos.DialogVO
 import kotlinx.android.synthetic.main.dialogs_count.view.*
 import java.util.*
 
 class DialogsAdapter(val context: Context) : ViewListAdapter<DialogsAdapter.ViewHolder>() {
 
-    val dialogs = SortedList<DialogItemViewVO>(DialogItemViewVO::class.java, DialogsCallback(this))
+    val dialogs = SortedList<DialogVO>(DialogVO::class.java, DialogsCallback(this))
     var addDialogCallback: (() -> (Unit))? = null
 
     override var viewList: ViewList? = null
