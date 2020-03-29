@@ -46,9 +46,6 @@ class AuthCountryFragment : CoreFragment() {
     }
 
     private fun onCountryClicked(country: Country) {
-        findNavController().let {
-            newNavigationManager!!.sendData(it, COUNTRY_EXTRA_NAME, Event(country))
-            it.popBackStack()
-        }
+        newNavigationManager!!.sendData(findNavController(), COUNTRY_EXTRA_NAME, Event(country))
     }
 }
