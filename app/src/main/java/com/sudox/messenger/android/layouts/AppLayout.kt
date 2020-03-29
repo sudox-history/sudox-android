@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sudox.design.saveableview.SaveableViewGroup
 import com.sudox.messenger.android.layouts.content.ContentLayout
@@ -38,9 +37,8 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
      * Инициализирует данную ViewGroup для отображения в качестве корневого элемента приложения.
      *
      * @param savedInstanceState Сохраненое состояние
-     * @param fragmentManager Менеджер фрагментов
      */
-    fun init(savedInstanceState: Bundle?, fragmentManager: FragmentManager) {
+    fun init(savedInstanceState: Bundle?) {
         if (savedInstanceState?.containsKey(LAYOUT_VIEW_ID_KEY) == true) {
             id = savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
 
@@ -50,8 +48,6 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
         } else {
             id = View.generateViewId()
         }
-
-        contentLayout.init(fragmentManager)
     }
 
     /**
