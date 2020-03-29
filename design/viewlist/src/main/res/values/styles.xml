@@ -3,6 +3,7 @@
 
     <style name="Sudox.ViewList" parent="">
         <item name="footerTextAppearance">@style/Sudox.ViewList.Footer</item>
+        <item name="footerMargin">@dimen/viewlist_footer_margin</item>
     </style>
 
     <style name="Sudox.ViewList.Header" parent="">
@@ -27,8 +28,7 @@
     <style name="Sudox.ViewList.Footer" parent="">
         <item name="android:fontFamily">@font/opensans_regular</item>
         <item name="android:textAlignment">center</item>
-        <item name="android:textColor">#BDBDBD</item>
-        <item name="android:textSize">14sp</item>
-        <!--TODO нормально реализовать-->
+        <item name="android:textColor">@color/viewlist_footer_text_color</item>
+        <item name="android:textSize">@dimen/viewlist_footer_text_size</item>
     </style>
 </resources>
