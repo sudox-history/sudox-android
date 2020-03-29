@@ -1,6 +1,7 @@
 package com.sudox.messenger.android.messages.adapters
 
 import android.view.ViewGroup
+import androidx.annotation.PluralsRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
@@ -10,7 +11,9 @@ import com.sudox.messenger.android.messages.callbacks.DialogsCallback
 import com.sudox.messenger.android.messages.views.DialogItemView
 import com.sudox.messenger.android.messages.vos.DialogVO
 
-class DialogsAdapter : ViewListAdapter<DialogsAdapter.ViewHolder>() {
+class DialogsAdapter(
+        @PluralsRes val pluralId: Int
+) : ViewListAdapter<DialogsAdapter.ViewHolder>() {
 
     val dialogsVOs = SortedList<DialogVO>(DialogVO::class.java, DialogsCallback(this))
 
@@ -32,7 +35,7 @@ class DialogsAdapter : ViewListAdapter<DialogsAdapter.ViewHolder>() {
 
     override fun getFooterText(position: Int): String? {
         return if (position == itemCount - 1) {
-            viewList!!.context.resources.getQuantityString(R.plurals.chats_count, dialogsVOs.size(), dialogsVOs.size())
+            viewList!!.context.resources.getQuantityString(pluralId, dialogsVOs.size(), dialogsVOs.size())
         } else {
             null
         }

@@ -11,7 +11,7 @@ import com.sudox.messenger.android.messages.vos.impl.TalkVO
 
 class TalksTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragment {
 
-    var dialogsAdapter = DialogsAdapter()
+    var dialogsAdapter = DialogsAdapter(R.plurals.talks)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -12,7 +12,7 @@ import com.sudox.messenger.android.people.common.vos.SEEN_TIME_ONLINE
 
 class ChatsTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragment {
 
-    var dialogsAdapter = DialogsAdapter()
+    var dialogsAdapter = DialogsAdapter(R.plurals.chats)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
