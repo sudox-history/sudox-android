@@ -1,6 +1,7 @@
 package com.sudox.messenger.android.core
 
 import android.animation.Animator
+import android.animation.AnimatorInflater
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.sudox.design.appbar.vos.AppBarLayoutVO
@@ -8,6 +9,7 @@ import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.design.appbar.vos.BACK_BUTTON_TAG
 import com.sudox.design.hideSoftKeyboard
 import com.sudox.messenger.android.core.managers.NavigationManager
+import com.sudox.messenger.android.core.managers.OldNavigationManager
 import com.sudox.messenger.android.core.managers.ScreenManager
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import javax.inject.Inject
@@ -19,6 +21,9 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     var appBarLayoutVO: AppBarLayoutVO? = null
     var appBarVO: AppBarVO? = null
 
+    @Inject
+    @JvmField
+    var navigationManager: OldNavigationManager? = null
     @Inject
     @JvmField
     var screenManager: ScreenManager? = null
