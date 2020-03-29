@@ -176,6 +176,7 @@ class DialogItemView : ViewGroup {
         } else {
             contentTextView.measuredWidth
         }
+
         measureChild(contentTextView, MeasureSpec.makeMeasureSpec(contentTextWidth, MeasureSpec.EXACTLY), heightMeasureSpec)
         measureChild(nameView, MeasureSpec.makeMeasureSpec(contentTextWidth, MeasureSpec.EXACTLY), heightMeasureSpec)
         val needHeight = paddingTop + max(innerDialogNameToTopMargin +

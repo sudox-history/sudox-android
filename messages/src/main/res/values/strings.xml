@@ -1,8 +1,9 @@
 <resources>
     <string name="messages">Messages</string>
-    <string name="rooms">Rooms</string>
-    <string name="message_sent_by_user"><font color='#BDBDBD'>You: %s</font></string>
-    <string name="message_sent_by_different_user"><font color='#BDBDBD'>%s: %s</font></string>
+    <string name="chats">Chats</string>
+    <string name="talks">Talks</string>
+    <string name="message_sent_by_user"><font color='#BDBDBD'>You: </font>%s</string>
+    <string name="message_sent_by_different_user"><font color='#BDBDBD'>%s: </font>%s</string>
 
     <plurals name="chats_count">
         <item quantity="one">%d chat</item>

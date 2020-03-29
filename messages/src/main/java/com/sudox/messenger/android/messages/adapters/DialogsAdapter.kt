@@ -23,22 +23,7 @@ class DialogsAdapter : ViewListAdapter<DialogsAdapter.ViewHolder>() {
         }
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(DialogItemView(parent.context)).apply {
-            view.setOnClickListener {
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    dialogsVOs[adapterPosition].isMuted = !dialogsVOs[adapterPosition].isMuted
-                    dialogsVOs.updateItemAt(adapterPosition, dialogsVOs[adapterPosition])
-                }
-            }
-
-            view.setOnLongClickListener {
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    dialogsVOs.removeItemAt(adapterPosition)
-                }
-
-                true
-            }
-        }
+        return ViewHolder(DialogItemView(parent.context))
     }
 
     override fun bindItemHolder(holder: ViewHolder, position: Int) {

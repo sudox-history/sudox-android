@@ -7,12 +7,11 @@ import com.sudox.messenger.android.people.common.views.AvatarImageView
 
 interface DialogVO {
 
-    val dialogId: Int
+    val dialogId: Long
     var isMuted: Boolean
     var isViewed: Boolean
     var time: Long
     var messagesCount: Int
-    var isLastMessageByMe: Boolean
     var isSentMessageDelivered: Boolean
     var isSentMessageViewed: Boolean
     var isSentByUserMessage: Boolean

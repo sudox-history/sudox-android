@@ -11,6 +11,6 @@ class DialogsFragment : TabsRootFragment() {
     }
 
     override fun getFragments(): Array<CoreFragment> {
-        return arrayOf(MessagesTabFragment(), TalksTabFragment())
+        return arrayOf(ChatsTabFragment(), TalksTabFragment())
     }
 }

@@ -18,7 +18,7 @@
     <dimen name="dialogitemview_inner_date_to_top_margin">4dp</dimen>
     <dimen name="dialogitemview_inner_message_status_margin">5dp</dimen>
     <dimen name="dialogitemview_inner_content_to_right_view_margin">10dp</dimen>
-    <dimen name="dialogitemview_inner_content_to_right_border_margin">52dp</dimen>
+    <dimen name="dialogitemview_inner_content_to_right_border_margin">24dp</dimen>
     <dimen name="dialogitemview_inner_muted_icon_to_date_margin">6dp</dimen>
     <dimen name="dialogitemview_inner_muted_icon_to_top_margin">7dp</dimen>
 

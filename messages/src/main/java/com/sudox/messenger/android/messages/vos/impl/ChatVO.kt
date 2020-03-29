@@ -8,12 +8,11 @@ import com.sudox.messenger.android.people.common.views.AvatarImageView
 import com.sudox.messenger.android.people.common.vos.PeopleVO
 
 data class ChatVO(
-        override val dialogId: Int,
+        override val dialogId: Long,
         override var isMuted: Boolean,
         override var isViewed: Boolean,
         override var time: Long,
         override var messagesCount: Int,
-        override var isLastMessageByMe: Boolean,
         override var isSentMessageDelivered: Boolean,
         override var isSentMessageViewed: Boolean,
         override var isSentByUserMessage: Boolean,
@@ -29,11 +28,11 @@ data class ChatVO(
     }
 
     override fun getLastMessage(context: Context): String {
-        if (isLastMessageByMe) {
-            return context.resources.getString(R.string.message_sent_by_user, lastSentMessage)
+        if (isSentByUserMessage) {
+            return lastSentMessage
         }
 
-        return lastSentMessage
+        return context.resources.getString(R.string.message_sent_by_user, lastSentMessage)
     }
 
     override fun getAvatarView(context: Context): View {
