@@ -2,56 +2,81 @@ package com.sudox.messenger.android
 
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreLoader
 import com.sudox.messenger.android.core.inject.CoreComponent
-import com.sudox.messenger.android.core.inject.CoreModule
-import com.sudox.messenger.android.core.inject.DaggerCoreComponent
 import com.sudox.messenger.android.layouts.AppLayout
 import com.sudox.messenger.android.managers.AppNavigationManager
-import com.sudox.messenger.android.managers.AppScreenManager
 
 class AppActivity : AppCompatActivity(), CoreActivity {
 
-    private var appLayout: AppLayout? = null
+    private var navigationManager: AppNavigationManager? = null
     private var coreComponent: CoreComponent? = null
-    private val navController: NavController by lazy {
-        appLayout!!.contentLayout.fragment.navController
-    }
+    private var appLayout: AppLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (window.decorView.background as LayerDrawable)
                 .getDrawable(1)
                 .alpha = 1
 
-        coreComponent = DaggerCoreComponent
-                .builder()
-                .coreModule(CoreModule(AppNavigationManager(lazy { navController }), AppScreenManager(this)))
-                .build()
-
-        super.onCreate(savedInstanceState)
-
         appLayout = AppLayout(this).apply {
-            init(savedInstanceState, supportFragmentManager)
+            init(savedInstanceState)
+
+            bottomNavigationView.menu.apply {
+                add("First item").apply {
+                    setIcon(R.drawable.ic_account)
+                }
+
+                add("Second item").apply {
+                    setIcon(R.drawable.ic_face)
+                }
+            }
+
+//            navigationManager = AppNavigationManager(
+//                    supportFragmentManager,
+//                    contentLayout.frameLayout.id,
+//                    bottomNavigationView
+//            )
+
+            setContentView(this)
         }
 
-        setContentView(appLayout)
+//        coreComponent = DaggerCoreComponent
+//                .builder()
+//                .coreModule(CoreModule(navigationManager!!, AppScreenManager(this)))
+//                .build()
+//
+        super.onCreate(savedInstanceState)
+//
+//        if (savedInstanceState != null) {
+//            navigationManager!!.restoreState(savedInstanceState)
+//        } else {
+//            navigationManager!!.configureNavigationBar()
+//            navigationManager!!.showAuthPart()
+//        }
     }
 
-    override fun onBackPressed() {
-        if (!navController.popBackStack()) {
-            super.onBackPressed()
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (!navigationManager!!.popBackstack()) {
+                super.onBackPressed()
+            }
+
+            return true
         }
+
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState.apply {
-            appLayout!!.saveIds(this)
-        })
+        super.onSaveInstanceState(outState)
+
+//        appLayout!!.saveIds(outState)
+//        navigationManager!!.saveState(outState)
     }
 
     override fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?) {
@@ -62,10 +87,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun setAppBarLayoutViewObject(appBarLayoutVO: AppBarLayoutVO?) {
-        appLayout!!
-                .contentLayout
-                .appBarLayout
-                .vo = appBarLayoutVO
+        appLayout!!.contentLayout.appBarLayout.vo = appBarLayoutVO
     }
 
     override fun getCoreComponent(): CoreComponent {
@@ -74,5 +96,8 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     override fun getLoader(): CoreLoader {
         return application as CoreLoader
+    }
+
+    override fun onBackPressed() {
     }
 }

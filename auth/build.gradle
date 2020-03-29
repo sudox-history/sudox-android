@@ -13,8 +13,6 @@ dependencies {
     implementation libraries.lifecycle_extensions
     implementation libraries.recyclerview
     implementation libraries.coroutines
-    implementation libraries.navigation_fragment
-    implementation libraries.navigation_ui
 
     implementation libraries.dagger
     kapt libraries.dagger_compiler

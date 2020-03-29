@@ -30,8 +30,6 @@ dependencies {
     implementation libraries.annotations
     implementation libraries.coordinator_layout
     implementation libraries.material_components
-    implementation libraries.navigation_fragment
-    implementation libraries.navigation_ui
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric
