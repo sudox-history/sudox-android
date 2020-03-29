@@ -10,7 +10,7 @@
         <item name="likeActionActiveColor">@color/newsitemview_like_action_active_color</item>
         <item name="actionBarPaddingRight">@dimen/newsitemview_action_bar_padding_right</item>
         <item name="actionBarPaddingLeft">@dimen/newsitemview_action_bar_padding_left</item>
-        <item name="dislikeActiveIcon">@drawable/ic_thumb_up</item>
+        <item name="dislikeActiveIcon">@drawable/ic_thumb_down</item>
         <item name="likeActiveIcon">@drawable/ic_thumb_up</item>
         <item name="contentTextAppearance">@style/Sudox.NewsItemView.ContentTextAppearance</item>
         <item name="defaultActionColor">@color/newsitemview_default_action_color</item>
