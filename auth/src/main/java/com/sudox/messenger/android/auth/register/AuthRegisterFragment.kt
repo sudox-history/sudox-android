@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.navigation.fragment.findNavController
 import com.sudox.design.showSoftKeyboard
-import com.sudox.messenger.android.auth.FROM_AUTH_REGISTER_TO_PEOPLE_FRAGMENT
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.core.CoreFragment
 import kotlinx.android.synthetic.main.fragment_auth_register.authRegisterNicknameEditText
@@ -43,7 +41,7 @@ class AuthRegisterFragment : CoreFragment() {
         super.onAppBarClicked(tag)
 
         if (tag == AUTH_REGISTER_FINISH_BUTTON_TAG) {
-            newNavigationManager!!.doAction(findNavController(), FROM_AUTH_REGISTER_TO_PEOPLE_FRAGMENT)
+            navigationManager!!.showMainPart()
         }
     }
 

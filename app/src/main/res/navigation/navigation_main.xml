@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_main"
-    tools:ignore="InvalidNavigation,UnusedNavigation">
+    tools:ignore="UnusedNavigation">
 
     <fragment
         android:id="@+id/authPhoneFragment"
@@ -13,7 +13,6 @@
         <action
             android:id="@+id/action_authPhoneFragment_to_authCodeFragment"
             app:destination="@id/authCodeFragment" />
-
         <action
             android:id="@+id/action_authPhoneFragment_to_authCountryFragment"
             app:destination="@id/authCountryFragment" />
@@ -32,20 +31,9 @@
     <fragment
         android:id="@+id/authRegisterFragment"
         android:name="com.sudox.messenger.android.auth.register.AuthRegisterFragment"
-        android:label="AuthRegisterFragment">
-
-        <action
-            android:id="@+id/action_authRegisterFragment_to_peopleFragment"
-            app:destination="@id/peopleFragment" />
-    </fragment>
-
+        android:label="AuthRegisterFragment" />
     <fragment
         android:id="@+id/authCountryFragment"
         android:name="com.sudox.messenger.android.auth.country.AuthCountryFragment"
         android:label="AuthCountryFragment" />
-
-    <fragment
-        android:id="@+id/peopleFragment"
-        android:name="com.sudox.messenger.android.people.PeopleFragment"
-        android:label="PeopleFragment" />
 </navigation>
