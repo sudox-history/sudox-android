@@ -68,11 +68,6 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
         super.onResume()
     }
 
-    override fun onPause() {
-        activity!!.hideSoftKeyboard()
-        super.onPause()
-    }
-
     override fun onDetach() {
         animator?.removeListener(this)
         onHiddenChanged(true)
