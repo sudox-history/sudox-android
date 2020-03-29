@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
 import com.sudox.design.viewlist.vos.ViewListHeaderVO
-import com.sudox.messenger.android.people.R
+import com.sudox.messenger.android.people.activitytab.R
 import com.sudox.messenger.android.people.activitytab.vos.headers.MomentsHeaderVO
 import com.sudox.messenger.android.people.activitytab.vos.headers.NewsHeaderVO
 import com.sudox.messenger.android.moments.adapters.MomentsAdapter
