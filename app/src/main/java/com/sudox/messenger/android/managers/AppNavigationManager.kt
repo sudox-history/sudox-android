@@ -23,7 +23,6 @@ internal const val PEOPLE_NAVBAR_ITEM_ID = 1
 internal const val DIALOGS_NAVBAR_ITEM_ID = 2
 internal const val PROFILE_NAVBAR_ITEM_ID = 3
 
-internal const val NAVIGATION_BAR_CONFIGURED_EXTRA_KEY = "navigation_bar_configured"
 internal const val NAVIGATION_BAR_VISIBLE_EXTRA_KEY = "navigation_bar_visible"
 internal const val BACKSTACK_SIZE_EXTRA_KEY = "backstack_size"
 internal const val BACKSTACK_ITEM_TAG_AT_INDEX_EXTRA_KEY = "backstack_item_tag_at_index"
@@ -43,7 +42,6 @@ class AppNavigationManager(
     private var blockCallback: Boolean = false
     private var backstack = LinkedList<Pair<Int, Fragment>>()
     private var loadedFragments = HashMap<Int, Fragment>()
-    private var navigationBarConfigured = false
     private var currentFragment: Fragment? = null
     private var currentItemTag = 0
 
@@ -211,7 +209,6 @@ class AppNavigationManager(
             loadedFragments[itemTag] = fragment
         }
 
-        navigationBarConfigured = bundle.getBoolean(NAVIGATION_BAR_CONFIGURED_EXTRA_KEY)
         navigationBar.visibility = if (bundle.getBoolean(NAVIGATION_BAR_VISIBLE_EXTRA_KEY)) {
             View.VISIBLE
         } else {
@@ -225,7 +222,6 @@ class AppNavigationManager(
 
     override fun saveState(bundle: Bundle) {
         bundle.putBoolean(NAVIGATION_BAR_VISIBLE_EXTRA_KEY, navigationBar.visibility == View.VISIBLE)
-        bundle.putBoolean(NAVIGATION_BAR_CONFIGURED_EXTRA_KEY, navigationBarConfigured)
         bundle.putString(CURRENT_FRAGMENT_TAG_EXTRA_KEY, currentFragment!!.tag)
         bundle.putInt(CURRENT_ITEM_TAG_EXTRA_KEY, currentItemTag)
         bundle.putInt(LOADED_FRAGMENTS_COUNT_EXTRA_KEY, loadedFragments.size)
@@ -334,8 +330,6 @@ class AppNavigationManager(
     }
 
     override fun configureNavigationBar() {
-        navigationBarConfigured = true
-
         navigationBar.menu.apply {
             addItem(this, PEOPLE_NAVBAR_ITEM_ID, R.string.people, R.drawable.ic_group)
             addItem(this, DIALOGS_NAVBAR_ITEM_ID, R.string.messages, R.drawable.ic_chat_bubble)

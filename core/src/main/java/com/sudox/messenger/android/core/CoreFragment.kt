@@ -3,7 +3,6 @@ package com.sudox.messenger.android.core
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.os.Bundle
-import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 import com.sudox.design.appbar.vos.AppBarVO
@@ -23,10 +22,10 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
 
     @Inject
     @JvmField
-    var navigationManager: NavigationManager? = null
+    var screenManager: ScreenManager? = null
     @Inject
     @JvmField
-    var screenManager: ScreenManager? = null
+    var navigationManager: NavigationManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         injectAll(activity as CoreActivity)
@@ -41,7 +40,7 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
      */
     open fun onAppBarClicked(tag: Int) {
         if (tag == BACK_BUTTON_TAG) {
-            activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
+            activity!!.onBackPressed()
         }
     }
 
@@ -55,12 +54,12 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
         activity.getCoreComponent().inject(this)
     }
 
-    override fun onResume() {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
         if (!isHidden) {
             onHiddenChanged(false)
         }
 
-        super.onResume()
+        super.onActivityCreated(savedInstanceState)
     }
 
     override fun onDetach() {
