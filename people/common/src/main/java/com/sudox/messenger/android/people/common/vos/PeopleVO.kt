@@ -1,7 +1,6 @@
 package com.sudox.messenger.android.people.common.vos
 
 import android.content.Context
-import com.sudox.messenger.android.media.images.vos.ImageVO
 import com.sudox.messenger.android.people.common.R
 
 const val SEEN_TIME_ONLINE = 0L
@@ -17,16 +16,12 @@ val CLOSE_BUTTON = arrayOf(Triple(CLOSE_BUTTON_TAG, R.drawable.ic_cancel, R.colo
  * @property photoId ID фотографии в хранилище.
  * @property seenTime Последнее время онлайна, (SEEN_TIME_ONLINE если пользователь онлайн в данный момент)
  */
-interface PeopleVO : ImageVO {
+interface PeopleVO {
 
     var userId: Long
     var userName: String
     var seenTime: Long
     var photoId: Long
-
-    override fun getImageId(): Long {
-        return photoId
-    }
 
     /**
      * Возвращает триплеты тег-иконка-оттенок для функциональных кнопок

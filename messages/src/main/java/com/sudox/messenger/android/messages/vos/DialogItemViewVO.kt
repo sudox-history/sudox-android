@@ -1,13 +1,13 @@
 package com.sudox.messenger.android.messages.vos
 
-import com.sudox.messenger.android.media.images.vos.ImageVO
+import android.graphics.drawable.Drawable
 
-interface DialogItemViewVO : ImageVO {
+interface DialogItemViewVO {
     val dialogId: Int
     var isUserOnline: Boolean
     var isMuted: Boolean
     var isViewed: Boolean
-    var dialogPhotoId: Long
+    var dialogPhoto: Drawable
     var dialogName: String
     var previewMessage: String
     var dateView: String

@@ -33,8 +33,4 @@ open class SimplePeopleVO(
     override fun isStatusActive(): Boolean {
         return false
     }
-
-    override fun getImageId(): Long {
-        return photoId
-    }
 }
