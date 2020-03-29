@@ -3,14 +3,16 @@ package com.sudox.messenger.android.people.activitytab
 import android.content.Context
 import android.os.Handler
 import com.sudox.design.viewlist.ViewList
+import com.sudox.design.viewlist.ViewListAdapter
+import com.sudox.messenger.android.people.activitytab.adapters.ActivityTabAdapter
+import com.sudox.messenger.android.people.activitytab.vos.ActivityTabAppBarVO
 import com.sudox.messenger.android.core.fragments.ViewListFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.media.vos.impls.ImageAttachmentVO
 import com.sudox.messenger.android.moments.vos.AddMomentVO
 import com.sudox.messenger.android.moments.vos.MomentVO
 import com.sudox.messenger.android.news.vos.NewsVO
-import com.sudox.messenger.android.people.activitytab.adapters.ActivityTabAdapter
-import com.sudox.messenger.android.people.activitytab.vos.ActivityTabAppBarVO
+import com.sudox.messenger.android.people.R
 import com.sudox.messenger.android.people.common.vos.SimplePeopleVO
 
 class ActivityTabFragment : ViewListFragment<ActivityTabAdapter>(), TabsChildFragment {
