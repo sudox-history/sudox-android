@@ -9,8 +9,11 @@ import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreLoader
 import com.sudox.messenger.android.core.inject.CoreComponent
+import com.sudox.messenger.android.core.inject.CoreModule
+import com.sudox.messenger.android.core.inject.DaggerCoreComponent
 import com.sudox.messenger.android.layouts.AppLayout
 import com.sudox.messenger.android.managers.AppNavigationManager
+import com.sudox.messenger.android.managers.AppScreenManager
 
 class AppActivity : AppCompatActivity(), CoreActivity {
 
@@ -26,38 +29,28 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         appLayout = AppLayout(this).apply {
             init(savedInstanceState)
 
-            bottomNavigationView.menu.apply {
-                add("First item").apply {
-                    setIcon(R.drawable.ic_account)
-                }
-
-                add("Second item").apply {
-                    setIcon(R.drawable.ic_face)
-                }
-            }
-
-//            navigationManager = AppNavigationManager(
-//                    supportFragmentManager,
-//                    contentLayout.frameLayout.id,
-//                    bottomNavigationView
-//            )
+            navigationManager = AppNavigationManager(
+                    supportFragmentManager,
+                    contentLayout.frameLayout.id,
+                    bottomNavigationView
+            )
 
             setContentView(this)
         }
 
-//        coreComponent = DaggerCoreComponent
-//                .builder()
-//                .coreModule(CoreModule(navigationManager!!, AppScreenManager(this)))
-//                .build()
-//
+        coreComponent = DaggerCoreComponent
+                .builder()
+                .coreModule(CoreModule(navigationManager!!, AppScreenManager(this)))
+                .build()
+
         super.onCreate(savedInstanceState)
-//
-//        if (savedInstanceState != null) {
-//            navigationManager!!.restoreState(savedInstanceState)
-//        } else {
-//            navigationManager!!.configureNavigationBar()
-//            navigationManager!!.showAuthPart()
-//        }
+
+        if (savedInstanceState != null) {
+            navigationManager!!.restoreState(savedInstanceState)
+        } else {
+            navigationManager!!.configureNavigationBar()
+            navigationManager!!.showAuthPart()
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -73,10 +66,10 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-//        appLayout!!.saveIds(outState)
-//        navigationManager!!.saveState(outState)
+        super.onSaveInstanceState(outState.apply {
+            appLayout!!.saveIds(this)
+            navigationManager!!.saveState(this)
+        })
     }
 
     override fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?) {

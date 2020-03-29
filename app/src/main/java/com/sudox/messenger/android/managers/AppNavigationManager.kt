@@ -1,11 +1,15 @@
 package com.sudox.messenger.android.managers
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.sudox.design.navigationBar.NavigationBar
-import com.sudox.design.navigationBar.NavigationBarListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sudox.messenger.android.R
 import com.sudox.messenger.android.auth.phone.AuthPhoneFragment
 import com.sudox.messenger.android.core.managers.NavigationManager
@@ -15,7 +19,6 @@ import com.sudox.messenger.android.people.ProfileFragment
 import java.util.LinkedList
 import java.util.UUID
 
-internal const val UNSPECIFIED_NAVBAR_ITEM_ID = 0
 internal const val PEOPLE_NAVBAR_ITEM_ID = 1
 internal const val DIALOGS_NAVBAR_ITEM_ID = 2
 internal const val PROFILE_NAVBAR_ITEM_ID = 3
@@ -34,9 +37,10 @@ internal const val CURRENT_ITEM_TAG_EXTRA_KEY = "current_item_tag"
 class AppNavigationManager(
         val fragmentManager: FragmentManager,
         val containerId: Int,
-        val navigationBar: NavigationBar
-) : NavigationManager, NavigationBarListener {
+        val navigationBar: BottomNavigationView
+) : NavigationManager, BottomNavigationView.OnNavigationItemSelectedListener {
 
+    private var blockCallback: Boolean = false
     private var backstack = LinkedList<Pair<Int, Fragment>>()
     private var loadedFragments = HashMap<Int, Fragment>()
     private var navigationBarConfigured = false
@@ -64,7 +68,6 @@ class AppNavigationManager(
                 .commit()
 
         navigationBar.visibility = View.GONE
-        navigationBar.setSelectedItem(UNSPECIFIED_NAVBAR_ITEM_ID, false)
     }
 
     override fun showMainPart() {
@@ -88,7 +91,7 @@ class AppNavigationManager(
 
         transaction.commit()
 
-        navigationBar.setSelectedItem(PEOPLE_NAVBAR_ITEM_ID)
+        navigationBar.selectedItemId = PEOPLE_NAVBAR_ITEM_ID
         navigationBar.visibility = View.VISIBLE
     }
 
@@ -172,7 +175,10 @@ class AppNavigationManager(
                 .show(prevFragment)
                 .commit()
 
-        navigationBar.setSelectedItem(prevItemTag, false)
+        blockCallback = true
+        navigationBar.selectedItemId = prevItemTag
+        blockCallback = false
+
         currentFragment = prevFragment
         currentItemTag = prevItemTag
 
@@ -247,9 +253,15 @@ class AppNavigationManager(
         }
     }
 
-    override fun onButtonClicked(tag: Int) {
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        if (blockCallback) {
+            return true
+        }
+
+        val tag = item.itemId
+
         if (currentFragment == loadedFragments[tag]) {
-            return
+            return false
         }
 
         var backFromChildToRootFragment = false
@@ -317,18 +329,26 @@ class AppNavigationManager(
 
         currentFragment = itemLastFragment
         currentItemTag = tag
+
+        return true
     }
 
     override fun configureNavigationBar() {
-        if (!navigationBarConfigured) {
-            navigationBarConfigured = true
+        navigationBarConfigured = true
 
-            navigationBar.addItem(PEOPLE_NAVBAR_ITEM_ID, R.string.people, R.drawable.ic_group)
-            navigationBar.addItem(DIALOGS_NAVBAR_ITEM_ID, R.string.messages, R.drawable.ic_chat_bubble)
-            navigationBar.addItem(PROFILE_NAVBAR_ITEM_ID, R.string.profile, R.drawable.ic_account)
+        navigationBar.menu.apply {
+            addItem(this, PEOPLE_NAVBAR_ITEM_ID, R.string.people, R.drawable.ic_group)
+            addItem(this, DIALOGS_NAVBAR_ITEM_ID, R.string.messages, R.drawable.ic_chat_bubble)
+            addItem(this, PROFILE_NAVBAR_ITEM_ID, R.string.profile, R.drawable.ic_account)
         }
 
-        navigationBar.listener = this
+        navigationBar.setOnNavigationItemSelectedListener(this)
+    }
+
+    private fun addItem(menu: Menu, @IdRes id: Int, @StringRes titleId: Int, @DrawableRes iconId: Int) {
+        menu.add(0, id, 0, titleId).apply {
+            setIcon(iconId)
+        }
     }
 
     private fun isFragmentLoaded(fragment: Fragment): Boolean {
