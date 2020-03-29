@@ -3,4 +3,5 @@
     <dimen name="tab_indicator_height">4dp</dimen>
     <dimen name="tab_title_text_size">16sp</dimen>
     <dimen name="tab_half_of_margin">21dp</dimen>
+    <dimen name="tab_height">31dp</dimen>
 </resources>

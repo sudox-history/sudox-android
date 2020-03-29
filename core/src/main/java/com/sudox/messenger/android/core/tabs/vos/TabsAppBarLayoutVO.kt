@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import com.sudox.design.appbar.vos.AppBarLayoutVO
+import com.sudox.design.tablayout.SizeableTabLayout
+import com.sudox.messenger.android.core.R
 
 /**
  * ViewObject для фрагмента с табами
@@ -21,11 +23,8 @@ class TabsAppBarLayoutVO(
 
     override fun getViews(context: Context): Array<View>? {
         if (tabLayout == null) {
-            tabLayout = TabLayout(context).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                )
+            tabLayout = SizeableTabLayout(context).apply {
+                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             }
         }
 

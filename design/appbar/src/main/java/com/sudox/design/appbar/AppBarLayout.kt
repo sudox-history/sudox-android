@@ -37,7 +37,9 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
             })
 
             value?.getViews(context)?.forEachIndexed { index, view ->
-                addViewInLayout(view, -1, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
+                val params = view.layoutParams
+
+                addViewInLayout(view, -1, LayoutParams(params.width, params.height).apply {
                     scrollFlags = if (index == views!!.lastIndex) {
                         LayoutParams.SCROLL_FLAG_SNAP
                     } else {
