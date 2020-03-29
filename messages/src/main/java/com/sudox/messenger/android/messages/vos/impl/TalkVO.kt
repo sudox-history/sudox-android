@@ -1,10 +1,10 @@
-package com.sudox.messenger.android.messages.vos
+package com.sudox.messenger.android.messages.vos.impl
 
 import android.content.Context
 import android.view.View
 import com.sudox.messenger.android.media.images.views.GlideCircleImageView
 import com.sudox.messenger.android.messages.R
-import com.sudox.messenger.android.people.common.vos.PeopleVO
+import com.sudox.messenger.android.messages.vos.DialogVO
 
 data class TalkVO(
         override val dialogId: Int,
@@ -17,11 +17,10 @@ data class TalkVO(
         override var isSentMessageViewed: Boolean,
         override var isSentByUserMessage: Boolean,
         override var lastSentMessage: String,
-
         var talkImageId: Long,
         var talkName: String,
         var firstName: String?
-        ) : DialogVO {
+) : DialogVO {
 
     override fun getName(): String {
         return talkName

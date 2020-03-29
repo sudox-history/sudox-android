@@ -5,10 +5,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import com.sudox.design.viewlist.ViewList
 import com.sudox.design.viewlist.ViewListAdapter
-import com.sudox.messenger.android.messages.callbacks.DialogsCallback
 import com.sudox.messenger.android.messages.R
+import com.sudox.messenger.android.messages.callbacks.DialogsCallback
 import com.sudox.messenger.android.messages.views.DialogItemView
-import com.sudox.messenger.android.messages.vos.DialogItemViewVO
 import com.sudox.messenger.android.messages.vos.DialogVO
 
 class DialogsAdapter : ViewListAdapter<DialogsAdapter.ViewHolder>() {

@@ -2,7 +2,6 @@ package com.sudox.messenger.android.messages.callbacks
 
 import com.sudox.design.viewlist.ViewListCallback
 import com.sudox.messenger.android.messages.adapters.DialogsAdapter
-import com.sudox.messenger.android.messages.vos.DialogItemViewVO
 import com.sudox.messenger.android.messages.vos.DialogVO
 
 class DialogsCallback(

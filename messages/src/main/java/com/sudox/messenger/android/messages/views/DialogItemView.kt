@@ -2,28 +2,28 @@ package com.sudox.messenger.android.messages.views
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
-import android.text.SpannableStringBuilder
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.res.*
-import androidx.core.text.color
+import androidx.core.content.res.getColorOrThrow
+import androidx.core.content.res.getDimensionPixelSizeOrThrow
+import androidx.core.content.res.getDrawableOrThrow
+import androidx.core.content.res.getResourceIdOrThrow
+import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
-import com.sudox.design.circleImageView.CircleImageView
 import com.sudox.messenger.android.messages.R
 import com.sudox.messenger.android.messages.vos.DialogVO
-import com.sudox.messenger.android.people.common.views.AvatarImageView
 import com.sudox.messenger.android.time.formatTime
 import kotlin.math.abs
 import kotlin.math.max
-
 
 class DialogItemView : ViewGroup {
 
@@ -34,8 +34,7 @@ class DialogItemView : ViewGroup {
     private val iconDoneView = AppCompatImageView(context).apply { addView(this) }
     private val iconMutedView = AppCompatImageView(context).apply { addView(this) }
 
-    private var dialogAvatarView:View? = null
-
+    private var dialogAvatarView: View? = null
     private var messageSentByUserHintColor = 0
     private var messageStatusSize = 0
     private var messageStatusIcon: Drawable? = null
@@ -78,14 +77,18 @@ class DialogItemView : ViewGroup {
             if (dialogAvatarView != null) {
                 field?.unbindAvatarView(dialogAvatarView!!)
             }
+
             field = value
-            if(value != null){
-                if(dialogAvatarView == null || value.isAvatarViewTypeSame(dialogAvatarView!!)){
+
+            if (value != null) {
+                if (dialogAvatarView == null || value.isAvatarViewTypeSame(dialogAvatarView!!)) {
                     removeView(dialogAvatarView)
+
                     dialogAvatarView = value.getAvatarView(context).apply {
                         addViewInLayout(this, -1, LayoutParams(imageWidth, imageHeight))
                     }
                 }
+
                 value.bindAvatarView(dialogAvatarView!!)
                 viewSettingsUpdate()
             } else {
@@ -143,97 +146,94 @@ class DialogItemView : ViewGroup {
 
             paintCountColor = it.getColorOrThrow(R.styleable.DialogItemView_messageCountColor)
         }
-
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-            val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
+        val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
 
-            measureChild(dateView, widthMeasureSpec, heightMeasureSpec)
-            measureChild(nameView, widthMeasureSpec, heightMeasureSpec)
-            measureChild(dialogAvatarView, widthMeasureSpec, heightMeasureSpec)
-            measureChild(iconDoneView, widthMeasureSpec, heightMeasureSpec)
-            measureChild(countMessagesView, widthMeasureSpec, heightMeasureSpec)
-            measureChild(iconMutedView, widthMeasureSpec, heightMeasureSpec)
-            measureChild(contentTextView, widthMeasureSpec, heightMeasureSpec)
+        measureChild(dateView, widthMeasureSpec, heightMeasureSpec)
+        measureChild(nameView, widthMeasureSpec, heightMeasureSpec)
+        measureChild(dialogAvatarView, widthMeasureSpec, heightMeasureSpec)
+        measureChild(iconDoneView, widthMeasureSpec, heightMeasureSpec)
+        measureChild(countMessagesView, widthMeasureSpec, heightMeasureSpec)
+        measureChild(iconMutedView, widthMeasureSpec, heightMeasureSpec)
+        measureChild(contentTextView, widthMeasureSpec, heightMeasureSpec)
 
-            val contentTextWidth: Int
-            val tempMaxStatusWidth = max(dateView.measuredWidth
-                    + if (vo!!.isMuted) iconMutedView.measuredWidth else 0,
-                    if (!vo!!.isViewed) countMessagesView.measuredWidth
-                            + 2 * innerCounterHorizontalMargin else 0)
+        val contentTextWidth: Int
+        val tempMaxStatusWidth = max(dateView.measuredWidth
+                + if (vo!!.isMuted) iconMutedView.measuredWidth else 0,
+                if (!vo!!.isViewed) countMessagesView.measuredWidth
+                        + 2 * innerCounterHorizontalMargin else 0)
 
-            contentTextWidth = if (availableWidth != 0) {
-                if (tempMaxStatusWidth > innerContentToRightBorderMargin) {
-                    availableWidth - paddingLeft - imageWidth - innerImageToTextMargin -
-                            tempMaxStatusWidth - innerContentToRightViewMargin - paddingRight
-                } else {
-                    availableWidth - paddingLeft - imageWidth - innerImageToTextMargin -
-                            innerContentToRightBorderMargin - paddingRight
-                }
+        contentTextWidth = if (availableWidth != 0) {
+            if (tempMaxStatusWidth > innerContentToRightBorderMargin) {
+                availableWidth - paddingLeft - imageWidth - innerImageToTextMargin -
+                        tempMaxStatusWidth - innerContentToRightViewMargin - paddingRight
             } else {
-                contentTextView.measuredWidth
+                availableWidth - paddingLeft - imageWidth - innerImageToTextMargin -
+                        innerContentToRightBorderMargin - paddingRight
             }
-            measureChild(contentTextView, MeasureSpec.makeMeasureSpec(contentTextWidth, MeasureSpec.EXACTLY), heightMeasureSpec)
-            measureChild(nameView, MeasureSpec.makeMeasureSpec(contentTextWidth, MeasureSpec.EXACTLY), heightMeasureSpec)
-            val needHeight = paddingTop + max(innerDialogNameToTopMargin +
-                    nameView.measuredHeight + innerDialogNameToContentMargin +
-                    contentTextView.measuredHeight, dialogAvatarView!!.measuredHeight) + paddingBottom
-            val needWidth = paddingLeft + dialogAvatarView!!.measuredWidth + innerImageToTextMargin +
-                    contentTextWidth + max(innerContentToRightBorderMargin, tempMaxStatusWidth -
-                    innerContentToRightBorderMargin) + paddingRight
+        } else {
+            contentTextView.measuredWidth
+        }
+        measureChild(contentTextView, MeasureSpec.makeMeasureSpec(contentTextWidth, MeasureSpec.EXACTLY), heightMeasureSpec)
+        measureChild(nameView, MeasureSpec.makeMeasureSpec(contentTextWidth, MeasureSpec.EXACTLY), heightMeasureSpec)
+        val needHeight = paddingTop + max(innerDialogNameToTopMargin +
+                nameView.measuredHeight + innerDialogNameToContentMargin +
+                contentTextView.measuredHeight, dialogAvatarView!!.measuredHeight) + paddingBottom
+        val needWidth = paddingLeft + dialogAvatarView!!.measuredWidth + innerImageToTextMargin +
+                contentTextWidth + max(innerContentToRightBorderMargin, tempMaxStatusWidth -
+                innerContentToRightBorderMargin) + paddingRight
 
-            setMeasuredDimension(if (availableWidth != 0) availableWidth else needWidth, needHeight)
+        setMeasuredDimension(if (availableWidth != 0) availableWidth else needWidth, needHeight)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-            val width = r - l
-            val rightBorder = width - paddingRight
+        val width = r - l
+        val rightBorder = width - paddingRight
 
-            val photoLeftBorder = paddingLeft
-            val photoTopBorder = paddingTop
-            val photoBottomBorder = photoTopBorder + dialogAvatarView!!.measuredHeight
-            val photoRightBorder = photoLeftBorder + dialogAvatarView!!.measuredWidth
+        val photoLeftBorder = paddingLeft
+        val photoTopBorder = paddingTop
+        val photoBottomBorder = photoTopBorder + dialogAvatarView!!.measuredHeight
+        val photoRightBorder = photoLeftBorder + dialogAvatarView!!.measuredWidth
 
-            var dialogNameLeftBorder = photoRightBorder + innerImageToTextMargin
-            val dialogNameTopBorder = paddingTop + innerDialogNameToTopMargin
-            val dialogNameBottomBorder = dialogNameTopBorder + nameView.measuredHeight
-            var dialogNameRightBorder = dialogNameLeftBorder + nameView.measuredWidth
+        val dialogNameLeftBorder = photoRightBorder + innerImageToTextMargin
+        val dialogNameTopBorder = paddingTop + innerDialogNameToTopMargin
+        val dialogNameBottomBorder = dialogNameTopBorder + nameView.measuredHeight
+        val dialogNameRightBorder = dialogNameLeftBorder + nameView.measuredWidth
 
-            val contentLeftBorder = dialogNameLeftBorder
-            val contentTopBorder = dialogNameBottomBorder + innerDialogNameToContentMargin
-            val contentRightBorder = contentLeftBorder + contentTextView.measuredWidth
-            val contentBottomBorder = contentTopBorder + contentTextView.measuredHeight
+        val contentTopBorder = dialogNameBottomBorder + innerDialogNameToContentMargin
+        val contentRightBorder = dialogNameLeftBorder + contentTextView.measuredWidth
+        val contentBottomBorder = contentTopBorder + contentTextView.measuredHeight
 
-            val dateLeftBorder = rightBorder - dateView.measuredWidth
-            val dateTopBorder = paddingTop + innerDateToTopMargin
-            val dateBottomBorder = dateTopBorder + dateView.measuredHeight
+        val dateLeftBorder = rightBorder - dateView.measuredWidth
+        val dateTopBorder = paddingTop + innerDateToTopMargin
+        val dateBottomBorder = dateTopBorder + dateView.measuredHeight
 
-            val counterLeftBorder = rightBorder - countMessagesView.measuredWidth - innerCounterHorizontalMargin
-            val counterTopBorder = dialogNameBottomBorder + innerDialogNameToContentMargin
-            val counterRightBorder = rightBorder - innerCounterHorizontalMargin
-            val counterBottomBorder = counterTopBorder + dateView.measuredHeight
+        val counterLeftBorder = rightBorder - countMessagesView.measuredWidth - innerCounterHorizontalMargin
+        val counterTopBorder = dialogNameBottomBorder + innerDialogNameToContentMargin
+        val counterRightBorder = rightBorder - innerCounterHorizontalMargin
+        val counterBottomBorder = counterTopBorder + dateView.measuredHeight
 
-            countMessagesView.layout(counterLeftBorder, counterTopBorder, counterRightBorder, counterBottomBorder)
+        countMessagesView.layout(counterLeftBorder, counterTopBorder, counterRightBorder, counterBottomBorder)
 
-            val doneIconTopBorder = dialogNameBottomBorder + innerDialogNameToContentMargin
-            val doneIconRightBorder = rightBorder
-            val doneIconBottomBorder = doneIconTopBorder + iconDoneView.measuredHeight
-            val doneIconLeftBorder = doneIconRightBorder - iconDoneView.measuredWidth
+        val doneIconTopBorder = dialogNameBottomBorder + innerDialogNameToContentMargin
+        val doneIconBottomBorder = doneIconTopBorder + iconDoneView.measuredHeight
+        val doneIconLeftBorder = rightBorder - iconDoneView.measuredWidth
 
-            iconDoneView.layout(doneIconLeftBorder, doneIconTopBorder, doneIconRightBorder, doneIconBottomBorder)
+        iconDoneView.layout(doneIconLeftBorder, doneIconTopBorder, rightBorder, doneIconBottomBorder)
 
-            val mutedIconTopBorder = dateTopBorder + (abs(iconMutedView.measuredHeight - dateView.measuredHeight)) / 2
-            val mutedIconRightBorder = dateLeftBorder - innerMutedIconToDateMargin
-            val mutedIconBottomBorder = mutedIconTopBorder + iconMutedView.measuredHeight
-            val mutedIconLeftBorder = mutedIconRightBorder - iconMutedView.measuredWidth
+        val mutedIconTopBorder = dateTopBorder + (abs(iconMutedView.measuredHeight - dateView.measuredHeight)) / 2
+        val mutedIconRightBorder = dateLeftBorder - innerMutedIconToDateMargin
+        val mutedIconBottomBorder = mutedIconTopBorder + iconMutedView.measuredHeight
+        val mutedIconLeftBorder = mutedIconRightBorder - iconMutedView.measuredWidth
 
-            iconMutedView.layout(mutedIconLeftBorder, mutedIconTopBorder, mutedIconRightBorder, mutedIconBottomBorder)
+        iconMutedView.layout(mutedIconLeftBorder, mutedIconTopBorder, mutedIconRightBorder, mutedIconBottomBorder)
 
-            dialogAvatarView?.layout(photoLeftBorder, photoTopBorder, photoRightBorder, photoBottomBorder)
-            nameView.layout(dialogNameLeftBorder, dialogNameTopBorder, dialogNameRightBorder, dialogNameBottomBorder)
-            contentTextView.layout(contentLeftBorder, contentTopBorder, contentRightBorder, contentBottomBorder)
-            dateView.layout(dateLeftBorder, dateTopBorder, rightBorder, dateBottomBorder)
+        dialogAvatarView?.layout(photoLeftBorder, photoTopBorder, photoRightBorder, photoBottomBorder)
+        nameView.layout(dialogNameLeftBorder, dialogNameTopBorder, dialogNameRightBorder, dialogNameBottomBorder)
+        contentTextView.layout(dialogNameLeftBorder, contentTopBorder, contentRightBorder, contentBottomBorder)
+        dateView.layout(dateLeftBorder, dateTopBorder, rightBorder, dateBottomBorder)
     }
 
     override fun dispatchDraw(canvas: Canvas) {
@@ -274,27 +274,24 @@ class DialogItemView : ViewGroup {
     }
 
     private fun contentViewSettingsUpdate() {
-        //text appearance
-        contentTextView.text = vo!!.getLastMessage(context)
-        if (!vo!!.isViewed and !vo!!.isMuted) {
-            setTextAppearance(contentTextView, dialogContentNewTextAppearance)
-        } else {
-            setTextAppearance(contentTextView, dialogContentTextAppearance)
-        }
-
-        //dialog content view settings
         contentTextView.apply {
+            text = vo!!.getLastMessage(context)
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             gravity = Gravity.LEFT
             ellipsize = TextUtils.TruncateAt.END
             maxLines = if (!vo!!.isViewed && !vo!!.isMuted) 2 else 1
+
+            if (!vo!!.isViewed and !vo!!.isMuted) {
+                setTextAppearance(contentTextView, dialogContentNewTextAppearance)
+            } else {
+                setTextAppearance(contentTextView, dialogContentTextAppearance)
+            }
         }
     }
 
     private fun dialogNameViewSettingsUpdate() {
-        //dialog name view settings
-        nameView.text = vo!!.getName()
         nameView.apply {
+            text = vo!!.getName()
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             gravity = Gravity.LEFT
             ellipsize = TextUtils.TruncateAt.END
@@ -305,8 +302,8 @@ class DialogItemView : ViewGroup {
 
     private fun dateViewSettingsUpdate() {
         //date view settings
-        dateView.text = formatTime(context, dateToLowerCase = true, time = vo!!.time)
         dateView.apply {
+            text = formatTime(context, dateToLowerCase = true, time = vo!!.time)
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             gravity = Gravity.CENTER_VERTICAL
             includeFontPadding = false
@@ -316,12 +313,12 @@ class DialogItemView : ViewGroup {
     }
 
     private fun counterViewSettingsUpdate() {
-        //counter view settings
         countMessagesView.apply {
+            setPadding(0, 0, 0, 0)
+
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             gravity = Gravity.CENTER_VERTICAL
             visibility = if (vo!!.messagesCount == 0 || vo!!.isViewed) View.GONE else View.VISIBLE
-            setPadding(0, 0, 0, 0)
             isSingleLine = true
             maxLines = 1
             includeFontPadding = false
@@ -337,8 +334,12 @@ class DialogItemView : ViewGroup {
             iconDoneView.apply {
                 visibility = View.VISIBLE
                 layoutParams = LayoutParams(messageStatusSize, messageStatusSize)
-                iconDoneView.setImageDrawable(if (vo!!.isSentMessageViewed)
-                    messageStatusDoneIcon else messageStatusIcon)
+
+                setImageDrawable(if (vo!!.isSentMessageViewed) {
+                    messageStatusDoneIcon
+                } else {
+                    messageStatusIcon
+                })
             }
         } else {
             iconDoneView.visibility = View.GONE
@@ -346,17 +347,18 @@ class DialogItemView : ViewGroup {
     }
 
     private fun hintSentByUserViewSettingsUpdate() {
-        //sent by user hint settings
         contentTextView.text = vo!!.getLastMessage(context)
     }
 
     private fun mutedViewSettingsUpdate() {
-        dialogMutedIcon?.setTint(dialogMutedColor)
         iconMutedView.apply {
             layoutParams = LayoutParams(dialogMutedIconSize, dialogMutedIconSize)
             visibility = if (vo!!.isMuted) View.VISIBLE else View.GONE
             adjustViewBounds = true
-            setImageDrawable(dialogMutedIcon)
+
+            setImageDrawable(dialogMutedIcon?.apply {
+                setTint(dialogMutedColor)
+            })
         }
     }
 }
