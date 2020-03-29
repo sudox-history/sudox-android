@@ -53,6 +53,7 @@ abstract class ViewListFragment<AT : ViewListAdapter<*>> : CoreFragment() {
 
     /**
      * Возвращает адаптер для ViewList (т.е. данного экрана)
+     * Ни в коем случее не добавляйте данные в адаптер в данном методе!
      *
      * @param viewList ViewList, с которым нужно связать адаптер
      */

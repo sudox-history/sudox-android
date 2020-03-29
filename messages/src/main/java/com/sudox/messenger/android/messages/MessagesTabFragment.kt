@@ -1,6 +1,8 @@
 package com.sudox.messenger.android.messages
 
 import android.content.Context
+import android.os.Bundle
+import android.view.View
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.viewlist.ViewList
 import com.sudox.messenger.android.core.CoreFragment
@@ -13,7 +15,17 @@ import kotlin.random.Random
 
 class MessagesTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragment, ApplicationBarListener {
 
-    var dialogsAdapter: DialogsAdapter? = null
+    var dialogsAdapter = DialogsAdapter()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        dialogsAdapter.dialogsVOs.apply {
+            add(generateDialog())
+            add(generateDialog())
+            add(generateDialog())
+        }
+    }
 
     fun generateDialog(): BaseMessagesDialogVO {
         val names = listOf("Ярослав", "Макс", "Никита", "Андрей", "Ярик", "Антон", "Дима")
@@ -65,20 +77,12 @@ class MessagesTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragmen
     }
 
     override fun onButtonClicked(tag: Int) {
-        dialogsAdapter?.apply {
+        dialogsAdapter.apply {
             dialogsVOs.add(generateDialog())
         }
     }
 
     override fun getAdapter(viewList: ViewList): DialogsAdapter? {
-        dialogsAdapter = DialogsAdapter().apply {
-            dialogsVOs.apply {
-                add(generateDialog())
-                add(generateDialog())
-                add(generateDialog())
-            }
-        }
-
         return dialogsAdapter
     }
 }

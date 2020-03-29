@@ -286,6 +286,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
         } else {
             notifyItemRangeInserted(position, itemCount)
         }
+
+        updateFooters()
     }
 
     /**
@@ -316,6 +318,24 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             notifyItemRangeRemoved(startPosition, itemCount)
         } else {
             notifyItemRangeRemoved(position, itemCount)
+        }
+
+        updateFooters()
+    }
+
+    private fun updateFooters() {
+        var updatedFooters = 0
+        val footersCount = getFooterCount()
+
+        for (i in itemCount - 1 downTo 0) {
+            if (getFooterText(i) != null) {
+                notifyItemChanged(i)
+                updatedFooters++
+
+                if (updatedFooters > footersCount) {
+                    break
+                }
+            }
         }
     }
 
