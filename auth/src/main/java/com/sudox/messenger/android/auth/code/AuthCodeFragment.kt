@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.text.HtmlCompat
-import androidx.navigation.fragment.findNavController
 import com.sudox.messenger.android.auth.FROM_AUTH_CODE_TO_REGISTER_ACTION_ID
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.core.CoreFragment
@@ -30,7 +29,7 @@ class AuthCodeFragment : CoreFragment() {
         val spannable = HtmlCompat.fromHtml(string, HtmlCompat.FROM_HTML_MODE_COMPACT)
 
         authCodeEditText.codeFilledCallback = {
-            newNavigationManager!!.doAction(findNavController(), FROM_AUTH_CODE_TO_REGISTER_ACTION_ID)
+            newNavigationManager!!.doAction(FROM_AUTH_CODE_TO_REGISTER_ACTION_ID)
         }
 
         authCodeDescriptionTextView.text = spannable

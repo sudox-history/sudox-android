@@ -48,7 +48,6 @@ class ContentLayout : CoordinatorLayout {
         fragmentManager
                 .beginTransaction()
                 .replace(frameLayout.id, fragment)
-                .setPrimaryNavigationFragment(fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit()
     }
