@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.messages.vos.BaseMessagesDialogVO
@@ -16,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_rooms.dialogsRoomRecyclerView
 import java.util.Calendar
 import kotlin.random.Random
 
-class TalksTabFragment : CoreFragment(), TabsChildFragment, ApplicationBarListener {
+class TalksTabFragment : CoreFragment(), TabsChildFragment {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_rooms, container, false)
@@ -82,8 +81,5 @@ class TalksTabFragment : CoreFragment(), TabsChildFragment, ApplicationBarListen
 
     override fun getTitle(context: Context): String {
         return context.getString(R.string.rooms)
-    }
-
-    override fun onButtonClicked(tag: Int) {
     }
 }

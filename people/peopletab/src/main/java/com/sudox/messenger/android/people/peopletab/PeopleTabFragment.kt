@@ -1,7 +1,6 @@
 package com.sudox.messenger.android.people.peopletab
 
 import android.content.Context
-import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.viewlist.ViewList
 import com.sudox.messenger.android.core.fragments.ViewListFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
@@ -12,7 +11,7 @@ import com.sudox.messenger.android.people.peopletab.vos.FriendRequestVO
 import com.sudox.messenger.android.people.peopletab.vos.MaybeYouKnowVO
 import com.sudox.messenger.android.people.peopletab.vos.appbar.PeopleTabAppBarVO
 
-class PeopleTabFragment : ViewListFragment<PeopleTabAdapter>(), TabsChildFragment, ApplicationBarListener {
+class PeopleTabFragment : ViewListFragment<PeopleTabAdapter>(), TabsChildFragment {
 
     init {
         appBarVO = PeopleTabAppBarVO()
@@ -40,8 +39,5 @@ class PeopleTabFragment : ViewListFragment<PeopleTabAdapter>(), TabsChildFragmen
 
     override fun getTitle(context: Context): String {
         return context.getString(R.string.people)
-    }
-
-    override fun onButtonClicked(tag: Int) {
     }
 }
