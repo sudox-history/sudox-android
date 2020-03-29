@@ -1,7 +1,6 @@
 package com.sudox.messenger.android.messages
 
 import android.content.Context
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.viewlist.ViewList
 import com.sudox.messenger.android.core.CoreFragment
@@ -17,7 +16,6 @@ class MessagesTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragmen
     var dialogsAdapter: DialogsAdapter? = null
 
     fun generateDialog(): BaseMessagesDialogVO {
-        val photos = listOf(getDrawable(context!!, R.drawable.drawable_photo_1)!!, getDrawable(context!!, R.drawable.drawable_photo_2)!!, getDrawable(context!!, R.drawable.drawable_photo_3)!!)
         val names = listOf("Ярослав", "Макс", "Никита", "Андрей", "Ярик", "Антон", "Дима")
         val messages = listOf(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut tellus elementum sagittis vitae et leo duis ut. Tortor at risus viverra adipiscing at in. In nulla posuere sollicitudin aliquam ultrices sagittis orci a scelerisque. Elit duis tristique sollicitudin nibh sit amet commodo. Ornare arcu dui vivamus arcu felis bibendum ut tristique et. Scelerisque varius morbi enim nunc faucibus a pellentesque. Proin nibh nisl condimentum id venenatis. Etiam erat velit scelerisque in. Arcu vitae elementum curabitur vitae nunc sed velit dignissim sodales. Sit amet dictum sit amet justo donec enim. Pulvinar sapien et ligula ullamcorper malesuada proin libero nunc consequat. Faucibus scelerisque eleifend donec pretium vulputate sapien nec sagittis. Adipiscing elit duis tristique sollicitudin nibh sit amet commodo. Nec tincidunt praesent semper feugiat nibh sed.",
@@ -41,7 +39,6 @@ class MessagesTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragmen
                 isUserOnline = false,
                 isMuted = Random.nextInt(2) == 1,
                 isViewed = messageViewed,
-                dialogPhoto = photos[Random.nextInt(photos.size)],
                 dialogName = names[Random.nextInt(names.size)],
                 previewMessage = messages[Random.nextInt(messages.size)],
                 dateView = dates[Random.nextInt(dates.size)],
@@ -49,7 +46,8 @@ class MessagesTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragmen
                 messagesCount = if (!messageViewed) Random.nextInt(10, 50) else 0,
                 isLastMessageByMe = lastMessage,
                 isSentMessageDelivered = lastMessage,
-                isSentMessageViewed = lastViewed
+                isSentMessageViewed = lastViewed,
+                dialogPhotoId = Random.nextLong(6L)
         )
     }
 
@@ -62,8 +60,7 @@ class MessagesTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragmen
 
         applicationBarManager!!.let {
             it.setListener(this)
-            //it.toggleIconButtonAtEnd(R.drawable.ic_search)
-            it.toggleIconButtonAtEnd(R.drawable.ic_add)
+            it.toggleIconButtonAtEnd(R.drawable.ic_search)
         }
     }
 

@@ -1,13 +1,11 @@
 package com.sudox.messenger.android.messages.vos
 
-import android.graphics.drawable.Drawable
-
 data class BaseMessagesDialogVO(
         override val dialogId: Int,
         override var isUserOnline: Boolean,
         override var isMuted: Boolean,
         override var isViewed: Boolean,
-        override var dialogPhoto: Drawable,
+        override var dialogPhotoId: Long,
         override var dialogName: String,
         override var previewMessage: String,
         override var dateView: String,
@@ -17,4 +15,9 @@ data class BaseMessagesDialogVO(
         override var isSentMessageDelivered: Boolean,
         override var isSentMessageViewed: Boolean,
         override var lastMessageUsername: String? = null
-) : DialogItemViewVO
+) : DialogItemViewVO {
+
+    override fun getImageId(): Long {
+        return dialogPhotoId
+    }
+}

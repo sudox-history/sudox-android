@@ -22,17 +22,6 @@ class AvatarImageView : GlideCircleImageView {
 
     private var indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    var vo: PeopleVO? = null
-        set(value) {
-            field = value
-
-            if (value != null) {
-                loadImage(value.photoId)
-            } else {
-                cancelLoading()
-            }
-        }
-
     var indicatorCropRadius = 0
         set(value) {
             field = value
@@ -58,6 +47,15 @@ class AvatarImageView : GlideCircleImageView {
             invalidate()
         }
 
+    var peopleVO: PeopleVO? = null
+        set(value) {
+            this.vo = value
+
+            field = value
+            requestLayout()
+            invalidate()
+        }
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.avatarImageViewStyle)
 
@@ -74,7 +72,7 @@ class AvatarImageView : GlideCircleImageView {
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
 
-        if (vo?.isStatusAboutOnline() == false && vo?.isUserOnline() == true) {
+        if (peopleVO?.isStatusAboutOnline() == false && peopleVO?.isUserOnline() == true) {
             val rightBorder = measuredWidth.toFloat()
             val bottomBorder = measuredHeight.toFloat()
             val cropCenterX = rightBorder - indicatorCropRadius

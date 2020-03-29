@@ -2,7 +2,9 @@ package com.sudox.messenger.android.messages.views
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.text.SpannableStringBuilder
 import android.text.TextUtils
@@ -13,10 +15,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.res.*
+import androidx.core.content.res.getColorOrThrow
+import androidx.core.content.res.getDimensionPixelSizeOrThrow
+import androidx.core.content.res.getDrawableOrThrow
+import androidx.core.content.res.getResourceIdOrThrow
+import androidx.core.content.res.use
 import androidx.core.text.color
 import androidx.core.widget.TextViewCompat.setTextAppearance
-import com.sudox.design.circleImageView.CircleImageView
+import com.sudox.messenger.android.media.images.views.GlideCircleImageView
 import com.sudox.messenger.android.messages.R
 import com.sudox.messenger.android.messages.vos.DialogItemViewVO
 import kotlin.math.abs
@@ -26,7 +32,7 @@ class DialogItemView : ViewGroup {
 
     private val nameView = AppCompatTextView(context).apply { addView(this) }
     private val contentTextView = AppCompatTextView(context).apply { addView(this) }
-    private val photoView = CircleImageView(context).apply { addView(this) }
+    private val photoView = GlideCircleImageView(context).apply { addView(this) }
     private val dateView = AppCompatTextView(context).apply { addView(this) }
     private val countMessagesView = AppCompatTextView(context).apply { addView(this) }
     private val iconDoneView = AppCompatImageView(context).apply { addView(this) }
@@ -122,7 +128,7 @@ class DialogItemView : ViewGroup {
             isNewMessage = !value.isViewed
             messageCounter = value.messagesCount
 
-            photoView.setImageDrawable(value.dialogPhoto)
+            photoView.vo = value
             nameView.text = value.dialogName
             isSentByUserMessage = value.isLastMessageByMe
 
@@ -229,8 +235,7 @@ class DialogItemView : ViewGroup {
                 contentTextView.measuredHeight, photoView.measuredHeight) + paddingBottom
 
         val needWidth = paddingLeft + photoView.measuredWidth + innerImageToTextMargin +
-                contentTextWidth + max(innerContentToRightBorderMargin, tempMaxStatusWidth -
-                innerContentToRightBorderMargin) + paddingRight
+                contentTextWidth + max(innerContentToRightBorderMargin, tempMaxStatusWidth - innerContentToRightBorderMargin) + paddingRight
 
         setMeasuredDimension(if (availableWidth != 0) availableWidth else needWidth, needHeight)
     }
