@@ -62,7 +62,9 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
                 syncWithViewList(viewList!!)
             })
         } else if (viewType == FOOTER_VIEW_TYPE && getFooterCount() > 0) {
-            FooterViewHolder(AppCompatTextView(ContextThemeWrapper(viewList!!.context, viewList!!.footerTextAppearance)))
+            FooterViewHolder(AppCompatTextView(ContextThemeWrapper(viewList!!.context, viewList!!.footerTextAppearance)).apply {
+                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            })
         } else if (viewType == LOADER_VIEW_TYPE) {
             LoaderViewHolder(ProgressBar(viewList!!.context).apply {
                 layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -284,6 +286,8 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
         } else {
             notifyItemRangeInserted(position, itemCount)
         }
+
+        updateFooters()
     }
 
     /**
@@ -314,6 +318,24 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             notifyItemRangeRemoved(startPosition, itemCount)
         } else {
             notifyItemRangeRemoved(position, itemCount)
+        }
+
+        updateFooters()
+    }
+
+    private fun updateFooters() {
+        var updatedFooters = 0
+        val footersCount = getFooterCount()
+
+        for (i in itemCount - 1 downTo 0) {
+            if (getFooterText(i) != null) {
+                notifyItemChanged(i)
+                updatedFooters++
+
+                if (updatedFooters > footersCount) {
+                    break
+                }
+            }
         }
     }
 

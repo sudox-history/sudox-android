@@ -16,7 +16,12 @@ class ViewListDecorator(
         val layoutManager = list.layoutManager as? LinearLayoutManager ?: return
         val position = parent.getChildAdapterPosition(view)
 
-        if (adapter.getHeadersCount() > 0 || adapter.getFooterCount() > 0 || !adapter.canCreateMarginViaDecorators()) {
+        if (position > 0 && adapter.getFooterText(position) != null && !adapter.canCreateMarginViaDecorators()) {
+            outRect.top = list.footerMargin - adapter.getItemMargin(position) / 2
+            return
+        }
+
+        if (adapter.getHeadersCount() > 0 || !adapter.canCreateMarginViaDecorators()) {
             return
         }
 

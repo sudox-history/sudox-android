@@ -1,11 +1,8 @@
 package com.sudox.messenger.android.messages.vos
 
 import android.graphics.drawable.Drawable
-import com.sudox.messenger.android.messages.R
-import java.util.*
 
 interface DialogItemViewVO {
-
     val dialogId: Int
     var isUserOnline: Boolean
     var isMuted: Boolean

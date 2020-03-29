@@ -20,6 +20,7 @@ import com.sudox.design.circleImageView.CircleImageView
 import com.sudox.messenger.android.messages.R
 import com.sudox.messenger.android.messages.vos.DialogVO
 import com.sudox.messenger.android.people.common.views.AvatarImageView
+import com.sudox.messenger.android.time.formatTime
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -292,6 +293,7 @@ class DialogItemView : ViewGroup {
 
     private fun dialogNameViewSettingsUpdate() {
         //dialog name view settings
+        nameView.text = vo!!.getName()
         nameView.apply {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             gravity = Gravity.LEFT
@@ -303,6 +305,7 @@ class DialogItemView : ViewGroup {
 
     private fun dateViewSettingsUpdate() {
         //date view settings
+        dateView.text = formatTime(context, dateToLowerCase = true, time = vo!!.time)
         dateView.apply {
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             gravity = Gravity.CENTER_VERTICAL

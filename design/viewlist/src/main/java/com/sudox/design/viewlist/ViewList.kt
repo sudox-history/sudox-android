@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
  */
 class ViewList : RecyclerView {
 
+    internal var footerMargin = 0
     internal var footerTextAppearance = 0
     internal var initialPaddingRight = 0
     internal var initialPaddingLeft = 0
@@ -35,6 +36,7 @@ class ViewList : RecyclerView {
         (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
         context.obtainStyledAttributes(attrs, R.styleable.ViewList, defStyle, 0).use {
+            footerMargin = it.getDimensionPixelSize(R.styleable.ViewList_footerMargin, 0)
             footerTextAppearance = it.getResourceIdOrThrow(R.styleable.ViewList_footerTextAppearance)
         }
     }
