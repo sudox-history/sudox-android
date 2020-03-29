@@ -23,16 +23,6 @@
     <dimen name="phoneedittext_separator_left_margin">13dp</dimen>
     <dimen name="phoneedittext_separator_right_margin">13dp</dimen>
 
-    <dimen name="applicationbar_height">57dp</dimen>
-
-    <dimen name="applicationbarbutton_icon_height">25dp</dimen>
-    <dimen name="applicationbarbutton_icon_width">25dp</dimen>
-    <dimen name="applicationbarbutton_padding_left">17dp</dimen>
-    <dimen name="applicationbarbutton_padding_right">17dp</dimen>
-    <dimen name="applicationbarbutton_text_size">15sp</dimen>
-
-    <dimen name="applicationbartitle_text_size">19sp</dimen>
-
     <dimen name="recyclerview_text_size">16sp</dimen>
 
     <dimen name="sortedlistview_letters_text_size">19sp</dimen>
@@ -44,15 +34,6 @@
     <dimen name="countryitemview_flag_width">28dp</dimen>
     <dimen name="countryitemview_vertical_padding">9dp</dimen>
     <dimen name="countryitemview_letters_margin">13dp</dimen>
-
-    <dimen name="navigationbar_height">58dp</dimen>
-    <dimen name="navigationbar_stroke_width">1dp</dimen>
-
-    <dimen name="navigationbarbutton_top_padding">7.5dp</dimen>
-    <dimen name="navigationbarbutton_bottom_padding">10.5dp</dimen>
-    <dimen name="navigationbarbutton_title_text_size">13sp</dimen>
-    <dimen name="navigationbarbutton_icon_width">25dp</dimen>
-    <dimen name="navigationbarbutton_icon_height">25dp</dimen>
 
     <dimen name="sectionedlistview_section_name_text_size">16sp</dimen>
     <dimen name="sectionedlistview_section_name_bottom_padding">16dp</dimen>

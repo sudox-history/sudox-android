@@ -19,20 +19,6 @@
         <attr name="digitsCount" format="integer" />
     </declare-styleable>
 
-    <declare-styleable name="ApplicationBar">
-        <attr name="titleTextAppearance" format="reference" />
-    </declare-styleable>
-
-    <declare-styleable name="ApplicationBarButton">
-        <attr name="textSize" />
-        <attr name="textTypeface" />
-        <attr name="textColor" />
-
-        <attr name="iconHeight" />
-        <attr name="iconWidth" />
-        <attr name="iconMargin" />
-    </declare-styleable>
-
     <declare-styleable name="NicknameEditText">
         <attr name="tagTextColor" format="color" />
     </declare-styleable>
@@ -68,17 +54,6 @@
         <attr name="textAppearance" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="NavigationBarButton">
-        <attr name="defaultContentColor" format="color" />
-        <attr name="focusedContentColor" format="color" />
-
-        <attr name="titleFont" format="reference" />
-        <attr name="titleTextSize" format="dimension" />
-
-        <attr name="iconWidth" />
-        <attr name="iconHeight" />
-    </declare-styleable>
-
     <declare-styleable name="SectionedListView">
         <attr name="sectionNameTextSize" format="dimension" />
         <attr name="sectionNameTextColor" format="color" />
@@ -104,11 +79,7 @@
     <attr name="phoneEditTextStyle" format="reference" />
     <attr name="codeEditTextStyle" format="reference" />
     <attr name="nicknameEditTextStyle" format="reference" />
-    <attr name="applicationBarStyle" format="reference" />
-    <attr name="applicationBarButtonStyle" format="reference" />
     <attr name="editTextLayoutStyle" format="reference" />
     <attr name="sortedListViewStyle" format="reference" />
-    <attr name="navigationBarStyle" format="reference" />
-    <attr name="navigationBarButtonStyle" format="reference" />
     <attr name="sectionedListViewStyle" format="reference" />
 </resources>

@@ -28,9 +28,6 @@
         <item name="imageButtonStyle">@style/Sudox.Button</item>
         <item name="buttonStyle">@style/Sudox.Button</item>
 
-        <item name="applicationBarStyle">@style/Sudox.ApplicationBar</item>
-        <item name="applicationBarButtonStyle">@style/Sudox.ApplicationBar.Button</item>
-
         <item name="appBarStyle">@style/Sudox.AppBar</item>
         <item name="appBarLayoutStyle">@style/Sudox.AppBarLayout</item>
         <item name="bottomNavigationStyle">@style/Sudox.BottomNavigationView</item>
@@ -43,8 +40,6 @@
         <item name="editTextLayoutStyle">@style/Sudox.EditTextLayout</item>
         <item name="sortedListViewStyle">@style/Sudox.SortedListView</item>
         <item name="countryItemViewStyle">@style/Sudox.CountryItemView</item>
-        <item name="navigationBarStyle">@style/Sudox.NavigationBar</item>
-        <item name="navigationBarButtonStyle">@style/Sudox.NavigationBar.Button</item>
         <item name="circularUpdatableViewStyle">@style/Sudox.CircularUpdatableView</item>
 
         <item name="popupItemViewStyle">@style/Sudox.PopupItemView</item>
@@ -123,33 +118,6 @@
         <item name="tagTextColor">@color/nicknameedittext_tag_text_color</item>
     </style>
 
-    <style name="Sudox.ApplicationBar" parent="">
-        <item name="android:paddingStart">@dimen/applicationbarbutton_padding_left</item>
-        <item name="android:paddingEnd">@dimen/applicationbarbutton_padding_right</item>
-        <item name="android:clipToPadding">false</item>
-
-        <item name="titleTextAppearance">@style/Sudox.ApplicationBar.TitleTextAppearance</item>
-    </style>
-
-    <style name="Sudox.ApplicationBar.TitleTextAppearance" parent="">
-        <item name="android:textSize">@dimen/applicationbartitle_text_size</item>
-        <item name="android:fontFamily">@font/opensans_bold</item>
-        <item name="fontFamily">@font/opensans_bold</item>
-    </style>
-
-    <style name="Sudox.ApplicationBar.Button" parent="">
-        <item name="android:paddingStart">@dimen/applicationbarbutton_padding_left</item>
-        <item name="android:paddingEnd">@dimen/applicationbarbutton_padding_right</item>
-        <item name="android:background">?selectableItemBackgroundBorderless</item>
-
-        <item name="textSize">@dimen/applicationbarbutton_text_size</item>
-        <item name="textTypeface">@font/opensans_semibold</item>
-        <item name="textColor">@color/applicationbarbutton_text_color</item>
-
-        <item name="iconHeight">@dimen/applicationbarbutton_icon_height</item>
-        <item name="iconWidth">@dimen/applicationbarbutton_icon_width</item>
-    </style>
-
     <style name="Sudox.SortedListView" parent="">
         <item name="lettersRightPadding">@dimen/sortedlistview_letters_right_padding</item>
         <item name="lettersTopPadding">@dimen/sortedlistview_letters_top_padding</item>
@@ -173,24 +141,5 @@
         <item name="android:textSize">@dimen/recyclerview_text_size</item>
         <item name="android:fontFamily">@font/opensans_semibold</item>
         <item name="fontFamily">@font/opensans_semibold</item>
-    </style>
-
-    <style name="Sudox.NavigationBar" parent="">
-        <item name="android:background">@drawable/drawable_navbar_background</item>
-        <item name="android:minHeight">@dimen/navigationbar_height</item>
-    </style>
-
-    <style name="Sudox.NavigationBar.Button" parent="">
-        <item name="android:paddingTop">@dimen/navigationbarbutton_top_padding</item>
-        <item name="android:paddingBottom">@dimen/navigationbarbutton_bottom_padding</item>
-
-        <item name="defaultContentColor">@color/navigationbarbutton_default_content_color</item>
-        <item name="focusedContentColor">@color/navigationbarbutton_focused_content_color</item>
-
-        <item name="titleFont">@font/opensans_semibold</item>
-        <item name="titleTextSize">@dimen/navigationbarbutton_title_text_size</item>
-
-        <item name="iconHeight">@dimen/navigationbarbutton_icon_height</item>
-        <item name="iconWidth">@dimen/navigationbarbutton_icon_width</item>
     </style>
 </resources>
