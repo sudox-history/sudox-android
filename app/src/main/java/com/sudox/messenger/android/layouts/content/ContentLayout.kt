@@ -9,6 +9,10 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.sudox.design.appbar.AppBar
 import com.sudox.design.appbar.AppBarLayout
 
+/**
+ * Layout, содержащий AppBarLayout и FrameLayout.
+ * Отвечает за отображение тулбара и контента в приложении.
+ */
 class ContentLayout : CoordinatorLayout {
 
     @Suppress("unused")

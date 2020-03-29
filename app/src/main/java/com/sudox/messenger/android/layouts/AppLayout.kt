@@ -12,6 +12,12 @@ import com.sudox.messenger.android.layouts.content.ContentLayout
 const val LAYOUT_VIEW_ID_KEY = "layout_view_id"
 const val FRAME_VIEW_ID_KEY = "frame_view_id"
 
+/**
+ * Layout, содержащий ContentLayout и BottomNavigationView.
+ * Отвечает за отображение содержимого в приложении.
+ *
+ * NB! ID должны восстанавливаться в ручном режиме, т.е. в onCreate().
+ */
 class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
 
     val contentLayout = ContentLayout(context).apply {

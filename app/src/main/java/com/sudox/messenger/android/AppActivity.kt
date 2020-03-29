@@ -15,6 +15,15 @@ import com.sudox.messenger.android.layouts.AppLayout
 import com.sudox.messenger.android.managers.AppNavigationManager
 import com.sudox.messenger.android.managers.AppScreenManager
 
+/**
+ * Главная Activity данного приложения.
+ *
+ * Отвечает за:
+ * 1) Скрытие Splash-icon'а (да, он реализован с помощью windowBackground)
+ * 2) Инициализацию основной View (т.е. AppLayout)
+ * 3) Восстановление состояния
+ * 4) Поставку Core-компонента Dagger.
+ */
 class AppActivity : AppCompatActivity(), CoreActivity {
 
     private var navigationManager: AppNavigationManager? = null
@@ -27,6 +36,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
                 .alpha = 1
 
         appLayout = AppLayout(this).apply {
+            // Почему-то фрагменты не восстанавливаются если восстанавливать ID FrameLayout'а в View.onRestoreState()
             init(savedInstanceState)
 
             navigationManager = AppNavigationManager(
@@ -92,5 +102,6 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun onBackPressed() {
+        // Перенесен в onKeyDown()
     }
 }

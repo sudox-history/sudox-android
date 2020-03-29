@@ -33,6 +33,21 @@ internal const val LOADED_FRAGMENT_TAG_AT_INDEX_EXTRA_KEY = "loaded_fragment_fra
 internal const val CURRENT_FRAGMENT_TAG_EXTRA_KEY = "current_fragment_tag"
 internal const val CURRENT_ITEM_TAG_EXTRA_KEY = "current_item_tag"
 
+/**
+ * Менеджер навигации данного приложения.
+ *
+ * Реализована навигация по следующему механизму:
+ * 1) При отсутствии BottomNavigationView все работает как в обычной программе;
+ * 2) Если есть BottomNavigationView, то у каждой вкладки свой стек:
+ * 2.1) При нажатии кнопки назад сначала откатываемся по стеку у текущей вкладки, как стек текущей вкладки
+ * закончился, переходим к стеку предыдущей вкладки (механизм двойного стэка)
+ * 2.2) Также в таком режиме фрагмент добавляется сразу при запуске основной части, в позже скрывается и появляется
+ * с помощью метода hide() и show() (необходимо учитывать если вы создаете свои фрагменты)
+ *
+ * @param fragmentManager Менеджер фрагментов
+ * @param containerId ID контейнера
+ * @param navigationBar BottomNavigationView
+ */
 class AppNavigationManager(
         val fragmentManager: FragmentManager,
         val containerId: Int,

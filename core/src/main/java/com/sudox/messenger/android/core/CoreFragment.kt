@@ -3,6 +3,7 @@ package com.sudox.messenger.android.core
 import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 import com.sudox.design.appbar.vos.AppBarVO
@@ -52,7 +53,8 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
      */
     open fun onAppBarClicked(tag: Int) {
         if (tag == BACK_BUTTON_TAG) {
-            activity!!.onBackPressed()
+            // При использовании данного ядра Activity должен обрабатывать нажатие кнопки назад в методе onKeyDown()
+            activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
         }
     }
 
