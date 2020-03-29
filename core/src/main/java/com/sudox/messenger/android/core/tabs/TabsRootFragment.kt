@@ -10,7 +10,8 @@ import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.tabs.adapters.TabsConfigurationStrategy
 import com.sudox.messenger.android.core.tabs.adapters.TabsPagerAdapter
-import com.sudox.messenger.android.core.tabs.vos.TabsChildAppBarLayoutVO
+import com.sudox.messenger.android.core.tabs.callbacks.TabsRootPageCallback
+import com.sudox.messenger.android.core.tabs.vos.TabsAppBarLayoutVO
 
 const val VIEW_PAGER_ID_KEY = "view_pager_id"
 
@@ -30,12 +31,8 @@ abstract class TabsRootFragment : CoreFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val fragments = getFragments()
 
-        for (fragment in fragments) {
-            fragment.injectAll(activity as CoreActivity)
-        }
-
         pagerAdapter = TabsPagerAdapter(fragments, this)
-        pageCallback = TabsRootPageCallback(activity as CoreActivity, fragments)
+        pageCallback = TabsRootPageCallback(coreActivity!!, fragments)
         viewPager = ViewPager2(context!!).also {
             it.adapter = pagerAdapter
             it.offscreenPageLimit = fragments.size
@@ -43,8 +40,8 @@ abstract class TabsRootFragment : CoreFragment() {
             it.registerOnPageChangeCallback(pageCallback!!)
         }
 
-        if (appBarLayoutVO !is TabsChildAppBarLayoutVO) {
-            appBarLayoutVO = TabsChildAppBarLayoutVO(appBarLayoutVO)
+        if (appBarLayoutVO !is TabsAppBarLayoutVO) {
+            appBarLayoutVO = TabsAppBarLayoutVO(appBarLayoutVO)
         }
 
         return viewPager!!
@@ -61,13 +58,14 @@ abstract class TabsRootFragment : CoreFragment() {
 
         if (!hidden) {
             screenManager!!.reset()
+            coreActivity!!.setAppBarLayoutViewObject(appBarLayoutVO)
 
-            (activity as CoreActivity).setAppBarLayoutViewObject(appBarLayoutVO)
-
-            (appBarLayoutVO as TabsChildAppBarLayoutVO).apply {
+            // TabLayout появится в VO только после как его зададут.
+            (appBarLayoutVO as TabsAppBarLayoutVO).apply {
                 TabLayoutMediator(tabLayout!!, viewPager!!, TabsConfigurationStrategy(pagerAdapter!!)).attach()
             }
 
+            // Обработка случая, когда AppBar конфигурируется в дочернем фрагменте.
             pageCallback!!.onPageSelected(viewPager!!.currentItem)
         }
     }

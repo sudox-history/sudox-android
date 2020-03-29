@@ -4,6 +4,9 @@ import com.sudox.design.appbar.vos.AppBarLayoutVO
 import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.messenger.android.core.inject.CoreComponent
 
+/**
+ * Интерфейс для связи CoreFragment и прочих классов с Activity.
+ */
 interface CoreActivity {
 
     /**
@@ -29,7 +32,6 @@ interface CoreActivity {
      *
      * @return Компонент ядра с заданными зависимостями.
      */
-
     fun getCoreComponent(): CoreComponent
 
     /**

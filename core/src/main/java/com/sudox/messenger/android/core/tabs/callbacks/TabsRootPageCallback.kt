@@ -1,8 +1,9 @@
-package com.sudox.messenger.android.core.tabs
+package com.sudox.messenger.android.core.tabs.callbacks
 
 import androidx.viewpager2.widget.ViewPager2
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.core.tabs.TabsChildFragment
 
 class TabsRootPageCallback(
         private val activity: CoreActivity,

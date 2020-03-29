@@ -6,7 +6,14 @@ import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 
-class TabsChildAppBarLayoutVO(
+/**
+ * ViewObject для фрагмента с табами
+ * Просто добавляет в конец к уже переданному разработчиком VO TabLayout.
+ *
+ * @param rootVO Основной ViewObject с элементами, которые хотел бы видеть
+ * разработчик.
+ */
+class TabsAppBarLayoutVO(
         val rootVO: AppBarLayoutVO?
 ) : AppBarLayoutVO {
 

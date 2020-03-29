@@ -4,6 +4,9 @@ import android.content.Context
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 
+/**
+ * Дочерний фрагмент фрагмента с ViewPager'ом и табами
+ */
 interface TabsChildFragment {
 
     /**
@@ -24,6 +27,9 @@ interface TabsChildFragment {
 
     /**
      * Сконфигурирован ли AppBar корневым фрагментом?
+     *
+     * @return True если AppBar настраивается корневым фрагментом,
+     * False если нет, необходимо настроить AppBar в данном фрагменте.
      */
     fun isAppBarConfiguredByRoot(): Boolean {
         return false
@@ -33,6 +39,7 @@ interface TabsChildFragment {
      * Возвращает название данной вкладки.
      *
      * @param context Контекст приложения/активности
+     * @return Заголовок данного фрагмента в TabLayout'е
      */
     fun getTitle(context: Context): String
 }
