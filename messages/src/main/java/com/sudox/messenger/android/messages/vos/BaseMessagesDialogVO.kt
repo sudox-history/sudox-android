@@ -16,4 +16,5 @@ data class BaseMessagesDialogVO(
         override var isLastMessageByMe: Boolean,
         override var isSentMessageDelivered: Boolean,
         override var isSentMessageViewed: Boolean,
-        override var lastMessageUsername: String? = null) : DialogItemViewVO
+        override var lastMessageUsername: String? = null
+) : DialogItemViewVO

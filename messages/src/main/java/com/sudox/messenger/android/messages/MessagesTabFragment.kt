@@ -1,22 +1,13 @@
 package com.sudox.messenger.android.messages
 
 import android.content.Context
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.applicationBar.ApplicationBarListener
 import com.sudox.design.viewlist.ViewList
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.fragments.ViewListFragment
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
+import com.sudox.messenger.android.messages.adapters.DialogsAdapter
 import com.sudox.messenger.android.messages.vos.BaseMessagesDialogVO
 import java.util.Calendar
 import kotlin.random.Random
@@ -78,19 +69,19 @@ class MessagesTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragmen
 
     override fun onButtonClicked(tag: Int) {
         dialogsAdapter?.apply {
-            dialogs.add(generateDialog())
+            dialogsVOs.add(generateDialog())
         }
     }
 
     override fun getAdapter(viewList: ViewList): DialogsAdapter? {
-        dialogsAdapter = DialogsAdapter(context!!).apply {
-            dialogs.apply {
+        dialogsAdapter = DialogsAdapter().apply {
+            dialogsVOs.apply {
                 add(generateDialog())
                 add(generateDialog())
                 add(generateDialog())
             }
-            addDialogCallback = { dialogs.add(generateDialog()) }
         }
+
         return dialogsAdapter
     }
 }
