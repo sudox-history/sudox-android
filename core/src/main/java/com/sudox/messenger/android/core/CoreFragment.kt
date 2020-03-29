@@ -98,13 +98,13 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     }
 
     override fun onCreateAnimator(transit: Int, enter: Boolean, nextAnim: Int): Animator? {
-//        if (enter && nextAnim != 0) {
-//            animator = AnimatorInflater.loadAnimator(context, nextAnim).apply {
-//                addListener(this@CoreFragment)
-//            }
-//
-//            return animator
-//        }
+        if (enter && nextAnim != 0) {
+            animator = AnimatorInflater.loadAnimator(context, nextAnim).apply {
+                addListener(this@CoreFragment)
+            }
+
+            return animator
+        }
 
         return super.onCreateAnimator(transit, enter, nextAnim)
     }

@@ -1,17 +1,12 @@
 package com.sudox.messenger.android.managers
 
 import android.annotation.SuppressLint
-import android.view.Menu
 import android.view.View
-import androidx.annotation.DrawableRes
-import androidx.annotation.IdRes
-import androidx.annotation.StringRes
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
-import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sudox.messenger.android.R
 import com.sudox.messenger.android.auth.FROM_AUTH_CODE_TO_REGISTER_ACTION_ID
@@ -19,6 +14,7 @@ import com.sudox.messenger.android.auth.FROM_AUTH_PHONE_TO_CODE_ACTION_ID
 import com.sudox.messenger.android.auth.FROM_AUTH_PHONE_TO_COUNTRIES_ACTION_ID
 import com.sudox.messenger.android.auth.FROM_AUTH_REGISTER_TO_PEOPLE_FRAGMENT
 import com.sudox.messenger.android.core.managers.NavigationManager
+import java.util.Deque
 
 val NAVIGATION_ACTIONS_MAP = hashMapOf(
         FROM_AUTH_PHONE_TO_CODE_ACTION_ID to R.id.action_authPhoneFragment_to_authCodeFragment,
@@ -60,33 +56,16 @@ class AppNavigationManager : NavigationManager {
     }
 
     fun linkWithBottomNavigationView(navController: NavController, bottomNavigationView: BottomNavigationView) {
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            bottomNavigationView.visibility = if (isAuthDestination(destination)) {
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            bottomNavigationView.visibility = if (destination.id == R.id.authPhoneFragment ||
+                    destination.id == R.id.authCodeFragment ||
+                    destination.id == R.id.authCountryFragment ||
+                    destination.id == R.id.authRegisterFragment
+            ) {
                 View.GONE
             } else {
                 View.VISIBLE
             }
         }
-
-        bottomNavigationView.menu.apply {
-            addItem(this, R.id.peopleFragment, R.string.people, R.drawable.ic_group)
-            addItem(this, R.id.dialogsFragment, R.string.messages, R.drawable.ic_chat_bubble)
-            addItem(this, R.id.profileFragment, R.string.blog, R.drawable.ic_account)
-        }
-
-        setupWithNavController(bottomNavigationView, navController)
-    }
-
-    private fun addItem(menu: Menu, @IdRes id: Int, @StringRes titleId: Int, @DrawableRes iconId: Int) {
-        menu.add(0, id, 0, titleId).apply {
-            setIcon(iconId)
-        }
-    }
-
-    private fun isAuthDestination(destination: NavDestination): Boolean {
-        return destination.id == R.id.authPhoneFragment ||
-                destination.id == R.id.authCodeFragment ||
-                destination.id == R.id.authCountryFragment ||
-                destination.id == R.id.authRegisterFragment
     }
 }
