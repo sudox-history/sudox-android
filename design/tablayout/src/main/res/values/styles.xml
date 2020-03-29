@@ -3,6 +3,7 @@
 
     <style name="Sudox.TabLayout" parent="">
         <item name="tabMode">scrollable</item>
+        <item name="tabIndicatorFullWidth">false</item>
         <item name="tabIndicatorColor">@color/tab_indicator_color</item>
         <item name="tabIndicator">@drawable/drawable_tab_indicator</item>
         <item name="tabIndicatorHeight">@dimen/tab_indicator_height</item>
