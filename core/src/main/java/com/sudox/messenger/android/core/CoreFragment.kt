@@ -118,6 +118,20 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
         animator = null
     }
 
+    /**
+     * Находится ли фрагмент в стартовом состоянии.
+     * Используется для сброса состояния TabsRootFragment.
+     */
+    open fun isInStartState(): Boolean {
+        return true
+    }
+
+    /**
+     * Сбрасывает состояние фрагмента (отскроливает список обратно наверх или переключает обратно на первый таб)
+     */
+    open fun resetFragment() {
+    }
+
     override fun onAnimationRepeat(animation: Animator) {}
     override fun onAnimationStart(animation: Animator) {}
 }

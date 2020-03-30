@@ -1,7 +1,7 @@
 package com.sudox.messenger.android.core.managers
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import com.sudox.messenger.android.core.CoreFragment
 
 interface NavigationManager {
 
@@ -26,7 +26,7 @@ interface NavigationManager {
      *
      * @param fragment Фрагмент, который нужно отобразить как дочерний.
      */
-    fun showChildFragment(fragment: Fragment)
+    fun showChildFragment(fragment: CoreFragment)
 
     /**
      * Производит откат на предыдущий фрагмент

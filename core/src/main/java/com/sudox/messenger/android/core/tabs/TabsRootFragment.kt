@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
-import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.tabs.adapters.TabsConfigurationStrategy
 import com.sudox.messenger.android.core.tabs.adapters.TabsPagerAdapter
@@ -24,18 +23,27 @@ const val VIEW_PAGER_ID_KEY = "view_pager_id"
  */
 abstract class TabsRootFragment : CoreFragment() {
 
+    private var fragments: Array<CoreFragment>? = null
     private var pageCallback: TabsRootPageCallback? = null
     private var pagerAdapter: TabsPagerAdapter? = null
     private var viewPager: ViewPager2? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val fragments = getFragments()
+        val savedFragmentsCount = childFragmentManager.fragments.size
 
-        pagerAdapter = TabsPagerAdapter(fragments, this)
-        pageCallback = TabsRootPageCallback(coreActivity!!, fragments)
+        fragments = if (savedFragmentsCount > 0) {
+            Array(savedFragmentsCount) {
+                childFragmentManager.fragments[it] as CoreFragment
+            }
+        } else {
+            getFragments()
+        }
+
+        pagerAdapter = TabsPagerAdapter(fragments!!, this)
+        pageCallback = TabsRootPageCallback(coreActivity!!, fragments!!)
         viewPager = ViewPager2(context!!).also {
             it.adapter = pagerAdapter
-            it.offscreenPageLimit = fragments.size
+            it.offscreenPageLimit = fragments!!.size
             it.id = savedInstanceState?.getInt(VIEW_PAGER_ID_KEY, View.generateViewId()) ?: View.generateViewId()
             it.registerOnPageChangeCallback(pageCallback!!)
         }
@@ -67,6 +75,17 @@ abstract class TabsRootFragment : CoreFragment() {
 
             // Обработка случая, когда AppBar конфигурируется в дочернем фрагменте.
             pageCallback!!.onPageSelected(viewPager!!.currentItem)
+        }
+    }
+
+    override fun resetFragment() {
+        val index = viewPager!!.currentItem
+        val fragment = fragments!![index]
+
+        if (index > 0 && fragment.isInStartState()) {
+            viewPager!!.setCurrentItem(0, true)
+        } else {
+            fragment.resetFragment()
         }
     }
 

@@ -54,6 +54,14 @@ abstract class ViewListFragment<AT : ViewListAdapter<*>> : CoreFragment() {
         }
     }
 
+    override fun isInStartState(): Boolean {
+        return viewList!!.getCurrentScrollY() == 0
+    }
+
+    override fun resetFragment() {
+        viewList?.smoothScrollBy(0, -viewList!!.getCurrentScrollY())
+    }
+
     /**
      * Возвращает адаптер для ViewList (т.е. данного экрана)
      * Ни в коем случее не добавляйте данные в адаптер в данном методе!

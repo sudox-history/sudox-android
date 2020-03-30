@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sudox.messenger.android.R
 import com.sudox.messenger.android.auth.phone.AuthPhoneFragment
+import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.android.messages.DialogsFragment
 import com.sudox.messenger.android.people.PeopleFragment
@@ -55,9 +56,9 @@ class AppNavigationManager(
 ) : NavigationManager, BottomNavigationView.OnNavigationItemSelectedListener {
 
     private var blockCallback: Boolean = false
-    private var backstack = LinkedList<Pair<Int, Fragment>>()
-    private var loadedFragments = HashMap<Int, Fragment>()
-    private var currentFragment: Fragment? = null
+    private var backstack = LinkedList<Pair<Int, CoreFragment>>()
+    private var loadedFragments = HashMap<Int, CoreFragment>()
+    private var currentFragment: CoreFragment? = null
     private var currentItemTag = 0
 
     override fun showAuthPart() {
@@ -108,7 +109,7 @@ class AppNavigationManager(
         navigationBar.visibility = View.VISIBLE
     }
 
-    override fun showChildFragment(fragment: Fragment) {
+    override fun showChildFragment(fragment: CoreFragment) {
         val fragmentTransaction = fragmentManager
                 .beginTransaction()
                 .setCustomAnimations(
@@ -142,7 +143,7 @@ class AppNavigationManager(
 
         val fragmentTransaction = fragmentManager.beginTransaction()
         val backstackIterator = backstack.descendingIterator()
-        var backstackPair: Pair<Int, Fragment>? = null
+        var backstackPair: Pair<Int, CoreFragment>? = null
 
         while (backstackIterator.hasNext()) {
             val pair = backstackIterator.next()
@@ -201,7 +202,7 @@ class AppNavigationManager(
     override fun restoreState(bundle: Bundle): Boolean {
         val currentFragmentTag = bundle.getString(CURRENT_FRAGMENT_TAG_EXTRA_KEY)
 
-        currentFragment = fragmentManager.findFragmentByTag(currentFragmentTag)
+        currentFragment = fragmentManager.findFragmentByTag(currentFragmentTag) as CoreFragment?
         currentItemTag = bundle.getInt(CURRENT_ITEM_TAG_EXTRA_KEY)
 
         val backstackSize = bundle.getInt(BACKSTACK_SIZE_EXTRA_KEY)
@@ -209,7 +210,7 @@ class AppNavigationManager(
         for (i in 0 until backstackSize) {
             val itemTag = bundle.getInt("$BACKSTACK_ITEM_TAG_AT_INDEX_EXTRA_KEY$i")
             val fragmentTag = bundle.getString("$BACKSTACK_FRAGMENT_TAG_AT_INDEX_EXTRA_KEY$i")
-            val fragment = fragmentManager.findFragmentByTag(fragmentTag)!!
+            val fragment = fragmentManager.findFragmentByTag(fragmentTag)!! as CoreFragment
 
             backstack.add(Pair(itemTag, fragment))
         }
@@ -219,7 +220,7 @@ class AppNavigationManager(
         for (i in 0 until loadedFragmentsCount) {
             val itemTag = bundle.getInt("$LOADED_FRAGMENT_ITEM_TAG_AT_INDEX_EXTRA_KEY$i")
             val fragmentTag = bundle.getString("$LOADED_FRAGMENT_TAG_AT_INDEX_EXTRA_KEY$i")
-            val fragment = fragmentManager.findFragmentByTag(fragmentTag)!!
+            val fragment = fragmentManager.findFragmentByTag(fragmentTag)!! as CoreFragment
 
             loadedFragments[itemTag] = fragment
         }
@@ -272,6 +273,7 @@ class AppNavigationManager(
         val tag = item.itemId
 
         if (currentFragment == loadedFragments[tag]) {
+            currentFragment!!.resetFragment()
             return false
         }
 
@@ -372,7 +374,7 @@ class AppNavigationManager(
         } != null
     }
 
-    private fun getItemLastFragment(tag: Int): Fragment {
+    private fun getItemLastFragment(tag: Int): CoreFragment {
         return backstack.findLast { pair ->
             pair.first == tag
         }?.second ?: loadedFragments[tag]!!

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
  * 1) Отображать шапки и футеры
  * 2) Переключать секции и сортировки
  * 3) Скрывать секции
+ * 4) Выдавать текущую позицию скролла
  */
 class ViewList : RecyclerView {
 
@@ -26,6 +27,8 @@ class ViewList : RecyclerView {
     internal var footerTextAppearance = 0
     internal var initialPaddingRight = 0
     internal var initialPaddingLeft = 0
+    internal var scrollX = 0
+    internal var scrollY = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.viewListStyle)
@@ -38,6 +41,33 @@ class ViewList : RecyclerView {
             footerMargin = it.getDimensionPixelSize(R.styleable.ViewList_footerMargin, 0)
             footerTextAppearance = it.getResourceIdOrThrow(R.styleable.ViewList_footerTextAppearance)
         }
+
+        addOnScrollListener(object : OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                scrollX += dx
+                scrollY += dy
+            }
+        })
+    }
+
+    /**
+     * Выдает текущий скролл по оси X
+     * P.S.: Рассчитывается на основе вызова обратной функции
+     *
+     * @return Текущий скролл по оси X
+     */
+    fun getCurrentScrollX(): Int {
+        return scrollX
+    }
+
+    /**
+     * Выдает текущий скролл по оси Y
+     * P.S.: Рассчитывается на основе вызова обратной функции
+     *
+     * @return Текущий скролл по оси Y
+     */
+    fun getCurrentScrollY(): Int {
+        return scrollY
     }
 
     override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
