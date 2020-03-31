@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.View
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.lists.sortedList.SortedListView
 import kotlin.math.max
@@ -15,81 +16,67 @@ class StickyLettersDecoration(
         context: Context
 ) : RecyclerView.ItemDecoration() {
 
-    private var maxLetterWidth = 0
-
     private val letters = provider.getLetters(context)
     private val lettersPositions = letters.keys
     private val letterBounds = Rect()
+    private var letterMaxWidth = 0
 
-    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        val letterTopPadding = sortedListView.lettersTopPadding
-        val letterPaint = sortedListView.lettersPaint
-        val letterMargin = sortedListView.lettersMargin
+    override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) = sortedListView.let { list ->
         val letterX = parent.paddingStart.toFloat()
+        var prevLetterY = Int.MAX_VALUE
+        var prevLetterPosition = -1
+        var prevDiffToCenter = 0
 
-        var previousLetterY = Float.MAX_VALUE
-        var previousLetterPosition = -1
+        for (i in parent.childCount - 1 downTo 0) {
+            val child = parent.getChildAt(i)
 
-        (parent.childCount - 1 downTo 0).map {
-            parent.getChildAt(it)
-        }.filter {
-            it.top - letterTopPadding - letterBounds.height() >= parent.paddingTop &&
-                    it.top - sortedListView.lettersTopPadding - letterBounds.height() <= parent.height
-        }.forEach {
-            val position = parent.getChildAdapterPosition(it)
-
-            if (position < RecyclerView.NO_POSITION) {
-                return@forEach
+            if (child.top - list.lettersTopPadding - letterBounds.height() !in parent.paddingTop .. parent.height) {
+                continue
             }
 
-            val letter = letters[position] ?: return@forEach
-            val letterY = (it.top - letterTopPadding)
-                    .coerceAtLeast(letterTopPadding)
-                    .coerceAtLeast(parent.paddingTop + letterBounds.height())
-                    .coerceAtMost((previousLetterY - letterTopPadding).toInt())
-                    .toFloat()
+            val position = parent.getChildAdapterPosition(child)
 
-            canvas.drawText(letter, letterX, letterY, letterPaint)
+            if (position < RecyclerView.NO_POSITION) {
+                continue
+            }
 
-            previousLetterY = letterY
-            previousLetterPosition = position
+            val letter = letters[position] ?: continue
+            val letterY = min(max(max(child.top - list.lettersTopPadding, list.lettersTopPadding), parent.paddingTop + letterBounds.height()), prevLetterY - list.lettersTopPadding)
+
+            canvas.drawText(letter, letterX, letterY.toFloat(), list.lettersPaint)
+
+            prevLetterY = letterY
+            prevLetterPosition = position
+            prevDiffToCenter = child.height / 2
         }
 
-        previousLetterPosition = if (previousLetterPosition == RecyclerView.NO_POSITION) {
+        prevLetterPosition = if (prevLetterPosition == RecyclerView.NO_POSITION) {
             parent.getChildAdapterPosition(parent.getChildAt(0)) + 1
         } else {
-            previousLetterPosition
+            prevLetterPosition
         }
 
-        val stickyLetterPosition = lettersPositions.find { it < previousLetterPosition } ?: return
+        val stickyLetterPosition = lettersPositions.find { it < prevLetterPosition } ?: return
         val stickyLetter = letters[stickyLetterPosition]!!
 
-        letterPaint.getTextBounds(stickyLetter, 0, stickyLetter.length, letterBounds)
+        list.lettersPaint.getTextBounds(stickyLetter, 0, stickyLetter.length, letterBounds)
 
-        val stickyLetterTop = previousLetterY - letterBounds.height() - letterMargin
-        val stickyLetterY = min(stickyLetterTop, letterTopPadding.toFloat())
-                .coerceAtLeast((parent.paddingTop + letterBounds.height()).toFloat())
-                .coerceAtMost(previousLetterY - letterMargin - letterBounds.height())
+        val stickyLetterBottom = prevLetterY - letterBounds.height() - prevDiffToCenter + letterBounds.height() / 2
+        val stickyLetterY = min(max(min(stickyLetterBottom, list.lettersTopPadding), parent.paddingTop + letterBounds.height()), stickyLetterBottom)
 
-        canvas.drawText(stickyLetter, letterX, stickyLetterY, letterPaint)
+        canvas.drawText(stickyLetter, letterX, stickyLetterY.toFloat(), list.lettersPaint)
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-        super.getItemOffsets(outRect, view, parent, state)
-
-        val letterTopPadding = sortedListView.lettersTopPadding
-        val letterRightPadding = sortedListView.lettersRightPadding
-        val letterPaint = sortedListView.lettersPaint
-
+    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) = sortedListView.let { list ->
         val position = parent.getChildAdapterPosition(view)
         val letter = letters[position]
 
         if (letter != null) {
-            letterPaint.getTextBounds(letter, 0, letter.length, letterBounds)
-            maxLetterWidth = max(letterBounds.width(), maxLetterWidth)
-            outRect.top += letterBounds.height() + letterTopPadding
+            list.lettersPaint.getTextBounds(letter, 0, letter.length, letterBounds)
+            letterMaxWidth = max(letterBounds.width(), letterMaxWidth)
+            outRect.top += letterBounds.height() + list.lettersTopPadding
         }
 
-        outRect.left += letterBounds.height() + letterRightPadding
+        view.updatePadding(left = letterMaxWidth + list.lettersRightPadding)
     }
 }
