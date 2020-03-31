@@ -8,4 +8,6 @@
     <dimen name="auth_description_margin_top">17dp</dimen>
 
     <dimen name="auth_first_edit_text_margin">36dp</dimen>
+
+    <dimen name="authcountryadapter_items_margin">18dp</dimen>
 </resources>

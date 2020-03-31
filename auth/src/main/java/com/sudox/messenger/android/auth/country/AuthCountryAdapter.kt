@@ -5,15 +5,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.countriesProvider.entries.Country
 import com.sudox.design.countryItemView.CountryItemView
+import com.sudox.design.viewlist.ViewListAdapter
+import com.sudox.messenger.android.auth.R
 
 class AuthCountryAdapter(
         val context: Context,
         val countries: List<Country>
-) : RecyclerView.Adapter<AuthCountryAdapter.ViewHolder>() {
+) : ViewListAdapter<AuthCountryAdapter.ViewHolder>() {
 
     var clickCallback: ((Country) -> (Unit))? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(CountryItemView(context).apply {
             layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -22,7 +24,7 @@ class AuthCountryAdapter(
         })
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) = holder.itemView.let {
+    override fun bindItemHolder(holder: ViewHolder, position: Int) {
         val country = countries[holder.adapterPosition]
 
         holder.view.let { view ->
@@ -35,7 +37,11 @@ class AuthCountryAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
+    override fun getItemMargin(position: Int): Int {
+        return viewList!!.context.resources.getDimensionPixelSize(R.dimen.authcountryadapter_items_margin)
+    }
+
+    override fun getItemsCountAfterHeader(type: Int): Int {
         return countries.size
     }
 

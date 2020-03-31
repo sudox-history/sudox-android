@@ -32,6 +32,5 @@
     <dimen name="countryitemview_flag_margin">17dp</dimen>
     <dimen name="countryitemview_flag_height">19dp</dimen>
     <dimen name="countryitemview_flag_width">28dp</dimen>
-    <dimen name="countryitemview_vertical_padding">9dp</dimen>
     <dimen name="countryitemview_letters_margin">13dp</dimen>
 </resources>
