@@ -7,10 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sudox.design.countriesProvider.CountriesLettersProvider
 import com.sudox.design.countriesProvider.entries.Country
+import com.sudox.design.countriesProvider.getCountries
 import com.sudox.design.lists.sortedList.SortedListView
 import com.sudox.messenger.android.auth.R
-import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.CoreFragment
 
 internal const val COUNTRY_EXTRA_NAME = "country"
@@ -22,15 +23,12 @@ class AuthCountryFragment : CoreFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val coreActivity = activity as CoreActivity
-
         return inflater.inflate(R.layout.fragment_auth_country, container, false).apply {
-            val provider = coreActivity.getLoader().getCountriesProvider()
             val listView = this as SortedListView
 
-            listView.setLettersProvider(provider.getLettersProvider())
+            listView.setLettersProvider(CountriesLettersProvider())
             listView.layoutManager = LinearLayoutManager(context)
-            listView.adapter = AuthCountryAdapter(context, provider.getLoadedCountries()).apply {
+            listView.adapter = AuthCountryAdapter(context, getCountries(context)).apply {
                 clickCallback = ::onCountryClicked
             }
         }

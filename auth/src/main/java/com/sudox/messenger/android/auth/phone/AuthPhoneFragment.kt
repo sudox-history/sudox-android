@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.sudox.design.countriesProvider.countries
+import com.sudox.design.countriesProvider.COUNTRIES
 import com.sudox.design.countriesProvider.entries.Country
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.code.AuthCodeFragment
@@ -67,7 +67,7 @@ class AuthPhoneFragment : CoreFragment() {
 
     private fun initPhoneEditText(view: View) = view.let {
         val regionCode = Locale.getDefault().country
-        val country = countries[regionCode] ?: countries.values.elementAt(0)
+        val country = COUNTRIES[regionCode] ?: COUNTRIES.values.elementAt(0)
 
         it.authPhoneEditText.setCountry(country.regionCode, country.countryCode, country.flagImageId)
         it.authPhoneEditText.regionFlagIdCallback = ::handleCountryChangingAttempt
@@ -79,7 +79,7 @@ class AuthPhoneFragment : CoreFragment() {
     }
 
     private fun handleCountryChangingAttempt(regionCode: String): Int {
-        val country = countries[regionCode]
+        val country = COUNTRIES[regionCode]
 
         if (country == null) {
             authPhoneEditTextLayout.setErrorText(R.string.sudox_not_working_in_this_country)

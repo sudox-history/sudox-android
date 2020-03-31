@@ -17,7 +17,7 @@ class StickyLettersDecoration(
 
     private var maxLetterWidth = 0
 
-    private val letters = provider.getLetters(context, false)
+    private val letters = provider.getLetters(context)
     private val lettersPositions = letters.keys
     private val letterBounds = Rect()
 

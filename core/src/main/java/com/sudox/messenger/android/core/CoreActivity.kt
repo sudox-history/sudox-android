@@ -33,12 +33,4 @@ interface CoreActivity {
      * @return Компонент ядра с заданными зависимостями.
      */
     fun getCoreComponent(): CoreComponent
-
-    /**
-     * Выдает обьект основного класса приложения.
-     *
-     * @return Обьект основного класса (Application)
-     */
-    @Deprecated(message = "Будет удален в будущем!")
-    fun getLoader(): CoreLoader
 }

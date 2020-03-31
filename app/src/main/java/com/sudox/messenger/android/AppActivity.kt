@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.messenger.android.core.CoreActivity
-import com.sudox.messenger.android.core.CoreLoader
 import com.sudox.messenger.android.core.inject.CoreComponent
 import com.sudox.messenger.android.core.inject.CoreModule
 import com.sudox.messenger.android.core.inject.DaggerCoreComponent
@@ -59,7 +58,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             navigationManager!!.restoreState(savedInstanceState)
         } else {
             navigationManager!!.configureNavigationBar()
-            navigationManager!!.showMainPart()
+            navigationManager!!.showAuthPart()
         }
     }
 
@@ -95,10 +94,6 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     override fun getCoreComponent(): CoreComponent {
         return coreComponent!!
-    }
-
-    override fun getLoader(): CoreLoader {
-        return application as CoreLoader
     }
 
     override fun onBackPressed() {

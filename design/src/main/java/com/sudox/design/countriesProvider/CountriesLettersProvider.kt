@@ -3,15 +3,11 @@ package com.sudox.design.countriesProvider
 import android.content.Context
 import com.sudox.design.lists.sortedList.decorations.StickyLettersProvider
 
-class CountriesLettersProvider(val provider: CountriesProvider) : StickyLettersProvider {
+class CountriesLettersProvider : StickyLettersProvider {
 
-    override fun getLetters(context: Context, ignoreCache: Boolean): HashMap<Int, String> {
-        if (!ignoreCache) {
-            return provider.getLoadedLetters()
-        }
-
+    override fun getLetters(context: Context): HashMap<Int, String> {
         val lettersPositions = LinkedHashMap<Int, String>()
-        val loadedCountries = provider.getLoadedCountries()
+        val loadedCountries = getCountries(context)
 
         for (index in loadedCountries.size - 1 downTo 0) {
             val letter = loadedCountries[index].getName(context)[0].toString()
