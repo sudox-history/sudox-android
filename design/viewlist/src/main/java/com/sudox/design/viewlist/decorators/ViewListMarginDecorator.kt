@@ -1,18 +1,18 @@
-package com.sudox.design.viewlist
+package com.sudox.design.viewlist.decorators
 
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.sudox.design.viewlist.ViewList
+import com.sudox.design.viewlist.ViewListAdapter
 
-class ViewListDecorator(
-        private val adapter: ViewListAdapter<*>,
+class ViewListMarginDecorator(
         private val list: ViewList
 ) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-        super.getItemOffsets(outRect, view, parent, state)
-
+        val adapter = list.adapter as ViewListAdapter<*>
         val layoutManager = list.layoutManager as? LinearLayoutManager ?: return
         val position = parent.getChildAdapterPosition(view)
 

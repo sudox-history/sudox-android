@@ -2,6 +2,11 @@
 <resources>
 
     <style name="Sudox.ViewList" parent="">
+        <item name="letterTextSize">@dimen/viewlist_letter_text_size</item>
+        <item name="letterFontFamily">@font/opensans_bold</item>
+        <item name="letterTextColor">@color/viewlist_letter_text_color</item>
+        <item name="letterPaddingRight">@dimen/viewlist_letter_padding_right</item>
+        <item name="letterPaddingTop">@dimen/viewlist_letter_padding_top</item>
         <item name="footerTextAppearance">@style/Sudox.ViewList.Footer</item>
         <item name="footerMargin">@dimen/viewlist_footer_margin</item>
     </style>

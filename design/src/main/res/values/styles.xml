@@ -127,6 +127,9 @@
     </style>
 
     <style name="Sudox.CountryItemView" parent="">
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+
         <item name="textAppearance">@style/Sudox.CountryItemView.Text</item>
         <item name="flagMargin">@dimen/countryitemview_flag_margin</item>
         <item name="flagHeight">@dimen/countryitemview_flag_height</item>

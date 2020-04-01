@@ -16,6 +16,8 @@ const val LOADER_VIEW_TYPE = -3
 
 abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    var stickyLetters: Map<Int, String>? = null
+
     open var nestedRecyclerViews = HashMap<Int, RecyclerView>()
     open var headersVOs: Array<ViewListHeaderVO>? = null
     open var viewList: ViewList? = null
@@ -35,18 +37,34 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         dataObserver = object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                val orientation = (viewList!!.layoutManager as? LinearLayoutManager)?.orientation ?: LinearLayoutManager.VERTICAL
+                viewList!!.let {
+                    val orientation = (it.layoutManager as? LinearLayoutManager)?.orientation ?: LinearLayoutManager.VERTICAL
 
-                if (positionStart == 0 &&
-                        ((!viewList!!.canScrollVertically(-1) && orientation == LinearLayoutManager.VERTICAL) ||
-                                (!viewList!!.canScrollHorizontally(-1) && orientation == LinearLayoutManager.HORIZONTAL))
-                ) {
-                    viewList!!.scrollToPosition(0)
+                    if (positionStart == 0 &&
+                            ((!it.canScrollVertically(-1) && orientation == LinearLayoutManager.VERTICAL)
+                                    || (!it.canScrollHorizontally(-1) && orientation == LinearLayoutManager.HORIZONTAL))) {
+                        viewList!!.scrollToPosition(0)
+                    }
                 }
+
+                stickyLetters = buildStickyLettersMap()
+            }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                stickyLetters = buildStickyLettersMap()
+            }
+
+            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
+                stickyLetters = buildStickyLettersMap()
+            }
+
+            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+                stickyLetters = buildStickyLettersMap()
             }
         }
 
         registerAdapterDataObserver(dataObserver!!)
+        stickyLetters = buildStickyLettersMap()
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
@@ -577,7 +595,15 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
      * @param type Тип шапки
      * @result Количество элементов после шапки
      */
-    open fun getItemsCountAfterHeader(type: Int): Int = 0
+    abstract fun getItemsCountAfterHeader(type: Int): Int
+
+    /**
+     * Строит хеш-таблицу с позициями и буквами на них
+     *
+     * @return Хеш-таблица вида позиция-буква (null если
+     * не нужно использовать "липкие" буквы)
+     */
+    open fun buildStickyLettersMap(): Map<Int, String>? = null
 
     /**
      * Определяет тип способа добавления отступа

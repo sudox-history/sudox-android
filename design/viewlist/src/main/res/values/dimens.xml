@@ -8,4 +8,7 @@
     <dimen name="viewlist_header_padding_top">22dp</dimen>
     <dimen name="viewlist_footer_text_size">15sp</dimen>
     <dimen name="viewlist_footer_margin">12dp</dimen>
+    <dimen name="viewlist_letter_text_size">19sp</dimen>
+    <dimen name="viewlist_letter_padding_right">21dp</dimen>
+    <dimen name="viewlist_letter_padding_top">18dp</dimen>
 </resources>

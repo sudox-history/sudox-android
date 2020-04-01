@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ViewList">
+        <attr name="letterPaddingRight" format="dimension" />
+        <attr name="letterPaddingTop" format="dimension" />
+        <attr name="letterFontFamily" format="reference" />
+        <attr name="letterTextSize" format="dimension" />
+        <attr name="letterTextColor" format="color" />
         <attr name="footerTextAppearance" format="reference" />
         <attr name="footerMargin" format="dimension" />
     </declare-styleable>

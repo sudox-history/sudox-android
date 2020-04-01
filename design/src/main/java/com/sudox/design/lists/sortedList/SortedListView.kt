@@ -12,12 +12,9 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.design.R
-import com.sudox.design.lists.sortedList.decorations.StickyLettersDecoration
 import com.sudox.design.lists.sortedList.decorations.StickyLettersProvider
 
 class SortedListView : RecyclerView {
-
-    private var lettersDecoration: StickyLettersDecoration? = null
 
     val lettersPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
     var lettersRightPadding = 0
@@ -40,14 +37,5 @@ class SortedListView : RecyclerView {
             lettersTopPadding = it.getDimensionPixelSizeOrThrow(R.styleable.SortedListView_lettersTopPadding)
             lettersMargin = it.getDimensionPixelSize(R.styleable.SortedListView_lettersMargin, 0)
         }
-    }
-
-    fun setLettersProvider(provider: StickyLettersProvider) {
-        if (lettersDecoration != null) {
-            removeItemDecoration(lettersDecoration!!)
-        }
-
-        lettersDecoration = StickyLettersDecoration(this, provider, context)
-        addItemDecoration(lettersDecoration!!)
     }
 }

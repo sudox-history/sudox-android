@@ -21,7 +21,13 @@ class AuthCountryAdapter(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             )
-        })
+        }).apply {
+            view.setOnClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    clickCallback?.invoke(countries[adapterPosition])
+                }
+            }
+        }
     }
 
     override fun bindItemHolder(holder: ViewHolder, position: Int) {
@@ -31,14 +37,31 @@ class AuthCountryAdapter(
             view.setFlag(country.flagImageId)
             view.setName(country.nameTextId)
             view.setCode(country.countryCode)
-            view.setOnClickListener {
-                clickCallback?.invoke(countries[holder.adapterPosition])
-            }
         }
     }
 
     override fun getItemMargin(position: Int): Int {
         return viewList!!.context.resources.getDimensionPixelSize(R.dimen.authcountryadapter_items_margin)
+    }
+
+    override fun buildStickyLettersMap(): Map<Int, String>? {
+        val letters = LinkedHashMap<Int, String>()
+
+        for (index in countries.size - 1 downTo 0) {
+            val letter = countries[index].getName(context)[0].toString()
+
+            if (index > 0) {
+                val prevLetter = countries[index - 1].getName(context)[0].toString()
+
+                if (letter != prevLetter) {
+                    letters[index] = letter
+                }
+            } else {
+                letters[index] = letter
+            }
+        }
+
+        return letters
     }
 
     override fun getItemsCountAfterHeader(type: Int): Int {
