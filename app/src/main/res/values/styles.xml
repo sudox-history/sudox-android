@@ -7,6 +7,7 @@
         <item name="avatarImageViewStyle">@style/Sudox.People.AvatarImageView</item>
         <item name="horizontalPeopleItemViewStyle">@style/Sudox.People.HorizontalPeopleItemView</item>
         <item name="verticalPeopleItemViewStyle">@style/Sudox.People.VerticalPeopleItemView</item>
+        <item name="countryItemViewStyle">@style/Sudox.CountryItemView</item>
         <item name="newsItemViewStyle">@style/Sudox.NewsItemView</item>
     </style>
 </resources>

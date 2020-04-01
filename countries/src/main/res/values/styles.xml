@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.CountryItemView" parent="">
+        <item name="marginBetweenFlagAndName">@dimen/countryitemview_margin_between_flag_and_name</item>
+        <item name="nameTextAppearance">@style/Sudox.CountryItemView.NameTextAppearance</item>
+        <item name="codeTextAppearance">@style/Sudox.CountryItemView.CodeTextAppearance</item>
+        <item name="flagHeight">@dimen/countryitemview_flag_height</item>
+        <item name="flagWidth">@dimen/countryitemview_flag_width</item>
+    </style>
+
+    <style name="Sudox.CountryItemView.NameTextAppearance" parent="">
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textColor">@color/countryitemview_name_text_color</item>
+        <item name="android:textSize">@dimen/countryitemview_name_text_size</item>
+    </style>
+    
+    <style name="Sudox.CountryItemView.CodeTextAppearance" parent="">
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textColor">@color/countryitemview_code_text_color</item>
+        <item name="android:textSize">@dimen/countryitemview_code_text_size</item>
+    </style>
+</resources>

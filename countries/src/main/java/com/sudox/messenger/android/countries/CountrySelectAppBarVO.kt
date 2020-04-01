@@ -1,22 +1,21 @@
-package com.sudox.messenger.android.auth.country
+package com.sudox.messenger.android.countries
 
 import android.content.Context
 import android.view.View
 import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.design.appbar.vos.BACK_BUTTON
 import com.sudox.design.appbar.vos.NOT_USED_PARAMETER
-import com.sudox.messenger.android.auth.R
 
-const val AUTH_COUNTRY_SEARCH_BUTTON_TAG = 2
+const val COUNTRY_SELECT_SEARCH_BUTTON_TAG = 2
 
-class AuthCountryAppBarVO : AppBarVO {
+class CountrySelectAppBarVO : AppBarVO {
 
     override fun getButtonsAtLeft(): Array<Triple<Int, Int, Int>>? {
         return BACK_BUTTON
     }
 
     override fun getButtonsAtRight(): Array<Triple<Int, Int, Int>>? {
-        return arrayOf(Triple(AUTH_COUNTRY_SEARCH_BUTTON_TAG, R.drawable.ic_search, NOT_USED_PARAMETER))
+        return arrayOf(Triple(COUNTRY_SELECT_SEARCH_BUTTON_TAG, R.drawable.ic_search, NOT_USED_PARAMETER))
     }
 
     override fun getViewAtLeft(context: Context): View? {

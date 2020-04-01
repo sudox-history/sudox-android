@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="countryselectadapter_items_margin">18dp</dimen>
+
+    <dimen name="countryitemview_margin_between_flag_and_name">17dp</dimen>
+    <dimen name="countryitemview_name_text_size">16sp</dimen>
+    <dimen name="countryitemview_code_text_size">16sp</dimen>
+    <dimen name="countryitemview_flag_height">19dp</dimen>
+    <dimen name="countryitemview_flag_width">28dp</dimen>
+</resources>

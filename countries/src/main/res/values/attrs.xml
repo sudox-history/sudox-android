@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CountryItemView">
+        <attr name="flagWidth" format="dimension" />
+        <attr name="flagHeight" format="dimension" />
+        <attr name="nameTextAppearance" format="reference" />
+        <attr name="codeTextAppearance" format="reference" />
+        <attr name="marginBetweenFlagAndName" format="dimension" />
+    </declare-styleable>
+
+    <attr name="countryItemViewStyle" format="reference" />
+</resources>

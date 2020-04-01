@@ -1,0 +1,13 @@
+apply from: '../configs/dependencies.gradle'
+apply from: '../configs/common.gradle'
+
+registerModule(false, true, true, true)
+
+dependencies {
+    api project(":core")
+    api project(":design:viewlist")
+
+    implementation libraries.core_ktx
+    implementation libraries.appcompat
+    implementation libraries.recyclerview
+}

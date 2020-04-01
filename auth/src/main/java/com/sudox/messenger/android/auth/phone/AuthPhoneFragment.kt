@@ -8,13 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.sudox.design.countriesProvider.COUNTRIES
-import com.sudox.design.countriesProvider.entries.Country
 import com.sudox.messenger.android.auth.R
-import com.sudox.messenger.android.auth.code.AuthCodeFragment
-import com.sudox.messenger.android.auth.country.AuthCountryFragment
-import com.sudox.messenger.android.auth.country.COUNTRY_EXTRA_NAME
 import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.countries.COUNTRIES
+import com.sudox.messenger.android.countries.COUNTRY_EXTRA_NAME
+import com.sudox.messenger.android.countries.CountrySelectFragment
+import com.sudox.messenger.android.countries.vos.CountryVO
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditText
 import kotlinx.android.synthetic.main.fragment_auth_phone.authPhoneEditTextLayout
 import kotlinx.android.synthetic.main.fragment_auth_phone.view.authPhoneEditText
@@ -36,7 +35,7 @@ class AuthPhoneFragment : CoreFragment() {
         super.onAppBarClicked(tag)
 
         if (tag == AUTH_PHONE_NEXT_BUTTON_TAG) {
-            navigationManager!!.showChildFragment(AuthCodeFragment())
+            navigationManager!!.showChildFragment(CountrySelectFragment())
         }
     }
 
@@ -60,8 +59,8 @@ class AuthPhoneFragment : CoreFragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        data!!.getParcelableExtra<Country>(COUNTRY_EXTRA_NAME)!!.let {
-            authPhoneEditText.setCountry(it.regionCode, it.countryCode, it.flagImageId)
+        data!!.getParcelableExtra<CountryVO>(COUNTRY_EXTRA_NAME)!!.let {
+            authPhoneEditText.setCountry(it.regionCode, it.countryCode, it.flagId)
         }
     }
 
@@ -69,10 +68,10 @@ class AuthPhoneFragment : CoreFragment() {
         val regionCode = Locale.getDefault().country
         val country = COUNTRIES[regionCode] ?: COUNTRIES.values.elementAt(0)
 
-        it.authPhoneEditText.setCountry(country.regionCode, country.countryCode, country.flagImageId)
+        it.authPhoneEditText.setCountry(country.regionCode, country.countryCode, country.flagId)
         it.authPhoneEditText.regionFlagIdCallback = ::handleCountryChangingAttempt
         it.authPhoneEditText.countryCodeSelector.setOnClickListener {
-            navigationManager!!.showChildFragment(AuthCountryFragment().apply {
+            navigationManager!!.showChildFragment(CountrySelectFragment().apply {
                 setTargetFragment(this@AuthPhoneFragment, 0)
             })
         }
@@ -86,6 +85,6 @@ class AuthPhoneFragment : CoreFragment() {
             return 0
         }
 
-        return country.flagImageId
+        return country.flagId
     }
 }

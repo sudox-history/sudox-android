@@ -39,7 +39,6 @@
         <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>
         <item name="nicknameEditTextStyle">@style/Sudox.NicknameEditText</item>
         <item name="editTextLayoutStyle">@style/Sudox.EditTextLayout</item>
-        <item name="countryItemViewStyle">@style/Sudox.CountryItemView</item>
 
         <item name="popupItemViewStyle">@style/Sudox.PopupItemView</item>
         <item name="listPopupWindowStyle">@style/Sudox.ListPopupWindow</item>
@@ -115,22 +114,5 @@
 
     <style name="Sudox.NicknameEditText" parent="Sudox.EditText">
         <item name="tagTextColor">@color/nicknameedittext_tag_text_color</item>
-    </style>
-
-    <style name="Sudox.CountryItemView" parent="">
-        <item name="android:paddingTop">15dp</item>
-        <item name="android:paddingBottom">15dp</item>
-
-        <item name="textAppearance">@style/Sudox.CountryItemView.Text</item>
-        <item name="flagMargin">@dimen/countryitemview_flag_margin</item>
-        <item name="flagHeight">@dimen/countryitemview_flag_height</item>
-        <item name="flagWidth">@dimen/countryitemview_flag_width</item>
-    </style>
-
-    <style name="Sudox.CountryItemView.Text" parent="">
-        <item name="android:textColor">@color/recyclerview_text_color</item>
-        <item name="android:textSize">@dimen/recyclerview_text_size</item>
-        <item name="android:fontFamily">@font/opensans_semibold</item>
-        <item name="fontFamily">@font/opensans_semibold</item>
     </style>
 </resources>

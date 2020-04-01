@@ -22,10 +22,4 @@
     <dimen name="phoneedittext_separator_height">23dp</dimen>
     <dimen name="phoneedittext_separator_left_margin">13dp</dimen>
     <dimen name="phoneedittext_separator_right_margin">13dp</dimen>
-
-    <dimen name="recyclerview_text_size">16sp</dimen>
-
-    <dimen name="countryitemview_flag_margin">17dp</dimen>
-    <dimen name="countryitemview_flag_height">19dp</dimen>
-    <dimen name="countryitemview_flag_width">28dp</dimen>
 </resources>

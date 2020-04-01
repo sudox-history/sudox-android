@@ -6,6 +6,7 @@ registerModule(false, true, true, true)
 dependencies {
     api project(path: ':core')
     api project(path: ':design')
+    api project(path: ':countries')
     api project(path: ':api')
 
     implementation libraries.core_ktx

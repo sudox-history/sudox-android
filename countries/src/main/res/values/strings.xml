@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="countries">Countries</string>
     <string name="russia">Russia</string>
     <string name="poland">Poland</string>
     <string name="hungary">Hungary</string>
