@@ -25,12 +25,7 @@
 
     <dimen name="recyclerview_text_size">16sp</dimen>
 
-    <dimen name="sortedlistview_letters_text_size">19sp</dimen>
-    <dimen name="sortedlistview_letters_right_padding">21dp</dimen>
-    <dimen name="sortedlistview_letters_top_padding">17dp</dimen>
-
     <dimen name="countryitemview_flag_margin">17dp</dimen>
     <dimen name="countryitemview_flag_height">19dp</dimen>
     <dimen name="countryitemview_flag_width">28dp</dimen>
-    <dimen name="countryitemview_letters_margin">13dp</dimen>
 </resources>

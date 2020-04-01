@@ -20,7 +20,5 @@
 
     <color name="recyclerview_text_color">#000000</color>
 
-    <color name="sortedlistview_letters_text_color">#000000</color>
-
     <color name="tablayoutbutton_active_text_color">#00BFA5</color>
 </resources>

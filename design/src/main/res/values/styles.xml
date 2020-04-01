@@ -39,7 +39,6 @@
         <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>
         <item name="nicknameEditTextStyle">@style/Sudox.NicknameEditText</item>
         <item name="editTextLayoutStyle">@style/Sudox.EditTextLayout</item>
-        <item name="sortedListViewStyle">@style/Sudox.SortedListView</item>
         <item name="countryItemViewStyle">@style/Sudox.CountryItemView</item>
 
         <item name="popupItemViewStyle">@style/Sudox.PopupItemView</item>
@@ -116,14 +115,6 @@
 
     <style name="Sudox.NicknameEditText" parent="Sudox.EditText">
         <item name="tagTextColor">@color/nicknameedittext_tag_text_color</item>
-    </style>
-
-    <style name="Sudox.SortedListView" parent="">
-        <item name="lettersRightPadding">@dimen/sortedlistview_letters_right_padding</item>
-        <item name="lettersTopPadding">@dimen/sortedlistview_letters_top_padding</item>
-        <item name="lettersTextSize">@dimen/sortedlistview_letters_text_size</item>
-        <item name="lettersColor">@color/sortedlistview_letters_text_color</item>
-        <item name="lettersFont">@font/opensans_semibold</item>
     </style>
 
     <style name="Sudox.CountryItemView" parent="">

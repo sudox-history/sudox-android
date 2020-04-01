@@ -38,15 +38,6 @@
         <attr name="strokeWidth" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="SortedListView">
-        <attr name="lettersRightPadding" format="dimension" />
-        <attr name="lettersTopPadding" format="dimension" />
-        <attr name="lettersMargin" format="dimension" />
-        <attr name="lettersFont" format="reference" />
-        <attr name="lettersTextSize" format="dimension" />
-        <attr name="lettersColor" format="color" />
-    </declare-styleable>
-
     <declare-styleable name="CountryItemView">
         <attr name="flagMargin" />
         <attr name="flagHeight" />
@@ -72,5 +63,4 @@
     <attr name="codeEditTextStyle" format="reference" />
     <attr name="nicknameEditTextStyle" format="reference" />
     <attr name="editTextLayoutStyle" format="reference" />
-    <attr name="sortedListViewStyle" format="reference" />
 </resources>
