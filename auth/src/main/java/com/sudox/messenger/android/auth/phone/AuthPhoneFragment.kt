@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import com.sudox.messenger.android.auth.R
+import com.sudox.messenger.android.auth.code.AuthCodeFragment
 import com.sudox.messenger.android.core.CoreFragment
 import com.sudox.messenger.android.countries.COUNTRIES
 import com.sudox.messenger.android.countries.COUNTRY_EXTRA_NAME
@@ -35,7 +36,7 @@ class AuthPhoneFragment : CoreFragment() {
         super.onAppBarClicked(tag)
 
         if (tag == AUTH_PHONE_NEXT_BUTTON_TAG) {
-            navigationManager!!.showChildFragment(CountrySelectFragment())
+            navigationManager!!.showChildFragment(AuthCodeFragment())
         }
     }
 
