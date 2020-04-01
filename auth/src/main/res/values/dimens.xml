@@ -9,5 +9,5 @@
 
     <dimen name="auth_first_edit_text_margin">36dp</dimen>
 
-    <dimen name="authcountryadapter_items_margin">18dp</dimen>
+    <dimen name="authcountryadapter_items_margin">20dp</dimen>
 </resources>
