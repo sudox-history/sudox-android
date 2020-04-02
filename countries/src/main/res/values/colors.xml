@@ -2,4 +2,6 @@
 <resources>
     <color name="countryitemview_name_text_color">#000000</color>
     <color name="countryitemview_code_text_color">#000000</color>
+
+    <color name="phoneedittext_separator_color">#E0E0E0</color>
 </resources>

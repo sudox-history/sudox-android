@@ -8,6 +8,7 @@
         <item name="horizontalPeopleItemViewStyle">@style/Sudox.People.HorizontalPeopleItemView</item>
         <item name="verticalPeopleItemViewStyle">@style/Sudox.People.VerticalPeopleItemView</item>
         <item name="countryItemViewStyle">@style/Sudox.CountryItemView</item>
+        <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
         <item name="newsItemViewStyle">@style/Sudox.NewsItemView</item>
     </style>
 </resources>

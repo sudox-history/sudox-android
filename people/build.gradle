@@ -5,6 +5,7 @@ registerModule(false, true, false, true)
 
 dependencies {
     api project(path: ':core')
+    api project(path: ':countries')
     api project(path: ':design')
     api project(path: ':design:edittext')
     api project(path: ':design:mityushkinlayout')

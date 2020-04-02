@@ -15,11 +15,21 @@
         <item name="android:textColor">@color/countryitemview_name_text_color</item>
         <item name="android:textSize">@dimen/countryitemview_name_text_size</item>
     </style>
-    
+
     <style name="Sudox.CountryItemView.CodeTextAppearance" parent="">
         <item name="fontFamily">@font/opensans_semibold</item>
         <item name="android:fontFamily">@font/opensans_semibold</item>
         <item name="android:textColor">@color/countryitemview_code_text_color</item>
         <item name="android:textSize">@dimen/countryitemview_code_text_size</item>
+    </style>
+
+    <style name="Sudox.PhoneEditText" parent="">
+        <item name="separatorColor">@color/phoneedittext_separator_color</item>
+        <item name="separatorWidth">@dimen/phoneedittext_separator_width</item>
+        <item name="separatorHeight">@dimen/phoneedittext_separator_height</item>
+        <item name="separatorLeftMargin">@dimen/phoneedittext_separator_left_margin</item>
+        <item name="separatorRightMargin">@dimen/phoneedittext_separator_right_margin</item>
+        <item name="marginBetweenFlagAndCode">@dimen/phoneedittext_margin_between_flag_and_code</item>
+        <item name="countrySelectorTextAppearance">@style/Sudox.EditText</item>
     </style>
 </resources>

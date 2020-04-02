@@ -8,5 +8,16 @@
         <attr name="marginBetweenFlagAndName" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="PhoneEditText">
+        <attr name="separatorColor" format="color" />
+        <attr name="separatorHeight" format="dimension" />
+        <attr name="separatorWidth" format="dimension" />
+        <attr name="separatorLeftMargin" format="dimension" />
+        <attr name="separatorRightMargin" format="dimension" />
+        <attr name="countrySelectorTextAppearance" format="reference" />
+        <attr name="marginBetweenFlagAndCode" format="dimension" />
+    </declare-styleable>
+
     <attr name="countryItemViewStyle" format="reference" />
+    <attr name="phoneEditTextStyle" format="reference" />
 </resources>

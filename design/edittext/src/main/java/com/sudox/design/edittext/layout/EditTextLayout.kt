@@ -2,11 +2,11 @@ package com.sudox.design.edittext.layout
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.GradientDrawable
+import android.os.Build
+import android.text.Layout
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
@@ -19,8 +19,8 @@ class EditTextLayout : ViewGroup {
     var errorColor = 0
         set(value) {
             if (errorText != null) {
+                childView?.changeStrokeColor(this, strokeWidth, value)
                 errorTextView.setTextColor(value)
-                changeStrokeColor(value)
             }
 
             field = value
@@ -31,9 +31,13 @@ class EditTextLayout : ViewGroup {
     var errorText: String?
         get() = errorTextView.text?.toString()
         set(value) {
+            if (errorTextView.text == value) {
+                return
+            }
+
             errorTextView.text = value
 
-            changeStrokeColor(if (value != null) {
+            childView?.changeStrokeColor(this, strokeWidth, if (value != null) {
                 errorColor
             } else {
                 strokeColor
@@ -48,7 +52,7 @@ class EditTextLayout : ViewGroup {
             field = value
 
             if (errorText == null) {
-                changeStrokeColor(value)
+                childView?.changeStrokeColor(this, strokeWidth, value)
             }
 
             requestLayout()
@@ -59,7 +63,7 @@ class EditTextLayout : ViewGroup {
         set(value) {
             field = value
 
-            changeStrokeColor(if (errorText != null) {
+            childView?.changeStrokeColor(this, value, if (errorText != null) {
                 errorColor
             } else {
                 strokeColor
@@ -83,17 +87,14 @@ class EditTextLayout : ViewGroup {
             invalidate()
         }
 
-    var childView: EditText? = null
+    var childView: EditTextLayoutChild? = null
         set(value) {
             if (field != null) {
-                removeView(field)
+                removeView(field as View)
             }
 
             field = value?.apply {
-                layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-                errorText = errorText // Restore stroke color
-
-                addView(this)
+                addView(this as View)
             }
 
             requestLayout()
@@ -101,6 +102,11 @@ class EditTextLayout : ViewGroup {
         }
 
     private var errorTextView = AppCompatTextView(context).apply {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            breakStrategy = Layout.BREAK_STRATEGY_SIMPLE
+            hyphenationFrequency = Layout.HYPHENATION_FREQUENCY_NONE
+        }
+
         isSingleLine = true
         maxLines = 1
 
@@ -159,12 +165,5 @@ class EditTextLayout : ViewGroup {
         val errorRightBorder = errorLeftBorder + errorTextView.measuredWidth
 
         errorTextView.layout(errorLeftBorder, errorTopBorder, errorRightBorder, errorBottomBorder)
-    }
-
-    private fun changeStrokeColor(color: Int) {
-        childView?.let {
-            (it.background as GradientDrawable).setStroke(strokeWidth, color)
-            it.invalidate()
-        }
     }
 }

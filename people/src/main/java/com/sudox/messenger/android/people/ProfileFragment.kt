@@ -8,6 +8,8 @@ import android.widget.EditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.countries.COUNTRIES
+import com.sudox.messenger.android.countries.views.PhoneEditText
 import kotlinx.android.synthetic.main.fragment_profile.editTextLayout
 
 class ProfileFragment : CoreFragment() {
@@ -19,7 +21,10 @@ class ProfileFragment : CoreFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        editTextLayout.childView = EditText(context)
+        editTextLayout.childView = PhoneEditText(context!!).apply {
+            vo = COUNTRIES["RU"]
+        }
+
         editTextLayout.postDelayed({
             editTextLayout.errorText = "Error"
         }, 6000L)
