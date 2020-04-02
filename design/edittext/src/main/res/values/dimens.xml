@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="edittextlayout_error_text_size">13sp</dimen>
+    <dimen name="edittextlayout_error_top_margin">5dp</dimen>
+    <dimen name="edittextlayout_error_vertical_margin">17dp</dimen>
+
     <dimen name="edittext_stroke_width">1dp</dimen>
     <dimen name="edittext_padding_left">20dp</dimen>
     <dimen name="edittext_padding_right">20dp</dimen>

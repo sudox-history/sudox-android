@@ -5,24 +5,16 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.sudox.design.appbar.AppBarLayout
-            android:id="@+id/appbarLayout"
+        <com.sudox.design.edittext.layout.EditTextLayout
+            android:id="@+id/editTextLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </FrameLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

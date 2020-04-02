@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="Sudox.EditTextLayout" parent="">
+        <item name="strokeColor">@color/edittext_stroke_color</item>
+        <item name="strokeWidth">@dimen/edittext_stroke_width</item>
+        <item name="errorTextTopMargin">@dimen/edittextlayout_error_top_margin</item>
+        <item name="errorTextVerticalMargin">@dimen/edittextlayout_error_vertical_margin</item>
+        <item name="errorTextAppearance">@style/Sudox.EditTextLayout.ErrorTextAppearance</item>
+        <item name="errorColor">@color/edittextlayout_error_color</item>
+    </style>
+
+    <style name="Sudox.EditTextLayout.ErrorTextAppearance" parent="">
+        <item name="android:textSize">@dimen/edittextlayout_error_text_size</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+
     <style name="Sudox.EditText" parent="android:Widget.EditText">
         <item name="fontFamily">@font/opensans_semibold</item>
         <item name="android:fontFamily">@font/opensans_semibold</item>
