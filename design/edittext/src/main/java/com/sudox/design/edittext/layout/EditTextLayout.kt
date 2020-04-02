@@ -3,18 +3,19 @@ package com.sudox.design.edittext.layout
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.os.Parcelable
 import android.text.Layout
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.design.edittext.R
+import com.sudox.design.saveableview.SaveableViewGroup
 
-class EditTextLayout : ViewGroup {
+class EditTextLayout : SaveableViewGroup<EditTextLayout, EditTextLayoutState> {
 
     var errorColor = 0
         set(value) {
@@ -165,5 +166,9 @@ class EditTextLayout : ViewGroup {
         val errorRightBorder = errorLeftBorder + errorTextView.measuredWidth
 
         errorTextView.layout(errorLeftBorder, errorTopBorder, errorRightBorder, errorBottomBorder)
+    }
+
+    override fun createStateInstance(superState: Parcelable): EditTextLayoutState {
+        return EditTextLayoutState(superState)
     }
 }

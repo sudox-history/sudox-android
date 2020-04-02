@@ -7,10 +7,11 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
+import android.os.Parcelable
 import android.text.Layout
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.ViewGroup
+import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
@@ -21,11 +22,13 @@ import androidx.core.widget.TextViewCompat.setTextAppearance
 import com.sudox.design.edittext.BasicEditText
 import com.sudox.design.edittext.layout.EditTextLayout
 import com.sudox.design.edittext.layout.EditTextLayoutChild
+import com.sudox.design.saveableview.SaveableViewGroup
 import com.sudox.messenger.android.countries.R
+import com.sudox.messenger.android.countries.views.state.PhoneEditTextState
 import com.sudox.messenger.android.countries.vos.CountryVO
 import kotlin.math.max
 
-class PhoneEditText : ViewGroup, EditTextLayoutChild {
+class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, EditTextLayoutChild {
 
     private var separatorColor: Int
         get() = separatorPaint.color
@@ -95,7 +98,8 @@ class PhoneEditText : ViewGroup, EditTextLayoutChild {
         this@PhoneEditText.addView(this)
     }
 
-    private var editText = BasicEditText(context).apply {
+    internal var editText = BasicEditText(context).apply {
+        id = View.generateViewId()
         isSingleLine = true
         maxLines = 1
 
@@ -181,5 +185,9 @@ class PhoneEditText : ViewGroup, EditTextLayoutChild {
         }
 
         invalidate()
+    }
+
+    override fun createStateInstance(superState: Parcelable): PhoneEditTextState {
+        return PhoneEditTextState(superState)
     }
 }
