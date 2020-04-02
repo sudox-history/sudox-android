@@ -7,5 +7,4 @@
         android:color="@color/edittext_stroke_color" />
 
     <corners android:radius="@dimen/edittext_corner_radius" />
-    <solid android:color="@color/edittext_background_color" />
 </shape>

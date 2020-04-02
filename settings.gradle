@@ -4,6 +4,7 @@ include ':app'
 include ':api'
 
 include ':design'
+include ':design:edittext'
 include ':design:tablayout'
 include ':design:viewlist'
 include ':design:saveableview'

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.EditText" parent="android:Widget.EditText">
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textSize">@dimen/edittext_text_size</item>
+        <item name="android:textColor">@color/edittext_text_color</item>
+        <item name="android:textColorHint">@color/edittext_hint_text_color</item>
+        <item name="android:background">@drawable/drawable_edittext</item>
+
+        <item name="android:paddingLeft">@dimen/edittext_padding_left</item>
+        <item name="android:paddingRight">@dimen/edittext_padding_right</item>
+        <item name="android:paddingBottom">@dimen/edittext_padding_bottom</item>
+        <item name="android:paddingTop">@dimen/edittext_padding_top</item>
+    </style>
+</resources>

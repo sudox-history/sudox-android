@@ -8,6 +8,7 @@ apply from: '../configs/robolectric.gradle'
 dependencies {
     api project(path: ':design:common')
     api project(path: ':design:appbar')
+    api project(path: ':design:edittext')
     api project(path: ':design:viewlist')
     api project(path: ':design:tablayout')
     api project(path: ':design:circularupdatableview')

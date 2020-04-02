@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="EditTextLayout">
+        <attr name="strokeColor" format="color" />
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="errorTextAppearance" format="reference" />
+        <attr name="errorTextVerticalMargin" format="dimension" />
+        <attr name="errorTextTopMargin" format="dimension" />
+        <attr name="errorColor" format="color" />
+    </declare-styleable>
+
+    <attr name="editTextLayoutStyle" format="reference" />
+</resources>
