@@ -2,6 +2,7 @@ package com.sudox.messenger.android.messages.vos
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.text.SpannableString
 import android.view.View
 import com.sudox.messenger.android.people.common.views.AvatarImageView
 
@@ -9,7 +10,7 @@ interface DialogVO {
 
     val dialogId: Long
     var isMuted: Boolean
-    var isViewed: Boolean
+    var isViewedByMe: Boolean
     var time: Long
     var messagesCount: Int
     var isSentMessageDelivered: Boolean
@@ -28,7 +29,7 @@ interface DialogVO {
      * @param context Контекст активности/приложения
      * @return последнее сообщение
      */
-    fun getLastMessage(context: Context): String
+    fun getLastMessage(context: Context): SpannableString
 
     /**
      * Возвращает View аватара диалога
