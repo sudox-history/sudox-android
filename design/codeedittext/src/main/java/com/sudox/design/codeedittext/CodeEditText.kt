@@ -2,6 +2,7 @@ package com.sudox.design.codeedittext
 
 import android.content.Context
 import android.os.Build
+import android.os.Parcelable
 import android.text.InputType
 import android.text.Layout
 import android.util.AttributeSet
@@ -13,9 +14,10 @@ import com.sudox.design.codeedittext.watchers.CodeTextWatcher
 import com.sudox.design.edittext.BasicEditText
 import com.sudox.design.edittext.layout.EditTextLayout
 import com.sudox.design.edittext.layout.EditTextLayoutChild
+import com.sudox.design.saveableview.SaveableViewGroup
 import kotlin.math.max
 
-class CodeEditText : ViewGroup, EditTextLayoutChild {
+class CodeEditText : SaveableViewGroup<CodeEditText, CodeEditTextState>, EditTextLayoutChild {
 
     var codeFilledCallback: ((String) -> (Unit))? = null
     var digitsCount: Int
@@ -135,5 +137,9 @@ class CodeEditText : ViewGroup, EditTextLayoutChild {
 
             digitEditText.requestFocus()
         }
+    }
+
+    override fun createStateInstance(superState: Parcelable): CodeEditTextState {
+        return CodeEditTextState(superState)
     }
 }
