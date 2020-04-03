@@ -26,9 +26,10 @@ class ProfileFragment : CoreFragment() {
             vo = COUNTRIES["RU"]
         }
 
-//        editTextLayout.postDelayed({
-//            editTextLayout.errorText = "Error"
-//        }, 6000L)
+        editTextLayout.postDelayed({
+            (editTextLayout.childView as PhoneEditText).vo = COUNTRIES["UA"]
+            editTextLayout.errorText = "Error"
+        }, 6000L)
     }
 
     inner class TestViewHolder(val view: AppCompatTextView) : RecyclerView.ViewHolder(view)

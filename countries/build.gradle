@@ -10,4 +10,8 @@ dependencies {
     implementation libraries.core_ktx
     implementation libraries.appcompat
     implementation libraries.recyclerview
+    implementation libraries.libphonenumber
+
+    implementation libraries.dagger
+    kapt libraries.dagger_compiler
 }

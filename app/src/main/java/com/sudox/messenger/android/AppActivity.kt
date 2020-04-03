@@ -9,10 +9,13 @@ import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.core.inject.CoreComponent
 import com.sudox.messenger.android.core.inject.CoreModule
-import com.sudox.messenger.android.core.inject.DaggerCoreComponent
+import com.sudox.messenger.android.countries.inject.CountriesModule
+import com.sudox.messenger.android.inject.AppComponent
+import com.sudox.messenger.android.inject.DaggerAppComponent
 import com.sudox.messenger.android.layouts.AppLayout
 import com.sudox.messenger.android.managers.AppNavigationManager
 import com.sudox.messenger.android.managers.AppScreenManager
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 
 /**
  * Главная Activity данного приложения.
@@ -26,7 +29,7 @@ import com.sudox.messenger.android.managers.AppScreenManager
 class AppActivity : AppCompatActivity(), CoreActivity {
 
     private var navigationManager: AppNavigationManager? = null
-    private var coreComponent: CoreComponent? = null
+    private var appComponent: AppComponent? = null
     private var appLayout: AppLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,9 +50,10 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             setContentView(this)
         }
 
-        coreComponent = DaggerCoreComponent
+        appComponent = DaggerAppComponent
                 .builder()
                 .coreModule(CoreModule(navigationManager!!, AppScreenManager(this)))
+                .countriesModule(CountriesModule(PhoneNumberUtil.createInstance(this)))
                 .build()
 
         super.onCreate(savedInstanceState)
@@ -93,7 +97,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun getCoreComponent(): CoreComponent {
-        return coreComponent!!
+        return appComponent!!
     }
 
     override fun onBackPressed() {

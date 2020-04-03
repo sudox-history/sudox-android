@@ -23,9 +23,14 @@ import com.sudox.design.edittext.BasicEditText
 import com.sudox.design.edittext.layout.EditTextLayout
 import com.sudox.design.edittext.layout.EditTextLayoutChild
 import com.sudox.design.saveableview.SaveableViewGroup
+import com.sudox.messenger.android.core.CoreActivity
 import com.sudox.messenger.android.countries.R
+import com.sudox.messenger.android.countries.inject.CountriesComponent
 import com.sudox.messenger.android.countries.views.state.PhoneEditTextState
+import com.sudox.messenger.android.countries.views.watchers.PhoneTextWatcher
 import com.sudox.messenger.android.countries.vos.CountryVO
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import javax.inject.Inject
 import kotlin.math.max
 
 class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, EditTextLayoutChild {
@@ -72,6 +77,7 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         set(value) {
             @SuppressLint("SetTextI18n")
             if (value != null) {
+                phoneTextWatcher?.setCountry(value.regionCode, value.countryCode)
                 countrySelector.setCompoundDrawablesWithIntrinsicBounds(value.flagId, 0, 0, 0)
                 countrySelector.text = "+${value.countryCode}"
             }
@@ -114,6 +120,28 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         background = null
     }
 
+    @Inject
+    @JvmField
+    var phoneNumberUtil: PhoneNumberUtil? = null
+
+    var phoneTextWatcher: PhoneTextWatcher? = null
+        @Inject
+        set(value) {
+            if (field != null) {
+                editText.removeTextChangedListener(field)
+            }
+
+            if (value != null) {
+                editText.addTextChangedListener(value.apply {
+                    if (vo != null) {
+                        setCountry(vo!!.regionCode, vo!!.countryCode)
+                    }
+                })
+            }
+
+            field = value
+        }
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.phoneEditTextStyle)
 
@@ -133,6 +161,8 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
             countrySelector.updatePadding(left = editText.paddingLeft, right = separatorLeftMargin)
             editText.updatePadding(left = separatorRightMargin)
         }
+
+        ((context as CoreActivity).getCoreComponent() as CountriesComponent).inject(this)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

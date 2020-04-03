@@ -1,7 +1,7 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(true, true, false, true)
+registerModule(true, true, true, true)
 
 android {
     buildTypes {
@@ -19,17 +19,21 @@ android {
 apply from: '../configs/robolectric.gradle'
 
 dependencies {
+    api project(path: ':core')
     api project(path: ':auth')
     api project(path: ':design')
     api project(path: ':people')
-    api project(path: ':core')
     api project(path: ':messages')
+    api project(path: ':countries')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
     implementation libraries.annotations
     implementation libraries.coordinator_layout
     implementation libraries.material_components
+    implementation libraries.libphonenumber
+    implementation libraries.dagger
+    kapt libraries.dagger_compiler
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric
