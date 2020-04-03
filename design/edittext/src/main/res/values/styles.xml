@@ -23,6 +23,8 @@
         <item name="android:textColor">@color/edittext_text_color</item>
         <item name="android:textColorHint">@color/edittext_hint_text_color</item>
         <item name="android:background">@drawable/drawable_edittext</item>
+        <item name="android:minWidth">@dimen/edittext_min_width</item>
+        <item name="android:minHeight">@dimen/edittext_min_height</item>
 
         <item name="android:paddingLeft">@dimen/edittext_padding_left</item>
         <item name="android:paddingRight">@dimen/edittext_padding_right</item>

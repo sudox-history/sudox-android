@@ -5,6 +5,7 @@ registerModule(false, true, false, true)
 
 dependencies {
     api project(path: ':design:common')
+    api project(path: ':design:edittext')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
