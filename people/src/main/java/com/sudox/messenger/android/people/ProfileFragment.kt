@@ -22,12 +22,12 @@ class ProfileFragment : CoreFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         editTextLayout.childView = PhoneEditText(context!!).apply {
+            autofillMyNumber = true
             id = View.generateViewId()
-            vo = COUNTRIES["RU"]
+            vo = COUNTRIES["UA"]
         }
 
         editTextLayout.postDelayed({
-            (editTextLayout.childView as PhoneEditText).vo = COUNTRIES["UA"]
             editTextLayout.errorText = "Error"
         }, 6000L)
     }

@@ -8,10 +8,12 @@ import android.graphics.Rect
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Parcelable
+import android.text.InputType
 import android.text.Layout
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
@@ -19,7 +21,6 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat.setTextAppearance
-import com.sudox.design.edittext.BasicEditText
 import com.sudox.design.edittext.layout.EditTextLayout
 import com.sudox.design.edittext.layout.EditTextLayoutChild
 import com.sudox.design.saveableview.SaveableViewGroup
@@ -77,6 +78,12 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         set(value) {
             @SuppressLint("SetTextI18n")
             if (value != null) {
+                val exampleNumber = phoneNumberUtil!!.getExampleNumber(value.regionCode)
+
+                editText.hint = phoneNumberUtil!!
+                        .format(exampleNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
+                        .removePrefix("+${value.countryCode} ")
+
                 phoneTextWatcher?.setCountry(value.regionCode, value.countryCode)
                 countrySelector.setCompoundDrawablesWithIntrinsicBounds(value.flagId, 0, 0, 0)
                 countrySelector.text = "+${value.countryCode}"
@@ -85,6 +92,20 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
             field = value
             requestLayout()
             invalidate()
+        }
+
+    var autofillMyNumber = false
+        set(value) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (value) {
+                    editText.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_YES_EXCLUDE_DESCENDANTS
+                    editText.setAutofillHints(View.AUTOFILL_HINT_PHONE)
+                } else {
+                    editText.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+                }
+
+                field = value
+            }
         }
 
     private var separatorPaint = Paint()
@@ -104,8 +125,10 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         this@PhoneEditText.addView(this)
     }
 
-    internal var editText = BasicEditText(context).apply {
+    internal var editText = PhoneNumberEditText(context).apply {
         id = View.generateViewId()
+        inputType = InputType.TYPE_CLASS_PHONE
+        imeOptions = EditorInfo.IME_ACTION_DONE
         isSingleLine = true
         maxLines = 1
 
@@ -123,7 +146,6 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
     @Inject
     @JvmField
     var phoneNumberUtil: PhoneNumberUtil? = null
-
     var phoneTextWatcher: PhoneTextWatcher? = null
         @Inject
         set(value) {
@@ -158,6 +180,7 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
             val separatorLeftMargin = it.getDimensionPixelSizeOrThrow(R.styleable.PhoneEditText_separatorLeftMargin)
             val separatorRightMargin = it.getDimensionPixelSizeOrThrow(R.styleable.PhoneEditText_separatorRightMargin)
 
+            autofillMyNumber = it.getBoolean(R.styleable.PhoneEditText_autofillMyNumber, false)
             countrySelector.updatePadding(left = editText.paddingLeft, right = separatorLeftMargin)
             editText.updatePadding(left = separatorRightMargin)
         }

@@ -7,7 +7,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import com.sudox.design.edittext.layout.EditTextLayout
 import com.sudox.design.edittext.layout.EditTextLayoutChild
 
-class BasicEditText : AppCompatEditText, EditTextLayoutChild {
+open class BasicEditText : AppCompatEditText, EditTextLayoutChild {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)

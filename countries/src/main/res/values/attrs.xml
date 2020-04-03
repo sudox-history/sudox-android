@@ -16,6 +16,7 @@
         <attr name="separatorRightMargin" format="dimension" />
         <attr name="countrySelectorTextAppearance" format="reference" />
         <attr name="marginBetweenFlagAndCode" format="dimension" />
+        <attr name="autofillMyNumber" format="boolean" />
     </declare-styleable>
 
     <attr name="countryItemViewStyle" format="reference" />
