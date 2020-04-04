@@ -21,6 +21,7 @@
         <item name="fontFamily">@font/opensans_regular</item>
 
         <!--    EditTexts     -->
+        <item name="editTextLayoutStyle">@style/Sudox.EditTextLayout</item>
         <item name="android:editTextStyle">@style/Sudox.EditText</item>
         <item name="editTextStyle">@style/Sudox.EditText</item>
 
@@ -36,12 +37,8 @@
         <item name="bottomNavigationStyle">@style/Sudox.BottomNavigationView</item>
         <item name="tabStyle">@style/Sudox.TabLayout</item>
 
+        <!--    Others     -->
         <item name="circularUpdatableViewStyle">@style/Sudox.CircularUpdatableView</item>
-        <item name="countryCodeSelectorStyle">@style/Sudox.CountryCodeSelector</item>
-        <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
-        <item name="codeEditTextStyle">@style/Sudox.CodeEditText</item>
-        <item name="nicknameEditTextStyle">@style/Sudox.NicknameEditText</item>
-        <item name="editTextLayoutStyle">@style/Sudox.EditTextLayout</item>
 
         <!--    Popups    -->
         <item name="popupItemViewStyle">@style/Sudox.PopupItemView</item>
@@ -63,30 +60,5 @@
         <item name="android:paddingBottom">@dimen/screen_top_padding</item>
         <item name="android:paddingRight">@dimen/screen_right_padding</item>
         <item name="android:paddingLeft">@dimen/screen_left_padding</item>
-    </style>
-
-    <style name="Sudox.CountryCodeSelector" parent="">
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
-
-        <item name="flagWidth">@dimen/countrycodeselector_flag_width</item>
-        <item name="flagHeight">@dimen/countrycodeselector_flag_height</item>
-        <item name="flagMargin">@dimen/countrycodeselector_flag_margin</item>
-    </style>
-
-    <style name="Sudox.PhoneEditText" parent="">
-        <item name="separatorDrawable">@color/phoneedittext_separator_color</item>
-        <item name="separatorDrawableWidth">@dimen/phoneedittext_separator_width</item>
-        <item name="separatorDrawableHeight">@dimen/phoneedittext_separator_height</item>
-        <item name="separatorLeftMargin">@dimen/phoneedittext_separator_left_margin</item>
-        <item name="separatorRightMargin">@dimen/phoneedittext_separator_right_margin</item>
-    </style>
-
-    <style name="Sudox.CodeEditText" parent="">
-        <item name="digitsCount">@integer/default_code_length</item>
-    </style>
-
-    <style name="Sudox.NicknameEditText" parent="Sudox.EditText">
-        <item name="tagTextColor">@color/nicknameedittext_tag_text_color</item>
     </style>
 </resources>

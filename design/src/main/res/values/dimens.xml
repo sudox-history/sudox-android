@@ -3,22 +3,4 @@
     <dimen name="screen_left_padding">17dp</dimen>
     <dimen name="screen_right_padding">17dp</dimen>
     <dimen name="screen_top_padding">11dp</dimen>
-
-    <dimen name="edittext_horizontal_padding">21dp</dimen>
-    <dimen name="edittext_vertical_padding">16dp</dimen>
-    <dimen name="edittext_corner_radius">6dp</dimen>
-    <dimen name="edittext_text_size">16sp</dimen>
-    <dimen name="edittext_min_height">51dp</dimen>
-    <dimen name="edittext_error_text_top_margin">5dp</dimen>
-    <dimen name="edittext_error_text_left_margin">17dp</dimen>
-    <dimen name="edittext_error_text_size">13sp</dimen>
-
-    <dimen name="countrycodeselector_flag_width">23dp</dimen>
-    <dimen name="countrycodeselector_flag_height">16dp</dimen>
-    <dimen name="countrycodeselector_flag_margin">13dp</dimen>
-
-    <dimen name="phoneedittext_separator_width">1dp</dimen>
-    <dimen name="phoneedittext_separator_height">23dp</dimen>
-    <dimen name="phoneedittext_separator_left_margin">13dp</dimen>
-    <dimen name="phoneedittext_separator_right_margin">13dp</dimen>
 </resources>
