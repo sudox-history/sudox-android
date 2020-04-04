@@ -17,6 +17,7 @@ class AuthPhoneFragment : CoreFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return AuthScreenLayout(context!!).apply {
+            id = 455
             vo = screenVO
         }
     }

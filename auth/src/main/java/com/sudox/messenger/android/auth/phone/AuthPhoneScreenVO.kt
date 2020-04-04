@@ -2,12 +2,14 @@ package com.sudox.messenger.android.auth.phone
 
 import android.content.Context
 import android.view.View
+import com.sudox.design.edittext.layout.EditTextLayout
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.vos.AuthScreenVO
 import com.sudox.messenger.android.countries.views.PhoneEditText
 
 class AuthPhoneScreenVO : AuthScreenVO {
 
+    var phoneEditTextLayout: EditTextLayout? = null
     var phoneEditText: PhoneEditText? = null
 
     override fun getTitle(context: Context): String {
@@ -23,10 +25,15 @@ class AuthPhoneScreenVO : AuthScreenVO {
     }
 
     override fun getChildViews(context: Context): Array<View> {
-        if (phoneEditText == null) {
+        if (phoneEditTextLayout == null) {
             phoneEditText = PhoneEditText(context)
+            phoneEditTextLayout = EditTextLayout(context).apply {
+                childView = phoneEditText
+            }
+
+            phoneEditText!!.useDefaultCountry()
         }
 
-        return arrayOf(phoneEditText as View)
+        return arrayOf(phoneEditTextLayout as View)
     }
 }

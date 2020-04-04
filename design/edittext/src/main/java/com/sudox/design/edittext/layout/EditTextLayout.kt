@@ -94,10 +94,12 @@ class EditTextLayout : SaveableViewGroup<EditTextLayout, EditTextLayoutState> {
                 removeView(field as View)
             }
 
-            field = value?.apply {
-                addView(this as View)
+            (value as? View)?.let {
+                it.id = View.generateViewId()
+                addView(it)
             }
 
+            field = value
             requestLayout()
             invalidate()
         }

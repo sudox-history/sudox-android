@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
+import android.os.Parcelable
 import android.text.Layout
 import android.util.AttributeSet
 import android.view.View
@@ -14,11 +15,12 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.TextViewCompat.setTextAppearance
+import com.sudox.design.saveableview.SaveableViewGroup
 import com.sudox.messenger.android.auth.R
 import com.sudox.messenger.android.auth.vos.AuthScreenVO
 import kotlin.math.max
 
-class AuthScreenLayout : ViewGroup {
+class AuthScreenLayout : SaveableViewGroup<AuthScreenLayout, AuthScreenLayoutState> {
 
     var marginBetweenChildren = 0
         set(value) {
@@ -95,9 +97,10 @@ class AuthScreenLayout : ViewGroup {
         }
     }
 
-    private var childViews: Array<View>? = null
+    internal var childViews: Array<View>? = null
         set(value) {
             value?.forEach {
+                it.id = View.generateViewId()
                 addView(it)
             }
 
@@ -136,7 +139,7 @@ class AuthScreenLayout : ViewGroup {
                 marginBetweenTitleAndDescription +
                 descriptionTextView.measuredHeight +
                 marginBetweenDescriptionAndChild +
-                max((childViews?.size ?: 0) - 1,  0) +
+                max((childViews?.size ?: 0) - 1, 0) +
                 childHeight +
                 paddingBottom
 
@@ -168,5 +171,9 @@ class AuthScreenLayout : ViewGroup {
             it.layout(leftBorder, topBorder, rightBorder, bottomBorder)
             topBorder = bottomBorder + marginBetweenChildren
         }
+    }
+
+    override fun createStateInstance(superState: Parcelable): AuthScreenLayoutState {
+        return AuthScreenLayoutState(superState)
     }
 }
