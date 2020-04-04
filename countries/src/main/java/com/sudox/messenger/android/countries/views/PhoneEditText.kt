@@ -240,6 +240,10 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         invalidate()
     }
 
+    override fun canIgnoreErrorLeftMargin(): Boolean {
+        return false
+    }
+
     override fun createStateInstance(superState: Parcelable): PhoneEditTextState {
         return PhoneEditTextState(superState)
     }

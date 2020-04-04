@@ -10,4 +10,11 @@ interface EditTextLayoutChild {
      * @param color Цвет, который нужно присвоить обводке
      */
     fun changeStrokeColor(layout: EditTextLayout, width: Int, color: Int)
+
+    /**
+     * Можно ли игнорировать левый отступ ошибки?
+     *
+     * @return True - если можно, False - если нельзя
+     */
+    fun canIgnoreErrorLeftMargin(): Boolean
 }

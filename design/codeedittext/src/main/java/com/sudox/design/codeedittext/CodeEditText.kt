@@ -8,7 +8,6 @@ import android.text.Layout
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import com.sudox.design.codeedittext.watchers.CodeTextWatcher
 import com.sudox.design.edittext.BasicEditText
@@ -137,6 +136,10 @@ class CodeEditText : SaveableViewGroup<CodeEditText, CodeEditTextState>, EditTex
 
             digitEditText.requestFocus()
         }
+    }
+
+    override fun canIgnoreErrorLeftMargin(): Boolean {
+        return true
     }
 
     override fun createStateInstance(superState: Parcelable): CodeEditTextState {

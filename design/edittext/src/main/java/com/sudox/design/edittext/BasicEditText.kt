@@ -17,4 +17,8 @@ open class BasicEditText : AppCompatEditText, EditTextLayoutChild {
         (background as GradientDrawable).setStroke(width, color)
         invalidate()
     }
+
+    override fun canIgnoreErrorLeftMargin(): Boolean {
+        return false
+    }
 }

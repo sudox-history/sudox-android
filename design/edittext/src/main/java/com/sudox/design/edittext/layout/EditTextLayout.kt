@@ -162,7 +162,12 @@ class EditTextLayout : SaveableViewGroup<EditTextLayout, EditTextLayoutState> {
 
         val errorTopBorder = childBottomBorder + errorTextTopMargin
         val errorBottomBorder = errorTopBorder + errorTextView.measuredHeight
-        val errorLeftBorder = childLeftBorder + errorTextVerticalMargin
+        var errorLeftBorder = childLeftBorder
+
+        if (childView?.canIgnoreErrorLeftMargin() == false) {
+            errorLeftBorder += errorTextVerticalMargin
+        }
+
         val errorRightBorder = errorLeftBorder + errorTextView.measuredWidth
 
         errorTextView.layout(errorLeftBorder, errorTopBorder, errorRightBorder, errorBottomBorder)
