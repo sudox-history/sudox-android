@@ -1,6 +1,8 @@
-package com.sudox.messenger.android.countries
+package com.sudox.messenger.android.countries.helpers
 
+import com.sudox.messenger.android.countries.R
 import com.sudox.messenger.android.countries.vos.CountryVO
+import java.util.Locale
 
 val COUNTRIES = hashMapOf(
         createCountryPair(CountryVO("RU", R.string.russia, R.drawable.ic_flag_russia, 7)),
@@ -17,6 +19,23 @@ val COUNTRIES = hashMapOf(
         createCountryPair(CountryVO("UA", R.string.ukraine, R.drawable.ic_flag_ukraine, 380))
 )
 
-fun createCountryPair(countryVO: CountryVO): Pair<String, CountryVO> {
+/**
+ * Получает страну пользователя на основе настроек его устройства.
+ * Если его страна не поддерживается, то выдает дефолтную страну.
+ *
+ * @return Пара (ViewObject страны)-(Совпадает ли она с настройками пользователя)
+ */
+fun getDefaultCountryVO(): Pair<CountryVO, Boolean> {
+    val regionCode = Locale.getDefault().country
+    val country = COUNTRIES[regionCode]
+
+    return if (country != null) {
+        Pair(country, true)
+    } else {
+        Pair(COUNTRIES["RU"]!!, false)
+    }
+}
+
+private fun createCountryPair(countryVO: CountryVO): Pair<String, CountryVO> {
     return countryVO.regionCode to countryVO
 }

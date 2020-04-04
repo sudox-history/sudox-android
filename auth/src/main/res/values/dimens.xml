@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="auth_padding_top_percent" format="float" type="dimen">0.07</item>
-
-    <dimen name="auth_title_text_size">21sp</dimen>
-    <dimen name="auth_description_text_size">15sp</dimen>
-    <dimen name="auth_description_drawable_padding">16dp</dimen>
-    <dimen name="auth_description_margin_top">17dp</dimen>
-
-    <dimen name="auth_first_edit_text_margin">36dp</dimen>
-
-    <dimen name="authcountryadapter_items_margin">20dp</dimen>
+    <dimen name="authscreenlayout_padding_top">50dp</dimen>
+    <dimen name="authscreenlayout_margin_between_children">16dp</dimen>
+    <dimen name="authscreenlayout_margin_between_description_and_child">41dp</dimen>
+    <dimen name="authscreenlayout_margin_between_title_and_description">16dp</dimen>
+    <dimen name="authscreenlayout_margin_between_icon_and_description">16dp</dimen>
+    <dimen name="authscreenlayout_description_text_size">15sp</dimen>
+    <dimen name="authscreenlayout_title_text_size">21sp</dimen>
 </resources>

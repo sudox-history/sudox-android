@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AuthScreenLayout">
+        <attr name="marginBetweenChildren" format="dimension" />
+        <attr name="marginBetweenDescriptionAndChild" format="dimension" />
+        <attr name="marginBetweenTitleAndDescription" format="dimension" />
+        <attr name="marginBetweenIconAndDescription" format="dimension" />
+        <attr name="descriptionTextAppearance" format="reference" />
+        <attr name="titleTextAppearance" format="reference" />
+    </declare-styleable>
+
+    <attr name="authScreenLayoutStyle" format="reference" />
+</resources>

@@ -8,6 +8,7 @@ import android.graphics.Rect
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Parcelable
+import android.telephony.PhoneNumberUtils
 import android.text.InputType
 import android.text.Layout
 import android.util.AttributeSet
@@ -25,11 +26,14 @@ import com.sudox.design.edittext.layout.EditTextLayout
 import com.sudox.design.edittext.layout.EditTextLayoutChild
 import com.sudox.design.saveableview.SaveableViewGroup
 import com.sudox.messenger.android.core.CoreActivity
+import com.sudox.messenger.android.countries.helpers.COUNTRIES
 import com.sudox.messenger.android.countries.R
+import com.sudox.messenger.android.countries.helpers.getDefaultCountryVO
 import com.sudox.messenger.android.countries.inject.CountriesComponent
 import com.sudox.messenger.android.countries.views.state.PhoneEditTextState
 import com.sudox.messenger.android.countries.views.watchers.PhoneTextWatcher
 import com.sudox.messenger.android.countries.vos.CountryVO
+import io.michaelrocks.libphonenumber.android.NumberParseException
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import javax.inject.Inject
 import kotlin.math.max
@@ -41,6 +45,33 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         set(value) {
             separatorPaint.color = value
             invalidate()
+        }
+
+    var phoneNumber: String?
+        get() = "${vo!!.countryCode}${PhoneNumberUtils.stripSeparators(editText.text.toString())}"
+        set(value) {
+            try {
+                val phoneNumber = phoneNumberUtil!!.parse(value, null)
+                val regionCode = phoneNumberUtil!!.getRegionCodeForNumber(phoneNumber)
+                val countryVO = COUNTRIES[regionCode]
+
+                if (countryVO != null) {
+                    vo = countryVO
+                    editText.setText(value!!.removePrefix("+${phoneNumber.countryCode}"))
+                    editText.setSelection(editText.length())
+                } else {
+                    useDefaultCountry()
+
+                    (parent as EditTextLayout)
+                            .errorText = context.getString(R.string.sudox_not_working_in_this_country)
+                }
+
+            } catch (ex: NumberParseException) {
+                useDefaultCountry()
+
+                (parent as EditTextLayout)
+                        .errorText = context.getString(R.string.sudox_not_working_in_this_country)
+            }
         }
 
     var separatorHeight: Int
@@ -180,7 +211,6 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
             val separatorLeftMargin = it.getDimensionPixelSizeOrThrow(R.styleable.PhoneEditText_separatorLeftMargin)
             val separatorRightMargin = it.getDimensionPixelSizeOrThrow(R.styleable.PhoneEditText_separatorRightMargin)
 
-            autofillMyNumber = it.getBoolean(R.styleable.PhoneEditText_autofillMyNumber, false)
             countrySelector.updatePadding(left = editText.paddingLeft, right = separatorLeftMargin)
             editText.updatePadding(left = separatorRightMargin)
         }
@@ -242,6 +272,22 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
 
     override fun canIgnoreErrorLeftMargin(): Boolean {
         return false
+    }
+
+    /**
+     * Выставляет страну пользователя если она не выставлена
+     * Если страна не поддерживается, то отображается соответствующая ошибка и ставится страна по-умолчанию.
+     */
+    fun useDefaultCountry() {
+        if (vo == null) {
+            val pair = getDefaultCountryVO()
+
+            if (!pair.second) {
+                (parent as EditTextLayout).errorText = context.getString(R.string.sudox_not_working_in_this_country)
+            }
+
+            vo = pair.first
+        }
     }
 
     override fun createStateInstance(superState: Parcelable): PhoneEditTextState {

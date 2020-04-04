@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Sudox.Auth" parent="Sudox.Screen">
-        <item name="paddingTopPercent">@dimen/auth_padding_top_percent</item>
+    <style name="Sudox.AuthScreenLayout" parent="Sudox.Screen">
+        <item name="android:paddingTop">@dimen/authscreenlayout_padding_top</item>
+        <item name="marginBetweenChildren">@dimen/authscreenlayout_margin_between_children</item>
+        <item name="marginBetweenDescriptionAndChild">@dimen/authscreenlayout_margin_between_description_and_child</item>
+        <item name="marginBetweenTitleAndDescription">@dimen/authscreenlayout_margin_between_title_and_description</item>
+        <item name="marginBetweenIconAndDescription">@dimen/authscreenlayout_margin_between_icon_and_description</item>
+        <item name="descriptionTextAppearance">@style/Sudox.AuthScreenLayout.DescriptionTextAppearance</item>
+        <item name="titleTextAppearance">@style/Sudox.AuthScreenLayout.TitleTextAppearance</item>
     </style>
 
-    <style name="Sudox.Auth.Title" parent="android:Widget.TextView">
-        <item name="android:textSize">@dimen/auth_title_text_size</item>
-        <item name="android:fontFamily">@font/opensans_bold</item>
+    <style name="Sudox.AuthScreenLayout.TitleTextAppearance" parent="">
         <item name="fontFamily">@font/opensans_bold</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="android:textColor">@color/authscreenlayout_title_text_color</item>
+        <item name="android:textSize">@dimen/authscreenlayout_title_text_size</item>
     </style>
 
-    <style name="Sudox.Auth.Description" parent="android:Widget.TextView">
-        <item name="android:drawablePadding">@dimen/auth_description_drawable_padding</item>
-        <item name="android:layout_marginTop">@dimen/auth_description_margin_top</item>
-
-        <item name="android:textColor">@color/auth_description_text_color</item>
-        <item name="android:textSize">@dimen/auth_description_text_size</item>
-        <item name="android:fontFamily">@font/opensans_regular</item>
+    <style name="Sudox.AuthScreenLayout.DescriptionTextAppearance" parent="">
         <item name="fontFamily">@font/opensans_regular</item>
-    </style>
-
-    <style name="Sudox.Auth.EditText" parent="">
-        <item name="android:layout_marginTop">@dimen/auth_first_edit_text_margin</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:textColor">@color/authscreenlayout_description_text_color</item>
+        <item name="android:textSize">@dimen/authscreenlayout_description_text_size</item>
     </style>
 </resources>

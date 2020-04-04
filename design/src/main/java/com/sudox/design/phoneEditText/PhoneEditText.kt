@@ -53,11 +53,11 @@ class PhoneEditText : ViewGroup, EditTextLayoutChild {
             separatorRightMargin = it.getDimensionPixelSizeOrThrow(R.styleable.PhoneEditText_separatorRightMargin)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (it.getBoolean(R.styleable.PhoneEditText_autofillMyNumber, false)) {
-                    numberEditText.setAutofillHints(View.AUTOFILL_HINT_PHONE)
-                } else {
-                    numberEditText.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
-                }
+//                if (it.getBoolean(R.styleable.PhoneEditText_autofillMyNumber, false)) {
+//                    numberEditText.setAutofillHints(View.AUTOFILL_HINT_PHONE)
+//                } else {
+//                    numberEditText.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+//                }
             }
         }
 
