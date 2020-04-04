@@ -5,6 +5,7 @@ registerModule(false, false, true, true)
 
 dependencies {
     api project(path: ':design')
+    api project(path: ':design:common')
 
     implementation libraries.annotations
     implementation libraries.recyclerview

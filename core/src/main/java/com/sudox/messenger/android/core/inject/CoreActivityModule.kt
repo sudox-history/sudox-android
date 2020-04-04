@@ -1,23 +1,23 @@
 package com.sudox.messenger.android.core.inject
 
+import com.sudox.messenger.android.core.inject.scopes.CoreActivityScope
 import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.android.core.managers.ScreenManager
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
-class CoreModule(
+class CoreActivityModule(
         navigationManager: NavigationManager,
         screenManager: ScreenManager
 ) {
     val navigationManager: NavigationManager? = navigationManager
         @Provides
-        @Singleton
+        @CoreActivityScope
         get
 
     val screenManager: ScreenManager? = screenManager
         @Provides
-        @Singleton
+        @CoreActivityScope
         get
 }

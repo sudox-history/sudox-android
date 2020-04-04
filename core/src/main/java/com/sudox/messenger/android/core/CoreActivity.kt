@@ -2,7 +2,8 @@ package com.sudox.messenger.android.core
 
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 import com.sudox.design.appbar.vos.AppBarVO
-import com.sudox.messenger.android.core.inject.CoreComponent
+import com.sudox.messenger.android.core.inject.CoreActivityComponent
+import com.sudox.messenger.android.core.inject.CoreLoaderComponent
 
 /**
  * Интерфейс для связи CoreFragment и прочих классов с Activity.
@@ -27,10 +28,17 @@ interface CoreActivity {
     fun setAppBarLayoutViewObject(appBarLayoutVO: AppBarLayoutVO?)
 
     /**
-     * Возвращает основной компонент ядра.
+     * Возвращает основной компонет загрузчика.
+     *
+     * @return Компонент загрузчика с заданными зависимостями.
+     */
+    fun getLoaderComponent(): CoreLoaderComponent
+
+    /**
+     * Возвращает основной компонент активности.
      * Вызывается при создании Fragment'ов
      *
      * @return Компонент ядра с заданными зависимостями.
      */
-    fun getCoreComponent(): CoreComponent
+    fun getActivityComponent(): CoreActivityComponent
 }

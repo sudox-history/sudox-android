@@ -222,7 +222,7 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
             editText.updatePadding(left = separatorRightMargin)
         }
 
-        ((context as CoreActivity).getCoreComponent() as CountriesComponent).inject(this)
+        ((context as CoreActivity).getLoaderComponent() as CountriesComponent).inject(this)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

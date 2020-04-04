@@ -29,7 +29,7 @@ class AuthCodeScreenVO(
 
     override fun getDescription(context: Context): Triple<Int, Int, CharSequence> {
         if (phoneNumberUtil == null) {
-            ((context as CoreActivity).getCoreComponent() as AuthComponent).inject(this)
+            ((context as CoreActivity).getLoaderComponent() as AuthComponent).inject(this)
         }
 
         val formattedPhone = phoneNumberUtil!!.formatPhoneNumber(phoneNumber)

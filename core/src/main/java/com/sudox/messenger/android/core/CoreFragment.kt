@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.design.appbar.vos.BACK_BUTTON_TAG
-import com.sudox.design.hideSoftKeyboard
+import com.sudox.design.common.hideSoftKeyboard
 import com.sudox.messenger.android.core.managers.NavigationManager
 import com.sudox.messenger.android.core.managers.ScreenManager
 import com.sudox.messenger.android.core.tabs.TabsChildFragment
@@ -40,7 +40,7 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         coreActivity = activity as CoreActivity
-        coreActivity!!.getCoreComponent().inject(this)
+        coreActivity!!.getActivityComponent().inject(this)
 
         super.onCreate(savedInstanceState)
     }

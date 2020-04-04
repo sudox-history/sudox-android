@@ -25,6 +25,7 @@ dependencies {
     api project(path: ':people')
     api project(path: ':messages')
     api project(path: ':countries')
+    api project(path: ':api')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat

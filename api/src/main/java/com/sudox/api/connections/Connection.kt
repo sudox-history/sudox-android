@@ -6,7 +6,9 @@ package com.sudox.api.connections
  * Занимается поставкой байтов на сервер и обратно.
  * Также контроллирует свой статус.
  */
-interface Connection {
+abstract class Connection {
+
+    var listener: ConnectionListener? = null
 
     /**
      * Устанавливает соединение с сервером
@@ -14,20 +16,17 @@ interface Connection {
      * @param address Адрес сервера
      * @param port Порт сервера
      */
-    fun start(address: String, port: Int)
-
-    /**
-     * Устанавливает слушателя соединения.
-     * Может быть только один слушатель.
-     *
-     * @param listener Слушатель соединения.
-     */
-    fun setListener(listener: ConnectionListener)
+    abstract fun start(address: String, port: Int)
 
     /**
      * Отправляет информацию на сервер.
      *
      * @param bytes Байты, которые нужно отправить на сервер.
      */
-    fun sendData(bytes: ByteArray)
+    abstract fun sendData(bytes: ByteArray)
+
+    /**
+     * Прерывает соединение с сервером.
+     */
+    abstract fun end()
 }

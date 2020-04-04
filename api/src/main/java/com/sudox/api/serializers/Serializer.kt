@@ -7,7 +7,7 @@ import com.sudox.api.entries.Message
  * Подготавливает данные для отправки в Connection и наоборот из него.
  */
 interface Serializer {
-
+    
     /**
      * Сериализует сообщение в байты
      *
@@ -22,5 +22,5 @@ interface Serializer {
      * @param bytes Байты, которые нужно десериализовать
      * @return Десериализованное сообщение
      */
-    fun deserialize(bytes: ByteArray)
+    fun deserialize(bytes: ByteArray): Message
 }
