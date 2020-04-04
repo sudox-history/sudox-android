@@ -29,5 +29,13 @@ class AppLoader : Application() {
                 .countriesModule(CountriesModule(PhoneNumberUtil.createInstance(this)))
                 .apiModule(ApiModule(WebSocketConnection(), JSONSerializer()))
                 .build()
+
+        loaderComponent!!.inject(this)
+        sudoxApi!!.startConnection()
+    }
+
+    override fun onTerminate() {
+        sudoxApi!!.endConnection()
+        super.onTerminate()
     }
 }

@@ -1,6 +1,7 @@
 package com.sudox.messenger.android.inject
 
 import com.sudox.api.inject.ApiModule
+import com.sudox.messenger.android.AppLoader
 import com.sudox.messenger.android.auth.inject.AuthComponent
 import com.sudox.messenger.android.core.inject.CoreActivityComponent
 import com.sudox.messenger.android.core.inject.CoreActivityModule
@@ -14,4 +15,5 @@ import javax.inject.Singleton
 @Component(modules = [ApiModule::class, CountriesModule::class])
 interface LoaderComponent : CoreLoaderComponent, CountriesComponent, AuthComponent {
     fun activityComponent(coreActivityModule: CoreActivityModule): ActivityComponent
+    fun inject(appLoader: AppLoader)
 }

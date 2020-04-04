@@ -95,7 +95,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun onDestroy() {
-        loaderComponent = null
+        activityComponent = null
         super.onDestroy()
     }
 
