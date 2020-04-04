@@ -3,6 +3,7 @@
 
     <style name="Sudox.AuthScreenLayout" parent="Sudox.Screen">
         <item name="android:paddingTop">@dimen/authscreenlayout_padding_top</item>
+        <item name="android:paddingBottom">@dimen/authscreenlayout_padding_bottom</item>
         <item name="marginBetweenChildren">@dimen/authscreenlayout_margin_between_children</item>
         <item name="marginBetweenDescriptionAndChild">@dimen/authscreenlayout_margin_between_description_and_child</item>
         <item name="marginBetweenTitleAndDescription">@dimen/authscreenlayout_margin_between_title_and_description</item>
