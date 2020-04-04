@@ -38,6 +38,17 @@ import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import javax.inject.Inject
 import kotlin.math.max
 
+/**
+ * EditText для ввода телефона.
+ *
+ * Для корректной работы необходимо сначало задать родителя данной View, а потом обязательно выполнить
+ * одно из указанных действий:
+ *
+ * 1) Вызвать метод useDefaultCountry(), тем самым задав страну по-умолчанию на основе настроек телефона пользователя
+ * 2) Задать уже установленный номер телефона в переменную phoneNumber (Java: setPhoneNumber())
+ *
+ * Если страна не поддерживается, то будет высвечена соответствующая ошибка и автоматически выполнено действие 1)
+ */
 class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, EditTextLayoutChild {
 
     private var separatorColor: Int
@@ -60,17 +71,10 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
                     editText.setText(value!!.removePrefix("+${phoneNumber.countryCode}"))
                     editText.setSelection(editText.length())
                 } else {
-                    useDefaultCountry()
-
-                    (parent as EditTextLayout)
-                            .errorText = context.getString(R.string.sudox_not_working_in_this_country)
+                    handleUnsupportedCountry()
                 }
-
             } catch (ex: NumberParseException) {
-                useDefaultCountry()
-
-                (parent as EditTextLayout)
-                        .errorText = context.getString(R.string.sudox_not_working_in_this_country)
+                handleUnsupportedCountry()
             }
         }
 
@@ -118,6 +122,8 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
                 phoneTextWatcher?.setCountry(value.regionCode, value.countryCode)
                 countrySelector.setCompoundDrawablesWithIntrinsicBounds(value.flagId, 0, 0, 0)
                 countrySelector.text = "+${value.countryCode}"
+
+                (parent as EditTextLayout).errorText = null
             }
 
             field = value
@@ -274,23 +280,34 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         return false
     }
 
+    override fun createStateInstance(superState: Parcelable): PhoneEditTextState {
+        return PhoneEditTextState(superState)
+    }
+
     /**
      * Выставляет страну пользователя если она не выставлена
      * Если страна не поддерживается, то отображается соответствующая ошибка и ставится страна по-умолчанию.
+     *
+     * P.S.: Перед вызовом убедитесь, что у данной View если родитель.
      */
     fun useDefaultCountry() {
         if (vo == null) {
-            val pair = getDefaultCountryVO()
+            getDefaultCountryVO().let {
+                vo = it.first
 
-            if (!pair.second) {
-                (parent as EditTextLayout).errorText = context.getString(R.string.sudox_not_working_in_this_country)
+                // P.S.: Если не удалось найти страну по-умолчанию у пользователя!
+                if (!it.second) {
+                    (parent as EditTextLayout).errorText = context.getString(R.string.sudox_not_working_in_your_country)
+                }
             }
-
-            vo = pair.first
         }
     }
 
-    override fun createStateInstance(superState: Parcelable): PhoneEditTextState {
-        return PhoneEditTextState(superState)
+    private fun handleUnsupportedCountry() {
+        useDefaultCountry()
+
+        // P.S.: Если не поддерживается выбранная страна!
+        (parent as EditTextLayout)
+                .errorText = context.getString(R.string.sudox_not_working_in_this_country)
     }
 }

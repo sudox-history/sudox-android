@@ -2,6 +2,7 @@
 <resources>
     <string name="countries">Countries</string>
     <string name="sudox_not_working_in_this_country">Sudox not working in this country.</string>
+    <string name="sudox_not_working_in_your_country">Sudox not working in your country.</string>
     <string name="russia">Russia</string>
     <string name="poland">Poland</string>
     <string name="hungary">Hungary</string>

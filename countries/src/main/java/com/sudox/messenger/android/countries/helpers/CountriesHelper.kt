@@ -19,6 +19,8 @@ val COUNTRIES = hashMapOf(
         createCountryPair(CountryVO("UA", R.string.ukraine, R.drawable.ic_flag_ukraine, 380))
 )
 
+val DEFAULT_COUNTRY = COUNTRIES["RU"]!!
+
 /**
  * Получает страну пользователя на основе настроек его устройства.
  * Если его страна не поддерживается, то выдает дефолтную страну.
@@ -32,7 +34,7 @@ fun getDefaultCountryVO(): Pair<CountryVO, Boolean> {
     return if (country != null) {
         Pair(country, true)
     } else {
-        Pair(COUNTRIES["RU"]!!, false)
+        Pair(DEFAULT_COUNTRY, false)
     }
 }
 
