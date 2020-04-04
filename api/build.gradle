@@ -1,8 +1,12 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, false, false, true)
+registerModule(false, false, true, true)
 
 dependencies {
+    implementation libraries.okhttp3
+    implementation libraries.dagger
+    kapt libraries.dagger_compiler
+
     testImplementation libraries.junit
 }
