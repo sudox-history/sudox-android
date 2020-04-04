@@ -9,6 +9,7 @@ import com.sudox.messenger.android.core.tabs.TabsChildFragment
 import com.sudox.messenger.android.messages.adapters.DialogsAdapter
 import com.sudox.messenger.android.messages.vos.impl.ChatVO
 import com.sudox.messenger.android.people.common.vos.SEEN_TIME_ONLINE
+import java.util.*
 
 class ChatsTabFragment : ViewListFragment<DialogsAdapter>(), TabsChildFragment {
 

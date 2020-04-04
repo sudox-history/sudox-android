@@ -160,31 +160,33 @@ class DialogItemView : ViewGroup {
         measureChild(contentTextView, widthMeasureSpec, heightMeasureSpec)
 
         val contentTextWidth: Int
-        val tempMaxStatusWidth = max(dateView.measuredWidth
-                + if (vo!!.isMuted) iconMutedView.measuredWidth else 0,
-                if (!vo!!.isViewed) countMessagesView.measuredWidth
-                        + 2 * innerCounterHorizontalMargin else 0)
+        val countMaxWidth = if (!vo!!.isViewedByMe) countMessagesView.measuredWidth + 2 * innerCounterHorizontalMargin else 0
+
+
+        val availableContentAndInfoWidth = availableWidth - dialogAvatarView!!.measuredWidth - innerImageToTextMargin
 
         contentTextWidth = if (availableWidth != 0) {
-            if (tempMaxStatusWidth > innerContentToRightBorderMargin) {
-                availableWidth - paddingLeft - imageWidth - innerImageToTextMargin -
-                        tempMaxStatusWidth - innerContentToRightViewMargin - paddingRight
+            if (countMaxWidth > innerContentToRightBorderMargin) {
+                availableContentAndInfoWidth - countMaxWidth - innerContentToRightViewMargin
             } else {
-                availableWidth - paddingLeft - imageWidth - innerImageToTextMargin -
-                        innerContentToRightBorderMargin - paddingRight
+                availableContentAndInfoWidth - innerContentToRightBorderMargin
             }
         } else {
             contentTextView.measuredWidth
         }
 
         measureChild(contentTextView, MeasureSpec.makeMeasureSpec(contentTextWidth, MeasureSpec.EXACTLY), heightMeasureSpec)
-        measureChild(nameView, MeasureSpec.makeMeasureSpec(contentTextWidth, MeasureSpec.EXACTLY), heightMeasureSpec)
+        measureChild(nameView, MeasureSpec.makeMeasureSpec(availableContentAndInfoWidth -
+                dateView.measuredWidth - innerMutedIconToDateMargin -
+                if(vo!!.isMuted) iconMutedView.measuredWidth + innerMutedIconToDateMargin else 0,
+                MeasureSpec.EXACTLY), heightMeasureSpec)
+
         val needHeight = paddingTop + max(innerDialogNameToTopMargin +
                 nameView.measuredHeight + innerDialogNameToContentMargin +
                 contentTextView.measuredHeight, dialogAvatarView!!.measuredHeight) + paddingBottom
         val needWidth = paddingLeft + dialogAvatarView!!.measuredWidth + innerImageToTextMargin +
-                contentTextWidth + max(innerContentToRightBorderMargin, tempMaxStatusWidth -
-                innerContentToRightBorderMargin) + paddingRight
+                contentTextWidth + max(innerContentToRightBorderMargin, countMaxWidth +
+                innerContentToRightViewMargin) + paddingRight
 
         setMeasuredDimension(if (availableWidth != 0) availableWidth else needWidth, needHeight)
     }
@@ -238,7 +240,7 @@ class DialogItemView : ViewGroup {
     }
 
     override fun dispatchDraw(canvas: Canvas) {
-        if (!vo!!.isViewed && vo!!.messagesCount != 0) {
+        if (!vo!!.isViewedByMe && vo!!.messagesCount != 0) {
             val leftCountBorder = width.toFloat() -
                     paddingRight - innerCounterHorizontalMargin * 2 - countMessagesView.measuredWidth
             val topCountBorder = paddingTop.toFloat() + innerDialogNameToTopMargin +
@@ -270,7 +272,6 @@ class DialogItemView : ViewGroup {
         dateViewSettingsUpdate()
         counterViewSettingsUpdate()
         statusIconViewSettingsUpdate()
-        hintSentByUserViewSettingsUpdate()
         mutedViewSettingsUpdate()
     }
 
@@ -280,9 +281,9 @@ class DialogItemView : ViewGroup {
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
             gravity = Gravity.LEFT
             ellipsize = TextUtils.TruncateAt.END
-            maxLines = if (!vo!!.isViewed && !vo!!.isMuted) 2 else 1
+            maxLines = if (!vo!!.isViewedByMe && !vo!!.isMuted) 2 else 1
 
-            if (!vo!!.isViewed and !vo!!.isMuted) {
+            if (!vo!!.isViewedByMe and !vo!!.isMuted) {
                 setTextAppearance(contentTextView, dialogContentNewTextAppearance)
             } else {
                 setTextAppearance(contentTextView, dialogContentTextAppearance)
@@ -319,7 +320,7 @@ class DialogItemView : ViewGroup {
 
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             gravity = Gravity.CENTER_VERTICAL
-            visibility = if (vo!!.messagesCount == 0 || vo!!.isViewed) View.GONE else View.VISIBLE
+            visibility = if (vo!!.messagesCount == 0 || vo!!.isViewedByMe) View.GONE else View.VISIBLE
             isSingleLine = true
             maxLines = 1
             includeFontPadding = false
@@ -328,7 +329,7 @@ class DialogItemView : ViewGroup {
     }
 
     private fun statusIconViewSettingsUpdate() {
-        if (vo!!.isSentMessageDelivered && vo!!.isViewed) {
+        if (vo!!.isSentMessageDelivered && vo!!.isViewedByMe) {
             messageStatusDoneIcon?.setTint(messageStatusColor)
             messageStatusIcon?.setTint(messageStatusColor)
 
@@ -345,10 +346,6 @@ class DialogItemView : ViewGroup {
         } else {
             iconDoneView.visibility = View.GONE
         }
-    }
-
-    private fun hintSentByUserViewSettingsUpdate() {
-        contentTextView.text = vo!!.getLastMessage(context)
     }
 
     private fun mutedViewSettingsUpdate() {

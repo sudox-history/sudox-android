@@ -1,7 +1,11 @@
 package com.sudox.messenger.android.messages.vos.impl
 
 import android.content.Context
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.text.color
 import com.sudox.messenger.android.media.images.views.GlideCircleImageView
 import com.sudox.messenger.android.messages.R
 import com.sudox.messenger.android.messages.vos.DialogVO
@@ -9,7 +13,7 @@ import com.sudox.messenger.android.messages.vos.DialogVO
 data class TalkVO(
         override val dialogId: Long,
         override var isMuted: Boolean,
-        override var isViewed: Boolean,
+        override var isViewedByMe: Boolean,
         override var time: Long,
         override var messagesCount: Int,
         override var isSentMessageDelivered: Boolean,
@@ -25,12 +29,19 @@ data class TalkVO(
         return talkName
     }
 
-    override fun getLastMessage(context: Context): String {
+    override fun getLastMessage(context: Context): SpannableString {
         if (isSentByUserMessage) {
-            return context.resources.getString(R.string.message_sent_by_different_user, firstName, lastSentMessage)
+            val hintColor = ContextCompat.getColor(context, R.color.dialogitemview_message_sent_by_user_hint_color)
+            val text = SpannableStringBuilder()
+                    .color(hintColor) {
+                        append(context.resources.getString(R.string.message_sent_by_different_user, firstName))
+                    }
+                    .append(lastSentMessage)
+
+            return SpannableString.valueOf(text)
         }
 
-        return context.resources.getString(R.string.message_sent_by_user, lastSentMessage)
+        return SpannableString.valueOf(lastSentMessage)
     }
 
     override fun getAvatarView(context: Context): View {

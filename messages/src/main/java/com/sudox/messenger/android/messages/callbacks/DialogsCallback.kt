@@ -9,15 +9,15 @@ class DialogsCallback(
 ) : ViewListCallback<DialogVO>(adapter) {
 
     override fun compare(first: DialogVO, second: DialogVO): Int {
-        if (first.isViewed && !second.isViewed) {
+        if (first.isViewedByMe && !second.isViewedByMe) {
             return 1
         }
 
-        if (!first.isViewed && second.isViewed) {
+        if (!first.isViewedByMe && second.isViewedByMe) {
             return -1
         }
 
-        if (!first.isViewed && !second.isViewed) {
+        if (!first.isViewedByMe && !second.isViewedByMe) {
             if (first.isMuted && !second.isMuted) {
                 return 1
             }
