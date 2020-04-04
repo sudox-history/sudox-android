@@ -74,7 +74,7 @@ class CodeEditText : SaveableViewGroup<CodeEditText, CodeEditTextState>, EditTex
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         val digitsWidth = digitEditTexts?.sumBy { it.measuredWidth } ?: 0
-        val digitsMargin = (measuredWidth - digitsWidth) / max(digitsCount - 1, 0)
+        val digitsMargin = (measuredWidth - digitsWidth) / max(digitsCount - 1, 1)
         val digitHeight = digitEditTexts?.get(0)?.measuredHeight ?: 0
         val digitWidth = digitEditTexts?.get(0)?.measuredWidth ?: 0
 

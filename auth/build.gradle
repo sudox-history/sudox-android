@@ -6,11 +6,13 @@ registerModule(false, true, true, true)
 dependencies {
     api project(path: ':core')
     api project(path: ':design')
+    api project(path: ':design:codeedittext')
     api project(path: ':countries')
     api project(path: ':api')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
+    implementation libraries.libphonenumber
     implementation libraries.lifecycle_extensions
     implementation libraries.recyclerview
     implementation libraries.coroutines

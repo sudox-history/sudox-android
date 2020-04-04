@@ -8,7 +8,6 @@ import android.os.Parcelable
 import android.text.Layout
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.getResourceIdOrThrow
@@ -101,6 +100,11 @@ class AuthScreenLayout : SaveableViewGroup<AuthScreenLayout, AuthScreenLayoutSta
         set(value) {
             value?.forEach {
                 it.id = View.generateViewId()
+                it.layoutParams = LayoutParams(
+                        LayoutParams.MATCH_PARENT,
+                        LayoutParams.WRAP_CONTENT
+                )
+
                 addView(it)
             }
 
@@ -139,7 +143,7 @@ class AuthScreenLayout : SaveableViewGroup<AuthScreenLayout, AuthScreenLayoutSta
                 marginBetweenTitleAndDescription +
                 descriptionTextView.measuredHeight +
                 marginBetweenDescriptionAndChild +
-                max((childViews?.size ?: 0) - 1, 0) +
+                (max((childViews?.size ?: 0) - 1, 0) * marginBetweenChildren) +
                 childHeight +
                 paddingBottom
 

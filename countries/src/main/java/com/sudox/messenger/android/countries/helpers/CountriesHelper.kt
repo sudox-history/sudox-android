@@ -2,6 +2,7 @@ package com.sudox.messenger.android.countries.helpers
 
 import com.sudox.messenger.android.countries.R
 import com.sudox.messenger.android.countries.vos.CountryVO
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import java.util.Locale
 
 val COUNTRIES = hashMapOf(
@@ -36,6 +37,21 @@ fun getDefaultCountryVO(): Pair<CountryVO, Boolean> {
     } else {
         Pair(DEFAULT_COUNTRY, false)
     }
+}
+
+/**
+ * Форматирует номер телефона в интернациональный формат
+ *
+ * @param phoneNumber Номер телефона, который нужно отформатировать
+ */
+fun PhoneNumberUtil.formatPhoneNumber(phoneNumber: String): String {
+    val number = if (!phoneNumber.startsWith("+")) {
+        "+$phoneNumber"
+    } else {
+        phoneNumber
+    }
+
+    return format(parse(number, null), PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
 }
 
 private fun createCountryPair(countryVO: CountryVO): Pair<String, CountryVO> {

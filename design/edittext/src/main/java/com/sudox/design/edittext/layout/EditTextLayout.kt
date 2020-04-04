@@ -96,6 +96,11 @@ class EditTextLayout : SaveableViewGroup<EditTextLayout, EditTextLayoutState> {
 
             (value as? View)?.let {
                 it.id = View.generateViewId()
+                it.layoutParams = LayoutParams(
+                        LayoutParams.MATCH_PARENT,
+                        LayoutParams.WRAP_CONTENT
+                )
+
                 addView(it)
             }
 
@@ -145,11 +150,13 @@ class EditTextLayout : SaveableViewGroup<EditTextLayout, EditTextLayoutState> {
                 paddingLeft +
                 paddingRight
 
-        val needHeight = paddingTop +
+        var needHeight = paddingTop +
                 (childView as View).measuredHeight +
-                errorTextTopMargin +
-                errorTextView.measuredHeight +
                 paddingBottom
+
+        if (!errorText.isNullOrEmpty()) {
+            needHeight += errorTextTopMargin + errorTextView.measuredHeight
+        }
 
         setMeasuredDimension(needWidth, needHeight)
     }
@@ -162,17 +169,21 @@ class EditTextLayout : SaveableViewGroup<EditTextLayout, EditTextLayoutState> {
 
         (childView as View).layout(childLeftBorder, childTopBorder, childRightBorder, childBottomBorder)
 
-        val errorTopBorder = childBottomBorder + errorTextTopMargin
-        val errorBottomBorder = errorTopBorder + errorTextView.measuredHeight
-        var errorLeftBorder = childLeftBorder
+        if (!errorText.isNullOrEmpty()) {
+            val errorTopBorder = childBottomBorder + errorTextTopMargin
+            val errorBottomBorder = errorTopBorder + errorTextView.measuredHeight
+            var errorLeftBorder = childLeftBorder
 
-        if (childView?.canIgnoreErrorLeftMargin() == false) {
-            errorLeftBorder += errorTextVerticalMargin
+            if (childView?.canIgnoreErrorLeftMargin() == false) {
+                errorLeftBorder += errorTextVerticalMargin
+            }
+
+            val errorRightBorder = errorLeftBorder + errorTextView.measuredWidth
+
+            errorTextView.layout(errorLeftBorder, errorTopBorder, errorRightBorder, errorBottomBorder)
+        } else {
+            errorTextView.layout(0, 0, 0, 0)
         }
-
-        val errorRightBorder = errorLeftBorder + errorTextView.measuredWidth
-
-        errorTextView.layout(errorLeftBorder, errorTopBorder, errorRightBorder, errorBottomBorder)
     }
 
     override fun createStateInstance(superState: Parcelable): EditTextLayoutState {

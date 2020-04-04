@@ -1,18 +1,20 @@
 package com.sudox.messenger.android.auth.code
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import com.sudox.messenger.android.core.CoreFragment
+import com.sudox.messenger.android.auth.AuthFragment
+import com.sudox.messenger.android.auth.register.AuthRegisterFragment
 
-class AuthCodeFragment : CoreFragment() {
+class AuthCodeFragment : AuthFragment<AuthCodeScreenVO>() {
 
     init {
         appBarVO = AuthCodeAppBarVO()
+        screenVO = AuthCodeScreenVO("79674788147")
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        screenVO!!.codeEditText!!.codeFilledCallback = {
+            navigationManager!!.showChildFragment(AuthRegisterFragment())
+        }
     }
 }

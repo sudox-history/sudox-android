@@ -147,7 +147,8 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
 
     private var separatorPaint = Paint()
     private var separatorBounds = Rect()
-    private var countrySelector = AppCompatTextView(context).apply {
+
+    var countrySelector = AppCompatTextView(context).apply {
         gravity = Gravity.CENTER_VERTICAL
         isFocusable = true
         isClickable = true
@@ -162,7 +163,7 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         this@PhoneEditText.addView(this)
     }
 
-    internal var editText = PhoneNumberEditText(context).apply {
+    var editText = PhoneNumberEditText(context).apply {
         id = View.generateViewId()
         inputType = InputType.TYPE_CLASS_PHONE
         imeOptions = EditorInfo.IME_ACTION_DONE

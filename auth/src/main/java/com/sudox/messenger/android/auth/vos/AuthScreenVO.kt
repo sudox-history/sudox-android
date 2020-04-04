@@ -19,7 +19,7 @@ interface AuthScreenVO {
      * @param context Контекст приложения/активности
      * @return Пара вида ID-иконки-ID оттенка-описание
      */
-    fun getDescription(context: Context): Triple<Int, Int, String>
+    fun getDescription(context: Context): Triple<Int, Int, CharSequence>
 
     /**
      * Выдает дочерние элементы экрана

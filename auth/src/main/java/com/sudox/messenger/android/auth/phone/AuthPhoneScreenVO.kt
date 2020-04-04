@@ -16,7 +16,7 @@ class AuthPhoneScreenVO : AuthScreenVO {
         return context.getString(R.string.phone_verification)
     }
 
-    override fun getDescription(context: Context): Triple<Int, Int, String> {
+    override fun getDescription(context: Context): Triple<Int, Int, CharSequence> {
         return Triple(
                 R.drawable.ic_smartphone,
                 R.color.authscreenlayout_icon_tint_color,

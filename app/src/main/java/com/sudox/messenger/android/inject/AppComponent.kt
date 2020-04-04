@@ -1,5 +1,6 @@
 package com.sudox.messenger.android.inject
 
+import com.sudox.messenger.android.auth.inject.AuthComponent
 import com.sudox.messenger.android.core.inject.CoreComponent
 import com.sudox.messenger.android.core.inject.CoreModule
 import com.sudox.messenger.android.countries.inject.CountriesComponent
@@ -12,4 +13,4 @@ import javax.inject.Singleton
     CoreModule::class,
     CountriesModule::class
 ])
-interface AppComponent : CoreComponent, CountriesComponent
+interface AppComponent : CoreComponent, CountriesComponent, AuthComponent
