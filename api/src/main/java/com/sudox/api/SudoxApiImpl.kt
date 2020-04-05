@@ -1,6 +1,7 @@
 package com.sudox.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.sudox.api.common.SudoxApi
 import com.sudox.api.connections.Connection
 import com.sudox.api.connections.ConnectionListener
 import com.sudox.api.entries.ApiRequest
@@ -10,6 +11,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleEmitter
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.SingleSubject
+import java.io.IOException
 import java.util.concurrent.Semaphore
 
 /**
@@ -20,10 +22,10 @@ import java.util.concurrent.Semaphore
  * @param connection Обьект соединения.
  * @param objectMapper Маппер обьектов.
  */
-class SudoxApi(
+class SudoxApiImpl(
         val connection: Connection,
         val objectMapper: ObjectMapper
-) : ConnectionListener {
+) : ConnectionListener, SudoxApi {
 
     val requestsSemaphores = LinkedHashMap<String, Semaphore>()
     val requestsCallbacks = LinkedHashMap<String, ApiRequestCallback<*>>()
@@ -33,6 +35,12 @@ class SudoxApi(
             field = value
 
             if (!value) {
+                // Разрываем запросы, на которые ожидаем ответа
+                requestsCallbacks.forEach {
+                    it.value.subjectEmitter.onError(IOException("Connection not installed!"))
+                }
+
+                // Разрываем запросы, которые ожидают выполнения себе подобных
                 requestsSemaphores.forEach { (_, semaphore) ->
                     semaphore.release(semaphore.queueLength)
                 }
@@ -51,42 +59,37 @@ class SudoxApi(
         connection.listener = this
     }
 
-    /**
-     * Запускает соединение с сервером.
-     */
-    fun startConnection() {
+    override fun startConnection() {
         connection.start("sudox.ru", 5000)
     }
 
-    /**
-     * Останавливает соединение с сервером.
-     */
-    fun endConnection() {
+    override fun endConnection() {
         connection.end()
     }
 
-    /**
-     * Отправляет запрос на сервер.
-     *
-     * @param methodName Название вызываемого метода.
-     * @param data Данные для запроса.
-     */
-    inline fun <reified T : Any> sendRequest(methodName: String, data: Any): Single<T> = SingleSubject.create<T> {
+    override fun <T : Any> sendRequest(
+            methodName: String,
+            requestData: Any,
+            responseClass: Class<T>
+    ): Single<T> = SingleSubject.create<T> {
         if (isConnected) {
             acquireRequestQueue(methodName)
 
+            // P.S.: Соединение могло быть разорвано за время ожидания!
             if (isConnected) {
-                requestsCallbacks[methodName] = ApiRequestCallback<T>(it, T::class.java)
+                requestsCallbacks[methodName] = ApiRequestCallback<T>(it, responseClass)
 
-                val request = ApiRequest(methodName, data)
+                val request = ApiRequest(methodName, requestData)
                 val serialized = objectMapper.writeValueAsString(request)
 
                 connection.send(serialized)
             } else {
                 releaseRequestQueue(methodName)
+                it.onError(IOException("Connection not installed!"))
             }
         } else {
             releaseRequestQueue(methodName)
+            it.onError(IOException("Connection not installed!"))
         }
     }
 
@@ -172,5 +175,6 @@ class SudoxApi(
     }
 
     override fun onReceive(bytes: ByteArray) {
+        // Nothing
     }
 }

@@ -1,7 +1,7 @@
 package com.sudox.api.inject
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.sudox.api.SudoxApi
+import com.sudox.api.SudoxApiImpl
 import com.sudox.api.connections.Connection
 import dagger.Module
 import dagger.Provides
@@ -23,7 +23,7 @@ class ApiModule(
         @Provides
         get
 
-    var api = SudoxApi(connection, objectMapper)
+    var api = SudoxApiImpl(connection, objectMapper)
         @Singleton
         @Provides
         get
