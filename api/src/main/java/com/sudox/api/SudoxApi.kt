@@ -32,6 +32,14 @@ class SudoxApi(
         private set(value) {
             field = value
 
+            if (!value) {
+                requestsSemaphores.forEach { (_, semaphore) ->
+                    semaphore.release(semaphore.queueLength)
+                }
+
+                requestsSemaphores.clear()
+            }
+
             statusSubject.onNext(if (value) {
                 SudoxApiStatus.CONNECTED
             } else {
@@ -65,7 +73,7 @@ class SudoxApi(
      */
     inline fun <reified T : Any> sendRequest(methodName: String, data: Any): Single<T> = SingleSubject.create<T> {
         if (isConnected) {
-            acquireRequestSemaphore(methodName)
+            acquireRequestQueue(methodName)
 
             if (isConnected) {
                 requestsCallbacks[methodName] = ApiRequestCallback<T>(it, T::class.java)
@@ -75,10 +83,10 @@ class SudoxApi(
 
                 connection.send(serialized)
             } else {
-                releaseRequestSemaphore(methodName)
+                releaseRequestQueue(methodName)
             }
         } else {
-            releaseRequestSemaphore(methodName)
+            releaseRequestQueue(methodName)
         }
     }
 
@@ -87,12 +95,13 @@ class SudoxApi(
      *
      * @param methodName Название метода.
      */
-    fun releaseRequestSemaphore(methodName: String) {
+    fun releaseRequestQueue(methodName: String) {
         requestsSemaphores[methodName]?.let {
             it.release()
 
             if (it.queueLength == 0) {
                 requestsSemaphores.remove(methodName)
+                requestsCallbacks.remove(methodName)
             }
         }
     }
@@ -102,7 +111,7 @@ class SudoxApi(
      *
      * @param methodName Название метода.
      */
-    fun acquireRequestSemaphore(methodName: String) {
+    fun acquireRequestQueue(methodName: String) {
         requestsSemaphores
                 .getOrPut(methodName, { Semaphore(1) })
                 .acquire()
@@ -143,7 +152,7 @@ class SudoxApi(
                 val dataNode = response.required("data")
 
                 if (!dataNode.isObject) {
-                    releaseRequestSemaphore(methodName)
+                    releaseRequestQueue(methodName)
                     return
                 }
 
@@ -152,10 +161,10 @@ class SudoxApi(
                 emitter.onError(ApiException(result))
             }
 
-            releaseRequestSemaphore(methodName)
+            releaseRequestQueue(methodName)
         } catch (ex: Exception) {
             if (methodName != null) {
-                releaseRequestSemaphore(methodName)
+                releaseRequestQueue(methodName)
             }
 
             emitter?.onError(ex)
