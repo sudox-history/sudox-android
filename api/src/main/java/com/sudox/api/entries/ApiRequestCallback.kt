@@ -1,8 +1,8 @@
 package com.sudox.api.entries
 
-import io.reactivex.rxjava3.subjects.SingleSubject
+import io.reactivex.rxjava3.core.SingleEmitter
 
 data class ApiRequestCallback<T : Any>(
-        val subject: SingleSubject<T>,
+        val subjectEmitter: SingleEmitter<T>,
         val dataClass: Class<T>
 )

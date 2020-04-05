@@ -6,13 +6,12 @@ import com.sudox.api.connections.Connection
 import com.sudox.api.connections.ConnectionListener
 import com.sudox.api.entries.ApiRequest
 import com.sudox.api.entries.ApiRequestCallback
-import com.sudox.api.entries.auth.AuthCreateRequestBody
-import com.sudox.api.entries.auth.AuthCreateResponseBody
 import com.sudox.api.exceptions.ApiException
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.SingleEmitter
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.SingleSubject
 import java.io.IOException
-import java.util.LinkedList
 import java.util.concurrent.Semaphore
 
 /**
@@ -28,7 +27,7 @@ class SudoxApi(
         val objectMapper: ObjectMapper
 ) : ConnectionListener {
 
-    val requestsSemaphores = LinkedHashMap<String, LinkedList<Semaphore>>()
+    val requestsSemaphores = LinkedHashMap<String, Semaphore>()
     val requestsCallbacks = LinkedHashMap<String, ApiRequestCallback<*>>()
     val statusSubject: PublishSubject<SudoxApiStatus> = PublishSubject.create()
     var isConnected = false
@@ -66,47 +65,55 @@ class SudoxApi(
      * @param methodName Название вызываемого метода.
      * @param data Данные для запроса.
      */
-    inline fun <reified T : Any> sendRequest(methodName: String, data: Any): SingleSubject<T> {
-        val subject = SingleSubject.create<T>()
-
+    inline fun <reified T : Any> sendRequest(methodName: String, data: Any): Single<T> = SingleSubject.create<T> {
         if (isConnected) {
             acquireRequestSemaphore(methodName)
 
             if (isConnected) {
-                requestsCallbacks[methodName] = ApiRequestCallback<T>(subject, T::class.java)
+                requestsCallbacks[methodName] = ApiRequestCallback<T>(it, T::class.java)
 
                 val request = ApiRequest(methodName, data)
                 val serialized = objectMapper.writeValueAsString(request)
 
                 connection.send(serialized)
             } else {
-                subject.onError(IOException("Connection not installed!"))
+                it.onError(IOException("Connection not installed!"))
                 releaseRequestSemaphore(methodName)
             }
         } else {
-            subject.onError(IOException("Connection not installed!"))
+            it.onError(IOException("Connection not installed!"))
             releaseRequestSemaphore(methodName)
         }
-
-        return subject
     }
 
+    /**
+     * Разблокировывает очередь запросов с определенным методом.
+     *
+     * @param methodName Название метода.
+     */
     fun releaseRequestSemaphore(methodName: String) {
+        requestsSemaphores[methodName]?.let {
+            it.release()
 
+            if (it.queueLength == 0) {
+                requestsSemaphores.remove(methodName)
+            }
+        }
     }
 
+    /**
+     * Блокирует очередь запросов с определенным методом.
+     *
+     * @param methodName Название метода.
+     */
     fun acquireRequestSemaphore(methodName: String) {
-
+        requestsSemaphores
+                .getOrPut(methodName, { Semaphore(1) })
+                .acquire()
     }
 
     override fun onStart() {
         isConnected = true
-
-        sendRequest<AuthCreateResponseBody>("auth.create", AuthCreateRequestBody("79674788145")).subscribe({
-            println("Success: $it")
-        }, {
-            println("Error: ${(it as ApiException).code}")
-        })
     }
 
     override fun onReceive(bytes: ByteArray) {
@@ -134,7 +141,7 @@ class SudoxApi(
             val callback = requestsCallbacks[methodName] ?: return
 
             @Suppress("UNCHECKED_CAST")
-            val subject = callback.subject as? SingleSubject<Any> ?: return
+            val emitter = callback.subjectEmitter as SingleEmitter<Any>
 
             if (result == OK_ERROR_CODE) {
                 val dataNode = response.required("data")
@@ -145,9 +152,9 @@ class SudoxApi(
                     return
                 }
 
-                subject.onSuccess(objectMapper.treeToValue(dataNode, callback.dataClass))
+                emitter.onSuccess(objectMapper.treeToValue(dataNode, callback.dataClass))
             } else {
-                subject.onError(ApiException(result))
+                emitter.onError(ApiException(result))
             }
 
             releaseRequestSemaphore(methodName)
