@@ -1,6 +1,5 @@
 package com.sudox.api
 
-import android.util.Log
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.sudox.api.connections.Connection
 import com.sudox.api.connections.ConnectionListener
@@ -11,7 +10,6 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleEmitter
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.SingleSubject
-import java.io.IOException
 import java.util.concurrent.Semaphore
 
 /**
@@ -77,11 +75,9 @@ class SudoxApi(
 
                 connection.send(serialized)
             } else {
-                it.onError(IOException("Connection not installed!"))
                 releaseRequestSemaphore(methodName)
             }
         } else {
-            it.onError(IOException("Connection not installed!"))
             releaseRequestSemaphore(methodName)
         }
     }
@@ -116,38 +112,37 @@ class SudoxApi(
         isConnected = true
     }
 
-    override fun onReceive(bytes: ByteArray) {
+    override fun onEnd() {
+        isConnected = false
     }
 
     override fun onReceive(text: String) {
+        var methodName: String? = null
+        var emitter: SingleEmitter<*>? = null
+
         try {
             val response = objectMapper.readTree(text)
+            val methodNameNode = response.required("method_name")
             val resultNode = response.required("result")
 
-            if (!resultNode.isInt) {
-                Log.e("Sudox API", "Error during deserialization: $text")
+            if (!methodNameNode.isTextual || !resultNode.isInt) {
                 return
             }
 
-            val methodNameNode = response.required("method_name")
+            methodName = methodNameNode.textValue()
 
-            if (!methodNameNode.isTextual) {
-                Log.e("Sudox API", "Error during deserialization: $text")
-                return
-            }
-
-            val result = resultNode.intValue()
-            val methodName = methodNameNode.textValue()
             val callback = requestsCallbacks[methodName] ?: return
+            val result = resultNode.intValue()
+
+            // TODO: Обработка уведомлений
 
             @Suppress("UNCHECKED_CAST")
-            val emitter = callback.subjectEmitter as SingleEmitter<Any>
+            emitter = callback.subjectEmitter as SingleEmitter<Any>
 
             if (result == OK_ERROR_CODE) {
                 val dataNode = response.required("data")
 
                 if (!dataNode.isObject) {
-                    Log.e("Sudox API", "Error during deserialization: $text")
                     releaseRequestSemaphore(methodName)
                     return
                 }
@@ -159,11 +154,14 @@ class SudoxApi(
 
             releaseRequestSemaphore(methodName)
         } catch (ex: Exception) {
-            Log.e("Sudox API", "Error during deserialization: $text")
+            if (methodName != null) {
+                releaseRequestSemaphore(methodName)
+            }
+
+            emitter?.onError(ex)
         }
     }
 
-    override fun onEnd() {
-        isConnected = false
+    override fun onReceive(bytes: ByteArray) {
     }
 }
