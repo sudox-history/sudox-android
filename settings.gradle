@@ -2,6 +2,7 @@ rootProject.name = "Sudox Android"
 
 include ':app'
 include ':api'
+include ':api:auth'
 
 include ':design'
 include ':design:edittext'
