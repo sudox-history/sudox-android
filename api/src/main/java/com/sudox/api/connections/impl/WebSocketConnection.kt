@@ -8,6 +8,9 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 
+/**
+ * Соединение на базе WebSocket'ов
+ */
 class WebSocketConnection : Connection() {
 
     private val client = OkHttpClient()
@@ -30,7 +33,7 @@ class WebSocketConnection : Connection() {
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
-            listener?.onReceive(text.toByteArray())
+            listener?.onReceive(text)
         }
     }
 
@@ -42,8 +45,8 @@ class WebSocketConnection : Connection() {
         webSocket = client.newWebSocket(request, socketListener)
     }
 
-    override fun sendData(bytes: ByteArray) {
-        webSocket?.send(ByteString.of(*bytes))
+    override fun send(text: String) {
+        webSocket?.send(text)
     }
 
     override fun end() {

@@ -12,11 +12,18 @@ interface ConnectionListener {
     fun onStart()
 
     /**
-     * Вызывается при получении сообщения.
+     * Вызывается при получении сообщения в байтах.
      *
      * @param bytes Полученные байты.
      */
     fun onReceive(bytes: ByteArray)
+
+    /**
+     * Вызывается при получении сообщения в строке.
+     *
+     * @param text Полученная строка.
+     */
+    fun onReceive(text: String)
 
     /**
      * Вызывается при ошибке соединения с сервером.

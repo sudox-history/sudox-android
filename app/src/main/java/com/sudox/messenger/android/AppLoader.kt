@@ -1,10 +1,12 @@
 package com.sudox.messenger.android
 
 import android.app.Application
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.sudox.api.SudoxApi
 import com.sudox.api.connections.impl.WebSocketConnection
 import com.sudox.api.inject.ApiModule
-import com.sudox.api.serializers.impl.JSONSerializer
 import com.sudox.messenger.android.countries.inject.CountriesModule
 import com.sudox.messenger.android.inject.DaggerLoaderComponent
 import com.sudox.messenger.android.inject.LoaderComponent
@@ -27,8 +29,10 @@ class AppLoader : Application() {
         loaderComponent = DaggerLoaderComponent
                 .builder()
                 .countriesModule(CountriesModule(PhoneNumberUtil.createInstance(this)))
-                .apiModule(ApiModule(WebSocketConnection(), JSONSerializer()))
-                .build()
+                .apiModule(ApiModule(WebSocketConnection(), ObjectMapper()
+                        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+                        .registerKotlinModule()
+                )).build()
 
         loaderComponent!!.inject(this)
         sudoxApi!!.startConnection()

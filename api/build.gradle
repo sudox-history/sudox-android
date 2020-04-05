@@ -4,7 +4,10 @@ apply from: '../configs/common.gradle'
 registerModule(false, false, true, true)
 
 dependencies {
+    implementation libraries.jackson_kotlin
+    implementation libraries.jackson
     implementation libraries.okhttp3
+    implementation libraries.rxjava
     implementation libraries.dagger
     kapt libraries.dagger_compiler
 

@@ -1,8 +1,8 @@
 package com.sudox.api.inject
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.sudox.api.SudoxApi
 import com.sudox.api.connections.Connection
-import com.sudox.api.serializers.Serializer
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Module
 class ApiModule(
         connection: Connection,
-        serializer: Serializer
+        objectMapper: ObjectMapper
 ) {
 
     var connection = connection
@@ -18,12 +18,12 @@ class ApiModule(
         @Provides
         get
 
-    var serializer = serializer
+    var objectMapper = objectMapper
         @Singleton
         @Provides
         get
 
-    var api = SudoxApi(connection, serializer)
+    var api = SudoxApi(connection, objectMapper)
         @Singleton
         @Provides
         get

@@ -21,9 +21,9 @@ abstract class Connection {
     /**
      * Отправляет информацию на сервер.
      *
-     * @param bytes Байты, которые нужно отправить на сервер.
+     * @param text Текст, который нужно отправить на сервер.
      */
-    abstract fun sendData(bytes: ByteArray)
+    abstract fun send(text: String)
 
     /**
      * Прерывает соединение с сервером.
