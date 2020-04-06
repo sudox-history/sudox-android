@@ -66,6 +66,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
         apiStatusDisposable = sudoxApi!!
                 .statusSubject
+                .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     appLayout!!.contentLayout.appBarLayout.appBar!!.let {

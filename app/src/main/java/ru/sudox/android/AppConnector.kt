@@ -54,6 +54,7 @@ class AppConnector : ConnectivityManager.NetworkCallback() {
     }
 
     fun destroy() {
+        connectivityManager!!.unregisterNetworkCallback(this)
         statusDisposable?.dispose()
         sudoxApi!!.endConnection()
     }
