@@ -38,7 +38,7 @@ ext.registerModule = { isApp, needExtensions, needApt, needKotlin ->
             versionName "${versionMajor}.${versionMinor}.${versionUpdate}.${versionPatch}"
 
             if (isApp) {
-                applicationId 'com.sudox.messenger.android'
+                applicationId 'ru.sudox.android'
             }
         }
 
