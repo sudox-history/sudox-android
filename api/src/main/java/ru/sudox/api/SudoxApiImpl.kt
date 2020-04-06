@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleEmitter
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.SingleSubject
+import ru.sudox.api.common.SudoxApiStatus
 import java.io.IOException
 import java.util.concurrent.Semaphore
 
@@ -29,9 +30,10 @@ class SudoxApiImpl(
 
     val requestsSemaphores = LinkedHashMap<String, Semaphore>()
     val requestsCallbacks = LinkedHashMap<String, ApiRequestCallback<*>>()
-    val statusSubject: PublishSubject<SudoxApiStatus> = PublishSubject.create()
-    var isConnected = false
-        private set(value) {
+
+    override val statusSubject: PublishSubject<SudoxApiStatus> = PublishSubject.create()
+    override var isConnected = false
+        set(value) {
             field = value
 
             if (!value) {

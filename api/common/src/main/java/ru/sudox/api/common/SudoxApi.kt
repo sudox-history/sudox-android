@@ -1,8 +1,12 @@
 package ru.sudox.api.common
 
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 interface SudoxApi {
+
+    val statusSubject: PublishSubject<SudoxApiStatus>
+    var isConnected: Boolean
 
     /**
      * Запускает соединение с сервером.

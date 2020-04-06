@@ -4,6 +4,8 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.Disposable
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.android.AppLoader.Companion.loaderComponent
@@ -14,6 +16,9 @@ import ru.sudox.android.inject.ActivityComponent
 import ru.sudox.android.layouts.AppLayout
 import ru.sudox.android.managers.AppNavigationManager
 import ru.sudox.android.managers.AppScreenManager
+import ru.sudox.android.vos.ConnectAppBarVO
+import ru.sudox.api.common.SudoxApi
+import javax.inject.Inject
 
 /**
  * Главная Activity данного приложения.
@@ -26,9 +31,14 @@ import ru.sudox.android.managers.AppScreenManager
  */
 class AppActivity : AppCompatActivity(), CoreActivity {
 
+    private var apiStatusDisposable: Disposable? = null
     private var navigationManager: AppNavigationManager? = null
     private var activityComponent: ActivityComponent? = null
     private var appLayout: AppLayout? = null
+
+    @Inject
+    @JvmField
+    var sudoxApi: SudoxApi? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         (window.decorView.background as LayerDrawable)
@@ -48,9 +58,24 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             setContentView(this)
         }
 
-        activityComponent = loaderComponent!!.activityComponent(CoreActivityModule(navigationManager!!, AppScreenManager(this))).apply {
-            inject(this@AppActivity)
-        }
+        activityComponent = loaderComponent!!
+                .activityComponent(CoreActivityModule(navigationManager!!, AppScreenManager(this)))
+                .apply {
+                    inject(this@AppActivity)
+                }
+
+        apiStatusDisposable = sudoxApi!!
+                .statusSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    appLayout!!.contentLayout.appBarLayout.appBar!!.let {
+                        setAppBarViewObject(if (it.vo is ConnectAppBarVO) {
+                            (it.vo as ConnectAppBarVO).originalAppBarVO
+                        } else {
+                            it.vo
+                        }, it.callback)
+                    }
+                }
 
         super.onCreate(savedInstanceState)
 
@@ -84,7 +109,17 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     override fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?) {
         appLayout!!.contentLayout.appBarLayout.appBar!!.let {
             it.callback = callback
-            it.vo = appBarVO
+
+            if (appBarVO != null) {
+                if (it.vo == null) {
+                    it.vo = ConnectAppBarVO(appBarVO)
+                } else if (it.vo is ConnectAppBarVO) {
+                    (it.vo as ConnectAppBarVO).originalAppBarVO = appBarVO
+                    it.vo = it.vo // Updating ...
+                }
+            } else {
+                it.vo = null
+            }
         }
     }
 
@@ -93,6 +128,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun onDestroy() {
+        apiStatusDisposable?.dispose()
         activityComponent = null
         super.onDestroy()
     }

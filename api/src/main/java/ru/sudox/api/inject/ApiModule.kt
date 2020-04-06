@@ -5,6 +5,7 @@ import ru.sudox.api.SudoxApiImpl
 import ru.sudox.api.connections.Connection
 import dagger.Module
 import dagger.Provides
+import ru.sudox.api.common.SudoxApi
 import javax.inject.Singleton
 
 @Module
@@ -23,7 +24,7 @@ class ApiModule(
         @Provides
         get
 
-    var api = SudoxApiImpl(connection, objectMapper)
+    var api: SudoxApi = SudoxApiImpl(connection, objectMapper)
         @Singleton
         @Provides
         get

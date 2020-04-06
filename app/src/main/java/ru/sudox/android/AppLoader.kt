@@ -11,6 +11,7 @@ import ru.sudox.android.countries.inject.CountriesModule
 import ru.sudox.android.inject.DaggerLoaderComponent
 import ru.sudox.android.inject.LoaderComponent
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import ru.sudox.api.common.SudoxApi
 import javax.inject.Inject
 
 class AppLoader : Application() {
@@ -21,7 +22,7 @@ class AppLoader : Application() {
 
     @Inject
     @JvmField
-    var sudoxApi: SudoxApiImpl? = null
+    var sudoxApi: SudoxApi? = null
 
     override fun onCreate() {
         super.onCreate()

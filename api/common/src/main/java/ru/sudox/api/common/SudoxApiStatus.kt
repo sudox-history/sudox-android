@@ -1,4 +1,4 @@
-package ru.sudox.api
+package ru.sudox.api.common
 
 enum class SudoxApiStatus {
     CONNECTED,
