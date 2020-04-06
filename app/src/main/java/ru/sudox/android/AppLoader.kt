@@ -4,31 +4,28 @@ import android.app.Application
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import ru.sudox.api.SudoxApiImpl
 import ru.sudox.api.connections.impl.WebSocketConnection
 import ru.sudox.api.inject.ApiModule
 import ru.sudox.android.countries.inject.CountriesModule
 import ru.sudox.android.inject.DaggerLoaderComponent
 import ru.sudox.android.inject.LoaderComponent
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import ru.sudox.api.common.SudoxApi
-import javax.inject.Inject
+import ru.sudox.android.core.inject.CoreLoaderModule
 
 class AppLoader : Application() {
+
+    private var connector: AppConnector? = null
 
     companion object {
         var loaderComponent: LoaderComponent? = null
     }
-
-    @Inject
-    @JvmField
-    var sudoxApi: SudoxApi? = null
 
     override fun onCreate() {
         super.onCreate()
 
         loaderComponent = DaggerLoaderComponent
                 .builder()
+                .coreLoaderModule(CoreLoaderModule(this))
                 .countriesModule(CountriesModule(PhoneNumberUtil.createInstance(this)))
                 .apiModule(ApiModule(WebSocketConnection(), ObjectMapper()
                         .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
@@ -36,11 +33,13 @@ class AppLoader : Application() {
                 )).build()
 
         loaderComponent!!.inject(this)
-        sudoxApi!!.startConnection()
+
+        connector = AppConnector()
+        connector!!.start()
     }
 
     override fun onTerminate() {
-        sudoxApi!!.endConnection()
+        connector!!.destroy()
         super.onTerminate()
     }
 }
