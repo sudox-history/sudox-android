@@ -5,22 +5,23 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import io.reactivex.rxjava3.disposables.Disposable
 import ru.sudox.android.countries.inject.CountriesModule
 import ru.sudox.android.inject.DaggerLoaderComponent
 import ru.sudox.android.inject.LoaderComponent
-import ru.sudox.android.managers.AppNetworkManager
 import ru.sudox.api.common.SudoxApi
+import ru.sudox.api.common.SudoxApiStatus
 import ru.sudox.api.connections.impl.WebSocketConnection
 import ru.sudox.api.inject.ApiModule
 import javax.inject.Inject
 
 class AppLoader : Application() {
 
-    private var networkManager: AppNetworkManager? = null
-
     companion object {
         var loaderComponent: LoaderComponent? = null
     }
+
+    private var apiStatusDisposable: Disposable? = null
 
     @Inject
     @JvmField
@@ -39,13 +40,20 @@ class AppLoader : Application() {
 
         loaderComponent!!.inject(this)
 
-        networkManager = AppNetworkManager(sudoxApi!!)
-        networkManager!!.register(this)
+        sudoxApi!!.let {
+            apiStatusDisposable = it.statusSubject.subscribe { status ->
+                if (status == SudoxApiStatus.DISCONNECTED) {
+                    it.startConnection()
+                }
+            }
+
+            it.startConnection()
+        }
     }
 
     override fun onTerminate() {
+        apiStatusDisposable!!.dispose()
         sudoxApi!!.endConnection()
-        networkManager!!.unregister()
         super.onTerminate()
     }
 }

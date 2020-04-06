@@ -50,6 +50,6 @@ class WebSocketConnection : Connection() {
     }
 
     override fun end() {
-        webSocket?.close(1000, null)
+        webSocket?.close(0, null)
     }
 }
