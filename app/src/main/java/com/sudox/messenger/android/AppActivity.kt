@@ -4,7 +4,6 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
-import com.sudox.api.SudoxApi
 import com.sudox.design.appbar.vos.AppBarLayoutVO
 import com.sudox.design.appbar.vos.AppBarVO
 import com.sudox.messenger.android.AppLoader.Companion.loaderComponent
@@ -15,7 +14,6 @@ import com.sudox.messenger.android.inject.ActivityComponent
 import com.sudox.messenger.android.layouts.AppLayout
 import com.sudox.messenger.android.managers.AppNavigationManager
 import com.sudox.messenger.android.managers.AppScreenManager
-import javax.inject.Inject
 
 /**
  * Главная Activity данного приложения.

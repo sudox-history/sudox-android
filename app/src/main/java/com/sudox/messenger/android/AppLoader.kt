@@ -4,7 +4,7 @@ import android.app.Application
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.sudox.api.SudoxApi
+import com.sudox.api.SudoxApiImpl
 import com.sudox.api.connections.impl.WebSocketConnection
 import com.sudox.api.inject.ApiModule
 import com.sudox.messenger.android.countries.inject.CountriesModule
@@ -21,7 +21,7 @@ class AppLoader : Application() {
 
     @Inject
     @JvmField
-    var sudoxApi: SudoxApi? = null
+    var sudoxApi: SudoxApiImpl? = null
 
     override fun onCreate() {
         super.onCreate()

@@ -4,6 +4,8 @@ apply from: '../../configs/common.gradle'
 registerModule(false, false, true, true)
 
 dependencies {
+    api project(":api:common")
+
     implementation libraries.okhttp3
     implementation libraries.rxjava
     implementation libraries.dagger
