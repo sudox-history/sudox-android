@@ -13,6 +13,8 @@ class CodeTextWatcher(
         val codeEditText: CodeEditText
 ) : TextWatcher, View.OnKeyListener {
 
+    private var blockEvents = false
+
     override fun onKey(view: View, keyCode: Int, event: KeyEvent): Boolean {
         if (event.action != KeyEvent.ACTION_DOWN) {
             return true
@@ -28,7 +30,7 @@ class CodeTextWatcher(
     }
 
     override fun afterTextChanged(source: Editable) {
-        if (source.isEmpty()) {
+        if (source.isEmpty() || blockEvents) {
             return
         }
 
@@ -45,15 +47,21 @@ class CodeTextWatcher(
         if (source.length > 1) {
             val selection = digitEditText.selectionStart - source.length
 
+            blockEvents = true
+
             if (selection >= 0) {
                 source.delete(0, source.length - 1)
             } else {
                 source.delete(1, source.length)
             }
+
+            blockEvents = false
         }
 
         if (source.isNotEmpty() && !source[0].isDigit()) {
+            blockEvents = true
             source.delete(0, 1)
+            blockEvents = false
         }
 
         return source.isNotEmpty()
