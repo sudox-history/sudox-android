@@ -20,11 +20,11 @@ class WebSocketConnection : Connection() {
             listener?.onStart()
         }
 
-        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             listener?.onEnd()
         }
 
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
             listener?.onEnd()
         }
 
@@ -50,6 +50,7 @@ class WebSocketConnection : Connection() {
     }
 
     override fun end() {
-        webSocket?.close(0, null)
+        webSocket?.cancel()
+        webSocket = null
     }
 }

@@ -2,8 +2,9 @@ package ru.sudox.android
 
 import android.content.Context
 import android.net.ConnectivityManager
-import androidx.core.content.ContextCompat
-import androidx.core.net.ConnectivityManagerCompat
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import io.reactivex.rxjava3.disposables.Disposable
 import ru.sudox.android.core.inject.APP_CONTEXT_NAME
 import ru.sudox.api.common.SudoxApi
@@ -11,7 +12,7 @@ import ru.sudox.api.common.SudoxApiStatus
 import javax.inject.Inject
 import javax.inject.Named
 
-class AppConnector {
+class AppConnector : ConnectivityManager.NetworkCallback() {
 
     private var statusDisposable: Disposable? = null
     private var connectivityManager: ConnectivityManager? = null
@@ -29,14 +30,26 @@ class AppConnector {
         AppLoader.loaderComponent!!.inject(this)
 
         connectivityManager = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-        statusDisposable = sudoxApi!!.statusSubject.subscribe {
-            if (it == SudoxApiStatus.DISCONNECTED) {
+    }
 
-            }
-        }
+    override fun onLost(network: Network) {
+        sudoxApi!!.endConnection()
+    }
+
+    override fun onAvailable(network: Network) {
+        sudoxApi!!.startConnection()
     }
 
     fun start() {
+        val request = NetworkRequest.Builder().build()
+
+        connectivityManager!!.registerNetworkCallback(request, this)
+        statusDisposable = sudoxApi!!.statusSubject.subscribe {
+            if (it == SudoxApiStatus.DISCONNECTED && checkInternalAvailability()) {
+                sudoxApi!!.startConnection()
+            }
+        }
+
         sudoxApi!!.startConnection()
     }
 
@@ -45,7 +58,9 @@ class AppConnector {
         sudoxApi!!.endConnection()
     }
 
-    private fun canConnectToServer() {
-        
+    private fun checkInternalAvailability(): Boolean {
+        return connectivityManager!!.allNetworks.indexOfFirst {
+            connectivityManager!!.getNetworkCapabilities(it)?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
+        } != -1
     }
 }
