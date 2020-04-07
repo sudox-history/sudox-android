@@ -28,6 +28,8 @@ class SudoxApiImpl(
         val objectMapper: ObjectMapper
 ) : ConnectionListener, SudoxApi {
 
+    private val endSemaphore = Semaphore(0)
+
     val requestsSemaphores = LinkedHashMap<String, Semaphore>()
     val requestsCallbacks = LinkedHashMap<String, ApiRequestCallback<*>>()
 
@@ -53,7 +55,7 @@ class SudoxApiImpl(
             statusSubject.onNext(if (value) {
                 SudoxApiStatus.CONNECTED
             } else {
-                SudoxApiStatus.DISCONNECTED
+                SudoxApiStatus.NOT_CONNECTED
             })
         }
 
@@ -62,11 +64,16 @@ class SudoxApiImpl(
     }
 
     override fun startConnection() {
+        if (isConnected) {
+            endConnection()
+        }
+
         connection.start("sudox.ru", 5000)
     }
 
     override fun endConnection() {
         connection.end()
+        endSemaphore.acquire()
     }
 
     override fun <T : Any> sendRequest(
@@ -128,6 +135,7 @@ class SudoxApiImpl(
 
     override fun onEnd() {
         isConnected = false
+        endSemaphore.release()
     }
 
     override fun onReceive(text: String) {

@@ -1,19 +1,23 @@
 package ru.sudox.api.connections.impl
 
-import ru.sudox.api.connections.Connection
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import ru.sudox.api.connections.Connection
+import java.util.concurrent.TimeUnit
 
 /**
  * Соединение на базе WebSocket'ов
  */
 class WebSocketConnection : Connection() {
 
-    private val client = OkHttpClient()
+    private val client = OkHttpClient.Builder()
+            .connectTimeout(1, TimeUnit.SECONDS)
+            .build()
+
     private var webSocket: WebSocket? = null
     private val socketListener = object : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
@@ -24,7 +28,7 @@ class WebSocketConnection : Connection() {
             listener?.onEnd()
         }
 
-        override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
             listener?.onEnd()
         }
 
@@ -50,7 +54,7 @@ class WebSocketConnection : Connection() {
     }
 
     override fun end() {
-        webSocket?.cancel()
+        webSocket?.close(1000, null)
         webSocket = null
     }
 }
