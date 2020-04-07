@@ -167,12 +167,12 @@ class AppNavigationManager(
         val prevFragment = backstackPair.second
         val prevItemTag = backstackPair.first
 
-        if (prevItemTag >= currentItemTag) {
+        if (prevItemTag > currentItemTag) {
             fragmentTransaction.setCustomAnimations(
                     R.animator.animator_fragment_enter_right,
                     R.animator.animator_fragment_exit_right
             )
-        } else if (prevItemTag < currentItemTag) {
+        } else if (prevItemTag <= currentItemTag) {
             fragmentTransaction.setCustomAnimations(
                     R.animator.animator_fragment_enter_left,
                     R.animator.animator_fragment_exit_left
