@@ -8,6 +8,12 @@ import ru.sudox.api.common.SudoxApi
 import ru.sudox.design.appbar.vos.AppBarVO
 import javax.inject.Inject
 
+/**
+ * ViewObject для AppBar'а с возможностью подмены заголовка.
+ *
+ * @param originalAppBarVO Оригинальный ViewObject, который будет использоваться если
+ * соединение установлено.
+ */
 class ConnectAppBarVO(
         var originalAppBarVO: AppBarVO
 ) : AppBarVO {

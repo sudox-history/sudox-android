@@ -12,6 +12,13 @@ import ru.sudox.android.inject.LoaderComponent
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import ru.sudox.android.core.inject.CoreLoaderModule
 
+/**
+ * Основной класс приложения.
+ *
+ * Отвечает за:
+ * 1) Создание корневого компонента DI
+ * 2) Инициализацию коннектора API
+ */
 class AppLoader : Application() {
 
     private var connector: AppConnector? = null
@@ -33,7 +40,6 @@ class AppLoader : Application() {
                 )).build()
 
         loaderComponent!!.inject(this)
-
         connector = AppConnector()
         connector!!.start()
     }

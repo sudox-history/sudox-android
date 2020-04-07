@@ -66,15 +66,11 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
         apiStatusDisposable = sudoxApi!!
                 .statusSubject
-                .distinctUntilChanged()
                 .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()
                 .subscribe {
                     appLayout!!.contentLayout.appBarLayout.appBar!!.let {
-                        setAppBarViewObject(if (it.vo is ConnectAppBarVO) {
-                            (it.vo as ConnectAppBarVO).originalAppBarVO
-                        } else {
-                            it.vo
-                        }, it.callback)
+                        setAppBarViewObject((it.vo as ConnectAppBarVO).originalAppBarVO, it.callback)
                     }
                 }
 
