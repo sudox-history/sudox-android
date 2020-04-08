@@ -33,7 +33,7 @@ class AppConnector : ConnectivityManager.NetworkCallback() {
         statusDisposable = sudoxApi!!
                 .statusSubject
                 .filter { it == SudoxApiStatus.NOT_CONNECTED }
-                .delay(400, TimeUnit.MILLISECONDS)
+                .throttleLast(400, TimeUnit.MILLISECONDS)
                 .subscribe {
                     if (it == SudoxApiStatus.NOT_CONNECTED) {
                         sudoxApi!!.startConnection()
