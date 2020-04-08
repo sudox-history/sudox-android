@@ -1,5 +1,6 @@
 package ru.sudox.api.auth
 
+import io.reactivex.rxjava3.core.Observable
 import ru.sudox.api.auth.entries.create.AuthCreateRequestBody
 import ru.sudox.api.auth.entries.create.AuthCreateResponseBody
 import ru.sudox.api.auth.entries.restore.AuthRestoreRequestBody
@@ -20,10 +21,10 @@ class AuthService(val sudoxApi: SudoxApi) {
      * @param userPhone Телефон пользователя
      * @return Single с ответом от сервера
      */
-    fun createSession(userPhone: String): Single<AuthCreateResponseBody> {
+    fun createSession(userPhone: String): Observable<AuthCreateResponseBody> {
         return sudoxApi
                 .sendRequest("auth.create", AuthCreateRequestBody(userPhone), AuthCreateResponseBody::class.java)
-                .doOnSuccess { lastAuthToken = it.authToken }
+                .doOnNext { lastAuthToken = it.authToken }
                 .doOnError { lastAuthToken = null }
     }
 
@@ -33,10 +34,10 @@ class AuthService(val sudoxApi: SudoxApi) {
      * @param authToken Токен сессии авторизации
      * @return Single с ответом от сервера
      */
-    fun restoreSession(authToken: String): Single<Unit> {
+    fun restoreSession(authToken: String): Observable<Unit> {
         return sudoxApi
                 .sendRequest("auth.restoreSession", AuthRestoreRequestBody(authToken), Unit::class.java)
-                .doOnSuccess { lastAuthToken = authToken }
+                .doOnNext { lastAuthToken = authToken }
                 .doOnError { lastAuthToken = null }
     }
 
@@ -45,10 +46,10 @@ class AuthService(val sudoxApi: SudoxApi) {
      *
      * @return Single с ответом от сервера.
      */
-    fun destroySession(): Single<Nothing> {
+    fun destroySession(): Observable<Nothing> {
         return sudoxApi
                 .sendRequest("auth.destroySession", Unit, Nothing::class.java)
-                .doOnSuccess { lastAuthToken = null }
+                .doOnNext { lastAuthToken = null }
     }
 
     /**
@@ -57,7 +58,7 @@ class AuthService(val sudoxApi: SudoxApi) {
      * @param code Код, введенный пользователем
      * @return Single с ответом от сервера.
      */
-    fun checkCode(code: Int): Single<Nothing> {
+    fun checkCode(code: Int): Observable<Nothing> {
         return sudoxApi.sendRequest("auth.checkCode", Unit, Nothing::class.java)
     }
 }

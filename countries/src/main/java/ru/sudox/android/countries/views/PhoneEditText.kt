@@ -277,6 +277,12 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         invalidate()
     }
 
+    override fun setEnabled(enabled: Boolean) {
+        countrySelector.isEnabled = enabled
+        editText.isEnabled = enabled
+        super.setEnabled(enabled)
+    }
+
     override fun canIgnoreErrorLeftMargin(): Boolean {
         return false
     }

@@ -24,15 +24,22 @@ class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         authPhoneViewModel = getViewModel(viewModelFactory!!)
-        authPhoneViewModel!!.statusLiveData.observe(viewLifecycleOwner, Observer {
-            screenVO!!.phoneEditTextLayout!!.errorText = null
 
-            if (it == OK_ERROR_CODE) {
-                navigationManager!!.showChildFragment(AuthCodeFragment())
-            } else {
-                screenVO!!.phoneEditTextLayout!!.errorText = getErrorText(context!!, it)
-            }
-        })
+        authPhoneViewModel!!.apply {
+            loadingLiveData.observe(viewLifecycleOwner, Observer {
+                screenVO!!.phoneEditTextLayout!!.isEnabled = !it
+            })
+
+            statusLiveData.observe(viewLifecycleOwner, Observer {
+                screenVO!!.phoneEditTextLayout!!.errorText = null
+
+                if (it == OK_ERROR_CODE) {
+                    navigationManager!!.showChildFragment(AuthCodeFragment())
+                } else {
+                    screenVO!!.phoneEditTextLayout!!.errorText = getErrorText(context!!, it)
+                }
+            })
+        }
 
         screenVO!!.phoneEditText!!.countrySelector.setOnClickListener {
             navigationManager!!.showChildFragment(CountrySelectFragment().apply {

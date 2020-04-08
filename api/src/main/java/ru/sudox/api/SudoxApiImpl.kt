@@ -1,16 +1,16 @@
 package ru.sudox.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableEmitter
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.api.connections.Connection
 import ru.sudox.api.connections.ConnectionListener
 import ru.sudox.api.entries.ApiRequest
 import ru.sudox.api.entries.ApiRequestCallback
 import ru.sudox.api.exceptions.ApiException
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleEmitter
 import io.reactivex.rxjava3.subjects.PublishSubject
-import io.reactivex.rxjava3.subjects.SingleSubject
 import ru.sudox.api.common.SudoxApiStatus
 import java.io.IOException
 import java.util.concurrent.Semaphore
@@ -42,6 +42,7 @@ class SudoxApiImpl(
                 // Разрываем запросы, на которые ожидаем ответа
                 requestsCallbacks.forEach {
                     it.value.subjectEmitter.onError(IOException("Connection not installed!"))
+                    it.value.subjectEmitter.onComplete()
                 }
 
                 // Разрываем запросы, которые ожидают выполнения себе подобных
@@ -80,7 +81,7 @@ class SudoxApiImpl(
             methodName: String,
             requestData: Any,
             responseClass: Class<T>
-    ): Single<T> = SingleSubject.create<T> {
+    ): Observable<T> = Observable.create<T> {
         if (isConnected) {
             acquireRequestQueue(methodName)
 
@@ -95,10 +96,12 @@ class SudoxApiImpl(
             } else {
                 releaseRequestQueue(methodName)
                 it.onError(IOException("Connection not installed!"))
+                it.onComplete()
             }
         } else {
             releaseRequestQueue(methodName)
             it.onError(IOException("Connection not installed!"))
+            it.onComplete()
         }
     }
 
@@ -140,7 +143,7 @@ class SudoxApiImpl(
 
     override fun onReceive(text: String) {
         var methodName: String? = null
-        var emitter: SingleEmitter<*>? = null
+        var emitter: ObservableEmitter<*>? = null
 
         try {
             val response = objectMapper.readTree(text)
@@ -159,7 +162,7 @@ class SudoxApiImpl(
             // TODO: Обработка уведомлений
 
             @Suppress("UNCHECKED_CAST")
-            emitter = callback.subjectEmitter as SingleEmitter<Any>
+            emitter = callback.subjectEmitter as ObservableEmitter<Any>
 
             if (result == OK_ERROR_CODE) {
                 val dataNode = response.required("data")
@@ -169,10 +172,12 @@ class SudoxApiImpl(
                     return
                 }
 
-                emitter.onSuccess(objectMapper.treeToValue(dataNode, callback.dataClass))
+                emitter.onNext(objectMapper.treeToValue(dataNode, callback.dataClass))
             } else {
                 emitter.onError(ApiException(result))
             }
+
+            emitter.onComplete()
 
             releaseRequestQueue(methodName)
         } catch (ex: Exception) {
@@ -181,6 +186,7 @@ class SudoxApiImpl(
             }
 
             emitter?.onError(ex)
+            emitter?.onComplete()
         }
     }
 
