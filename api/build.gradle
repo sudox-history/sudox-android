@@ -5,6 +5,7 @@ registerModule(false, false, true, true)
 
 dependencies {
     api project(":api:common")
+    api project(":api:auth")
 
     implementation libraries.jackson_kotlin
     implementation libraries.jackson
