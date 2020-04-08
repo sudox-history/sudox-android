@@ -12,6 +12,14 @@ interface EditTextLayoutChild {
     fun changeStrokeColor(layout: EditTextLayout, width: Int, color: Int)
 
     /**
+     * Включает/выключает поле ввода.
+     * Блокируется ввод, EditText принимает соответствующий вид.
+     *
+     * @param enabled Включить или выключить EditText?
+     */
+    fun setEnabled(enabled: Boolean)
+
+    /**
      * Можно ли игнорировать левый отступ ошибки?
      *
      * @return True - если можно, False - если нельзя

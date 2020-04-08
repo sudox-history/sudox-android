@@ -186,6 +186,11 @@ class EditTextLayout : SaveableViewGroup<EditTextLayout, EditTextLayoutState> {
         }
     }
 
+    override fun setEnabled(enabled: Boolean) {
+        childView?.setEnabled(enabled)
+        super.setEnabled(enabled)
+    }
+
     override fun createStateInstance(superState: Parcelable): EditTextLayoutState {
         return EditTextLayoutState(superState)
     }
