@@ -5,10 +5,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import ru.sudox.android.auth.AuthFragment
+import ru.sudox.android.auth.code.AuthCodeFragment
 import ru.sudox.android.core.inject.viewmodel.getViewModel
 import ru.sudox.android.countries.COUNTRY_CHANGE_REQUEST_CODE
 import ru.sudox.android.countries.COUNTRY_EXTRA_NAME
 import ru.sudox.android.countries.CountrySelectFragment
+import ru.sudox.api.OK_ERROR_CODE
+import ru.sudox.api.getErrorText
 
 class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
 
@@ -22,6 +25,13 @@ class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         authPhoneViewModel = getViewModel(viewModelFactory!!)
         authPhoneViewModel!!.statusLiveData.observe(viewLifecycleOwner, Observer {
+            screenVO!!.phoneEditTextLayout!!.errorText = null
+
+            if (it == OK_ERROR_CODE) {
+                navigationManager!!.showChildFragment(AuthCodeFragment())
+            } else {
+                screenVO!!.phoneEditTextLayout!!.errorText = getErrorText(context!!, it)
+            }
         })
 
         screenVO!!.phoneEditText!!.countrySelector.setOnClickListener {

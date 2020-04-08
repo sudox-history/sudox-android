@@ -4,10 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import ru.sudox.android.auth.repositories.AuthRepository
-import ru.sudox.api.NO_INTERNET_CONNECTION
-import ru.sudox.api.common.SudoxApi
-import ru.sudox.api.exceptions.ApiException
-import java.io.IOException
+import ru.sudox.api.OK_ERROR_CODE
+import ru.sudox.api.createApiErrorsCallback
 import javax.inject.Inject
 
 class AuthPhoneViewModel @Inject constructor(
@@ -21,13 +19,9 @@ class AuthPhoneViewModel @Inject constructor(
         val disposable = authRepository
                 .createSession(userPhone)
                 .subscribe({
-                    statusLiveData.postValue(0)
-                }, {
-                    if (it is ApiException) {
-                        statusLiveData.postValue(it.code)
-                    } else {
-                        statusLiveData.postValue(NO_INTERNET_CONNECTION)
-                    }
+                    statusLiveData.postValue(OK_ERROR_CODE)
+                }, createApiErrorsCallback {
+                    statusLiveData.postValue(it)
                 })
 
         compositeDisposable.add(disposable)
