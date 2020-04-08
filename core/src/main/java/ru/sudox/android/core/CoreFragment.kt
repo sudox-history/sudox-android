@@ -5,6 +5,7 @@ import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.BACK_BUTTON_TAG
@@ -37,6 +38,9 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     @Inject
     @JvmField
     var navigationManager: NavigationManager? = null
+    @Inject
+    @JvmField
+    var viewModelFactory: ViewModelProvider.Factory? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         coreActivity = activity as CoreActivity

@@ -9,12 +9,19 @@ import ru.sudox.android.countries.inject.CountriesComponent
 import ru.sudox.android.countries.inject.CountriesModule
 import dagger.Component
 import ru.sudox.android.AppConnector
+import ru.sudox.android.auth.inject.AuthModule
 import ru.sudox.android.core.inject.CoreLoaderModule
 import ru.sudox.android.vos.ConnectAppBarVO
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ApiModule::class, CoreLoaderModule::class, CountriesModule::class])
+@Component(modules = [
+    ApiModule::class,
+    CoreLoaderModule::class,
+    CountriesModule::class,
+    ViewModelModule::class,
+    AuthModule::class
+])
 interface LoaderComponent : CoreLoaderComponent, CountriesComponent, AuthComponent {
     fun activityComponent(coreActivityModule: CoreActivityModule): ActivityComponent
     fun inject(connectAppBarVO: ConnectAppBarVO)

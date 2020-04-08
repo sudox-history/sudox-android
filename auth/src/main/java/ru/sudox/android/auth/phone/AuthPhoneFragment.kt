@@ -3,13 +3,16 @@ package ru.sudox.android.auth.phone
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
 import ru.sudox.android.auth.AuthFragment
-import ru.sudox.android.auth.code.AuthCodeFragment
+import ru.sudox.android.core.inject.viewmodel.getViewModel
 import ru.sudox.android.countries.COUNTRY_CHANGE_REQUEST_CODE
 import ru.sudox.android.countries.COUNTRY_EXTRA_NAME
 import ru.sudox.android.countries.CountrySelectFragment
 
 class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
+
+    private var authPhoneViewModel: AuthPhoneViewModel? = null
 
     init {
         appBarVO = AuthPhoneAppBarVO()
@@ -17,6 +20,10 @@ class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        authPhoneViewModel = getViewModel(viewModelFactory!!)
+        authPhoneViewModel!!.statusLiveData.observe(viewLifecycleOwner, Observer {
+        })
+
         screenVO!!.phoneEditText!!.countrySelector.setOnClickListener {
             navigationManager!!.showChildFragment(CountrySelectFragment().apply {
                 setTargetFragment(this@AuthPhoneFragment, COUNTRY_CHANGE_REQUEST_CODE)
@@ -28,7 +35,7 @@ class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
         super.onAppBarClicked(tag)
 
         if (tag == AUTH_PHONE_NEXT_BUTTON_TAG) {
-            navigationManager!!.showChildFragment(AuthCodeFragment())
+            authPhoneViewModel!!.createSession(screenVO!!.phoneEditText!!.phoneNumber!!)
         }
     }
 
