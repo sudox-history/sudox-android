@@ -6,6 +6,7 @@ import ru.sudox.api.common.SudoxApi
 import ru.sudox.api.common.SudoxApiStatus
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Коннектор API.
@@ -14,33 +15,28 @@ import javax.inject.Inject
  * 1) Установку соединения с сервером;
  * 2) Восстановление соединения при его падении.
  */
-class AppConnector : ConnectivityManager.NetworkCallback() {
+@Singleton
+class AppConnector @Inject constructor(
+        val sudoxApi: SudoxApi
+) : ConnectivityManager.NetworkCallback() {
 
     private var statusDisposable: Disposable? = null
-
-    @Inject
-    @JvmField
-    var sudoxApi: SudoxApi? = null
-
-    init {
-        AppLoader.loaderComponent!!.inject(this)
-    }
 
     /**
      * Запускает установку соединения с сервером и его восстановитель.
      */
     fun start() {
-        statusDisposable = sudoxApi!!
+        statusDisposable = sudoxApi
                 .statusSubject
                 .filter { it == SudoxApiStatus.NOT_CONNECTED }
                 .delay(400, TimeUnit.MILLISECONDS)
                 .subscribe {
                     if (it == SudoxApiStatus.NOT_CONNECTED) {
-                        sudoxApi!!.startConnection()
+                        sudoxApi.startConnection()
                     }
                 }
 
-        sudoxApi!!.startConnection()
+        sudoxApi.startConnection()
     }
 
     /**
@@ -48,6 +44,6 @@ class AppConnector : ConnectivityManager.NetworkCallback() {
      */
     fun destroy() {
         statusDisposable?.dispose()
-        sudoxApi!!.endConnection()
+        sudoxApi.endConnection()
     }
 }

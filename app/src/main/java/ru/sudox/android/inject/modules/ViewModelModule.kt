@@ -1,4 +1,4 @@
-package ru.sudox.android.inject
+package ru.sudox.android.inject.modules
 
 import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
