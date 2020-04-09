@@ -70,7 +70,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
                 .distinctUntilChanged()
                 .subscribe {
                     appLayout!!.contentLayout.appBarLayout.appBar!!.let {
-                        setAppBarViewObject((it.vo as ConnectAppBarVO).originalAppBarVO, it.callback)
+                        setAppBarViewObject(it.vo, it.callback)
                     }
                 }
 
@@ -106,17 +106,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     override fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?) {
         appLayout!!.contentLayout.appBarLayout.appBar!!.let {
             it.callback = callback
-
-            if (appBarVO != null) {
-                if (it.vo == null) {
-                    it.vo = ConnectAppBarVO(appBarVO)
-                } else if (it.vo is ConnectAppBarVO) {
-                    (it.vo as ConnectAppBarVO).originalAppBarVO = appBarVO
-                    it.vo = it.vo // Updating ...
-                }
-            } else {
-                it.vo = null
-            }
+            it.vo = ConnectAppBarVO(appBarVO!!)
         }
     }
 

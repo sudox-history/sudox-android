@@ -6,6 +6,12 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import kotlin.math.min
 
+fun View.lazyLayout(newLeft: Int, newTop: Int, newRight: Int, newBottom: Int) {
+    if (newLeft != left || newTop != top || newRight != right || newBottom != bottom) {
+        layout(newLeft, newTop, newRight, newBottom)
+    }
+}
+
 /**
  * Расчитывает значение одного из размерных параметров View.
  *
