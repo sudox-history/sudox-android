@@ -1,6 +1,7 @@
 package ru.sudox.api
 
 import android.content.Context
+import android.util.Log
 import com.sudox.messenger.api.R
 import ru.sudox.api.exceptions.ApiException
 import java.io.IOException
@@ -43,6 +44,8 @@ val errorNames = hashMapOf(
  * @param callback Кэллбэк для передачи кода ошибки.
  */
 inline fun createApiErrorsCallback(crossinline callback: (Int) -> (Unit)): (Throwable) -> (Unit) = {
+    Log.e("Sudox Error!", it.localizedMessage ?: "Without message")
+
     if (it is ApiException) {
         callback(it.code)
     } else if (it is IOException) {
