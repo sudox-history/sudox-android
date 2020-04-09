@@ -1,3 +1,5 @@
+-keepnames @ru.sudox.api.common.SudoxApiDTO public class * {*;}
+
 -assumenosideeffects class kotlin.jvm.internal.Intrinsics {
   public static void checkExpressionValueIsNotNull(java.lang.Object, java.lang.String);
   public static void checkFieldIsNotNull(java.lang.Object, java.lang.String);

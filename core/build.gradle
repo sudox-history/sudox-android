@@ -14,6 +14,7 @@ dependencies {
     implementation libraries.viewpager2
     implementation libraries.material_components
     implementation libraries.lifecycle_extensions
+    implementation libraries.rxandroid
     implementation libraries.rxjava
 
     implementation libraries.dagger
