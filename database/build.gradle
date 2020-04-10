@@ -8,6 +8,9 @@ dependencies {
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
+    implementation libraries.objectbox_rxjava
+    implementation libraries.rxjava_bridge
+    implementation libraries.rxjava
     implementation libraries.dagger
     kapt libraries.dagger_compiler
 }

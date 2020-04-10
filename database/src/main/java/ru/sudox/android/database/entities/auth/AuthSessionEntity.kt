@@ -1,8 +1,10 @@
 package ru.sudox.android.database.entities.auth
 
+import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.annotation.Index
+import ru.sudox.android.database.encryption.converters.EncryptedStringConverter
 
 /**
  * Сущность сессии авторизации
@@ -14,8 +16,8 @@ import io.objectbox.annotation.Index
  */
 @Entity
 data class AuthSessionEntity(
-        @Id var id: Long,
+        @Id var id: Long = 0L,
         @Index var phoneNumber: String,
         var userExists: Boolean,
-        var token: String
+        @Convert(converter = EncryptedStringConverter::class, dbType = ByteArray::class) var token: String
 )

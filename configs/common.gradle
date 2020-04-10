@@ -35,7 +35,7 @@ ext.registerModule = { isApp, needExtensions, needApt, needKotlin, needObjectBox
         }
 
         defaultConfig {
-            minSdkVersion 21
+            minSdkVersion 23
             targetSdkVersion 29
             testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
             versionCode versionMajor * 1000 + versionMinor * 100 + versionUpdate * 10 + versionPatch

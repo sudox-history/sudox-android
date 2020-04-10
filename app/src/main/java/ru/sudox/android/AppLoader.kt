@@ -11,6 +11,7 @@ import ru.sudox.android.inject.DaggerLoaderComponent
 import ru.sudox.android.inject.LoaderComponent
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import ru.sudox.android.core.inject.CoreLoaderModule
+import ru.sudox.android.database.encryption.DatabaseEncryptor
 import ru.sudox.android.database.inject.DatabaseModule
 
 /**
@@ -41,6 +42,7 @@ class AppLoader : Application() {
                         .registerKotlinModule()
                 )).build()
 
+        DatabaseEncryptor.loadKey()
         loaderComponent!!.inject(this)
         connector = AppConnector()
         connector!!.start()
