@@ -6,6 +6,8 @@ include ':api'
 include ':api:auth'
 include ':api:common'
 
+include ':database'
+
 include ':design'
 include ':design:edittext'
 include ':design:tablayout'

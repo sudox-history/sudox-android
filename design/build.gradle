@@ -1,7 +1,7 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, false, false, true)
+registerModule(false, false, false, true, false)
 
 apply from: '../configs/robolectric.gradle'
 

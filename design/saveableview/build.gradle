@@ -1,4 +1,4 @@
 apply from: '../../configs/dependencies.gradle'
 apply from: '../../configs/common.gradle'
 
-registerModule(false, true, false, true)
+registerModule(false, true, false, true, false)

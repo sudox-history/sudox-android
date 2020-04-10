@@ -1,5 +1,6 @@
 package ru.sudox.android.auth.repositories
 
+import io.objectbox.BoxStore
 import io.reactivex.rxjava3.core.Observable
 import ru.sudox.api.auth.AuthService
 import ru.sudox.api.auth.entries.create.AuthCreateResponseBody
@@ -10,7 +11,8 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepository @Inject constructor(
         val sudoxApi: SudoxApi,
-        val authService: AuthService
+        val authService: AuthService,
+        val boxStore: BoxStore
 ) {
 
     fun createSession(userPhone: String): Observable<AuthCreateResponseBody> {

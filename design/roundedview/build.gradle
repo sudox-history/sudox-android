@@ -1,7 +1,7 @@
 apply from: '../../configs/dependencies.gradle'
 apply from: '../../configs/common.gradle'
 
-registerModule(false, true, true, true)
+registerModule(false, true, true, true, false)
 
 dependencies {
     implementation libraries.core_ktx
