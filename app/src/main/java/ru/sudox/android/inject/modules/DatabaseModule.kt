@@ -5,6 +5,7 @@ import dagger.Provides
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import ru.sudox.android.AppEncryptor
+import javax.inject.Singleton
 
 @Module
 class DatabaseModule(
@@ -13,6 +14,7 @@ class DatabaseModule(
 ) {
 
     @Provides
+    @Singleton
     fun providesRealm(encryptor: AppEncryptor): Realm {
         return Realm.getInstance(RealmConfiguration.Builder()
                 .name(name)
