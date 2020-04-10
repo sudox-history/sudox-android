@@ -2,6 +2,9 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url 'http://oss.jfrog.org/artifactory/oss-snapshot-local'
+        }
     }
 
     dependencies {
