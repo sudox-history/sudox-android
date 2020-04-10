@@ -3,15 +3,15 @@ package ru.sudox.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 import ru.sudox.api.common.SudoxApi
+import ru.sudox.api.common.SudoxApiStatus
 import ru.sudox.api.connections.Connection
 import ru.sudox.api.connections.ConnectionListener
 import ru.sudox.api.entries.ApiRequest
 import ru.sudox.api.entries.ApiRequestCallback
 import ru.sudox.api.exceptions.ApiException
-import io.reactivex.rxjava3.core.SingleEmitter
-import io.reactivex.rxjava3.subjects.PublishSubject
-import ru.sudox.api.common.SudoxApiStatus
 import java.io.IOException
 import java.util.concurrent.Semaphore
 
@@ -103,7 +103,7 @@ class SudoxApiImpl(
             it.onError(IOException("Connection not installed!"))
             it.onComplete()
         }
-    }
+    }.subscribeOn(Schedulers.io())
 
     /**
      * Разблокировывает очередь запросов с определенным методом.
