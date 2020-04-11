@@ -16,7 +16,6 @@ dependencies {
     implementation libraries.libphonenumber
     implementation libraries.lifecycle_extensions
     implementation libraries.objectbox_rxjava
-    implementation libraries.rxjava_bridge
     implementation libraries.recyclerview
     implementation libraries.coroutines
     implementation libraries.rxjava
