@@ -3,7 +3,7 @@ def versionMinor = 6
 def versionUpdate = 0
 def versionPatch = 0
 
-ext.registerModule = { isApp, needExtensions, needApt, needKotlin, needObjectBox ->
+ext.registerModule = { isApp, needExtensions, needApt, needKotlin ->
     if (isApp) {
         apply plugin: 'com.android.application'
     } else {
@@ -20,10 +20,6 @@ ext.registerModule = { isApp, needExtensions, needApt, needKotlin, needObjectBox
         if (needApt) {
             apply plugin: 'kotlin-kapt'
         }
-    }
-
-    if (needObjectBox) {
-        apply plugin: 'io.objectbox'
     }
 
     android {
@@ -51,10 +47,8 @@ ext.registerModule = { isApp, needExtensions, needApt, needKotlin, needObjectBox
             targetCompatibility JavaVersion.VERSION_1_8
         }
 
-        if (needKotlin) {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
+        kotlinOptions {
+            jvmTarget = "1.8"
         }
 
         dexOptions {

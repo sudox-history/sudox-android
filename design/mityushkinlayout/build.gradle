@@ -1,7 +1,7 @@
 apply from: '../../configs/dependencies.gradle'
 apply from: '../../configs/common.gradle'
 
-registerModule(false, true, true, true, false)
+registerModule(false, true, true, true)
 
 dependencies {
     api project(path: ':design:common')
