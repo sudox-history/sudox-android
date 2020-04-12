@@ -27,26 +27,24 @@ class AuthRegisterScreenVO : AuthScreenVO {
     }
 
     override fun getChildViews(context: Context): Array<View> {
-        if (nicknameEditTextLayout == null) {
-            nicknameEditTextLayout = EditTextLayout(context).apply {
-                nicknameEditText = BasicEditText(context).apply {
-                    hint = context.getString(R.string.nickname)
-                    isSingleLine = true
-                    maxLines = 1
-                }
-
-                childView = nicknameEditText
+        nicknameEditTextLayout = EditTextLayout(context).apply {
+            nicknameEditText = BasicEditText(context).apply {
+                hint = context.getString(R.string.nickname)
+                isSingleLine = true
+                maxLines = 1
             }
 
-            nameEditTextLayout = EditTextLayout(context).apply {
-                nameEditText = BasicEditText(context).apply {
-                    hint = context.getString(R.string.name_and_surname)
-                    isSingleLine = true
-                    maxLines = 1
-                }
+            childView = nicknameEditText
+        }
 
-                childView = nameEditText
+        nameEditTextLayout = EditTextLayout(context).apply {
+            nameEditText = BasicEditText(context).apply {
+                hint = context.getString(R.string.name_and_surname)
+                isSingleLine = true
+                maxLines = 1
             }
+
+            childView = nameEditText
         }
 
         return arrayOf(nicknameEditTextLayout as View, nameEditTextLayout as View)

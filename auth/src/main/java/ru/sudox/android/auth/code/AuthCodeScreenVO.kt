@@ -39,14 +39,12 @@ class AuthCodeScreenVO(
     }
 
     override fun getChildViews(context: Context): Array<View> {
-        if (codeEditTextLayout == null) {
-            codeEditTextLayout = EditTextLayout(context).apply {
-                codeEditText = CodeEditText(context).apply {
-                    digitsCount = 5 // TODO: Get from API
-                }
-
-                childView = codeEditText
+        codeEditTextLayout = EditTextLayout(context).apply {
+            codeEditText = CodeEditText(context).apply {
+                digitsCount = 5 // TODO: Get from API
             }
+
+            childView = codeEditText
         }
 
         return arrayOf(codeEditTextLayout as View)

@@ -35,17 +35,15 @@ class AuthPhoneScreenVO : AuthScreenVO {
     }
 
     override fun getChildViews(context: Context): Array<View> {
-        if (phoneEditTextLayout == null) {
-            phoneEditText = PhoneEditText(context)
-            phoneEditTextLayout = EditTextLayout(context).apply {
-                childView = phoneEditText
-            }
+        phoneEditText = PhoneEditText(context)
+        phoneEditTextLayout = EditTextLayout(context).apply {
+            childView = phoneEditText
+        }
 
-            if (selectedCountry == null) {
-                phoneEditText!!.useDefaultCountry()
-            } else {
-                setSelectedCountry()
-            }
+        if (selectedCountry == null) {
+            phoneEditText!!.useDefaultCountry()
+        } else {
+            setSelectedCountry()
         }
 
         return arrayOf(phoneEditTextLayout as View)
