@@ -9,6 +9,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.sudox.android.R
 import ru.sudox.android.auth.phone.AuthPhoneFragment
@@ -17,22 +18,13 @@ import ru.sudox.android.core.managers.NavigationManager
 import ru.sudox.android.messages.DialogsFragment
 import ru.sudox.android.people.PeopleFragment
 import ru.sudox.android.people.ProfileFragment
-import java.util.LinkedList
+import java.util.Stack
 import java.util.UUID
 
-internal const val PEOPLE_NAVBAR_ITEM_ID = 1
-internal const val DIALOGS_NAVBAR_ITEM_ID = 2
-internal const val PROFILE_NAVBAR_ITEM_ID = 3
-
-internal const val NAVIGATION_BAR_VISIBLE_EXTRA_KEY = "navigation_bar_visible"
-internal const val BACKSTACK_SIZE_EXTRA_KEY = "backstack_size"
-internal const val BACKSTACK_ITEM_TAG_AT_INDEX_EXTRA_KEY = "backstack_item_tag_at_index"
-internal const val BACKSTACK_FRAGMENT_TAG_AT_INDEX_EXTRA_KEY = "backstack_fragment_tag_at_index"
-internal const val LOADED_FRAGMENTS_COUNT_EXTRA_KEY = "loaded_fragments_count"
-internal const val LOADED_FRAGMENT_ITEM_TAG_AT_INDEX_EXTRA_KEY = "loaded_fragment_item_tag_at_index"
-internal const val LOADED_FRAGMENT_TAG_AT_INDEX_EXTRA_KEY = "loaded_fragment_fragment_tag_at_index"
-internal const val CURRENT_FRAGMENT_TAG_EXTRA_KEY = "current_fragment_tag"
-internal const val CURRENT_ITEM_TAG_EXTRA_KEY = "current_item_tag"
+internal const val AUTH_TAG = 0
+internal const val PEOPLE_TAG = 1
+internal const val DIALOGS_TAG = 2
+internal const val PROFILE_TAG = 3
 
 /**
  * Менеджер навигации данного приложения.
@@ -55,302 +47,228 @@ class AppNavigationManager(
         val navigationBar: BottomNavigationView
 ) : NavigationManager, BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private var blockCallback: Boolean = false
-    private var backstack = LinkedList<Pair<Int, CoreFragment>>()
-    private var loadedFragments = HashMap<Int, CoreFragment>()
-    private var currentFragment: CoreFragment? = null
-    private var currentItemTag = 0
+    private var mainFragments: HashMap<Int, Lazy<CoreFragment>>? = null
+    private var fragmentStates = HashMap<Fragment, Fragment.SavedState?>()
+
+    private fun createMainFragmentsMap(): HashMap<Int, Lazy<CoreFragment>> {
+        return hashMapOf(
+                PEOPLE_TAG to lazy { PeopleFragment() },
+                DIALOGS_TAG to lazy { DialogsFragment() },
+                PROFILE_TAG to lazy { ProfileFragment() }
+        )
+    }
+
+    private var blockNavbarCallback = false
+    private var tagsBackstack = Stack<Int>()
+    private var childBackstack = HashMap<Int, Stack<CoreFragment>>()
+    private var currentPart: AppNavigationPart? = null
+    private var currentTag: Int = 0
 
     override fun showAuthPart() {
-        currentFragment = AuthPhoneFragment()
-        loadedFragments.clear()
-        backstack.clear()
+        val transaction = fragmentManager.beginTransaction()
+        val fragment = AuthPhoneFragment()
 
-        val fragmentTransaction = fragmentManager
-                .beginTransaction()
-                .setCustomAnimations(
-                        R.animator.animator_fragment_enter_right,
-                        R.animator.animator_fragment_exit_right
-                )
-
-        fragmentManager.fragments.forEach {
-            fragmentTransaction.remove(it)
+        if (currentPart != null) {
+            transaction.setCustomAnimations(R.animator.animator_fragment_enter_left, R.animator.animator_fragment_exit_left)
+        } else {
+            transaction.setTransition(TRANSIT_FRAGMENT_FADE)
         }
 
-        fragmentTransaction
-                .add(containerId, currentFragment!!, UUID.randomUUID().toString())
+        transaction
+                .replace(containerId, fragment, UUID.randomUUID().toString())
                 .commit()
 
         navigationBar.visibility = View.GONE
+
+        currentPart = AppNavigationPart.AUTH
+        currentTag = AUTH_TAG
+
+        tagsBackstack.clear()
+        childBackstack.clear()
+        mainFragments?.clear()
+        fragmentStates.clear()
+
+        childBackstack
+                .getOrPut(currentTag, { Stack() })
+                .push(fragment)
+
+        tagsBackstack.push(currentTag)
     }
 
     override fun showMainPart() {
-        currentFragment = null
-        backstack.clear()
+        val fragment = PeopleFragment()
 
-        val transaction = fragmentManager.beginTransaction()
+        fragmentManager
+                .beginTransaction()
+                .setCustomAnimations(R.animator.animator_fragment_enter_right, R.animator.animator_fragment_exit_right)
+                .replace(containerId, fragment, UUID.randomUUID().toString())
+                .commit()
 
-        loadedFragments[PEOPLE_NAVBAR_ITEM_ID] = PeopleFragment()
-        loadedFragments[DIALOGS_NAVBAR_ITEM_ID] = DialogsFragment()
-        loadedFragments[PROFILE_NAVBAR_ITEM_ID] = ProfileFragment()
+        currentPart = AppNavigationPart.MAIN
+        currentTag = PEOPLE_TAG
 
-        fragmentManager.fragments.forEach {
-            transaction.remove(it)
-        }
+        tagsBackstack.clear()
+        childBackstack.clear()
+        mainFragments = createMainFragmentsMap()
+        fragmentStates.clear()
 
-        loadedFragments.forEach { pair ->
-            transaction.add(containerId, pair.value, UUID.randomUUID().toString())
-            transaction.hide(pair.value)
-        }
+        childBackstack
+                .getOrPut(currentTag, { Stack() })
+                .push(fragment)
 
-        transaction.commit()
+        tagsBackstack.push(currentTag)
 
-        navigationBar.selectedItemId = PEOPLE_NAVBAR_ITEM_ID
+        blockNavbarCallback = true
+        navigationBar.selectedItemId = PEOPLE_TAG
+        blockNavbarCallback = false
+
         navigationBar.visibility = View.VISIBLE
     }
 
     override fun showChildFragment(fragment: CoreFragment) {
-        val fragmentTransaction = fragmentManager
+        saveCurrentFragmentState()
+
+        childBackstack[currentTag]!!.push(fragment)
+
+        fragmentManager
                 .beginTransaction()
-                .setCustomAnimations(
-                        R.animator.animator_fragment_enter_right,
-                        R.animator.animator_fragment_exit_right
-                )
-
-        fragmentManager.fragments.forEach {
-            fragmentTransaction.detach(it)
-        }
-
-        if (!fragment.isAdded) {
-            fragmentTransaction.add(containerId, fragment, UUID.randomUUID().toString())
-        }
-
-        if (currentFragment != null && !isBackstackContainsCurrentFragment()) {
-            backstack.add(Pair(currentItemTag, currentFragment!!))
-        }
-
-        currentFragment = fragment
-
-        fragmentTransaction
-                .show(fragment)
+                .setCustomAnimations(R.animator.animator_fragment_enter_right, R.animator.animator_fragment_exit_right)
+                .replace(containerId, fragment, UUID.randomUUID().toString())
                 .commit()
     }
 
     override fun popBackstack(): Boolean {
-        if (backstack.isEmpty() || currentFragment == null) {
-            return false
-        }
+        val currentBackstack = childBackstack[currentTag]!!
+        currentBackstack.pop()
 
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        val backstackIterator = backstack.descendingIterator()
-        var backstackPair: Pair<Int, CoreFragment>? = null
+        val transaction = fragmentManager.beginTransaction()
 
-        while (backstackIterator.hasNext()) {
-            val pair = backstackIterator.next()
+        if (currentBackstack.isEmpty()) {
+            // Root to child or root to root
 
-            if (pair.second == currentFragment) {
-                backstackIterator.remove()
-                continue
+            childBackstack.remove(currentTag)
+            tagsBackstack.pop()
+
+            if (tagsBackstack.isEmpty()) {
+                return false
             }
 
-            if (pair.first == currentItemTag) {
-                backstackIterator.remove()
-                backstackPair = pair
-                break
+            val prevTag = tagsBackstack.peek()
+            val prevFragment = childBackstack[prevTag]!!.peek().apply {
+                restoreFragmentState(this)
             }
-        }
 
-        if (backstackPair == null) {
-            backstackPair = backstack.removeLast()!!
-        }
+            if (prevTag > currentTag) {
+                transaction.setCustomAnimations(R.animator.animator_fragment_enter_right, R.animator.animator_fragment_exit_right)
+            } else {
+                transaction.setCustomAnimations(R.animator.animator_fragment_enter_left, R.animator.animator_fragment_exit_left)
+            }
 
-        val prevFragment = backstackPair.second
-        val prevItemTag = backstackPair.first
+            transaction
+                    .replace(containerId, prevFragment, prevFragment.tag)
+                    .commit()
 
-        if (prevItemTag > currentItemTag) {
-            fragmentTransaction.setCustomAnimations(
-                    R.animator.animator_fragment_enter_right,
-                    R.animator.animator_fragment_exit_right
-            )
-        } else if (prevItemTag <= currentItemTag) {
-            fragmentTransaction.setCustomAnimations(
-                    R.animator.animator_fragment_enter_left,
-                    R.animator.animator_fragment_exit_left
-            )
-        }
+            currentTag = prevTag
 
-        if (isFragmentLoaded(currentFragment!!)) {
-            fragmentTransaction.detach(currentFragment!!)
+            blockNavbarCallback = true
+            navigationBar.selectedItemId = currentTag
+            blockNavbarCallback = false
         } else {
-            fragmentTransaction.remove(currentFragment!!)
+            // Child to root, or child to child in once tag
+
+            val fragment = currentBackstack.peek().apply {
+                restoreFragmentState(this)
+            }
+
+            transaction
+                    .setCustomAnimations(R.animator.animator_fragment_enter_left, R.animator.animator_fragment_exit_left)
+                    .replace(containerId, fragment, fragment.tag)
+                    .commit()
         }
-
-        fragmentTransaction
-                .attach(prevFragment)
-                .commit()
-
-        blockCallback = true
-        navigationBar.selectedItemId = prevItemTag
-        blockCallback = false
-
-        currentFragment = prevFragment
-        currentItemTag = prevItemTag
 
         return true
     }
 
     override fun restoreState(bundle: Bundle): Boolean {
-        val currentFragmentTag = bundle.getString(CURRENT_FRAGMENT_TAG_EXTRA_KEY)
-
-        currentFragment = fragmentManager.findFragmentByTag(currentFragmentTag) as CoreFragment?
-        currentItemTag = bundle.getInt(CURRENT_ITEM_TAG_EXTRA_KEY)
-
-        val backstackSize = bundle.getInt(BACKSTACK_SIZE_EXTRA_KEY)
-
-        for (i in 0 until backstackSize) {
-            val itemTag = bundle.getInt("$BACKSTACK_ITEM_TAG_AT_INDEX_EXTRA_KEY$i")
-            val fragmentTag = bundle.getString("$BACKSTACK_FRAGMENT_TAG_AT_INDEX_EXTRA_KEY$i")
-            val fragment = fragmentManager.findFragmentByTag(fragmentTag)!! as CoreFragment
-
-            backstack.add(Pair(itemTag, fragment))
-        }
-
-        val loadedFragmentsCount = bundle.getInt(LOADED_FRAGMENTS_COUNT_EXTRA_KEY)
-
-        for (i in 0 until loadedFragmentsCount) {
-            val itemTag = bundle.getInt("$LOADED_FRAGMENT_ITEM_TAG_AT_INDEX_EXTRA_KEY$i")
-            val fragmentTag = bundle.getString("$LOADED_FRAGMENT_TAG_AT_INDEX_EXTRA_KEY$i")
-            val fragment = fragmentManager.findFragmentByTag(fragmentTag)!! as CoreFragment
-
-            loadedFragments[itemTag] = fragment
-        }
-
-        navigationBar.visibility = if (bundle.getBoolean(NAVIGATION_BAR_VISIBLE_EXTRA_KEY)) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
-
-        configureNavigationBar()
-
         return false
     }
 
     override fun saveState(bundle: Bundle) {
-        bundle.putBoolean(NAVIGATION_BAR_VISIBLE_EXTRA_KEY, navigationBar.visibility == View.VISIBLE)
-        bundle.putString(CURRENT_FRAGMENT_TAG_EXTRA_KEY, currentFragment!!.tag)
-        bundle.putInt(CURRENT_ITEM_TAG_EXTRA_KEY, currentItemTag)
-        bundle.putInt(LOADED_FRAGMENTS_COUNT_EXTRA_KEY, loadedFragments.size)
-        bundle.putInt(BACKSTACK_SIZE_EXTRA_KEY, backstack.size)
-
-        var backstackIndex = 0
-        val backstackIterator = backstack.iterator()
-
-        while (backstackIterator.hasNext()) {
-            val backstackPair = backstackIterator.next()
-
-            bundle.putInt("$BACKSTACK_ITEM_TAG_AT_INDEX_EXTRA_KEY$backstackIndex", backstackPair.first)
-            bundle.putString("$BACKSTACK_FRAGMENT_TAG_AT_INDEX_EXTRA_KEY$backstackIndex", backstackPair.second.tag)
-
-            backstackIndex++
-        }
-
-        var loadedFragmentIndex = 0
-
-        loadedFragments.forEach {
-            bundle.putInt("$LOADED_FRAGMENT_ITEM_TAG_AT_INDEX_EXTRA_KEY$loadedFragmentIndex", it.key)
-            bundle.putString("$LOADED_FRAGMENT_TAG_AT_INDEX_EXTRA_KEY$loadedFragmentIndex", it.value.tag)
-
-            loadedFragmentIndex++
-        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        if (blockCallback) {
+        if (blockNavbarCallback) {
             return true
         }
 
         val tag = item.itemId
+        val currentStack = childBackstack[currentTag]!!
+        val transaction = fragmentManager.beginTransaction()
 
-        if (currentFragment == loadedFragments[tag]) {
-            currentFragment!!.resetFragment()
+        if (tag == currentTag) {
+            // It's root fragment!
+            if (currentStack.size == 1) {
+                currentStack.peek().resetFragment()
+            } else {
+                // Child to root where tag not changing
+                repeat(currentStack.size - 1) {
+                    currentStack.pop()
+                }
+
+                val fragment = currentStack.peek().apply {
+                    restoreFragmentState(this)
+                }
+
+                transaction
+                        .setCustomAnimations(R.animator.animator_fragment_enter_left, R.animator.animator_fragment_exit_left)
+                        .replace(containerId, fragment, fragment.tag)
+                        .commit()
+            }
+
             return false
-        }
+        } else {
+            saveCurrentFragmentState()
 
-        var backFromChildToRootFragment = false
-        var itemLastFragment = getItemLastFragment(tag)
-        val fragmentTransaction = fragmentManager.beginTransaction()
+            tagsBackstack.remove(tag)
+            tagsBackstack.push(tag)
 
-        if (tag >= currentItemTag) {
-            fragmentTransaction.setCustomAnimations(
-                    R.animator.animator_fragment_enter_right,
-                    R.animator.animator_fragment_exit_right
-            )
-        } else if (tag < currentItemTag) {
-            fragmentTransaction.setCustomAnimations(
-                    R.animator.animator_fragment_enter_left,
-                    R.animator.animator_fragment_exit_left
-            )
-        }
+            val stack = childBackstack.getOrPut(tag, { Stack() })
 
-        fragmentManager.fragments.forEach {
-            fragmentTransaction.hide(it)
-        }
-
-        if (currentFragment != null && currentItemTag == tag && !isFragmentLoaded(currentFragment!!)) {
-            val loadedFragment = loadedFragments[tag]
-            val backstackIterator = backstack.iterator()
-
-            fragmentTransaction.remove(currentFragment!!)
-
-            while (backstackIterator.hasNext()) {
-                val pair = backstackIterator.next()
-
-                if (pair.first != currentItemTag) {
-                    continue
-                }
-
-                if (pair.second != loadedFragment) {
-                    fragmentTransaction.remove(pair.second)
-                }
-
-                backstackIterator.remove()
+            if (stack.isEmpty()) {
+                stack.push(mainFragments!![tag]!!.value)
             }
 
-            itemLastFragment = loadedFragment!!
-            backFromChildToRootFragment = true
-        }
-
-        if (!backFromChildToRootFragment && currentFragment != null) {
-            val iterator = backstack.iterator()
-
-            while (iterator.hasNext()) {
-                val pair = iterator.next()
-
-                if (pair.first == currentItemTag && pair.second == currentFragment!!) {
-                    iterator.remove()
-                    break
-                }
+            if (tag > currentTag) {
+                transaction.setCustomAnimations(
+                        R.animator.animator_fragment_enter_right,
+                        R.animator.animator_fragment_exit_right
+                )
+            } else {
+                transaction.setCustomAnimations(
+                        R.animator.animator_fragment_enter_left,
+                        R.animator.animator_fragment_exit_left
+                )
             }
 
-            backstack.add(Pair(currentItemTag, currentFragment!!))
+            val fragment = stack.peek().apply {
+                restoreFragmentState(this)
+            }
+
+            transaction
+                    .replace(containerId, fragment, fragment.tag)
+                    .commit()
+
+            currentTag = tag
         }
-
-        fragmentTransaction
-                .show(itemLastFragment)
-                .commit()
-
-        currentFragment = itemLastFragment
-        currentItemTag = tag
 
         return true
     }
 
     override fun configureNavigationBar() {
         navigationBar.menu.apply {
-            addItem(this, PEOPLE_NAVBAR_ITEM_ID, R.string.people, R.drawable.ic_group)
-            addItem(this, DIALOGS_NAVBAR_ITEM_ID, R.string.messages, R.drawable.ic_chat_bubble)
-            addItem(this, PROFILE_NAVBAR_ITEM_ID, R.string.profile, R.drawable.ic_account)
+            addItem(this, PEOPLE_TAG, R.string.people, R.drawable.ic_group)
+            addItem(this, DIALOGS_TAG, R.string.messages, R.drawable.ic_chat_bubble)
+            addItem(this, PROFILE_TAG, R.string.profile, R.drawable.ic_account)
         }
 
         navigationBar.setOnNavigationItemSelectedListener(this)
@@ -362,21 +280,19 @@ class AppNavigationManager(
         }
     }
 
-    private fun isFragmentLoaded(fragment: Fragment): Boolean {
-        return loadedFragments.entries.find {
-            it.value == fragment
-        } != null
+    private fun saveCurrentFragmentState() {
+        childBackstack[currentTag]!!.peek().let {
+            if (fragmentStates[it] != null) {
+                fragmentStates.remove(it)
+            }
+
+            fragmentStates[it] = fragmentManager.saveFragmentInstanceState(it)
+        }
     }
 
-    private fun isBackstackContainsCurrentFragment(): Boolean {
-        return backstack.find { pair ->
-            pair.first == currentItemTag && pair.second == currentFragment!!
-        } != null
-    }
-
-    private fun getItemLastFragment(tag: Int): CoreFragment {
-        return backstack.findLast { pair ->
-            pair.first == tag
-        }?.second ?: loadedFragments[tag]!!
+    private fun restoreFragmentState(fragment: CoreFragment) {
+        fragmentStates[fragment]?.let {
+            fragment.setInitialSavedState(it)
+        }
     }
 }
