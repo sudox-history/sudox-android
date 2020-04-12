@@ -59,7 +59,7 @@ class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == COUNTRY_CHANGE_REQUEST_CODE) {
-            screenVO!!.selectedCountry = data!!.getParcelableExtra(COUNTRY_EXTRA_NAME)
+            screenVO!!.phoneEditText!!.vo = data!!.getParcelableExtra(COUNTRY_EXTRA_NAME)
         }
     }
 }

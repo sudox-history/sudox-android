@@ -124,7 +124,6 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
                 countrySelector.setCompoundDrawablesWithIntrinsicBounds(value.flagId, 0, 0, 0)
                 countrySelector.text = "+${value.countryCode}"
 
-                // TODO: Сброс только если ошибка связана с страной
                 (parent as EditTextLayout).errorText = null
             }
 
@@ -133,7 +132,6 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
             invalidate()
         }
 
-    var ignoreCountryFromState = false
     var autofillMyNumber = false
         set(value) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
