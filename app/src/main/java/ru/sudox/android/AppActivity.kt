@@ -80,7 +80,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             navigationManager!!.restoreState(savedInstanceState)
         } else {
             navigationManager!!.configureNavigationBar()
-            navigationManager!!.showMainPart()
+            navigationManager!!.showAuthPart()
         }
     }
 
@@ -106,11 +106,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     override fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?) {
         appLayout!!.contentLayout.appBarLayout.appBar!!.let {
             it.callback = callback
-            it.vo = if (appBarVO != null) {
-                ConnectAppBarVO(appBarVO)
-            } else {
-                null
-            }
+            it.vo = ConnectAppBarVO(appBarVO!!)
         }
     }
 

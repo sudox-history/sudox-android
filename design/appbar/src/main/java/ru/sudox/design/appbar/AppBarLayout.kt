@@ -30,7 +30,7 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
                 val child = getChildAt(i)
 
                 if (child != appBar) {
-                    removeView(child)
+                    removeView(this)
                 }
             }
 
