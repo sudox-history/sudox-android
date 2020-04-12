@@ -3,7 +3,7 @@ package ru.sudox.android.auth.phone
 import androidx.lifecycle.MutableLiveData
 import ru.sudox.android.auth.repositories.AuthRepository
 import ru.sudox.android.core.CoreViewModel
-import ru.sudox.api.OK_ERROR_CODE
+import ru.sudox.android.core.livedata.SingleLiveEvent
 import ru.sudox.api.createApiErrorsCallback
 import javax.inject.Inject
 
@@ -12,16 +12,18 @@ class AuthPhoneViewModel @Inject constructor(
 ) : CoreViewModel() {
 
     val loadingLiveData = MutableLiveData<Boolean>()
-    val statusLiveData = MutableLiveData<Int>()
+    val successLiveData = SingleLiveEvent<Nothing>()
+    val errorsLiveData = MutableLiveData<Int>()
 
     fun createSession(userPhone: String) {
         loadingLiveData.postValue(true)
 
         compositeDisposable.add(doRequest(authRepository.createSessionOrRestore(userPhone)).subscribe({
-            statusLiveData.postValue(OK_ERROR_CODE)
+            successLiveData.postValue(null)
             loadingLiveData.postValue(false)
+            errorsLiveData.postValue(null)
         }, createApiErrorsCallback {
-            statusLiveData.postValue(it)
+            errorsLiveData.postValue(it)
             loadingLiveData.postValue(false)
         }))
     }
