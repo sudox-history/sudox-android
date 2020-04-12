@@ -6,8 +6,18 @@ import ru.sudox.design.edittext.layout.EditTextLayout
 import ru.sudox.android.auth.R
 import ru.sudox.android.auth.vos.AuthScreenVO
 import ru.sudox.android.countries.views.PhoneEditText
+import ru.sudox.android.countries.vos.CountryVO
 
 class AuthPhoneScreenVO : AuthScreenVO {
+
+    var selectedCountry: CountryVO? = null
+        set(value) {
+            field = value
+
+            if (value != null && phoneEditText != null) {
+                setSelectedCountry()
+            }
+        }
 
     var phoneEditTextLayout: EditTextLayout? = null
     var phoneEditText: PhoneEditText? = null
@@ -31,9 +41,18 @@ class AuthPhoneScreenVO : AuthScreenVO {
                 childView = phoneEditText
             }
 
-            phoneEditText!!.useDefaultCountry()
+            if (selectedCountry == null) {
+                phoneEditText!!.useDefaultCountry()
+            } else {
+                setSelectedCountry()
+            }
         }
 
         return arrayOf(phoneEditTextLayout as View)
+    }
+
+    private fun setSelectedCountry() {
+        phoneEditText!!.ignoreCountryFromState = true
+        phoneEditText!!.vo = selectedCountry
     }
 }
