@@ -106,7 +106,12 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     override fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?) {
         appLayout!!.contentLayout.appBarLayout.appBar!!.let {
             it.callback = callback
-            it.vo = ConnectAppBarVO(appBarVO!!)
+
+            if (appBarVO != null) {
+                it.vo = ConnectAppBarVO(appBarVO)
+            } else {
+                it.vo = null
+            }
         }
     }
 

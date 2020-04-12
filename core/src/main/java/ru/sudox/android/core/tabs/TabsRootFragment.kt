@@ -66,7 +66,6 @@ abstract class TabsRootFragment : CoreFragment() {
 
         if (!hidden) {
             screenManager!!.reset()
-            coreActivity!!.setAppBarLayoutViewObject(appBarLayoutVO)
 
             // TabLayout появится в VO только после как его зададут.
             (appBarLayoutVO as TabsAppBarLayoutVO).apply {
