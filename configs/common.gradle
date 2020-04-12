@@ -47,8 +47,10 @@ ext.registerModule = { isApp, needExtensions, needApt, needKotlin ->
             targetCompatibility JavaVersion.VERSION_1_8
         }
 
-        kotlinOptions {
-            jvmTarget = "1.8"
+        if (needKotlin) {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
         }
 
         dexOptions {

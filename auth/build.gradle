@@ -18,6 +18,10 @@ dependencies {
     implementation libraries.coroutines
     implementation libraries.rxjava
 
+    implementation libraries.room_rxjava2
+    implementation libraries.room
+    kapt libraries.room_compiler
+
     implementation libraries.dagger
     kapt libraries.dagger_compiler
 }

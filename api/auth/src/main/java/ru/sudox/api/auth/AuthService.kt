@@ -1,11 +1,10 @@
 package ru.sudox.api.auth
 
-import io.reactivex.rxjava3.core.Observable
+import io.reactivex.Observable
 import ru.sudox.api.auth.entries.create.AuthCreateRequestBody
 import ru.sudox.api.auth.entries.create.AuthCreateResponseBody
 import ru.sudox.api.auth.entries.restore.AuthRestoreRequestBody
 import ru.sudox.api.common.SudoxApi
-import io.reactivex.rxjava3.core.Single
 
 class AuthService(val sudoxApi: SudoxApi) {
 
@@ -36,7 +35,7 @@ class AuthService(val sudoxApi: SudoxApi) {
      */
     fun restoreSession(authToken: String): Observable<Unit> {
         return sudoxApi
-                .sendRequest("auth.restoreSession", AuthRestoreRequestBody(authToken), Unit::class.java)
+                .sendRequest("auth.createSession", AuthRestoreRequestBody(authToken), Unit::class.java)
                 .doOnNext { lastAuthToken = authToken }
                 .doOnError { lastAuthToken = null }
     }

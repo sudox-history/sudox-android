@@ -1,4 +1,4 @@
-package ru.sudox.android.inject
+package ru.sudox.android.inject.components
 
 import ru.sudox.api.inject.ApiModule
 import ru.sudox.android.AppLoader
@@ -11,12 +11,15 @@ import dagger.Component
 import ru.sudox.android.AppConnector
 import ru.sudox.android.auth.inject.AuthModule
 import ru.sudox.android.core.inject.CoreLoaderModule
+import ru.sudox.android.inject.DatabaseModule
+import ru.sudox.android.inject.ViewModelModule
 import ru.sudox.android.vos.ConnectAppBarVO
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [
     ApiModule::class,
+    DatabaseModule::class,
     CoreLoaderModule::class,
     CountriesModule::class,
     ViewModelModule::class,

@@ -1,6 +1,6 @@
 package ru.sudox.api.entries
 
-import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.ObservableEmitter
 
 /**
  * Обьект системы обратных вызовов для запросов.

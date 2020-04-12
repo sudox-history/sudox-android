@@ -1,4 +1,4 @@
-package ru.sudox.android.inject
+package ru.sudox.android.inject.components
 
 import ru.sudox.android.AppActivity
 import ru.sudox.android.core.inject.CoreActivityComponent

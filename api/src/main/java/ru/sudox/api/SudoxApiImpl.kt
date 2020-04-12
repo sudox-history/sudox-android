@@ -1,16 +1,16 @@
 package ru.sudox.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.ObservableEmitter
+import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
+import io.reactivex.schedulers.Schedulers
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.api.connections.Connection
 import ru.sudox.api.connections.ConnectionListener
 import ru.sudox.api.entries.ApiRequest
 import ru.sudox.api.entries.ApiRequestCallback
 import ru.sudox.api.exceptions.ApiException
-import io.reactivex.rxjava3.core.SingleEmitter
-import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.subjects.PublishSubject
 import ru.sudox.api.common.SudoxApiStatus
 import java.io.IOException
 import java.util.concurrent.Semaphore
@@ -165,14 +165,14 @@ class SudoxApiImpl(
             emitter = callback.subjectEmitter as ObservableEmitter<Any>
 
             if (result == OK_ERROR_CODE) {
-                val dataNode = response.required("data")
+                val dataNode = response["data"]
 
-                if (!dataNode.isObject) {
-                    releaseRequestQueue(methodName)
-                    return
-                }
-
-                emitter.onNext(objectMapper.treeToValue(dataNode, callback.dataClass))
+                @Suppress("RedundantUnitExpression")
+                emitter.onNext(if (dataNode != null) {
+                    objectMapper.treeToValue(dataNode, callback.dataClass)
+                } else {
+                    Unit
+                })
             } else {
                 emitter.onError(ApiException(result))
             }

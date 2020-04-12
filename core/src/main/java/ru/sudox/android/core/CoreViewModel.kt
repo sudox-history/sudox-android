@@ -1,17 +1,18 @@
 package ru.sudox.android.core
 
 import androidx.lifecycle.ViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Notification
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.Notification
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 abstract class CoreViewModel : ViewModel() {
 
     val compositeDisposable = CompositeDisposable()
 
+    @Suppress("UnstableApiUsage")
     fun <T> doRequest(observable: Observable<T>): Observable<T> {
         return observable
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -22,9 +23,9 @@ abstract class CoreViewModel : ViewModel() {
                     if (it.isOnComplete) {
                         Notification.createOnComplete<T>()
                     } else if (it.isOnError) {
-                        Notification.createOnError<T>(it.error)
+                        Notification.createOnError<T>(it.error!!)
                     } else {
-                        Notification.createOnNext<T>(it.value)
+                        Notification.createOnNext<T>(it.value!!)
                     }
                 }
     }

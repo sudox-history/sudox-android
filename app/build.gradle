@@ -27,6 +27,10 @@ dependencies {
     api project(path: ':countries')
     api project(path: ':api')
 
+    implementation libraries.room_rxjava2
+    implementation libraries.room
+    kapt libraries.room_compiler
+
     implementation libraries.core_ktx
     implementation libraries.appcompat
     implementation libraries.annotations

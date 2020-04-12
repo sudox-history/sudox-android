@@ -7,10 +7,11 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import ru.sudox.api.connections.impl.WebSocketConnection
 import ru.sudox.api.inject.ApiModule
 import ru.sudox.android.countries.inject.CountriesModule
-import ru.sudox.android.inject.DaggerLoaderComponent
-import ru.sudox.android.inject.LoaderComponent
+import ru.sudox.android.inject.components.LoaderComponent
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import ru.sudox.android.core.inject.CoreLoaderModule
+import ru.sudox.android.inject.DatabaseModule
+import ru.sudox.android.inject.components.DaggerLoaderComponent
 
 /**
  * Основной класс приложения.
@@ -32,6 +33,7 @@ class AppLoader : Application() {
 
         loaderComponent = DaggerLoaderComponent
                 .builder()
+                .databaseModule(DatabaseModule("sudox"))
                 .coreLoaderModule(CoreLoaderModule(this))
                 .countriesModule(CountriesModule(PhoneNumberUtil.createInstance(this)))
                 .apiModule(ApiModule(WebSocketConnection(), ObjectMapper()

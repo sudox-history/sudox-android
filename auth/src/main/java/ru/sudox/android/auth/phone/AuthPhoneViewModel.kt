@@ -17,7 +17,7 @@ class AuthPhoneViewModel @Inject constructor(
     fun createSession(userPhone: String) {
         loadingLiveData.postValue(true)
 
-        compositeDisposable.add(doRequest(authRepository.createSession(userPhone)).subscribe({
+        compositeDisposable.add(doRequest(authRepository.createSessionOrRestore(userPhone)).subscribe({
             statusLiveData.postValue(OK_ERROR_CODE)
             loadingLiveData.postValue(false)
         }, createApiErrorsCallback {

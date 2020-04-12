@@ -1,7 +1,7 @@
 package ru.sudox.android
 
 import android.net.ConnectivityManager
-import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.disposables.Disposable
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.api.common.SudoxApiStatus
 import java.util.concurrent.TimeUnit
