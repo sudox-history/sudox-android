@@ -4,6 +4,9 @@ import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
@@ -32,6 +35,9 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     var appBarLayoutVO: AppBarLayoutVO? = null
     var appBarVO: AppBarVO? = null
 
+    var cachedView: View? = null
+    var viewLoadedFromCache: Boolean = false
+
     @Inject
     @JvmField
     var screenManager: ScreenManager? = null
@@ -47,6 +53,18 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
         coreActivity!!.getActivityComponent().inject(this)
 
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if (cachedView != null) {
+            viewLoadedFromCache = true
+            return cachedView
+        }
+
+        viewLoadedFromCache = false
+        cachedView = createView(savedInstanceState)
+
+        return cachedView
     }
 
     /**
@@ -120,6 +138,16 @@ abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
     override fun onAnimationEnd(animation: Animator) {
         animator?.removeListener(this)
         animator = null
+    }
+
+    /**
+     * Создает View для отображения.
+     *
+     * @param savedInstanceState Сохраненное состояние
+     * @return Необходимая View
+     */
+    open fun createView(savedInstanceState: Bundle?): View? {
+        return null
     }
 
     /**
