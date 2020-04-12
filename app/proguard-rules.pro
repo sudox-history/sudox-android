@@ -1,4 +1,5 @@
 -keep @ru.sudox.api.common.SudoxApiDTO public class * {*;}
+-keep @androidx.room.Entity public class * {*;}
 -keep class kotlin.Metadata { *; }
 
 -assumenosideeffects class kotlin.jvm.internal.Intrinsics {

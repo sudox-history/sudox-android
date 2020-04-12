@@ -1,13 +1,10 @@
 package ru.sudox.android.auth.repositories
 
-import android.util.Log
-import io.reactivex.Notification
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import ru.sudox.android.auth.daos.AuthSessionDAO
 import ru.sudox.android.auth.entities.AuthSessionEntity
 import ru.sudox.api.auth.AuthService
-import ru.sudox.api.common.SudoxApi
 import javax.inject.Inject
 import javax.inject.Singleton
 
