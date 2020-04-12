@@ -118,7 +118,7 @@ class AppNavigationManager(
                 )
 
         fragmentManager.fragments.forEach {
-            fragmentTransaction.detach(it)
+            fragmentTransaction.hide(it)
         }
 
         if (!fragment.isAdded) {
@@ -180,13 +180,13 @@ class AppNavigationManager(
         }
 
         if (isFragmentLoaded(currentFragment!!)) {
-            fragmentTransaction.detach(currentFragment!!)
+            fragmentTransaction.hide(currentFragment!!)
         } else {
             fragmentTransaction.remove(currentFragment!!)
         }
 
         fragmentTransaction
-                .attach(prevFragment)
+                .show(prevFragment)
                 .commit()
 
         blockCallback = true
