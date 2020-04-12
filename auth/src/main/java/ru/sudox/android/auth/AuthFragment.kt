@@ -37,9 +37,9 @@ open class AuthFragment<T : AuthScreenVO> : CoreFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        if (cachedView != null) {
-            outState.putInt(SCROLL_VIEW_ID, cachedView!!.id)
-            outState.putInt(AUTH_FRAGMENT_LAYOUT_ID_KEY, (cachedView as ViewGroup).getChildAt(0).id)
+        if (view != null) {
+            outState.putInt(SCROLL_VIEW_ID, view!!.id)
+            outState.putInt(AUTH_FRAGMENT_LAYOUT_ID_KEY, (view as ViewGroup).getChildAt(0).id)
         }
     }
 }
