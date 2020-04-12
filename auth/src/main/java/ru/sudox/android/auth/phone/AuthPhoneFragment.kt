@@ -10,7 +10,6 @@ import ru.sudox.android.core.inject.viewmodel.getViewModel
 import ru.sudox.android.countries.COUNTRY_CHANGE_REQUEST_CODE
 import ru.sudox.android.countries.COUNTRY_EXTRA_NAME
 import ru.sudox.android.countries.CountrySelectFragment
-import ru.sudox.api.OK_ERROR_CODE
 import ru.sudox.api.getErrorText
 
 class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
@@ -26,18 +25,20 @@ class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
         authPhoneViewModel = getViewModel(viewModelFactory!!)
 
         authPhoneViewModel!!.apply {
+            errorsLiveData.observe(viewLifecycleOwner, Observer {
+                if (it != null) {
+                    screenVO!!.phoneEditTextLayout!!.errorText = getErrorText(context!!, it)
+                } else {
+                    screenVO!!.phoneEditTextLayout!!.errorText = null
+                }
+            })
+
             loadingLiveData.observe(viewLifecycleOwner, Observer {
                 screenVO!!.phoneEditTextLayout!!.isEnabled = !it
             })
 
-            statusLiveData.observe(viewLifecycleOwner, Observer {
-                screenVO!!.phoneEditTextLayout!!.errorText = null
-
-                if (it == OK_ERROR_CODE) {
-                    navigationManager!!.showChildFragment(AuthCodeFragment())
-                } else {
-                    screenVO!!.phoneEditTextLayout!!.errorText = getErrorText(context!!, it)
-                }
+            successLiveData.observe(viewLifecycleOwner, Observer {
+                navigationManager!!.showChildFragment(AuthCodeFragment())
             })
         }
 
