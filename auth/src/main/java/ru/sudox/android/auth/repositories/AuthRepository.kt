@@ -1,10 +1,13 @@
 package ru.sudox.android.auth.repositories
 
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
+import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
 import ru.sudox.android.auth.daos.AuthSessionDAO
 import ru.sudox.android.auth.entities.AuthSessionEntity
 import ru.sudox.api.auth.AuthService
+import ru.sudox.api.exceptions.ApiException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -50,11 +53,15 @@ class AuthRepository @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .map { entity }
-                .onExceptionResumeNext {
-                    authSessionDAO
-                            .delete(entity)
-                            .toObservable()
-                            .flatMap { createSession(entity.phoneNumber) }
-                }
+                .onErrorResumeNext(Function<Throwable, ObservableSource<out AuthSessionEntity>> {
+                    if (it is ApiException) {
+                        authSessionDAO
+                                .delete(entity)
+                                .toObservable()
+                                .flatMap { createSession(entity.phoneNumber) }
+                    } else {
+                        Observable.error(it)
+                    }
+                })
     }
 }
