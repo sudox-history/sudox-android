@@ -22,19 +22,20 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.view.updatePadding
 import androidx.core.widget.TextViewCompat.setTextAppearance
-import ru.sudox.design.edittext.layout.EditTextLayout
-import ru.sudox.design.edittext.layout.EditTextLayoutChild
-import ru.sudox.design.saveableview.SaveableViewGroup
+import io.michaelrocks.libphonenumber.android.NumberParseException
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import ru.sudox.android.core.CoreActivity
-import ru.sudox.android.countries.helpers.COUNTRIES
 import ru.sudox.android.countries.R
+import ru.sudox.android.countries.helpers.COUNTRIES
 import ru.sudox.android.countries.helpers.getDefaultCountryVO
 import ru.sudox.android.countries.inject.CountriesComponent
 import ru.sudox.android.countries.views.state.PhoneEditTextState
 import ru.sudox.android.countries.views.watchers.PhoneTextWatcher
 import ru.sudox.android.countries.vos.CountryVO
-import io.michaelrocks.libphonenumber.android.NumberParseException
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import ru.sudox.design.common.AUTOFILL_HINT_PHONE_NUMBER
+import ru.sudox.design.edittext.layout.EditTextLayout
+import ru.sudox.design.edittext.layout.EditTextLayoutChild
+import ru.sudox.design.saveableview.SaveableViewGroup
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -135,10 +136,10 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         set(value) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (value) {
-                    editText.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_YES_EXCLUDE_DESCENDANTS
-                    editText.setAutofillHints(View.AUTOFILL_HINT_PHONE)
+                    editText.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_YES
+                    editText.setAutofillHints(AUTOFILL_HINT_PHONE_NUMBER)
                 } else {
-                    editText.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+                    editText.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
                 }
 
                 field = value
