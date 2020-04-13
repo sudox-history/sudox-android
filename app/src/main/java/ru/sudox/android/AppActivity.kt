@@ -56,10 +56,15 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
         val router = attachRouter(appLayout!!.contentLayout.frameLayout, savedInstanceState)
 
-        navigationManager = AppNavigationManager(router, appLayout!!.bottomNavigationView)
+        navigationManager = AppNavigationManager(router, appLayout!!.bottomNavigationView).apply {
+            restoreState(savedInstanceState)
+        }
+
         activityComponent = loaderComponent!!
                 .activityComponent(CoreActivityModule(navigationManager!!, AppScreenManager(this)))
                 .apply { inject(this@AppActivity) }
+
+        setContentView(appLayout)
 
         if (!router.hasRootController()) {
             navigationManager!!.showRoot(AUTH_ROOT_TAG)
@@ -80,6 +85,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState.apply {
+            navigationManager!!.saveState(this)
             appLayout!!.saveIds(this)
         })
     }

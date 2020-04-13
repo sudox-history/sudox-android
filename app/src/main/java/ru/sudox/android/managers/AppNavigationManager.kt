@@ -1,12 +1,16 @@
 package ru.sudox.android.managers
 
+import android.os.Bundle
 import android.view.View
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import ru.sudox.android.auth.ui.phone.AuthPhoneController
 import ru.sudox.android.core.managers.AUTH_ROOT_TAG
 import ru.sudox.android.core.managers.NewNavigationManager
+
+private const val NAVIGATION_VIEW_VISIBILITY_KEY = "bottom_navigation_view_visibility_key"
 
 class AppNavigationManager(
         val router: Router,
@@ -27,8 +31,17 @@ class AppNavigationManager(
     override fun showRoot(tag: Int) {
         if (tag == AUTH_ROOT_TAG) {
             bottomNavigationView.visibility = View.GONE
+            router.setRoot(RouterTransaction.with(AuthPhoneController()))
         }
+    }
 
+    override fun restoreState(bundle: Bundle?) {
+        if (bundle != null) {
+            bottomNavigationView.visibility = bundle.getInt(NAVIGATION_VIEW_VISIBILITY_KEY)
+        }
+    }
 
+    override fun saveState(bundle: Bundle?) {
+        bundle?.putInt(NAVIGATION_VIEW_VISIBILITY_KEY, bottomNavigationView.visibility)
     }
 }

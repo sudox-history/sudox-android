@@ -1,5 +1,6 @@
 package ru.sudox.android.core.inject
 
+import ru.sudox.android.core.CoreController
 import ru.sudox.android.core.CoreFragment
 
 /**
@@ -10,4 +11,5 @@ import ru.sudox.android.core.CoreFragment
  */
 interface CoreActivityComponent {
     fun inject(coreFragment: CoreFragment)
+    fun inject(coreController: CoreController)
 }

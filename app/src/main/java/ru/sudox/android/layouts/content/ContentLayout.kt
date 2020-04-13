@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.bluelinelabs.conductor.ChangeHandlerFrameLayout
 import ru.sudox.design.appbar.AppBar
 import ru.sudox.design.appbar.AppBarLayout
 
@@ -24,7 +25,7 @@ class ContentLayout : CoordinatorLayout {
         this@ContentLayout.addView(this)
     }
 
-    val frameLayout = FrameLayout(context).apply {
+    val frameLayout = ChangeHandlerFrameLayout(context).apply {
         id = View.generateViewId()
         layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).apply {
             behavior = com.google.android.material.appbar.AppBarLayout.ScrollingViewBehavior()
