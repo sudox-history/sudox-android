@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
+import ru.sudox.android.auth.ui.signup.AuthSignUpController
 import ru.sudox.android.auth.ui.views.AuthScreenLayout
 import ru.sudox.android.core.controllers.ScrollableController
 
@@ -27,7 +28,7 @@ class AuthCodeController : ScrollableController() {
 
         if (changeType.isEnter) {
             screenVO.codeEditText!!.codeFilledCallback = {
-//                navigationManager!!.showChildFragment(AuthRegisterFragment())
+                navigationManager!!.showChild(AuthSignUpController())
             }
         }
     }
