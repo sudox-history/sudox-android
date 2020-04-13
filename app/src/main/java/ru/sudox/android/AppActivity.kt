@@ -6,6 +6,8 @@ import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.attachRouter
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import ru.sudox.android.AppLoader.Companion.loaderComponent
 import ru.sudox.android.core.CoreActivity
 import ru.sudox.android.core.inject.CoreActivityComponent
@@ -33,6 +35,7 @@ import javax.inject.Inject
  */
 class AppActivity : AppCompatActivity(), CoreActivity {
 
+    private var apiStatusDisposable: Disposable? = null
     private var navigationManager: NewNavigationManager? = null
     private var activityComponent: ActivityComponent? = null
     private var routerLazy: Lazy<Router>? = null
@@ -65,6 +68,18 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         if (!routerLazy!!.value.hasRootController()) {
             navigationManager!!.showRoot(DIALOGS_ROOT_TAG)
         }
+
+        (getActivityComponent() as ActivityComponent).inject(this)
+
+        apiStatusDisposable = sudoxApi!!
+                .statusSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .distinctUntilChanged()
+                .subscribe {
+                    appLayout!!.contentLayout.appBarLayout.appBar!!.let {
+                        setAppBarViewObject(it.vo, it.callback)
+                    }
+                }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -103,6 +118,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun onDestroy() {
+        apiStatusDisposable?.dispose()
         activityComponent = null
         super.onDestroy()
     }
