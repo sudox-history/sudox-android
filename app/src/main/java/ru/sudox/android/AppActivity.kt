@@ -4,13 +4,18 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
+import com.bluelinelabs.conductor.attachRouter
 import io.reactivex.disposables.Disposable
 import ru.sudox.android.AppLoader.Companion.loaderComponent
 import ru.sudox.android.core.CoreActivity
+import ru.sudox.android.core.inject.CoreActivityModule
 import ru.sudox.android.core.inject.CoreLoaderComponent
+import ru.sudox.android.core.managers.AUTH_ROOT_TAG
+import ru.sudox.android.core.managers.NewNavigationManager
 import ru.sudox.android.inject.components.ActivityComponent
 import ru.sudox.android.layouts.AppLayout
 import ru.sudox.android.managers.AppNavigationManager
+import ru.sudox.android.managers.AppScreenManager
 import ru.sudox.android.vos.ConnectAppBarVO
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
@@ -29,7 +34,7 @@ import javax.inject.Inject
 class AppActivity : AppCompatActivity(), CoreActivity {
 
     private var apiStatusDisposable: Disposable? = null
-    private var navigationManager: AppNavigationManager? = null
+    private var navigationManager: NewNavigationManager? = null
     private var activityComponent: ActivityComponent? = null
     private var appLayout: AppLayout? = null
 
@@ -45,47 +50,20 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         super.onCreate(savedInstanceState)
 
         appLayout = AppLayout(this).apply {
+            // Почему-то фрагменты не восстанавливаются если восстанавливать ID FrameLayout'а в View.onRestoreState()
             init(savedInstanceState)
         }
 
+        val router = attachRouter(appLayout!!.contentLayout.frameLayout, savedInstanceState)
 
-//        appLayout = AppLayout(this).apply {
-//            // Почему-то фрагменты не восстанавливаются если восстанавливать ID FrameLayout'а в View.onRestoreState()
-//            init(savedInstanceState)
-//
-//            navigationManager = AppNavigationManager(
-//                    supportFragmentManager,
-//                    contentLayout.frameLayout.id,
-//                    bottomNavigationView
-//            )
-//
-//            setContentView(this)
-//        }
-//
-//        activityComponent = loaderComponent!!
-//                .activityComponent(CoreActivityModule(navigationManager!!, AppScreenManager(this)))
-//                .apply {
-//                    inject(this@AppActivity)
-//                }
-//
-//        apiStatusDisposable = sudoxApi!!
-//                .statusSubject
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .distinctUntilChanged()
-//                .subscribe {
-//                    appLayout!!.contentLayout.appBarLayout.appBar!!.let {
-//                        setAppBarViewObject(it.vo, it.callback)
-//                    }
-//                }
-//
-//        super.onCreate(savedInstanceState)
-//
-//        if (savedInstanceState != null) {
-//            navigationManager!!.restoreState(savedInstanceState)
-//        } else {
-//            navigationManager!!.configureNavigationBar()
-//            navigationManager!!.showAuthPart()
-//        }
+        navigationManager = AppNavigationManager(router, appLayout!!.bottomNavigationView)
+        activityComponent = loaderComponent!!
+                .activityComponent(CoreActivityModule(navigationManager!!, AppScreenManager(this)))
+                .apply { inject(this@AppActivity) }
+
+        if (!router.hasRootController()) {
+            navigationManager!!.showRoot(AUTH_ROOT_TAG)
+        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
