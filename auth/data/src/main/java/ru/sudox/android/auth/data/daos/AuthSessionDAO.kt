@@ -1,13 +1,12 @@
-package ru.sudox.android.auth.daos
+package ru.sudox.android.auth.data.daos
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.reactivex.Completable
 import io.reactivex.Single
-import ru.sudox.android.auth.entities.AuthSessionEntity
+import ru.sudox.android.auth.data.entities.AuthSessionEntity
 
 @Dao
 interface AuthSessionDAO {

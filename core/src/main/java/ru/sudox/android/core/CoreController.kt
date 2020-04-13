@@ -21,14 +21,17 @@ private const val CORE_CONTROLLER_ROOT_VIEW_ID_KEY = "core_controller_root_view_
 
 abstract class CoreController : LifecycleController() {
 
-    private val viewModelStore = ViewModelStore()
-
     var appBarVO: AppBarVO? = null
     var appBarLayoutVO: AppBarLayoutVO? = null
+    val viewModelStore = ViewModelStore()
 
     @Inject
     @JvmField
     var navigationManager: NewNavigationManager? = null
+
+    @Inject
+    @JvmField
+    var viewModelFactory: ViewModelProvider.Factory? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedViewState: Bundle?): View {
         (activity as CoreActivity)
@@ -42,8 +45,8 @@ abstract class CoreController : LifecycleController() {
         }
     }
 
-    fun getViewModelProvider(): ViewModelProvider {
-        return ViewModelProvider(viewModelStore, ViewModelProvider.AndroidViewModelFactory(activity!!.application))
+    inline fun <reified T : ViewModel> getViewModel(): T {
+        return ViewModelProvider(viewModelStore, viewModelFactory!!)[T::class.java]
     }
 
     override fun onChangeStarted(changeHandler: ControllerChangeHandler, changeType: ControllerChangeType) {

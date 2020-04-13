@@ -1,4 +1,4 @@
-package ru.sudox.android.auth.entities
+package ru.sudox.android.auth.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

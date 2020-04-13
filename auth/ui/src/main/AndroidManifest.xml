@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ru.sudox.android.auth.ui" />
+<manifest package="ru.sudox.android.auth.ui" />

@@ -1,0 +1,16 @@
+apply from: '../../configs/dependencies.gradle'
+apply from: '../../configs/common.gradle'
+
+registerModule(false, true, true, true)
+
+dependencies {
+    api project(path: ':api')
+
+    implementation libraries.rxjava
+    implementation libraries.room_rxjava2
+    implementation libraries.room
+    kapt libraries.room_compiler
+
+    implementation libraries.dagger
+    kapt libraries.dagger_compiler
+}

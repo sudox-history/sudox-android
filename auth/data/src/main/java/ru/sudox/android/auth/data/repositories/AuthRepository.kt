@@ -1,11 +1,11 @@
-package ru.sudox.android.auth.repositories
+package ru.sudox.android.auth.data.repositories
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
-import ru.sudox.android.auth.daos.AuthSessionDAO
-import ru.sudox.android.auth.entities.AuthSessionEntity
+import ru.sudox.android.auth.data.daos.AuthSessionDAO
+import ru.sudox.android.auth.data.entities.AuthSessionEntity
 import ru.sudox.api.auth.AuthService
 import ru.sudox.api.exceptions.ApiException
 import javax.inject.Inject

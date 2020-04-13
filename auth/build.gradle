@@ -4,25 +4,8 @@ apply from: '../configs/common.gradle'
 registerModule(false, true, true, true)
 
 dependencies {
-    api project(path: ':core')
-    api project(path: ':design')
-    api project(path: ':design:codeedittext')
-    api project(path: ':countries')
+    api project(path: ':auth:data')
     api project(path: ':auth:ui')
-    api project(path: ':api')
-
-    implementation libraries.core_ktx
-    implementation libraries.appcompat
-    implementation libraries.conductor
-    implementation libraries.libphonenumber
-    implementation libraries.lifecycle_extensions
-    implementation libraries.recyclerview
-    implementation libraries.coroutines
-    implementation libraries.rxjava
-
-    implementation libraries.room_rxjava2
-    implementation libraries.room
-    kapt libraries.room_compiler
 
     implementation libraries.dagger
     kapt libraries.dagger_compiler

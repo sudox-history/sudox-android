@@ -13,6 +13,7 @@ import ru.sudox.android.core.controllers.ScrollableController
 import ru.sudox.android.countries.COUNTRY_CHANGE_REQUEST_CODE
 import ru.sudox.android.countries.COUNTRY_EXTRA_NAME
 import ru.sudox.android.countries.CountrySelectController
+import ru.sudox.api.getErrorText
 
 class AuthPhoneController : ScrollableController() {
 
@@ -33,10 +34,10 @@ class AuthPhoneController : ScrollableController() {
         super.onChangeStarted(changeHandler, changeType)
 
         if (changeType.isEnter) {
-            authPhoneViewModel = getViewModelProvider().get(AuthPhoneViewModel::class.java)
+            authPhoneViewModel = getViewModel()
             authPhoneViewModel!!.errorsLiveData.observe(this, Observer {
                 if (it != null) {
-//                    screenVO.phoneEditTextLayout!!.errorText = getErrorText(context!!, it)
+                    screenVO.phoneEditTextLayout!!.errorText = getErrorText(activity!!, it)
                 } else {
                     screenVO.phoneEditTextLayout!!.errorText = null
                 }
