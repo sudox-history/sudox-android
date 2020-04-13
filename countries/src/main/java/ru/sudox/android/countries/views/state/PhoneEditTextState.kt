@@ -32,10 +32,7 @@ class PhoneEditTextState : SaveableViewState<PhoneEditText> {
     }
 
     override fun writeToView(view: PhoneEditText) {
-        if (!view.ignoreCountryFromState) {
-            view.vo = countryVO
-        }
-
+        view.vo = countryVO
         view.editText.id = editTextId
     }
 }

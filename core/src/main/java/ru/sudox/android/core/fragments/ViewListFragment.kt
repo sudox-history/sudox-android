@@ -31,10 +31,10 @@ abstract class ViewListFragment<AT : ViewListAdapter<*>> : CoreFragment() {
         viewList = ViewList(context!!).also { viewList ->
             viewList.layoutManager = LinearLayoutManager(context)
             viewList.updatePadding(
-                    left = context!!.resources.getDimensionPixelSize(R.dimen.viewlistfragment_left_padding),
-                    right = context!!.resources.getDimensionPixelSize(R.dimen.viewlistfragment_right_padding),
-                    bottom = context!!.resources.getDimensionPixelSize(R.dimen.viewlistfragment_bottom_padding),
-                    top = context!!.resources.getDimensionPixelSize(R.dimen.viewlistfragment_top_padding)
+                    left = context!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_left_padding),
+                    right = context!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_right_padding),
+                    bottom = context!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_bottom_padding),
+                    top = context!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_top_padding)
             )
 
             viewList.clipToPadding = false

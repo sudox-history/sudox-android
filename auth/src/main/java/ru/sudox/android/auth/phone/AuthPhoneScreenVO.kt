@@ -50,7 +50,6 @@ class AuthPhoneScreenVO : AuthScreenVO {
     }
 
     private fun setSelectedCountry() {
-        phoneEditText!!.ignoreCountryFromState = true
         phoneEditText!!.vo = selectedCountry
     }
 }

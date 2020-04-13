@@ -13,7 +13,7 @@ import ru.sudox.android.core.managers.NewNavigationManager
 private const val NAVIGATION_VIEW_VISIBILITY_KEY = "bottom_navigation_view_visibility_key"
 
 class AppNavigationManager(
-        val router: Router,
+        val routerProvider: Lazy<Router>,
         val bottomNavigationView: BottomNavigationView
 ) : NewNavigationManager {
 
@@ -21,17 +21,17 @@ class AppNavigationManager(
     }
 
     override fun popBackstack(): Boolean {
-        return router.popCurrentController()
+        return routerProvider.value.popCurrentController()
     }
 
     override fun showChild(controller: Controller) {
-        router.pushController(RouterTransaction.with(controller))
+        routerProvider.value.pushController(RouterTransaction.with(controller))
     }
 
     override fun showRoot(tag: Int) {
         if (tag == AUTH_ROOT_TAG) {
             bottomNavigationView.visibility = View.GONE
-            router.setRoot(RouterTransaction.with(AuthPhoneController()))
+            routerProvider.value.setRoot(RouterTransaction.with(AuthPhoneController()))
         }
     }
 

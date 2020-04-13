@@ -9,7 +9,6 @@ import ru.sudox.android.auth.code.AuthCodeFragment
 import ru.sudox.android.core.inject.viewmodel.getViewModel
 import ru.sudox.android.countries.COUNTRY_CHANGE_REQUEST_CODE
 import ru.sudox.android.countries.COUNTRY_EXTRA_NAME
-import ru.sudox.android.countries.CountrySelectFragment
 import ru.sudox.api.getErrorText
 
 class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
@@ -43,9 +42,9 @@ class AuthPhoneFragment : AuthFragment<AuthPhoneScreenVO>() {
         }
 
         screenVO!!.phoneEditText!!.countrySelector.setOnClickListener {
-            navigationManager!!.showChildFragment(CountrySelectFragment().apply {
-                setTargetFragment(this@AuthPhoneFragment, COUNTRY_CHANGE_REQUEST_CODE)
-            })
+//            navigationManager!!.showChildFragment(CountrySelectFragment().apply {
+//                setTargetFragment(this@AuthPhoneFragment, COUNTRY_CHANGE_REQUEST_CODE)
+//            })
         }
     }
 

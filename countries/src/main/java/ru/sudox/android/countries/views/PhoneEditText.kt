@@ -133,7 +133,6 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
             invalidate()
         }
 
-    var ignoreCountryFromState = false
     var autofillMyNumber = false
         set(value) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

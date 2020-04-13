@@ -4,10 +4,11 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
+import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.attachRouter
-import io.reactivex.disposables.Disposable
 import ru.sudox.android.AppLoader.Companion.loaderComponent
 import ru.sudox.android.core.CoreActivity
+import ru.sudox.android.core.inject.CoreActivityComponent
 import ru.sudox.android.core.inject.CoreActivityModule
 import ru.sudox.android.core.inject.CoreLoaderComponent
 import ru.sudox.android.core.managers.AUTH_ROOT_TAG
@@ -33,9 +34,9 @@ import javax.inject.Inject
  */
 class AppActivity : AppCompatActivity(), CoreActivity {
 
-    private var apiStatusDisposable: Disposable? = null
     private var navigationManager: NewNavigationManager? = null
     private var activityComponent: ActivityComponent? = null
+    private var routerLazy: Lazy<Router>? = null
     private var appLayout: AppLayout? = null
 
     @Inject
@@ -54,19 +55,15 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             init(savedInstanceState)
         }
 
-        val router = attachRouter(appLayout!!.contentLayout.frameLayout, savedInstanceState)
-
-        navigationManager = AppNavigationManager(router, appLayout!!.bottomNavigationView).apply {
+        // Отложим инициализацию роутера до первого его запроса (исправляем краши при инжекте из субкомпонента активности)
+        routerLazy = lazy { attachRouter(appLayout!!.contentLayout.frameLayout, savedInstanceState) }
+        navigationManager = AppNavigationManager(routerLazy!!, appLayout!!.bottomNavigationView).apply {
             restoreState(savedInstanceState)
         }
 
-        activityComponent = loaderComponent!!
-                .activityComponent(CoreActivityModule(navigationManager!!, AppScreenManager(this)))
-                .apply { inject(this@AppActivity) }
-
         setContentView(appLayout)
 
-        if (!router.hasRootController()) {
+        if (!routerLazy!!.value.hasRootController()) {
             navigationManager!!.showRoot(AUTH_ROOT_TAG)
         }
     }
@@ -107,17 +104,20 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun onDestroy() {
-        apiStatusDisposable?.dispose()
         activityComponent = null
         super.onDestroy()
     }
 
-    override fun getLoaderComponent(): CoreLoaderComponent {
-        return loaderComponent!!
+    override fun getActivityComponent(): CoreActivityComponent {
+        if (activityComponent == null) {
+            activityComponent = loaderComponent!!.activityComponent(CoreActivityModule(navigationManager!!, AppScreenManager(this)))
+        }
+
+        return activityComponent!!
     }
 
-    override fun getActivityComponent(): ru.sudox.android.core.inject.CoreActivityComponent {
-        return activityComponent!!
+    override fun getLoaderComponent(): CoreLoaderComponent {
+        return loaderComponent!!
     }
 
     override fun onBackPressed() {
