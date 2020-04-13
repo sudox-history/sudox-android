@@ -1,7 +1,6 @@
 package ru.sudox.android.core.inject
 
 import ru.sudox.android.core.CoreController
-import ru.sudox.android.core.CoreFragment
 
 /**
  * Интерфейс для внедрения зависимостей в ядро.
@@ -10,6 +9,5 @@ import ru.sudox.android.core.CoreFragment
  * дабы избежать циклических зависимостей между модулями.
  */
 interface CoreActivityComponent {
-    fun inject(coreFragment: CoreFragment)
     fun inject(coreController: CoreController)
 }

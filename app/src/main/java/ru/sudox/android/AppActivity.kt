@@ -11,14 +11,11 @@ import ru.sudox.android.core.CoreActivity
 import ru.sudox.android.core.inject.CoreActivityComponent
 import ru.sudox.android.core.inject.CoreActivityModule
 import ru.sudox.android.core.inject.CoreLoaderComponent
-import ru.sudox.android.core.managers.AUTH_ROOT_TAG
 import ru.sudox.android.core.managers.DIALOGS_ROOT_TAG
 import ru.sudox.android.core.managers.NewNavigationManager
-import ru.sudox.android.core.managers.PEOPLE_ROOT_TAG
 import ru.sudox.android.inject.components.ActivityComponent
 import ru.sudox.android.layouts.AppLayout
 import ru.sudox.android.managers.AppNavigationManager
-import ru.sudox.android.managers.AppScreenManager
 import ru.sudox.android.vos.ConnectAppBarVO
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
@@ -112,7 +109,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     override fun getActivityComponent(): CoreActivityComponent {
         if (activityComponent == null) {
-            activityComponent = loaderComponent!!.activityComponent(CoreActivityModule(navigationManager!!, AppScreenManager(this)))
+            activityComponent = loaderComponent!!.activityComponent(CoreActivityModule(navigationManager!!))
         }
 
         return activityComponent!!
