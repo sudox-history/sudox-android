@@ -35,6 +35,7 @@ dependencies {
     implementation libraries.core_ktx
     implementation libraries.appcompat
     implementation libraries.conductor
+    implementation libraries.conductor_archlifecycle
     implementation libraries.annotations
     implementation libraries.coordinator_layout
     implementation libraries.material_components

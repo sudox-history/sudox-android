@@ -11,6 +11,7 @@ dependencies {
     implementation libraries.appcompat
     implementation libraries.recyclerview
     implementation libraries.libphonenumber
+    implementation libraries.conductor_archlifecycle
     implementation libraries.conductor
 
     implementation libraries.dagger

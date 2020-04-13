@@ -13,6 +13,7 @@ dependencies {
     implementation libraries.appcompat
     implementation libraries.lifecycle_extensions
     implementation libraries.libphonenumber
+    implementation libraries.conductor_archlifecycle
     implementation libraries.conductor
 
     implementation libraries.dagger
