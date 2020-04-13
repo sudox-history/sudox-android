@@ -1,0 +1,14 @@
+apply from: '../../configs/dependencies.gradle'
+apply from: '../../configs/common.gradle'
+
+registerModule(false, true, true, true)
+
+dependencies {
+    api project(path: ':core')
+    api project(path: ':design')
+    api project(path: ':countries')
+
+    implementation libraries.core_ktx
+    implementation libraries.appcompat
+    implementation libraries.lifecycle_extensions
+}

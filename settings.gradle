@@ -21,6 +21,8 @@ include ':design:common'
 include ':design:popup'
 
 include ':auth'
+include ':auth:ui'
+
 include ':core'
 
 include ':people'
