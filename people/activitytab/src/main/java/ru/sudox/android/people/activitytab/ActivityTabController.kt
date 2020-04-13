@@ -1,19 +1,17 @@
 package ru.sudox.android.people.activitytab
 
-import android.content.Context
 import android.os.Handler
-import ru.sudox.design.viewlist.ViewList
-import ru.sudox.android.people.activitytab.adapters.ActivityTabAdapter
-import ru.sudox.android.people.activitytab.vos.ActivityTabAppBarVO
-import ru.sudox.android.core.fragments.ViewListFragment
-import ru.sudox.android.core.tabs.TabsChildFragment
+import ru.sudox.android.core.controllers.ViewListController
 import ru.sudox.android.media.vos.impls.ImageAttachmentVO
 import ru.sudox.android.moments.vos.AddMomentVO
 import ru.sudox.android.moments.vos.MomentVO
 import ru.sudox.android.news.vos.NewsVO
+import ru.sudox.android.people.activitytab.adapters.ActivityTabAdapter
+import ru.sudox.android.people.activitytab.vos.ActivityTabAppBarVO
 import ru.sudox.android.people.common.vos.SimplePeopleVO
+import ru.sudox.design.viewlist.ViewList
 
-class ActivityTabFragment : ViewListFragment<ActivityTabAdapter>(), TabsChildFragment {
+class ActivityTabController : ViewListController<ActivityTabAdapter>() {
 
     init {
         appBarVO = ActivityTabAppBarVO()
@@ -87,9 +85,5 @@ class ActivityTabFragment : ViewListFragment<ActivityTabAdapter>(), TabsChildFra
                 }, 25000L)
             }
         }
-    }
-
-    override fun getTitle(context: Context): String {
-        return context.getString(R.string.activity)
     }
 }

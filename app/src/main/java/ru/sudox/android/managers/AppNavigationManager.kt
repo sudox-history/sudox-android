@@ -9,6 +9,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.sudox.android.auth.ui.phone.AuthPhoneController
 import ru.sudox.android.core.managers.AUTH_ROOT_TAG
 import ru.sudox.android.core.managers.NewNavigationManager
+import ru.sudox.android.core.managers.PEOPLE_ROOT_TAG
+import ru.sudox.android.people.PeopleController
 
 private const val NAVIGATION_VIEW_VISIBILITY_KEY = "bottom_navigation_view_visibility_key"
 
@@ -32,6 +34,9 @@ class AppNavigationManager(
         if (tag == AUTH_ROOT_TAG) {
             bottomNavigationView.visibility = View.GONE
             routerProvider.value.setRoot(RouterTransaction.with(AuthPhoneController()))
+        } else if (tag == PEOPLE_ROOT_TAG) {
+            bottomNavigationView.visibility = View.VISIBLE
+            routerProvider.value.setRoot(RouterTransaction.with(PeopleController()))
         }
     }
 

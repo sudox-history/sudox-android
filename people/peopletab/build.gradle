@@ -15,8 +15,10 @@ dependencies {
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
-    implementation libraries.lifecycle_extensions
     implementation libraries.recyclerview
+    implementation libraries.lifecycle_extensions
+    implementation libraries.conductor_archlifecycle
+    implementation libraries.conductor
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric

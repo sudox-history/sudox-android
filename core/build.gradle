@@ -16,6 +16,7 @@ dependencies {
     implementation libraries.material_components
     implementation libraries.lifecycle_extensions
     implementation libraries.conductor_archlifecycle
+    implementation libraries.conductor_viewpager
     implementation libraries.rxandroid
     implementation libraries.rxjava
 

@@ -1,17 +1,15 @@
 package ru.sudox.android.people.peopletab
 
-import android.content.Context
-import ru.sudox.design.viewlist.ViewList
-import ru.sudox.android.core.fragments.ViewListFragment
-import ru.sudox.android.core.tabs.TabsChildFragment
+import ru.sudox.android.core.controllers.ViewListController
 import ru.sudox.android.people.common.vos.SEEN_TIME_ONLINE
 import ru.sudox.android.people.peopletab.adapters.PeopleTabAdapter
 import ru.sudox.android.people.peopletab.vos.AddedFriendVO
 import ru.sudox.android.people.peopletab.vos.FriendRequestVO
 import ru.sudox.android.people.peopletab.vos.MaybeYouKnowVO
 import ru.sudox.android.people.peopletab.vos.appbar.PeopleTabAppBarVO
+import ru.sudox.design.viewlist.ViewList
 
-class PeopleTabFragment : ViewListFragment<PeopleTabAdapter>(), TabsChildFragment {
+class PeopleTabController : ViewListController<PeopleTabAdapter>() {
 
     init {
         appBarVO = PeopleTabAppBarVO()
@@ -35,9 +33,5 @@ class PeopleTabFragment : ViewListFragment<PeopleTabAdapter>(), TabsChildFragmen
 
             subscriptionsVOs.apply {}
         }
-    }
-
-    override fun getTitle(context: Context): String {
-        return context.getString(R.string.people)
     }
 }

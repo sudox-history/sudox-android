@@ -23,6 +23,8 @@ ext.libraries = [
         'coordinator_layout'     : "androidx.coordinatorlayout:coordinatorlayout:1.1.0",
         'conductor'              : "com.bluelinelabs:conductor:3.0.0-rc4",
         'conductor_archlifecycle': "com.bluelinelabs:conductor-archlifecycle:3.0.0-rc4",
+        'conductor_viewpager'    : "com.bluelinelabs:conductor-viewpager:3.0.0-rc4",
+        'viewpager'              : "androidx.viewpager:viewpager:1.0.0",
         'viewpager2'             : "androidx.viewpager2:viewpager2:1.0.0",
         'jackson'                : "com.fasterxml.jackson.core:jackson-databind:2.10.3",
         'jackson_kotlin'         : "com.fasterxml.jackson.module:jackson-module-kotlin:2.10.2",
