@@ -1,4 +1,4 @@
-package ru.sudox.android.core.tabs.vos
+package ru.sudox.android.core.controllers.tabs
 
 import android.content.Context
 import android.view.View
@@ -7,13 +7,6 @@ import com.google.android.material.tabs.TabLayout
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.tablayout.SizeableTabLayout
 
-/**
- * ViewObject для фрагмента с табами
- * Просто добавляет в конец к уже переданному разработчиком VO TabLayout.
- *
- * @param rootVO Основной ViewObject с элементами, которые хотел бы видеть
- * разработчик.
- */
 class TabsAppBarLayoutVO(
         val rootVO: AppBarLayoutVO?
 ) : AppBarLayoutVO {

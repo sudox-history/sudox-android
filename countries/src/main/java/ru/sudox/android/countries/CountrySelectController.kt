@@ -3,7 +3,6 @@ package ru.sudox.android.countries
 import android.content.Intent
 import ru.sudox.android.core.controllers.ViewListController
 import ru.sudox.design.viewlist.ViewList
-import ru.sudox.android.core.fragments.ViewListFragment
 
 const val COUNTRY_EXTRA_NAME = "country"
 const val COUNTRY_CHANGE_REQUEST_CODE = 1
@@ -22,5 +21,9 @@ class CountrySelectController : ViewListController<CountrySelectAdapter>() {
                 putExtra(COUNTRY_EXTRA_NAME, it)
             })
         }
+    }
+
+    override fun isChild(): Boolean {
+        return false
     }
 }

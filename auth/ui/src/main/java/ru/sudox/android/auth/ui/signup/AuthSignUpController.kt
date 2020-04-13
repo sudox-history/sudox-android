@@ -19,4 +19,8 @@ class AuthSignUpController : ScrollableController() {
             vo = screenVO
         }
     }
+
+    override fun isChild(): Boolean {
+        return false
+    }
 }

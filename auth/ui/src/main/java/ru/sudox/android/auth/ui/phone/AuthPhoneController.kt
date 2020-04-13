@@ -72,4 +72,8 @@ class AuthPhoneController : ScrollableController() {
             screenVO.phoneEditText!!.vo = data!!.getParcelableExtra(COUNTRY_EXTRA_NAME)
         }
     }
+
+    override fun isChild(): Boolean {
+        return false
+    }
 }

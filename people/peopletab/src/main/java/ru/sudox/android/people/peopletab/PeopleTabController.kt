@@ -34,4 +34,8 @@ class PeopleTabController : ViewListController<PeopleTabAdapter>() {
             subscriptionsVOs.apply {}
         }
     }
+
+    override fun isChild(): Boolean {
+        return true
+    }
 }

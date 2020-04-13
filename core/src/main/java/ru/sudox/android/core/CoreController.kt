@@ -53,17 +53,14 @@ abstract class CoreController : LifecycleController() {
         if (changeType.isEnter) {
             (activity as CoreActivity).let {
                 it.setAppBarViewObject(appBarVO, ::onAppBarClicked)
-                it.setAppBarLayoutViewObject(appBarLayoutVO)
+
+                if (!isChild()) {
+                    it.setAppBarLayoutViewObject(appBarLayoutVO)
+                }
             }
         }
     }
 
-    /**
-     * Вызывается при клике по кнопке, находящейся в AppBar'е
-     * Стандартная реализация также отрабатывает нажатие кнопки назад
-     *
-     * @param tag Тег кнопки, по которой был произведен клик
-     */
     open fun onAppBarClicked(tag: Int) {
         if (tag == BACK_BUTTON_TAG) {
             // При использовании данного ядра Activity должен обрабатывать нажатие кнопки назад в методе onKeyDown()
@@ -80,4 +77,5 @@ abstract class CoreController : LifecycleController() {
     }
 
     abstract fun createView(container: ViewGroup, savedViewState: Bundle?): View
+    abstract fun isChild(): Boolean
 }

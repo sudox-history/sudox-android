@@ -10,7 +10,7 @@ import ru.sudox.android.core.CoreFragment
 import ru.sudox.android.core.tabs.adapters.TabsConfigurationStrategy
 import ru.sudox.android.core.tabs.adapters.TabsPagerAdapter
 import ru.sudox.android.core.tabs.callbacks.TabsRootPageCallback
-import ru.sudox.android.core.tabs.vos.TabsAppBarLayoutVO
+import ru.sudox.android.core.controllers.tabs.TabsAppBarLayoutVO
 
 const val VIEW_PAGER_ID_KEY = "view_pager_id"
 

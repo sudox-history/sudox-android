@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.ViewPager
+import com.bluelinelabs.conductor.ControllerChangeHandler
+import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.viewpager.RouterPagerAdapter
@@ -39,9 +41,25 @@ abstract class TabsRootController : CoreController() {
     }
 
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
+        if (appBarLayoutVO !is TabsAppBarLayoutVO) {
+            appBarLayoutVO = TabsAppBarLayoutVO(appBarLayoutVO)
+        }
+
         return ViewPager(activity!!).apply {
             adapter = pagerAdapter
         }
+    }
+
+    override fun onChangeStarted(changeHandler: ControllerChangeHandler, changeType: ControllerChangeType) {
+        super.onChangeStarted(changeHandler, changeType)
+
+        (appBarLayoutVO as TabsAppBarLayoutVO)
+                .tabLayout!!
+                .setupWithViewPager(view as ViewPager)
+    }
+
+    override fun isChild(): Boolean {
+        return false
     }
 
     abstract fun getControllersCount(): Int

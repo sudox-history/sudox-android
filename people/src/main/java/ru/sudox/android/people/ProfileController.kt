@@ -12,4 +12,8 @@ class ProfileController : CoreController() {
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
         return View(activity)
     }
+
+    override fun isChild(): Boolean {
+        return false
+    }
 }

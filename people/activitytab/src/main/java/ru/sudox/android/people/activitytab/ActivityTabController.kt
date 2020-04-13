@@ -86,4 +86,8 @@ class ActivityTabController : ViewListController<ActivityTabAdapter>() {
             }
         }
     }
+
+    override fun isChild(): Boolean {
+        return true
+    }
 }
