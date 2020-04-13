@@ -4,20 +4,17 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import ru.sudox.design.appbar.vos.AppBarLayoutVO
-import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.android.AppLoader.Companion.loaderComponent
 import ru.sudox.android.core.CoreActivity
-import ru.sudox.android.core.inject.CoreActivityModule
 import ru.sudox.android.core.inject.CoreLoaderComponent
 import ru.sudox.android.inject.components.ActivityComponent
 import ru.sudox.android.layouts.AppLayout
 import ru.sudox.android.managers.AppNavigationManager
-import ru.sudox.android.managers.AppScreenManager
 import ru.sudox.android.vos.ConnectAppBarVO
 import ru.sudox.api.common.SudoxApi
+import ru.sudox.design.appbar.vos.AppBarLayoutVO
+import ru.sudox.design.appbar.vos.AppBarVO
 import javax.inject.Inject
 
 /**
@@ -45,43 +42,50 @@ class AppActivity : AppCompatActivity(), CoreActivity {
                 .getDrawable(1)
                 .alpha = 1
 
-        appLayout = AppLayout(this).apply {
-            // Почему-то фрагменты не восстанавливаются если восстанавливать ID FrameLayout'а в View.onRestoreState()
-            init(savedInstanceState)
-
-            navigationManager = AppNavigationManager(
-                    supportFragmentManager,
-                    contentLayout.frameLayout.id,
-                    bottomNavigationView
-            )
-
-            setContentView(this)
-        }
-
-        activityComponent = loaderComponent!!
-                .activityComponent(CoreActivityModule(navigationManager!!, AppScreenManager(this)))
-                .apply {
-                    inject(this@AppActivity)
-                }
-
-        apiStatusDisposable = sudoxApi!!
-                .statusSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .distinctUntilChanged()
-                .subscribe {
-                    appLayout!!.contentLayout.appBarLayout.appBar!!.let {
-                        setAppBarViewObject(it.vo, it.callback)
-                    }
-                }
-
         super.onCreate(savedInstanceState)
 
-        if (savedInstanceState != null) {
-            navigationManager!!.restoreState(savedInstanceState)
-        } else {
-            navigationManager!!.configureNavigationBar()
-            navigationManager!!.showAuthPart()
+        appLayout = AppLayout(this).apply {
+            init(savedInstanceState)
         }
+
+
+//        appLayout = AppLayout(this).apply {
+//            // Почему-то фрагменты не восстанавливаются если восстанавливать ID FrameLayout'а в View.onRestoreState()
+//            init(savedInstanceState)
+//
+//            navigationManager = AppNavigationManager(
+//                    supportFragmentManager,
+//                    contentLayout.frameLayout.id,
+//                    bottomNavigationView
+//            )
+//
+//            setContentView(this)
+//        }
+//
+//        activityComponent = loaderComponent!!
+//                .activityComponent(CoreActivityModule(navigationManager!!, AppScreenManager(this)))
+//                .apply {
+//                    inject(this@AppActivity)
+//                }
+//
+//        apiStatusDisposable = sudoxApi!!
+//                .statusSubject
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .distinctUntilChanged()
+//                .subscribe {
+//                    appLayout!!.contentLayout.appBarLayout.appBar!!.let {
+//                        setAppBarViewObject(it.vo, it.callback)
+//                    }
+//                }
+//
+//        super.onCreate(savedInstanceState)
+//
+//        if (savedInstanceState != null) {
+//            navigationManager!!.restoreState(savedInstanceState)
+//        } else {
+//            navigationManager!!.configureNavigationBar()
+//            navigationManager!!.showAuthPart()
+//        }
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -99,7 +103,6 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState.apply {
             appLayout!!.saveIds(this)
-            navigationManager!!.saveState(this)
         })
     }
 

@@ -3,6 +3,7 @@ package ru.sudox.android.core.managers
 import android.os.Bundle
 import ru.sudox.android.core.CoreFragment
 
+@Deprecated("will be removed")
 interface NavigationManager {
 
     /**

@@ -25,6 +25,7 @@ import javax.inject.Inject
  * 4) Связь с AppBar из Sudox Design Library, а именно реализована обработка кнопки назад.
  * 5) Перехват анимаций для получения возможности загрузки тяжелого контента после неё.
  */
+@Deprecated("will be removed")
 abstract class CoreFragment : Fragment(), Animator.AnimatorListener {
 
     var animator: Animator? = null

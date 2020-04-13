@@ -22,6 +22,7 @@ const val VIEW_LIST_ID_KEY = "view_list_id"
  *
  * AT - тип адаптера
  */
+@Deprecated("will be removed")
 abstract class ViewListFragment<AT : ViewListAdapter<*>> : CoreFragment() {
 
     private var viewList: ViewList? = null
