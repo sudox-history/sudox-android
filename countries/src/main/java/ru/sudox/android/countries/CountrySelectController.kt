@@ -23,7 +23,4 @@ class CountrySelectController : ViewListController<CountrySelectAdapter>() {
         }
     }
 
-    override fun isChild(): Boolean {
-        return false
-    }
 }

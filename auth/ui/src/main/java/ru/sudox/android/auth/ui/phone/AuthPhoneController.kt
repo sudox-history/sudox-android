@@ -73,7 +73,4 @@ class AuthPhoneController : ScrollableController() {
         }
     }
 
-    override fun isChild(): Boolean {
-        return false
-    }
 }

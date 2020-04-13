@@ -58,10 +58,6 @@ abstract class TabsRootController : CoreController() {
                 .setupWithViewPager(view as ViewPager)
     }
 
-    override fun isChild(): Boolean {
-        return false
-    }
-
     abstract fun getControllersCount(): Int
     abstract fun getControllerTitle(position: Int): String
     abstract fun createController(position: Int): CoreController

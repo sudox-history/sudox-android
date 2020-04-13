@@ -1,6 +1,7 @@
 package ru.sudox.android.people.peopletab
 
 import ru.sudox.android.core.controllers.ViewListController
+import ru.sudox.android.core.controllers.tabs.TabsChildController
 import ru.sudox.android.people.common.vos.SEEN_TIME_ONLINE
 import ru.sudox.android.people.peopletab.adapters.PeopleTabAdapter
 import ru.sudox.android.people.peopletab.vos.AddedFriendVO
@@ -9,7 +10,7 @@ import ru.sudox.android.people.peopletab.vos.MaybeYouKnowVO
 import ru.sudox.android.people.peopletab.vos.appbar.PeopleTabAppBarVO
 import ru.sudox.design.viewlist.ViewList
 
-class PeopleTabController : ViewListController<PeopleTabAdapter>() {
+class PeopleTabController : ViewListController<PeopleTabAdapter>(), TabsChildController {
 
     init {
         appBarVO = PeopleTabAppBarVO()
@@ -35,7 +36,7 @@ class PeopleTabController : ViewListController<PeopleTabAdapter>() {
         }
     }
 
-    override fun isChild(): Boolean {
+    override fun canConfigureAppBarVO(): Boolean {
         return true
     }
 }

@@ -2,6 +2,7 @@ package ru.sudox.android.people.activitytab
 
 import android.os.Handler
 import ru.sudox.android.core.controllers.ViewListController
+import ru.sudox.android.core.controllers.tabs.TabsChildController
 import ru.sudox.android.media.vos.impls.ImageAttachmentVO
 import ru.sudox.android.moments.vos.AddMomentVO
 import ru.sudox.android.moments.vos.MomentVO
@@ -11,7 +12,7 @@ import ru.sudox.android.people.activitytab.vos.ActivityTabAppBarVO
 import ru.sudox.android.people.common.vos.SimplePeopleVO
 import ru.sudox.design.viewlist.ViewList
 
-class ActivityTabController : ViewListController<ActivityTabAdapter>() {
+class ActivityTabController : ViewListController<ActivityTabAdapter>(), TabsChildController {
 
     init {
         appBarVO = ActivityTabAppBarVO()
@@ -87,7 +88,7 @@ class ActivityTabController : ViewListController<ActivityTabAdapter>() {
         }
     }
 
-    override fun isChild(): Boolean {
+    override fun canConfigureAppBarVO(): Boolean {
         return true
     }
 }

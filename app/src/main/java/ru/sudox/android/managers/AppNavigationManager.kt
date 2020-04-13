@@ -8,9 +8,13 @@ import com.bluelinelabs.conductor.RouterTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.sudox.android.auth.ui.phone.AuthPhoneController
 import ru.sudox.android.core.managers.AUTH_ROOT_TAG
+import ru.sudox.android.core.managers.DIALOGS_ROOT_TAG
 import ru.sudox.android.core.managers.NewNavigationManager
 import ru.sudox.android.core.managers.PEOPLE_ROOT_TAG
+import ru.sudox.android.core.managers.PROFILE_ROOT_TAG
+import ru.sudox.android.messages.DialogsController
 import ru.sudox.android.people.PeopleController
+import ru.sudox.android.people.ProfileController
 
 private const val NAVIGATION_VIEW_VISIBILITY_KEY = "bottom_navigation_view_visibility_key"
 
@@ -37,6 +41,12 @@ class AppNavigationManager(
         } else if (tag == PEOPLE_ROOT_TAG) {
             bottomNavigationView.visibility = View.VISIBLE
             routerProvider.value.setRoot(RouterTransaction.with(PeopleController()))
+        } else if (tag == DIALOGS_ROOT_TAG) {
+            bottomNavigationView.visibility = View.VISIBLE
+            routerProvider.value.setRoot(RouterTransaction.with(DialogsController()))
+        } else if (tag == PROFILE_ROOT_TAG) {
+            bottomNavigationView.visibility = View.VISIBLE
+            routerProvider.value.setRoot(RouterTransaction.with(ProfileController()))
         }
     }
 

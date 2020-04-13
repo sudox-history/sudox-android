@@ -33,7 +33,4 @@ class AuthCodeController : ScrollableController() {
         }
     }
 
-    override fun isChild(): Boolean {
-        return false
-    }
 }

@@ -20,7 +20,4 @@ class AuthSignUpController : ScrollableController() {
         }
     }
 
-    override fun isChild(): Boolean {
-        return false
-    }
 }
