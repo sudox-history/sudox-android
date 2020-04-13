@@ -13,18 +13,18 @@ import ru.sudox.design.viewlist.ViewListAdapter
 abstract class ViewListController<AT : ViewListAdapter<*>> : CoreController() {
 
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
-        return ViewList(activity!!).apply {
-            updatePadding(
-                    left = context!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_left_padding),
-                    right = context!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_right_padding),
-                    bottom = context!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_bottom_padding),
-                    top = context!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_top_padding)
+        return ViewList(activity!!).also { viewList ->
+            viewList.layoutManager = LinearLayoutManager(activity)
+            viewList.updatePadding(
+                    left = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_left_padding),
+                    right = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_right_padding),
+                    bottom = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_bottom_padding),
+                    top = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_top_padding)
             )
 
-            clipToPadding = false
-            layoutManager = LinearLayoutManager(context)
-            adapter = getAdapter(this)?.also {
-                it.viewList = this
+            viewList.clipToPadding = false
+            viewList.adapter = this@ViewListController.getAdapter(viewList)?.apply {
+                this.viewList = viewList
             }
         }
     }
