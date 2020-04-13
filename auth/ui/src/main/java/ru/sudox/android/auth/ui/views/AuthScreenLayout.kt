@@ -1,4 +1,4 @@
-package ru.sudox.android.auth.views
+package ru.sudox.android.auth.ui.views
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,8 +15,8 @@ import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.design.saveableview.SaveableViewGroup
-import ru.sudox.android.auth.R
-import ru.sudox.android.auth.vos.AuthScreenVO
+import ru.sudox.android.auth.ui.R
+import ru.sudox.android.auth.ui.vos.AuthScreenVO
 import kotlin.math.max
 
 class AuthScreenLayout : SaveableViewGroup<AuthScreenLayout, AuthScreenLayoutState> {

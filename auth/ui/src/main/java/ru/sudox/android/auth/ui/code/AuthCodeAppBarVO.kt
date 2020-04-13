@@ -1,22 +1,19 @@
-package ru.sudox.android.auth.phone
+package ru.sudox.android.auth.ui.code
 
 import android.content.Context
 import android.view.View
+import ru.sudox.android.auth.ui.R
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.BACK_BUTTON
-import ru.sudox.design.appbar.vos.NOT_USED_PARAMETER
-import ru.sudox.android.auth.R
 
-const val AUTH_PHONE_NEXT_BUTTON_TAG = 2
-
-class AuthPhoneAppBarVO : AppBarVO {
+class AuthCodeAppBarVO : AppBarVO {
 
     override fun getButtonsAtLeft(): Array<Triple<Int, Int, Int>>? {
         return BACK_BUTTON
     }
 
     override fun getButtonsAtRight(): Array<Triple<Int, Int, Int>>? {
-        return arrayOf(Triple(AUTH_PHONE_NEXT_BUTTON_TAG, NOT_USED_PARAMETER, R.string.next))
+        return null
     }
 
     override fun getViewAtLeft(context: Context): View? {

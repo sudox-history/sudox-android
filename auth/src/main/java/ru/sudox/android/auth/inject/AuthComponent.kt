@@ -1,7 +1,5 @@
 package ru.sudox.android.auth.inject
 
-import ru.sudox.android.auth.code.AuthCodeScreenVO
+import ru.sudox.android.auth.ui.inject.AuthUiComponent
 
-interface AuthComponent {
-    fun inject(authCodeScreenVO: AuthCodeScreenVO)
-}
+interface AuthComponent : AuthUiComponent

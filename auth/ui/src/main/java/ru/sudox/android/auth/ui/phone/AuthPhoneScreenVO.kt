@@ -2,8 +2,8 @@ package ru.sudox.android.auth.ui.phone
 
 import android.content.Context
 import android.view.View
-import ru.sudox.android.auth.R
-import ru.sudox.android.auth.vos.AuthScreenVO
+import ru.sudox.android.auth.ui.R
+import ru.sudox.android.auth.ui.vos.AuthScreenVO
 import ru.sudox.android.countries.views.PhoneEditText
 import ru.sudox.design.edittext.layout.EditTextLayout
 

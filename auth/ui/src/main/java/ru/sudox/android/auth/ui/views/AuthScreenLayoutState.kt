@@ -1,4 +1,4 @@
-package ru.sudox.android.auth.views
+package ru.sudox.android.auth.ui.views
 
 import android.os.Parcel
 import android.os.Parcelable

@@ -8,6 +8,7 @@ dependencies {
     api project(path: ':design')
     api project(path: ':design:codeedittext')
     api project(path: ':countries')
+    api project(path: ':auth:ui')
     api project(path: ':api')
 
     implementation libraries.core_ktx

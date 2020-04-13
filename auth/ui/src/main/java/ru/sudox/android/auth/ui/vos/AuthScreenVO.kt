@@ -1,4 +1,4 @@
-package ru.sudox.android.auth.vos
+package ru.sudox.android.auth.ui.vos
 
 import android.content.Context
 import android.view.View

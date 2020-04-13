@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
-import ru.sudox.android.auth.views.AuthScreenLayout
+import ru.sudox.android.auth.ui.views.AuthScreenLayout
 import ru.sudox.android.core.controllers.ScrollableController
 import ru.sudox.android.countries.COUNTRY_CHANGE_REQUEST_CODE
 import ru.sudox.android.countries.COUNTRY_EXTRA_NAME

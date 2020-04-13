@@ -1,13 +1,13 @@
-package ru.sudox.android.auth.register
+package ru.sudox.android.auth.ui.signup
 
 import android.content.Context
 import android.view.View
+import ru.sudox.android.auth.ui.R
+import ru.sudox.android.auth.ui.vos.AuthScreenVO
 import ru.sudox.design.edittext.BasicEditText
 import ru.sudox.design.edittext.layout.EditTextLayout
-import ru.sudox.android.auth.R
-import ru.sudox.android.auth.vos.AuthScreenVO
 
-class AuthRegisterScreenVO : AuthScreenVO {
+class AuthSignUpScreenVO : AuthScreenVO {
 
     var nicknameEditText: BasicEditText? = null
     var nicknameEditTextLayout: EditTextLayout? = null

@@ -1,16 +1,16 @@
-package ru.sudox.android.auth.code
+package ru.sudox.android.auth.ui.code
 
 import android.content.Context
 import android.view.View
 import androidx.core.text.HtmlCompat
 import ru.sudox.design.codeedittext.CodeEditText
 import ru.sudox.design.edittext.layout.EditTextLayout
-import ru.sudox.android.auth.R
-import ru.sudox.android.auth.inject.AuthComponent
-import ru.sudox.android.auth.vos.AuthScreenVO
+import ru.sudox.android.auth.ui.R
+import ru.sudox.android.auth.ui.vos.AuthScreenVO
 import ru.sudox.android.core.CoreActivity
 import ru.sudox.android.countries.helpers.formatPhoneNumber
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import ru.sudox.android.auth.ui.inject.AuthUiComponent
 import javax.inject.Inject
 
 class AuthCodeScreenVO(
@@ -29,7 +29,7 @@ class AuthCodeScreenVO(
 
     override fun getDescription(context: Context): Triple<Int, Int, CharSequence> {
         if (phoneNumberUtil == null) {
-            ((context as CoreActivity).getLoaderComponent() as AuthComponent).inject(this)
+            ((context as CoreActivity).getLoaderComponent() as AuthUiComponent).inject(this)
         }
 
         val formattedPhone = phoneNumberUtil!!.formatPhoneNumber(phoneNumber)

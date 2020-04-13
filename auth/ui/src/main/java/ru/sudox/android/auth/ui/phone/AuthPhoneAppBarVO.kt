@@ -2,7 +2,7 @@ package ru.sudox.android.auth.ui.phone
 
 import android.content.Context
 import android.view.View
-import ru.sudox.android.auth.R
+import ru.sudox.android.auth.ui.R
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.BACK_BUTTON
 import ru.sudox.design.appbar.vos.NOT_USED_PARAMETER
