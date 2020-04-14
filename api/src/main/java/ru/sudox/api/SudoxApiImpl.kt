@@ -3,15 +3,14 @@ package ru.sudox.api
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import ru.sudox.api.common.SudoxApi
+import ru.sudox.api.common.SudoxApiStatus
 import ru.sudox.api.connections.Connection
 import ru.sudox.api.connections.ConnectionListener
 import ru.sudox.api.entries.ApiRequest
 import ru.sudox.api.entries.ApiRequestCallback
 import ru.sudox.api.exceptions.ApiException
-import io.reactivex.subjects.PublishSubject
-import ru.sudox.api.common.SudoxApiStatus
 import java.io.IOException
 import java.util.concurrent.Semaphore
 
@@ -41,8 +40,10 @@ class SudoxApiImpl(
             if (!value) {
                 // Разрываем запросы, на которые ожидаем ответа
                 requestsCallbacks.forEach {
-                    it.value.subjectEmitter.onError(IOException("Connection not installed!"))
-                    it.value.subjectEmitter.onComplete()
+                    if (!it.value.subjectEmitter.isDisposed) {
+                        it.value.subjectEmitter.onError(IOException("Connection not installed!"))
+                        it.value.subjectEmitter.onComplete()
+                    }
                 }
 
                 // Разрываем запросы, которые ожидают выполнения себе подобных
@@ -95,13 +96,19 @@ class SudoxApiImpl(
                 connection.send(serialized)
             } else {
                 releaseRequestQueue(methodName)
-                it.onError(IOException("Connection not installed!"))
-                it.onComplete()
+
+                if (!it.isDisposed) {
+                    it.onError(IOException("Connection not installed!"))
+                    it.onComplete()
+                }
             }
         } else {
             releaseRequestQueue(methodName)
-            it.onError(IOException("Connection not installed!"))
-            it.onComplete()
+
+            if (!it.isDisposed) {
+                it.onError(IOException("Connection not installed!"))
+                it.onComplete()
+            }
         }
     }
 
@@ -168,16 +175,22 @@ class SudoxApiImpl(
                 val dataNode = response["data"]
 
                 @Suppress("RedundantUnitExpression")
-                emitter.onNext(if (dataNode != null) {
-                    objectMapper.treeToValue(dataNode, callback.dataClass)
-                } else {
-                    Unit
-                })
+                if (!emitter.isDisposed) {
+                    emitter.onNext(if (dataNode != null) {
+                        objectMapper.treeToValue(dataNode, callback.dataClass)
+                    } else {
+                        Unit
+                    })
+                }
             } else {
-                emitter.onError(ApiException(result))
+                if (!emitter.isDisposed) {
+                    emitter.onError(ApiException(result))
+                }
             }
 
-            emitter.onComplete()
+            if (!emitter.isDisposed) {
+                emitter.onComplete()
+            }
 
             releaseRequestQueue(methodName)
         } catch (ex: Exception) {
@@ -185,8 +198,10 @@ class SudoxApiImpl(
                 releaseRequestQueue(methodName)
             }
 
-            emitter?.onError(ex)
-            emitter?.onComplete()
+            if (emitter?.isDisposed == false) {
+                emitter.onError(ex)
+                emitter.onComplete()
+            }
         }
     }
 
