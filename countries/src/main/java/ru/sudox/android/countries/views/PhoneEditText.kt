@@ -123,9 +123,6 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
                 phoneTextWatcher?.setCountry(value.regionCode, value.countryCode)
                 countrySelector.setCompoundDrawablesWithIntrinsicBounds(value.flagId, 0, 0, 0)
                 countrySelector.text = "+${value.countryCode}"
-
-                // TODO: Сброс только если ошибка связана с страной
-                (parent as EditTextLayout).errorText = null
             }
 
             field = value
@@ -168,7 +165,7 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
     var editText = PhoneNumberEditText(context).apply {
         id = View.generateViewId()
         inputType = InputType.TYPE_CLASS_PHONE
-        imeOptions = EditorInfo.IME_ACTION_DONE
+        imeOptions = imeOptions or EditorInfo.IME_ACTION_DONE
         isSingleLine = true
         maxLines = 1
 
