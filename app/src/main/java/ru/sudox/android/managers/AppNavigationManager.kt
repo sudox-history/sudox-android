@@ -135,6 +135,8 @@ class AppNavigationManager(
     }
 
     override fun showRoot(tag: Int) {
+        val router = routerProvider.value
+
         if (tag == AUTH_ROOT_TAG) {
             val controller = AuthPhoneController()
             val transaction = RouterTransaction.with(controller)
@@ -143,12 +145,19 @@ class AppNavigationManager(
             loadedMainTags.clear()
             mainControllersTags.clear()
 
-            routerProvider.value.setRoot(transaction)
+            router.setRoot(transaction)
         } else if (tag == MAIN_ROOT_TAG) {
-            bottomNavigationView.apply {
-                visibility = View.VISIBLE
-                selectedItemId = PEOPLE_TAG
-            }
+            val controller = PeopleController()
+
+            loadedMainTags.add(PEOPLE_TAG)
+            mainControllersTags[controller.instanceId] = PEOPLE_TAG
+
+            blockNavigationViewCallback = true
+            bottomNavigationView.visibility = View.VISIBLE
+            bottomNavigationView.selectedItemId = PEOPLE_TAG
+            blockNavigationViewCallback = false
+
+            router.setRoot(RouterTransaction.with(controller))
         }
     }
 

@@ -5,6 +5,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
@@ -36,10 +37,16 @@ abstract class CoreController : LifecycleController() {
                 .getActivityComponent()
                 .inject(this)
 
-        return view ?: createView(container, savedViewState).apply {
+        if (view != null) {
+            return view!!
+        }
+
+        return createView(container, savedViewState).apply {
             id = savedViewState
                     ?.getInt(CORE_CONTROLLER_ROOT_VIEW_ID_KEY, View.generateViewId())
                     ?: View.generateViewId()
+
+            bindView(this)
         }
     }
 
@@ -47,6 +54,7 @@ abstract class CoreController : LifecycleController() {
         return ViewModelProvider(viewModelStore, viewModelFactory!!)[T::class.java]
     }
 
+    @CallSuper
     override fun onAttach(view: View) {
         super.onAttach(view)
 
@@ -73,9 +81,13 @@ abstract class CoreController : LifecycleController() {
         outState.putInt(CORE_CONTROLLER_ROOT_VIEW_ID_KEY, view.id)
     }
 
+    @CallSuper
     override fun onDestroy() {
         viewModelStore.clear()
     }
 
     abstract fun createView(container: ViewGroup, savedViewState: Bundle?): View
+
+    open fun bindView(view: View) {
+    }
 }

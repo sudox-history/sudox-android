@@ -1,5 +1,6 @@
 package ru.sudox.android.people.peopletab
 
+import android.view.View
 import ru.sudox.android.core.controllers.ViewListController
 import ru.sudox.android.people.common.vos.SEEN_TIME_ONLINE
 import ru.sudox.android.people.peopletab.adapters.PeopleTabAdapter
@@ -10,8 +11,8 @@ import ru.sudox.design.viewlist.ViewList
 
 class PeopleTabController : ViewListController<PeopleTabAdapter>() {
 
-    override fun getAdapter(viewList: ViewList): PeopleTabAdapter {
-        return PeopleTabAdapter().apply {
+    override fun bindView(view: View) {
+        adapter!!.apply {
             friendsRequestsVOs.apply {
                 add(FriendRequestVO(2, "undefined.7887", SEEN_TIME_ONLINE, 2L, "Привет, как дела?", 1L))
             }
@@ -28,6 +29,10 @@ class PeopleTabController : ViewListController<PeopleTabAdapter>() {
 
             subscriptionsVOs.apply {}
         }
+    }
+
+    override fun getAdapter(viewList: ViewList): PeopleTabAdapter {
+        return PeopleTabAdapter()
     }
 
     override fun isChild(): Boolean {

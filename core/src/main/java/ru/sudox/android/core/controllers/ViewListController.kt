@@ -12,6 +12,9 @@ import ru.sudox.design.viewlist.ViewListAdapter
 
 abstract class ViewListController<AT : ViewListAdapter<*>> : CoreController() {
 
+    var adapter: AT? = null
+        private set
+
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
         return ViewList(activity!!).also { viewList ->
             viewList.layoutManager = LinearLayoutManager(activity)
@@ -23,10 +26,18 @@ abstract class ViewListController<AT : ViewListAdapter<*>> : CoreController() {
             )
 
             viewList.clipToPadding = false
-            viewList.adapter = this@ViewListController.getAdapter(viewList)?.apply {
+
+            adapter = this@ViewListController.getAdapter(viewList)?.apply {
                 this.viewList = viewList
             }
+
+            viewList.adapter = adapter
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adapter = null
     }
 
     /**

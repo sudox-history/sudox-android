@@ -9,11 +9,7 @@ import ru.sudox.design.viewlist.ViewList
 
 class ChatsTabController : ViewListController<DialogsAdapter>() {
 
-    private var adapter: DialogsAdapter? = null
-
-    override fun onAttach(view: View) {
-        super.onAttach(view)
-
+    override fun bindView(view: View) {
         adapter!!.dialogsVOs.let {
             it.add(ChatVO(1L, false, true, System.currentTimeMillis() - 30000, 0, false, false, true, 1L, "Максим Митюшкин", SEEN_TIME_ONLINE, 4L, "" +
                     "Мы тут M760Li до 900 сил чипанули. До сотки за 2,4 секунды разгоняется. Лютая дичь конечно получилась!"))
@@ -33,8 +29,7 @@ class ChatsTabController : ViewListController<DialogsAdapter>() {
     }
 
     override fun getAdapter(viewList: ViewList): DialogsAdapter? {
-        adapter = DialogsAdapter(R.plurals.chats)
-        return adapter
+        return DialogsAdapter(R.plurals.chats)
     }
 
     override fun isChild(): Boolean {
