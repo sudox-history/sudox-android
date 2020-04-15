@@ -20,6 +20,10 @@ abstract class ScrollableController : CoreController() {
         }
     }
 
+    override fun getViewForBind(parent: View): View {
+        return (parent as ViewGroup).getChildAt(0)
+    }
+
     override fun onSaveViewState(view: View, outState: Bundle) {
         super.onSaveViewState(view, outState.apply {
             if ((view as ViewGroup).childCount == 1) {

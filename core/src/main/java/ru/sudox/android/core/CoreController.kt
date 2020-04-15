@@ -46,8 +46,12 @@ abstract class CoreController : LifecycleController() {
                     ?.getInt(CORE_CONTROLLER_ROOT_VIEW_ID_KEY, View.generateViewId())
                     ?: View.generateViewId()
 
-            bindView(this)
+            bindView(getViewForBind(this))
         }
+    }
+
+    open fun getViewForBind(parent: View): View {
+        return parent
     }
 
     inline fun <reified T : ViewModel> getViewModel(): T {

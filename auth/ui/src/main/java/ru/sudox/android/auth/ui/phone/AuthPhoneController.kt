@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.bluelinelabs.conductor.ControllerChangeHandler
-import com.bluelinelabs.conductor.ControllerChangeType
 import ru.sudox.android.auth.ui.code.AuthCodeController
 import ru.sudox.android.auth.ui.views.AuthScreenLayout
 import ru.sudox.android.core.controllers.ScrollableController
@@ -18,44 +16,42 @@ import ru.sudox.api.getErrorText
 class AuthPhoneController : ScrollableController() {
 
     private var authPhoneViewModel: AuthPhoneViewModel? = null
-    private val screenVO = AuthPhoneScreenVO()
+    private var screenVO: AuthPhoneScreenVO? = null
 
     init {
         appBarVO = AuthPhoneAppBarVO()
     }
 
     override fun createChildView(container: ViewGroup, savedViewState: Bundle?): View {
-        return AuthScreenLayout(container.context).apply {
-            vo = screenVO
-        }
+        return AuthScreenLayout(container.context)
     }
 
-    override fun onChangeStarted(changeHandler: ControllerChangeHandler, changeType: ControllerChangeType) {
-        super.onChangeStarted(changeHandler, changeType)
+    override fun bindView(view: View) {
+        screenVO = AuthPhoneScreenVO().apply {
+            (view as AuthScreenLayout).vo = this
+        }
 
-        if (changeType.isEnter) {
-            authPhoneViewModel = getViewModel()
-            authPhoneViewModel!!.errorsLiveData.observe(this, Observer {
-                if (it != null) {
-                    screenVO.phoneEditTextLayout!!.errorText = getErrorText(activity!!, it)
-                } else {
-                    screenVO.phoneEditTextLayout!!.errorText = null
-                }
-            })
-
-            authPhoneViewModel!!.loadingLiveData.observe(this, Observer {
-                screenVO.phoneEditTextLayout!!.isEnabled = !it
-            })
-
-            authPhoneViewModel!!.successLiveData.observe(this, Observer {
-                navigationManager!!.showRootChild(AuthCodeController())
-            })
-
-            screenVO.phoneEditText!!.countrySelector.setOnClickListener {
-                navigationManager!!.showRootChild(CountrySelectController().apply {
-                    targetController = this@AuthPhoneController
-                })
+        authPhoneViewModel = getViewModel()
+        authPhoneViewModel!!.errorsLiveData.observe(this, Observer {
+            if (it != null) {
+                screenVO!!.phoneEditTextLayout!!.errorText = getErrorText(activity!!, it)
+            } else {
+                screenVO!!.phoneEditTextLayout!!.errorText = null
             }
+        })
+
+        authPhoneViewModel!!.loadingLiveData.observe(this, Observer {
+            screenVO!!.phoneEditTextLayout!!.isEnabled = !it
+        })
+
+        authPhoneViewModel!!.successLiveData.observe(this, Observer {
+            navigationManager!!.showRootChild(AuthCodeController())
+        })
+
+        screenVO!!.phoneEditText!!.countrySelector.setOnClickListener {
+            navigationManager!!.showRootChild(CountrySelectController().apply {
+                targetController = this@AuthPhoneController
+            })
         }
     }
 
@@ -63,14 +59,13 @@ class AuthPhoneController : ScrollableController() {
         super.onAppBarClicked(tag)
 
         if (tag == AUTH_PHONE_NEXT_BUTTON_TAG) {
-            authPhoneViewModel!!.createSession(screenVO.phoneEditText!!.phoneNumber!!)
+            authPhoneViewModel!!.createSession(screenVO!!.phoneEditText!!.phoneNumber!!)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == COUNTRY_CHANGE_REQUEST_CODE) {
-            screenVO.phoneEditText!!.vo = data!!.getParcelableExtra(COUNTRY_EXTRA_NAME)
+            screenVO!!.phoneEditText!!.vo = data!!.getParcelableExtra(COUNTRY_EXTRA_NAME)
         }
     }
-
 }
