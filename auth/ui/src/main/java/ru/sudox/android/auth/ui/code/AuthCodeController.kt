@@ -28,7 +28,7 @@ class AuthCodeController : ScrollableController() {
 
         if (changeType.isEnter) {
             screenVO.codeEditText!!.codeFilledCallback = {
-                navigationManager!!.showChild(AuthSignUpController())
+                navigationManager!!.showRootChild(AuthSignUpController())
             }
         }
     }

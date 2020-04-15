@@ -3,12 +3,11 @@ package ru.sudox.android.messages
 import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import ru.sudox.android.core.controllers.ViewListController
-import ru.sudox.android.core.controllers.tabs.TabsChildController
 import ru.sudox.android.messages.adapters.DialogsAdapter
 import ru.sudox.android.messages.vos.impl.TalkVO
 import ru.sudox.design.viewlist.ViewList
 
-class TalksTabFragment : ViewListController<DialogsAdapter>(), TabsChildController {
+class TalksTabFragment : ViewListController<DialogsAdapter>() {
 
     private var adapter: DialogsAdapter? = null
 
@@ -32,9 +31,5 @@ class TalksTabFragment : ViewListController<DialogsAdapter>(), TabsChildControll
     override fun getAdapter(viewList: ViewList): DialogsAdapter? {
         adapter = DialogsAdapter(R.plurals.talks)
         return adapter
-    }
-
-    override fun canConfigureAppBarVO(): Boolean {
-        return false
     }
 }

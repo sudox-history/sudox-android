@@ -8,10 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
-import com.bluelinelabs.conductor.ControllerChangeHandler
-import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
-import ru.sudox.android.core.controllers.tabs.TabsChildController
 import ru.sudox.android.core.managers.NewNavigationManager
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.appbar.vos.AppBarVO
@@ -50,17 +47,12 @@ abstract class CoreController : LifecycleController() {
         return ViewModelProvider(viewModelStore, viewModelFactory!!)[T::class.java]
     }
 
-    override fun onChangeStarted(changeHandler: ControllerChangeHandler, changeType: ControllerChangeType) {
-        if (changeType.isEnter) {
-            (activity as CoreActivity).let {
-                if (this !is TabsChildController || canConfigureAppBarVO()) {
-                    it.setAppBarViewObject(appBarVO, ::onAppBarClicked)
-                }
+    override fun onAttach(view: View) {
+        super.onAttach(view)
 
-                if (this !is TabsChildController) {
-                    it.setAppBarLayoutViewObject(appBarLayoutVO)
-                }
-            }
+        (activity as CoreActivity).let {
+            it.setAppBarViewObject(appBarVO, ::onAppBarClicked)
+            it.setAppBarLayoutViewObject(appBarLayoutVO)
         }
     }
 

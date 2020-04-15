@@ -48,11 +48,11 @@ class AuthPhoneController : ScrollableController() {
             })
 
             authPhoneViewModel!!.successLiveData.observe(this, Observer {
-                navigationManager!!.showChild(AuthCodeController())
+                navigationManager!!.showRootChild(AuthCodeController())
             })
 
             screenVO.phoneEditText!!.countrySelector.setOnClickListener {
-                navigationManager!!.showChild(CountrySelectController().apply {
+                navigationManager!!.showRootChild(CountrySelectController().apply {
                     targetController = this@AuthPhoneController
                 })
             }
