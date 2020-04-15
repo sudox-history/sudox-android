@@ -4,6 +4,7 @@ import ru.sudox.android.core.CoreController
 import ru.sudox.android.core.controllers.tabs.TabsRootController
 import ru.sudox.android.people.activitytab.ActivityTabController
 import ru.sudox.android.people.peopletab.PeopleTabController
+import ru.sudox.android.people.vos.PeopleAppBarVO
 
 class PeopleController : TabsRootController() {
 

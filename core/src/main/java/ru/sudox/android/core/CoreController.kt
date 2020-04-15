@@ -90,8 +90,9 @@ abstract class CoreController : LifecycleController() {
         viewModelStore.clear()
     }
 
-    abstract fun createView(container: ViewGroup, savedViewState: Bundle?): View
-
+    @CallSuper
     open fun bindView(view: View) {
     }
+
+    abstract fun createView(container: ViewGroup, savedViewState: Bundle?): View
 }

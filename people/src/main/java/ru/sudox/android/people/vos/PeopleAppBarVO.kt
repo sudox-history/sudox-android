@@ -1,4 +1,4 @@
-package ru.sudox.android.people
+package ru.sudox.android.people.vos
 
 import android.content.Context
 import android.view.View

@@ -10,6 +10,8 @@ import ru.sudox.design.viewlist.ViewList
 class ChatsTabController : ViewListController<DialogsAdapter>() {
 
     override fun bindView(view: View) {
+        super.bindView(view)
+
         adapter!!.dialogsVOs.let {
             it.add(ChatVO(1L, false, true, System.currentTimeMillis() - 30000, 0, false, false, true, 1L, "Максим Митюшкин", SEEN_TIME_ONLINE, 4L, "" +
                     "Мы тут M760Li до 900 сил чипанули. До сотки за 2,4 секунды разгоняется. Лютая дичь конечно получилась!"))

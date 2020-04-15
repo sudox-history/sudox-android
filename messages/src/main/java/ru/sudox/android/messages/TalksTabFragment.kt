@@ -9,6 +9,8 @@ import ru.sudox.design.viewlist.ViewList
 class TalksTabFragment : ViewListController<DialogsAdapter>() {
 
     override fun bindView(view: View) {
+        super.bindView(view)
+
         adapter!!.dialogsVOs.let {
             it.add(TalkVO(1L, true, false, System.currentTimeMillis(), 100500, false, false, true,
                     "Да ладно S63-й двиг! Я в отличии от тебя масло не жру!", 7L, "Двигателя BMW", "n74b66"))

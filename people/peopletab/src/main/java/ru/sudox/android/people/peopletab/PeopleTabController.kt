@@ -12,6 +12,8 @@ import ru.sudox.design.viewlist.ViewList
 class PeopleTabController : ViewListController<PeopleTabAdapter>() {
 
     override fun bindView(view: View) {
+        super.bindView(view)
+
         adapter!!.apply {
             friendsRequestsVOs.apply {
                 add(FriendRequestVO(2, "undefined.7887", SEEN_TIME_ONLINE, 2L, "Привет, как дела?", 1L))

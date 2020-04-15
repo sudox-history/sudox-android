@@ -40,7 +40,7 @@ abstract class TabsRootController : CoreController() {
 
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
         if (appBarLayoutVO !is TabsAppBarLayoutVO) {
-            appBarLayoutVO = TabsAppBarLayoutVO(appBarLayoutVO)
+            appBarLayoutVO = TabsAppBarLayoutVO(activity!!, appBarLayoutVO)
         }
 
         return ViewPager(activity!!).apply {
@@ -48,11 +48,11 @@ abstract class TabsRootController : CoreController() {
         }
     }
 
-    override fun onAttach(view: View) {
-        super.onAttach(view)
+    override fun bindView(view: View) {
+        super.bindView(view)
 
         (appBarLayoutVO as TabsAppBarLayoutVO)
-                .tabLayout!!
+                .tabLayout
                 .setupWithViewPager(view as ViewPager)
     }
 
