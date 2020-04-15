@@ -32,4 +32,8 @@ class TalksTabFragment : ViewListController<DialogsAdapter>() {
         adapter = DialogsAdapter(R.plurals.talks)
         return adapter
     }
+
+    override fun isChild(): Boolean {
+        return true
+    }
 }

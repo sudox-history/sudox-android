@@ -6,14 +6,9 @@ import ru.sudox.android.people.peopletab.adapters.PeopleTabAdapter
 import ru.sudox.android.people.peopletab.vos.AddedFriendVO
 import ru.sudox.android.people.peopletab.vos.FriendRequestVO
 import ru.sudox.android.people.peopletab.vos.MaybeYouKnowVO
-import ru.sudox.android.people.peopletab.vos.appbar.PeopleTabAppBarVO
 import ru.sudox.design.viewlist.ViewList
 
 class PeopleTabController : ViewListController<PeopleTabAdapter>() {
-
-    init {
-        appBarVO = PeopleTabAppBarVO()
-    }
 
     override fun getAdapter(viewList: ViewList): PeopleTabAdapter {
         return PeopleTabAdapter().apply {
@@ -33,5 +28,9 @@ class PeopleTabController : ViewListController<PeopleTabAdapter>() {
 
             subscriptionsVOs.apply {}
         }
+    }
+
+    override fun isChild(): Boolean {
+        return true
     }
 }

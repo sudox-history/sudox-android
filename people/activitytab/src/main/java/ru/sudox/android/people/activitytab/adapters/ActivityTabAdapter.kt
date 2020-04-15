@@ -7,8 +7,8 @@ import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 import ru.sudox.design.viewlist.vos.ViewListHeaderVO
 import ru.sudox.android.people.activitytab.R
-import ru.sudox.android.people.activitytab.vos.headers.MomentsHeaderVO
-import ru.sudox.android.people.activitytab.vos.headers.NewsHeaderVO
+import ru.sudox.android.people.activitytab.vos.MomentsHeaderVO
+import ru.sudox.android.people.activitytab.vos.NewsHeaderVO
 import ru.sudox.android.moments.adapters.MomentsAdapter
 import ru.sudox.android.moments.createMomentsRecyclerView
 import ru.sudox.android.news.callbacks.NewsSortingCallback

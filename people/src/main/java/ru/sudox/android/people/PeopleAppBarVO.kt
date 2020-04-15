@@ -1,21 +1,22 @@
-package ru.sudox.android.people.peopletab.vos.appbar
+package ru.sudox.android.people
 
 import android.content.Context
 import android.view.View
+import ru.sudox.android.people.activitytab.R
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.NOT_USED_PARAMETER
-import ru.sudox.android.people.peopletab.R
 
-const val SEARCH_BUTTON_TAG = 3
+const val PEOPLE_NOTIFICATION_BUTTON_TAG = 2
+const val PEOPLE_SEARCH_BUTTON_TAG = 3
 
-class PeopleTabAppBarVO : AppBarVO {
+class PeopleAppBarVO : AppBarVO {
 
     override fun getButtonsAtLeft(): Array<Triple<Int, Int, Int>>? {
-        return null
+        return arrayOf(Triple(PEOPLE_NOTIFICATION_BUTTON_TAG, R.drawable.ic_notifications_none, NOT_USED_PARAMETER))
     }
 
     override fun getButtonsAtRight(): Array<Triple<Int, Int, Int>>? {
-        return arrayOf(Triple(SEARCH_BUTTON_TAG, R.drawable.ic_search, NOT_USED_PARAMETER))
+        return arrayOf(Triple(PEOPLE_SEARCH_BUTTON_TAG, R.drawable.ic_search, NOT_USED_PARAMETER))
     }
 
     override fun getViewAtLeft(context: Context): View? {

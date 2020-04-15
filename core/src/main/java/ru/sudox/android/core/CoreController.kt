@@ -50,9 +50,11 @@ abstract class CoreController : LifecycleController() {
     override fun onAttach(view: View) {
         super.onAttach(view)
 
-        (activity as CoreActivity).let {
-            it.setAppBarViewObject(appBarVO, ::onAppBarClicked)
-            it.setAppBarLayoutViewObject(appBarLayoutVO)
+        if (!isChild()) {
+            (activity as CoreActivity).let {
+                it.setAppBarViewObject(appBarVO, ::onAppBarClicked)
+                it.setAppBarLayoutViewObject(appBarLayoutVO)
+            }
         }
     }
 
@@ -61,6 +63,10 @@ abstract class CoreController : LifecycleController() {
             // При использовании данного ядра Activity должен обрабатывать нажатие кнопки назад в методе onKeyDown()
             activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
         }
+    }
+
+    open fun isChild(): Boolean {
+        return false
     }
 
     override fun onSaveViewState(view: View, outState: Bundle) {

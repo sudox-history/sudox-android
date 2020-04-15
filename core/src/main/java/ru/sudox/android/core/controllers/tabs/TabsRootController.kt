@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.ViewPager
-import com.bluelinelabs.conductor.ControllerChangeHandler
-import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
 import com.bluelinelabs.conductor.viewpager.RouterPagerAdapter
@@ -50,8 +48,8 @@ abstract class TabsRootController : CoreController() {
         }
     }
 
-    override fun onChangeStarted(changeHandler: ControllerChangeHandler, changeType: ControllerChangeType) {
-        super.onChangeStarted(changeHandler, changeType)
+    override fun onAttach(view: View) {
+        super.onAttach(view)
 
         (appBarLayoutVO as TabsAppBarLayoutVO)
                 .tabLayout!!

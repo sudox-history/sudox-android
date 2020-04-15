@@ -1,4 +1,4 @@
-package ru.sudox.android.people.activitytab.vos.headers
+package ru.sudox.android.people.activitytab.vos
 
 import android.content.Context
 import ru.sudox.design.popup.vos.PopupItemVO

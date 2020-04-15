@@ -7,6 +7,10 @@ import ru.sudox.android.people.peopletab.PeopleTabController
 
 class PeopleController : TabsRootController() {
 
+    init {
+        appBarVO = PeopleAppBarVO()
+    }
+
     override fun getControllersCount(): Int {
         return 2
     }

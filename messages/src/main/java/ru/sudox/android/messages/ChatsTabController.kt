@@ -36,4 +36,8 @@ class ChatsTabController : ViewListController<DialogsAdapter>() {
         adapter = DialogsAdapter(R.plurals.chats)
         return adapter
     }
+
+    override fun isChild(): Boolean {
+        return true
+    }
 }
