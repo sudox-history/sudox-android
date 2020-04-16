@@ -34,7 +34,7 @@ class PeopleTabController : ViewListController<PeopleTabAdapter>() {
     }
 
     override fun getAdapter(viewList: ViewList): PeopleTabAdapter {
-        return PeopleTabAdapter()
+        return PeopleTabAdapter(glide)
     }
 
     override fun isChild(): Boolean {

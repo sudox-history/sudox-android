@@ -14,7 +14,7 @@ class ActivityTabController : ViewListController<ActivityTabAdapter>() {
     override fun getAdapter(viewList: ViewList): ActivityTabAdapter? {
         val handler = Handler()
 
-        return ActivityTabAdapter().apply {
+        return ActivityTabAdapter(glide).apply {
             momentsAdapter.apply {
                 addMomentVO = AddMomentVO(1, "kerjen", 1)
 

@@ -18,6 +18,7 @@ import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setCompoundDrawableTintList
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.media.MediaAttachmentsLayout
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.texts.LinkifiedTextView
 import ru.sudox.android.media.texts.helpers.formatNumber
 import ru.sudox.android.news.R
@@ -29,24 +30,7 @@ import kotlin.math.roundToInt
 class NewsItemView : ViewGroup {
 
     var vo: NewsVO? = null
-        set(value) {
-            peopleItemView.vo = value
-            contentTextView.text = value?.contentText
-            attachmentsLayout.vos = value?.attachments
-
-            if (value != null) {
-                dislikeButton.text = formatNumber(context, value.dislikesCount)
-                commentButton.text = formatNumber(context, value.commentsCount)
-                shareButton.text = formatNumber(context, value.sharesCount)
-
-                bindButton(likeButton, likeDrawable!!, likeActiveDrawable!!, likeActionActiveColor, value.isLikeSet, value.likesCount)
-                bindButton(dislikeButton, dislikeDrawable!!, dislikeActiveDrawable!!, dislikeActionActiveColor, value.isDislikeSet, value.dislikesCount)
-            }
-
-            field = value
-            requestLayout()
-            invalidate()
-        }
+        private set
 
     var marginBetweenPeopleAndContent = 0
         set(value) {
@@ -311,5 +295,24 @@ class NewsItemView : ViewGroup {
         if (vo!!.dislikesCount != IS_ACTION_DISABLED) {
             dislikeButton.layout(leftBorder, buttonsTop, leftBorder + dislikeButton.measuredWidth, buttonsBottom)
         }
+    }
+
+    fun setVO(vo: NewsVO?, glide: GlideRequests) {
+        peopleItemView.setVO(vo, glide)
+        contentTextView.text = vo?.contentText
+        attachmentsLayout.vos = vo?.attachments
+
+        if (vo != null) {
+            dislikeButton.text = formatNumber(context, vo.dislikesCount)
+            commentButton.text = formatNumber(context, vo.commentsCount)
+            shareButton.text = formatNumber(context, vo.sharesCount)
+
+            bindButton(likeButton, likeDrawable!!, likeActiveDrawable!!, likeActionActiveColor, vo.isLikeSet, vo.likesCount)
+            bindButton(dislikeButton, dislikeDrawable!!, dislikeActiveDrawable!!, dislikeActionActiveColor, vo.isDislikeSet, vo.dislikesCount)
+        }
+
+        this.vo = vo
+        requestLayout()
+        invalidate()
     }
 }

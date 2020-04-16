@@ -3,6 +3,7 @@ package ru.sudox.android.people.peopletab.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 import ru.sudox.design.viewlist.sortItems
@@ -34,7 +35,9 @@ const val SUBSCRIPTION_VIEW_TYPE = 3
 /**
  * Адаптер для вкладки "People".
  */
-class PeopleTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
+class PeopleTabAdapter(
+        val glide: GlideRequests
+) : ViewListAdapter<RecyclerView.ViewHolder>() {
 
     override var headersVOs: Array<ViewListHeaderVO>? = arrayOf(
             FriendRequestsHeaderVO(),
@@ -46,7 +49,7 @@ class PeopleTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
     val addedFriendsVOs: SortedList<AddedFriendVO> = SortedList(AddedFriendVO::class.java, AddedFriendsSortingCallback(this))
     val friendsRequestsVOs: SortedList<FriendRequestVO> = SortedList(FriendRequestVO::class.java, FriendRequestSortingCallback(this))
     val subscriptionsVOs: SortedList<SubscriptionVO> = SortedList(SubscriptionVO::class.java, SubscriptionsSortingCallback(this))
-    val maybeYouKnowAdapter = MaybeYouKnowAdapter()
+    val maybeYouKnowAdapter = MaybeYouKnowAdapter(glide)
 
     override var viewList: ViewList? = null
         set(value) {
@@ -95,18 +98,18 @@ class PeopleTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
     }
 
     override fun bindItemHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as? PeopleViewHolder)?.view?.vo = when (getItemType(position)) {
+        (holder as? PeopleViewHolder)?.view?.setVO(when (getItemType(position)) {
             FRIEND_REQUEST_VIEW_TYPE -> friendsRequestsVOs
             ADDED_FRIEND_VIEW_TYPE -> addedFriendsVOs
             else -> subscriptionsVOs
-        }[recalculatePositionRelativeHeader(position)]
+        }[recalculatePositionRelativeHeader(position)], glide)
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
 
         if (holder is PeopleViewHolder) {
-            holder.view.vo = null
+            holder.view.setVO(null, glide)
         }
     }
 

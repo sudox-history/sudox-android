@@ -36,36 +36,13 @@ data class ChatVO(
         if (isSentByUserMessage) {
             val hintColor = ContextCompat.getColor(context, R.color.dialogitemview_message_sent_by_user_hint_color)
             val text = SpannableStringBuilder()
-                    .color(hintColor) {
-                        append(context.resources.getString(R.string.message_sent_by_user))
-                        Log.d("APPEND", context.resources.getString(R.string.message_sent_by_user))
-                    }
+                    .color(hintColor) { append(context.resources.getString(R.string.message_sent_by_user)) }
                     .append(lastSentMessage)
 
             return SpannableString.valueOf(text)
         }
 
         return SpannableString.valueOf(lastSentMessage)
-    }
-
-    override fun getAvatarView(context: Context): View {
-        return AvatarImageView(context)
-    }
-
-    override fun bindAvatarView(view: View) {
-        if (view is AvatarImageView) {
-            view.vo = this
-        }
-    }
-
-    override fun unbindAvatarView(view: View) {
-        if (view is AvatarImageView) {
-            view.vo = this
-        }
-    }
-
-    override fun isAvatarViewTypeSame(view: View): Boolean {
-        return view is AvatarImageView
     }
 
     override fun getButtons(): Array<Triple<Int, Int, Int>>? {

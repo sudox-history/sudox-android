@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.GlideCircleImageView
 import ru.sudox.android.people.common.R
 import ru.sudox.android.people.common.vos.AvatarVO
@@ -23,15 +24,7 @@ class AvatarImageView : GlideCircleImageView {
     private var indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     var vo: AvatarVO? = null
-        set(value) {
-            field = value
-
-            if (value != null) {
-                loadImage(value.getResourceId())
-            } else {
-                cancelLoading()
-            }
-        }
+        private set
 
     var indicatorCropRadius = 0
         set(value) {
@@ -85,6 +78,16 @@ class AvatarImageView : GlideCircleImageView {
 
             indicatorPaint.color = indicatorColor
             canvas.drawCircle(cropCenterX, cropCenterY, indicatorRadius.toFloat(), indicatorPaint)
+        }
+    }
+
+    fun setVO(vo: AvatarVO?, glideRequests: GlideRequests) {
+        this.vo = vo
+
+        if (vo != null) {
+            loadImage(vo.getResourceId())
+        } else {
+            cancelLoading()
         }
     }
 }

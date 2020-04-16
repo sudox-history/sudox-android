@@ -3,10 +3,8 @@ package ru.sudox.android.messages.vos.impl
 import android.content.Context
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.text.color
-import ru.sudox.android.media.images.views.GlideCircleImageView
 import ru.sudox.android.messages.R
 import ru.sudox.android.messages.vos.DialogVO
 
@@ -44,23 +42,11 @@ data class TalkVO(
         return SpannableString.valueOf(lastSentMessage)
     }
 
-    override fun getAvatarView(context: Context): View {
-        return GlideCircleImageView(context)
+    override fun getResourceId(): Long {
+        return talkImageId
     }
 
-    override fun bindAvatarView(view: View) {
-        if (view is GlideCircleImageView) {
-            view.loadImage(talkImageId)
-        }
-    }
-
-    override fun unbindAvatarView(view: View) {
-        if (view is GlideCircleImageView) {
-            view.cancelLoading()
-        }
-    }
-
-    override fun isAvatarViewTypeSame(view: View): Boolean {
-        return view is GlideCircleImageView
+    override fun canShowIndicator(): Boolean {
+        return false
     }
 }

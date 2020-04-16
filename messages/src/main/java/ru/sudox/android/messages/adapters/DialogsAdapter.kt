@@ -4,15 +4,17 @@ import android.view.ViewGroup
 import androidx.annotation.PluralsRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
-import ru.sudox.design.viewlist.ViewList
-import ru.sudox.design.viewlist.ViewListAdapter
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.messages.R
 import ru.sudox.android.messages.callbacks.DialogsCallback
 import ru.sudox.android.messages.views.DialogItemView
 import ru.sudox.android.messages.vos.DialogVO
+import ru.sudox.design.viewlist.ViewList
+import ru.sudox.design.viewlist.ViewListAdapter
 
 class DialogsAdapter(
-        @PluralsRes val pluralId: Int
+        @PluralsRes val pluralId: Int,
+        val glide: GlideRequests
 ) : ViewListAdapter<DialogsAdapter.ViewHolder>() {
 
     val dialogsVOs = SortedList<DialogVO>(DialogVO::class.java, DialogsCallback(this))
@@ -30,7 +32,7 @@ class DialogsAdapter(
     }
 
     override fun bindItemHolder(holder: ViewHolder, position: Int) {
-        holder.view.vo = dialogsVOs[position]
+        holder.view.setVO(dialogsVOs[position], glide)
     }
 
     override fun getFooterText(position: Int): String? {

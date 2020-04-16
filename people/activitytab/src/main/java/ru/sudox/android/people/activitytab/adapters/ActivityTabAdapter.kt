@@ -3,6 +3,7 @@ package ru.sudox.android.people.activitytab.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 import ru.sudox.design.viewlist.vos.ViewListHeaderVO
@@ -24,7 +25,9 @@ const val NEWS_ITEM_VIEW_TYPE = 1
 /**
  * Адаптер для экрана Activity
  */
-class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
+class ActivityTabAdapter(
+        private val glide: GlideRequests
+) : ViewListAdapter<RecyclerView.ViewHolder>() {
 
     override var headersVOs: Array<ViewListHeaderVO>? = arrayOf(
             MomentsHeaderVO(),
@@ -59,7 +62,7 @@ class ActivityTabAdapter : ViewListAdapter<RecyclerView.ViewHolder>() {
 
     override fun bindItemHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is NewsViewHolder) {
-            holder.view.vo = newsVOs[recalculatePositionRelativeHeader(position)]
+            holder.view.setVO(newsVOs[recalculatePositionRelativeHeader(position)], glide)
         }
     }
 

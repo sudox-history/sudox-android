@@ -31,7 +31,7 @@ class ChatsTabController : ViewListController<DialogsAdapter>() {
     }
 
     override fun getAdapter(viewList: ViewList): DialogsAdapter? {
-        return DialogsAdapter(R.plurals.chats)
+        return DialogsAdapter(R.plurals.chats, glide)
     }
 
     override fun isChild(): Boolean {

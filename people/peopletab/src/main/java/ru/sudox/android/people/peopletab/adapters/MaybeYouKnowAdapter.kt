@@ -3,6 +3,7 @@ package ru.sudox.android.people.peopletab.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 import ru.sudox.android.people.common.views.VerticalPeopleItemView
@@ -15,7 +16,9 @@ const val MAYBE_YOU_KNOW_ITEM_VIEW_TYPE = 4
 /**
  * Адаптер для блока "Maybe you know".
  */
-class MaybeYouKnowAdapter : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>() {
+class MaybeYouKnowAdapter(
+        val glide: GlideRequests
+) : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>() {
 
     override var viewList: ViewList? = null
         set(value) {
@@ -32,14 +35,14 @@ class MaybeYouKnowAdapter : ViewListAdapter<MaybeYouKnowAdapter.ViewHolder>() {
     }
 
     override fun bindItemHolder(holder: ViewHolder, position: Int) {
-        holder.view.vo = maybeYouKnowVOs[position]
+        holder.view.setVO(maybeYouKnowVOs[position], glide)
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
 
         if (holder is ViewHolder) {
-            holder.view.vo = null
+            holder.view.setVO(null, glide)
         }
     }
 

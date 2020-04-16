@@ -40,18 +40,18 @@ open class MomentVO(
     }
 
     override fun unbindViewInCenter(view: View) {
-        (view as AvatarImageView).vo = null
+//        (view as AvatarImageView).vo = null
     }
 
     override fun bindViewInCenter(view: View) {
-        (view as AvatarImageView).let {
-            it.layoutParams = ViewGroup.LayoutParams(
-                    view.context.resources.getDimensionPixelSize(R.dimen.momentvo_photo_width),
-                    view.context.resources.getDimensionPixelSize(R.dimen.momentvo_photo_height)
-            )
-
-            it.vo = this
-        }
+//        (view as AvatarImageView).let {
+//            it.layoutParams = ViewGroup.LayoutParams(
+//                    view.context.resources.getDimensionPixelSize(R.dimen.momentvo_photo_width),
+//                    view.context.resources.getDimensionPixelSize(R.dimen.momentvo_photo_height)
+//            )
+//
+//            it.vo = this
+//        }
     }
 
     override fun getViewInCenter(context: Context): View {

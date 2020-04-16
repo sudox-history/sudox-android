@@ -2,9 +2,9 @@ package ru.sudox.android.messages.vos
 
 import android.content.Context
 import android.text.SpannableString
-import android.view.View
+import ru.sudox.android.people.common.vos.AvatarVO
 
-interface DialogVO {
+interface DialogVO : AvatarVO {
 
     val dialogId: Long
     var isMuted: Boolean
@@ -28,29 +28,4 @@ interface DialogVO {
      * @return последнее сообщение
      */
     fun getLastMessage(context: Context): SpannableString
-
-    /**
-     * Возвращает View аватара диалога
-     * @param context Контекст активности/приложения
-     * @return View аватара диалога
-     */
-    fun getAvatarView(context: Context): View
-
-    /**
-     * Привязать view к аватару
-     * @param view для привязки
-     */
-    fun bindAvatarView(view: View)
-
-    /**
-     * Отвязать view от аватара
-     * @param view от которого необходимо отвязать
-     */
-    fun unbindAvatarView(view: View)
-
-    /**
-     * Определяет, одинаковые ли типы у аватара диалога и переданного view
-     * @param view, с которой необходимо сравнить текущий AvatarView
-     */
-    fun isAvatarViewTypeSame(view: View): Boolean
 }

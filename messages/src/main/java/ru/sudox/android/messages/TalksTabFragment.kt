@@ -24,7 +24,7 @@ class TalksTabFragment : ViewListController<DialogsAdapter>() {
     }
 
     override fun getAdapter(viewList: ViewList): DialogsAdapter? {
-        return DialogsAdapter(R.plurals.talks)
+        return DialogsAdapter(R.plurals.talks, glide)
     }
 
     override fun isChild(): Boolean {

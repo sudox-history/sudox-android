@@ -19,8 +19,10 @@ import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.messages.R
 import ru.sudox.android.messages.vos.DialogVO
+import ru.sudox.android.people.common.views.AvatarImageView
 import ru.sudox.android.time.formatTime
 import kotlin.math.abs
 import kotlin.math.max
@@ -34,7 +36,7 @@ class DialogItemView : ViewGroup {
     private val iconDoneView = AppCompatImageView(context).apply { addView(this) }
     private val iconMutedView = AppCompatImageView(context).apply { addView(this) }
 
-    private var dialogAvatarView: View? = null
+    private var dialogAvatarView = AvatarImageView(context).apply { addView(this) }
     private var messageSentByUserHintColor = 0
     private var messageStatusSize = 0
     private var messageStatusIcon: Drawable? = null
@@ -45,8 +47,6 @@ class DialogItemView : ViewGroup {
     private var dialogMutedColor = 0
     private var dialogMutedIconSize = 0
 
-    private var imageHeight = 0
-    private var imageWidth = 0
     private var imageActiveColor = 0
     private var imageActiveRadius = 0
     private var imageActiveInnerRadius = 0
@@ -73,32 +73,7 @@ class DialogItemView : ViewGroup {
     private var dialogContentNewTextAppearance = 0
 
     var vo: DialogVO? = null
-        set(value) {
-            if (dialogAvatarView != null) {
-                field?.unbindAvatarView(dialogAvatarView!!)
-            }
-
-            field = value
-
-            if (value != null) {
-                if (dialogAvatarView == null || value.isAvatarViewTypeSame(dialogAvatarView!!)) {
-                    removeView(dialogAvatarView)
-
-                    dialogAvatarView = value.getAvatarView(context).apply {
-                        addViewInLayout(this, -1, LayoutParams(imageWidth, imageHeight))
-                    }
-                }
-
-                value.bindAvatarView(dialogAvatarView!!)
-                viewSettingsUpdate()
-            } else {
-                removeViewInLayout(dialogAvatarView)
-                dialogAvatarView = null
-            }
-
-            invalidate()
-            requestLayout()
-        }
+        private set
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.dialogItemViewStyle)
@@ -112,8 +87,10 @@ class DialogItemView : ViewGroup {
             dialogContentNewTextAppearance = it.getResourceIdOrThrow(R.styleable.DialogItemView_dialogNewContentTextAppearance)
             setTextAppearance(countMessagesView, it.getResourceIdOrThrow(R.styleable.DialogItemView_dialogMessageCountTextAppearance))
 
-            imageHeight = it.getDimensionPixelSizeOrThrow(R.styleable.DialogItemView_imageHeight)
-            imageWidth = it.getDimensionPixelSizeOrThrow(R.styleable.DialogItemView_imageWidth)
+            val imageHeight = it.getDimensionPixelSizeOrThrow(R.styleable.DialogItemView_imageHeight)
+            val imageWidth = it.getDimensionPixelSizeOrThrow(R.styleable.DialogItemView_imageWidth)
+
+            dialogAvatarView.layoutParams = LayoutParams(imageWidth, imageHeight)
 
             imageActiveColor = it.getColorOrThrow(R.styleable.DialogItemView_imageActiveColor)
             imageActiveRadius = it.getDimensionPixelSizeOrThrow(R.styleable.DialogItemView_imageActiveRadius)
@@ -163,7 +140,7 @@ class DialogItemView : ViewGroup {
         val countMaxWidth = if (!vo!!.isViewedByMe) countMessagesView.measuredWidth + 2 * innerCounterHorizontalMargin else 0
 
 
-        val availableContentAndInfoWidth = availableWidth - dialogAvatarView!!.measuredWidth - innerImageToTextMargin
+        val availableContentAndInfoWidth = availableWidth - dialogAvatarView.measuredWidth - innerImageToTextMargin
 
         contentTextWidth = if (availableWidth != 0) {
             if (countMaxWidth > innerContentToRightBorderMargin) {
@@ -183,8 +160,8 @@ class DialogItemView : ViewGroup {
 
         val needHeight = paddingTop + max(innerDialogNameToTopMargin +
                 nameView.measuredHeight + innerDialogNameToContentMargin +
-                contentTextView.measuredHeight, dialogAvatarView!!.measuredHeight) + paddingBottom
-        val needWidth = paddingLeft + dialogAvatarView!!.measuredWidth + innerImageToTextMargin +
+                contentTextView.measuredHeight, dialogAvatarView.measuredHeight) + paddingBottom
+        val needWidth = paddingLeft + dialogAvatarView.measuredWidth + innerImageToTextMargin +
                 contentTextWidth + max(innerContentToRightBorderMargin, countMaxWidth +
                 innerContentToRightViewMargin) + paddingRight
 
@@ -197,8 +174,8 @@ class DialogItemView : ViewGroup {
 
         val photoLeftBorder = paddingLeft
         val photoTopBorder = paddingTop
-        val photoBottomBorder = photoTopBorder + dialogAvatarView!!.measuredHeight
-        val photoRightBorder = photoLeftBorder + dialogAvatarView!!.measuredWidth
+        val photoBottomBorder = photoTopBorder + dialogAvatarView.measuredHeight
+        val photoRightBorder = photoLeftBorder + dialogAvatarView.measuredWidth
 
         val dialogNameLeftBorder = photoRightBorder + innerImageToTextMargin
         val dialogNameTopBorder = paddingTop + innerDialogNameToTopMargin
@@ -233,7 +210,7 @@ class DialogItemView : ViewGroup {
 
         iconMutedView.layout(mutedIconLeftBorder, mutedIconTopBorder, mutedIconRightBorder, mutedIconBottomBorder)
 
-        dialogAvatarView?.layout(photoLeftBorder, photoTopBorder, photoRightBorder, photoBottomBorder)
+        dialogAvatarView.layout(photoLeftBorder, photoTopBorder, photoRightBorder, photoBottomBorder)
         nameView.layout(dialogNameLeftBorder, dialogNameTopBorder, dialogNameRightBorder, dialogNameBottomBorder)
         contentTextView.layout(dialogNameLeftBorder, contentTopBorder, contentRightBorder, contentBottomBorder)
         dateView.layout(dateLeftBorder, dateTopBorder, rightBorder, dateBottomBorder)
@@ -279,7 +256,6 @@ class DialogItemView : ViewGroup {
         contentTextView.apply {
             text = vo!!.getLastMessage(context)
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-            gravity = Gravity.LEFT
             ellipsize = TextUtils.TruncateAt.END
             maxLines = if (!vo!!.isViewedByMe && !vo!!.isMuted) 2 else 1
 
@@ -295,7 +271,6 @@ class DialogItemView : ViewGroup {
         nameView.apply {
             text = vo!!.getName()
             layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-            gravity = Gravity.LEFT
             ellipsize = TextUtils.TruncateAt.END
             isSingleLine = true
             maxLines = 1
@@ -358,5 +333,14 @@ class DialogItemView : ViewGroup {
                 setTint(dialogMutedColor)
             })
         }
+    }
+
+    fun setVO(vo: DialogVO, glide: GlideRequests) {
+        this.vo = vo
+
+        dialogAvatarView.setVO(vo, glide)
+        viewSettingsUpdate()
+        requestLayout()
+        invalidate()
     }
 }

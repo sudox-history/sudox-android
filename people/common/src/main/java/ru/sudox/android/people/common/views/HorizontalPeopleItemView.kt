@@ -18,6 +18,7 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.TextViewCompat.setTextAppearance
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.people.common.R
 import ru.sudox.android.people.common.vos.PeopleVO
 import java.util.ArrayList
@@ -82,54 +83,7 @@ open class HorizontalPeopleItemView : ViewGroup {
         }
 
     var vo: PeopleVO? = null
-        set(value) {
-            val buttons = value?.getButtons()
-            val needRemove = (buttonsViews?.size ?: 0) - (buttons?.size ?: 0)
-            val needAdd = (buttons?.size ?: 0) - (buttonsViews?.size ?: 0)
-
-            if (needRemove > 0) {
-                repeat(needRemove) {
-                    removeViewInLayout(with(buttonsViews!!) {
-                        removeAt(lastIndex)
-                    })
-                }
-            } else if (needAdd > 0) {
-                if (buttonsViews == null) {
-                    buttonsViews = ArrayList()
-                }
-
-                repeat(needAdd) {
-                    buttonsViews!!.add(AppCompatImageButton(context).apply {
-                        addViewInLayout(this, -1, LayoutParams(buttonsWidth, buttonsHeight))
-                    })
-                }
-            }
-
-            buttonsViews?.forEachIndexed { index, imageButton ->
-                buttons!![index].let {
-                    imageButton.tag = it.first
-                    imageButton.layoutParams = LayoutParams(buttonsWidth, buttonsHeight)
-                    imageButton.setImageResource(it.second)
-                    ImageViewCompat.setImageTintList(imageButton, ColorStateList.valueOf(getColor(context, it.third)))
-                }
-            }
-
-            nameTextView.text = value?.userName
-            photoImageView.vo = value
-            statusTextView.let {
-                it.setTextColor(if (value?.isStatusAboutOnline() == true && value.isStatusActive()) {
-                    activeStatusTextColor
-                } else {
-                    inactiveStatusTextColor
-                })
-
-                it.text = value?.getStatusMessage(context)
-            }
-
-            field = value
-            requestLayout()
-            invalidate()
-        }
+        private set
 
     internal var nameTextView = AppCompatTextView(context).apply {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -256,5 +210,54 @@ open class HorizontalPeopleItemView : ViewGroup {
 
         nameTextView.layout(nameLeftBorder, nameTopBorder, nameRightBorder, nameBottomBorder)
         statusTextView.layout(statusLeftBorder, statusTopBorder, statusRightBorder, statusBottomBorder)
+    }
+
+    fun setVO(vo: PeopleVO?, glide: GlideRequests) {
+        val buttons = vo?.getButtons()
+        val needRemove = (buttonsViews?.size ?: 0) - (buttons?.size ?: 0)
+        val needAdd = (buttons?.size ?: 0) - (buttonsViews?.size ?: 0)
+
+        if (needRemove > 0) {
+            repeat(needRemove) {
+                removeViewInLayout(with(buttonsViews!!) {
+                    removeAt(lastIndex)
+                })
+            }
+        } else if (needAdd > 0) {
+            if (buttonsViews == null) {
+                buttonsViews = ArrayList()
+            }
+
+            repeat(needAdd) {
+                buttonsViews!!.add(AppCompatImageButton(context).apply {
+                    addViewInLayout(this, -1, LayoutParams(buttonsWidth, buttonsHeight))
+                })
+            }
+        }
+
+        buttonsViews?.forEachIndexed { index, imageButton ->
+            buttons!![index].let {
+                imageButton.tag = it.first
+                imageButton.layoutParams = LayoutParams(buttonsWidth, buttonsHeight)
+                imageButton.setImageResource(it.second)
+                ImageViewCompat.setImageTintList(imageButton, ColorStateList.valueOf(getColor(context, it.third)))
+            }
+        }
+
+        nameTextView.text = vo?.userName
+        photoImageView.setVO(vo, glide)
+        statusTextView.let {
+            it.setTextColor(if (vo?.isStatusAboutOnline() == true && vo.isStatusActive()) {
+                activeStatusTextColor
+            } else {
+                inactiveStatusTextColor
+            })
+
+            it.text = vo?.getStatusMessage(context)
+        }
+
+        this.vo = vo
+        requestLayout()
+        invalidate()
     }
 }
