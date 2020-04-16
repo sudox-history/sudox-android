@@ -16,12 +16,20 @@ val CLOSE_BUTTON = arrayOf(Triple(CLOSE_BUTTON_TAG, R.drawable.ic_cancel, R.colo
  * @property photoId ID фотографии в хранилище.
  * @property seenTime Последнее время онлайна, (SEEN_TIME_ONLINE если пользователь онлайн в данный момент)
  */
-interface PeopleVO {
+interface PeopleVO : AvatarVO {
 
     var userId: Long
     var userName: String
     var seenTime: Long
     var photoId: Long
+
+    override fun canShowIndicator(): Boolean {
+        return !isStatusAboutOnline() && isUserOnline()
+    }
+
+    override fun getResourceId(): Long {
+        return photoId
+    }
 
     /**
      * Возвращает триплеты тег-иконка-оттенок для функциональных кнопок

@@ -10,7 +10,7 @@ import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
 import ru.sudox.android.media.images.views.GlideCircleImageView
 import ru.sudox.android.people.common.R
-import ru.sudox.android.people.common.vos.PeopleVO
+import ru.sudox.android.people.common.vos.AvatarVO
 
 /**
  * ImageView для аватарок.
@@ -22,12 +22,12 @@ class AvatarImageView : GlideCircleImageView {
 
     private var indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    var vo: PeopleVO? = null
+    var vo: AvatarVO? = null
         set(value) {
             field = value
 
             if (value != null) {
-                loadImage(value.photoId)
+                loadImage(value.getResourceId())
             } else {
                 cancelLoading()
             }
@@ -74,7 +74,7 @@ class AvatarImageView : GlideCircleImageView {
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
 
-        if (vo?.isStatusAboutOnline() == false && vo?.isUserOnline() == true) {
+        if (vo?.canShowIndicator() == true) {
             val rightBorder = measuredWidth.toFloat()
             val bottomBorder = measuredHeight.toFloat()
             val cropCenterX = rightBorder - indicatorCropRadius

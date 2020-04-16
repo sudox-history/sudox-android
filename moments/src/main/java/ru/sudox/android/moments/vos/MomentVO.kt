@@ -20,6 +20,10 @@ open class MomentVO(
 
     override var seenTime: Long = 0
 
+    override fun canShowIndicator(): Boolean {
+        return false
+    }
+
     override fun getTitle(context: Context): String? {
         return userName
     }
