@@ -6,12 +6,15 @@ import android.view.View
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
+import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.sudox.android.R
 import ru.sudox.android.auth.ui.phone.AuthPhoneController
 import ru.sudox.android.core.managers.AUTH_ROOT_TAG
 import ru.sudox.android.core.managers.MAIN_ROOT_TAG
 import ru.sudox.android.core.managers.NewNavigationManager
+import ru.sudox.android.managers.handlers.move.LeftMoveHandler
+import ru.sudox.android.managers.handlers.move.RightMoveHandler
 import ru.sudox.android.messages.DialogsController
 import ru.sudox.android.people.PeopleController
 import ru.sudox.android.people.ProfileController
@@ -25,6 +28,7 @@ private const val MAIN_CONTROLLER_AT_VALUE_KEY = "main_controllers_value_" // in
 private const val MAIN_CONTROLLER_AT_KEY_KEY = "main_controllers_key_" // index
 private const val LOADED_MAIN_CONTROLLERS_COUNT = "loaded_main_controllers_count"
 private const val LOADED_MAIN_CONTROLLER_AT = "loaded_main_controller_at_" // index
+private const val ANIMATION_DURATION = 140L
 
 private const val PEOPLE_TAG = 2
 private const val DIALOGS_TAG = 3
@@ -38,6 +42,7 @@ class AppNavigationManager(
     private var loadedMainTags = HashSet<Int>()
     private var mainControllersTags = HashMap<String, Int>()
     private var blockNavigationViewCallback = false
+    private var isLaunched = false
 
     init {
         bottomNavigationView.apply {
@@ -56,6 +61,11 @@ class AppNavigationManager(
 
         val tag = item.itemId
         val router = routerProvider.value
+        val changeHandler = if (tag > bottomNavigationView.selectedItemId) {
+            RightMoveHandler(ANIMATION_DURATION)
+        } else {
+            LeftMoveHandler(ANIMATION_DURATION)
+        }
 
         if (loadedMainTags.contains(tag)) {
             val backstack = router.backstack
@@ -73,7 +83,7 @@ class AppNavigationManager(
 
             router.setBackstack(backstack.apply {
                 addAll(stack)
-            }, null)
+            }, changeHandler)
         } else {
             val controller = if (tag == PEOPLE_TAG) {
                 PeopleController()
@@ -86,7 +96,9 @@ class AppNavigationManager(
             mainControllersTags[controller.instanceId] = tag
             loadedMainTags.add(tag)
 
-            router.pushController(RouterTransaction.with(controller))
+            router.pushController(RouterTransaction
+                    .with(controller)
+                    .pushChangeHandler(changeHandler))
         }
 
         return true
@@ -100,8 +112,6 @@ class AppNavigationManager(
         val currentTag = mainControllersTags.remove(currentId)
 
         if (backstack.isNotEmpty()) {
-            router.setBackstack(backstack, null)
-
             val previous = backstack.last().controller
             val previousTag = mainControllersTags[previous.instanceId]
 
@@ -120,6 +130,13 @@ class AppNavigationManager(
                 loadedMainTags.remove(currentTag)
             }
 
+            val changeHandler = if (previousTag == null || currentTag == null || previousTag <= currentTag) {
+                LeftMoveHandler(ANIMATION_DURATION)
+            } else {
+                RightMoveHandler(ANIMATION_DURATION)
+            }
+
+            router.setBackstack(backstack, changeHandler)
             return true
         }
 
@@ -131,23 +148,33 @@ class AppNavigationManager(
             mainControllersTags[controller.instanceId] = bottomNavigationView.selectedItemId
         }
 
-        routerProvider.value.pushController(RouterTransaction.with(controller))
+        routerProvider.value.pushController(RouterTransaction
+                .with(controller)
+                .pushChangeHandler(RightMoveHandler(ANIMATION_DURATION)))
     }
 
     override fun showRoot(tag: Int) {
         val router = routerProvider.value
-
-        if (tag == AUTH_ROOT_TAG) {
+        val transaction = if (tag == AUTH_ROOT_TAG) {
             val controller = AuthPhoneController()
             val transaction = RouterTransaction.with(controller)
+
+            if (isLaunched) {
+                transaction.pushChangeHandler(LeftMoveHandler(ANIMATION_DURATION))
+            }
 
             bottomNavigationView.visibility = View.GONE
             loadedMainTags.clear()
             mainControllersTags.clear()
 
-            router.setRoot(transaction)
-        } else if (tag == MAIN_ROOT_TAG) {
+            transaction
+        } else {
             val controller = PeopleController()
+            val transaction = RouterTransaction.with(controller)
+
+            if (isLaunched) {
+                transaction.pushChangeHandler(RightMoveHandler(ANIMATION_DURATION))
+            }
 
             loadedMainTags.add(PEOPLE_TAG)
             mainControllersTags[controller.instanceId] = PEOPLE_TAG
@@ -157,8 +184,15 @@ class AppNavigationManager(
             bottomNavigationView.selectedItemId = PEOPLE_TAG
             blockNavigationViewCallback = false
 
-            router.setRoot(RouterTransaction.with(controller))
+            transaction
         }
+
+        if (!isLaunched) {
+            transaction.pushChangeHandler(FadeChangeHandler(ANIMATION_DURATION))
+            isLaunched = true
+        }
+
+        router.setRoot(transaction)
     }
 
     override fun showSubRoot(controller: Controller) {
