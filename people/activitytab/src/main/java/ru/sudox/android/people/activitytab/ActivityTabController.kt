@@ -3,8 +3,8 @@ package ru.sudox.android.people.activitytab
 import android.os.Handler
 import ru.sudox.android.core.controllers.ViewListController
 import ru.sudox.android.media.vos.impls.ImageAttachmentVO
-import ru.sudox.android.moments.vos.AddMomentVO
-import ru.sudox.android.moments.vos.MomentVO
+import ru.sudox.android.moments.vos.impl.add.AddMomentVO
+import ru.sudox.android.moments.vos.impl.MomentVO
 import ru.sudox.android.news.vos.NewsVO
 import ru.sudox.android.people.activitytab.adapters.ActivityTabAdapter
 import ru.sudox.design.viewlist.ViewList

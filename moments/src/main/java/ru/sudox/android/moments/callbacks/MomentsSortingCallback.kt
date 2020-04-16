@@ -2,7 +2,7 @@ package ru.sudox.android.moments.callbacks
 
 import ru.sudox.design.viewlist.ViewListAdapter
 import ru.sudox.design.viewlist.ViewListCallback
-import ru.sudox.android.moments.vos.MomentVO
+import ru.sudox.android.moments.vos.impl.MomentVO
 
 class MomentsSortingCallback(
         viewListAdapter: ViewListAdapter<*>,

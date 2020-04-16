@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="circularupdatableview_active_stroke_width">2dp</dimen>
-    <dimen name="circularupdatableview_inactive_stroke_width">1dp</dimen>
-    <dimen name="circularupdatableview_stroke_radius_diff">5dp</dimen>
-    <dimen name="circularupdatableview_margin_between_title_and_view_in_center">8dp</dimen>
-    <dimen name="circularupdatableview_title_text_size">13dp</dimen>
-</resources>

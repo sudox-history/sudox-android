@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="circularupdatableview_active_color">#00BFA5</color>
-    <color name="circularupdatableview_inactive_color">#CCCCCC</color>
-    <color name="circularupdatableview_title_text_color">#606060</color>
-</resources>

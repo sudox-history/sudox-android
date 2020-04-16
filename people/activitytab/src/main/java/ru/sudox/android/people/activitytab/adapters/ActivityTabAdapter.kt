@@ -36,7 +36,7 @@ class ActivityTabAdapter(
 
     var viewPool = RecyclerView.RecycledViewPool()
     val newsVOs = SortedList<NewsVO>(NewsVO::class.java, NewsSortingCallback(this, NEWS_HEADER_TYPE))
-    val momentsAdapter = MomentsAdapter()
+    val momentsAdapter = MomentsAdapter(glide)
 
     override var viewList: ViewList? = null
         set(value) {
@@ -70,7 +70,7 @@ class ActivityTabAdapter(
         super.onViewRecycled(holder)
 
         if (holder is MomentsAdapter.ViewHolder) {
-            holder.view.vo = null
+            holder.view.setVO(null, glide)
         }
     }
 

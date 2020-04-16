@@ -9,6 +9,8 @@
         <item name="strokeRadiusDiff">@dimen/circularupdatableview_stroke_radius_diff</item>
         <item name="marginBetweenTitleAndViewInCenter">@dimen/circularupdatableview_margin_between_title_and_view_in_center</item>
         <item name="titleTextAppearance">@style/Sudox.CircularUpdatableView.TitleTextAppearance</item>
+        <item name="avatarHeight">@dimen/circularupdatableview_avatar_height</item>
+        <item name="avatarWidth">@dimen/circularupdatableview_avatar_width</item>
     </style>
 
     <style name="Sudox.CircularUpdatableView.TitleTextAppearance" parent="">

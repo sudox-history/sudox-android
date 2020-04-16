@@ -3,19 +3,22 @@ package ru.sudox.android.moments.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
-import ru.sudox.design.circularupdatableview.CircularUpdatableView
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 import ru.sudox.android.moments.R
 import ru.sudox.android.moments.callbacks.MomentsSortingCallback
-import ru.sudox.android.moments.vos.MomentVO
+import ru.sudox.android.moments.views.CircularUpdatableView
+import ru.sudox.android.moments.vos.impl.MomentVO
 
 const val MOMENTS_ITEM_VIEW_TYPE = 2
 
 /**
  * Адаптер для моментов.
  */
-class MomentsAdapter : ViewListAdapter<MomentsAdapter.ViewHolder>() {
+class MomentsAdapter(
+        val glide: GlideRequests
+) : ViewListAdapter<MomentsAdapter.ViewHolder>() {
 
     override var viewList: ViewList? = null
         set(value) {
@@ -33,18 +36,18 @@ class MomentsAdapter : ViewListAdapter<MomentsAdapter.ViewHolder>() {
     }
 
     override fun bindItemHolder(holder: ViewHolder, position: Int) {
-        holder.view.vo = if (position != 0) {
+        holder.view.setVO(if (position != 0) {
             momentsVOs[position - 1]
         } else {
             addMomentVO
-        }
+        }, glide)
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
 
         if (holder is ViewHolder) {
-            holder.view.vo = null
+            holder.view.setVO(null, glide)
         }
     }
 

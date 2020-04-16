@@ -3,4 +3,8 @@
     <color name="addmomentvo_add_icon_clip_color">#FFFFFF</color>
     <color name="addmomentvo_add_icon_stroke_color">#CCCCCC</color>
     <color name="addmomentvo_add_icon_tint_color">#00BFA5</color>
+
+    <color name="circularupdatableview_active_color">#00BFA5</color>
+    <color name="circularupdatableview_inactive_color">#CCCCCC</color>
+    <color name="circularupdatableview_title_text_color">#606060</color>
 </resources>
