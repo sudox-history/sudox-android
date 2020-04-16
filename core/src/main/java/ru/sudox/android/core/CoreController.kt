@@ -10,7 +10,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
+import com.lalafo.conductor.glide.GlideProvider
 import ru.sudox.android.core.managers.NewNavigationManager
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.BACK_BUTTON_TAG
@@ -18,7 +20,10 @@ import javax.inject.Inject
 
 private const val CORE_CONTROLLER_ROOT_VIEW_ID_KEY = "core_controller_root_view_id"
 
-abstract class CoreController : LifecycleController() {
+abstract class CoreController : LifecycleController(), GlideProvider<GlideRequests> {
+
+    @Suppress("LeakingThis")
+    private val glideControllerSupport = CoreGlideControllerSupport(this)
 
     var appBarVO: AppBarVO? = null
     var appBarLayoutVO: AppBarLayoutVO? = null
@@ -48,6 +53,10 @@ abstract class CoreController : LifecycleController() {
 
             bindView(getViewForBind(this))
         }
+    }
+
+    override fun getGlide(): GlideRequests {
+        return glideControllerSupport.glide
     }
 
     open fun getViewForBind(parent: View): View {
