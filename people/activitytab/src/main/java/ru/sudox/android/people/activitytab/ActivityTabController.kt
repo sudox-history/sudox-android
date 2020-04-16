@@ -7,7 +7,6 @@ import ru.sudox.android.moments.vos.AddMomentVO
 import ru.sudox.android.moments.vos.MomentVO
 import ru.sudox.android.news.vos.NewsVO
 import ru.sudox.android.people.activitytab.adapters.ActivityTabAdapter
-import ru.sudox.android.people.common.vos.SimplePeopleVO
 import ru.sudox.design.viewlist.ViewList
 
 class ActivityTabController : ViewListController<ActivityTabAdapter>() {
@@ -17,10 +16,10 @@ class ActivityTabController : ViewListController<ActivityTabAdapter>() {
 
         return ActivityTabAdapter().apply {
             momentsAdapter.apply {
-                addMomentVO = AddMomentVO(SimplePeopleVO(1, "kerjen", 1))
+                addMomentVO = AddMomentVO(1, "kerjen", 1)
 
                 handler.postDelayed({
-                    momentsVOs.add(MomentVO(SimplePeopleVO(2, "undefined.7887", 2), 1L, false))
+                    momentsVOs.add(MomentVO(2, "undefined.7887", 2, 1L, false))
                     newsVOs.add(NewsVO(4L, "Максим Митюшкин", 4L, true, false, 1_000_000_000, 400_000, 1456, 0, arrayListOf(
                             ImageAttachmentVO(7L).apply {
                                 height = 387
@@ -30,10 +29,10 @@ class ActivityTabController : ViewListController<ActivityTabAdapter>() {
                 }, 5000L)
 
                 handler.postDelayed({
-                    momentsVOs.add(MomentVO(SimplePeopleVO(3, "isp", 3), 2L, true))
-                    momentsVOs.add(MomentVO(SimplePeopleVO(4, "Максим Митюшкин", 4), 3L, true))
-                    momentsVOs.add(MomentVO(SimplePeopleVO(5, "andy", 5), 4L, false))
-                    momentsVOs.add(MomentVO(SimplePeopleVO(6, "Jeremy Clarkson", 6), 5L, false))
+                    momentsVOs.add(MomentVO(3, "isp", 3, 2L, true))
+                    momentsVOs.add(MomentVO(4, "Максим Митюшкин", 4, 3L, true))
+                    momentsVOs.add(MomentVO(5, "andy", 5, 4L, false))
+                    momentsVOs.add(MomentVO(6, "Jeremy Clarkson", 6, 5L, false))
 
                     newsVOs.add(NewsVO(4L, "Максим Митюшкин", 4L, false, false, 600_000, 400_000, 1456, 0, arrayListOf(
                             ImageAttachmentVO(8L).apply {
@@ -69,10 +68,10 @@ class ActivityTabController : ViewListController<ActivityTabAdapter>() {
                 }, 15000L)
 
                 handler.postDelayed({
-                    momentsVOs.add(MomentVO(SimplePeopleVO(3, "isp", 3), 2L, true))
-                    momentsVOs.add(MomentVO(SimplePeopleVO(4, "Максим Митюшкин", 4), 3L, true))
-                    momentsVOs.add(MomentVO(SimplePeopleVO(5, "andy", 5), 4L, false))
-                    momentsVOs.add(MomentVO(SimplePeopleVO(6, "Jeremy Clarkson", 6), 5L, false))
+                    momentsVOs.add(MomentVO(3, "isp", 3, 2L, true))
+                    momentsVOs.add(MomentVO(4, "Максим Митюшкин", 4, 3L, true))
+                    momentsVOs.add(MomentVO(5, "andy", 5, 4L, false))
+                    momentsVOs.add(MomentVO(6, "Jeremy Clarkson", 6, 5L, false))
                 }, 18000L)
 
                 handler.postDelayed({

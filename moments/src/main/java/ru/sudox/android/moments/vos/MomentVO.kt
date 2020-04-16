@@ -11,13 +11,17 @@ import ru.sudox.android.people.common.views.AvatarImageView
 import ru.sudox.android.people.common.vos.PeopleVO
 
 open class MomentVO(
-        val peopleVO: PeopleVO,
+        override var userId: Long,
+        override var userName: String,
+        override var photoId: Long,
         val publishTime: Long,
         val isViewed: Boolean
-) : CircularUpdatableViewVO {
+) : CircularUpdatableViewVO, PeopleVO {
+
+    override var seenTime: Long = 0
 
     override fun getTitle(context: Context): String? {
-        return peopleVO.userName
+        return userName
     }
 
     override fun isViewInCenterTypeSame(view: View): Boolean {
@@ -42,12 +46,28 @@ open class MomentVO(
                     view.context.resources.getDimensionPixelSize(R.dimen.momentvo_photo_height)
             )
 
-            it.vo = peopleVO
+            it.vo = this
         }
     }
 
     override fun getViewInCenter(context: Context): View {
         return AvatarImageView(context)
+    }
+
+    override fun getButtons(): Array<Triple<Int, Int, Int>>? {
+        return null
+    }
+
+    override fun getStatusMessage(context: Context): String? {
+        return null
+    }
+
+    override fun isStatusAboutOnline(): Boolean {
+        return false
+    }
+
+    override fun isStatusActive(): Boolean {
+        return false
     }
 
     override fun isActive(): Boolean {

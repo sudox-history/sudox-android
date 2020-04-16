@@ -9,11 +9,12 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.graphics.withTranslation
 import ru.sudox.android.moments.R
-import ru.sudox.android.people.common.vos.PeopleVO
 
 class AddMomentVO(
-        peopleVO: PeopleVO
-) : MomentVO(peopleVO, 0, true) {
+        override var userId: Long,
+        override var userName: String,
+        override var photoId: Long
+) : MomentVO(userId, userName, photoId, 0, true) {
 
     private var addIconClipColor = 0
     private var addIconStrokeColor = 0
