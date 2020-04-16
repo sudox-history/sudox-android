@@ -2,6 +2,7 @@ package ru.sudox.android.media.vos
 
 import android.content.Context
 import android.view.View
+import ru.sudox.android.media.images.GlideRequests
 
 /**
  * ViewObject вложения.
@@ -32,13 +33,15 @@ interface MediaAttachmentVO {
      * Забивает данные в предоставленный View
      *
      * @param view View в который нужно загрузить данные.
+     * @param glide Менеджер запросов Glide
      */
-    fun bindView(view: View)
+    fun bindView(view: View, glide: GlideRequests)
 
     /**
      * Удаляет данные из старого View
      *
      * @param view View с которого нужно отгрузить данные
+     * @param glide Менеджер запросов Glide
      */
-    fun unbindView(view: View)
+    fun unbindView(view: View, glide: GlideRequests)
 }

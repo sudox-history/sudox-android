@@ -8,6 +8,7 @@ import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.roundedview.RoundedImageView
 import ru.sudox.android.media.images.Images
 import ru.sudox.android.media.images.R
@@ -40,12 +41,12 @@ open class GlideImageView : RoundedImageView {
      * Дополнительно выполняет нужные преобразования.
      *
      * @param id ID изображения.
+     * @param glide Менеджер запросов Glide
      */
-    fun loadImage(id: Long) {
-        cancelLoading()
+    fun loadImage(id: Long, glide: GlideRequests) {
+        cancelLoading(glide)
 
-        Images.with(this)
-                .load(GlideImageRequest(id))
+        glide.load(GlideImageRequest(id))
                 .placeholder(placeholderDrawable)
                 .transition(withCrossFade(crossFadeDuration))
                 .centerCrop()
@@ -54,8 +55,10 @@ open class GlideImageView : RoundedImageView {
 
     /**
      * Приостанавливает загрузку текущего изображения
+     *
+     * @param glide Менеджер запросов Glide
      */
-    fun cancelLoading() {
-        Images.with(this).clear(this)
+    fun cancelLoading(glide: GlideRequests) {
+        glide.clear(this)
     }
 }

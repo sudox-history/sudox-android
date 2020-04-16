@@ -81,13 +81,13 @@ class AvatarImageView : GlideCircleImageView {
         }
     }
 
-    fun setVO(vo: AvatarVO?, glideRequests: GlideRequests) {
+    fun setVO(vo: AvatarVO?, glide: GlideRequests) {
         this.vo = vo
 
         if (vo != null) {
-            loadImage(vo.getResourceId())
+            loadImage(vo.getResourceId(), glide)
         } else {
-            cancelLoading()
+            cancelLoading(glide)
         }
     }
 }

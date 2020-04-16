@@ -2,44 +2,47 @@ package ru.sudox.android.media
 
 import android.content.Context
 import android.util.AttributeSet
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.mityushkinlayout.MityushkinLayout
 import ru.sudox.android.media.vos.MediaAttachmentVO
 
 class MediaAttachmentsLayout : MityushkinLayout {
 
     var vos: ArrayList<MediaAttachmentVO>? = null
-        set(value) {
-            if (field != null) {
-                for (i in 0 until childCount) {
-                    removeViewInLayout(getChildAt(0).apply {
-                        field!![i].unbindView(this)
-                    })
-                }
-            }
-
-            if (value != null) {
-                val isLayoutDependsFromChildSize = adapter!!.getTemplate(value.size)!!.dependsFromChildSize
-
-                for (i in 0 until value.size) {
-                    val vo = value[i]
-                    val view = vo.getView(context)
-
-                    if (isLayoutDependsFromChildSize) {
-                        addView(view, -1, LayoutParams(vo.width, vo.height))
-                    } else {
-                        addView(view)
-                    }
-
-                    vo.bindView(view)
-                }
-            }
-
-            field = value
-            requestLayout()
-            invalidate()
-        }
+        private set
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+    fun setVOs(vos: ArrayList<MediaAttachmentVO>?, glide: GlideRequests) {
+        if (vos != null) {
+            for (i in 0 until childCount) {
+                removeViewInLayout(getChildAt(0).apply {
+                    vos[i].unbindView(this, glide)
+                })
+            }
+        }
+
+        if (vos != null) {
+            val isLayoutDependsFromChildSize = adapter!!.getTemplate(vos.size)!!.dependsFromChildSize
+
+            for (i in 0 until vos.size) {
+                val vo = vos[i]
+                val view = vo.getView(context)
+
+                if (isLayoutDependsFromChildSize) {
+                    addView(view, -1, LayoutParams(vo.width, vo.height))
+                } else {
+                    addView(view)
+                }
+
+                vo.bindView(view, glide)
+            }
+        }
+
+        this.vos = vos
+        requestLayout()
+        invalidate()
+    }
 }

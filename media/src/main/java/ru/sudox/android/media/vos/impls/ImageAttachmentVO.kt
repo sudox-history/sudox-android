@@ -2,6 +2,7 @@ package ru.sudox.android.media.vos.impls
 
 import android.content.Context
 import android.view.View
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.GlideImageView
 import ru.sudox.android.media.vos.MediaAttachmentType
 import ru.sudox.android.media.vos.MediaAttachmentVO
@@ -22,15 +23,15 @@ class ImageAttachmentVO(
         return GlideImageView(context)
     }
 
-    override fun bindView(view: View) {
+    override fun bindView(view: View, glide: GlideRequests) {
         if (view is GlideImageView) {
-            view.loadImage(id)
+            view.loadImage(id, glide)
         }
     }
 
-    override fun unbindView(view: View) {
+    override fun unbindView(view: View, glide: GlideRequests) {
         if (view is GlideImageView) {
-            view.cancelLoading()
+            view.cancelLoading(glide)
         }
     }
 }

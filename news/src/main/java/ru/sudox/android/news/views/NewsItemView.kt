@@ -300,7 +300,7 @@ class NewsItemView : ViewGroup {
     fun setVO(vo: NewsVO?, glide: GlideRequests) {
         peopleItemView.setVO(vo, glide)
         contentTextView.text = vo?.contentText
-        attachmentsLayout.vos = vo?.attachments
+        attachmentsLayout.setVOs(vo?.attachments, glide)
 
         if (vo != null) {
             dislikeButton.text = formatNumber(context, vo.dislikesCount)
