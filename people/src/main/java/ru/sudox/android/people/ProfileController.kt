@@ -4,10 +4,11 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import ru.sudox.android.core.CoreController
+import ru.sudox.android.core.controllers.ScrollableController
 
-class ProfileController : CoreController() {
+class ProfileController : ScrollableController() {
 
-    override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
+    override fun createChildView(container: ViewGroup, savedViewState: Bundle?): View {
         return View(activity)
     }
 }

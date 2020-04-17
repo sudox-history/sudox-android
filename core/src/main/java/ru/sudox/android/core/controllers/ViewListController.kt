@@ -35,6 +35,14 @@ abstract class ViewListController<AT : ViewListAdapter<*>> : CoreController() {
         }
     }
 
+    override fun isInStartState(): Boolean {
+        return (view as ViewList).getCurrentScrollY() <= 1
+    }
+
+    override fun toStartState() {
+        (view as ViewList).smoothScrollToPosition(0)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         adapter = null

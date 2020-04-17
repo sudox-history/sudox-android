@@ -113,4 +113,6 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
     }
 
     abstract fun createView(container: ViewGroup, savedViewState: Bundle?): View
+    abstract fun isInStartState(): Boolean
+    abstract fun toStartState()
 }

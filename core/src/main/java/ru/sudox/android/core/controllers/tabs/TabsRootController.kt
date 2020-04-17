@@ -56,6 +56,22 @@ abstract class TabsRootController : CoreController() {
                 .setupWithViewPager(view as ViewPager)
     }
 
+    override fun isInStartState(): Boolean {
+        return (view as ViewPager).currentItem == 0 && loadedControllers[0]!!.isInStartState()
+    }
+
+    override fun toStartState() {
+        val viewPager = (view as ViewPager)
+        val currentItem = viewPager.currentItem
+        val controller = loadedControllers[currentItem]!!
+
+        if (controller.isInStartState()) {
+            viewPager.setCurrentItem(0, true)
+        } else {
+            controller.toStartState()
+        }
+    }
+
     abstract fun getControllersCount(): Int
     abstract fun getControllerTitle(position: Int): String
     abstract fun createController(position: Int): CoreController

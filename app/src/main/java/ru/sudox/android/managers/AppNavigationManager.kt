@@ -10,8 +10,8 @@ import com.bluelinelabs.conductor.changehandler.FadeChangeHandler
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.sudox.android.R
 import ru.sudox.android.auth.ui.phone.AuthPhoneController
+import ru.sudox.android.core.CoreController
 import ru.sudox.android.core.managers.AUTH_ROOT_TAG
-import ru.sudox.android.core.managers.MAIN_ROOT_TAG
 import ru.sudox.android.core.managers.NewNavigationManager
 import ru.sudox.android.managers.handlers.move.LeftMoveHandler
 import ru.sudox.android.managers.handlers.move.RightMoveHandler
@@ -61,6 +61,17 @@ class AppNavigationManager(
 
         val tag = item.itemId
         val router = routerProvider.value
+
+        if (tag == bottomNavigationView.selectedItemId) {
+            val controller = router.backstack.last().controller as CoreController
+
+            if (!controller.isInStartState()) {
+                controller.toStartState()
+            }
+
+            return true
+        }
+
         val changeHandler = if (tag > bottomNavigationView.selectedItemId) {
             RightMoveHandler(ANIMATION_DURATION)
         } else {
