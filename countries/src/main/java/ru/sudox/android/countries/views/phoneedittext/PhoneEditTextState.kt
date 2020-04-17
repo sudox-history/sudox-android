@@ -1,9 +1,8 @@
-package ru.sudox.android.countries.views.state
+package ru.sudox.android.countries.views.phoneedittext
 
 import android.os.Parcel
 import android.os.Parcelable
 import ru.sudox.design.saveableview.SaveableViewState
-import ru.sudox.android.countries.views.PhoneEditText
 import ru.sudox.android.countries.vos.CountryVO
 
 class PhoneEditTextState : SaveableViewState<PhoneEditText> {

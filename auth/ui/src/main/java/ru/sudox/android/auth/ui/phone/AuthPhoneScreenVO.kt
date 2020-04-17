@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import ru.sudox.android.auth.ui.R
 import ru.sudox.android.auth.ui.vos.AuthScreenVO
-import ru.sudox.android.countries.views.PhoneEditText
+import ru.sudox.android.countries.views.phoneedittext.PhoneEditText
 import ru.sudox.design.edittext.layout.EditTextLayout
 
 class AuthPhoneScreenVO : AuthScreenVO {
@@ -31,6 +31,7 @@ class AuthPhoneScreenVO : AuthScreenVO {
         }
 
         // Страна будет восстановлена позже ;)
+        phoneEditText!!.autofillMyNumber = true
         phoneEditText!!.useDefaultCountry()
 
         return arrayOf(phoneEditTextLayout as View)

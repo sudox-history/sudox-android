@@ -1,4 +1,4 @@
-package ru.sudox.android.countries.views
+package ru.sudox.android.countries.views.phoneedittext
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -29,7 +29,6 @@ import ru.sudox.android.countries.R
 import ru.sudox.android.countries.helpers.COUNTRIES
 import ru.sudox.android.countries.helpers.getDefaultCountryVO
 import ru.sudox.android.countries.inject.CountriesComponent
-import ru.sudox.android.countries.views.state.PhoneEditTextState
 import ru.sudox.android.countries.views.watchers.PhoneTextWatcher
 import ru.sudox.android.countries.vos.CountryVO
 import ru.sudox.design.common.AUTOFILL_HINT_PHONE_NUMBER
@@ -60,7 +59,13 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
         }
 
     var phoneNumber: String?
-        get() = "${vo!!.countryCode}${PhoneNumberUtils.stripSeparators(editText.text.toString())}"
+        get() {
+            if (vo == null || editText.length() == 0) {
+                return null
+            }
+
+            return "${vo!!.countryCode}${PhoneNumberUtils.stripSeparators(editText.text.toString())}"
+        }
         set(value) {
             try {
                 val phoneNumber = phoneNumberUtil!!.parse(value, null)
@@ -206,6 +211,8 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
 
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        clipToOutline = true
+
         context.obtainStyledAttributes(attrs, R.styleable.PhoneEditText, defStyleAttr, 0).use {
             setTextAppearance(countrySelector, it.getResourceIdOrThrow(R.styleable.PhoneEditText_countrySelectorTextAppearance))
 

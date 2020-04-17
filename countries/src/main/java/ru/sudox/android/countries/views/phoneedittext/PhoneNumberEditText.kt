@@ -1,4 +1,4 @@
-package ru.sudox.android.countries.views
+package ru.sudox.android.countries.views.phoneedittext
 
 import android.content.Context
 import android.os.Build
@@ -16,5 +16,13 @@ class PhoneNumberEditText : BasicEditText {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun autofill(value: AutofillValue) {
         (parent as PhoneEditText).phoneNumber = value.textValue.toString()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun getAutofillValue(): AutofillValue? {
+        val parent = parent as? PhoneEditText ?: return null
+        val phoneNumber = parent.phoneNumber ?: return null
+
+        return AutofillValue.forText("+${phoneNumber}")
     }
 }

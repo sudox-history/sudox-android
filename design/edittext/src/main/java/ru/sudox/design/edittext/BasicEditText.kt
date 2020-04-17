@@ -13,6 +13,11 @@ open class BasicEditText : AppCompatEditText, EditTextLayoutChild {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
+    init {
+        background = background.mutate()
+        clipToOutline = true
+    }
+
     override fun changeStrokeColor(layout: EditTextLayout, width: Int, color: Int) {
         (background as GradientDrawable).setStroke(width, color)
         invalidate()
