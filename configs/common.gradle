@@ -60,7 +60,7 @@ ext.registerModule = { isApp, needExtensions, needApt, needKotlin ->
 
     dependencies {
         if (needKotlin) {
-            implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.61'
+            implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.3.71'
         }
     }
 }
