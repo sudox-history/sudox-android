@@ -34,7 +34,7 @@ class AppLayout : CoordinatorLayout {
     val frameLayout = ChangeHandlerFrameLayout(context).apply {
         id = View.generateViewId()
         layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).apply {
-            behavior = com.google.android.material.appbar.AppBarLayout.ScrollingViewBehavior()
+            behavior = AppBehavior()
         }
 
         this@AppLayout.addView(this)
@@ -43,8 +43,7 @@ class AppLayout : CoordinatorLayout {
     val navigationView = BottomNavigationView(context).apply {
         id = View.generateViewId()
         layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
-            anchorGravity = Gravity.BOTTOM
-            anchorId = frameLayout.id
+            gravity = Gravity.BOTTOM
         }
 
         this@AppLayout.addView(this)
@@ -64,9 +63,6 @@ class AppLayout : CoordinatorLayout {
             id = savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
             appBarLayout.id = savedInstanceState.getInt(APPBARLAYOUT_ID_KEY)
             frameLayout.id = savedInstanceState.getInt(FRAMELAYOUT_ID_KEY)
-
-            // Fixing crash during state restoring
-            (navigationView.layoutParams as LayoutParams).anchorId = frameLayout.id
         } else {
             id = View.generateViewId()
         }
