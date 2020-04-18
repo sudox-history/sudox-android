@@ -2,42 +2,57 @@ package ru.sudox.android.layouts
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.bluelinelabs.conductor.ChangeHandlerFrameLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import ru.sudox.design.saveableview.SaveableViewGroup
-import ru.sudox.android.layouts.content.ContentLayout
+import ru.sudox.design.appbar.AppBar
+import ru.sudox.design.appbar.AppBarLayout
 
-const val LAYOUT_VIEW_ID_KEY = "layout_view_id"
-const val FRAME_VIEW_ID_KEY = "frame_view_id"
+private const val LAYOUT_VIEW_ID_KEY = "layout_view_id"
+private const val APPBARLAYOUT_ID_KEY = "appbarlayout_id"
+private const val FRAMELAYOUT_ID_KEY = "framelayout_id"
 
 /**
- * Layout, содержащий ContentLayout и BottomNavigationView.
- * Отвечает за отображение содержимого в приложении.
- *
- * NB! ID должны восстанавливаться в ручном режиме, т.е. в onCreate().
+ * Layout, содержащий AppBarLayout и FrameLayout.
+ * Отвечает за отображение тулбара и контента в приложении.
  */
-class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
+class AppLayout : CoordinatorLayout {
 
-    val contentLayout = ContentLayout(context).apply {
-        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+    @Suppress("unused")
+    val appBarLayout = AppBarLayout(context).apply {
         id = View.generateViewId()
+        layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        appBar = AppBar(context)
+
+        this@AppLayout.addView(this)
     }
 
-    val bottomNavigationView = BottomNavigationView(context).apply {
-        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+    val frameLayout = ChangeHandlerFrameLayout(context).apply {
         id = View.generateViewId()
+        layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).apply {
+            behavior = com.google.android.material.appbar.AppBarLayout.ScrollingViewBehavior()
+        }
+
+        this@AppLayout.addView(this)
+    }
+
+    val navigationView = BottomNavigationView(context).apply {
+        id = View.generateViewId()
+        layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+            anchorGravity = Gravity.BOTTOM
+            anchorId = frameLayout.id
+        }
+
+        this@AppLayout.addView(this)
     }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
-    init {
-        addView(contentLayout)
-        addView(bottomNavigationView)
-    }
 
     /**
      * Инициализирует данную ViewGroup для отображения в качестве корневого элемента приложения.
@@ -47,10 +62,11 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
     fun init(savedInstanceState: Bundle?) {
         if (savedInstanceState?.containsKey(LAYOUT_VIEW_ID_KEY) == true) {
             id = savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
+            appBarLayout.id = savedInstanceState.getInt(APPBARLAYOUT_ID_KEY)
+            frameLayout.id = savedInstanceState.getInt(FRAMELAYOUT_ID_KEY)
 
-            contentLayout
-                    .frameLayout
-                    .id = savedInstanceState.getInt(FRAME_VIEW_ID_KEY)
+            // Fixing crash during state restoring
+            (navigationView.layoutParams as LayoutParams).anchorId = frameLayout.id
         } else {
             id = View.generateViewId()
         }
@@ -62,38 +78,8 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
      * @param outState Bundle, в который нужно сохранить I
      */
     fun saveIds(outState: Bundle) = outState.let {
-        it.putInt(FRAME_VIEW_ID_KEY, contentLayout.frameLayout.id)
+        it.putInt(APPBARLAYOUT_ID_KEY, appBarLayout.id)
+        it.putInt(FRAMELAYOUT_ID_KEY, frameLayout.id)
         it.putInt(LAYOUT_VIEW_ID_KEY, id)
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var contentHeight = MeasureSpec.getSize(heightMeasureSpec)
-
-        measureChild(bottomNavigationView, widthMeasureSpec, heightMeasureSpec)
-
-        if (bottomNavigationView.visibility == View.VISIBLE) {
-            contentHeight -= bottomNavigationView.measuredHeight
-        }
-
-        contentLayout.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(contentHeight, MeasureSpec.EXACTLY))
-
-        setMeasuredDimension(
-                MeasureSpec.getSize(widthMeasureSpec),
-                MeasureSpec.getSize(heightMeasureSpec)
-        )
-    }
-
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        if (bottomNavigationView.visibility == View.VISIBLE) {
-            bottomNavigationView.layout(0, measuredHeight - bottomNavigationView.measuredHeight, bottomNavigationView.measuredWidth, measuredHeight)
-        } else {
-            bottomNavigationView.layout(0, 0, 0, 0)
-        }
-
-        contentLayout.layout(0, 0, contentLayout.measuredWidth, contentLayout.measuredHeight)
-    }
-
-    override fun createStateInstance(superState: Parcelable): AppLayoutState {
-        return AppLayoutState(superState)
     }
 }

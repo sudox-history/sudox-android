@@ -14,7 +14,6 @@ import ru.sudox.android.core.inject.CoreActivityComponent
 import ru.sudox.android.core.inject.CoreActivityModule
 import ru.sudox.android.core.inject.CoreLoaderComponent
 import ru.sudox.android.core.managers.AUTH_ROOT_TAG
-import ru.sudox.android.core.managers.MAIN_ROOT_TAG
 import ru.sudox.android.core.managers.NewNavigationManager
 import ru.sudox.android.inject.components.ActivityComponent
 import ru.sudox.android.layouts.AppLayout
@@ -59,8 +58,8 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         }
 
         // Отложим инициализацию роутера до первого его запроса (исправляем краши при инжекте из субкомпонента активности)
-        routerLazy = lazy { attachRouter(appLayout!!.contentLayout.frameLayout, savedInstanceState) }
-        navigationManager = AppNavigationManager(routerLazy!!, appLayout!!.bottomNavigationView).apply {
+        routerLazy = lazy { attachRouter(appLayout!!.frameLayout, savedInstanceState) }
+        navigationManager = AppNavigationManager(routerLazy!!, appLayout!!.navigationView).apply {
             restoreState(savedInstanceState)
         }
 
@@ -77,7 +76,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .distinctUntilChanged()
                 .subscribe {
-                    appLayout!!.contentLayout.appBarLayout.appBar!!.let {
+                    appLayout!!.appBarLayout.appBar!!.let {
                         setAppBarViewObject(it.vo, it.callback)
                     }
                 }
@@ -103,7 +102,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?) {
-        appLayout!!.contentLayout.appBarLayout.appBar!!.let {
+        appLayout!!.appBarLayout.appBar!!.let {
             it.callback = callback
 
             if (appBarVO != null) {
@@ -115,7 +114,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun setAppBarLayoutViewObject(appBarLayoutVO: AppBarLayoutVO?) {
-        appLayout!!.contentLayout.appBarLayout.vo = appBarLayoutVO
+        appLayout!!.appBarLayout.vo = appBarLayoutVO
     }
 
     override fun onDestroy() {
