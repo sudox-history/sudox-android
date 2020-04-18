@@ -12,6 +12,7 @@ dependencies {
     api project(path: ':design:edittext')
     api project(path: ':design:viewlist')
     api project(path: ':design:tablayout')
+    api project(path: ':design:bottomsheet')
     api project(path: ':design:bottomnavigationview')
 
     implementation libraries.core_ktx

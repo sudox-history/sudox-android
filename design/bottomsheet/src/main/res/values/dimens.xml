@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bottomsheetlayout_corners_radius">26dp</dimen>
+    <dimen name="bottomsheetlayout_title_text_size">17sp</dimen>
+    <dimen name="bottomsheetlayout_margin_between_title_and_content">29dp</dimen>
+    <dimen name="bottomsheetlayout_margin_between_content_and_buttons">29dp</dimen>
+    <dimen name="bottomsheetlayout_margin_between_buttons">11dp</dimen>
+    <dimen name="bottomsheetlayout_padding_left">62dp</dimen>
+    <dimen name="bottomsheetlayout_padding_right">62dp</dimen>
+    <dimen name="bottomsheetlayout_padding_bottom">8dp</dimen>
+    <dimen name="bottomsheetlayout_padding_top">21dp</dimen>
+</resources>

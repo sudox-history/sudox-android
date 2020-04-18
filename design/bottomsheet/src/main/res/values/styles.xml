@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Sudox.BottomSheet</item>
+    </style>
+
+    <style name="Sudox.BottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/background_bottomsheet</item>
+    </style>
+
+    <style name="Sudox.BottomSheetLayout" parent="">
+        <item name="android:paddingLeft">@dimen/bottomsheetlayout_padding_left</item>
+        <item name="android:paddingRight">@dimen/bottomsheetlayout_padding_right</item>
+        <item name="android:paddingBottom">@dimen/bottomsheetlayout_padding_bottom</item>
+        <item name="android:paddingTop">@dimen/bottomsheetlayout_padding_top</item>
+
+        <item name="titleTextAppearance">@style/Sudox.BottomSheetLayout.TitleTextAppearance</item>
+        <item name="marginBetweenTitleAndContent">@dimen/bottomsheetlayout_margin_between_title_and_content</item>
+        <item name="marginBetweenContentAndButtons">@dimen/bottomsheetlayout_margin_between_content_and_buttons</item>
+        <item name="marginBetweenButtons">@dimen/bottomsheetlayout_margin_between_buttons</item>
+    </style>
+
+    <style name="Sudox.BottomSheetLayout.TitleTextAppearance" parent="">
+        <item name="android:textColor">@color/bottomsheetlayout_title_text_color</item>
+        <item name="android:textSize">@dimen/bottomsheetlayout_title_text_size</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+</resources>

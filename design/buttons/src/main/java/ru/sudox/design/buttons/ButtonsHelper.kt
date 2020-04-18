@@ -15,11 +15,11 @@ fun createPrimaryButton(context: Context): AppCompatButton {
 }
 
 /**
- * Создает кнопку второго применения.
+ * Создает кнопку, предупреждающую об опасности.
  *
  * @param context Контекст приложения/активности
  * @return Созданная View кнопки
  */
-fun createSecondaryButton(context: Context): AppCompatButton {
-    return AppCompatButton(ContextThemeWrapper(context, R.style.Sudox_Button_Secondary), null, 0)
+fun createDangerButton(context: Context): AppCompatButton {
+    return AppCompatButton(ContextThemeWrapper(context, R.style.Sudox_Button_Danger), null, 0)
 }
