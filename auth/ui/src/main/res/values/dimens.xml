@@ -8,4 +8,7 @@
     <dimen name="authscreenlayout_margin_between_icon_and_description">16dp</dimen>
     <dimen name="authscreenlayout_description_text_size">15sp</dimen>
     <dimen name="authscreenlayout_title_text_size">21sp</dimen>
+
+    <dimen name="authrequestbottomsheet_text_size">26sp</dimen>
+    <dimen name="authrequestbottomsheet_margin_between_icon_and_phone_name">16dp</dimen>
 </resources>

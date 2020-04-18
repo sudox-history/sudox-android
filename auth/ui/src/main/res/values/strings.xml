@@ -13,6 +13,11 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
     <string name="finish">Finish</string>
+    <string name="next">Next</string>
+
+    <string name="new_device_wants_to_sign_in_to_your_account">New device wants to sign in to your account</string>
+    <string name="accept">Accept</string>
+    <string name="forbid">Forbid</string>
 
     <string name="nickname">Nickname</string>
     <string name="name_and_surname">Name &amp; surname</string>

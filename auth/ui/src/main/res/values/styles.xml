@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="Sudox.AuthRequestBottomSheet.PhoneNameTextAppearance" parent="">
+        <item name="android:textColor">@color/authrequestbottomsheet_text_color</item>
+        <item name="android:textSize">@dimen/authrequestbottomsheet_text_size</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
+    </style>
+
     <style name="Sudox.AuthScreenLayout" parent="Sudox.Screen">
         <item name="android:paddingTop">@dimen/authscreenlayout_padding_top</item>
         <item name="android:paddingBottom">@dimen/authscreenlayout_padding_bottom</item>
