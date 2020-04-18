@@ -64,4 +64,14 @@ class AuthRepository @Inject constructor(
                     }
                 })
     }
+
+    fun checkCode(code: Int): Observable<Nothing>{
+        return authService
+                .checkCode(code)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .doOnError {
+                    Observable.error<Throwable>(it)
+                }
+    }
 }

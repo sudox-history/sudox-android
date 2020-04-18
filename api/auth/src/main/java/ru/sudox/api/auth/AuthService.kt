@@ -1,6 +1,7 @@
 package ru.sudox.api.auth
 
 import io.reactivex.Observable
+import ru.sudox.api.auth.entries.code.AuthCheckCodeRequestBody
 import ru.sudox.api.auth.entries.create.AuthCreateRequestBody
 import ru.sudox.api.auth.entries.create.AuthCreateResponseBody
 import ru.sudox.api.auth.entries.restore.AuthRestoreRequestBody
@@ -58,6 +59,6 @@ class AuthService(val sudoxApi: SudoxApi) {
      * @return Single с ответом от сервера.
      */
     fun checkCode(code: Int): Observable<Nothing> {
-        return sudoxApi.sendRequest("auth.checkCode", Unit, Nothing::class.java)
+        return sudoxApi.sendRequest("auth.checkCode", AuthCheckCodeRequestBody(code), Nothing::class.java)
     }
 }
