@@ -18,9 +18,11 @@ include ':design:roundedview'
 include ':design:appbar'
 include ':design:common'
 include ':design:popup'
+include ':design:buttons'
 
 include ':auth'
 include ':auth:ui'
+include ':auth:data'
 
 include ':core'
 
@@ -38,4 +40,3 @@ include ':messages'
 include ':moments'
 include ':time'
 include ':news'
-include ':auth:data'

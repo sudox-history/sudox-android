@@ -5,13 +5,6 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <!--  TODO: Вынести в design-common  -->
-    <style name="Sudox.Button" parent="Widget.AppCompat.Button">
-        <item name="android:background">?selectableItemBackgroundBorderless</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:minWidth">0dp</item>
-    </style>
-
     <style name="Sudox.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/drawable_splash_background</item>
 
@@ -26,19 +19,16 @@
         <item name="editTextStyle">@style/Sudox.EditText</item>
 
         <!--    Buttons     -->
-        <item name="android:imageButtonStyle">@style/Sudox.Button</item>
-        <item name="android:buttonStyle">@style/Sudox.Button</item>
-        <item name="imageButtonStyle">@style/Sudox.Button</item>
-        <item name="buttonStyle">@style/Sudox.Button</item>
+        <item name="imageButtonStyle">@style/Sudox.ImageButton</item>
+        <item name="android:imageButtonStyle">@style/Sudox.ImageButton</item>
+        <item name="android:buttonStyle">@style/Sudox.Button.Primary</item>
+        <item name="buttonStyle">@style/Sudox.Button.Primary</item>
 
         <!--    Bars    -->
         <item name="appBarStyle">@style/Sudox.AppBar</item>
         <item name="appBarLayoutStyle">@style/Sudox.AppBarLayout</item>
         <item name="bottomNavigationStyle">@style/Sudox.BottomNavigationView</item>
         <item name="tabStyle">@style/Sudox.TabLayout</item>
-
-        <!--    Others     -->
-        <item name="circularUpdatableViewStyle">@style/Sudox.CircularUpdatableView</item>
 
         <!--    Popups    -->
         <item name="popupItemViewStyle">@style/Sudox.PopupItemView</item>
