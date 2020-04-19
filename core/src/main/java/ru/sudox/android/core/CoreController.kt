@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.core.view.ViewCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
@@ -50,9 +52,18 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
         }
 
         return createView(container, savedViewState).apply {
-            id = savedViewState
-                    ?.getInt(CORE_CONTROLLER_ROOT_VIEW_ID_KEY, View.generateViewId())
-                    ?: View.generateViewId()
+            id = savedViewState?.getInt(CORE_CONTROLLER_ROOT_VIEW_ID_KEY, View.generateViewId()) ?: View.generateViewId()
+
+            if (navigationManager!!.isContentUsesAllLayout()) {
+                val initialBottomPadding = paddingBottom
+
+                ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
+                    updatePadding(bottom = initialBottomPadding + insets.systemWindowInsetBottom)
+                    insets
+                }
+
+                fitsSystemWindows = true
+            }
 
             bindView(getViewForBind(this))
         }
@@ -79,6 +90,10 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
                 it.setAppBarViewObject(appBarVO, ::onAppBarClicked)
                 it.setAppBarLayoutViewObject(appBarLayoutVO)
             }
+        }
+
+        if (navigationManager!!.isContentUsesAllLayout()) {
+            view.requestApplyInsets()
         }
     }
 

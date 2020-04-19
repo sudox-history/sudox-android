@@ -248,4 +248,8 @@ class AppNavigationManager(
             }
         }
     }
+
+    override fun isContentUsesAllLayout(): Boolean {
+        return bottomNavigationView.visibility == View.GONE
+    }
 }
