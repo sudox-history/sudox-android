@@ -4,27 +4,28 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
+import android.os.Parcelable
 import android.text.Layout
 import android.util.AttributeSet
 import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.TextViewCompat.setTextAppearance
+import ru.sudox.design.appbar.states.AppBarState
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.others.AppBarButtonParam
 import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 import ru.sudox.design.common.lazyLayout
+import ru.sudox.design.saveableview.SaveableViewGroup
 import java.util.LinkedList
 import kotlin.math.abs
 
-class AppBar : ViewGroup, View.OnClickListener {
+class AppBar : SaveableViewGroup<AppBar, AppBarState>, View.OnClickListener {
 
     var vo: AppBarVO? = null
         set(value) {
@@ -79,8 +80,9 @@ class AppBar : ViewGroup, View.OnClickListener {
 
     var callback: ((Int) -> (Unit))? = null
 
-    private var viewAtLeft: View? = null
-    private var viewAtRight: View? = null
+    internal var viewAtLeft: View? = null
+    internal var viewAtRight: View? = null
+
     private var buttonsAtLeft = LinkedList<AppCompatTextView>()
     private var buttonsAtRight = LinkedList<AppCompatTextView>()
     private var titleTextView = createTextView()
@@ -282,5 +284,9 @@ class AppBar : ViewGroup, View.OnClickListener {
 
     override fun onClick(view: View) {
         callback?.invoke(view.tag as Int)
+    }
+
+    override fun createStateInstance(superState: Parcelable): AppBarState {
+        return AppBarState(superState)
     }
 }

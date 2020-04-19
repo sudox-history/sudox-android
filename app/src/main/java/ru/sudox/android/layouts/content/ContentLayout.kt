@@ -18,10 +18,10 @@ class ContentLayout : CoordinatorLayout {
 
     @Suppress("unused")
     val appBarLayout = AppBarLayout(context).apply {
-        fitsSystemWindows = true
         id = View.generateViewId()
+        fitsSystemWindows = true
         layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        appBar = AppBar(context)
+        appBar = AppBar(context).apply { id = View.generateViewId() }
 
         this@ContentLayout.addView(this)
     }

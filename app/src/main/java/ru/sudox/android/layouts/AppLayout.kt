@@ -11,6 +11,7 @@ import ru.sudox.android.layouts.content.ContentLayout
 
 const val LAYOUT_VIEW_ID_KEY = "layout_view_id"
 const val FRAME_VIEW_ID_KEY = "frame_view_id"
+const val APPBARLAYOUT_ID_KEY = "appbarlayout_id"
 
 /**
  * Layout, содержащий ContentLayout и BottomNavigationView.
@@ -51,6 +52,10 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
             id = savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
 
             contentLayout
+                    .appBarLayout
+                    .id = savedInstanceState.getInt(APPBARLAYOUT_ID_KEY)
+
+            contentLayout
                     .frameLayout
                     .id = savedInstanceState.getInt(FRAME_VIEW_ID_KEY)
         } else {
@@ -64,6 +69,7 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
      * @param outState Bundle, в который нужно сохранить I
      */
     fun saveIds(outState: Bundle) = outState.let {
+        it.putInt(APPBARLAYOUT_ID_KEY, contentLayout.appBarLayout.id)
         it.putInt(FRAME_VIEW_ID_KEY, contentLayout.frameLayout.id)
         it.putInt(LAYOUT_VIEW_ID_KEY, id)
     }

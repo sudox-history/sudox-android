@@ -1,8 +1,11 @@
 package ru.sudox.design.appbar
 
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.View
 import androidx.core.view.updateLayoutParams
+import ru.sudox.design.appbar.states.AppBarLayoutState
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 
 class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
@@ -15,6 +18,7 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
 
             if (value != null) {
                 addView(value.apply {
+                    id = View.generateViewId()
                     layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
                 }, 0)
             }
@@ -64,4 +68,17 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
+    override fun onSaveInstanceState(): Parcelable {
+        return AppBarLayoutState(super.onSaveInstanceState()!!).apply {
+            readFromView(this@AppBarLayout)
+        }
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        (state as AppBarLayoutState).apply {
+            super.onRestoreInstanceState(superState)
+            writeToView(this@AppBarLayout)
+        }
+    }
 }
