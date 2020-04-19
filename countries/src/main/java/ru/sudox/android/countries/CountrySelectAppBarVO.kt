@@ -16,7 +16,7 @@ class CountrySelectAppBarVO : AppBarVO {
     }
 
     override fun getButtonsAtRight(): Array<AppBarButtonParam>? {
-        return arrayOf(AppBarButtonParam(COUNTRY_SELECT_SEARCH_BUTTON_TAG, R.drawable.ic_search, NOT_USED_PARAMETER, true))
+        return arrayOf(AppBarButtonParam(COUNTRY_SELECT_SEARCH_BUTTON_TAG, R.drawable.ic_search, NOT_USED_PARAMETER))
     }
 
     override fun getViewAtLeft(context: Context): View? {

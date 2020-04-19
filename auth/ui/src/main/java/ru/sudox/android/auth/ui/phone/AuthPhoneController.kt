@@ -27,6 +27,8 @@ class AuthPhoneController : ScrollableController() {
     }
 
     override fun bindView(view: View) {
+        super.bindView(view)
+
         screenVO = AuthPhoneScreenVO().apply {
             (view as AuthScreenLayout).vo = this
         }
@@ -42,6 +44,7 @@ class AuthPhoneController : ScrollableController() {
 
         authPhoneViewModel!!.loadingLiveData.observe(this, Observer {
             screenVO!!.phoneEditTextLayout!!.isEnabled = !it
+            appBarManager!!.toggleLoading(it)
         })
 
         authPhoneViewModel!!.successLiveData.observe(this, Observer {

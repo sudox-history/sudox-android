@@ -148,6 +148,7 @@ class AppBar : ViewGroup, View.OnClickListener {
             it.text = null
         }
 
+        it.isEnabled = param.isEnabled
         it.tag = param.tag
     }
 

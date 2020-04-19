@@ -7,7 +7,7 @@ import ru.sudox.design.appbar.vos.others.AppBarButtonParam
 import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 
 const val APPBAR_BACK_BUTTON_TAG = 1
-val APPBAR_BACK_BUTTON_PARAMS = arrayOf(AppBarButtonParam(APPBAR_BACK_BUTTON_TAG, R.drawable.ic_left_arrow, NOT_USED_PARAMETER, true))
+val APPBAR_BACK_BUTTON_PARAMS = arrayOf(AppBarButtonParam(APPBAR_BACK_BUTTON_TAG, R.drawable.ic_left_arrow, NOT_USED_PARAMETER))
 
 /**
  * ViewObject состояния AppBar'а

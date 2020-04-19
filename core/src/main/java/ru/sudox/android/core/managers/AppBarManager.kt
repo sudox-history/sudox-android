@@ -23,6 +23,14 @@ interface AppBarManager {
     fun setLayoutVO(vo: AppBarLayoutVO?)
 
     /**
+     * Переключает загрузку.
+     * Блокирует кнопки справа
+     *
+     * @param toggle Включить загрузку?
+     */
+    fun toggleLoading(toggle: Boolean)
+
+    /**
      * Вызывается при создании Activity
      */
     fun onStart()

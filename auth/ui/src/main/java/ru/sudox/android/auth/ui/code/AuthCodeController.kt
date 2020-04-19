@@ -25,6 +25,7 @@ class AuthCodeController : ScrollableController() {
 
     override fun bindView(view: View) {
         super.bindView(view)
+
         screenVO = AuthCodeScreenVO("79674788147").apply {
             (view as AuthScreenLayout).vo = this
         }

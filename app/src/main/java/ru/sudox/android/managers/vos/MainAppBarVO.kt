@@ -22,6 +22,7 @@ class MainAppBarVO(
     @Inject
     @JvmField
     var sudoxApi: SudoxApi? = null
+    var disableButtons = false
 
     init {
         AppLoader.loaderComponent?.inject(this)
@@ -32,7 +33,13 @@ class MainAppBarVO(
     }
 
     override fun getButtonsAtRight(): Array<AppBarButtonParam>? {
-        return originalAppBarVO.getButtonsAtRight()
+        val buttons = originalAppBarVO.getButtonsAtRight()
+
+        buttons?.forEach {
+            it.isEnabled = !disableButtons
+        }
+
+        return buttons
     }
 
     override fun getViewAtLeft(context: Context): View? {

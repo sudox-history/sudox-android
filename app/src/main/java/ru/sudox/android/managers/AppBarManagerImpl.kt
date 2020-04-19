@@ -41,6 +41,16 @@ class AppBarManagerImpl(
         }
     }
 
+    override fun toggleLoading(toggle: Boolean) {
+        val vo = appBarLayout.appBar!!.vo
+
+        if (vo is MainAppBarVO) {
+            vo.disableButtons = toggle
+        }
+
+        appBarLayout.appBar!!.vo = vo
+    }
+
     override fun setLayoutVO(vo: AppBarLayoutVO?) {
         appBarLayout.vo = vo
     }
