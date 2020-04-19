@@ -15,8 +15,8 @@
         <item name="android:backgroundTint">@color/primary_button_background_tint</item>
     </style>
 
-    <style name="Sudox.Button.Danger" parent="Sudox.Button">
-        <item name="android:textColor">@color/danger_button_text_color</item>
+    <style name="Sudox.Button.Secondary" parent="Sudox.Button">
+        <item name="android:textColor">@color/secondary_button_text_color</item>
         <item name="android:backgroundTint">@null</item>
         <item name="android:background">@null</item>
     </style>

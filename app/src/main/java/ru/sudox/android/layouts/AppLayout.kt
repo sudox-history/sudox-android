@@ -37,6 +37,8 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
     init {
         addView(contentLayout)
         addView(bottomNavigationView)
+
+        systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 
     /**

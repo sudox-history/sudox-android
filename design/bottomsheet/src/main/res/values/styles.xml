@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Sudox.BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+    <style name="Sudox.BottomSheetDialog" parent="Theme.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/Sudox.BottomSheet</item>
     </style>
 

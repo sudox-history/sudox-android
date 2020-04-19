@@ -6,7 +6,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.auth.ui.R
 import ru.sudox.design.bottomsheet.vos.BottomSheetVO
-import ru.sudox.design.buttons.createDangerButton
+import ru.sudox.design.buttons.createSecondaryButton
 import ru.sudox.design.buttons.createPrimaryButton
 
 class AuthRequestBottomSheetVO(
@@ -32,7 +32,7 @@ class AuthRequestBottomSheetVO(
     override fun getButtonsViews(context: Context): Array<View>? {
         return arrayOf(
                 createPrimaryButton(context).apply { setText(R.string.accept) },
-                createDangerButton(context).apply { setText(R.string.forbid) }
+                createSecondaryButton(context).apply { setText(R.string.forbid) }
         )
     }
 }
