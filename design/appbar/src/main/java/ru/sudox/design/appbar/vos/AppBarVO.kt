@@ -3,11 +3,11 @@ package ru.sudox.design.appbar.vos
 import android.content.Context
 import android.view.View
 import ru.sudox.design.appbar.R
+import ru.sudox.design.appbar.vos.others.AppBarButtonParam
+import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 
-const val NOT_USED_PARAMETER = 0
-const val BACK_BUTTON_TAG = 1
-
-val BACK_BUTTON = arrayOf(Triple(BACK_BUTTON_TAG, R.drawable.ic_left_arrow, NOT_USED_PARAMETER))
+const val APPBAR_BACK_BUTTON_TAG = 1
+val APPBAR_BACK_BUTTON_PARAMS = arrayOf(AppBarButtonParam(APPBAR_BACK_BUTTON_TAG, R.drawable.ic_left_arrow, NOT_USED_PARAMETER, true))
 
 /**
  * ViewObject состояния AppBar'а
@@ -19,14 +19,14 @@ interface AppBarVO {
      *
      * @return Пары тег-иконка-текст (один из параметров после тега может быть равен NOT_USED_PARAMETER если он не используется)
      */
-    fun getButtonsAtLeft(): Array<Triple<Int, Int, Int>>?
+    fun getButtonsAtLeft(): Array<AppBarButtonParam>?
 
     /**
      * Выдает параметры кнопок справа.
      *
      * @return Пары тег-иконка-текст (один из параметров после тега может быть равен NOT_USED_PARAMETER если он не используется)
      */
-    fun getButtonsAtRight(): Array<Triple<Int, Int, Int>>?
+    fun getButtonsAtRight(): Array<AppBarButtonParam>?
 
     /**
      * Возвращает View слева.

@@ -20,7 +20,7 @@ import ru.sudox.android.core.managers.NavigationManager
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.appbar.vos.AppBarVO
-import ru.sudox.design.appbar.vos.BACK_BUTTON_TAG
+import ru.sudox.design.appbar.vos.APPBAR_BACK_BUTTON_TAG
 import ru.sudox.design.common.hideSoftKeyboard
 import javax.inject.Inject
 
@@ -107,7 +107,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
     }
 
     open fun onAppBarClicked(tag: Int) {
-        if (tag == BACK_BUTTON_TAG) {
+        if (tag == APPBAR_BACK_BUTTON_TAG) {
             // При использовании данного ядра Activity должен обрабатывать нажатие кнопки назад в методе onKeyDown()
             activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
         }

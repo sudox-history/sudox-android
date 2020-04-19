@@ -3,19 +3,20 @@ package ru.sudox.android.messages.vos
 import android.content.Context
 import android.view.View
 import ru.sudox.design.appbar.vos.AppBarVO
-import ru.sudox.design.appbar.vos.NOT_USED_PARAMETER
+import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 import ru.sudox.android.messages.R
+import ru.sudox.design.appbar.vos.others.AppBarButtonParam
 
 const val DIALOGS_SEARCH_BUTTON_TAG = 2
 
 class DialogsAppBarVO : AppBarVO {
 
-    override fun getButtonsAtLeft(): Array<Triple<Int, Int, Int>>? {
+    override fun getButtonsAtLeft(): Array<AppBarButtonParam>? {
         return null
     }
 
-    override fun getButtonsAtRight(): Array<Triple<Int, Int, Int>>? {
-        return arrayOf(Triple(DIALOGS_SEARCH_BUTTON_TAG, R.drawable.ic_search, NOT_USED_PARAMETER))
+    override fun getButtonsAtRight(): Array<AppBarButtonParam>? {
+        return arrayOf(AppBarButtonParam(DIALOGS_SEARCH_BUTTON_TAG, R.drawable.ic_search, NOT_USED_PARAMETER))
     }
 
     override fun getViewAtLeft(context: Context): View? {

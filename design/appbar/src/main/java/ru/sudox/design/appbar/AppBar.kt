@@ -14,7 +14,8 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.design.appbar.vos.AppBarVO
-import ru.sudox.design.appbar.vos.NOT_USED_PARAMETER
+import ru.sudox.design.appbar.vos.others.AppBarButtonParam
+import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 import ru.sudox.design.common.lazyLayout
 import java.util.LinkedList
 import kotlin.math.abs
@@ -46,11 +47,11 @@ class AppBar : ViewGroup, View.OnClickListener {
         }
 
     private fun updateButtons(
-            oldButtonsTriples: Array<Triple<Int, Int, Int>>?,
-            newButtonsTriples: Array<Triple<Int, Int, Int>>?,
+            oldButtonsParams: Array<AppBarButtonParam>?,
+            newButtonsParams: Array<AppBarButtonParam>?,
             buttonsList: LinkedList<AppCompatTextView>
     ) {
-        val countDiff = (oldButtonsTriples?.size ?: 0) - (newButtonsTriples?.size ?: 0)
+        val countDiff = (oldButtonsParams?.size ?: 0) - (newButtonsParams?.size ?: 0)
 
         if (countDiff >= 0) {
             repeat(countDiff) {
@@ -63,19 +64,14 @@ class AppBar : ViewGroup, View.OnClickListener {
         }
 
         buttonsList.forEachIndexed { index, it ->
-            configureButton(it, newButtonsTriples!![index])
+            configureButton(it, newButtonsParams!![index])
         }
     }
 
     var buttonsStyleId: Int = 0
         set(value) {
-            buttonsAtLeft.forEach {
-                setTextAppearance(it, value)
-            }
-
-            buttonsAtRight.forEach {
-                setTextAppearance(it, value)
-            }
+            buttonsAtLeft.forEach { setTextAppearance(it, value) }
+            buttonsAtRight.forEach { setTextAppearance(it, value) }
 
             field = value
             requestLayout()
@@ -139,20 +135,20 @@ class AppBar : ViewGroup, View.OnClickListener {
         }
     }
 
-    private fun configureButton(button: AppCompatTextView, triple: Triple<Int, Int, Int>) = button.let {
-        if (triple.second != NOT_USED_PARAMETER) {
-            it.setCompoundDrawablesWithIntrinsicBounds(triple.second, 0, 0, 0)
+    private fun configureButton(button: AppCompatTextView, param: AppBarButtonParam) = button.let {
+        if (param.iconRes != NOT_USED_PARAMETER) {
+            it.setCompoundDrawablesWithIntrinsicBounds(param.iconRes, 0, 0, 0)
         } else {
             it.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
         }
 
-        if (triple.third != NOT_USED_PARAMETER) {
-            it.setText(triple.third)
+        if (param.textRes != NOT_USED_PARAMETER) {
+            it.setText(param.textRes)
         } else {
             it.text = null
         }
 
-        it.tag = triple.first
+        it.tag = param.tag
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

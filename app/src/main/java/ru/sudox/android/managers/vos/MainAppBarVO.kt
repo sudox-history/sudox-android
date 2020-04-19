@@ -6,6 +6,7 @@ import ru.sudox.android.AppLoader
 import ru.sudox.android.R
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.design.appbar.vos.AppBarVO
+import ru.sudox.design.appbar.vos.others.AppBarButtonParam
 import javax.inject.Inject
 
 /**
@@ -26,11 +27,11 @@ class MainAppBarVO(
         AppLoader.loaderComponent?.inject(this)
     }
 
-    override fun getButtonsAtLeft(): Array<Triple<Int, Int, Int>>? {
+    override fun getButtonsAtLeft(): Array<AppBarButtonParam>? {
         return originalAppBarVO.getButtonsAtLeft()
     }
 
-    override fun getButtonsAtRight(): Array<Triple<Int, Int, Int>>? {
+    override fun getButtonsAtRight(): Array<AppBarButtonParam>? {
         return originalAppBarVO.getButtonsAtRight()
     }
 

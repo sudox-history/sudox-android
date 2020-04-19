@@ -3,20 +3,21 @@ package ru.sudox.android.auth.ui.signup
 import android.content.Context
 import android.view.View
 import ru.sudox.design.appbar.vos.AppBarVO
-import ru.sudox.design.appbar.vos.BACK_BUTTON
-import ru.sudox.design.appbar.vos.NOT_USED_PARAMETER
+import ru.sudox.design.appbar.vos.APPBAR_BACK_BUTTON_PARAMS
+import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 import ru.sudox.android.auth.ui.R
+import ru.sudox.design.appbar.vos.others.AppBarButtonParam
 
 const val AUTH_SIGN_UP_FINISH_BUTTON_TAG = 2
 
 class AuthSignUpAppBarVO : AppBarVO {
 
-    override fun getButtonsAtLeft(): Array<Triple<Int, Int, Int>>? {
-        return BACK_BUTTON
+    override fun getButtonsAtLeft(): Array<AppBarButtonParam>? {
+        return APPBAR_BACK_BUTTON_PARAMS
     }
 
-    override fun getButtonsAtRight(): Array<Triple<Int, Int, Int>>? {
-        return arrayOf(Triple(AUTH_SIGN_UP_FINISH_BUTTON_TAG, NOT_USED_PARAMETER, R.string.finish))
+    override fun getButtonsAtRight(): Array<AppBarButtonParam>? {
+        return arrayOf(AppBarButtonParam(AUTH_SIGN_UP_FINISH_BUTTON_TAG, NOT_USED_PARAMETER, R.string.finish))
     }
 
     override fun getViewAtLeft(context: Context): View? {
