@@ -15,7 +15,8 @@ import com.bluelinelabs.conductor.ControllerChangeHandler
 import com.bluelinelabs.conductor.ControllerChangeType
 import com.bluelinelabs.conductor.archlifecycle.LifecycleController
 import com.lalafo.conductor.glide.GlideProvider
-import ru.sudox.android.core.managers.NewNavigationManager
+import ru.sudox.android.core.managers.AppBarManager
+import ru.sudox.android.core.managers.NavigationManager
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.appbar.vos.AppBarVO
@@ -36,7 +37,11 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
 
     @Inject
     @JvmField
-    var navigationManager: NewNavigationManager? = null
+    var navigationManager: NavigationManager? = null
+
+    @Inject
+    @JvmField
+    var appBarManager: AppBarManager? = null
 
     @Inject
     @JvmField
@@ -86,10 +91,8 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
         super.onAttach(view)
 
         if (!isChild()) {
-            (activity as CoreActivity).let {
-                it.setAppBarViewObject(appBarVO, ::onAppBarClicked)
-                it.setAppBarLayoutViewObject(appBarLayoutVO)
-            }
+            appBarManager!!.setVO(appBarVO, ::onAppBarClicked)
+            appBarManager!!.setLayoutVO(appBarLayoutVO)
         }
 
         if (navigationManager!!.isContentUsesAllLayout()) {

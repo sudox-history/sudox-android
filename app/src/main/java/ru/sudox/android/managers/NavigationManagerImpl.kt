@@ -12,7 +12,7 @@ import ru.sudox.android.R
 import ru.sudox.android.auth.ui.phone.AuthPhoneController
 import ru.sudox.android.core.CoreController
 import ru.sudox.android.core.managers.AUTH_ROOT_TAG
-import ru.sudox.android.core.managers.NewNavigationManager
+import ru.sudox.android.core.managers.NavigationManager
 import ru.sudox.android.managers.handlers.move.LeftMoveHandler
 import ru.sudox.android.managers.handlers.move.RightMoveHandler
 import ru.sudox.android.messages.DialogsController
@@ -34,10 +34,10 @@ private const val PEOPLE_TAG = 2
 private const val DIALOGS_TAG = 3
 private const val PROFILE_TAG = 4
 
-class AppNavigationManager(
+class NavigationManagerImpl(
         val routerProvider: Lazy<Router>,
         val bottomNavigationView: BottomNavigationView
-) : NewNavigationManager, BottomNavigationView.OnNavigationItemSelectedListener {
+) : NavigationManager, BottomNavigationView.OnNavigationItemSelectedListener {
 
     private var loadedMainTags = HashSet<Int>()
     private var mainControllersTags = HashMap<String, Int>()
@@ -50,7 +50,7 @@ class AppNavigationManager(
             addItem(DIALOGS_TAG, R.string.messages, R.drawable.ic_chat_bubble)
             addItem(PROFILE_TAG, R.string.profile, R.drawable.ic_account)
 
-            setOnNavigationItemSelectedListener(this@AppNavigationManager)
+            setOnNavigationItemSelectedListener(this@NavigationManagerImpl)
         }
     }
 

@@ -6,8 +6,8 @@ import ru.sudox.android.auth.data.daos.AuthSessionDAO
 import ru.sudox.android.auth.data.entities.AuthSessionEntity
 
 @Database(entities = [
-    ru.sudox.android.auth.data.entities.AuthSessionEntity::class
+    AuthSessionEntity::class
 ], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun authSessionDao(): ru.sudox.android.auth.data.daos.AuthSessionDAO
+    abstract fun authSessionDao(): AuthSessionDAO
 }

@@ -13,7 +13,8 @@ import ru.sudox.android.auth.inject.AuthModule
 import ru.sudox.android.core.inject.CoreLoaderModule
 import ru.sudox.android.inject.DatabaseModule
 import ru.sudox.android.inject.ViewModelModule
-import ru.sudox.android.vos.ConnectAppBarVO
+import ru.sudox.android.managers.vos.MainAppBarVO
+import ru.sudox.api.common.SudoxApi
 import javax.inject.Singleton
 
 @Singleton
@@ -27,7 +28,8 @@ import javax.inject.Singleton
 ])
 interface LoaderComponent : CoreLoaderComponent, CountriesComponent, AuthComponent {
     fun activityComponent(coreActivityModule: CoreActivityModule): ActivityComponent
-    fun inject(connectAppBarVO: ConnectAppBarVO)
+    fun inject(mainAppBarVO: MainAppBarVO)
     fun inject(appConnector: AppConnector)
     fun inject(appLoader: AppLoader)
+    fun sudoxApi(): SudoxApi
 }

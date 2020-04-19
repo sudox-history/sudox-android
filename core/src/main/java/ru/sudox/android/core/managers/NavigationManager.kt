@@ -6,7 +6,7 @@ import com.bluelinelabs.conductor.Controller
 const val AUTH_ROOT_TAG = 0
 const val MAIN_ROOT_TAG = 1
 
-interface NewNavigationManager {
+interface NavigationManager {
     fun popBackstack(): Boolean
     fun isContentUsesAllLayout(): Boolean
     fun showRootChild(controller: Controller)

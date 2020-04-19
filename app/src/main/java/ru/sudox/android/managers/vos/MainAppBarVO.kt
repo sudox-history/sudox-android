@@ -1,4 +1,4 @@
-package ru.sudox.android.vos
+package ru.sudox.android.managers.vos
 
 import android.content.Context
 import android.view.View
@@ -14,7 +14,7 @@ import javax.inject.Inject
  * @param originalAppBarVO Оригинальный ViewObject, который будет использоваться если
  * соединение установлено.
  */
-class ConnectAppBarVO(
+class MainAppBarVO(
         var originalAppBarVO: AppBarVO
 ) : AppBarVO {
 
