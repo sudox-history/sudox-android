@@ -3,6 +3,8 @@ package ru.sudox.android.managers
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.bluelinelabs.conductor.Controller
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.RouterTransaction
@@ -18,7 +20,6 @@ import ru.sudox.android.managers.handlers.move.RightMoveHandler
 import ru.sudox.android.messages.DialogsController
 import ru.sudox.android.people.PeopleController
 import ru.sudox.android.people.ProfileController
-import ru.sudox.design.bottomnavigationview.addItem
 import java.util.Stack
 
 private const val NAVIGATION_VIEW_CURRENT_ITEM_ID_KEY = "navigation_view_current_item_id"
@@ -39,6 +40,9 @@ class NavigationManagerImpl(
         val bottomNavigationView: BottomNavigationView
 ) : NavigationManager, BottomNavigationView.OnNavigationItemSelectedListener {
 
+    private val bottomNavViewTags = HashMap<Int, Int>()
+    private val bottomNavViewIds = HashMap<Int, Int>()
+
     private var loadedMainTags = HashSet<Int>()
     private var mainControllersTags = HashMap<String, Int>()
     private var blockNavigationViewCallback = false
@@ -46,12 +50,23 @@ class NavigationManagerImpl(
 
     init {
         bottomNavigationView.apply {
-            addItem(PEOPLE_TAG, R.string.people, R.drawable.ic_group)
-            addItem(DIALOGS_TAG, R.string.messages, R.drawable.ic_chat_bubble)
-            addItem(PROFILE_TAG, R.string.profile, R.drawable.ic_account)
+            addItem(this, PEOPLE_TAG, R.string.people, R.drawable.ic_group)
+            addItem(this, DIALOGS_TAG, R.string.messages, R.drawable.ic_chat_bubble)
+            addItem(this, PROFILE_TAG, R.string.profile, R.drawable.ic_account)
 
             setOnNavigationItemSelectedListener(this@NavigationManagerImpl)
         }
+    }
+
+    private fun addItem(view: BottomNavigationView, tag: Int, @StringRes titleId: Int, @DrawableRes iconId: Int) {
+        val id = View.generateViewId()
+
+        view.menu.add(0, id, 0, titleId).apply {
+            setIcon(iconId)
+        }
+
+        bottomNavViewTags[id] = tag
+        bottomNavViewIds[tag] = id
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -59,10 +74,11 @@ class NavigationManagerImpl(
             return true
         }
 
-        val tag = item.itemId
+        val tag = bottomNavViewTags[item.itemId]!!
+        val selectedTag = getCurrentTag()
         val router = routerProvider.value
 
-        if (tag == bottomNavigationView.selectedItemId) {
+        if (tag == selectedTag) {
             val controller = router.backstack.last().controller as CoreController
 
             if (!controller.isInStartState()) {
@@ -72,7 +88,7 @@ class NavigationManagerImpl(
             return true
         }
 
-        val changeHandler = if (tag > bottomNavigationView.selectedItemId) {
+        val changeHandler = if (tag > selectedTag) {
             RightMoveHandler(ANIMATION_DURATION)
         } else {
             LeftMoveHandler(ANIMATION_DURATION)
@@ -131,7 +147,7 @@ class NavigationManagerImpl(
                     loadedMainTags.remove(currentTag)
 
                     blockNavigationViewCallback = true
-                    bottomNavigationView.selectedItemId = previousTag
+                    bottomNavigationView.selectedItemId = getTagItemId(previousTag)
                     blockNavigationViewCallback = false
                 }
 
@@ -156,7 +172,7 @@ class NavigationManagerImpl(
 
     override fun showRootChild(controller: Controller) {
         if (bottomNavigationView.visibility == View.VISIBLE) {
-            mainControllersTags[controller.instanceId] = bottomNavigationView.selectedItemId
+            mainControllersTags[controller.instanceId] = getCurrentTag()
         }
 
         routerProvider.value.pushController(RouterTransaction
@@ -192,7 +208,7 @@ class NavigationManagerImpl(
 
             blockNavigationViewCallback = true
             bottomNavigationView.visibility = View.VISIBLE
-            bottomNavigationView.selectedItemId = PEOPLE_TAG
+            bottomNavigationView.selectedItemId = getTagItemId(PEOPLE_TAG)
             blockNavigationViewCallback = false
 
             transaction
@@ -215,7 +231,7 @@ class NavigationManagerImpl(
             bottomNavigationView.visibility = bundle.getInt(NAVIGATION_VIEW_VISIBILITY_KEY)
 
             blockNavigationViewCallback = true
-            bottomNavigationView.selectedItemId = bundle.getInt(NAVIGATION_VIEW_CURRENT_ITEM_ID_KEY)
+            bottomNavigationView.selectedItemId = getTagItemId(bundle.getInt(NAVIGATION_VIEW_CURRENT_ITEM_ID_KEY))
             blockNavigationViewCallback = false
 
             repeat(bundle.getInt(LOADED_MAIN_CONTROLLERS_COUNT)) {
@@ -233,7 +249,7 @@ class NavigationManagerImpl(
 
     override fun saveState(bundle: Bundle?) {
         if (bundle != null) {
-            bundle.putInt(NAVIGATION_VIEW_CURRENT_ITEM_ID_KEY, bottomNavigationView.selectedItemId)
+            bundle.putInt(NAVIGATION_VIEW_CURRENT_ITEM_ID_KEY, getCurrentTag())
             bundle.putInt(NAVIGATION_VIEW_VISIBILITY_KEY, bottomNavigationView.visibility)
             bundle.putInt(LOADED_MAIN_CONTROLLERS_COUNT, loadedMainTags.size)
             bundle.putInt(MAIN_CONTROLLERS_COUNT_KEY, mainControllersTags.size)
@@ -252,4 +268,10 @@ class NavigationManagerImpl(
     override fun isContentUsesAllLayout(): Boolean {
         return bottomNavigationView.visibility == View.GONE
     }
+
+    private fun getCurrentTag()
+            = bottomNavViewTags[bottomNavigationView.selectedItemId]!!
+
+    private fun getTagItemId(tag: Int)
+            = bottomNavViewIds[tag]!!
 }
