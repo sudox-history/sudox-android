@@ -1,6 +1,8 @@
 package ru.sudox.android.managers
 
 import android.app.Activity
+import android.os.Bundle
+import android.view.View
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import ru.sudox.android.core.managers.AppBarManager
@@ -12,6 +14,9 @@ import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.others.SearchAppBarVO
 import ru.sudox.design.common.hideSoftKeyboard
 import ru.sudox.design.common.showSoftKeyboard
+
+private const val APPBARMANAGER_IS_SEARCH_ENABLED_KEY = "appbarmanager_is_search_enabled_key"
+private const val APPBARMANAGER_SEARCH_EDITTEXT_ID = "appbarmanager_search_edittext_id"
 
 class AppBarManagerImpl(
         val activity: Activity,
@@ -37,7 +42,13 @@ class AppBarManagerImpl(
         }
     }
 
-    override fun setVO(vo: AppBarVO?, callback: ((Int) -> Unit)?) {
+    override fun setVO(vo: AppBarVO?, callback: ((Int) -> Unit)?, force: Boolean) {
+        if (isSearchEnabled() && !force) {
+            savedAppBarCallback = callback
+            savedAppBarVO = vo
+            return
+        }
+
         val realVo = if (vo is MainAppBarVO) {
             vo.originalAppBarVO
         } else {
@@ -64,37 +75,64 @@ class AppBarManagerImpl(
         appBarLayout.appBar!!.vo = vo
     }
 
-    override fun toggleSearch(toggle: Boolean) {
+    override fun toggleSearch(toggle: Boolean, editTextId: Int, callback: ((Int) -> Unit)?) {
+        if (toggle == isSearchEnabled()) {
+            return
+        }
+
         if (toggle) {
             onStop()
 
             savedAppBarVO = appBarLayout.appBar!!.vo
             savedAppBarCallback = appBarLayout.appBar!!.callback
 
-            val searchVO = SearchAppBarVO()
+            val searchVO = SearchAppBarVO(editTextId)
 
             appBarLayout.appBar!!.vo = searchVO
-            appBarLayout.post { searchVO.appCompatEditText!!.showSoftKeyboard() }
+            appBarLayout.appBar!!.callback = callback
+            appBarLayout.post { searchVO.searchEditText!!.showSoftKeyboard() }
         } else {
             val vo = appBarLayout.appBar!!.vo as SearchAppBarVO
 
-            if (vo.appCompatEditText!!.isFocused) {
+            if (vo.searchEditText!!.isFocused) {
                 activity.hideSoftKeyboard()
             }
 
-            setVO(savedAppBarVO, savedAppBarCallback)
+            val oldSavedAppBarCallback = savedAppBarCallback
+            val oldSavedAppBarVO = savedAppBarVO
 
             // Предотвращаем утечки памяти
             savedAppBarCallback = null
             savedAppBarVO = null
+
+            setVO(oldSavedAppBarVO, oldSavedAppBarCallback, true)
 
             // Начинаем заново слушать обновления состояния API
             onStart()
         }
     }
 
+    override fun saveSearchState(bundle: Bundle) {
+        bundle.putBoolean(APPBARMANAGER_IS_SEARCH_ENABLED_KEY, isSearchEnabled())
+
+        if (isSearchEnabled()) {
+            bundle.putInt(APPBARMANAGER_SEARCH_EDITTEXT_ID, (appBarLayout.appBar!!.vo as SearchAppBarVO).searchEditText!!.id)
+        }
+    }
+
+    override fun restoreSearchState(bundle: Bundle?, callback: ((Int) -> Unit)?) {
+        if (bundle == null) {
+            toggleSearch(false)
+        } else {
+            val toggle = bundle.getBoolean(APPBARMANAGER_IS_SEARCH_ENABLED_KEY, false)
+            val editTextId = bundle.getInt(APPBARMANAGER_SEARCH_EDITTEXT_ID, View.NO_ID)
+
+            toggleSearch(toggle, editTextId, callback)
+        }
+    }
+
     override fun isSearchEnabled(): Boolean {
-        return savedAppBarVO != null
+        return appBarLayout.appBar!!.vo is SearchAppBarVO
     }
 
     override fun setLayoutVO(vo: AppBarLayoutVO?) {

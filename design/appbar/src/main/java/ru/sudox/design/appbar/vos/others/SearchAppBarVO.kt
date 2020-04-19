@@ -10,9 +10,11 @@ import ru.sudox.design.appbar.vos.AppBarVO
 
 const val APPBAR_SEARCH_CANCEL_BUTTON_TAG = 3
 
-class SearchAppBarVO : AppBarVO {
+class SearchAppBarVO(
+        val editTextId: Int = View.NO_ID
+) : AppBarVO {
 
-    var appCompatEditText: AppCompatEditText? = null
+    var searchEditText: AppCompatEditText? = null
 
     override fun getButtonsAtLeft(): Array<AppBarButtonParam>? {
         return APPBAR_BACK_BUTTON_PARAMS
@@ -28,7 +30,13 @@ class SearchAppBarVO : AppBarVO {
     }
 
     override fun getViewAtLeft(context: Context): View? {
-        appCompatEditText = AppCompatEditText(context, null, R.attr.appBarSearchEditTextStyle).apply {
+        searchEditText = AppCompatEditText(context, null, R.attr.appBarSearchEditTextStyle).apply {
+            id = if (editTextId == View.NO_ID) {
+                View.generateViewId()
+            } else {
+                editTextId
+            }
+
             maxLines = 1
             isSingleLine = true
             layoutParams = ViewGroup.LayoutParams(
@@ -37,7 +45,7 @@ class SearchAppBarVO : AppBarVO {
             )
         }
 
-        return appCompatEditText
+        return searchEditText
     }
 
     override fun getViewAtRight(context: Context): View? {

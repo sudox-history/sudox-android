@@ -31,6 +31,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
 
     @Suppress("LeakingThis")
     private val glideControllerSupport = CoreGlideControllerSupport(this)
+    private var isSearchEnabledBeforeStop = false
 
     var appBarVO: AppBarVO? = null
     var appBarLayoutVO: AppBarLayoutVO? = null
@@ -56,6 +57,8 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
         if (view != null) {
             return view!!
         }
+
+        appBarManager!!.restoreSearchState(savedViewState, callback = ::onAppBarClicked)
 
         return createView(container, savedViewState).apply {
             id = savedViewState?.getInt(CORE_CONTROLLER_ROOT_VIEW_ID_KEY, View.generateViewId()) ?: View.generateViewId()
@@ -116,7 +119,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
                 activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
             }
         } else if (tag == APPBAR_SEARCH_BUTTON_TAG) {
-            appBarManager!!.toggleSearch(true)
+            appBarManager!!.toggleSearch(true, callback = ::onAppBarClicked)
         }
     }
 
@@ -126,6 +129,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
 
     override fun onSaveViewState(view: View, outState: Bundle) {
         outState.putInt(CORE_CONTROLLER_ROOT_VIEW_ID_KEY, view.id)
+        appBarManager!!.saveSearchState(outState)
     }
 
     @CallSuper
@@ -133,7 +137,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
         viewModelStore.clear()
 
         if (appBarManager!!.isSearchEnabled()) {
-            appBarManager!!.toggleSearch(false)
+            appBarManager!!.toggleSearch(false, callback = ::onAppBarClicked)
         }
     }
 
