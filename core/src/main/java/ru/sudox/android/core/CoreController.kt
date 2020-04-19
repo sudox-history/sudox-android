@@ -17,6 +17,7 @@ import com.bluelinelabs.conductor.archlifecycle.LifecycleController
 import com.lalafo.conductor.glide.GlideProvider
 import ru.sudox.android.core.managers.AppBarManager
 import ru.sudox.android.core.managers.NavigationManager
+import ru.sudox.android.core.managers.SearchManager
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.appbar.vos.AppBarVO
@@ -39,6 +40,10 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
 
     @Inject
     @JvmField
+    var searchManager: SearchManager? = null
+
+    @Inject
+    @JvmField
     var navigationManager: NavigationManager? = null
 
     @Inject
@@ -58,7 +63,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
             return view!!
         }
 
-        appBarManager!!.restoreSearchState(savedViewState, callback = ::onAppBarClicked)
+        searchManager!!.restoreSearchState(savedViewState, callback = ::onAppBarClicked)
 
         return createView(container, savedViewState).apply {
             id = savedViewState?.getInt(CORE_CONTROLLER_ROOT_VIEW_ID_KEY, View.generateViewId()) ?: View.generateViewId()
@@ -112,14 +117,14 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
 
     open fun onAppBarClicked(tag: Int) {
         if (tag == APPBAR_BACK_BUTTON_TAG) {
-            if (appBarManager!!.isSearchEnabled()) {
-                appBarManager!!.toggleSearch(false)
+            if (searchManager!!.isSearchEnabled()) {
+                searchManager!!.toggleSearch(false)
             } else {
                 // При использовании данного ядра Activity должен обрабатывать нажатие кнопки назад в методе onKeyDown()
                 activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
             }
         } else if (tag == APPBAR_SEARCH_BUTTON_TAG) {
-            appBarManager!!.toggleSearch(true, callback = ::onAppBarClicked)
+            searchManager!!.toggleSearch(true, callback = ::onAppBarClicked)
         }
     }
 
@@ -129,15 +134,15 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
 
     override fun onSaveViewState(view: View, outState: Bundle) {
         outState.putInt(CORE_CONTROLLER_ROOT_VIEW_ID_KEY, view.id)
-        appBarManager!!.saveSearchState(outState)
+        searchManager!!.saveSearchState(outState)
     }
 
     @CallSuper
     override fun onDestroy() {
         viewModelStore.clear()
 
-        if (appBarManager!!.isSearchEnabled()) {
-            appBarManager!!.toggleSearch(false, callback = ::onAppBarClicked)
+        if (searchManager!!.isSearchEnabled()) {
+            searchManager!!.toggleSearch(false, callback = ::onAppBarClicked)
         }
     }
 

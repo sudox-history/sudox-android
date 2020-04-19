@@ -5,11 +5,13 @@ import dagger.Provides
 import ru.sudox.android.core.inject.scopes.CoreActivityScope
 import ru.sudox.android.core.managers.AppBarManager
 import ru.sudox.android.core.managers.NavigationManager
+import ru.sudox.android.core.managers.SearchManager
 
 @Module
 class CoreActivityModule(
         private val navigationManager: NavigationManager,
-        private val appBarManager: AppBarManager
+        private val appBarManager: AppBarManager,
+        private val searchManager: SearchManager
 ) {
 
     @Provides
@@ -22,5 +24,11 @@ class CoreActivityModule(
     @CoreActivityScope
     fun provideAppBarManager(): AppBarManager {
         return appBarManager
+    }
+
+    @Provides
+    @CoreActivityScope
+    fun provideSearchManager(): SearchManager {
+        return searchManager
     }
 }

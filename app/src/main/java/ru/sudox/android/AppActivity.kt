@@ -18,8 +18,7 @@ import ru.sudox.android.inject.components.ActivityComponent
 import ru.sudox.android.layouts.AppLayout
 import ru.sudox.android.managers.AppBarManagerImpl
 import ru.sudox.android.managers.NavigationManagerImpl
-import ru.sudox.api.common.SudoxApi
-import javax.inject.Inject
+import ru.sudox.android.managers.SearchManagerImpl
 
 /**
  * Главная Activity данного приложения.
@@ -81,8 +80,14 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     override fun getActivityComponent(): CoreActivityComponent {
         if (activityComponent == null) {
-            appBarManager = AppBarManagerImpl(this, appLayout!!.contentLayout.appBarLayout, loaderComponent!!.sudoxApi()).apply { onStart() }
-            activityComponent = loaderComponent!!.activityComponent(CoreActivityModule(navigationManager!!, appBarManager!!))
+            val appBarLayout = appLayout!!.contentLayout.appBarLayout
+
+            appBarManager = AppBarManagerImpl(appBarLayout, loaderComponent!!.sudoxApi()).apply { onStart() }
+
+            val searchManager = SearchManagerImpl(appBarLayout, appBarManager!!, this)
+            val module = CoreActivityModule(navigationManager!!, appBarManager!!, searchManager)
+
+            activityComponent = loaderComponent!!.activityComponent(module)
         }
 
         return activityComponent!!
