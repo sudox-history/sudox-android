@@ -59,8 +59,8 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         }
 
         // Отложим инициализацию роутера до первого его запроса (исправляем краши при инжекте из субкомпонента активности)
-        routerLazy = lazy { attachRouter(appLayout!!.frameLayout, savedInstanceState) }
-        navigationManager = AppNavigationManager(routerLazy!!, appLayout!!.navigationView).apply {
+        routerLazy = lazy { attachRouter(appLayout!!.contentLayout.frameLayout, savedInstanceState) }
+        navigationManager = AppNavigationManager(routerLazy!!, appLayout!!.bottomNavigationView).apply {
             restoreState(savedInstanceState)
         }
 
@@ -77,7 +77,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .distinctUntilChanged()
                 .subscribe {
-                    appLayout!!.appBarLayout.appBar!!.let {
+                    appLayout!!.contentLayout.appBarLayout.appBar!!.let {
                         setAppBarViewObject(it.vo, it.callback)
                     }
                 }
@@ -103,7 +103,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun setAppBarViewObject(appBarVO: AppBarVO?, callback: ((Int) -> (Unit))?) {
-        appLayout!!.appBarLayout.appBar!!.let {
+        appLayout!!.contentLayout.appBarLayout.appBar!!.let {
             it.callback = callback
 
             if (appBarVO != null) {
@@ -115,7 +115,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
     }
 
     override fun setAppBarLayoutViewObject(appBarLayoutVO: AppBarLayoutVO?) {
-        appLayout!!.appBarLayout.vo = appBarLayoutVO
+        appLayout!!.contentLayout.appBarLayout.vo = appBarLayoutVO
     }
 
     override fun onDestroy() {
