@@ -7,4 +7,5 @@
     </declare-styleable>
 
     <attr name="appBarStyle" format="reference" />
+    <attr name="appBarSearchEditTextStyle" format="reference" />
 </resources>

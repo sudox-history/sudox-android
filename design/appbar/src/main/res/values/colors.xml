@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="appbar_title_text_color">#000000</color>
+    <color name="appbar_search_text_color">#000000</color>
     <color name="appbar_button_text_color">#000000</color>
+    <color name="appbar_button_icon_tint">#000000</color>
+    <color name="appbar_search_cancel_icon_tint">#808080</color>
     <color name="appbar_background_color">#FFFFFF</color>
     <color name="appbar_background_stroke_color">#E6E6E6</color>
 </resources>

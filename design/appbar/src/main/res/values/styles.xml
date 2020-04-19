@@ -29,4 +29,17 @@
         <item name="android:textColor">@color/appbar_button_text_color</item>
         <item name="android:background">?selectableItemBackgroundBorderless</item>
     </style>
+
+    <style name="Sudox.AppBar.SearchEditText" parent="Sudox.EditText">
+        <item name="android:background">@null</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+
+        <item name="android:textSize">@dimen/appbar_search_text_size</item>
+        <item name="android:textColor">@color/appbar_search_text_color</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
+    </style>
 </resources>

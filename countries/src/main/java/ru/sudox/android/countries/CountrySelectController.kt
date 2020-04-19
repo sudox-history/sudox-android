@@ -16,11 +16,13 @@ class CountrySelectController : ViewListController<CountrySelectAdapter>() {
     override fun getAdapter(viewList: ViewList): CountrySelectAdapter {
         return CountrySelectAdapter(activity!!) {
             navigationManager!!.popBackstack()
-
             targetController!!.onActivityResult(COUNTRY_CHANGE_REQUEST_CODE, 0, Intent().apply {
                 putExtra(COUNTRY_EXTRA_NAME, it)
             })
         }
     }
 
+    override fun onAppBarClicked(tag: Int) {
+        super.onAppBarClicked(tag)
+    }
 }

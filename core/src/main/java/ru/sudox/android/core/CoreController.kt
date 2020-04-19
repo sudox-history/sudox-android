@@ -21,6 +21,7 @@ import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.APPBAR_BACK_BUTTON_TAG
+import ru.sudox.design.appbar.vos.APPBAR_SEARCH_BUTTON_TAG
 import ru.sudox.design.common.hideSoftKeyboard
 import javax.inject.Inject
 
@@ -108,8 +109,14 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
 
     open fun onAppBarClicked(tag: Int) {
         if (tag == APPBAR_BACK_BUTTON_TAG) {
-            // При использовании данного ядра Activity должен обрабатывать нажатие кнопки назад в методе onKeyDown()
-            activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
+            if (appBarManager!!.isSearchEnabled()) {
+                appBarManager!!.toggleSearch(false)
+            } else {
+                // При использовании данного ядра Activity должен обрабатывать нажатие кнопки назад в методе onKeyDown()
+                activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
+            }
+        } else if (tag == APPBAR_SEARCH_BUTTON_TAG) {
+            appBarManager!!.toggleSearch(true)
         }
     }
 
@@ -124,6 +131,10 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
     @CallSuper
     override fun onDestroy() {
         viewModelStore.clear()
+
+        if (appBarManager!!.isSearchEnabled()) {
+            appBarManager!!.toggleSearch(false)
+        }
     }
 
     @CallSuper

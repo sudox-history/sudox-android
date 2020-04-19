@@ -2,6 +2,7 @@ package ru.sudox.design.appbar
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Build
 import android.text.Layout
 import android.util.AttributeSet
@@ -9,9 +10,12 @@ import android.view.ContextThemeWrapper
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
+import androidx.core.widget.TextViewCompat
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.others.AppBarButtonParam
@@ -35,6 +39,16 @@ class AppBar : ViewGroup, View.OnClickListener {
                 titleTextView.text = null
             }
 
+            if (viewAtLeft != null) {
+                removeView(viewAtLeft)
+                viewAtLeft = null
+            }
+
+            if (viewAtRight != null) {
+                removeView(viewAtRight)
+                viewAtRight = null
+            }
+
             viewAtLeft = value?.getViewAtLeft(context)?.apply {
                 this@AppBar.addView(this)
             }
@@ -45,28 +59,6 @@ class AppBar : ViewGroup, View.OnClickListener {
 
             field = value
         }
-
-    private fun updateButtons(
-            oldButtonsParams: Array<AppBarButtonParam>?,
-            newButtonsParams: Array<AppBarButtonParam>?,
-            buttonsList: LinkedList<AppCompatTextView>
-    ) {
-        val countDiff = (oldButtonsParams?.size ?: 0) - (newButtonsParams?.size ?: 0)
-
-        if (countDiff >= 0) {
-            repeat(countDiff) {
-                removeView(buttonsList.removeLast())
-            }
-        } else if (countDiff < 0) {
-            repeat(abs(countDiff)) {
-                buttonsList.addFirst(createButton())
-            }
-        }
-
-        buttonsList.forEachIndexed { index, it ->
-            configureButton(it, newButtonsParams!![index])
-        }
-    }
 
     var buttonsStyleId: Int = 0
         set(value) {
@@ -148,8 +140,34 @@ class AppBar : ViewGroup, View.OnClickListener {
             it.text = null
         }
 
+        TextViewCompat.setCompoundDrawableTintList(it, ColorStateList.valueOf(
+                ContextCompat.getColor(context, param.iconTint)
+        ))
+
         it.isEnabled = param.isEnabled
         it.tag = param.tag
+    }
+
+    private fun updateButtons(
+            oldButtonsParams: Array<AppBarButtonParam>?,
+            newButtonsParams: Array<AppBarButtonParam>?,
+            buttonsList: LinkedList<AppCompatTextView>
+    ) {
+        val countDiff = (oldButtonsParams?.size ?: 0) - (newButtonsParams?.size ?: 0)
+
+        if (countDiff >= 0) {
+            repeat(countDiff) {
+                removeView(buttonsList.removeLast())
+            }
+        } else if (countDiff < 0) {
+            repeat(abs(countDiff)) {
+                buttonsList.addFirst(createButton())
+            }
+        }
+
+        buttonsList.forEachIndexed { index, it ->
+            configureButton(it, newButtonsParams!![index])
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -172,9 +190,13 @@ class AppBar : ViewGroup, View.OnClickListener {
                 freeWidth -= marginBetweenViewsAndButtons
             }
 
-            val widthSpec = MeasureSpec.makeMeasureSpec(freeWidth, MeasureSpec.AT_MOST)
+            val widthSpec = MeasureSpec.makeMeasureSpec(freeWidth, if (viewAtRight!!.layoutParams.width == LayoutParams.MATCH_PARENT) {
+                MeasureSpec.EXACTLY
+            } else {
+                MeasureSpec.AT_MOST
+            })
 
-            measureChild(viewAtRight, widthSpec, heightMeasureSpec)
+            viewAtRight!!.measure(widthSpec, heightMeasureSpec)
             freeWidth -= viewAtRight!!.measuredWidth
         }
 
@@ -183,9 +205,17 @@ class AppBar : ViewGroup, View.OnClickListener {
                 freeWidth -= marginBetweenViewsAndButtons
             }
 
-            val widthSpec = MeasureSpec.makeMeasureSpec(freeWidth, MeasureSpec.AT_MOST)
+            if (buttonsAtRight.isNotEmpty() && viewAtRight == null) {
+                freeWidth -= marginBetweenViewsAndButtons
+            }
 
-            measureChild(viewAtLeft, widthSpec, heightMeasureSpec)
+            val widthSpec = MeasureSpec.makeMeasureSpec(freeWidth, if (viewAtLeft!!.layoutParams.width == LayoutParams.MATCH_PARENT) {
+                MeasureSpec.EXACTLY
+            } else {
+                MeasureSpec.AT_MOST
+            })
+
+            viewAtLeft!!.measure(widthSpec, heightMeasureSpec)
             freeWidth -= viewAtLeft!!.measuredWidth
         }
 

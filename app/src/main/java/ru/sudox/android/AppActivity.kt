@@ -81,7 +81,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
 
     override fun getActivityComponent(): CoreActivityComponent {
         if (activityComponent == null) {
-            appBarManager = AppBarManagerImpl(appLayout!!.contentLayout.appBarLayout, loaderComponent!!.sudoxApi()).apply { onStart() }
+            appBarManager = AppBarManagerImpl(this, appLayout!!.contentLayout.appBarLayout, loaderComponent!!.sudoxApi()).apply { onStart() }
             activityComponent = loaderComponent!!.activityComponent(CoreActivityModule(navigationManager!!, appBarManager!!))
         }
 

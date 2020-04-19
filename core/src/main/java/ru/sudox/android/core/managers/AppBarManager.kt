@@ -31,6 +31,22 @@ interface AppBarManager {
     fun toggleLoading(toggle: Boolean)
 
     /**
+     * Переключает поиск.
+     * Меняет VO AppBar'а
+     *
+     * @param toggle Включить поиск?
+     */
+    fun toggleSearch(toggle: Boolean)
+
+    /**
+     * Определяет включенность поиска?
+     *
+     * @return True если поиск включен,
+     * False если поиск выключен.
+     */
+    fun isSearchEnabled(): Boolean
+
+    /**
      * Вызывается при создании Activity
      */
     fun onStart()
