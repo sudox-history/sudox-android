@@ -24,9 +24,11 @@ class CountrySelectController : ViewListController<CountrySelectAdapter>() {
         viewModel = getViewModel()
         viewModel!!.apply {
             searchLiveData.observe(this@CountrySelectController, Observer {
-                DiffUtil
-                        .calculateDiff(CountrySelectDiffCallback(adapter!!.countries!!, it))
-                        .dispatchUpdatesTo(adapter!!)
+                if (adapter!!.countries != null) {
+                    DiffUtil
+                            .calculateDiff(CountrySelectDiffCallback(adapter!!.countries!!, it))
+                            .dispatchUpdatesTo(adapter!!)
+                }
 
                 adapter!!.countries = it
             })
