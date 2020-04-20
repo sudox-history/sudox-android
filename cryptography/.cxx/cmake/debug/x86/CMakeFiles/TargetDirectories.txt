@@ -1,0 +1,3 @@
+C:/Users/kotli/Documents/Projects/sudox-android/cryptography/.cxx/cmake/debug/x86/CMakeFiles/libcryptography.dir
+C:/Users/kotli/Documents/Projects/sudox-android/cryptography/.cxx/cmake/debug/x86/CMakeFiles/edit_cache.dir
+C:/Users/kotli/Documents/Projects/sudox-android/cryptography/.cxx/cmake/debug/x86/CMakeFiles/rebuild_cache.dir

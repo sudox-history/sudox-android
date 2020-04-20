@@ -1,0 +1,42 @@
+{
+  "stringTable": {
+    "0": "C:/Users/kotli/Documents/Projects/sudox-android/cryptography/.cxx/cmake/debug/x86",
+    "1": "--target=i686-none-linux-android21 --gcc-toolchain=C:/Users/kotli/AppData/Local/Android/Sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/windows-x86_64 --sysroot=C:/Users/kotli/AppData/Local/Android/Sdk/ndk/21.1.6352462/toolchains/llvm/prebuilt/windows-x86_64/sysroot -Dlibcryptography_EXPORTS -IC:/Users/kotli/Documents/Projects/sudox-android/cryptography/src/main/jni/. -isystem C:/Users/kotli/Documents/Projects/sudox-android/cryptography/src/main/jni/includes/x86 -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -O0 -fno-limit-debug-info -fPIC"
+  },
+  "buildFiles": [
+    "C:\\Users\\kotli\\AppData\\Local\\Android\\Sdk\\ndk\\21.1.6352462\\build\\cmake\\android.toolchain.cmake",
+    "C:\\Users\\kotli\\Documents\\Projects\\sudox-android\\cryptography\\src\\main\\jni\\CMakeLists.txt",
+    "C:\\Users\\kotli\\AppData\\Local\\Android\\Sdk\\ndk\\21.1.6352462\\build\\cmake\\platforms.cmake"
+  ],
+  "cleanCommands": [
+    "C:\\Users\\kotli\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"C:\\Users\\kotli\\Documents\\Projects\\sudox-android\\cryptography\\.cxx\\cmake\\debug\\x86\" clean"
+  ],
+  "buildTargetsCommand": "C:\\Users\\kotli\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe  -C \"C:\\Users\\kotli\\Documents\\Projects\\sudox-android\\cryptography\\.cxx\\cmake\\debug\\x86\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "libcryptography-Debug-x86": {
+      "buildCommand": "C:\\Users\\kotli\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"C:\\Users\\kotli\\Documents\\Projects\\sudox-android\\cryptography\\.cxx\\cmake\\debug\\x86\" libcryptography",
+      "buildType": "debug",
+      "toolchain": "604889967",
+      "abi": "x86",
+      "artifactName": "libcryptography",
+      "files": [
+        {
+          "src": "C:\\Users\\kotli\\Documents\\Projects\\sudox-android\\cryptography\\src\\main\\jni\\Main.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "C:\\Users\\kotli\\Documents\\Projects\\sudox-android\\cryptography\\build\\intermediates\\cmake\\debug\\obj\\x86\\liblibcryptography.so"
+    }
+  },
+  "toolchains": {
+    "604889967": {
+      "cppCompilerExecutable": "C:\\Users\\kotli\\AppData\\Local\\Android\\Sdk\\ndk\\21.1.6352462\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}
