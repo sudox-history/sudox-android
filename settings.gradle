@@ -26,6 +26,7 @@ include ':auth:ui'
 include ':auth:data'
 
 include ':core'
+include ':cryptography'
 
 include ':people'
 include ':people:activitytab'

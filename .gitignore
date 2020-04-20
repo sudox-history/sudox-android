@@ -12,3 +12,4 @@
 .externalNativeBuild
 configs/passwords.gradle
 app/release
+.cxx

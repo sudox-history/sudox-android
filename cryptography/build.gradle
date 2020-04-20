@@ -1,0 +1,12 @@
+apply from: '../configs/dependencies.gradle'
+apply from: '../configs/common.gradle'
+
+registerModule(false, false, false, true)
+
+android {
+    externalNativeBuild {
+        cmake {
+            path file('src/main/jni/CMakeLists.txt')
+        }
+    }
+}
