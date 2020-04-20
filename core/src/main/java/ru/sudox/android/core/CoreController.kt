@@ -23,6 +23,7 @@ import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.APPBAR_BACK_BUTTON_TAG
 import ru.sudox.design.appbar.vos.APPBAR_SEARCH_BUTTON_TAG
+import ru.sudox.design.appbar.vos.others.APPBAR_SEARCH_CANCEL_BUTTON_TAG
 import ru.sudox.design.common.hideSoftKeyboard
 import javax.inject.Inject
 
@@ -115,7 +116,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
         }
     }
 
-    open fun onSearchRequest(text: String) {
+    open fun onSearchRequest(text: String?) {
     }
 
     open fun onAppBarClicked(tag: Int) {
@@ -128,6 +129,8 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
             }
         } else if (tag == APPBAR_SEARCH_BUTTON_TAG) {
             searchManager!!.toggleSearch(true, callback = ::onAppBarClicked, searchCallback = ::onSearchRequest)
+        } else if (tag == APPBAR_SEARCH_CANCEL_BUTTON_TAG) {
+            searchManager!!.resetSearch()
         }
     }
 

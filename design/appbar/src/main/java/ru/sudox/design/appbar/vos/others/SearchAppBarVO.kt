@@ -13,7 +13,7 @@ const val APPBAR_SEARCH_CANCEL_BUTTON_TAG = 3
 
 class SearchAppBarVO(
         val editTextId: Int = View.NO_ID,
-        val searchCallback: ((String) -> (Unit))
+        val searchCallback: ((String?) -> (Unit))
 ) : AppBarVO {
 
     var searchEditText: AppCompatEditText? = null

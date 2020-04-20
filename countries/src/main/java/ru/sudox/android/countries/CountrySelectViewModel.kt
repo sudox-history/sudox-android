@@ -12,7 +12,11 @@ class CountrySelectViewModel @Inject constructor() : CoreViewModel() {
     val searchLiveData = MutableLiveData<List<CountryVO>>()
     val countriesLiveData = MutableLiveData<List<CountryVO>>()
 
-    fun loadCountries(context: Context) {
+    fun loadCountries(context: Context, resetSearch: Boolean) {
+        if (resetSearch) {
+            searchLiveData.value = null
+        }
+
         if (searchLiveData.value == null) {
             countriesLiveData.postValue(COUNTRIES.values.sortedBy {
                 it.getName(context)

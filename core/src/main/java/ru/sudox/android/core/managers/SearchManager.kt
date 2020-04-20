@@ -17,7 +17,13 @@ interface SearchManager {
     fun toggleSearch(toggle: Boolean,
                      editTextId: Int = View.NO_ID,
                      callback: ((Int) -> Unit)? = null,
-                     searchCallback: ((String) -> (Unit))? = null)
+                     searchCallback: ((String?) -> (Unit))? = null)
+
+    /**
+     * Сбрасывает поиск.
+     * Заново открывает клавиатуру, очищает поле ввода запроса.
+     */
+    fun resetSearch()
 
     /**
      * Определяет включенность поиска?
@@ -41,5 +47,5 @@ interface SearchManager {
      * @param callback Функция для обратного вызова
      * @param searchCallback Функция для обратного вызова поиска
      */
-    fun restoreSearchState(bundle: Bundle?, callback: ((Int) -> Unit)? = null, searchCallback: ((String) -> (Unit))? = null)
+    fun restoreSearchState(bundle: Bundle?, callback: ((Int) -> Unit)? = null, searchCallback: ((String?) -> (Unit))? = null)
 }

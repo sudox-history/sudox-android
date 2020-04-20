@@ -24,13 +24,15 @@ class CountrySelectController : ViewListController<CountrySelectAdapter>() {
         viewModel = getViewModel()
         viewModel!!.apply {
             searchLiveData.observe(this@CountrySelectController, Observer {
-                if (adapter!!.countries != null) {
-                    DiffUtil
-                            .calculateDiff(CountrySelectDiffCallback(adapter!!.countries!!, it))
-                            .dispatchUpdatesTo(adapter!!)
-                }
+                if (it != null) {
+                    if (adapter!!.countries != null) {
+                        DiffUtil
+                                .calculateDiff(CountrySelectDiffCallback(adapter!!.countries!!, it))
+                                .dispatchUpdatesTo(adapter!!)
+                    }
 
-                adapter!!.countries = it
+                    adapter!!.countries = it
+                }
             })
 
             countriesLiveData.observe(this@CountrySelectController, Observer {
@@ -38,7 +40,7 @@ class CountrySelectController : ViewListController<CountrySelectAdapter>() {
                 adapter!!.notifyDataSetChanged()
             })
 
-            loadCountries(activity!!)
+            loadCountries(activity!!, false)
         }
     }
 
@@ -51,7 +53,11 @@ class CountrySelectController : ViewListController<CountrySelectAdapter>() {
         }
     }
 
-    override fun onSearchRequest(text: String) {
-        viewModel!!.searchStartsWith(activity!!, text)
+    override fun onSearchRequest(text: String?) {
+        if (text != null) {
+            viewModel!!.searchStartsWith(activity!!, text)
+        } else {
+            viewModel!!.loadCountries(activity!!, true)
+        }
     }
 }

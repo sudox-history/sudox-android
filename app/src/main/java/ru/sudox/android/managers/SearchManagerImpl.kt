@@ -19,7 +19,7 @@ class SearchManagerImpl(
         val activity: Activity
 ) : SearchManager {
 
-    override fun toggleSearch(toggle: Boolean, editTextId: Int, callback: ((Int) -> Unit)?, searchCallback: ((String) -> (Unit))?) {
+    override fun toggleSearch(toggle: Boolean, editTextId: Int, callback: ((Int) -> Unit)?, searchCallback: ((String?) -> (Unit))?) {
         if (toggle == isSearchEnabled()) {
             return
         }
@@ -40,8 +40,17 @@ class SearchManagerImpl(
                 activity.hideSoftKeyboard()
             }
 
+            vo.searchCallback(null) // Сбрасываем поиск
             appBarManager.onlyStoreChanges(false)
         }
+    }
+
+    override fun resetSearch() {
+        val vo = appBarLayout.appBar!!.vo as SearchAppBarVO
+
+        appBarLayout.post { vo.searchEditText!!.showSoftKeyboard() }
+        vo.searchEditText!!.text = null
+        vo.searchCallback(null) // Сбрасываем поиск
     }
 
     override fun isSearchEnabled(): Boolean {
@@ -56,7 +65,7 @@ class SearchManagerImpl(
         }
     }
 
-    override fun restoreSearchState(bundle: Bundle?, callback: ((Int) -> Unit)?, searchCallback: ((String) -> (Unit))?) {
+    override fun restoreSearchState(bundle: Bundle?, callback: ((Int) -> Unit)?, searchCallback: ((String?) -> (Unit))?) {
         if (bundle == null) {
             toggleSearch(false)
         } else {
