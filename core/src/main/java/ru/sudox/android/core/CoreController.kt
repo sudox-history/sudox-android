@@ -63,7 +63,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
             return view!!
         }
 
-        searchManager!!.restoreSearchState(savedViewState, callback = ::onAppBarClicked)
+        searchManager!!.restoreSearchState(savedViewState, callback = ::onAppBarClicked, searchCallback = ::onSearchRequest)
 
         return createView(container, savedViewState).apply {
             id = savedViewState?.getInt(CORE_CONTROLLER_ROOT_VIEW_ID_KEY, View.generateViewId()) ?: View.generateViewId()
@@ -115,6 +115,9 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
         }
     }
 
+    open fun onSearchRequest(text: String) {
+    }
+
     open fun onAppBarClicked(tag: Int) {
         if (tag == APPBAR_BACK_BUTTON_TAG) {
             if (searchManager!!.isSearchEnabled()) {
@@ -124,7 +127,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
                 activity!!.onKeyDown(KeyEvent.KEYCODE_BACK, null)
             }
         } else if (tag == APPBAR_SEARCH_BUTTON_TAG) {
-            searchManager!!.toggleSearch(true, callback = ::onAppBarClicked)
+            searchManager!!.toggleSearch(true, callback = ::onAppBarClicked, searchCallback = ::onSearchRequest)
         }
     }
 
@@ -142,7 +145,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
         viewModelStore.clear()
 
         if (searchManager!!.isSearchEnabled()) {
-            searchManager!!.toggleSearch(false, callback = ::onAppBarClicked)
+            searchManager!!.toggleSearch(false)
         }
     }
 

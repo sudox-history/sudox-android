@@ -46,19 +46,9 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
                         viewList!!.scrollToPosition(0)
                     }
                 }
-
-                stickyLetters = buildStickyLettersMap()
             }
 
-            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
-                stickyLetters = buildStickyLettersMap()
-            }
-
-            override fun onItemRangeMoved(fromPosition: Int, toPosition: Int, itemCount: Int) {
-                stickyLetters = buildStickyLettersMap()
-            }
-
-            override fun onItemRangeChanged(positionStart: Int, itemCount: Int) {
+            override fun onChanged() {
                 stickyLetters = buildStickyLettersMap()
             }
         }

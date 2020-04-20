@@ -19,7 +19,7 @@ class SearchManagerImpl(
         val activity: Activity
 ) : SearchManager {
 
-    override fun toggleSearch(toggle: Boolean, editTextId: Int, callback: ((Int) -> Unit)?) {
+    override fun toggleSearch(toggle: Boolean, editTextId: Int, callback: ((Int) -> Unit)?, searchCallback: ((String) -> (Unit))?) {
         if (toggle == isSearchEnabled()) {
             return
         }
@@ -28,7 +28,7 @@ class SearchManagerImpl(
             appBarManager.onlyStoreChanges(true)
             appBarManager.setVO(appBarLayout.appBar!!.vo, appBarLayout.appBar!!.callback)
 
-            val searchVO = SearchAppBarVO(editTextId)
+            val searchVO = SearchAppBarVO(editTextId, searchCallback!!)
 
             appBarLayout.appBar!!.vo = searchVO
             appBarLayout.appBar!!.callback = callback
@@ -56,14 +56,14 @@ class SearchManagerImpl(
         }
     }
 
-    override fun restoreSearchState(bundle: Bundle?, callback: ((Int) -> Unit)?) {
+    override fun restoreSearchState(bundle: Bundle?, callback: ((Int) -> Unit)?, searchCallback: ((String) -> (Unit))?) {
         if (bundle == null) {
             toggleSearch(false)
         } else {
             val toggle = bundle.getBoolean(SEARCHMANAGER_IS_SEARCH_ENABLED_KEY, false)
             val editTextId = bundle.getInt(SEARCHMANAGER_SEARCH_EDITTEXT_ID, View.NO_ID)
 
-            toggleSearch(toggle, editTextId, callback)
+            toggleSearch(toggle, editTextId, callback, searchCallback)
         }
     }
 }

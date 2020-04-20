@@ -8,7 +8,7 @@ import ru.sudox.design.appbar.vos.APPBAR_BACK_BUTTON_PARAMS
 import ru.sudox.design.appbar.vos.others.AppBarButtonParam
 import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 
-const val AUTH_PHONE_NEXT_BUTTON_TAG = 2
+const val AUTH_PHONE_NEXT_BUTTON_TAG = 3
 
 class AuthPhoneAppBarVO : AppBarVO {
 

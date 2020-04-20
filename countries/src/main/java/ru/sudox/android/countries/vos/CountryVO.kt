@@ -1,5 +1,6 @@
 package ru.sudox.android.countries.vos
 
+import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
@@ -25,6 +26,10 @@ data class CountryVO(
             parcel.readInt(),
             parcel.readInt(),
             parcel.readInt()) {
+    }
+
+    fun getName(context: Context): String {
+        return context.getString(nameId)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

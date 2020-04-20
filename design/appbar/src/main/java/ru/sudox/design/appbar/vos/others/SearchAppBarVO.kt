@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.widget.addTextChangedListener
 import ru.sudox.design.appbar.R
 import ru.sudox.design.appbar.vos.APPBAR_BACK_BUTTON_PARAMS
 import ru.sudox.design.appbar.vos.AppBarVO
@@ -11,7 +12,8 @@ import ru.sudox.design.appbar.vos.AppBarVO
 const val APPBAR_SEARCH_CANCEL_BUTTON_TAG = 3
 
 class SearchAppBarVO(
-        val editTextId: Int = View.NO_ID
+        val editTextId: Int = View.NO_ID,
+        val searchCallback: ((String) -> (Unit))
 ) : AppBarVO {
 
     var searchEditText: AppCompatEditText? = null
@@ -43,6 +45,8 @@ class SearchAppBarVO(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             )
+
+            addTextChangedListener { searchCallback(it.toString()) }
         }
 
         return searchEditText

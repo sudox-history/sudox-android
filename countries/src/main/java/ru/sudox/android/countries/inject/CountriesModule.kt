@@ -5,7 +5,7 @@ import dagger.Provides
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import javax.inject.Singleton
 
-@Module
+@Module(includes = [CountriesUiModule::class])
 class CountriesModule(phoneNumberUtil: PhoneNumberUtil) {
 
     val phoneNumberUtil: PhoneNumberUtil = phoneNumberUtil
