@@ -8,7 +8,7 @@ import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 import ru.sudox.android.auth.ui.R
 import ru.sudox.design.appbar.vos.others.AppBarButtonParam
 
-const val AUTH_SIGN_UP_FINISH_BUTTON_TAG = 3
+const val AUTH_SIGN_UP_FINISH_BUTTON_TAG = 4
 
 class AuthSignUpAppBarVO : AppBarVO {
 
