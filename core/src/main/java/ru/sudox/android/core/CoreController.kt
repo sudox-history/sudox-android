@@ -147,8 +147,8 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
     override fun onDestroy() {
         viewModelStore.clear()
 
-        if (searchManager!!.isSearchEnabled()) {
-            searchManager!!.toggleSearch(false)
+        if (searchManager?.isSearchEnabled() == true) {
+            searchManager?.toggleSearch(false)
         }
     }
 
