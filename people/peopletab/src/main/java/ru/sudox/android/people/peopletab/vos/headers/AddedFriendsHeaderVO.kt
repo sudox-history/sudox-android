@@ -2,6 +2,7 @@ package ru.sudox.android.people.peopletab.vos.headers
 
 import android.content.Context
 import android.os.Parcel
+import android.os.Parcelable
 import ru.sudox.design.popup.vos.PopupItemVO
 import ru.sudox.design.popup.vos.PopupItemWithDrawableIconVO
 import ru.sudox.design.viewlist.vos.ViewListHeaderVO
@@ -24,7 +25,6 @@ class AddedFriendsHeaderVO : ViewListHeaderVO {
 
     override var type = ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE
 
-    @Suppress("unused")
     constructor(source: Parcel) : super(source)
     constructor() : super() {
         selectedFunctionButtonToggleTags = intArrayOf(IMPORTANCE_OPTION_TAG, FAVORITE_OPTION_TAG)
@@ -90,5 +90,15 @@ class AddedFriendsHeaderVO : ViewListHeaderVO {
 
     override fun canSortItems(): Boolean {
         return true
+    }
+
+    companion object CREATOR : Parcelable.Creator<ViewListHeaderVO> {
+        override fun createFromParcel(source: Parcel): ViewListHeaderVO {
+            return AddedFriendsHeaderVO(source)
+        }
+
+        override fun newArray(size: Int): Array<ViewListHeaderVO?> {
+            return arrayOfNulls(size)
+        }
     }
 }

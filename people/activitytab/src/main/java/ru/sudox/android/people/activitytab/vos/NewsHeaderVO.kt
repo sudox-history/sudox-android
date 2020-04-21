@@ -2,6 +2,7 @@ package ru.sudox.android.people.activitytab.vos
 
 import android.content.Context
 import android.os.Parcel
+import android.os.Parcelable
 import ru.sudox.design.popup.vos.PopupItemVO
 import ru.sudox.design.popup.vos.PopupItemWithoutIconVO
 import ru.sudox.design.viewlist.vos.ViewListHeaderVO
@@ -36,5 +37,15 @@ class NewsHeaderVO : ViewListHeaderVO {
 
     override fun canHideItems(): Boolean {
         return false
+    }
+
+    companion object CREATOR : Parcelable.Creator<ViewListHeaderVO> {
+        override fun createFromParcel(source: Parcel): ViewListHeaderVO {
+            return NewsHeaderVO(source)
+        }
+
+        override fun newArray(size: Int): Array<ViewListHeaderVO?> {
+            return arrayOfNulls(size)
+        }
     }
 }

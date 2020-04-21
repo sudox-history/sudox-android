@@ -128,9 +128,11 @@ abstract class ViewListHeaderVO() : Parcelable {
 
     companion object CREATOR : Parcelable.Creator<ViewListHeaderVO> {
         override fun createFromParcel(source: Parcel): ViewListHeaderVO {
-            return Class.forName(source.readString()!!)
-                    .getDeclaredConstructor(Parcel::class.java)
-                    .newInstance(source) as ViewListHeaderVO
+            val creator = Class.forName(source.readString()!!)
+                    .getDeclaredField("CREATOR")
+                    .get(null) as Parcelable.Creator<*>
+
+            return creator.createFromParcel(source) as ViewListHeaderVO
         }
 
         override fun newArray(size: Int): Array<ViewListHeaderVO?> {
