@@ -2,6 +2,8 @@ package ru.sudox.android.layouts
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.view.View
+import ru.sudox.android.countries.vos.CountryVO
 import ru.sudox.design.saveableview.SaveableViewState
 
 class AppLayoutState : SaveableViewState<AppLayout> {
@@ -17,6 +19,7 @@ class AppLayoutState : SaveableViewState<AppLayout> {
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         super.writeToParcel(out, flags)
+        out.writeInt(contentLayoutId)
         out.writeInt(navigationBarId)
     }
 
@@ -28,5 +31,15 @@ class AppLayoutState : SaveableViewState<AppLayout> {
     override fun writeToView(view: AppLayout) {
         view.contentLayout.id = contentLayoutId
         view.bottomNavigationView.id = navigationBarId
+    }
+
+    companion object CREATOR : Parcelable.Creator<AppLayoutState> {
+        override fun createFromParcel(parcel: Parcel): AppLayoutState {
+            return AppLayoutState(parcel)
+        }
+
+        override fun newArray(size: Int): Array<AppLayoutState?> {
+            return arrayOfNulls(size)
+        }
     }
 }

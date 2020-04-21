@@ -29,4 +29,14 @@ class ViewListState : SaveableViewState<ViewList> {
     override fun writeToView(view: ViewList) {
         (view.adapter as? ViewListAdapter<*>)?.headersVOs = headersVOs
     }
+
+    companion object CREATOR : Parcelable.Creator<ViewListState> {
+        override fun createFromParcel(parcel: Parcel): ViewListState {
+            return ViewListState(parcel)
+        }
+
+        override fun newArray(size: Int): Array<ViewListState?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

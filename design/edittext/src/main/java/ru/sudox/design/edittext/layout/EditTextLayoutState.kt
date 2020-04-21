@@ -26,4 +26,14 @@ class EditTextLayoutState : SaveableViewState<EditTextLayout> {
     override fun writeToView(view: EditTextLayout) {
         (view.childView as View).id = childId
     }
+
+    companion object CREATOR : Parcelable.Creator<EditTextLayoutState> {
+        override fun createFromParcel(parcel: Parcel): EditTextLayoutState {
+            return EditTextLayoutState(parcel)
+        }
+
+        override fun newArray(size: Int): Array<EditTextLayoutState?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

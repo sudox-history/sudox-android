@@ -29,4 +29,14 @@ class CodeEditTextState : SaveableViewState<CodeEditText> {
             view.digitEditTexts!![index].id = id
         }
     }
+
+    companion object CREATOR : Parcelable.Creator<CodeEditTextState> {
+        override fun createFromParcel(parcel: Parcel): CodeEditTextState {
+            return CodeEditTextState(parcel)
+        }
+
+        override fun newArray(size: Int): Array<CodeEditTextState?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

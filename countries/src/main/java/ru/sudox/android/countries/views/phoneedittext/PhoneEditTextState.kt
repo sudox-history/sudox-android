@@ -12,7 +12,7 @@ class PhoneEditTextState : SaveableViewState<PhoneEditText> {
 
     constructor(superState: Parcelable) : super(superState)
     constructor(source: Parcel) : super(source) {
-        countryVO = source.readParcelable(CountryVO::class.java.classLoader)
+//        countryVO = source.readParcelable(CountryVO::class.java.classLoader)
         editTextId = source.readInt()
     }
 
@@ -20,7 +20,7 @@ class PhoneEditTextState : SaveableViewState<PhoneEditText> {
         super.writeToParcel(out, flags)
 
         out.let {
-            it.writeParcelable(countryVO, 0)
+//            it.writeParcelable(countryVO, 0)
             it.writeInt(editTextId)
         }
     }
@@ -33,5 +33,15 @@ class PhoneEditTextState : SaveableViewState<PhoneEditText> {
     override fun writeToView(view: PhoneEditText) {
         view.vo = countryVO
         view.editText.id = editTextId
+    }
+
+    companion object CREATOR : Parcelable.Creator<PhoneEditTextState> {
+        override fun createFromParcel(parcel: Parcel): PhoneEditTextState {
+            return PhoneEditTextState(parcel)
+        }
+
+        override fun newArray(size: Int): Array<PhoneEditTextState?> {
+            return arrayOfNulls(size)
+        }
     }
 }

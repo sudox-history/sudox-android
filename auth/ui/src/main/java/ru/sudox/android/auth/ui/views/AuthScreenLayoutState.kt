@@ -29,4 +29,14 @@ class AuthScreenLayoutState : SaveableViewState<AuthScreenLayout> {
             view.childViews!![index].id = id
         }
     }
+
+    companion object CREATOR : Parcelable.Creator<AuthScreenLayoutState> {
+        override fun createFromParcel(parcel: Parcel): AuthScreenLayoutState {
+            return AuthScreenLayoutState(parcel)
+        }
+
+        override fun newArray(size: Int): Array<AuthScreenLayoutState?> {
+            return arrayOfNulls(size)
+        }
+    }
 }
