@@ -9,7 +9,7 @@ public class NativeHelper {
      */
     public static void loadMethods() {
         try {
-            System.loadLibrary("libcryptography");
+            System.loadLibrary("cryptography");
         } catch (Exception e) {
             Log.e("Sudox Cryptography", "Couldn't load cryptography library", e);
         }
