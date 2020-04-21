@@ -1,6 +1,7 @@
 package ru.sudox.android.people.activitytab.vos
 
 import android.content.Context
+import android.os.Parcel
 import ru.sudox.design.popup.vos.PopupItemVO
 import ru.sudox.design.popup.vos.PopupItemWithoutIconVO
 import ru.sudox.design.viewlist.vos.ViewListHeaderVO
@@ -10,9 +11,12 @@ import ru.sudox.android.people.activitytab.adapters.MOMENTS_HEADER_TYPE
 /**
  * ViewObject для секции моментов
  */
-class MomentsHeaderVO : ViewListHeaderVO() {
+class MomentsHeaderVO : ViewListHeaderVO {
 
     override var type: Int = MOMENTS_HEADER_TYPE
+
+    constructor() : super()
+    constructor(source: Parcel) : super(source)
 
     override fun getToggleOptions(context: Context): List<PopupItemVO<*>> {
         return listOf(PopupItemWithoutIconVO(0, context.getString(R.string.moments), selectedToggleTag == 0))

@@ -2,31 +2,46 @@ package ru.sudox.design.viewlist
 
 import android.os.Parcel
 import android.os.Parcelable
-import ru.sudox.design.saveableview.SaveableViewState
+import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.design.viewlist.vos.ViewListHeaderVO
 
-class ViewListState : SaveableViewState<ViewList> {
+val EMPTY_STATE = object : ViewListState() {}
 
+open class ViewListState : Parcelable {
+
+    var superState: Parcelable? = null
     var headersVOs: Array<ViewListHeaderVO>? = null
 
-    constructor(superState: Parcelable) : super(superState)
-    constructor(source: Parcel) : super(source) {
-        headersVOs = source.createTypedArray(ViewListHeaderVO.CREATOR)
+    constructor()
+    constructor(superState: Parcelable) {
+        this.superState = if (superState != EMPTY_STATE) {
+            superState
+        } else {
+            null
+        }
+    }
+
+    constructor(input: Parcel) : this(input.readParcelable(RecyclerView::class.java.classLoader) ?: EMPTY_STATE) {
+        headersVOs = input.createTypedArray(ViewListHeaderVO.CREATOR)
     }
 
     override fun writeToParcel(out: Parcel, flags: Int) {
-        super.writeToParcel(out, flags)
+        out.writeParcelable(superState, flags)
         out.writeTypedArray(headersVOs, 0)
     }
 
-    override fun readFromView(view: ViewList) {
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    fun readFromView(view: ViewList) {
         (view.adapter as? ViewListAdapter<*>)?.let {
             it.saveNestedRecyclerViewsState()
             headersVOs = it.headersVOs
         }
     }
 
-    override fun writeToView(view: ViewList) {
+    fun writeToView(view: ViewList) {
         (view.adapter as? ViewListAdapter<*>)?.headersVOs = headersVOs
     }
 

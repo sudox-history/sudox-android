@@ -34,6 +34,7 @@ abstract class ViewListHeaderVO() : Parcelable {
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.let {
+            it.writeString(javaClass.name)
             writeBoolean(it, isItemsHidden)
             writeBoolean(it, isContentLoading)
             writeBoolean(it, isInClearLoading)
