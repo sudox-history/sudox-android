@@ -18,7 +18,6 @@ class ContentLayout : CoordinatorLayout {
 
     @Suppress("unused")
     val appBarLayout = AppBarLayout(context).apply {
-        id = View.generateViewId()
         fitsSystemWindows = true
         layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         appBar = AppBar(context).apply { id = View.generateViewId() }
@@ -27,7 +26,6 @@ class ContentLayout : CoordinatorLayout {
     }
 
     val frameLayout = ChangeHandlerFrameLayout(context).apply {
-        id = View.generateViewId()
         layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT).apply {
             behavior = com.google.android.material.appbar.AppBarLayout.ScrollingViewBehavior()
         }

@@ -9,6 +9,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.sudox.android.layouts.content.ContentLayout
 
 const val APPBARLAYOUT_ID_KEY = "appbarlayout_id"
+const val FRAMELAYOUT_ID_KEY = "framelayout_id"
 
 /**
  * Layout, содержащий ContentLayout и BottomNavigationView.
@@ -45,8 +46,10 @@ class AppLayout : ViewGroup {
     fun init(savedInstanceState: Bundle?) {
         if (savedInstanceState?.containsKey(APPBARLAYOUT_ID_KEY) == true) {
             contentLayout.appBarLayout.id = savedInstanceState.getInt(APPBARLAYOUT_ID_KEY)
+            contentLayout.frameLayout.id = savedInstanceState.getInt(FRAMELAYOUT_ID_KEY)
         } else {
             contentLayout.appBarLayout.id = View.generateViewId()
+            contentLayout.frameLayout.id = View.generateViewId()
         }
     }
 
@@ -57,6 +60,7 @@ class AppLayout : ViewGroup {
      */
     fun saveIds(outState: Bundle) = outState.let {
         it.putInt(APPBARLAYOUT_ID_KEY, contentLayout.appBarLayout.id)
+        it.putInt(FRAMELAYOUT_ID_KEY, contentLayout.frameLayout.id)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
