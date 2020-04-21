@@ -10,3 +10,10 @@ android {
         }
     }
 }
+
+dependencies {
+    implementation libraries.annotations
+
+    androidTestImplementation libraries.junit
+    androidTestImplementation libraries.runner
+}
