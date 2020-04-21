@@ -7,6 +7,7 @@ import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
+import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
@@ -15,7 +16,6 @@ class ViewListStickyDecorator(
 ) : RecyclerView.ItemDecoration() {
 
     private val letterBounds = Rect()
-    private var letterMaxWidth = 0
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         val letterX = list.initialPaddingLeft.toFloat()
@@ -72,10 +72,9 @@ class ViewListStickyDecorator(
 
         if (letter != null) {
             list.letterPaint.getTextBounds(letter, 0, letter.length, letterBounds)
-            letterMaxWidth = max(letterBounds.width(), letterMaxWidth)
             outRect.top += letterBounds.height() + list.letterPaddingTop
         }
 
-        view.updatePadding(left = list.initialPaddingLeft + letterMaxWidth + list.letterPaddingRight)
+        view.updatePadding(left = list.initialPaddingLeft + ceil(list.letterPaint.textSize).toInt() + list.letterPaddingRight)
     }
 }

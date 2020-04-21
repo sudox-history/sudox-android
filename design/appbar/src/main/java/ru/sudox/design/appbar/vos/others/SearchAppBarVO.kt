@@ -47,6 +47,7 @@ class SearchAppBarVO(
             )
 
             addTextChangedListener { searchCallback(it.toString()) }
+            setHint(R.string.search)
         }
 
         return searchEditText
