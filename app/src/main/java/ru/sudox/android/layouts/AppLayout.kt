@@ -2,15 +2,12 @@ package ru.sudox.android.layouts
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import ru.sudox.design.saveableview.SaveableViewGroup
 import ru.sudox.android.layouts.content.ContentLayout
 
-const val LAYOUT_VIEW_ID_KEY = "layout_view_id"
-const val FRAME_VIEW_ID_KEY = "frame_view_id"
 const val APPBARLAYOUT_ID_KEY = "appbarlayout_id"
 
 /**
@@ -19,16 +16,14 @@ const val APPBARLAYOUT_ID_KEY = "appbarlayout_id"
  *
  * NB! ID должны восстанавливаться в ручном режиме, т.е. в onCreate().
  */
-class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
+class AppLayout : ViewGroup {
 
     val contentLayout = ContentLayout(context).apply {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        id = View.generateViewId()
     }
 
     val bottomNavigationView = BottomNavigationView(context).apply {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        id = View.generateViewId()
     }
 
     constructor(context: Context) : super(context)
@@ -48,18 +43,10 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
      * @param savedInstanceState Сохраненое состояние
      */
     fun init(savedInstanceState: Bundle?) {
-        if (savedInstanceState?.containsKey(LAYOUT_VIEW_ID_KEY) == true) {
-            id = savedInstanceState.getInt(LAYOUT_VIEW_ID_KEY)
-
-            contentLayout
-                    .appBarLayout
-                    .id = savedInstanceState.getInt(APPBARLAYOUT_ID_KEY)
-
-            contentLayout
-                    .frameLayout
-                    .id = savedInstanceState.getInt(FRAME_VIEW_ID_KEY)
+        if (savedInstanceState?.containsKey(APPBARLAYOUT_ID_KEY) == true) {
+            contentLayout.appBarLayout.id = savedInstanceState.getInt(APPBARLAYOUT_ID_KEY)
         } else {
-            id = View.generateViewId()
+            contentLayout.appBarLayout.id = View.generateViewId()
         }
     }
 
@@ -70,8 +57,6 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
      */
     fun saveIds(outState: Bundle) = outState.let {
         it.putInt(APPBARLAYOUT_ID_KEY, contentLayout.appBarLayout.id)
-        it.putInt(FRAME_VIEW_ID_KEY, contentLayout.frameLayout.id)
-        it.putInt(LAYOUT_VIEW_ID_KEY, id)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -99,9 +84,5 @@ class AppLayout : SaveableViewGroup<AppLayout, AppLayoutState> {
         }
 
         contentLayout.layout(0, 0, contentLayout.measuredWidth, contentLayout.measuredHeight)
-    }
-
-    override fun createStateInstance(superState: Parcelable): AppLayoutState {
-        return AppLayoutState(superState)
     }
 }
