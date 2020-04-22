@@ -1,7 +1,9 @@
 package ru.sudox.design.appbar
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.util.AttributeSet
@@ -10,14 +12,23 @@ import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.updateLayoutParams
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 
 class CustomAppBarLayout : com.google.android.material.appbar.AppBarLayout {
 
     private var strokeWidth = 0
-    private var strokeAnimationDuration = 0
     private var strokeColor = 0
+    private var strokeShown = true
+    private var strokeAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
+        addUpdateListener {
+            val alpha = (255 * it.animatedValue as Float).toInt()
+            val current = ColorUtils.setAlphaComponent(strokeColor, alpha)
+
+            getStrokeDrawable().setStroke(strokeWidth, current)
+        }
+    }
 
     var appBar: AppBar? = null
         set(value) {
@@ -81,21 +92,37 @@ class CustomAppBarLayout : com.google.android.material.appbar.AppBarLayout {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.CustomAppBarLayout, defStyleAttr, 0).use {
-            strokeAnimationDuration = it.getIntegerOrThrow(R.styleable.CustomAppBarLayout_strokeAnimationDuration)
             strokeWidth = it.getDimensionPixelSizeOrThrow(R.styleable.CustomAppBarLayout_strokeWidth)
             strokeColor = it.getColorOrThrow(R.styleable.CustomAppBarLayout_strokeColor)
+            strokeAnimator.duration = it.getIntegerOrThrow(R.styleable.CustomAppBarLayout_strokeAnimationDuration).toLong()
         }
     }
 
     fun toggleStrokeShowing(toggle: Boolean, withAnimation: Boolean) {
-        val gradientDrawable = (background as LayerDrawable).getDrawable(0) as GradientDrawable
+        if (strokeShown == toggle) {
+            return
+        }
 
-        if (childCount > 1) {
-            gradientDrawable.setStroke(strokeWidth, strokeColor)
+        strokeShown = toggle
+
+        if (strokeAnimator!!.isRunning) {
+            strokeAnimator!!.cancel()
+        }
+
+        if (withAnimation) {
+            if (childCount > 1 || toggle) {
+                strokeAnimator!!.start()
+            } else {
+                strokeAnimator!!.reverse()
+            }
+        } else if (childCount > 1) {
+            getStrokeDrawable().setStroke(strokeWidth, strokeColor)
         } else if (toggle) {
-            gradientDrawable.setStroke(strokeWidth, strokeColor)
+            getStrokeDrawable().setStroke(strokeWidth, strokeColor)
         } else {
-            gradientDrawable.setStroke(0, strokeColor)
+            getStrokeDrawable().setStroke(strokeWidth, Color.TRANSPARENT)
         }
     }
+
+    private fun getStrokeDrawable() = (background as LayerDrawable).getDrawable(0) as GradientDrawable
 }
