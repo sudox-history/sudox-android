@@ -77,8 +77,12 @@ class AppBarManagerImpl(
         }
     }
 
-    override fun toggleElevation(toggle: Boolean, withAnimation: Boolean) {
-        appBarLayout.toggleStrokeShowing(toggle, withAnimation)
+    override fun requestElevationToggling(toggle: Boolean, animate: Boolean) {
+        if (appBarLayout.childCount > 1) {
+            appBarLayout.requestStrokeShowing(true, animate = false)
+        } else {
+            appBarLayout.requestStrokeShowing(toggle, animate = animate)
+        }
     }
 
     override fun toggleLoading(toggle: Boolean) {

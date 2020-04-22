@@ -14,9 +14,9 @@ abstract class ScrollableController : CoreController() {
         return RestorableScrollView(activity!!).apply {
             setOnScrollChangeListener { _, _, scrollY, _, _ ->
                 if (scrollY > 0) {
-                    appBarManager!!.toggleElevation(toggle = true, withAnimation = true)
+                    appBarManager!!.requestElevationToggling(toggle = true, animate = true)
                 } else {
-                    appBarManager!!.toggleElevation(toggle = false, withAnimation = true)
+                    appBarManager!!.requestElevationToggling(toggle = false, animate = true)
                 }
             }
 

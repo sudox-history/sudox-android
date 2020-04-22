@@ -105,7 +105,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
             appBarManager!!.setLayoutVO(appBarLayoutVO)
         }
 
-        appBarManager!!.toggleElevation(toggle = false, withAnimation = false)
+        appBarManager!!.requestElevationToggling(toggle = false, animate = false)
 
         if (navigationManager!!.isContentUsesAllLayout()) {
             view.requestApplyInsets()

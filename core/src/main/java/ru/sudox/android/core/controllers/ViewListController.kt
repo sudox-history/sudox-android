@@ -35,9 +35,9 @@ abstract class ViewListController<AT : ViewListAdapter<*>> : CoreController() {
             it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (it.getCurrentScrollY() > 0) {
-                        appBarManager!!.toggleElevation(toggle = true, withAnimation = true)
+                        appBarManager!!.requestElevationToggling(toggle = true, animate = true)
                     } else {
-                        appBarManager!!.toggleElevation(toggle = false, withAnimation = true)
+                        appBarManager!!.requestElevationToggling(toggle = false, animate = true)
                     }
                 }
             })

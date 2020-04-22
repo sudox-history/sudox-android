@@ -98,31 +98,27 @@ class CustomAppBarLayout : com.google.android.material.appbar.AppBarLayout {
         }
     }
 
-    fun toggleStrokeShowing(toggle: Boolean, withAnimation: Boolean) {
-        if (strokeShown == toggle) {
-            return
-        }
+    fun requestStrokeShowing(toggle: Boolean, animate: Boolean) {
+        val drawable = getStrokeDrawable()
 
-        strokeShown = toggle
+        if (toggle != strokeShown) {
+            strokeShown = toggle
 
-        if (strokeAnimator!!.isRunning) {
-            strokeAnimator!!.cancel()
-        }
-
-        if (withAnimation) {
-            if (childCount > 1 || toggle) {
-                strokeAnimator!!.start()
+            if (toggle) {
+                if (animate) {
+                    strokeAnimator.start()
+                } else {
+                    drawable.setStroke(strokeWidth, strokeColor)
+                }
+            } else if (animate) {
+                strokeAnimator.reverse()
             } else {
-                strokeAnimator!!.reverse()
+                drawable.setStroke(strokeWidth, Color.TRANSPARENT)
             }
-        } else if (childCount > 1) {
-            getStrokeDrawable().setStroke(strokeWidth, strokeColor)
-        } else if (toggle) {
-            getStrokeDrawable().setStroke(strokeWidth, strokeColor)
-        } else {
-            getStrokeDrawable().setStroke(strokeWidth, Color.TRANSPARENT)
         }
     }
 
-    private fun getStrokeDrawable() = (background as LayerDrawable).getDrawable(0) as GradientDrawable
+    private fun getStrokeDrawable(): GradientDrawable {
+        return (background as LayerDrawable).getDrawable(0) as GradientDrawable
+    }
 }

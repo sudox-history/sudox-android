@@ -33,12 +33,13 @@ interface AppBarManager {
     fun setLayoutVO(vo: AppBarLayoutVO?)
 
     /**
-     * Переключает отображение тени у AppBarLayout'а
+     * Запрашивает изменение режима отображения тени у AppBarLayout'а
+     * Не гарантирует, что тень будет включена или выключена.
      *
      * @param toggle Включить или выключить тень?
-     * @param withAnimation Показать анимацию переключения?
+     * @param animate Показать анимацию переключения?
      */
-    fun toggleElevation(toggle: Boolean, withAnimation: Boolean)
+    fun requestElevationToggling(toggle: Boolean, animate: Boolean)
 
     /**
      * Переключает загрузку.
