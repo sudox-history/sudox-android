@@ -2,13 +2,15 @@
 <resources>
 
     <style name="Sudox.App" parent="Sudox">
+        <item name="authScreenLayoutStyle">@style/Sudox.AuthScreenLayout</item>
+        <item name="authVerifyLayoutStyle">@style/Sudox.AuthVerifyLayout</item>
+
         <item name="glideImageViewStyle">@style/Sudox.GlideImageView</item>
         <item name="dialogItemViewStyle">@style/Sudox.Messages.DialogItemView</item>
         <item name="avatarImageViewStyle">@style/Sudox.People.AvatarImageView</item>
         <item name="horizontalPeopleItemViewStyle">@style/Sudox.People.HorizontalPeopleItemView</item>
         <item name="verticalPeopleItemViewStyle">@style/Sudox.People.VerticalPeopleItemView</item>
         <item name="circularUpdatableViewStyle">@style/Sudox.CircularUpdatableView</item>
-        <item name="authScreenLayoutStyle">@style/Sudox.AuthScreenLayout</item>
         <item name="countryItemViewStyle">@style/Sudox.CountryItemView</item>
         <item name="phoneEditTextStyle">@style/Sudox.PhoneEditText</item>
         <item name="newsItemViewStyle">@style/Sudox.NewsItemView</item>
