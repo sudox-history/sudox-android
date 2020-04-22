@@ -4,6 +4,9 @@
     <color name="authscreenlayout_description_text_color">#808080</color>
     <color name="authscreenlayout_icon_tint_color">#000000</color>
 
+    <color name="authverifylayout_title_text_color">#00BFA5</color>
+    <color name="authverifylayout_description_text_color">#BDBDBD</color>
+
     <color name="authrequestbottomsheet_text_color">#000000</color>
     <color name="authcodescreenvo_phone_text_color">#000000</color>
 </resources>

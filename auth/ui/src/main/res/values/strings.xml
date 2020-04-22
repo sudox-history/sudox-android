@@ -12,6 +12,7 @@
 
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
+    <string name="verify">Verify</string>
     <string name="finish">Finish</string>
     <string name="next">Next</string>
 
@@ -21,4 +22,7 @@
 
     <string name="nickname">Nickname</string>
     <string name="name_and_surname">Name &amp; surname</string>
+
+    <string name="check_your_other_device_and_tap_agree">Check your other device and tap agree</string>
+    <string name="we_need_to_transfer_your_secure_data">We need to transfer your secure data</string>
 </resources>

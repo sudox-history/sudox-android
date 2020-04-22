@@ -3,11 +3,27 @@
     <declare-styleable name="AuthScreenLayout">
         <attr name="marginBetweenChildren" format="dimension" />
         <attr name="marginBetweenDescriptionAndChild" format="dimension" />
-        <attr name="marginBetweenTitleAndDescription" format="dimension" />
         <attr name="marginBetweenIconAndDescription" format="dimension" />
-        <attr name="descriptionTextAppearance" format="reference" />
-        <attr name="titleTextAppearance" format="reference" />
+        <attr name="marginBetweenTitleAndDescription" />
+        <attr name="descriptionTextAppearance" />
+        <attr name="titleTextAppearance" />
+    </declare-styleable>
+
+    <declare-styleable name="AuthVerifyLayout">
+        <attr name="iconWidth" format="dimension" />
+        <attr name="iconHeight" format="dimension" />
+        <attr name="iconDrawable" format="reference" />
+        <attr name="marginBetweenIconAndTitle" format="dimension" />
+        <attr name="marginBetweenTitleAndDescription" />
+        <attr name="descriptionText" format="string" />
+        <attr name="descriptionTextAppearance" />
+        <attr name="titleTextAppearance" />
+        <attr name="titleText" format="string" />
     </declare-styleable>
 
     <attr name="authScreenLayoutStyle" format="reference" />
+    <attr name="authVerifyLayoutStyle" format="reference" />
+    <attr name="marginBetweenTitleAndDescription" format="reference" />
+    <attr name="descriptionTextAppearance" format="reference" />
+    <attr name="titleTextAppearance" format="reference" />
 </resources>

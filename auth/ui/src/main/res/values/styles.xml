@@ -32,4 +32,36 @@
         <item name="android:textColor">@color/authscreenlayout_description_text_color</item>
         <item name="android:textSize">@dimen/authscreenlayout_description_text_size</item>
     </style>
+
+    <style name="Sudox.AuthVerifyLayout" parent="">
+        <item name="titleText">@string/check_your_other_device_and_tap_agree</item>
+        <item name="descriptionText">@string/we_need_to_transfer_your_secure_data</item>
+
+        <item name="android:paddingTop">@dimen/authverifylayout_padding_top</item>
+        <item name="android:paddingBottom">@dimen/authverifylayout_padding_bottom</item>
+        <item name="android:paddingLeft">@dimen/authverifylayout_padding_left</item>
+        <item name="android:paddingRight">@dimen/authverifylayout_padding_right</item>
+
+        <item name="iconWidth">@dimen/authverifylayout_icon_width</item>
+        <item name="iconHeight">@dimen/authverifylayout_icon_height</item>
+        <item name="iconDrawable">@drawable/ic_auth_verify</item>
+        <item name="marginBetweenIconAndTitle">@dimen/authverifylayout_margin_between_icon_and_title</item>
+        <item name="marginBetweenTitleAndDescription">@dimen/authverifylayout_margin_between_title_and_description</item>
+        <item name="descriptionTextAppearance">@style/Sudox.AuthVerifyLayout.DescriptionTextAppearance</item>
+        <item name="titleTextAppearance">@style/Sudox.AuthVerifyLayout.TitleTextAppearance</item>
+    </style>
+
+    <style name="Sudox.AuthVerifyLayout.TitleTextAppearance" parent="">
+        <item name="android:textSize">@dimen/authverifylayout_title_text_size</item>
+        <item name="android:textColor">@color/authverifylayout_title_text_color</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
+    </style>
+
+    <style name="Sudox.AuthVerifyLayout.DescriptionTextAppearance" parent="">
+        <item name="android:textSize">@dimen/authverifylayout_description_text_size</item>
+        <item name="android:textColor">@color/authverifylayout_description_text_color</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
 </resources>

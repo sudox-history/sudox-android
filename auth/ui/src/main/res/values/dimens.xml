@@ -9,6 +9,17 @@
     <dimen name="authscreenlayout_description_text_size">15sp</dimen>
     <dimen name="authscreenlayout_title_text_size">21sp</dimen>
 
+    <dimen name="authverifylayout_padding_top">50dp</dimen>
+    <dimen name="authverifylayout_padding_bottom">50dp</dimen>
+    <dimen name="authverifylayout_padding_left">36dp</dimen>
+    <dimen name="authverifylayout_padding_right">36dp</dimen>
+    <dimen name="authverifylayout_icon_width">209dp</dimen>
+    <dimen name="authverifylayout_icon_height">196dp</dimen>
+    <dimen name="authverifylayout_title_text_size">26sp</dimen>
+    <dimen name="authverifylayout_description_text_size">21sp</dimen>
+    <dimen name="authverifylayout_margin_between_icon_and_title">51dp</dimen>
+    <dimen name="authverifylayout_margin_between_title_and_description">21dp</dimen>
+
     <dimen name="authrequestbottomsheet_text_size">26sp</dimen>
     <dimen name="authrequestbottomsheet_margin_between_icon_and_phone_name">16dp</dimen>
 </resources>
