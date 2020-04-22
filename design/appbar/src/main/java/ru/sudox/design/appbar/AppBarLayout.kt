@@ -1,6 +1,7 @@
 package ru.sudox.design.appbar
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.view.updateLayoutParams
@@ -39,6 +40,12 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
             val views = value?.getViews(context)
             val viewsCount = views?.size ?: 0
 
+            background = if (viewsCount > 0) {
+                backgroundRef
+            } else {
+                null
+            }
+
             appBar!!.updateLayoutParams<LayoutParams> {
                 scrollFlags = if (viewsCount > 0) {
                     LayoutParams.SCROLL_FLAG_SCROLL or LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
@@ -64,6 +71,12 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
             invalidate()
         }
 
+    private var backgroundRef: Drawable? = null
+
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+
+    init {
+        backgroundRef = background
+    }
 }
