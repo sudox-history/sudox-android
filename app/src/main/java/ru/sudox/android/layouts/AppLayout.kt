@@ -5,8 +5,7 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import ru.sudox.android.layouts.content.ContentLayout
+import ru.sudox.design.bottomnavigationview.TransitionlessBottomNavigationView
 
 const val APPBARLAYOUT_ID_KEY = "appbarlayout_id"
 const val FRAMELAYOUT_ID_KEY = "framelayout_id"
@@ -23,7 +22,7 @@ class AppLayout : ViewGroup {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
     }
 
-    val bottomNavigationView = BottomNavigationView(context).apply {
+    val bottomNavigationView = TransitionlessBottomNavigationView(context).apply {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
     }
 

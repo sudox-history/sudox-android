@@ -1,4 +1,4 @@
-package ru.sudox.android.layouts.content
+package ru.sudox.android.layouts
 
 import android.content.Context
 import android.util.AttributeSet
