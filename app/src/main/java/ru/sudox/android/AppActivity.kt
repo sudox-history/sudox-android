@@ -56,7 +56,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         setContentView(appLayout)
 
         if (!routerLazy!!.value.hasRootController()) {
-            navigationManager!!.showRoot(MAIN_ROOT_TAG)
+            navigationManager!!.showRoot(AUTH_ROOT_TAG)
         }
     }
 

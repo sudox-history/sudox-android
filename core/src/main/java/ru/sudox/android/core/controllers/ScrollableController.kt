@@ -3,16 +3,23 @@ package ru.sudox.android.core.controllers
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
 import ru.sudox.android.core.CoreController
-import ru.sudox.design.viewlist.ViewList
+import ru.sudox.android.core.views.RestorableScrollView
 
 private const val SCROLLABLE_CONTROLLER_CHILD_VIEW_ID = "scrollable_controller_child_view_id"
 
 abstract class ScrollableController : CoreController() {
 
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
-        return ScrollView(activity).apply {
+        return RestorableScrollView(activity!!).apply {
+            setOnScrollChangeListener { _, _, scrollY, _, _ ->
+                if (scrollY > 0) {
+                    appBarManager!!.toggleElevation(toggle = true, withAnimation = true)
+                } else {
+                    appBarManager!!.toggleElevation(toggle = false, withAnimation = true)
+                }
+            }
+
             addView(createChildView(container, savedViewState).apply {
                 id = savedViewState
                         ?.getInt(SCROLLABLE_CONTROLLER_CHILD_VIEW_ID, View.generateViewId())
@@ -22,11 +29,11 @@ abstract class ScrollableController : CoreController() {
     }
 
     override fun isInStartState(): Boolean {
-        return (view as ScrollView).scrollY == 0
+        return (view as RestorableScrollView).scrollY == 0
     }
 
     override fun toStartState() {
-        (view as ScrollView).scrollTo(0, 0)
+        (view as RestorableScrollView).scrollTo(0, 0)
     }
 
     override fun getViewForBind(parent: View): View {

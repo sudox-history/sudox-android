@@ -27,7 +27,7 @@
 
         <!--    Bars    -->
         <item name="appBarStyle">@style/Sudox.AppBar</item>
-        <item name="appBarLayoutStyle">@style/Sudox.AppBarLayout</item>
+        <item name="customAppBarLayoutStyle">@style/Sudox.AppBarLayout</item>
         <item name="appBarSearchEditTextStyle">@style/Sudox.AppBar.SearchEditText</item>
         <item name="bottomNavigationStyle">@style/Sudox.BottomNavigationView</item>
         <item name="bottomSheetLayoutStyle">@style/Sudox.BottomSheetLayout</item>

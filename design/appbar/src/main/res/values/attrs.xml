@@ -6,6 +6,13 @@
         <attr name="marginBetweenViewsAndButtons" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="CustomAppBarLayout">
+        <attr name="strokeAnimationDuration" format="integer" />
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="strokeColor" format="color" />
+    </declare-styleable>
+
     <attr name="appBarStyle" format="reference" />
+    <attr name="customAppBarLayoutStyle" format="reference" />
     <attr name="appBarSearchEditTextStyle" format="reference" />
 </resources>

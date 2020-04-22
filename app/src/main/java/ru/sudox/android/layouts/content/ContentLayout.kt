@@ -4,11 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.bluelinelabs.conductor.ChangeHandlerFrameLayout
 import ru.sudox.design.appbar.AppBar
-import ru.sudox.design.appbar.AppBarLayout
+import ru.sudox.design.appbar.CustomAppBarLayout
 
 /**
  * Layout, содержащий AppBarLayout и FrameLayout.
@@ -17,7 +16,7 @@ import ru.sudox.design.appbar.AppBarLayout
 class ContentLayout : CoordinatorLayout {
 
     @Suppress("unused")
-    val appBarLayout = AppBarLayout(context).apply {
+    val appBarLayout = CustomAppBarLayout(context).apply {
         fitsSystemWindows = true
         layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         appBar = AppBar(context).apply { id = View.generateViewId() }

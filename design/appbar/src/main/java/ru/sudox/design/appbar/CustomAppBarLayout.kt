@@ -1,13 +1,23 @@
 package ru.sudox.design.appbar
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.LayerDrawable
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.res.getColorOrThrow
+import androidx.core.content.res.getDimensionPixelSizeOrThrow
+import androidx.core.content.res.getIntegerOrThrow
+import androidx.core.content.res.use
 import androidx.core.view.updateLayoutParams
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 
-class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
+class CustomAppBarLayout : com.google.android.material.appbar.AppBarLayout {
+
+    private var strokeWidth = 0
+    private var strokeAnimationDuration = 0
+    private var strokeColor = 0
 
     var appBar: AppBar? = null
         set(value) {
@@ -40,12 +50,6 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
             val views = value?.getViews(context)
             val viewsCount = views?.size ?: 0
 
-            background = if (viewsCount > 0) {
-                backgroundRef
-            } else {
-                null
-            }
-
             appBar!!.updateLayoutParams<LayoutParams> {
                 scrollFlags = if (viewsCount > 0) {
                     LayoutParams.SCROLL_FLAG_SCROLL or LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
@@ -71,12 +75,27 @@ class AppBarLayout : com.google.android.material.appbar.AppBarLayout {
             invalidate()
         }
 
-    private var backgroundRef: Drawable? = null
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.customAppBarLayoutStyle)
 
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    @SuppressLint("Recycle")
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        context.obtainStyledAttributes(attrs, R.styleable.CustomAppBarLayout, defStyleAttr, 0).use {
+            strokeAnimationDuration = it.getIntegerOrThrow(R.styleable.CustomAppBarLayout_strokeAnimationDuration)
+            strokeWidth = it.getDimensionPixelSizeOrThrow(R.styleable.CustomAppBarLayout_strokeWidth)
+            strokeColor = it.getColorOrThrow(R.styleable.CustomAppBarLayout_strokeColor)
+        }
+    }
 
-    init {
-        backgroundRef = background
+    fun toggleStrokeShowing(toggle: Boolean, withAnimation: Boolean) {
+        val gradientDrawable = (background as LayerDrawable).getDrawable(0) as GradientDrawable
+
+        if (childCount > 1) {
+            gradientDrawable.setStroke(strokeWidth, strokeColor)
+        } else if (toggle) {
+            gradientDrawable.setStroke(strokeWidth, strokeColor)
+        } else {
+            gradientDrawable.setStroke(0, strokeColor)
+        }
     }
 }

@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import ru.sudox.android.core.managers.AppBarManager
 import ru.sudox.android.core.managers.SearchManager
-import ru.sudox.design.appbar.AppBarLayout
+import ru.sudox.design.appbar.CustomAppBarLayout
 import ru.sudox.design.appbar.vos.others.SearchAppBarVO
 import ru.sudox.design.common.hideSoftKeyboard
 import ru.sudox.design.common.showSoftKeyboard
@@ -14,7 +14,7 @@ private const val SEARCHMANAGER_IS_SEARCH_ENABLED_KEY = "appbarmanager_is_search
 private const val SEARCHMANAGER_SEARCH_EDITTEXT_ID = "appbarmanager_search_edittext_id"
 
 class SearchManagerImpl(
-        val appBarLayout: AppBarLayout,
+        val appBarLayout: CustomAppBarLayout,
         val appBarManager: AppBarManager,
         val activity: Activity
 ) : SearchManager {

@@ -36,8 +36,6 @@ class ViewList : RecyclerView {
     internal var letterPaddingRight = 0
     internal var letterPaddingTop = 0
     internal var letterPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
-    internal var scrollX = 0
-    internal var scrollY = 0
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.viewListStyle)
@@ -59,13 +57,6 @@ class ViewList : RecyclerView {
             }
         }
 
-        addOnScrollListener(object : OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                scrollX += dx
-                scrollY += dy
-            }
-        })
-
         addItemDecoration(ViewListMarginDecorator(this))
         addItemDecoration(ViewListStickyDecorator(this))
     }
@@ -77,7 +68,7 @@ class ViewList : RecyclerView {
      * @return Текущий скролл по оси X
      */
     fun getCurrentScrollX(): Int {
-        return scrollX
+        return computeHorizontalScrollOffset()
     }
 
     /**
@@ -87,7 +78,7 @@ class ViewList : RecyclerView {
      * @return Текущий скролл по оси Y
      */
     fun getCurrentScrollY(): Int {
-        return scrollY
+        return computeVerticalScrollOffset()
     }
 
     override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {

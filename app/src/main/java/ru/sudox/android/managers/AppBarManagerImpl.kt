@@ -5,12 +5,12 @@ import io.reactivex.disposables.Disposable
 import ru.sudox.android.core.managers.AppBarManager
 import ru.sudox.android.managers.vos.MainAppBarVO
 import ru.sudox.api.common.SudoxApi
-import ru.sudox.design.appbar.AppBarLayout
+import ru.sudox.design.appbar.CustomAppBarLayout
 import ru.sudox.design.appbar.vos.AppBarLayoutVO
 import ru.sudox.design.appbar.vos.AppBarVO
 
 class AppBarManagerImpl(
-        val appBarLayout: AppBarLayout,
+        val appBarLayout: CustomAppBarLayout,
         val sudoxApi: SudoxApi
 ) : AppBarManager {
 
@@ -75,6 +75,10 @@ class AppBarManagerImpl(
                 null
             }
         }
+    }
+
+    override fun toggleElevation(toggle: Boolean, withAnimation: Boolean) {
+        appBarLayout.toggleStrokeShowing(toggle, withAnimation)
     }
 
     override fun toggleLoading(toggle: Boolean) {

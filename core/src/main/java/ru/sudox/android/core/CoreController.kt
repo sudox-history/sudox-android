@@ -64,6 +64,7 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
             return view!!
         }
 
+        appBarManager!!.toggleElevation(toggle = false, withAnimation = false)
         searchManager!!.restoreSearchState(savedViewState, callback = ::onAppBarClicked, searchCallback = ::onSearchRequest)
 
         return createView(container, savedViewState).apply {

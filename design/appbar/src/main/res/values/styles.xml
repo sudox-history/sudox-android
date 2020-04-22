@@ -13,6 +13,9 @@
 
     <style name="Sudox.AppBarLayout" parent="">
         <item name="android:background">@drawable/background_appbarlayout</item>
+        <item name="strokeAnimationDuration">@integer/appbarlayout_stroke_animation_duration</item>
+        <item name="strokeColor">@color/appbar_background_stroke_color</item>
+        <item name="strokeWidth">@dimen/appbar_stroke_width</item>
     </style>
 
     <style name="Sudox.AppBar.TitleTextAppearance" parent="">
