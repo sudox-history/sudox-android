@@ -1,8 +1,6 @@
 package ru.sudox.api
 
 import android.content.Context
-import android.util.Log
-import com.sudox.messenger.api.R
 import ru.sudox.api.exceptions.ApiException
 import java.io.IOException
 

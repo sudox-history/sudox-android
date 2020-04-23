@@ -32,7 +32,7 @@
 
     <style name="Sudox.ViewList.Footer" parent="">
         <item name="android:fontFamily">@font/opensans_regular</item>
-        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
         <item name="android:textColor">@color/viewlist_footer_text_color</item>
         <item name="android:textSize">@dimen/viewlist_footer_text_size</item>
     </style>
