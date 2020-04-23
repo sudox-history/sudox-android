@@ -6,8 +6,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.auth.ui.R
 import ru.sudox.design.bottomsheet.vos.BottomSheetVO
-import ru.sudox.design.buttons.createSecondaryButton
-import ru.sudox.design.buttons.createPrimaryButton
+import ru.sudox.design.buttons.helpers.createSecondaryButton
+import ru.sudox.design.buttons.helpers.createPrimaryButton
 
 class AuthRequestBottomSheetVO(
         val phoneName: String

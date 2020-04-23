@@ -22,6 +22,7 @@
         <!--    Buttons     -->
         <item name="imageButtonStyle">@style/Sudox.ImageButton</item>
         <item name="android:imageButtonStyle">@style/Sudox.ImageButton</item>
+        <item name="bottomLabeledImageButtonStyle">@style/Sudox.BottomLabeledImageButton</item>
         <item name="android:buttonStyle">@style/Sudox.Button.Primary</item>
         <item name="buttonStyle">@style/Sudox.Button.Primary</item>
 

@@ -1,8 +1,9 @@
-package ru.sudox.design.buttons
+package ru.sudox.design.buttons.helpers
 
 import android.content.Context
 import android.view.ContextThemeWrapper
 import androidx.appcompat.widget.AppCompatButton
+import ru.sudox.design.buttons.R
 
 /**
  * Создает кнопку первого применения.

@@ -26,4 +26,13 @@
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>
     </style>
+
+    <style name="Sudox.BottomLabeledImageButton" parent="">
+        <item name="android:gravity">center</item>
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textSize">@dimen/bottomlabeledimagebutton_text_size</item>
+        <item name="android:textColor">@color/bottomlabeledimagebutton_text_color</item>
+        <item name="iconTint">@color/bottomlabeledimagebutton_text_color</item>
+    </style>
 </resources>
