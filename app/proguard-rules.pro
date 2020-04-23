@@ -1,3 +1,5 @@
+-keepclassmembernames class com.google.android.material.bottomnavigation.BottomNavigationView { *; }
+-keepclassmembernames class com.google.android.material.bottomnavigation.BottomNavigationMenuView { *; }
 -keep @ru.sudox.api.common.SudoxApiDTO public class * {*;}
 -keep @androidx.room.Entity public class * {*;}
 -keep class kotlin.Metadata { *; }
