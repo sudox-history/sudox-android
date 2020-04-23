@@ -1,5 +1,5 @@
-<manifest package="com.sudox.messenger.api"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ru.sudox.api">
 
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

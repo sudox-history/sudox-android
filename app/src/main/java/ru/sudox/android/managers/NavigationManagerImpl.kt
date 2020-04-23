@@ -33,7 +33,7 @@ private const val ANIMATION_DURATION = 140L
 
 private const val PEOPLE_TAG = 2
 private const val DIALOGS_TAG = 3
-private const val PROFILE_TAG = 4
+private const val BLOG_TAG = 4
 
 class NavigationManagerImpl(
         val routerProvider: Lazy<Router>,
@@ -52,7 +52,7 @@ class NavigationManagerImpl(
         bottomNavigationView.apply {
             addItem(this, PEOPLE_TAG, R.string.people, R.drawable.ic_group)
             addItem(this, DIALOGS_TAG, R.string.messages, R.drawable.ic_chat_bubble)
-            addItem(this, PROFILE_TAG, R.string.profile, R.drawable.ic_account)
+            addItem(this, BLOG_TAG, R.string.blog, R.drawable.ic_account)
 
             setOnNavigationItemSelectedListener(this@NavigationManagerImpl)
         }
