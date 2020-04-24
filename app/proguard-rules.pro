@@ -4,6 +4,10 @@
 -keep @androidx.room.Entity public class * {*;}
 -keep class kotlin.Metadata { *; }
 
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+
 -assumenosideeffects class kotlin.jvm.internal.Intrinsics {
     public static void checkExpressionValueIsNotNull(java.lang.Object, java.lang.String);
     public static void checkFieldIsNotNull(java.lang.Object, java.lang.String);
@@ -19,6 +23,7 @@
 
 -optimizations *
 -optimizationpasses 1000
+-printmapping mapping.txt
 -overloadaggressively
 -allowaccessmodification
 -mergeinterfacesaggressively

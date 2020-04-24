@@ -3,11 +3,18 @@ apply from: '../configs/common.gradle'
 
 registerModule(true, true, true, true)
 
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
+
 android {
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
+
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+            }
 
             proguardFiles getDefaultProguardFile(
                     'proguard-android-optimize.txt'),
@@ -27,6 +34,10 @@ dependencies {
     api project(path: ':dialogs')
     api project(path: ':countries')
     api project(path: ':api')
+
+    implementation libraries.firebase_analytics
+    implementation libraries.firebase_crashlytics
+    implementation libraries.firebase_crashlytics_ndk
 
     implementation libraries.room_rxjava2
     implementation libraries.room
@@ -50,4 +61,3 @@ dependencies {
     testImplementation libraries.junit
     testImplementation libraries.robolectric
 }
-

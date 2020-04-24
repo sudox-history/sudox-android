@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "825814633561",
+    "firebase_url": "https://sudox-380c5.firebaseio.com",
+    "project_id": "sudox-380c5",
+    "storage_bucket": "sudox-380c5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825814633561:android:2fdf8d34cabc88cfe67548",
+        "android_client_info": {
+          "package_name": "ru.sudox.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "825814633561-3p16lknmg33vransproiupdqoeanvr7a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIBXxIGgsOP4sE3doS_48QRjeSkFBrK58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "825814633561-3p16lknmg33vransproiupdqoeanvr7a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -13,3 +13,4 @@
 configs/passwords.gradle
 app/release
 .cxx
+mapping.txt
