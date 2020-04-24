@@ -1,8 +1,8 @@
-package ru.sudox.android.messages
+package ru.sudox.android.dialogs
 
 import ru.sudox.android.core.CoreController
 import ru.sudox.android.core.controllers.tabs.TabsRootController
-import ru.sudox.android.messages.vos.DialogsAppBarVO
+import ru.sudox.android.dialogs.vos.DialogsAppBarVO
 
 class DialogsController : TabsRootController() {
 

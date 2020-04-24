@@ -1,8 +1,8 @@
-package ru.sudox.android.messages.callbacks
+package ru.sudox.android.dialogs.callbacks
 
 import ru.sudox.design.viewlist.ViewListCallback
-import ru.sudox.android.messages.adapters.DialogsAdapter
-import ru.sudox.android.messages.vos.DialogVO
+import ru.sudox.android.dialogs.adapters.DialogsAdapter
+import ru.sudox.android.dialogs.vos.DialogVO
 
 class DialogsCallback(
         adapter: DialogsAdapter

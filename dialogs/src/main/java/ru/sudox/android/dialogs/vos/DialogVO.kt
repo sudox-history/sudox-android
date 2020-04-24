@@ -1,4 +1,4 @@
-package ru.sudox.android.messages.vos
+package ru.sudox.android.dialogs.vos
 
 import android.content.Context
 import android.text.SpannableString

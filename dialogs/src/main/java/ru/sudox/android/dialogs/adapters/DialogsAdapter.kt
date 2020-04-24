@@ -1,14 +1,14 @@
-package ru.sudox.android.messages.adapters
+package ru.sudox.android.dialogs.adapters
 
 import android.view.ViewGroup
 import androidx.annotation.PluralsRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SortedList
 import ru.sudox.android.media.images.GlideRequests
-import ru.sudox.android.messages.R
-import ru.sudox.android.messages.callbacks.DialogsCallback
-import ru.sudox.android.messages.views.DialogItemView
-import ru.sudox.android.messages.vos.DialogVO
+import ru.sudox.android.dialogs.R
+import ru.sudox.android.dialogs.callbacks.DialogsCallback
+import ru.sudox.android.dialogs.views.DialogItemView
+import ru.sudox.android.dialogs.vos.DialogVO
 import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 

@@ -1,9 +1,9 @@
-package ru.sudox.android.messages
+package ru.sudox.android.dialogs
 
 import android.view.View
 import ru.sudox.android.core.controllers.ViewListController
-import ru.sudox.android.messages.adapters.DialogsAdapter
-import ru.sudox.android.messages.vos.impl.TalkVO
+import ru.sudox.android.dialogs.adapters.DialogsAdapter
+import ru.sudox.android.dialogs.vos.impl.TalkVO
 import ru.sudox.design.viewlist.ViewList
 
 class TalksTabFragment : ViewListController<DialogsAdapter>() {

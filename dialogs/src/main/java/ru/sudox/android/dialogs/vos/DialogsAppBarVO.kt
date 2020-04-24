@@ -1,10 +1,10 @@
-package ru.sudox.android.messages.vos
+package ru.sudox.android.dialogs.vos
 
 import android.content.Context
 import android.view.View
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
-import ru.sudox.android.messages.R
+import ru.sudox.android.dialogs.R
 import ru.sudox.design.appbar.vos.others.AppBarButtonParam
 
 const val DIALOGS_SEARCH_BUTTON_TAG = 2

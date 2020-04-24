@@ -1,4 +1,4 @@
-package ru.sudox.android.messages.views
+package ru.sudox.android.dialogs.views
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -20,8 +20,8 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.media.images.GlideRequests
-import ru.sudox.android.messages.R
-import ru.sudox.android.messages.vos.DialogVO
+import ru.sudox.android.dialogs.R
+import ru.sudox.android.dialogs.vos.DialogVO
 import ru.sudox.android.people.common.views.AvatarImageView
 import ru.sudox.android.time.formatTime
 import kotlin.math.abs

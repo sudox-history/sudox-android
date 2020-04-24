@@ -17,7 +17,7 @@ import ru.sudox.android.core.managers.AUTH_ROOT_TAG
 import ru.sudox.android.core.managers.NavigationManager
 import ru.sudox.android.managers.handlers.move.LeftMoveHandler
 import ru.sudox.android.managers.handlers.move.RightMoveHandler
-import ru.sudox.android.messages.DialogsController
+import ru.sudox.android.dialogs.DialogsController
 import ru.sudox.android.people.PeopleController
 import ru.sudox.android.people.ProfileController
 import java.util.Stack

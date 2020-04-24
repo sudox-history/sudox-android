@@ -1,18 +1,14 @@
-package ru.sudox.android.messages.vos.impl
+package ru.sudox.android.dialogs.vos.impl
 
 import android.content.Context
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.util.Log
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.text.color
-import ru.sudox.android.messages.R
-import ru.sudox.android.messages.vos.DialogVO
-import ru.sudox.android.people.common.views.AvatarImageView
-import ru.sudox.android.people.common.vos.PeopleVO
+import ru.sudox.android.dialogs.R
+import ru.sudox.android.dialogs.vos.DialogVO
 
-data class ChatVO(
+data class TalkVO(
         override val dialogId: Long,
         override var isMuted: Boolean,
         override var isViewedByMe: Boolean,
@@ -21,22 +17,23 @@ data class ChatVO(
         override var isSentMessageDelivered: Boolean,
         override var isSentMessageViewed: Boolean,
         override var isSentByUserMessage: Boolean,
-        override var userId: Long,
-        override var userName: String,
-        override var seenTime: Long,
-        override var photoId: Long,
-        override var lastSentMessage: String
-) : DialogVO, PeopleVO {
+        override var lastSentMessage: String,
+        var talkImageId: Long,
+        var talkName: String,
+        var firstName: String?
+) : DialogVO {
 
     override fun getName(): String {
-        return userName
+        return talkName
     }
 
     override fun getLastMessage(context: Context): SpannableString {
         if (isSentByUserMessage) {
             val hintColor = ContextCompat.getColor(context, R.color.dialogitemview_message_sent_by_user_hint_color)
             val text = SpannableStringBuilder()
-                    .color(hintColor) { append(context.resources.getString(R.string.message_sent_by_user)) }
+                    .color(hintColor) {
+                        append(context.resources.getString(R.string.message_sent_by_different_user, firstName))
+                    }
                     .append(lastSentMessage)
 
             return SpannableString.valueOf(text)
@@ -45,19 +42,11 @@ data class ChatVO(
         return SpannableString.valueOf(lastSentMessage)
     }
 
-    override fun getButtons(): Array<Triple<Int, Int, Int>>? {
-        return null
+    override fun getResourceId(): Long {
+        return talkImageId
     }
 
-    override fun getStatusMessage(context: Context): String? {
-        return null
-    }
-
-    override fun isStatusAboutOnline(): Boolean {
-        return false
-    }
-
-    override fun isStatusActive(): Boolean {
+    override fun canShowIndicator(): Boolean {
         return false
     }
 }
