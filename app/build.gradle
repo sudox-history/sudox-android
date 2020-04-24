@@ -24,7 +24,7 @@ dependencies {
     api project(path: ':auth:ui')
     api project(path: ':design')
     api project(path: ':people')
-    api project(path: ':messages')
+    api project(path: ':dialogs')
     api project(path: ':countries')
     api project(path: ':api')
 
