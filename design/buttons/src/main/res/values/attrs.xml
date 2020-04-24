@@ -4,5 +4,12 @@
         <attr name="iconTint" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="TwoLabeledButton">
+        <attr name="firstLineFontFamily" format="reference" />
+        <attr name="firstLineTextSize" format="dimension" />
+        <attr name="firstLineTextColor" format="color" />
+    </declare-styleable>
+
     <attr name="bottomLabeledImageButtonStyle" format="reference" />
+    <attr name="twoLabeledButtonStyle" format="reference" />
 </resources>

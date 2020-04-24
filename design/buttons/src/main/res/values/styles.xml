@@ -35,4 +35,16 @@
         <item name="android:textColor">@color/bottomlabeledimagebutton_text_color</item>
         <item name="iconTint">@color/bottomlabeledimagebutton_text_color</item>
     </style>
+
+    <style name="Sudox.TwoLabeledButton" parent="">
+        <item name="fontFamily">@font/opensans_regular</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:textColor">@color/twolabeledbutton_second_line_text_color</item>
+        <item name="android:textSize">@dimen/twolabeledbutton_second_line_text_size</item>
+        <item name="android:gravity">center</item>
+
+        <item name="firstLineFontFamily">@font/opensans_bold</item>
+        <item name="firstLineTextColor">@color/twolabeledbutton_first_line_text_color</item>
+        <item name="firstLineTextSize">@dimen/twolabeledbutton_first_line_text_size</item>
+    </style>
 </resources>
