@@ -5,6 +5,9 @@
         <item name="authScreenLayoutStyle">@style/Sudox.AuthScreenLayout</item>
         <item name="authVerifyLayoutStyle">@style/Sudox.AuthVerifyLayout</item>
 
+        <!--    Messages    -->
+        <item name="messagesTitleAppBarViewStyle">@style/Sudox.MessagesTitleAppBarView</item>
+
         <item name="glideImageViewStyle">@style/Sudox.GlideImageView</item>
         <item name="dialogItemViewStyle">@style/Sudox.Messages.DialogItemView</item>
         <item name="avatarImageViewStyle">@style/Sudox.AvatarImageView</item>

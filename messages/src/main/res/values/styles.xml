@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.MessagesTitleAppBarView" parent="">
+        <item name="titleTextAppearance">@style/Sudox.MessagesTitleAppBarView.Title</item>
+        <item name="subtitleTextAppearance">@style/Sudox.MessagesTitleAppBarView.Subtitle</item>
+        <item name="marginBetweenTitleAndSubtitle">@dimen/messagestitleappbarview_margin_between_title_and_subtitle</item>
+    </style>
+
+    <style name="Sudox.MessagesTitleAppBarView.Title" parent="">
+        <item name="android:textSize">@dimen/messagestitleappbarview_title_text_size</item>
+        <item name="android:textColor">@color/messagestitleappbarview_title_text_color</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="fontFamily">@font/opensans_bold</item>
+    </style>
+
+    <style name="Sudox.MessagesTitleAppBarView.Subtitle" parent="">
+        <item name="android:textSize">@dimen/messagestitleappbarview_subtitle_text_size</item>
+        <item name="android:textColor">@color/messagestitleappbarview_subtitle_text_color</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+</resources>

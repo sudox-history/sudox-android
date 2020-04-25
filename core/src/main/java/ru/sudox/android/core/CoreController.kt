@@ -36,7 +36,23 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
     private var isSearchEnabledBeforeStop = false
 
     var appBarVO: AppBarVO? = null
+        set(value) {
+            if (!isChild() && isAttached) {
+                appBarManager!!.setVO(value, ::onAppBarClicked)
+            }
+
+            field = value
+        }
+
     var appBarLayoutVO: AppBarLayoutVO? = null
+        set(value) {
+            if (!isChild() && isAttached) {
+                appBarManager!!.setLayoutVO(value)
+            }
+
+            field = value
+        }
+
     val viewModelStore = ViewModelStore()
 
     @Inject

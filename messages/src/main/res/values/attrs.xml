@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MessagesTitleAppBarView">
+        <attr name="titleTextAppearance" format="reference" />
+        <attr name="subtitleTextAppearance" format="reference" />
+        <attr name="marginBetweenTitleAndSubtitle" format="dimension" />
+    </declare-styleable>
+
+    <attr name="messagesTitleAppBarViewStyle" format="reference" />
+</resources>
