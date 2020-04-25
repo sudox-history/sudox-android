@@ -2,7 +2,7 @@ package ru.sudox.android.moments.vos
 
 import android.content.Context
 import android.graphics.Canvas
-import ru.sudox.android.people.common.vos.AvatarVO
+import ru.sudox.android.media.images.views.avatar.AvatarVO
 
 const val NOT_SHOW_CONTENT_ON_STROKE_ANGLE = -1.0
 

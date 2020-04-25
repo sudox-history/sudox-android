@@ -1,4 +1,4 @@
-package ru.sudox.android.people.common.vos
+package ru.sudox.android.media.images.views.avatar
 
 interface AvatarVO {
 

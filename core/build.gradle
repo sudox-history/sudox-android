@@ -6,6 +6,7 @@ registerModule(false, false, true, true)
 dependencies {
     api project(path: ':design')
     api project(path: ':design:common')
+    api project(path: ':media:images')
 
     implementation libraries.conductor
     implementation libraries.annotations

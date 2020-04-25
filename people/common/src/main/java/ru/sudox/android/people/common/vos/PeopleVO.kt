@@ -1,6 +1,7 @@
 package ru.sudox.android.people.common.vos
 
 import android.content.Context
+import ru.sudox.android.media.images.views.avatar.AvatarVO
 import ru.sudox.android.people.common.R
 
 const val SEEN_TIME_ONLINE = 0L

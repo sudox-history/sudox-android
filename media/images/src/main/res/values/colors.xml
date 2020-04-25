@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="placeholder_imageview_color">#000000</color>
+
+    <color name="avatarimageview_indicator_color">#00BFA5</color>
+    <color name="avatarimageview_indicator_crop_color">@color/background_color</color>
+    <color name="avatarimageview_indicator_number_text_color">#FFFFFF</color>
 </resources>

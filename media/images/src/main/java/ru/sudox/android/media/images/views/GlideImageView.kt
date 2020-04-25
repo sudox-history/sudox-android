@@ -9,10 +9,9 @@ import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import ru.sudox.android.media.images.GlideRequests
-import ru.sudox.design.roundedview.RoundedImageView
-import ru.sudox.android.media.images.Images
 import ru.sudox.android.media.images.R
 import ru.sudox.android.media.images.entries.GlideImageRequest
+import ru.sudox.design.roundedview.RoundedImageView
 
 @Suppress("unused")
 const val NOT_SHOWING_IMAGE_ID = -1

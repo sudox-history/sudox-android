@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import ru.sudox.android.core.controllers.ScrollableController
-import ru.sudox.android.people.common.views.AvatarImageView
-import ru.sudox.android.people.common.vos.AvatarVO
+import ru.sudox.android.media.images.views.avatar.AvatarImageView
+import ru.sudox.android.media.images.views.avatar.AvatarVO
 
 class ProfileController : ScrollableController() {
 

@@ -1,4 +1,4 @@
-package ru.sudox.android.people.common.views
+package ru.sudox.android.media.images.views.avatar
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,9 +13,8 @@ import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getFontOrThrow
 import androidx.core.content.res.use
 import ru.sudox.android.media.images.GlideRequests
+import ru.sudox.android.media.images.R
 import ru.sudox.android.media.images.views.GlideCircleImageView
-import ru.sudox.android.people.common.R
-import ru.sudox.android.people.common.vos.AvatarVO
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
