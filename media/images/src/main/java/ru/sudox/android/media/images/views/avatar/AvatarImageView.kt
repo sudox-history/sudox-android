@@ -242,6 +242,14 @@ class AvatarImageView : GlideCircleImageView {
         invalidate()
     }
 
+    override fun getImageHeight(): Int {
+        return layoutParams.height
+    }
+
+    override fun getImageWidth(): Int {
+        return layoutParams.width
+    }
+
     private fun isIndicatorShowing(): Boolean {
         return vo != null && vo!!.canShowIndicator()
     }
