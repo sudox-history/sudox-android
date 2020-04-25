@@ -3,20 +3,29 @@ package ru.sudox.android.people
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import ru.sudox.android.auth.ui.vos.AuthRequestBottomSheetVO
 import ru.sudox.android.core.controllers.ScrollableController
-import ru.sudox.design.bottomsheet.createBottomSheetDialog
+import ru.sudox.android.people.common.views.AvatarImageView
+import ru.sudox.android.people.common.vos.AvatarVO
 
 class ProfileController : ScrollableController() {
 
     override fun createChildView(container: ViewGroup, savedViewState: Bundle?): View {
-        return View(activity)
-    }
+        return AvatarImageView(activity!!).apply {
+            layoutParams = ViewGroup.LayoutParams(120, 120)
 
-    override fun bindView(view: View) {
-        super.bindView(view)
+            setVO(object : AvatarVO {
+                override fun getResourceId(): Long {
+                    return 1L
+                }
 
-        createBottomSheetDialog(activity!!, AuthRequestBottomSheetVO("Mi 8"))
-                .show()
+                override fun canShowIndicator(): Boolean {
+                    return true
+                }
+
+                override fun getNumberInIndicator(): Int {
+                    return 10
+                }
+            }, glide)
+        }
     }
 }

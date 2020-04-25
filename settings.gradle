@@ -42,4 +42,6 @@ include ':countries'
 include ':moments'
 include ':time'
 include ':news'
+
+include ':messages'
 include ':blog'

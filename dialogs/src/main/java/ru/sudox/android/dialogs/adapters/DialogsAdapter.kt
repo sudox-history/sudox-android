@@ -14,7 +14,8 @@ import ru.sudox.design.viewlist.ViewListAdapter
 
 class DialogsAdapter(
         @PluralsRes val pluralId: Int,
-        val glide: GlideRequests
+        val glide: GlideRequests,
+        val clickCallback: (Long) -> (Unit)
 ) : ViewListAdapter<DialogsAdapter.ViewHolder>() {
 
     val dialogsVOs = SortedList<DialogVO>(DialogVO::class.java, DialogsCallback(this))
@@ -28,7 +29,13 @@ class DialogsAdapter(
         }
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(DialogItemView(parent.context))
+        return ViewHolder(DialogItemView(parent.context)).apply {
+            view.setOnClickListener {
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    clickCallback(dialogsVOs[adapterPosition]!!.dialogId)
+                }
+            }
+        }
     }
 
     override fun bindItemHolder(holder: ViewHolder, position: Int) {

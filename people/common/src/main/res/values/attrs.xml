@@ -21,8 +21,16 @@
     </declare-styleable>
 
     <declare-styleable name="AvatarImageView">
+        <attr name="indicatorNumberTextColor" format="color" />
+        <attr name="indicatorNumberTextSize" format="dimension" />
+        <attr name="indicatorNumberTextFontFamily" format="reference" />
+
         <attr name="indicatorCropColor" format="color" />
-        <attr name="indicatorCropRadius" format="dimension" />
+        <attr name="indicatorCropRadiusDiff" format="dimension" />
+        <attr name="indicatorNumberTextPaddingTop" format="dimension" />
+        <attr name="indicatorNumberTextPaddingBottom" format="dimension" />
+        <attr name="indicatorNumberTextPaddingLeft" format="dimension" />
+        <attr name="indicatorNumberTextPaddingRight" format="dimension" />
         <attr name="indicatorRadius" format="dimension" />
         <attr name="indicatorColor" format="color" />
     </declare-styleable>
