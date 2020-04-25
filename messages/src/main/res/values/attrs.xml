@@ -2,8 +2,10 @@
 <resources>
     <declare-styleable name="MessagesTitleAppBarView">
         <attr name="titleTextAppearance" format="reference" />
-        <attr name="subtitleTextAppearance" format="reference" />
         <attr name="marginBetweenTitleAndSubtitle" format="dimension" />
+        <attr name="subtitleTextAppearance" format="reference" />
+        <attr name="inactiveSubtitleTextColor" format="color" />
+        <attr name="activeSubtitleTextColor" format="color" />
     </declare-styleable>
 
     <attr name="messagesTitleAppBarViewStyle" format="reference" />

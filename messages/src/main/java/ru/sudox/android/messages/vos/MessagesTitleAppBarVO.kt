@@ -21,4 +21,12 @@ interface MessagesTitleAppBarVO {
      * @return Строка с заголовком
      */
     fun getSubtitle(context: Context): String
+
+    /**
+     * Определяет, активный ли подзаголовок
+     * Активный подзаголовок будет отображаться зеленым цветом.
+     *
+     * @return Активен ли заголовок?
+     */
+    fun isSubtitleActive(): Boolean
 }

@@ -5,28 +5,23 @@ import android.view.View
 import android.view.ViewGroup
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.avatar.AvatarImageView
+import ru.sudox.android.media.images.views.avatar.AvatarVO
 import ru.sudox.android.messages.R
 import ru.sudox.android.messages.views.MessagesTitleAppBarView
-import ru.sudox.android.messages.vos.MessagesChatVO
+import ru.sudox.android.messages.vos.MessagesTitleAppBarVO
 import ru.sudox.design.appbar.vos.APPBAR_BACK_BUTTON_PARAMS
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.others.AppBarButtonParam
 import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 
-class ChatMessagesAppBarVO(
-        val glide: GlideRequests
-) : AppBarVO {
+class BaseMessagesAppBarVO<T>(val glide: GlideRequests) : AppBarVO {
 
     var messagesTitleAppBarView: MessagesTitleAppBarView? = null
     var avatarImageView: AvatarImageView? = null
-    var vo: MessagesChatVO? = null
+    var vo: T? = null
 
     override fun getButtonsAtLeft(): Array<AppBarButtonParam>? {
         return APPBAR_BACK_BUTTON_PARAMS
-    }
-
-    override fun getButtonsAtRight(): Array<AppBarButtonParam>? {
-        return null
     }
 
     override fun getViewAtLeft(context: Context): View? {
@@ -35,7 +30,7 @@ class ChatMessagesAppBarVO(
         }
 
         return messagesTitleAppBarView!!.apply {
-            vo = this@ChatMessagesAppBarVO.vo
+            vo = this@BaseMessagesAppBarVO.vo as MessagesTitleAppBarVO
         }
     }
 
@@ -44,14 +39,17 @@ class ChatMessagesAppBarVO(
             avatarImageView = AvatarImageView(context).apply {
                 layoutParams = ViewGroup.LayoutParams(
                         context.resources.getDimensionPixelSize(R.dimen.chatmessagesappbarvo_avatar_width),
-                        context.resources.getDimensionPixelSize(R.dimen.chatmessagesappbarvo_avatar_height)
-                )
+                        context.resources.getDimensionPixelSize(R.dimen.chatmessagesappbarvo_avatar_height))
             }
         }
 
         return avatarImageView!!.apply {
-            setVO(this@ChatMessagesAppBarVO.vo, glide)
+            setVO(this@BaseMessagesAppBarVO.vo as AvatarVO, glide)
         }
+    }
+
+    override fun getButtonsAtRight(): Array<AppBarButtonParam>? {
+        return null
     }
 
     override fun getTitle(): Int {

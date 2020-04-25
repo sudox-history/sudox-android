@@ -5,7 +5,8 @@ import ru.sudox.android.core.controllers.ViewListController
 import ru.sudox.android.dialogs.adapters.DialogsAdapter
 import ru.sudox.android.dialogs.vos.impl.TalkVO
 import ru.sudox.android.messages.MESSAGES_CONTROLLER_DIALOG_ID_KEY
-import ru.sudox.android.messages.MessagesController
+import ru.sudox.android.messages.MessagesChatController
+import ru.sudox.android.messages.MessagesTalkController
 import ru.sudox.design.viewlist.ViewList
 
 class TalksTabFragment : ViewListController<DialogsAdapter>() {
@@ -27,7 +28,7 @@ class TalksTabFragment : ViewListController<DialogsAdapter>() {
 
     override fun getAdapter(viewList: ViewList): DialogsAdapter? {
         return DialogsAdapter(R.plurals.talks, glide) {
-            navigationManager!!.showSubRoot(MessagesController().apply {
+            navigationManager!!.showSubRoot(MessagesTalkController().apply {
                 args.putLong(MESSAGES_CONTROLLER_DIALOG_ID_KEY, it)
             })
         }

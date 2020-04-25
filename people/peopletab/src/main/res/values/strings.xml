@@ -2,7 +2,6 @@
 <resources>
     <string name="people">People</string>
     <string name="friends">Friends</string>
-    <string name="seen_mask">Seen %s</string>
     <string name="new_friend_request">New friend request</string>
     <string name="importance">Importance</string>
     <string name="subscriptions">Subscriptions</string>
@@ -11,7 +10,6 @@
     <string name="maybe_you_know">Maybe you know</string>
     <string name="favorite">Favorite</string>
     <string name="popular">Popular</string>
-    <string name="online">Online</string>
     <string name="name">Name</string>
 
     <plurals name="mutual">

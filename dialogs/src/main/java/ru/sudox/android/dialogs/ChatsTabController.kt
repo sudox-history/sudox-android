@@ -6,7 +6,7 @@ import ru.sudox.android.dialogs.adapters.DialogsAdapter
 import ru.sudox.android.dialogs.vos.impl.ChatVO
 import ru.sudox.android.media.images.views.NOT_SHOWING_IMAGE_ID
 import ru.sudox.android.messages.MESSAGES_CONTROLLER_DIALOG_ID_KEY
-import ru.sudox.android.messages.MessagesController
+import ru.sudox.android.messages.MessagesChatController
 import ru.sudox.android.people.common.vos.SEEN_TIME_ONLINE
 import ru.sudox.design.viewlist.ViewList
 
@@ -46,7 +46,7 @@ class ChatsTabController : ViewListController<DialogsAdapter>() {
 
     override fun getAdapter(viewList: ViewList): DialogsAdapter? {
         return DialogsAdapter(R.plurals.chats, glide) {
-            navigationManager!!.showSubRoot(MessagesController().apply {
+            navigationManager!!.showSubRoot(MessagesChatController().apply {
                 args.putLong(MESSAGES_CONTROLLER_DIALOG_ID_KEY, it)
             })
         }

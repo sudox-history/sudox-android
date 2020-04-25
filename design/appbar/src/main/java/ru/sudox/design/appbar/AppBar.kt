@@ -76,11 +76,20 @@ class AppBar : ViewGroup, View.OnClickListener {
             invalidate()
         }
 
+    var marginBetweenViews: Int = 0
+        set(value) {
+            field = value
+            requestLayout()
+            invalidate()
+        }
+
     var callback: ((Int) -> (Unit))? = null
 
     internal var viewAtLeft: View? = null
     internal var viewAtRight: View? = null
 
+    private var pseudoPaddingLeft = 0
+    private var pseudoPaddingRight = 0
     private var buttonsAtLeft = LinkedList<AppCompatTextView>()
     private var buttonsAtRight = LinkedList<AppCompatTextView>()
     private var titleTextView = createTextView()
@@ -93,6 +102,9 @@ class AppBar : ViewGroup, View.OnClickListener {
         context.obtainStyledAttributes(attrs, R.styleable.AppBar, defStyleAttr, 0).use {
             buttonsStyleId = it.getResourceIdOrThrow(R.styleable.AppBar_buttonsStyle)
             marginBetweenViewsAndButtons = it.getDimensionPixelSize(R.styleable.AppBar_marginBetweenViewsAndButtons, 0)
+            marginBetweenViews = it.getDimensionPixelSize(R.styleable.AppBar_marginBetweenViews, 0)
+            pseudoPaddingLeft = it.getDimensionPixelSize(R.styleable.AppBar_pseudoPaddingLeft, 0)
+            pseudoPaddingRight = it.getDimensionPixelSize(R.styleable.AppBar_pseudoPaddingRight, 0)
 
             setTextAppearance(titleTextView, it.getResourceIdOrThrow(R.styleable.AppBar_titleTextAppearance))
         }
@@ -173,7 +185,7 @@ class AppBar : ViewGroup, View.OnClickListener {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         measureChild(titleTextView, widthMeasureSpec, heightMeasureSpec)
 
-        var freeWidth = MeasureSpec.getSize(widthMeasureSpec) - titleTextView.measuredWidth - paddingRight - paddingLeft
+        var freeWidth = MeasureSpec.getSize(widthMeasureSpec) - titleTextView.measuredWidth - pseudoPaddingLeft - pseudoPaddingRight
 
         buttonsAtLeft.forEach {
             measureChild(it, widthMeasureSpec, heightMeasureSpec)
@@ -198,6 +210,10 @@ class AppBar : ViewGroup, View.OnClickListener {
 
             viewAtRight!!.measure(widthSpec, heightMeasureSpec)
             freeWidth -= viewAtRight!!.measuredWidth
+
+            if (viewAtLeft != null) {
+                freeWidth -= marginBetweenViews
+            }
         }
 
         if (viewAtLeft != null) {
@@ -234,9 +250,9 @@ class AppBar : ViewGroup, View.OnClickListener {
             titleTextView.lazyLayout(0, 0, 0, 0)
         }
 
-        var leftBorderLeftButton = paddingLeft
+        var leftBorderLeftButton = pseudoPaddingLeft
         var rightBorderLeftButton = leftBorderLeftButton
-        var rightBorderRightButton = measuredWidth - paddingRight
+        var rightBorderRightButton = measuredWidth - pseudoPaddingRight
         var leftBorderRightButton = rightBorderRightButton
         val firstButton = buttonsAtLeft.firstOrNull() ?: buttonsAtRight.firstOrNull()
 
@@ -269,6 +285,10 @@ class AppBar : ViewGroup, View.OnClickListener {
         }
 
         if (viewAtRight != null) {
+            if (viewAtLeft != null) {
+                rightBorderLeftButton -= marginBetweenViews
+            }
+
             if (buttonsAtRight.isNotEmpty()) {
                 leftBorderRightButton -= marginBetweenViewsAndButtons
             }
@@ -276,7 +296,11 @@ class AppBar : ViewGroup, View.OnClickListener {
             val topBorder = measuredHeight / 2 - viewAtRight!!.measuredHeight / 2
             val bottomBorder = topBorder + viewAtRight!!.measuredHeight
 
-            viewAtRight!!.lazyLayout(leftBorderRightButton - viewAtRight!!.measuredWidth, topBorder, leftBorderRightButton, bottomBorder)
+            viewAtRight!!.lazyLayout(
+                    leftBorderRightButton - viewAtRight!!.measuredWidth,
+                    topBorder,
+                    leftBorderRightButton,
+                    bottomBorder)
         }
     }
 

@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import ru.sudox.android.core.CoreController
 import ru.sudox.android.messages.vos.MessagesChatVO
-import ru.sudox.android.messages.vos.appbar.ChatMessagesAppBarVO
+import ru.sudox.android.messages.vos.appbar.BaseMessagesAppBarVO
 
 const val MESSAGES_CONTROLLER_DIALOG_ID_KEY = "dialog_id"
 
-class MessagesController : CoreController() {
+class MessagesChatController : CoreController() {
 
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
-        appBarVO = ChatMessagesAppBarVO(glide).apply {
+        appBarVO = BaseMessagesAppBarVO<MessagesChatVO>(glide).apply {
             vo = MessagesChatVO(1L, "Maxim Mityushkin", 0L, 4L)
         }
 

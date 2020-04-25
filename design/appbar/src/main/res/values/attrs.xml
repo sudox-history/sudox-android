@@ -4,6 +4,9 @@
         <attr name="buttonsStyle" format="reference" />
         <attr name="titleTextAppearance" format="reference" />
         <attr name="marginBetweenViewsAndButtons" format="dimension" />
+        <attr name="marginBetweenViews" format="dimension" />
+        <attr name="pseudoPaddingRight" format="dimension" />
+        <attr name="pseudoPaddingLeft" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="CustomAppBarLayout">

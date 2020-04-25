@@ -23,17 +23,10 @@ data class AddedFriendVO(
     }
 
     override fun getStatusMessage(context: Context): String {
-        return if (status != null) {
-            status!!
-        } else if (isUserOnline()) {
-            context.getString(R.string.online)
+        return if (status == null) {
+            super.getStatusMessage(context)!!
         } else {
-            context.getString(R.string.seen_mask, formatTime(
-                    context,
-                    fullFormat = true,
-                    dateToLowerCase = true,
-                    time = seenTime)
-            )
+            status!!
         }
     }
 

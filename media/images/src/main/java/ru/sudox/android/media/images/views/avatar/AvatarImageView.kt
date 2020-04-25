@@ -20,6 +20,7 @@ import ru.sudox.android.media.images.views.GlideCircleImageView
 import ru.sudox.android.media.images.views.NOT_SHOWING_IMAGE_ID
 import ru.sudox.android.media.texts.helpers.getTwoFirstLetters
 import kotlin.math.cos
+import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.sin
 
@@ -193,7 +194,9 @@ class AvatarImageView : GlideCircleImageView {
                 indicatorClipRect.right = indicatorRect.right + indicatorCropRadiusDiff
                 indicatorClipRect.bottom = indicatorRect.bottom + indicatorCropRadiusDiff
             } else {
-                indicatorRect.left = (measuredWidth / 2F) + indicatorCropRadiusDiff
+                indicatorNumberTextPaint.getTextBounds(indicatorNumberText, 0, indicatorNumberText!!.length, indicatorNumberBounds)
+
+                indicatorRect.left = getImageWidth() / 2F
                 indicatorRect.right = indicatorRect.left +
                         indicatorNumberTextPaddingLeft +
                         indicatorNumberBounds.width() +
@@ -201,7 +204,7 @@ class AvatarImageView : GlideCircleImageView {
 
                 val indicatorHeight = indicatorNumberTextPaddingTop + indicatorNumberBounds.height() + indicatorNumberTextPaddingBottom
 
-                indicatorRect.top = measuredHeight - indicatorHeight / 2F
+                indicatorRect.top = getImageHeight() - indicatorHeight / 2F
                 indicatorRect.bottom = indicatorRect.top + indicatorHeight
 
                 indicatorClipRect.left = indicatorRect.left - indicatorCropRadiusDiff
@@ -212,15 +215,13 @@ class AvatarImageView : GlideCircleImageView {
                 var needWidthSpec = widthMeasureSpec
                 var needHeightSpec = heightMeasureSpec
 
-                if (indicatorClipRect.bottom > measuredHeight) {
+                if (indicatorClipRect.bottom > getImageHeight()) {
                     needHeightSpec = MeasureSpec.makeMeasureSpec(indicatorClipRect.bottom.toInt(), MeasureSpec.EXACTLY)
                 }
 
-                if (indicatorClipRect.right > measuredWidth) {
+                if (indicatorClipRect.right > getImageWidth()) {
                     needWidthSpec = MeasureSpec.makeMeasureSpec(indicatorClipRect.right.toInt(), MeasureSpec.EXACTLY)
                 }
-
-                indicatorNumberTextPaint.getTextBounds(indicatorNumberText, 0, indicatorNumberText!!.length, indicatorNumberBounds)
 
                 if (needWidthSpec != widthMeasureSpec || needHeightSpec != heightMeasureSpec) {
                     super.onMeasure(needWidthSpec, needHeightSpec)
@@ -256,6 +257,17 @@ class AvatarImageView : GlideCircleImageView {
 
                 canvas.drawText(indicatorNumberText!!, textX, textY, indicatorNumberTextPaint)
             }
+        }
+    }
+
+    override fun layout(l: Int, t: Int, r: Int, b: Int) {
+        if (indicatorNumberText != null) {
+            val offsetHorizontal = (indicatorClipRect.right.toInt() - getImageWidth())
+            val offsetVertical = (measuredHeight - getImageHeight()) / 2
+
+            super.layout(l + offsetHorizontal, t + offsetVertical, r + offsetHorizontal, b + offsetVertical)
+        } else {
+            super.layout(l, t, r, b)
         }
     }
 
