@@ -19,6 +19,7 @@ import ru.sudox.android.media.images.R
 import ru.sudox.android.media.images.views.GlideCircleImageView
 import ru.sudox.android.media.images.views.NOT_SHOWING_IMAGE_ID
 import ru.sudox.android.media.texts.helpers.getTwoFirstLetters
+import ru.sudox.design.appbar.AppBar
 import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.min
@@ -261,7 +262,7 @@ class AvatarImageView : GlideCircleImageView {
     }
 
     override fun layout(l: Int, t: Int, r: Int, b: Int) {
-        if (indicatorNumberText != null) {
+        if (indicatorNumberText != null && parent is AppBar) {
             val offsetHorizontal = (indicatorClipRect.right.toInt() - getImageWidth())
             val offsetVertical = (measuredHeight - getImageHeight()) / 2
 
