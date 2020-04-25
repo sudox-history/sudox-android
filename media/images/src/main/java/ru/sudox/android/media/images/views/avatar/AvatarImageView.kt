@@ -10,11 +10,15 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
+import androidx.core.content.res.getFloatOrThrow
 import androidx.core.content.res.getFontOrThrow
+import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.R
 import ru.sudox.android.media.images.views.GlideCircleImageView
+import ru.sudox.android.media.images.views.NOT_SHOWING_IMAGE_ID
+import ru.sudox.android.media.texts.helpers.getTwoFirstLetters
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -30,13 +34,42 @@ class AvatarImageView : GlideCircleImageView {
     private var indicatorNumberBounds = Rect()
     private var indicatorNumberText: String? = null
     private var indicatorNumberTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-
     private var indicatorPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var indicatorClipRect = RectF()
     private var indicatorRect = RectF()
 
+    private var avatarDrawable = AvatarDrawable(this)
+    private var avatarColors: IntArray? = null
+
+    internal var textInAvatar: String? = null
+    internal var avatarTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    internal var avatarTextBounds = Rect()
+    internal var avatarColor = 0
+
     var vo: AvatarVO? = null
         private set
+
+    var avatarTextColor: Int
+        get() = avatarTextPaint.color
+        set(value) {
+            avatarTextPaint.color = value
+        }
+
+    var avatarTextTypeface: Typeface?
+        get() = avatarTextPaint.typeface
+        set(value) {
+            avatarTextPaint.typeface = value
+        }
+
+    var avatarHeightPercent = 0F
+        set(value) {
+            if (drawable != null) {
+                requestLayout()
+                invalidate()
+            }
+
+            field = value
+        }
 
     var indicatorCropRadiusDiff = 0
         set(value) {
@@ -130,6 +163,11 @@ class AvatarImageView : GlideCircleImageView {
             indicatorNumberTextPaddingLeft = it.getDimensionPixelSize(R.styleable.AvatarImageView_indicatorNumberTextPaddingLeft, 0)
             indicatorNumberTextPaddingRight = it.getDimensionPixelSize(R.styleable.AvatarImageView_indicatorNumberTextPaddingRight, 0)
 
+            avatarColors = it.resources.getIntArray(it.getResourceIdOrThrow(R.styleable.AvatarImageView_avatarColors))
+            avatarTextColor = it.getColorOrThrow(R.styleable.AvatarImageView_avatarTextColor)
+            avatarTextTypeface = it.getFontOrThrow(R.styleable.AvatarImageView_avatarTextFontFamily)
+            avatarHeightPercent = it.getFloatOrThrow(R.styleable.AvatarImageView_avatarHeightPercent)
+
             indicatorCropColor = it.getColorOrThrow(R.styleable.AvatarImageView_indicatorCropColor)
             indicatorCropRadiusDiff = it.getDimensionPixelSizeOrThrow(R.styleable.AvatarImageView_indicatorCropRadiusDiff)
             indicatorRadius = it.getDimensionPixelSizeOrThrow(R.styleable.AvatarImageView_indicatorRadius)
@@ -182,10 +220,17 @@ class AvatarImageView : GlideCircleImageView {
                     needWidthSpec = MeasureSpec.makeMeasureSpec(indicatorClipRect.right.toInt(), MeasureSpec.EXACTLY)
                 }
 
+                indicatorNumberTextPaint.getTextBounds(indicatorNumberText, 0, indicatorNumberText!!.length, indicatorNumberBounds)
+
                 if (needWidthSpec != widthMeasureSpec || needHeightSpec != heightMeasureSpec) {
                     super.onMeasure(needWidthSpec, needHeightSpec)
                 }
             }
+        }
+
+        if (textInAvatar != null) {
+            avatarTextPaint.textSize = getImageHeight() * avatarHeightPercent
+            avatarTextPaint.getTextBounds(textInAvatar, 0, textInAvatar!!.length, avatarTextBounds)
         }
     }
 
@@ -218,9 +263,17 @@ class AvatarImageView : GlideCircleImageView {
         this.vo = vo
 
         if (vo != null) {
-            loadImage(vo.getResourceId(), glide)
-
+            val resourceId = vo.getResourceId()
             val number = vo.getNumberInIndicator()
+
+            if (resourceId != NOT_SHOWING_IMAGE_ID) {
+                loadImage(vo.getResourceId(), glide)
+            } else {
+                avatarColor = avatarColors!![(vo.getAvatarKey() % avatarColors!!.size).toInt()]
+                textInAvatar = getTwoFirstLetters(vo.getTextInAvatar()!!)
+
+                loadDrawable(glide, avatarDrawable)
+            }
 
             indicatorNumberText = if (number == 0) {
                 null
@@ -228,10 +281,6 @@ class AvatarImageView : GlideCircleImageView {
                 "$number"
             } else {
                 "9+"
-            }
-
-            if (indicatorNumberText != null) {
-                indicatorNumberTextPaint.getTextBounds(indicatorNumberText, 0, indicatorNumberText!!.length, indicatorNumberBounds)
             }
         } else {
             indicatorNumberText = null

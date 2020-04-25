@@ -29,3 +29,24 @@ fun formatNumber(context: Context, number: Int): String {
         String.format("$mask${context.getString(R.string.billions_suffix)}", number / 1_000_000_000F)
     }
 }
+
+/**
+ * Генерирует строку из первых букв первых двух слов
+ *
+ * @param string Строка, из которой нужно получить новую
+ * @return Сгенерированная строка
+ */
+fun getTwoFirstLetters(string: String): String {
+    val builder = StringBuilder()
+    val names = string.split(" ")
+
+    if (names.isNotEmpty()) {
+        builder.append(names[0][0])
+
+        if (names.size >= 2) {
+            builder.append(names[1][0])
+        }
+    }
+
+    return builder.toString()
+}

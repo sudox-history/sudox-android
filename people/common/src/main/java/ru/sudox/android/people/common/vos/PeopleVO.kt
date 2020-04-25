@@ -28,6 +28,14 @@ interface PeopleVO : AvatarVO {
         return !isStatusAboutOnline() && isUserOnline()
     }
 
+    override fun getAvatarKey(): Long {
+        return userId
+    }
+
+    override fun getTextInAvatar(): String? {
+        return userName
+    }
+
     override fun getResourceId(): Long {
         return photoId
     }

@@ -14,7 +14,7 @@ import ru.sudox.android.media.images.entries.GlideImageRequest
 import ru.sudox.design.roundedview.RoundedImageView
 
 @Suppress("unused")
-const val NOT_SHOWING_IMAGE_ID = -1
+const val NOT_SHOWING_IMAGE_ID = -1L
 
 /**
  * ImageView с возможность загрузки изображения по ID с сервера
@@ -46,7 +46,24 @@ open class GlideImageView : RoundedImageView {
         cancelLoading(glide)
 
         glide.load(GlideImageRequest(id))
-                .placeholder(placeholderDrawable)
+                .placeholder(this.drawable ?: placeholderDrawable)
+                .transition(withCrossFade(crossFadeDuration))
+                .centerCrop()
+                .into(this)
+    }
+
+    /**
+     * Загружает Drawable как изображение
+     * Дополнительно выполняет нужные преобразования.
+     *
+     * @param glide Менеджер запросов Glide
+     * @param drawable Drawable для загрузки
+     */
+    fun loadDrawable(glide: GlideRequests, drawable: Drawable) {
+        cancelLoading(glide)
+
+        glide.load(drawable)
+                .placeholder(this.drawable ?: placeholderDrawable)
                 .transition(withCrossFade(crossFadeDuration))
                 .centerCrop()
                 .into(this)

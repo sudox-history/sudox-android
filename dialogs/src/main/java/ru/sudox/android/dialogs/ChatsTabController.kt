@@ -4,6 +4,7 @@ import android.view.View
 import ru.sudox.android.core.controllers.ViewListController
 import ru.sudox.android.dialogs.adapters.DialogsAdapter
 import ru.sudox.android.dialogs.vos.impl.ChatVO
+import ru.sudox.android.media.images.views.NOT_SHOWING_IMAGE_ID
 import ru.sudox.android.messages.MESSAGES_CONTROLLER_DIALOG_ID_KEY
 import ru.sudox.android.messages.MessagesController
 import ru.sudox.android.people.common.vos.SEEN_TIME_ONLINE
@@ -15,7 +16,7 @@ class ChatsTabController : ViewListController<DialogsAdapter>() {
         super.bindView(view)
 
         adapter!!.dialogsVOs.let {
-            it.add(ChatVO(1L, false, true, System.currentTimeMillis() - 30000, 0, false, false, true, 1L, "Максим Митюшкин", SEEN_TIME_ONLINE, 4L, "" +
+            it.add(ChatVO(1L, false, true, System.currentTimeMillis() - 30000, 0, false, false, true, 1L, "Максим Митюшкин", SEEN_TIME_ONLINE, NOT_SHOWING_IMAGE_ID, "" +
                     "Мы тут M760Li до 900 сил чипанули. До сотки за 2,4 секунды разгоняется. Лютая дичь конечно получилась!"))
 
             it.add(ChatVO(2L, false, true, System.currentTimeMillis() - 10000, 0, false, true, true, 1L, "n74b66", 1L, 7L, "" +
@@ -29,6 +30,17 @@ class ChatsTabController : ViewListController<DialogsAdapter>() {
 
             it.add(ChatVO(5L, false, false, System.currentTimeMillis() - 15000, 1, false, false, true, 1L, "isp", 1L, 3L, "" +
                     "Сударь, мое сообщение ещё выше и отображается в две линии!"))
+
+            var counter = 1L
+
+            adapter!!.dialogsVOs.beginBatchedUpdates()
+
+            repeat(300) {
+                adapter!!.dialogsVOs.add(ChatVO(1L, false, true, counter++, 0, false, false, true, counter, "$counter", SEEN_TIME_ONLINE, NOT_SHOWING_IMAGE_ID, "" +
+                        "Мы тут M760Li до 900 сил чипанули. До сотки за 2,4 секунды разгоняется. Лютая дичь конечно получилась!"))
+            }
+
+            adapter!!.dialogsVOs.endBatchedUpdates()
         }
     }
 
