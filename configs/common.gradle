@@ -3,7 +3,7 @@ def versionMinor = 6
 def versionUpdate = 0
 def versionPatch = 0
 
-ext.registerModule = { isApp, needExtensions, needApt, needKotlin ->
+ext.registerModule = { isApp, needApt, needKotlin ->
     if (isApp) {
         apply plugin: 'com.android.application'
     } else {
@@ -12,10 +12,6 @@ ext.registerModule = { isApp, needExtensions, needApt, needKotlin ->
 
     if (needKotlin) {
         apply plugin: 'kotlin-android'
-
-        if (needExtensions) {
-            apply plugin: 'kotlin-android-extensions'
-        }
 
         if (needApt) {
             apply plugin: 'kotlin-kapt'

@@ -8,12 +8,6 @@ import kotlin.math.min
 
 const val AUTOFILL_HINT_PHONE_NUMBER = "phoneNumber"
 
-fun View.lazyLayout(newLeft: Int, newTop: Int, newRight: Int, newBottom: Int) {
-    if (newLeft != left || newTop != top || newRight != right || newBottom != bottom) {
-        layout(newLeft, newTop, newRight, newBottom)
-    }
-}
-
 /**
  * Расчитывает значение одного из размерных параметров View.
  *

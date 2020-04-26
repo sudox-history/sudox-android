@@ -1,24 +1,15 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, true, false, true)
-
-apply from: '../configs/robolectric.gradle'
+registerModule(false, false, true)
 
 dependencies {
     implementation project(path: ':people:common') // TODO: Move PeopleVO & PeopleItemViews to another module
     implementation project(path: ':design')
     implementation project(path: ':media')
-    implementation project(path: ':api')
-
-    api project(path: ':core')
+    implementation project(path: ':core')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
-    implementation libraries.lifecycle_extensions
     implementation libraries.recyclerview
-
-    testImplementation libraries.junit
-    testImplementation libraries.robolectric
-    testImplementation libraries.mockito
 }

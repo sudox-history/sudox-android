@@ -1,17 +1,17 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, true, true, true)
+registerModule(false, true, true)
 
 dependencies {
     implementation project(path: ':design')
-
-    api project(":core")
+    implementation project(":core")
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
     implementation libraries.recyclerview
     implementation libraries.libphonenumber
+    implementation libraries.lifecycle_extensions
     implementation libraries.conductor_archlifecycle
     implementation libraries.conductor
 

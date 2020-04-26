@@ -11,24 +11,15 @@ import javax.inject.Singleton
 
 @Module
 class ApiModule(
-        connection: Connection,
-        objectMapper: ObjectMapper
+        private val connection: Connection,
+        private val objectMapper: ObjectMapper
 ) {
 
-    var connection = connection
-        @Singleton
-        @Provides
-        get
-
-    var objectMapper = objectMapper
-        @Singleton
-        @Provides
-        get
-
-    var api: SudoxApi = SudoxApiImpl(connection, objectMapper)
-        @Singleton
-        @Provides
-        get
+    @Singleton
+    @Provides
+    fun provideSudoxApi(): SudoxApi {
+        return SudoxApiImpl(connection, objectMapper)
+    }
 
     @Singleton
     @Provides

@@ -19,7 +19,6 @@ import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.others.AppBarButtonParam
 import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
-import ru.sudox.design.common.lazyLayout
 import java.util.LinkedList
 import kotlin.math.abs
 
@@ -247,9 +246,9 @@ class AppBar : ViewGroup, View.OnClickListener {
             val topBorder = measuredHeight / 2 - titleTextView.measuredHeight / 2
             val bottomBorder = topBorder + titleTextView.measuredHeight
 
-            titleTextView.lazyLayout(leftBorder, topBorder, rightBorder, bottomBorder)
+            titleTextView.layout(leftBorder, topBorder, rightBorder, bottomBorder)
         } else {
-            titleTextView.lazyLayout(0, 0, 0, 0)
+            titleTextView.layout(0, 0, 0, 0)
         }
 
         var leftBorderLeftButton = pseudoPaddingLeft
@@ -264,13 +263,13 @@ class AppBar : ViewGroup, View.OnClickListener {
 
             buttonsAtLeft.forEach {
                 rightBorderLeftButton = leftBorderLeftButton + it.measuredWidth
-                it.lazyLayout(leftBorderLeftButton, buttonsTopBorder, rightBorderLeftButton, buttonsBottomBorder)
+                it.layout(leftBorderLeftButton, buttonsTopBorder, rightBorderLeftButton, buttonsBottomBorder)
                 leftBorderLeftButton = rightBorderLeftButton
             }
 
             buttonsAtRight.forEach {
                 leftBorderRightButton = rightBorderRightButton - it.measuredWidth
-                it.lazyLayout(leftBorderRightButton, buttonsTopBorder, rightBorderRightButton, buttonsBottomBorder)
+                it.layout(leftBorderRightButton, buttonsTopBorder, rightBorderRightButton, buttonsBottomBorder)
                 rightBorderRightButton = leftBorderRightButton
             }
         }
@@ -283,7 +282,7 @@ class AppBar : ViewGroup, View.OnClickListener {
             val topBorder = measuredHeight / 2 - viewAtLeft!!.measuredHeight / 2
             val bottomBorder = topBorder + viewAtLeft!!.measuredHeight
 
-            viewAtLeft!!.lazyLayout(rightBorderLeftButton, topBorder, rightBorderLeftButton + viewAtLeft!!.measuredWidth, bottomBorder)
+            viewAtLeft!!.layout(rightBorderLeftButton, topBorder, rightBorderLeftButton + viewAtLeft!!.measuredWidth, bottomBorder)
         }
 
         if (viewAtRight != null) {
@@ -298,7 +297,7 @@ class AppBar : ViewGroup, View.OnClickListener {
             val topBorder = measuredHeight / 2 - viewAtRight!!.measuredHeight / 2
             val bottomBorder = topBorder + viewAtRight!!.measuredHeight
 
-            viewAtRight!!.lazyLayout(
+            viewAtRight!!.layout(
                     leftBorderRightButton - viewAtRight!!.measuredWidth,
                     topBorder,
                     leftBorderRightButton,

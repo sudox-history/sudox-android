@@ -28,7 +28,7 @@ class MomentsAdapter(
             }
         }
 
-    val momentsVOs = SortedList<MomentVO>(MomentVO::class.java, MomentsSortingCallback(this, 1))
+    val momentsVOs = SortedList(MomentVO::class.java, MomentsSortingCallback(this, 1))
     var addMomentVO: MomentVO? = null
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {

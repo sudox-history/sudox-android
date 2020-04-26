@@ -1,7 +1,7 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, true, false, true)
+registerModule(false, false, true)
 
 dependencies {
     implementation project(path: ':time')
@@ -10,8 +10,7 @@ dependencies {
     implementation project(path: ':media')
     implementation project(path: ':design')
     implementation project(path: ':api')
-
-    api project(path: ':core')
+    implementation project(path: ':core')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat

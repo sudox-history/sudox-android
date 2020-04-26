@@ -6,10 +6,13 @@ import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import javax.inject.Singleton
 
 @Module(includes = [CountriesUiModule::class])
-class CountriesModule(phoneNumberUtil: PhoneNumberUtil) {
+class CountriesModule(
+        private val phoneNumberUtil: PhoneNumberUtil
+) {
 
-    val phoneNumberUtil: PhoneNumberUtil = phoneNumberUtil
-        @Provides
-        @Singleton
-        get
+    @Provides
+    @Singleton
+    fun providePhoneNumberUtil(): PhoneNumberUtil {
+        return phoneNumberUtil
+    }
 }

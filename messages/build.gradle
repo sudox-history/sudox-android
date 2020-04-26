@@ -1,18 +1,16 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, true, false, true)
+registerModule(false, false, true)
 
 dependencies {
     implementation project(":people")
     implementation project(":design")
     implementation project(":media")
-
-    api project(":core")
+    implementation project(":core")
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
-    implementation libraries.conductor
     implementation libraries.conductor_archlifecycle
-    implementation libraries.conductor_viewpager
+    implementation libraries.conductor
 }

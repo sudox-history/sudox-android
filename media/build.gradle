@@ -1,13 +1,12 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, true, false, true)
+registerModule(false, false, true)
 
 dependencies {
     api project(":media:images")
     api project(":media:texts")
 
     implementation project(":design")
-    implementation libraries.core_ktx
     implementation libraries.appcompat
 }

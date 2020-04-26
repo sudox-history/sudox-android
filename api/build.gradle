@@ -1,14 +1,12 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, false, true, true)
+registerModule(false, true, true)
 
 dependencies {
     api project(":api:common")
     api project(":api:auth")
 
-    implementation libraries.annotations
-    implementation libraries.jackson_kotlin
     implementation libraries.jackson
     implementation libraries.okhttp3
     implementation libraries.rxjava

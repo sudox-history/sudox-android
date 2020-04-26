@@ -1,24 +1,22 @@
 apply from: '../../configs/dependencies.gradle'
 apply from: '../../configs/common.gradle'
 
-registerModule(false, true, true, true)
+registerModule(false, true, true)
 
 dependencies {
     implementation project(path: ':design')
     implementation project(path: ':countries')
     implementation project(path: ':auth:data')
     implementation project(path: ':api')
-
-    api project(path: ':core')
+    implementation project(path: ':core')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
     implementation libraries.lifecycle_extensions
     implementation libraries.libphonenumber
     implementation libraries.conductor_archlifecycle
-    implementation libraries.rxandroid
-    implementation libraries.rxjava
     implementation libraries.conductor
+    implementation libraries.rxjava
 
     implementation libraries.dagger
     kapt libraries.dagger_compiler

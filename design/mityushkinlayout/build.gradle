@@ -1,12 +1,8 @@
 apply from: '../../configs/dependencies.gradle'
 apply from: '../../configs/common.gradle'
 
-registerModule(false, true, true, true)
+registerModule(false, false, true)
 
 dependencies {
-    implementation project(path: ':design:common')
     implementation project(path: ':design:roundedview')
-
-    implementation libraries.core_ktx
-    implementation libraries.appcompat
 }

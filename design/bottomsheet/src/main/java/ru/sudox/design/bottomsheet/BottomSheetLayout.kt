@@ -99,7 +99,7 @@ class BottomSheetLayout : ViewGroup {
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         var topBorder = paddingTop
-        var bottomBorder = topBorder
+        var bottomBorder: Int
 
         if (!titleTextView.text.isNullOrEmpty()) {
             bottomBorder = topBorder + titleTextView.measuredHeight

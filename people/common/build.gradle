@@ -1,21 +1,13 @@
 apply from: '../../configs/dependencies.gradle'
 apply from: '../../configs/common.gradle'
 
-registerModule(false, true, true, true)
+registerModule(false, false, true)
 
 dependencies {
     implementation project(path: ':design')
     implementation project(path: ':media')
-    implementation project(path: ":time")
-    implementation project(path: ':api')
-
-    api project(path: ':core')
+    implementation project(path: ':time')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
-    implementation libraries.lifecycle_extensions
-    implementation libraries.recyclerview
-
-    implementation libraries.glide
-    kapt libraries.glide_compiler
 }

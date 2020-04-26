@@ -1,18 +1,14 @@
 apply from: '../../configs/dependencies.gradle'
 apply from: '../../configs/common.gradle'
 
-registerModule(false, true, false, true)
-
-apply from: '../../configs/robolectric.gradle'
+registerModule(false, false, true)
 
 dependencies {
-    implementation project(path: ':media')
     implementation project(path: ':time')
     implementation project(path: ':people:common')
     implementation project(path: ':design')
-    implementation project(path: ':api')
-
-    api project(path: ':core')
+    implementation project(path: ':media')
+    implementation project(path: ':core')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
@@ -20,8 +16,4 @@ dependencies {
     implementation libraries.lifecycle_extensions
     implementation libraries.conductor_archlifecycle
     implementation libraries.conductor
-
-    testImplementation libraries.junit
-    testImplementation libraries.robolectric
-    testImplementation libraries.mockito
 }
