@@ -4,8 +4,8 @@ apply from: '../../configs/common.gradle'
 registerModule(false, true, true, true)
 
 dependencies {
-    api project(":design")
-    api project(":design:roundedview")
+    implementation project(path: ':design')
+
     api project(":media:texts")
 
     implementation libraries.core_ktx

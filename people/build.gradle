@@ -4,12 +4,11 @@ apply from: '../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
+    implementation project(path: ':design')
+
     api project(path: ':core')
     api project(path: ':countries')
     api project(path: ':auth:ui')
-    api project(path: ':design')
-    api project(path: ':design:edittext')
-    api project(path: ':design:mityushkinlayout')
     api project(path: ':people:activitytab')
     api project(path: ':people:peopletab')
     api project(path: ':people:common')

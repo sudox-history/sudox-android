@@ -4,8 +4,8 @@ apply from: '../../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
-    api project(":design:common")
-    api project(":design:edittext")
+    implementation project(":design:common")
+    implementation project(":design:edittext")
 
     implementation libraries.core_ktx
     implementation libraries.appcompat

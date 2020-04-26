@@ -4,8 +4,9 @@ apply from: '../../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
+    implementation project(path: ':design')
+
     api project(path: ':core')
-    api project(path: ':design')
     api project(path: ':moments')
     api project(path: ':news')
     api project(path: ':api')

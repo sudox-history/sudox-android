@@ -4,8 +4,8 @@ apply from: '../../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
-    api project(path: ':design:common')
-    api project(path: ':design:saveableview')
+    implementation project(path: ':design:common')
+    implementation project(path: ':design:saveableview')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat

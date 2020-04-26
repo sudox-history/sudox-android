@@ -4,10 +4,10 @@ apply from: '../../configs/common.gradle'
 registerModule(false, true, true, true)
 
 dependencies {
+    implementation project(path: ':design')
+
     api project(path: ":time")
     api project(path: ':core')
-    api project(path: ':design')
-    api project(path: ':design:viewlist')
     api project(path: ':media:images')
     api project(path: ':api')
 
