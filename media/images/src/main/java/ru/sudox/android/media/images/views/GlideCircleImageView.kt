@@ -16,7 +16,7 @@ open class GlideCircleImageView : GlideImageView {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val radius = min(measuredWidth, measuredHeight) / 2F
+        val radius = min(getImageWidth(), getImageHeight()) / 2F
 
         topLeftCropRadius = radius
         topRightCropRadius = radius

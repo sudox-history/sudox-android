@@ -75,10 +75,6 @@ open class RoundedImageView : AppCompatImageView, RoundedView {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val top = paddingTop.toFloat()
-        val left = paddingLeft.toFloat()
-        val right = left + getImageWidth()
-        val bottom = top + getImageHeight()
         val radii = floatArrayOf(
                 topLeftCropRadius,
                 topLeftCropRadius,
@@ -93,7 +89,7 @@ open class RoundedImageView : AppCompatImageView, RoundedView {
         if (topLeftCropRadius != 0F || topRightCropRadius != 0F || bottomLeftCropRadius != 0F || bottomRightCropRadius != 0F) {
             clipPath.let {
                 it.reset()
-                it.addRoundRect(left, top, right, bottom, radii, Path.Direction.CW)
+                it.addRoundRect(0F, 0F, getImageWidth().toFloat(), getImageHeight().toFloat(), radii, Path.Direction.CW)
             }
         }
     }

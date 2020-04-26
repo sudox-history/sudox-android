@@ -20,7 +20,6 @@ import ru.sudox.android.media.images.R
 import ru.sudox.android.media.images.views.GlideCircleImageView
 import ru.sudox.android.media.images.views.NOT_SHOWING_IMAGE_ID
 import ru.sudox.android.media.texts.helpers.getTwoFirstLetters
-import ru.sudox.design.appbar.AppBar
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.sin
@@ -30,6 +29,8 @@ import kotlin.math.sin
  *
  * Отображает первые буквы двух слов если пользователь не установил аватарку.
  * Также отображает кружок-индикатор статуса пользователя если это требует ViewObject.
+ *
+ * Если используете цифровой индикатор, то убедитесь, что у родительской View выставлен clipChildren = false
  */
 class AvatarImageView : GlideCircleImageView {
 
@@ -223,7 +224,7 @@ class AvatarImageView : GlideCircleImageView {
 
     override fun onDraw(canvas: Canvas) {
         canvas.save()
-        canvas.clipRect(paddingLeft, paddingTop, paddingRight + layoutParams.width, paddingTop + layoutParams.height)
+        canvas.clipRect(0, 0, getImageWidth(), getImageHeight())
         super.onDraw(canvas)
         canvas.restore()
 
@@ -243,18 +244,6 @@ class AvatarImageView : GlideCircleImageView {
 
                 canvas.drawText(indicatorNumberText!!, textX, textY, indicatorNumberTextPaint)
             }
-        }
-    }
-
-    override fun layout(l: Int, t: Int, r: Int, b: Int) {
-        // Да, так не очень хорошо делать, но это был единственный выход из ситуации.
-        if (indicatorNumberText != null && parent is AppBar) {
-            val offsetHorizontal = (indicatorClipRect.right.toInt() - getImageWidth())
-            val offsetVertical = (measuredHeight - getImageHeight()) / 2
-
-            super.layout(l + offsetHorizontal, t + offsetVertical, r + offsetHorizontal, b + offsetVertical)
-        } else {
-            super.layout(l, t, r, b)
         }
     }
 
