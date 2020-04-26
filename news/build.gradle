@@ -6,11 +6,10 @@ registerModule(false, true, false, true)
 dependencies {
     implementation project(path: ':design')
     implementation project(path: ':api')
+    implementation project(path: ':media')
 
     api project(path: ':core')
     api project(path: ':people:common')
-    api project(path: ':media:texts')
-    api project(path: ':media')
     api project(path: ':time')
 
     implementation libraries.core_ktx
