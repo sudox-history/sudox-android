@@ -7,10 +7,12 @@ import android.util.AttributeSet
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.R
 import ru.sudox.android.media.images.entries.GlideImageRequest
+import ru.sudox.android.media.images.transitions.FadeTransition
 import ru.sudox.design.roundedview.RoundedImageView
 
 @Suppress("unused")
@@ -47,7 +49,7 @@ open class GlideImageView : RoundedImageView {
 
         glide.load(GlideImageRequest(id))
                 .placeholder(this.drawable ?: placeholderDrawable)
-                .transition(withCrossFade(crossFadeDuration))
+                .transition(DrawableTransitionOptions.with(FadeTransition))
                 .centerCrop()
                 .into(this)
     }

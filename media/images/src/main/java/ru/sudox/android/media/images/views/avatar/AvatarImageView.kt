@@ -262,9 +262,6 @@ class AvatarImageView : GlideCircleImageView {
             val number = vo.getNumberInIndicator()
 
             if (resourceId != NOT_SHOWING_IMAGE_ID) {
-                avatarColor = 0
-                textInAvatar = null
-
                 loadImage(resourceId, glide)
             } else {
                 avatarColor = avatarColors!![(vo.getAvatarKey() % avatarColors!!.size).toInt()]
