@@ -4,16 +4,15 @@ apply from: '../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
+    implementation project(path: ':people:activitytab')
+    implementation project(path: ':people:peopletab')
+    implementation project(path: ':countries')
     implementation project(path: ':design')
     implementation project(path: ':media')
     implementation project(path: ':api')
 
-    api project(path: ':core')
-    api project(path: ':countries')
-    api project(path: ':people:activitytab')
-    api project(path: ':people:peopletab')
     api project(path: ':people:common')
-    api project(path: ':news')
+    api project(path: ':core')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat

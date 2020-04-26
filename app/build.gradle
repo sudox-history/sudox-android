@@ -26,15 +26,15 @@ android {
 apply from: '../configs/robolectric.gradle'
 
 dependencies {
+    implementation project(path: ':people')
+    implementation project(path: ':countries')
     implementation project(path: ':media') // TODO: Remove
     implementation project(path: ':design')
     implementation project(path: ':auth')
     implementation project(path: ':api')
 
     api project(path: ':core')
-    api project(path: ':people')
     api project(path: ':dialogs')
-    api project(path: ':countries')
 
     implementation libraries.firebase_analytics
     implementation libraries.firebase_crashlytics

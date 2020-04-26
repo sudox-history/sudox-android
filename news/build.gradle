@@ -4,13 +4,13 @@ apply from: '../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
+    implementation project(path: ':time')
+    implementation project(path: ':people:common') // TODO: Move PeopleVO & PeopleItemViews to another module
     implementation project(path: ':design')
     implementation project(path: ':api')
     implementation project(path: ':media')
 
     api project(path: ':core')
-    api project(path: ':people:common')
-    api project(path: ':time')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat

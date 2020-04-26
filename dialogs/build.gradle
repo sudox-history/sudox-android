@@ -4,13 +4,14 @@ apply from: '../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
+    implementation project(path: ':time')
+    implementation project(path: ':messages')
+    implementation project(path: ':people')
+    implementation project(path: ':media')
     implementation project(path: ':design')
     implementation project(path: ':api')
 
     api project(path: ':core')
-    api project(path: ':people')
-    api project(path: ':messages')
-    api project(path: ':time')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
