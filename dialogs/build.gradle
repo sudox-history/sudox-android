@@ -5,8 +5,8 @@ registerModule(false, true, false, true)
 
 dependencies {
     implementation project(path: ':design')
+    implementation project(path: ':api')
 
-    api project(path: ':api')
     api project(path: ':core')
     api project(path: ':people')
     api project(path: ':messages')

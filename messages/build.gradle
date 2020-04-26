@@ -4,6 +4,8 @@ apply from: '../configs/common.gradle'
 registerModule(false, true, false, true)
 
 dependencies {
+    implementation project(":design")
+
     api project(":core")
     api project(":people:common")
 

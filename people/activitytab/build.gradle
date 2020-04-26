@@ -5,11 +5,11 @@ registerModule(false, true, false, true)
 
 dependencies {
     implementation project(path: ':design')
+    implementation project(path: ':api')
 
     api project(path: ':core')
     api project(path: ':moments')
     api project(path: ':news')
-    api project(path: ':api')
 
     implementation libraries.core_ktx
     implementation libraries.appcompat
