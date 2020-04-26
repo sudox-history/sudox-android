@@ -99,6 +99,8 @@ class AppBar : ViewGroup, View.OnClickListener {
 
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        clipChildren = false
+
         context.obtainStyledAttributes(attrs, R.styleable.AppBar, defStyleAttr, 0).use {
             buttonsStyleId = it.getResourceIdOrThrow(R.styleable.AppBar_buttonsStyle)
             marginBetweenViewsAndButtons = it.getDimensionPixelSize(R.styleable.AppBar_marginBetweenViewsAndButtons, 0)

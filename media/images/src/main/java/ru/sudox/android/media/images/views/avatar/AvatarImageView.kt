@@ -8,6 +8,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.util.AttributeSet
+import android.view.ViewGroup
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getFloatOrThrow
@@ -21,7 +22,6 @@ import ru.sudox.android.media.images.views.NOT_SHOWING_IMAGE_ID
 import ru.sudox.android.media.texts.helpers.getTwoFirstLetters
 import ru.sudox.design.appbar.AppBar
 import kotlin.math.cos
-import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.sin
 
@@ -212,21 +212,6 @@ class AvatarImageView : GlideCircleImageView {
                 indicatorClipRect.right = indicatorRect.right + indicatorCropRadiusDiff
                 indicatorClipRect.bottom = indicatorRect.bottom + indicatorCropRadiusDiff
                 indicatorClipRect.top = indicatorRect.top - indicatorCropRadiusDiff
-
-                var needWidthSpec = widthMeasureSpec
-                var needHeightSpec = heightMeasureSpec
-
-                if (indicatorClipRect.bottom > getImageHeight()) {
-                    needHeightSpec = MeasureSpec.makeMeasureSpec(indicatorClipRect.bottom.toInt(), MeasureSpec.EXACTLY)
-                }
-
-                if (indicatorClipRect.right > getImageWidth()) {
-                    needWidthSpec = MeasureSpec.makeMeasureSpec(indicatorClipRect.right.toInt(), MeasureSpec.EXACTLY)
-                }
-
-                if (needWidthSpec != widthMeasureSpec || needHeightSpec != heightMeasureSpec) {
-                    super.onMeasure(needWidthSpec, needHeightSpec)
-                }
             }
         }
 
@@ -262,6 +247,7 @@ class AvatarImageView : GlideCircleImageView {
     }
 
     override fun layout(l: Int, t: Int, r: Int, b: Int) {
+        // Да, так не очень хорошо делать, но это был единственный выход из ситуации.
         if (indicatorNumberText != null && parent is AppBar) {
             val offsetHorizontal = (indicatorClipRect.right.toInt() - getImageWidth())
             val offsetVertical = (measuredHeight - getImageHeight()) / 2
@@ -280,6 +266,9 @@ class AvatarImageView : GlideCircleImageView {
             val number = vo.getNumberInIndicator()
 
             if (resourceId != NOT_SHOWING_IMAGE_ID) {
+                avatarColor = 0
+                textInAvatar = null
+
                 loadImage(vo.getResourceId(), glide)
             } else {
                 avatarColor = avatarColors!![(vo.getAvatarKey() % avatarColors!!.size).toInt()]
@@ -296,7 +285,10 @@ class AvatarImageView : GlideCircleImageView {
                 "9+"
             }
         } else {
+            avatarColor = 0
+            textInAvatar = null
             indicatorNumberText = null
+
             cancelLoading(glide)
         }
 
@@ -304,12 +296,22 @@ class AvatarImageView : GlideCircleImageView {
         invalidate()
     }
 
-    override fun getImageHeight(): Int {
-        return layoutParams.height
-    }
+    override fun setLayoutParams(params: ViewGroup.LayoutParams) {
+        // Да, так опять же не очень хорошо делать, но опять же, нужно было быстро выкрутиться из ситуации.
+        // Будущему тим-лиду Android команды: проанализируйте и реорганизуйте систему аваток если это требуется.
+        minimumHeight = if (params.height > 0) {
+            params.height
+        } else {
+            0
+        }
 
-    override fun getImageWidth(): Int {
-        return layoutParams.width
+        minimumWidth = if (params.width > 0) {
+            params.width
+        } else {
+            0
+        }
+
+        super.setLayoutParams(params)
     }
 
     private fun isIndicatorShowing(): Boolean {
