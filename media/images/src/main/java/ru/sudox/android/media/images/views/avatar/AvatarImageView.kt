@@ -21,6 +21,7 @@ import ru.sudox.android.media.images.views.NOT_SHOWING_IMAGE_ID
 import ru.sudox.android.media.texts.helpers.getTwoFirstLetters
 import ru.sudox.design.appbar.AppBar
 import kotlin.math.cos
+import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.sin
 
@@ -237,7 +238,7 @@ class AvatarImageView : GlideCircleImageView {
 
     override fun onDraw(canvas: Canvas) {
         canvas.save()
-        canvas.clipRect(0F, 0F, getImageWidth().toFloat(), getImageHeight().toFloat())
+        canvas.clipRect(paddingLeft, paddingTop, paddingRight + layoutParams.width, paddingTop + layoutParams.height)
         super.onDraw(canvas)
         canvas.restore()
 
@@ -279,15 +280,12 @@ class AvatarImageView : GlideCircleImageView {
             val number = vo.getNumberInIndicator()
 
             if (resourceId != NOT_SHOWING_IMAGE_ID) {
-                avatarColor = 0
-                textInAvatar = null
-
-                loadImage(resourceId, glide, getImageWidth(), getImageHeight())
+                loadImage(vo.getResourceId(), glide)
             } else {
                 avatarColor = avatarColors!![(vo.getAvatarKey() % avatarColors!!.size).toInt()]
                 textInAvatar = getTwoFirstLetters(vo.getTextInAvatar()!!)
 
-                loadDrawable(glide, avatarDrawable, getImageWidth(), getImageHeight())
+                loadDrawable(glide, avatarDrawable)
             }
 
             indicatorNumberText = if (number == 0) {
@@ -298,10 +296,7 @@ class AvatarImageView : GlideCircleImageView {
                 "9+"
             }
         } else {
-            avatarColor = 0
-            textInAvatar = null
             indicatorNumberText = null
-
             cancelLoading(glide)
         }
 

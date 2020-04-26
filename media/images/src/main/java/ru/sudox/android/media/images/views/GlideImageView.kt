@@ -41,19 +41,12 @@ open class GlideImageView : RoundedImageView {
      *
      * @param id ID изображения.
      * @param glide Менеджер запросов Glide
-     * @param width Ширина картинки
-     * @param height Высота картинки
      */
-    fun loadImage(id: Long, glide: GlideRequests, width: Int = 0, height: Int = 0) {
+    fun loadImage(id: Long, glide: GlideRequests) {
         cancelLoading(glide)
 
-        var request = glide.load(GlideImageRequest(id))
-
-        if (width != 0 && height != 0) {
-            request = request.override(width, height)
-        }
-
-        request.placeholder(this.drawable ?: placeholderDrawable)
+        glide.load(GlideImageRequest(id))
+                .placeholder(this.drawable ?: placeholderDrawable)
                 .transition(withCrossFade(crossFadeDuration))
                 .centerCrop()
                 .into(this)
@@ -65,19 +58,12 @@ open class GlideImageView : RoundedImageView {
      *
      * @param glide Менеджер запросов Glide
      * @param drawable Drawable для загрузки
-     * @param width Ширина картинки
-     * @param height Высота картинки
      */
-    fun loadDrawable(glide: GlideRequests, drawable: Drawable, width: Int = 0, height: Int = 0) {
+    fun loadDrawable(glide: GlideRequests, drawable: Drawable) {
         cancelLoading(glide)
 
-        var request = glide.load(drawable)
-
-        if (width != 0 && height != 0) {
-            request = request.override(width, height)
-        }
-
-        request.placeholder(this.drawable ?: placeholderDrawable)
+        glide.load(drawable)
+                .placeholder(this.drawable ?: placeholderDrawable)
                 .transition(withCrossFade(crossFadeDuration))
                 .centerCrop()
                 .into(this)
