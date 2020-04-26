@@ -89,18 +89,20 @@ open class RoundedImageView : AppCompatImageView, RoundedView {
         if (topLeftCropRadius != 0F || topRightCropRadius != 0F || bottomLeftCropRadius != 0F || bottomRightCropRadius != 0F) {
             clipPath.let {
                 it.reset()
-                it.addRoundRect(0F, 0F, getImageWidth().toFloat(), getImageHeight().toFloat(), radii, Path.Direction.CW)
+                it.addRoundRect(0F, 0F, measuredWidth.toFloat(), measuredHeight.toFloat(), radii, Path.Direction.CW)
             }
         }
     }
 
     override fun onDraw(canvas: Canvas) {
         if (topLeftCropRadius != 0F || topRightCropRadius != 0F || bottomLeftCropRadius != 0F || bottomRightCropRadius != 0F) {
-            val imageLayer = canvas.saveLayer(0F, 0F, getImageWidth().toFloat(), getImageHeight().toFloat(), imagePaint)
+            val rightBorder = measuredWidth.toFloat()
+            val bottomBorder = measuredHeight.toFloat()
+            val imageLayer = canvas.saveLayer(0F, 0F, rightBorder, bottomBorder, imagePaint)
 
             super.onDraw(canvas)
 
-            val mergeLayer = canvas.saveLayer(0F, 0F, getImageWidth().toFloat(), getImageHeight().toFloat(), mergePaint)
+            val mergeLayer = canvas.saveLayer(0F, 0F, rightBorder, bottomBorder, mergePaint)
 
             canvas.drawColor(Color.GREEN)
             canvas.drawPath(clipPath, cropPaint)
@@ -109,13 +111,5 @@ open class RoundedImageView : AppCompatImageView, RoundedView {
         } else {
             super.onDraw(canvas)
         }
-    }
-
-    open fun getImageHeight(): Int {
-        return measuredHeight
-    }
-
-    open fun getImageWidth(): Int {
-        return measuredWidth
     }
 }

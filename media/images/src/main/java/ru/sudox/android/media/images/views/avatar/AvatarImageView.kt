@@ -198,7 +198,7 @@ class AvatarImageView : GlideCircleImageView {
             } else {
                 indicatorNumberTextPaint.getTextBounds(indicatorNumberText, 0, indicatorNumberText!!.length, indicatorNumberBounds)
 
-                indicatorRect.left = getImageWidth() / 2F
+                indicatorRect.left = measuredWidth / 2F
                 indicatorRect.right = indicatorRect.left +
                         indicatorNumberTextPaddingLeft +
                         indicatorNumberBounds.width() +
@@ -206,7 +206,7 @@ class AvatarImageView : GlideCircleImageView {
 
                 val indicatorHeight = indicatorNumberTextPaddingTop + indicatorNumberBounds.height() + indicatorNumberTextPaddingBottom
 
-                indicatorRect.top = getImageHeight() - indicatorHeight / 2F
+                indicatorRect.top = measuredHeight - indicatorHeight / 2F
                 indicatorRect.bottom = indicatorRect.top + indicatorHeight
 
                 indicatorClipRect.left = indicatorRect.left - indicatorCropRadiusDiff
@@ -217,14 +217,14 @@ class AvatarImageView : GlideCircleImageView {
         }
 
         if (textInAvatar != null) {
-            avatarTextPaint.textSize = getImageHeight() * avatarHeightPercent
+            avatarTextPaint.textSize = measuredHeight * avatarHeightPercent
             avatarTextPaint.getTextBounds(textInAvatar, 0, textInAvatar!!.length, avatarTextBounds)
         }
     }
 
     override fun onDraw(canvas: Canvas) {
         canvas.save()
-        canvas.clipRect(0, 0, getImageWidth(), getImageHeight())
+        canvas.clipRect(0, 0, measuredWidth, measuredHeight)
         super.onDraw(canvas)
         canvas.restore()
 
@@ -247,6 +247,13 @@ class AvatarImageView : GlideCircleImageView {
         }
     }
 
+    /**
+     * Выставляет ViewObject в качестве поставщика данных.
+     * Также начинает загрузку картинки с помощью Glide.
+     *
+     * @param vo VO аватарки для получения информации об её отображении.
+     * @param glide Обьект Glide для загрузки картинки.
+     */
     fun setVO(vo: AvatarVO?, glide: GlideRequests) {
         this.vo = vo
 
