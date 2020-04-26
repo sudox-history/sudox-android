@@ -7,8 +7,6 @@
     </style>
 
     <style name="Sudox.AvatarImageView" parent="Sudox.GlideImageView">
-        <item name="android:scaleType">fitStart</item>
-
         <item name="avatarColors">@array/avatarimageview_avatar_colors</item>
         <item name="avatarTextColor">#FFFFFF</item>
         <item name="avatarTextFontFamily">@font/opensans_bold</item>

@@ -12,7 +12,7 @@ class MessagesTalkController : CoreController()  {
 
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
         appBarVO = BaseMessagesAppBarVO<MessagesTalkVO>(glide).apply {
-            vo = MessagesTalkVO(1L, "\"Inglourious Basterds\" aka the...", 15, 30, 1L)
+            vo = MessagesTalkVO(1L, "\"Inglourious Basterds\" aka the...", 15, 30, 4L)
         }
 
         return AppCompatTextView(activity!!).apply {
