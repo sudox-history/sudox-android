@@ -61,12 +61,7 @@ open class GlideImageView : RoundedImageView {
      */
     fun loadDrawable(glide: GlideRequests, drawable: Drawable) {
         cancelLoading(glide)
-
-        glide.load(drawable)
-                .placeholder(this.drawable ?: placeholderDrawable)
-                .transition(withCrossFade(crossFadeDuration))
-                .centerCrop()
-                .into(this)
+        setImageDrawable(drawable)
     }
 
     /**

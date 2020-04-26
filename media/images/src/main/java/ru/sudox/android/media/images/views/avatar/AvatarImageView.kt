@@ -258,7 +258,7 @@ class AvatarImageView : GlideCircleImageView {
                 avatarColor = 0
                 textInAvatar = null
 
-                loadImage(vo.getResourceId(), glide)
+                loadImage(resourceId, glide)
             } else {
                 avatarColor = avatarColors!![(vo.getAvatarKey() % avatarColors!!.size).toInt()]
                 textInAvatar = getTwoFirstLetters(vo.getTextInAvatar()!!)
