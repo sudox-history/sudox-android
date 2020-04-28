@@ -6,12 +6,10 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
+import okio.ByteString.Companion.toByteString
 import ru.sudox.api.connections.Connection
 import java.util.concurrent.TimeUnit
 
-/**
- * Соединение на базе WebSocket'ов
- */
 class WebSocketConnection : Connection() {
 
     private val client = OkHttpClient.Builder()
@@ -25,20 +23,18 @@ class WebSocketConnection : Connection() {
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            listener?.onEnd()
+            listener?.onClosed(t)
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            listener?.onEnd()
+            listener?.onClosed(null)
         }
 
         override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
             listener?.onReceive(bytes.toByteArray())
         }
 
-        override fun onMessage(webSocket: WebSocket, text: String) {
-            listener?.onReceive(text)
-        }
+        override fun onMessage(webSocket: WebSocket, text: String) {}
     }
 
     override fun start(address: String, port: Int) {
@@ -49,11 +45,11 @@ class WebSocketConnection : Connection() {
         webSocket = client.newWebSocket(request, socketListener)
     }
 
-    override fun send(text: String) {
-        webSocket?.send(text)
+    override fun send(bytes: ByteArray) {
+        webSocket?.send(bytes.toByteString())
     }
 
-    override fun end() {
+    override fun close() {
         webSocket?.close(1000, null)
         webSocket = null
     }

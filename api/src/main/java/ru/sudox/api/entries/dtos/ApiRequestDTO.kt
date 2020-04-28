@@ -1,4 +1,4 @@
-package ru.sudox.api.entries
+package ru.sudox.api.entries.dtos
 
 import ru.sudox.api.common.SudoxApiDTO
 
@@ -9,7 +9,7 @@ import ru.sudox.api.common.SudoxApiDTO
  * @param data Информация, подаваемая на метод
  */
 @SudoxApiDTO
-data class ApiRequest(
+data class ApiRequestDTO(
         val methodName: String,
         val data: Any
 )

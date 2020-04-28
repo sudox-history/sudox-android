@@ -39,6 +39,10 @@ dependencies {
     implementation libraries.firebase_crashlytics
     implementation libraries.firebase_crashlytics_ndk
 
+    implementation libraries.jackson_msgpack
+    implementation libraries.jackson_kotlin
+    implementation libraries.jackson
+
     implementation libraries.room_rxjava2
     implementation libraries.room
     kapt libraries.room_compiler
@@ -51,8 +55,6 @@ dependencies {
     implementation libraries.coordinator_layout
     implementation libraries.material_components
     implementation libraries.libphonenumber
-    implementation libraries.jackson_kotlin
-    implementation libraries.jackson
     implementation libraries.rxandroid
     implementation libraries.rxjava
     implementation libraries.dagger

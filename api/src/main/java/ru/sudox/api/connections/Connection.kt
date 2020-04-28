@@ -1,11 +1,5 @@
 package ru.sudox.api.connections
 
-/**
- * Интерфейс соединения.
- *
- * Занимается поставкой байтов на сервер и обратно.
- * Также контроллирует свой статус.
- */
 abstract class Connection {
 
     var listener: ConnectionListener? = null
@@ -21,12 +15,12 @@ abstract class Connection {
     /**
      * Отправляет информацию на сервер.
      *
-     * @param text Текст, который нужно отправить на сервер.
+     * @param bytes Байты, которые должны быть отправлены на сервер.
      */
-    abstract fun send(text: String)
+    abstract fun send(bytes: ByteArray)
 
     /**
-     * Прерывает соединение с сервером.
+     * Закрывает соединение с сервером.
      */
-    abstract fun end()
+    abstract fun close()
 }

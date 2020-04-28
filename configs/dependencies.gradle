@@ -31,6 +31,7 @@ ext.libraries = [
         'viewpager2'              : "androidx.viewpager2:viewpager2:1.0.0",
         'jackson'                 : "com.fasterxml.jackson.core:jackson-databind:2.10.3",
         'jackson_kotlin'          : "com.fasterxml.jackson.module:jackson-module-kotlin:2.10.2",
+        'jackson_msgpack'         : "org.msgpack:jackson-dataformat-msgpack:0.8.20",
         'okhttp3'                 : "com.squareup.okhttp3:okhttp:4.4.0",
         'junit'                   : "junit:junit:4.12"
 ]

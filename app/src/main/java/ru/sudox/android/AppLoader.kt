@@ -9,6 +9,7 @@ import ru.sudox.api.inject.ApiModule
 import ru.sudox.android.countries.inject.CountriesModule
 import ru.sudox.android.inject.components.LoaderComponent
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import org.msgpack.jackson.dataformat.MessagePackFactory
 import ru.sudox.android.core.inject.CoreLoaderModule
 import ru.sudox.android.inject.DatabaseModule
 import ru.sudox.android.inject.components.DaggerLoaderComponent
@@ -36,7 +37,7 @@ class AppLoader : Application() {
                 .databaseModule(DatabaseModule("sudox"))
                 .coreLoaderModule(CoreLoaderModule(this))
                 .countriesModule(CountriesModule(PhoneNumberUtil.createInstance(this)))
-                .apiModule(ApiModule(WebSocketConnection(), ObjectMapper()
+                .apiModule(ApiModule(WebSocketConnection(), ObjectMapper(MessagePackFactory())
                         .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                         .registerKotlinModule()
                 )).build()

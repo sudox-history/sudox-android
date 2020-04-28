@@ -1,7 +1,7 @@
 package ru.sudox.api.exceptions
 
 /**
- * Исключение API.
+ * Исключение уровня API.
  * Вызывается, когда метод API возвращает ошибку
  *
  * @param code Код ошибки.
