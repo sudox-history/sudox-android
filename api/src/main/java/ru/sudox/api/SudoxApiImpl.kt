@@ -11,9 +11,10 @@ import ru.sudox.api.common.exceptions.ApiException
 import ru.sudox.api.common.exceptions.AttackSuspicionException
 import ru.sudox.api.connections.Connection
 import ru.sudox.api.connections.ConnectionListener
-import ru.sudox.api.entries.ApiRequestCallback
+import ru.sudox.api.entries.ApiCallback
 import ru.sudox.api.entries.dtos.ApiRequestDTO
 import java.io.IOException
+import java.util.Stack
 import java.util.concurrent.Semaphore
 
 /**
@@ -31,7 +32,8 @@ class SudoxApiImpl(
 
     private val endSemaphore = Semaphore(0)
     private val requestsSemaphores = LinkedHashMap<String, Semaphore>()
-    private val requestsCallbacks = LinkedHashMap<String, ApiRequestCallback<*>>()
+    private val requestsCallbacks = LinkedHashMap<String, ApiCallback<*>>()
+    private var updatesCallbacks = LinkedHashMap<String, Stack<ApiCallback<*>>>()
 
     override val statusSubject: PublishSubject<SudoxApiStatus> = PublishSubject.create()
     override var isConnected = false
@@ -77,14 +79,14 @@ class SudoxApiImpl(
         endSemaphore.acquire()
     }
 
-    override fun <T : Any> sendRequest(methodName: String, requestData: Any, responseClass: Class<T>): Observable<T> {
-        return Observable.create<T> {
-            if (isConnected) {
-                acquireRequestQueue(methodName)
+    override fun <T : Any> sendRequest(methodName: String, requestData: Any, responseClass: Class<T>) = Observable.create<T> {
+        if (isConnected) {
+            acquireRequestQueue(methodName)
 
-                // Проверим статус ещё раз, т.к. соединение могло быть разорвано во время ожидания очереди
-                if (isConnected) {
-                    requestsCallbacks[methodName] = ApiRequestCallback<T>(it, responseClass)
+            // Проверим статус ещё раз, т.к. соединение могло быть разорвано во время ожидания очереди
+            if (isConnected) {
+                if (!it.isDisposed) {
+                    requestsCallbacks[methodName] = ApiCallback<T>(it, responseClass)
 
                     val request = ApiRequestDTO(methodName, requestData)
                     val serialized = objectMapper.writeValueAsBytes(request)
@@ -96,21 +98,33 @@ class SudoxApiImpl(
                     }
                 } else {
                     if (BuildConfig.DEBUG) {
-                        Log.d("Sudox API", "Request abandoned because connection was closed while queue waiting.")
+                        Log.d("Sudox API", "Request abandoned because sender revoke it.")
                     }
 
                     releaseRequestQueue(methodName)
-                    throwException(it, IOException("Connection not installed!"))
                 }
             } else {
                 if (BuildConfig.DEBUG) {
-                    Log.d("Sudox API", "Request abandoned because connection not installed.")
+                    Log.d("Sudox API", "Request abandoned because connection was closed while queue waiting.")
                 }
 
                 releaseRequestQueue(methodName)
                 throwException(it, IOException("Connection not installed!"))
             }
+        } else {
+            if (BuildConfig.DEBUG) {
+                Log.d("Sudox API", "Request abandoned because connection not installed.")
+            }
+
+            releaseRequestQueue(methodName)
+            throwException(it, IOException("Connection not installed!"))
         }
+    }
+
+    override fun <T : Any> listenUpdate(updateName: String, dataClass: Class<T>) = Observable.create<T> {
+        updatesCallbacks
+                .getOrPut(updateName, { Stack() })
+                .add(ApiCallback(it, dataClass))
     }
 
     override fun onStart() {
@@ -125,9 +139,37 @@ class SudoxApiImpl(
         val responseTree = objectMapper.readTree(bytes)
         val updateNameNode = responseTree.get("update_name")
         val methodNameNode = responseTree.get("method_name")
+        val dataNode = responseTree.get("data")
 
         if (updateNameNode != null && updateNameNode.isTextual) {
-            // TODO: Handle updates
+            val iterator = updatesCallbacks[updateNameNode.asText()]?.iterator()
+
+            if (iterator != null) {
+                while (iterator.hasNext()) {
+                    val next = iterator.next()
+
+                    @Suppress("UNCHECKED_CAST")
+                    val emitter = next.observableEmitter as ObservableEmitter<Any>
+
+                    if (!emitter.isDisposed) {
+                        emitter.onNext(if (dataNode != null) {
+                            objectMapper.treeToValue(dataNode, next.dataClass)
+                        } else {
+                            Unit
+                        })
+
+                        emitter.onComplete()
+                    } else {
+                        iterator.remove()
+
+                        if (BuildConfig.DEBUG) {
+                            Log.d("Sudox API", "Removed disposed update listener.")
+                        }
+                    }
+                }
+            } else if (BuildConfig.DEBUG) {
+                Log.d("Sudox API", "Server sent unwanted update.")
+            }
         } else if (methodNameNode != null && methodNameNode.isTextual) {
             val methodName = methodNameNode.textValue()
             val resultNode = responseTree.get("method_result")
@@ -154,8 +196,6 @@ class SudoxApiImpl(
                     val result = resultNode.intValue()
 
                     if (result == OK_ERROR_CODE) {
-                        val dataNode = resultNode.get("data")
-
                         @Suppress("RedundantUnitExpression")
                         emitter.onNext(if (dataNode != null) {
                             objectMapper.treeToValue(dataNode, callback.dataClass)
@@ -167,6 +207,8 @@ class SudoxApiImpl(
                     } else {
                         throwException(emitter, ApiException(result))
                     }
+                } else if (BuildConfig.DEBUG) {
+                    Log.d("Sudox API", "Request response ignored because sender revoke it.")
                 }
             }
         } else if (BuildConfig.DEBUG) {
