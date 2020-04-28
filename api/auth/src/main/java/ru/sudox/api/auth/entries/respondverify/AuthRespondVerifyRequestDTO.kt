@@ -1,5 +1,7 @@
 package ru.sudox.api.auth.entries.respondverify
 
+import ru.sudox.api.common.SudoxApiDTO
+
 /**
  * Data Transfer Object для запроса метода auth.respondVerify
  *
@@ -8,6 +10,7 @@ package ru.sudox.api.auth.entries.respondverify
  * @param authId ID сессии авторизации
  * @param userKeyEnc Зашифрованный ключ пользователя
  */
+@SudoxApiDTO
 data class AuthRespondVerifyRequestDTO(
         val accept: Boolean,
         val publicKey: String,

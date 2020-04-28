@@ -1,0 +1,8 @@
+package ru.sudox.api.common
+
+const val OK_ERROR_CODE = 0
+const val SERVICE_UNAVAILABLE_ERROR_CODE = 1
+const val ACCESS_DENIED_ERROR_CODE = 2
+const val FORMAT_INVALID_ERROR_CODE = 3
+const val CLIENT_NOT_FOUND_ERROR_CODE = 4
+const val SESSION_NOT_FOUND_ERROR_CODE = 4

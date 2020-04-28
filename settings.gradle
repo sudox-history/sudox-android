@@ -5,6 +5,7 @@ include ':app'
 include ':api'
 include ':api:auth'
 include ':api:common'
+include ':api:system'
 
 include ':design'
 include ':design:buttons'

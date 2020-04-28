@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.subjects.PublishSubject
+import ru.sudox.api.common.OK_ERROR_CODE
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.api.common.SudoxApiStatus
 import ru.sudox.api.common.exceptions.ApiException
@@ -152,6 +153,7 @@ class SudoxApiImpl(
                     val emitter = next.observableEmitter as ObservableEmitter<Any>
 
                     if (!emitter.isDisposed) {
+                        @Suppress("RedundantUnitExpression")
                         emitter.onNext(if (dataNode != null) {
                             objectMapper.treeToValue(dataNode, next.dataClass)
                         } else {
@@ -195,6 +197,7 @@ class SudoxApiImpl(
                 if (!emitter.isDisposed) {
                     val result = resultNode.intValue()
 
+                    @Suppress("RedundantUnitExpression")
                     if (result == OK_ERROR_CODE) {
                         @Suppress("RedundantUnitExpression")
                         emitter.onNext(if (dataNode != null) {
