@@ -5,5 +5,7 @@ registerModule(false, false, true)
 
 dependencies {
     implementation project(":api:common")
+
     implementation libraries.rxjava
+    implementation libraries.libphonenumber
 }

@@ -60,7 +60,7 @@ class PhoneEditText : SaveableViewGroup<PhoneEditText, PhoneEditTextState>, Edit
 
     var phoneNumber: String?
         get() {
-            if (vo == null || editText.length() == 0) {
+            if (vo == null) {
                 return null
             }
 

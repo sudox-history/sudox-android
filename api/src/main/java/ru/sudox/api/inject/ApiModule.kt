@@ -5,6 +5,7 @@ import ru.sudox.api.SudoxApiImpl
 import ru.sudox.api.connections.Connection
 import dagger.Module
 import dagger.Provides
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import ru.sudox.api.auth.AuthService
 import ru.sudox.api.common.SudoxApi
 import javax.inject.Singleton
@@ -12,7 +13,8 @@ import javax.inject.Singleton
 @Module
 class ApiModule(
         private val connection: Connection,
-        private val objectMapper: ObjectMapper
+        private val objectMapper: ObjectMapper,
+        private val phoneNumberUtil: PhoneNumberUtil
 ) {
 
     @Singleton
@@ -24,6 +26,6 @@ class ApiModule(
     @Singleton
     @Provides
     fun provideAuthService(api: SudoxApi): AuthService {
-        return AuthService(api)
+        return AuthService(api, phoneNumberUtil)
     }
 }

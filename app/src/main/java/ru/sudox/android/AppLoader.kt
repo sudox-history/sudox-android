@@ -32,15 +32,18 @@ class AppLoader : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        val phoneNumberUtil = PhoneNumberUtil.createInstance(this)
+        val objectMapper = ObjectMapper(MessagePackFactory())
+                .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+                .registerKotlinModule()
+
         loaderComponent = DaggerLoaderComponent
                 .builder()
                 .databaseModule(DatabaseModule("sudox"))
                 .coreLoaderModule(CoreLoaderModule(this))
-                .countriesModule(CountriesModule(PhoneNumberUtil.createInstance(this)))
-                .apiModule(ApiModule(WebSocketConnection(), ObjectMapper(MessagePackFactory())
-                        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
-                        .registerKotlinModule()
-                )).build()
+                .countriesModule(CountriesModule(phoneNumberUtil))
+                .apiModule(ApiModule(WebSocketConnection(), objectMapper, phoneNumberUtil))
+                .build()
 
         loaderComponent!!.inject(this)
         connector = AppConnector()

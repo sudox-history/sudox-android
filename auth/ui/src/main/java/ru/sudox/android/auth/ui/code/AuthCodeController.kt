@@ -3,12 +3,8 @@ package ru.sudox.android.auth.ui.code
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.lifecycle.Observer
-import ru.sudox.android.auth.ui.signup.AuthSignUpController
 import ru.sudox.android.auth.ui.views.AuthScreenLayout
 import ru.sudox.android.core.controllers.ScrollableController
-import ru.sudox.api.getErrorText
 
 class AuthCodeController : ScrollableController() {
 
@@ -31,22 +27,6 @@ class AuthCodeController : ScrollableController() {
         }
 
         authCodeViewModel = getViewModel()
-
-        authCodeViewModel!!.loadingLiveData.observe(this, Observer {
-            screenVO!!.codeEditTextLayout!!.isEnabled = !it
-        })
-
-        authCodeViewModel!!.errorsLiveData.observe(this, Observer {
-            if (it != null) {
-                screenVO!!.codeEditTextLayout!!.errorText = getErrorText(activity!!, it)
-            } else {
-                screenVO!!.codeEditTextLayout!!.errorText = null
-            }
-        })
-
-        authCodeViewModel!!.successLiveData.observe(this, Observer {
-            navigationManager!!.showRootChild(AuthSignUpController())
-        })
 
         screenVO!!.codeEditText!!.codeFilledCallback = {
             authCodeViewModel!!.checkCode(it.toInt())

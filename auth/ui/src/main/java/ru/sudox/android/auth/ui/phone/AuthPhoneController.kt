@@ -4,14 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import ru.sudox.android.auth.ui.code.AuthCodeController
 import ru.sudox.android.auth.ui.views.AuthScreenLayout
 import ru.sudox.android.core.controllers.ScrollableController
 import ru.sudox.android.countries.COUNTRY_CHANGE_REQUEST_CODE
 import ru.sudox.android.countries.COUNTRY_EXTRA_NAME
 import ru.sudox.android.countries.CountrySelectController
-import ru.sudox.api.getErrorText
 
 class AuthPhoneController : ScrollableController() {
 
@@ -34,22 +31,6 @@ class AuthPhoneController : ScrollableController() {
         }
 
         authPhoneViewModel = getViewModel()
-        authPhoneViewModel!!.errorsLiveData.observe(this, Observer {
-            if (it != null) {
-                screenVO!!.phoneEditTextLayout!!.errorText = getErrorText(activity!!, it)
-            } else {
-                screenVO!!.phoneEditTextLayout!!.errorText = null
-            }
-        })
-
-        authPhoneViewModel!!.loadingLiveData.observe(this, Observer {
-            screenVO!!.phoneEditTextLayout!!.isEnabled = !it
-            appBarManager!!.toggleLoading(it)
-        })
-
-        authPhoneViewModel!!.successLiveData.observe(this, Observer {
-            navigationManager!!.showRootChild(AuthCodeController())
-        })
 
         screenVO!!.phoneEditText!!.countrySelector.setOnClickListener {
             navigationManager!!.showRootChild(CountrySelectController().apply {

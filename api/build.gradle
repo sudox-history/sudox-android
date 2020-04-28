@@ -8,6 +8,7 @@ dependencies {
     api project(":api:auth")
 
     implementation libraries.jackson
+    implementation libraries.libphonenumber
     implementation libraries.okhttp3
     implementation libraries.rxjava
     implementation libraries.dagger
