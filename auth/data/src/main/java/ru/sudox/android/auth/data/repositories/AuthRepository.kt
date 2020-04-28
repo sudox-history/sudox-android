@@ -7,7 +7,7 @@ import io.reactivex.schedulers.Schedulers
 import ru.sudox.android.auth.data.daos.AuthSessionDAO
 import ru.sudox.android.auth.data.entities.AuthSessionEntity
 import ru.sudox.api.auth.AuthService
-import ru.sudox.api.exceptions.ApiException
+import ru.sudox.api.common.exceptions.ApiException
 import javax.inject.Inject
 import javax.inject.Singleton
 

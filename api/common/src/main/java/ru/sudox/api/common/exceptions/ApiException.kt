@@ -1,4 +1,4 @@
-package ru.sudox.api.exceptions
+package ru.sudox.api.common.exceptions
 
 /**
  * Исключение уровня API.

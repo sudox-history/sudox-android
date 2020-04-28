@@ -7,14 +7,13 @@ import io.reactivex.ObservableEmitter
 import io.reactivex.subjects.PublishSubject
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.api.common.SudoxApiStatus
+import ru.sudox.api.common.exceptions.ApiException
+import ru.sudox.api.common.exceptions.AttackSuspicionException
 import ru.sudox.api.connections.Connection
 import ru.sudox.api.connections.ConnectionListener
-import ru.sudox.api.entries.dtos.ApiRequestDTO
 import ru.sudox.api.entries.ApiRequestCallback
-import ru.sudox.api.exceptions.ApiException
-import ru.sudox.api.exceptions.AttackSuspicionException
+import ru.sudox.api.entries.dtos.ApiRequestDTO
 import java.io.IOException
-import java.lang.Exception
 import java.util.concurrent.Semaphore
 
 /**
@@ -26,8 +25,8 @@ import java.util.concurrent.Semaphore
  * @param objectMapper Маппер обьектов.
  */
 class SudoxApiImpl(
-        val connection: Connection,
-        val objectMapper: ObjectMapper
+        private val connection: Connection,
+        private val objectMapper: ObjectMapper
 ) : ConnectionListener, SudoxApi {
 
     private val endSemaphore = Semaphore(0)
@@ -78,41 +77,39 @@ class SudoxApiImpl(
         endSemaphore.acquire()
     }
 
-    override fun <T : Any> sendRequest(
-            methodName: String,
-            requestData: Any,
-            responseClass: Class<T>
-    ): Observable<T> = Observable.create {
-        if (isConnected) {
-            acquireRequestQueue(methodName)
-
-            // Проверим статус ещё раз, т.к. соединение могло быть разорвано во время ожидания очереди
+    override fun <T : Any> sendRequest(methodName: String, requestData: Any, responseClass: Class<T>): Observable<T> {
+        return Observable.create<T> {
             if (isConnected) {
-                requestsCallbacks[methodName] = ApiRequestCallback<T>(it, responseClass)
+                acquireRequestQueue(methodName)
 
-                val request = ApiRequestDTO(methodName, requestData)
-                val serialized = objectMapper.writeValueAsBytes(request)
+                // Проверим статус ещё раз, т.к. соединение могло быть разорвано во время ожидания очереди
+                if (isConnected) {
+                    requestsCallbacks[methodName] = ApiRequestCallback<T>(it, responseClass)
 
-                connection.send(serialized)
+                    val request = ApiRequestDTO(methodName, requestData)
+                    val serialized = objectMapper.writeValueAsBytes(request)
 
-                if (BuildConfig.DEBUG) {
-                    Log.d("Sudox API", "Request sent to server.")
+                    connection.send(serialized)
+
+                    if (BuildConfig.DEBUG) {
+                        Log.d("Sudox API", "Request sent to server.")
+                    }
+                } else {
+                    if (BuildConfig.DEBUG) {
+                        Log.d("Sudox API", "Request abandoned because connection was closed while queue waiting.")
+                    }
+
+                    releaseRequestQueue(methodName)
+                    throwException(it, IOException("Connection not installed!"))
                 }
             } else {
                 if (BuildConfig.DEBUG) {
-                    Log.d("Sudox API", "Request abandoned because connection was closed while queue waiting.")
+                    Log.d("Sudox API", "Request abandoned because connection not installed.")
                 }
 
                 releaseRequestQueue(methodName)
                 throwException(it, IOException("Connection not installed!"))
             }
-        } else {
-            if (BuildConfig.DEBUG) {
-                Log.d("Sudox API", "Request abandoned because connection not installed.")
-            }
-
-            releaseRequestQueue(methodName)
-            throwException(it, IOException("Connection not installed!"))
         }
     }
 
@@ -129,22 +126,18 @@ class SudoxApiImpl(
         val updateNameNode = responseTree.get("update_name")
         val methodNameNode = responseTree.get("method_name")
 
-        if (updateNameNode == null && methodNameNode == null) {
-            if (BuildConfig.DEBUG) {
-                Log.d("Sudox API", "Failed to recognize request type")
-            }
-        } else if (updateNameNode.isTextual) {
+        if (updateNameNode != null && updateNameNode.isTextual) {
             // TODO: Handle updates
-        } else if (methodNameNode.isTextual) {
+        } else if (methodNameNode != null && methodNameNode.isTextual) {
             val methodName = methodNameNode.textValue()
-            val resultNode = responseTree.get("result")
+            val resultNode = responseTree.get("method_result")
             val callback = requestsCallbacks[methodName]
 
             if (callback == null) {
                 if (BuildConfig.DEBUG) {
                     Log.d("Sudox API", "Server sent unwanted response.")
                 }
-            } else if (!resultNode.isInt) {
+            } else if (resultNode == null || !resultNode.isInt) {
                 if (BuildConfig.DEBUG) {
                     Log.d("Sudox API", "Result code isn't integer.")
                 }
@@ -176,6 +169,8 @@ class SudoxApiImpl(
                     }
                 }
             }
+        } else if (BuildConfig.DEBUG) {
+            Log.d("Sudox API", "Failed to recognize request type")
         }
     }
 

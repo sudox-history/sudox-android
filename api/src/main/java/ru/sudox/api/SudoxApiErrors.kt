@@ -1,8 +1,7 @@
 package ru.sudox.api
 
 import android.content.Context
-import ru.sudox.api.exceptions.ApiException
-import java.io.IOException
+import ru.sudox.api.common.exceptions.ApiException
 
 const val OK_ERROR_CODE = 0
 const val SERVICE_UNAVAILABLE_ERROR_CODE = 1
@@ -44,7 +43,7 @@ val errorNames = hashMapOf(
 inline fun createApiErrorsCallback(crossinline callback: (Int) -> (Unit)): (Throwable) -> (Unit) = {
     if (it is ApiException) {
         callback(it.code)
-    } else if (it is IOException) {
+    } else {
         callback(NO_INTERNET_CONNECTION_ERROR_CODE)
     }
 }
