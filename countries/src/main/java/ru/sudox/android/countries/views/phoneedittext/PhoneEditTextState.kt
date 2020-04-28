@@ -12,7 +12,7 @@ class PhoneEditTextState : SaveableViewState<PhoneEditText> {
 
     constructor(superState: Parcelable) : super(superState)
     constructor(source: Parcel) : super(source) {
-//        countryVO = source.readParcelable(CountryVO::class.java.classLoader)
+        countryVO = source.readParcelable(CountryVO::class.java.classLoader)
         editTextId = source.readInt()
     }
 
@@ -20,7 +20,7 @@ class PhoneEditTextState : SaveableViewState<PhoneEditText> {
         super.writeToParcel(out, flags)
 
         out.let {
-//            it.writeParcelable(countryVO, 0)
+            it.writeParcelable(countryVO, 0)
             it.writeInt(editTextId)
         }
     }
