@@ -36,7 +36,7 @@ class AuthPhoneController : ScrollableController() {
 
         viewModel = getViewModel()
         viewModel!!.successLiveData.observe(this, Observer {
-            if (it == AuthSessionStage.PHONE_ENTERED) {
+            if (it == AuthSessionStage.PHONE_CHECKED) {
                 navigationManager!!.showRootChild(AuthCodeController())
             }
         })

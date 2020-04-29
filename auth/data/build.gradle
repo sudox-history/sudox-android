@@ -6,6 +6,7 @@ registerModule(false, true, true)
 dependencies {
     implementation project(path: ':api')
     implementation project(path: ':core')
+    implementation project(path: ':cryptography')
 
     implementation libraries.rxjava
     implementation libraries.libphonenumber

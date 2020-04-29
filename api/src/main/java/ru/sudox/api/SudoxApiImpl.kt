@@ -217,7 +217,7 @@ class SudoxApiImpl(
 
                         emitter.onComplete()
                     } else {
-                        throwException(emitter, ApiException(result))
+                        throwException(emitter, ApiException(methodName, result))
                     }
                 } else if (BuildConfig.DEBUG) {
                     Log.d("Sudox API", "Request response ignored because sender revoke it.")
