@@ -10,8 +10,14 @@ import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
  * @return True если номер телефона валиден, False - если не валиден.
  */
 fun PhoneNumberUtil.isPhoneNumberValid(phone: String): Boolean {
+    var newPhone = phone
+
+    if (!newPhone.startsWith("+")) {
+        newPhone = "+$phone"
+    }
+
     return try {
-        isValidNumber(parse(phone, null))
+        isValidNumber(parse(newPhone, null))
     } catch (e: NumberParseException) {
         false
     }

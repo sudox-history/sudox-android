@@ -5,18 +5,21 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.reactivex.Single
+import androidx.room.Update
 import ru.sudox.android.auth.data.entities.AuthSessionEntity
 
 @Dao
 interface AuthSessionDAO {
 
     @Query("SELECT * FROM AuthSessionEntity WHERE phoneNumber = :phoneNumber")
-    fun get(phoneNumber: String): Single<List<AuthSessionEntity>>
+    fun get(phoneNumber: String): List<AuthSessionEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(authSessionEntity: AuthSessionEntity): Single<Long>
+    fun insert(authSessionEntity: AuthSessionEntity): Long
+
+    @Update
+    fun update(authSessionEntity: AuthSessionEntity)
 
     @Delete
-    fun delete(authSessionEntity: AuthSessionEntity): Single<Int>
+    fun delete(authSessionEntity: AuthSessionEntity): Int
 }

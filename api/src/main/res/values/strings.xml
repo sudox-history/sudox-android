@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="connecting">Connecting …</string>
-    <string name="service_unavailable">Service unavailable</string>
-    <string name="request_format_invalid">Request format invalid</string>
-    <string name="auth_already_exists">Auth already exists</string>
-    <string name="user_phone_banned">User phone banned</string>
-    <string name="access_denied">Access denied</string>
-    <string name="auth_does_not_exists">Auth doesn\'t exists</string>
-    <string name="auth_session_invalid">Auth session invalid</string>
-    <string name="auth_session_no_longer_valid">Auth session no longer valid</string>
-    <string name="auth_type_invalid">Auth type invalid</string>
-    <string name="auth_code_invalid">Auth code invalid</string>
-    <string name="user_key_hash_invalid">User key hash invalid</string>
-    <string name="auth_code_already_sent">Auth code already sent</string>
-    <string name="no_internet_connection">No internet connection</string>
 </resources>

@@ -7,5 +7,5 @@ package ru.sudox.api.common.exceptions
  * которых функция выбросила исключение.
  */
 class ApiRegexException(
-      vararg fields: Int
+      val fields: HashSet<Int>
 ) : Exception()

@@ -8,5 +8,8 @@ import androidx.room.PrimaryKey
 data class AuthSessionEntity(
         @PrimaryKey val phoneNumber: String,
         @ColumnInfo val userExists: Boolean,
-        @ColumnInfo val token: String
+        @ColumnInfo val creationTime: Long,
+        @ColumnInfo var stage: AuthSessionStage,
+        @ColumnInfo var isActive: Boolean,
+        @ColumnInfo val authId: String
 )

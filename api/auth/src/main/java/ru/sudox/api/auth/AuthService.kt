@@ -18,6 +18,8 @@ import ru.sudox.api.common.SudoxApi
 import ru.sudox.api.common.exceptions.ApiRegexException
 import ru.sudox.api.common.helpers.toHexString
 
+const val AUTH_SESSION_LIFETIME = 10L * 60L * 1000L
+
 class AuthService(
         private val sudoxApi: SudoxApi,
         private val phoneNumberUtil: PhoneNumberUtil
@@ -27,14 +29,9 @@ class AuthService(
      * Создает сессию авторизации.
      *
      * @param userPhone Номер телефона
-     * @throws ApiRegexException Если номер телефона не прошел проверку.
      * @return Observable на который прилетит ответ от сервера.
      */
     fun create(userPhone: String): Observable<AuthCreateResponseDTO> {
-        if (!phoneNumberUtil.isPhoneNumberValid(userPhone)) {
-            return Observable.error(ApiRegexException(0))
-        }
-
         return sudoxApi.sendRequest("auth.create", AuthCreateRequestDTO(userPhone), AuthCreateResponseDTO::class.java)
     }
 
@@ -43,14 +40,9 @@ class AuthService(
      *
      * @param authId ID сессии авторизации
      * @param authCode Код подтверждения
-     * @throws ApiRegexException Если какое-то поле не прошло проверку (1 - код)
      * @return Observable на который прилетит ответ от сервера.
      */
     fun checkCode(authId: String, authCode: Int): Observable<Unit> {
-        if (authCode !in 10000 .. 99999) {
-            return Observable.error(ApiRegexException(1))
-        }
-
         return sudoxApi.sendRequest("auth.checkCode", AuthCheckCodeRequestDTO(authId, authCode), Unit::class.java)
     }
 
@@ -72,21 +64,9 @@ class AuthService(
      * @param userName Имя пользователя
      * @param userNickname Никнейм пользователя
      * @param userKeyHash Хэш ключа пользователя (по BLAKE2b)
-     * @throws ApiRegexException Если какое-то поле не прошло проверку (1 - имя, 2 - никнейм)
      * @return Observable на который прилетит ответ от сервера.
      */
     fun signUp(authId: String, userName: String, userNickname: String, userKeyHash: ByteArray): Observable<AuthSignUpResponseDTO> {
-        val userNameInvalid = !USERNAME_REGEX.matches(userName)
-        val userNicknameInvalid = !USERNICKNAME_REGEX.matches(userNickname)
-
-        if (userNameInvalid && userNicknameInvalid) {
-            return Observable.error(ApiRegexException(1, 2))
-        } else if (userNameInvalid) {
-            return Observable.error(ApiRegexException(1))
-        } else if (userNicknameInvalid) {
-            return Observable.error(ApiRegexException(2))
-        }
-
         return sudoxApi.sendRequest("auth.signUp", AuthSignUpRequestDTO(authId, userName, userNickname, userKeyHash.toHexString()), AuthSignUpResponseDTO::class.java)
     }
 

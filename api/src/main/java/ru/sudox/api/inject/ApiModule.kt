@@ -8,6 +8,7 @@ import dagger.Provides
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import ru.sudox.api.auth.AuthService
 import ru.sudox.api.common.SudoxApi
+import ru.sudox.api.system.SystemService
 import javax.inject.Singleton
 
 @Module
@@ -27,5 +28,11 @@ class ApiModule(
     @Provides
     fun provideAuthService(api: SudoxApi): AuthService {
         return AuthService(api, phoneNumberUtil)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSystemService(): SystemService {
+        return SystemService()
     }
 }

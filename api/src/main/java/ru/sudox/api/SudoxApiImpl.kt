@@ -4,6 +4,7 @@ import android.util.Log
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import ru.sudox.api.common.OK_ERROR_CODE
 import ru.sudox.api.common.SudoxApi
@@ -80,46 +81,54 @@ class SudoxApiImpl(
         endSemaphore.acquire()
     }
 
-    override fun <T : Any> sendRequest(methodName: String, requestData: Any, responseClass: Class<T>) = Observable.create<T> {
-        if (isConnected) {
-            acquireRequestQueue(methodName)
-
-            // Проверим статус ещё раз, т.к. соединение могло быть разорвано во время ожидания очереди
+    override fun <T : Any> sendRequest(methodName: String, requestData: Any, responseClass: Class<T>): Observable<T> {
+        var observable = Observable.create<T> {
             if (isConnected) {
-                if (!it.isDisposed) {
-                    requestsCallbacks[methodName] = ApiCallback<T>(it, responseClass)
+                acquireRequestQueue(methodName)
 
-                    val request = ApiRequestDTO(methodName, requestData)
-                    val serialized = objectMapper.writeValueAsBytes(request)
+                // Проверим статус ещё раз, т.к. соединение могло быть разорвано во время ожидания очереди
+                if (isConnected) {
+                    if (!it.isDisposed) {
+                        requestsCallbacks[methodName] = ApiCallback<T>(it, responseClass)
 
-                    connection.send(serialized)
+                        val request = ApiRequestDTO(methodName, requestData)
+                        val serialized = objectMapper.writeValueAsBytes(request)
 
-                    if (BuildConfig.DEBUG) {
-                        Log.d("Sudox API", "Request sent to server.")
+                        connection.send(serialized)
+
+                        if (BuildConfig.DEBUG) {
+                            Log.d("Sudox API", "Request sent to server.")
+                        }
+                    } else {
+                        if (BuildConfig.DEBUG) {
+                            Log.d("Sudox API", "Request abandoned because sender revoke it.")
+                        }
+
+                        releaseRequestQueue(methodName)
                     }
                 } else {
                     if (BuildConfig.DEBUG) {
-                        Log.d("Sudox API", "Request abandoned because sender revoke it.")
+                        Log.d("Sudox API", "Request abandoned because connection was closed while queue waiting.")
                     }
 
                     releaseRequestQueue(methodName)
+                    throwException(it, IOException("Connection not installed!"))
                 }
             } else {
                 if (BuildConfig.DEBUG) {
-                    Log.d("Sudox API", "Request abandoned because connection was closed while queue waiting.")
+                    Log.d("Sudox API", "Request abandoned because connection not installed.")
                 }
 
                 releaseRequestQueue(methodName)
                 throwException(it, IOException("Connection not installed!"))
             }
-        } else {
-            if (BuildConfig.DEBUG) {
-                Log.d("Sudox API", "Request abandoned because connection not installed.")
-            }
+        }.subscribeOn(Schedulers.io())
 
-            releaseRequestQueue(methodName)
-            throwException(it, IOException("Connection not installed!"))
+        if (BuildConfig.DEBUG) {
+            observable = observable.doOnError { Log.d("Sudox API", "Error during request sending", it) }
         }
+
+        return observable
     }
 
     override fun <T : Any> listenUpdate(updateName: String, dataClass: Class<T>) = Observable.create<T> {

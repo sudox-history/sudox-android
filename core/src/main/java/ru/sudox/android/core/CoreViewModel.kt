@@ -1,5 +1,6 @@
 package ru.sudox.android.core
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import io.reactivex.Notification
 import io.reactivex.Observable
@@ -14,7 +15,7 @@ abstract class CoreViewModel : ViewModel() {
 
     @Suppress("UnstableApiUsage")
     fun <T> doRequest(observable: Observable<T>): Observable<T> {
-        return observable
+        var newObservable = observable
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(Schedulers.io())
                 .materialize()
@@ -28,6 +29,12 @@ abstract class CoreViewModel : ViewModel() {
                         Notification.createOnNext<T>(it.value!!)
                     }
                 }
+
+        if (BuildConfig.DEBUG) {
+            newObservable = newObservable.doOnError { Log.d("Sudox Core", "Error during request executing", it) }
+        }
+
+        return newObservable
     }
 
     override fun onCleared() {

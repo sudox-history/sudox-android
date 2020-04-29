@@ -4,15 +4,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import ru.sudox.android.auth.data.entities.AuthSessionStage
+import ru.sudox.android.auth.ui.code.AuthCodeController
 import ru.sudox.android.auth.ui.views.AuthScreenLayout
 import ru.sudox.android.core.controllers.ScrollableController
 import ru.sudox.android.countries.COUNTRY_CHANGE_REQUEST_CODE
 import ru.sudox.android.countries.COUNTRY_EXTRA_NAME
 import ru.sudox.android.countries.CountrySelectController
+import ru.sudox.api.common.getErrorText
 
 class AuthPhoneController : ScrollableController() {
 
-    private var authPhoneViewModel: AuthPhoneViewModel? = null
+    private var viewModel: AuthPhoneViewModel? = null
     private var screenVO: AuthPhoneScreenVO? = null
 
     init {
@@ -30,7 +34,25 @@ class AuthPhoneController : ScrollableController() {
             (view as AuthScreenLayout).vo = this
         }
 
-        authPhoneViewModel = getViewModel()
+        viewModel = getViewModel()
+        viewModel!!.successLiveData.observe(this, Observer {
+            if (it == AuthSessionStage.PHONE_ENTERED) {
+                navigationManager!!.showRootChild(AuthCodeController())
+            }
+        })
+
+        viewModel!!.errorsLiveData.observe(this, Observer {
+            screenVO!!.phoneEditTextLayout!!.errorText = if (it != null) {
+                getErrorText(it)
+            } else {
+                null
+            }
+        })
+
+        viewModel!!.loadingStateLiveData.observe(this, Observer {
+            appBarManager!!.toggleLoading(it)
+            screenVO!!.phoneEditTextLayout!!.isEnabled = !it
+        })
 
         screenVO!!.phoneEditText!!.countrySelector.setOnClickListener {
             navigationManager!!.showRootChild(CountrySelectController().apply {
@@ -43,7 +65,7 @@ class AuthPhoneController : ScrollableController() {
         super.onAppBarClicked(tag)
 
         if (tag == AUTH_PHONE_NEXT_BUTTON_TAG) {
-            authPhoneViewModel!!.createSession(screenVO!!.phoneEditText!!.phoneNumber!!)
+            viewModel!!.createSession(screenVO!!.phoneEditText!!.phoneNumber!!)
         }
     }
 
