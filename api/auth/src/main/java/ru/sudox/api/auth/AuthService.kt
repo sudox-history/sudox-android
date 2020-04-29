@@ -13,9 +13,7 @@ import ru.sudox.api.auth.entries.signin.AuthSignInResponseDTO
 import ru.sudox.api.auth.entries.signup.AuthSignUpRequestDTO
 import ru.sudox.api.auth.entries.signup.AuthSignUpResponseDTO
 import ru.sudox.api.auth.entries.verify.AuthVerifyRequestDTO
-import ru.sudox.api.auth.helpers.isPhoneNumberValid
 import ru.sudox.api.common.SudoxApi
-import ru.sudox.api.common.exceptions.ApiRegexException
 import ru.sudox.api.common.helpers.toHexString
 
 const val AUTH_SESSION_LIFETIME = 10L * 60L * 1000L

@@ -41,30 +41,29 @@ class AuthRepository @Inject constructor(
         }
 
         return systemService.getTime().flatMap {
-            val sessionDao = authSessionDAO.get(phone).firstOrNull()
+            val session = authSessionDAO.get(phone).firstOrNull()
 
-            if (sessionDao != null) {
-                val remainingTime = sessionDao.creationTime + AUTH_SESSION_LIFETIME - it.time
+            if (session != null) {
+                val remainingTime = session.creationTime + AUTH_SESSION_LIFETIME - it.time
 
                 if (remainingTime > 0) {
                     timerObservable = Observable.timer(remainingTime, TimeUnit.MILLISECONDS)
 
-                    authSessionDAO.update(sessionDao.apply {
-                        isActive = true
-                    })
+                    session.isActive = true
+                    authSessionDAO.update(session)
 
-                    Observable.just(sessionDao)
+                    Observable.just(session)
                 } else {
-                    authSessionDAO.delete(sessionDao)
+                    authSessionDAO.delete(session)
                 }
             }
 
             authService.create(phone).map { dto ->
                 timerObservable = Observable.timer(AUTH_SESSION_LIFETIME, TimeUnit.MILLISECONDS)
 
-                AuthSessionEntity(phone, dto.userExists, it.time, AuthSessionStage.PHONE_ENTERED, true, dto.authId).apply {
-                    authSessionDAO.insert(this)
-                }
+                val entity = AuthSessionEntity(phone, dto.userExists, it.time, AuthSessionStage.PHONE_ENTERED, true, dto.authId)
+                authSessionDAO.insert(entity)
+                entity
             }
         }.subscribeOn(Schedulers.computation())
     }
