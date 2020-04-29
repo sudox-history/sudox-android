@@ -54,7 +54,10 @@ class AuthRepository @Inject constructor(
                 .create(phone)
                 .map { AuthSessionEntity(phone, it.userExists, time, AuthSessionStage.PHONE_ENTERED, true, it.authId) }
                 .observeOn(Schedulers.computation())
-                .doOnNext { sessionDao.insert(it) }
+                .doOnNext {
+                    timerObservable = Observable.timer(AUTH_SESSION_LIFETIME, TimeUnit.MILLISECONDS)
+                    sessionDao.insert(it)
+                }
     }
 
     private fun restoreSession(it: AuthSessionEntity, time: Long): Observable<AuthSessionEntity> {
