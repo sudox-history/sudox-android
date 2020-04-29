@@ -19,8 +19,8 @@ import javax.inject.Singleton
 class AuthRepository @Inject constructor(
         private val authService: AuthService,
         private val systemService: SystemService,
-        private val authSessionDAO: AuthSessionDAO,
-        private val phoneNumberUtil: PhoneNumberUtil
+        private val phoneNumberUtil: PhoneNumberUtil,
+        private val sessionDao: AuthSessionDAO
 ) {
 
     var timerObservable: Observable<Long>? = null
@@ -34,37 +34,42 @@ class AuthRepository @Inject constructor(
      * @param phone Номер телефона, под которым нужно провести авторизацию
      * @return Observable с сущностью <u>в виде гномика</u> сессии авторизации
      */
-    fun createSession(phone: String): Observable<AuthSessionEntity> {
-        // TODO: Переместить в CountriesRepository
-        if (!phoneNumberUtil.isPhoneNumberValid(phone)) {
-            return Observable.error(InvalidFieldFormatException(hashSetOf(0)))
+    fun createOrRestoreSession(phone: String): Observable<AuthSessionEntity> {
+        return if (phoneNumberUtil.isPhoneNumberValid(phone)) {
+            systemService.getTime().flatMap { dto ->
+                sessionDao
+                        .get(phone)
+                        .subscribeOn(Schedulers.computation())
+                        .toObservable()
+                        .flatMap { restoreSession(it,  dto.time) }
+                        .switchIfEmpty(createSession(phone,  dto.time))
+            }
+        } else {
+            Observable.error(InvalidFieldFormatException(hashSetOf(0)))
         }
+    }
 
-        return systemService.getTime().flatMap {
-            val session = authSessionDAO.get(phone).firstOrNull()
+    private fun createSession(phone: String, time: Long): Observable<AuthSessionEntity> {
+        return authService
+                .create(phone)
+                .map { AuthSessionEntity(phone, it.userExists, time, AuthSessionStage.PHONE_ENTERED, true, it.authId) }
+                .observeOn(Schedulers.computation())
+                .doOnNext { sessionDao.insert(it) }
+    }
 
-            if (session != null) {
-                val remainingTime = session.creationTime + AUTH_SESSION_LIFETIME - it.time
+    private fun restoreSession(it: AuthSessionEntity, time: Long): Observable<AuthSessionEntity> {
+        val remainingTime = it.creationTime + AUTH_SESSION_LIFETIME - time
 
-                if (remainingTime > 0) {
-                    timerObservable = Observable.timer(remainingTime, TimeUnit.MILLISECONDS)
+        return if (remainingTime > 0) {
+            timerObservable = Observable.timer(remainingTime, TimeUnit.MILLISECONDS)
 
-                    session.isActive = true
-                    authSessionDAO.update(session)
+            it.isSelected = true
+            sessionDao.update(it)
 
-                    Observable.just(session)
-                } else {
-                    authSessionDAO.delete(session)
-                }
-            }
-
-            authService.create(phone).map { dto ->
-                timerObservable = Observable.timer(AUTH_SESSION_LIFETIME, TimeUnit.MILLISECONDS)
-
-                val entity = AuthSessionEntity(phone, dto.userExists, it.time, AuthSessionStage.PHONE_ENTERED, true, dto.authId)
-                authSessionDAO.insert(entity)
-                entity
-            }
-        }.subscribeOn(Schedulers.computation())
+            Observable.just(it)
+        } else {
+            sessionDao.delete(it)
+            Observable.empty()
+        }
     }
 }

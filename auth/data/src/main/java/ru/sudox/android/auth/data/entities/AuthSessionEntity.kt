@@ -10,6 +10,6 @@ data class AuthSessionEntity(
         @ColumnInfo val userExists: Boolean,
         @ColumnInfo val creationTime: Long,
         @ColumnInfo var stage: AuthSessionStage,
-        @ColumnInfo var isActive: Boolean,
+        @ColumnInfo var isSelected: Boolean,
         @ColumnInfo val authId: String
 )

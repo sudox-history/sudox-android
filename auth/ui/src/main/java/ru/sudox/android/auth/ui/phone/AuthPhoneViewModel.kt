@@ -5,7 +5,6 @@ import ru.sudox.android.auth.data.entities.AuthSessionStage
 import ru.sudox.android.auth.data.repositories.AuthRepository
 import ru.sudox.android.core.CoreViewModel
 import ru.sudox.android.core.livedata.SingleLiveEvent
-import java.lang.Exception
 import javax.inject.Inject
 
 class AuthPhoneViewModel @Inject constructor(
@@ -19,7 +18,7 @@ class AuthPhoneViewModel @Inject constructor(
     fun createSession(userPhone: String) {
         loadingStateLiveData.postValue(true)
 
-        compositeDisposable.add(doRequest(authRepository.createSession(userPhone)).subscribe({
+        compositeDisposable.add(doRequest(authRepository.createOrRestoreSession(userPhone)).subscribe({
             errorsLiveData.postValue(null)
             successLiveData.postValue(it.stage)
             loadingStateLiveData.postValue(false)

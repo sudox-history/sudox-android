@@ -122,7 +122,7 @@ class SudoxApiImpl(
                 releaseRequestQueue(methodName)
                 throwException(it, IOException("Connection not installed!"))
             }
-        }.subscribeOn(Schedulers.io())
+        }.observeOn(Schedulers.io()).subscribeOn(Schedulers.io())
 
         if (BuildConfig.DEBUG) {
             observable = observable.doOnError { Log.d("Sudox API", "Error during request sending", it) }
