@@ -6,10 +6,10 @@ import io.reactivex.schedulers.Schedulers
 import ru.sudox.android.auth.data.daos.AuthSessionDAO
 import ru.sudox.android.auth.data.entities.AuthSessionEntity
 import ru.sudox.android.auth.data.entities.AuthSessionStage
+import ru.sudox.android.core.exceptions.InvalidFieldFormatException
 import ru.sudox.api.auth.AUTH_SESSION_LIFETIME
 import ru.sudox.api.auth.AuthService
 import ru.sudox.api.auth.helpers.isPhoneNumberValid
-import ru.sudox.api.common.exceptions.ApiRegexException
 import ru.sudox.api.system.SystemService
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class AuthRepository @Inject constructor(
     fun createSession(phone: String): Observable<AuthSessionEntity> {
         // TODO: Переместить в CountriesRepository
         if (!phoneNumberUtil.isPhoneNumberValid(phone)) {
-            return Observable.error(ApiRegexException(hashSetOf(0)))
+            return Observable.error(InvalidFieldFormatException(hashSetOf(0)))
         }
 
         return systemService.getTime().flatMap {
