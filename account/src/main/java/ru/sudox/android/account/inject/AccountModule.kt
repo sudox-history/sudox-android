@@ -30,7 +30,7 @@ class AccountModule(
 
     @Provides
     @Singleton
-    fun provideAuthenticator(@Named(APP_CONTEXT_NAME) context: Context): AccountAuthenticator {
-        return AccountAuthenticator(context, authActivity)
+    fun provideAuthenticator(@Named(APP_CONTEXT_NAME) context: Context, accountRepository: AccountRepository): AccountAuthenticator {
+        return AccountAuthenticator(context, authActivity, accountRepository)
     }
 }

@@ -7,10 +7,12 @@ import android.accounts.AccountManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import ru.sudox.android.account.repository.AccountRepository
 
 class AccountAuthenticator(
        private val context: Context,
-       private val activityClass: Class<*>
+       private val activityClass: Class<*>,
+       private val accountRepository: AccountRepository
 ) : AbstractAccountAuthenticator(context) {
     
     override fun getAuthTokenLabel(authTokenType: String?): String? {
@@ -44,6 +46,13 @@ class AccountAuthenticator(
 
     override fun editProperties(response: AccountAuthenticatorResponse?, accountType: String?): Bundle? {
         return null
+    }
+
+    override fun getAccountRemovalAllowed(response: AccountAuthenticatorResponse?, account: Account?): Bundle {
+        accountRepository.removeAccountKey(account!!)
+
+        // Always true!
+        return super.getAccountRemovalAllowed(response, account)
     }
 
     override fun addAccount(
