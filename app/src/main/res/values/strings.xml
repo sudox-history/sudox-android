@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="account_type">ru.sudox.account</string>
+    <string name="app_name">Sudox</string>
+
     <string name="people">People</string>
     <string name="messages">Messages</string>
     <string name="blog">Blog</string>

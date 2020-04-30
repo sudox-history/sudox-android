@@ -42,7 +42,7 @@ class AppLoader : Application(), CoreLoader {
 
         loaderComponent = DaggerLoaderComponent
                 .builder()
-                .accountModule(AccountModule(AppActivity::class.java))
+                .accountModule(AccountModule(AppActivity::class.java, getString(R.string.account_type)))
                 .databaseModule(DatabaseModule("sudox"))
                 .coreLoaderModule(CoreLoaderModule(this))
                 .countriesModule(CountriesModule(phoneNumberUtil))

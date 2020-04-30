@@ -8,6 +8,7 @@ dependencies {
     implementation project(path: ':core')
     implementation project(path: ':cryptography')
     implementation project(path: ':countries')
+    implementation project(path: ':account')
 
     implementation libraries.rxjava
     implementation libraries.libphonenumber
