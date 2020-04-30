@@ -9,12 +9,18 @@ import ru.sudox.android.auth.data.entities.AuthSessionEntity
 import ru.sudox.android.auth.data.entities.AuthSessionStage
 import ru.sudox.android.core.exceptions.InvalidFieldFormatException
 import ru.sudox.android.countries.helpers.isPhoneNumberValid
+import ru.sudox.api.auth.AUTH_CODE_INVALID_ERROR_CODE
 import ru.sudox.api.auth.AUTH_DROPPED_ERROR_CODE
 import ru.sudox.api.auth.AUTH_NOT_FOUND_ERROR_CODE
 import ru.sudox.api.auth.AUTH_SESSION_LIFETIME
+import ru.sudox.api.auth.AUTH_TYPE_INVALID_ERROR_CODE
 import ru.sudox.api.auth.AuthService
+import ru.sudox.api.auth.NAME_REGEX
+import ru.sudox.api.auth.NICKNAME_REGEX
+import ru.sudox.api.common.SESSION_NOT_FOUND_ERROR_CODE
 import ru.sudox.api.common.exceptions.ApiException
 import ru.sudox.api.system.SystemService
+import ru.sudox.cryptography.BLAKE2b
 import ru.sudox.cryptography.Random
 import ru.sudox.cryptography.XChaCha20Poly1305
 import java.util.concurrent.TimeUnit
@@ -113,28 +119,37 @@ class AuthRepository @Inject constructor(
         }
     }
 
-//    fun signUp(name: String, nickname: String): Observable<Unit> {
-//        val invalidFields = HashSet<Int>(2)
-//
-//        if (!NAME_REGEX.matches(name)) {
-//            invalidFields.add(0)
-//        }
-//
-//        if (!NICKNAME_REGEX.matches(nickname)) {
-//            invalidFields.add(1)
-//        }
-//
-//        if (invalidFields.isNotEmpty()) {
-//            return Observable.error(InvalidFieldFormatException(invalidFields))
-//        }
-//
-//        val accountKey = Random.generate(XChaCha20Poly1305.KEY_LENGTH)
-//        val accountKeyHash = BLAKE2b.hash(accountKey)
-//
-//        return authService
-//                .signUp(currentSession!!.authId, name, nickname, accountKeyHash)
-//                .flatMap {  }
-//    }
+    fun signUp(name: String, nickname: String): Observable<Unit> {
+        val invalidFields = HashSet<Int>(2)
+
+        if (!NAME_REGEX.matches(name)) {
+            invalidFields.add(0)
+        }
+
+        if (!NICKNAME_REGEX.matches(nickname)) {
+            invalidFields.add(1)
+        }
+
+        if (invalidFields.isNotEmpty()) {
+            return Observable.error(InvalidFieldFormatException(invalidFields))
+        }
+
+        val accountKey = Random.generate(XChaCha20Poly1305.KEY_LENGTH)
+        val accountKeyHash = BLAKE2b.hash(accountKey)
+
+        return authService
+                .signUp(currentSession!!.authId, name, nickname, accountKeyHash)
+                .observeOn(Schedulers.computation())
+                .doOnError {
+                    if (it is ApiException && (it.code == SESSION_NOT_FOUND_ERROR_CODE ||
+                                    it.code == AUTH_TYPE_INVALID_ERROR_CODE ||
+                                    it.code == AUTH_CODE_INVALID_ERROR_CODE)) {
+
+                        destroySession(it.code)
+                    }
+                }
+                .map { Unit }
+    }
 
     private fun destroySession(code: Int) {
         sessionDao.delete(currentSession!!)

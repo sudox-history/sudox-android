@@ -6,6 +6,7 @@ registerModule(false, true, true)
 dependencies {
     api project(":api:system")
     api project(":api:common")
+    api project(":api:users")
     api project(":api:auth")
 
     implementation libraries.jackson

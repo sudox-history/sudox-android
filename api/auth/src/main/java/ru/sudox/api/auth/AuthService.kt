@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import ru.sudox.api.auth.entries.checkcode.AuthCheckCodeRequestDTO
 import ru.sudox.api.auth.entries.create.AuthCreateRequestDTO
 import ru.sudox.api.auth.entries.create.AuthCreateResponseDTO
+import ru.sudox.api.auth.entries.createusersession.AuthCreateUserSessionRequestDTO
 import ru.sudox.api.auth.entries.newauthverify.NewAuthVerifyDTO
 import ru.sudox.api.auth.entries.respondauthverify.AuthRespondAuthVerifyDTO
 import ru.sudox.api.auth.entries.respondverify.AuthRespondVerifyRequestDTO
@@ -86,6 +87,16 @@ class AuthService(private val sudoxApi: SudoxApi) {
      */
     fun respondVerify(accept: Boolean, publicKey: ByteArray, authId: String, userKeyEnc: ByteArray): Observable<Unit> {
         return sudoxApi.sendRequest("auth.respondVerify", AuthRespondVerifyRequestDTO(accept, publicKey.toHexString(), authId, userKeyEnc.toHexString()), Unit::class.java)
+    }
+
+    /**
+     * Восстанавливает сессию пользователя
+     *
+     * @param userSecret Токен сессии пользователя
+     * @return Observable на который прилетит ответ от сервера.
+     */
+    fun createUserSession(userSecret: String): Observable<Unit> {
+        return sudoxApi.sendRequest("auth.createUserSession", AuthCreateUserSessionRequestDTO(userSecret), Unit::class.java)
     }
 
     /**
