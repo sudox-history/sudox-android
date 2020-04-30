@@ -38,9 +38,9 @@ class AuthCodeController : ScrollableController() {
         viewModel!!.successLiveData.observe(this, Observer {
             if (it != null) {
                 if (it) {
-                    navigationManager!!.showRootChild(AuthVerifyController())
+                    navigationManager!!.showRootChild(AuthVerifyController(), true)
                 } else {
-                    navigationManager!!.showRootChild(AuthSignUpController())
+                    navigationManager!!.showRootChild(AuthSignUpController(), true)
                 }
             }
         })

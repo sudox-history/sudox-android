@@ -37,11 +37,13 @@ class AuthPhoneController : ScrollableController() {
 
         viewModel = getViewModel()
         viewModel!!.successLiveData.observe(this, Observer {
-            if (it!!.stage == AuthSessionStage.PHONE_CHECKED) {
-                navigationManager!!.showRootChild(AuthCodeController())
-            } else if (it.stage == AuthSessionStage.CODE_CHECKED) {
-                if (!it.userExists) {
-                    navigationManager!!.showRootChild(AuthSignUpController())
+            if (it != null) {
+                if (it.stage == AuthSessionStage.PHONE_CHECKED) {
+                    navigationManager!!.showRootChild(AuthCodeController())
+                } else if (it.stage == AuthSessionStage.CODE_CHECKED) {
+                    if (!it.userExists) {
+                        navigationManager!!.showRootChild(AuthSignUpController())
+                    }
                 }
             }
         })

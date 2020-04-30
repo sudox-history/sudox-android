@@ -9,7 +9,7 @@ const val MAIN_ROOT_TAG = 1
 interface NavigationManager {
     fun popBackstack(): Boolean
     fun isContentUsesAllLayout(): Boolean
-    fun showRootChild(controller: Controller)
+    fun showRootChild(controller: Controller, removeCurrent: Boolean = false)
     fun showSubRoot(controller: Controller)
     fun restoreState(bundle: Bundle?)
     fun saveState(bundle: Bundle?)

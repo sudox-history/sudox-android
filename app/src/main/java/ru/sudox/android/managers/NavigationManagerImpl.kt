@@ -170,14 +170,21 @@ class NavigationManagerImpl(
         return false
     }
 
-    override fun showRootChild(controller: Controller) {
+    @ExperimentalStdlibApi
+    override fun showRootChild(controller: Controller, removeCurrent: Boolean) {
         if (bottomNavigationView.visibility == View.VISIBLE) {
             mainControllersTags[controller.instanceId] = getCurrentTag()
         }
 
-        routerProvider.value.pushController(RouterTransaction
-                .with(controller)
-                .pushChangeHandler(RightMoveHandler(ANIMATION_DURATION)))
+        val router = routerProvider.value
+        val backstack = router.backstack
+
+        if (removeCurrent) {
+            backstack.removeLast()
+        }
+
+        backstack.add(RouterTransaction.with(controller))
+        router.setBackstack(backstack, RightMoveHandler(ANIMATION_DURATION))
     }
 
     override fun showRoot(tag: Int) {
