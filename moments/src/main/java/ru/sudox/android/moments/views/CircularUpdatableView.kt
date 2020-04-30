@@ -183,6 +183,12 @@ class CircularUpdatableView : ViewGroup {
         }
     }
 
+    /**
+     * Устанавливает ViewObject в данную View
+     *
+     * @param vo ViewObject, который нужно использовать
+     * @param glide Glide для загрузки аватарки
+     */
     fun setVO(vo: CircularUpdatableViewVO?, glide: GlideRequests) {
         voStorage = vo?.createVoStorage(context!!)
         titleTextView.text = vo?.getTitle(context)

@@ -213,6 +213,13 @@ open class HorizontalPeopleItemView : ViewGroup {
         statusTextView.layout(statusLeftBorder, statusTopBorder, statusRightBorder, statusBottomBorder)
     }
 
+    /**
+     * Устанавливает ViewObject во View
+     * Также загружает аватар с помощью Glide
+     *
+     * @param vo ViewObject, который нужно использовать
+     * @param glide Glide для загрузки изображения
+     */
     fun setVO(vo: PeopleVO?, glide: GlideRequests) {
         val buttons = vo?.getButtons()
         val needRemove = (buttonsViews?.size ?: 0) - (buttons?.size ?: 0)

@@ -15,6 +15,12 @@ class MediaAttachmentsLayout : MityushkinLayout {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
+    /**
+     * Устанавливает ViewObject'ы вложений в данную View
+     *
+     * @param vos ViewObject'ы, которые нужно использовать
+     * @param glide Glide для загрузки изображений/GIF'ок
+     */
     fun setVOs(vos: ArrayList<MediaAttachmentVO>?, glide: GlideRequests) {
         if (vos != null) {
             for (i in 0 until childCount) {

@@ -119,6 +119,14 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    /**
+     * Регистрирует пользователя.
+     *
+     * @param name Имя пользователя
+     * @param nickname Никнейм пользователя
+     * @throws InvalidFieldFormatException если одно из значений предоставлено в неверном формате (0 - имя, 1 - никнейм)
+     * @return Observable с ответом от сервера
+     */
     fun signUp(name: String, nickname: String): Observable<Unit> {
         val invalidFields = HashSet<Int>(2)
 

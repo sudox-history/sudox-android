@@ -297,6 +297,12 @@ class NewsItemView : ViewGroup {
         }
     }
 
+    /**
+     * Устанавливает ViewObject в данную View
+     *
+     * @param vo ViewObject, который нужно использовать
+     * @param glide Glide для загрузки вложений и аватара
+     */
     fun setVO(vo: NewsVO?, glide: GlideRequests) {
         peopleItemView.setVO(vo, glide)
         contentTextView.text = vo?.contentText

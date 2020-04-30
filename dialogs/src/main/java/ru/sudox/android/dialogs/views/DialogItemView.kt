@@ -335,6 +335,12 @@ class DialogItemView : ViewGroup {
         }
     }
 
+    /**
+     * Устанавливает ViewObject в данную View
+     *
+     * @param vo ViewObject, который нужно использовать
+     * @param glide Glide для загрузки аватарки
+     */
     fun setVO(vo: DialogVO, glide: GlideRequests) {
         this.vo = vo
 
