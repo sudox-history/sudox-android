@@ -1,6 +1,5 @@
 package ru.sudox.api.auth
 
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import io.reactivex.Observable
 import ru.sudox.api.auth.entries.checkcode.AuthCheckCodeRequestDTO
 import ru.sudox.api.auth.entries.create.AuthCreateRequestDTO
@@ -18,10 +17,7 @@ import ru.sudox.api.common.helpers.toHexString
 
 const val AUTH_SESSION_LIFETIME = 10L * 60L * 1000L
 
-class AuthService(
-        private val sudoxApi: SudoxApi,
-        private val phoneNumberUtil: PhoneNumberUtil
-) {
+class AuthService(private val sudoxApi: SudoxApi) {
 
     /**
      * Создает сессию авторизации.

@@ -1,5 +1,6 @@
 package ru.sudox.android.countries.helpers
 
+import io.michaelrocks.libphonenumber.android.NumberParseException
 import ru.sudox.android.countries.R
 import ru.sudox.android.countries.vos.CountryVO
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
@@ -52,6 +53,26 @@ fun PhoneNumberUtil.formatPhoneNumber(phoneNumber: String): String {
     }
 
     return format(parse(number, null), PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
+}
+
+/**
+ * Проверяет валидность номера телефона.
+ *
+ * @param phone Номер телефона
+ * @return True если номер телефона валиден, False - если не валиден.
+ */
+fun PhoneNumberUtil.isPhoneNumberValid(phone: String): Boolean {
+    var newPhone = phone
+
+    if (!newPhone.startsWith("+")) {
+        newPhone = "+$phone"
+    }
+
+    return try {
+        isValidNumber(parse(newPhone, null))
+    } catch (e: NumberParseException) {
+        false
+    }
 }
 
 private fun createCountryPair(countryVO: CountryVO): Pair<String, CountryVO> {

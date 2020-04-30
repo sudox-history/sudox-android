@@ -1,21 +1,19 @@
 package ru.sudox.api.inject
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import ru.sudox.api.SudoxApiImpl
-import ru.sudox.api.connections.Connection
 import dagger.Module
 import dagger.Provides
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import ru.sudox.api.SudoxApiImpl
 import ru.sudox.api.auth.AuthService
 import ru.sudox.api.common.SudoxApi
+import ru.sudox.api.connections.Connection
 import ru.sudox.api.system.SystemService
 import javax.inject.Singleton
 
 @Module
 class ApiModule(
         private val connection: Connection,
-        private val objectMapper: ObjectMapper,
-        private val phoneNumberUtil: PhoneNumberUtil
+        private val objectMapper: ObjectMapper
 ) {
 
     @Singleton
@@ -26,8 +24,8 @@ class ApiModule(
 
     @Singleton
     @Provides
-    fun provideAuthService(api: SudoxApi): AuthService {
-        return AuthService(api, phoneNumberUtil)
+    fun provideAuthService(sudoxApi: SudoxApi): AuthService {
+        return AuthService(sudoxApi)
     }
 
     @Singleton

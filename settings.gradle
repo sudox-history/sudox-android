@@ -6,6 +6,7 @@ include ':api'
 include ':api:auth'
 include ':api:common'
 include ':api:system'
+include ':api:users'
 
 include ':design'
 include ':design:buttons'

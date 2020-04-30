@@ -42,7 +42,7 @@ class AppLoader : Application() {
                 .databaseModule(DatabaseModule("sudox"))
                 .coreLoaderModule(CoreLoaderModule(this))
                 .countriesModule(CountriesModule(phoneNumberUtil))
-                .apiModule(ApiModule(WebSocketConnection(), objectMapper, phoneNumberUtil))
+                .apiModule(ApiModule(WebSocketConnection(), objectMapper))
                 .build()
 
         loaderComponent!!.inject(this)

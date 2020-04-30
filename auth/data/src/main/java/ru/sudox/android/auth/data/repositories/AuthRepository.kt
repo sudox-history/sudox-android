@@ -8,11 +8,11 @@ import ru.sudox.android.auth.data.daos.AuthSessionDAO
 import ru.sudox.android.auth.data.entities.AuthSessionEntity
 import ru.sudox.android.auth.data.entities.AuthSessionStage
 import ru.sudox.android.core.exceptions.InvalidFieldFormatException
+import ru.sudox.android.countries.helpers.isPhoneNumberValid
 import ru.sudox.api.auth.AUTH_DROPPED_ERROR_CODE
 import ru.sudox.api.auth.AUTH_NOT_FOUND_ERROR_CODE
 import ru.sudox.api.auth.AUTH_SESSION_LIFETIME
 import ru.sudox.api.auth.AuthService
-import ru.sudox.api.auth.helpers.isPhoneNumberValid
 import ru.sudox.api.common.exceptions.ApiException
 import ru.sudox.api.system.SystemService
 import ru.sudox.cryptography.Random
@@ -39,6 +39,9 @@ class AuthRepository @Inject constructor(
         private set
 
     var currentPrivateKey: ByteArray? = null
+        private set
+
+    var currentAccountKey: ByteArray? = null
         private set
 
     val sessionDestroyedSubject = PublishSubject.create<Int>()
@@ -72,6 +75,14 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    /**
+     * Подтверждает сессию авторизации кодом, введенным пользователем.
+     * Также вызывается обмен ключей с другим телефоном если пользователь зарегистрирован.
+     *
+     * @param code Код подтверждения
+     * @throws InvalidFieldFormatException если код введен в неправильном формате.
+     * @return Observable с состоянием регистрации пользователя
+     */
     fun checkCode(code: Int): Observable<Boolean> {
         return if (code in 10000..99999) {
             authService
@@ -101,6 +112,29 @@ class AuthRepository @Inject constructor(
             Observable.error(InvalidFieldFormatException(hashSetOf(0)))
         }
     }
+
+//    fun signUp(name: String, nickname: String): Observable<Unit> {
+//        val invalidFields = HashSet<Int>(2)
+//
+//        if (!NAME_REGEX.matches(name)) {
+//            invalidFields.add(0)
+//        }
+//
+//        if (!NICKNAME_REGEX.matches(nickname)) {
+//            invalidFields.add(1)
+//        }
+//
+//        if (invalidFields.isNotEmpty()) {
+//            return Observable.error(InvalidFieldFormatException(invalidFields))
+//        }
+//
+//        val accountKey = Random.generate(XChaCha20Poly1305.KEY_LENGTH)
+//        val accountKeyHash = BLAKE2b.hash(accountKey)
+//
+//        return authService
+//                .signUp(currentSession!!.authId, name, nickname, accountKeyHash)
+//                .flatMap {  }
+//    }
 
     private fun destroySession(code: Int) {
         sessionDao.delete(currentSession!!)
