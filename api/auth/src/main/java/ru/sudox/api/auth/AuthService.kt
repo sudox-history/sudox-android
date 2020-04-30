@@ -16,7 +16,7 @@ import ru.sudox.api.auth.entries.verify.AuthVerifyRequestDTO
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.api.common.helpers.toHexString
 
-const val AUTH_SESSION_LIFETIME = 1L * 60L * 1000L
+const val AUTH_SESSION_LIFETIME = 10L * 60L * 1000L
 
 class AuthService(
         private val sudoxApi: SudoxApi,

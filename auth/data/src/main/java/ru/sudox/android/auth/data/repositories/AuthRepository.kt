@@ -92,10 +92,11 @@ class AuthRepository @Inject constructor(
                             authService
                                     .verify(currentSession!!.authId, currentPublicKey!!)
                                     .doOnError { destroySession(AUTH_NOT_FOUND_ERROR_CODE) }
+                                    .map { true }
                         } else {
-                            Observable.empty()
+                            Observable.just(false)
                         }
-                    }.map { currentSession!!.userExists }
+                    }
         } else {
             Observable.error(InvalidFieldFormatException(hashSetOf(0)))
         }

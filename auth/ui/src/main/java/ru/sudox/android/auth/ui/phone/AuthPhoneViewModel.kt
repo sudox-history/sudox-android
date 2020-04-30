@@ -1,6 +1,7 @@
 package ru.sudox.android.auth.ui.phone
 
 import androidx.lifecycle.MutableLiveData
+import ru.sudox.android.auth.data.entities.AuthSessionEntity
 import ru.sudox.android.auth.data.entities.AuthSessionStage
 import ru.sudox.android.auth.data.repositories.AuthRepository
 import ru.sudox.android.core.CoreViewModel
@@ -11,7 +12,7 @@ class AuthPhoneViewModel @Inject constructor(
         private val authRepository: AuthRepository
 ) : CoreViewModel() {
 
-    val successLiveData = SingleLiveEvent<AuthSessionStage?>()
+    val successLiveData = SingleLiveEvent<AuthSessionEntity?>()
     val loadingStateLiveData = MutableLiveData<Boolean>()
     val errorsLiveData = MutableLiveData<Throwable>()
 
@@ -20,7 +21,7 @@ class AuthPhoneViewModel @Inject constructor(
 
         compositeDisposable.add(doRequest(authRepository.createOrRestoreSession(userPhone)).subscribe({
             errorsLiveData.postValue(null)
-            successLiveData.postValue(it.stage)
+            successLiveData.postValue(it)
             loadingStateLiveData.postValue(false)
         }, {
             errorsLiveData.postValue(it)
