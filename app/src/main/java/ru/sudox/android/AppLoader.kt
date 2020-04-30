@@ -10,6 +10,9 @@ import ru.sudox.android.countries.inject.CountriesModule
 import ru.sudox.android.inject.components.LoaderComponent
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import org.msgpack.jackson.dataformat.MessagePackFactory
+import ru.sudox.android.account.inject.AccountModule
+import ru.sudox.android.core.CoreLoader
+import ru.sudox.android.core.inject.CoreLoaderComponent
 import ru.sudox.android.core.inject.CoreLoaderModule
 import ru.sudox.android.inject.DatabaseModule
 import ru.sudox.android.inject.components.DaggerLoaderComponent
@@ -21,7 +24,7 @@ import ru.sudox.android.inject.components.DaggerLoaderComponent
  * 1) Создание корневого компонента DI
  * 2) Инициализацию коннектора API
  */
-class AppLoader : Application() {
+class AppLoader : Application(), CoreLoader {
 
     private var connector: AppConnector? = null
 
@@ -39,6 +42,7 @@ class AppLoader : Application() {
 
         loaderComponent = DaggerLoaderComponent
                 .builder()
+                .accountModule(AccountModule(AppActivity::class.java))
                 .databaseModule(DatabaseModule("sudox"))
                 .coreLoaderModule(CoreLoaderModule(this))
                 .countriesModule(CountriesModule(phoneNumberUtil))
@@ -48,6 +52,10 @@ class AppLoader : Application() {
         loaderComponent!!.inject(this)
         connector = AppConnector()
         connector!!.start()
+    }
+
+    override fun getComponent(): CoreLoaderComponent {
+        return loaderComponent as CoreLoaderComponent
     }
 
     override fun onTerminate() {

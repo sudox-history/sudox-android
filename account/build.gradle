@@ -1,8 +1,11 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, false, true)
+registerModule(false, true, true)
 
 dependencies {
     implementation project(":core")
+
+    implementation libraries.dagger
+    kapt libraries.dagger_compiler
 }

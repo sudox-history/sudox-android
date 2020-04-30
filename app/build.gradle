@@ -27,13 +27,14 @@ apply from: '../configs/robolectric.gradle'
 
 dependencies {
     implementation project(path: ':media')
+    implementation project(path: ':account')
     implementation project(path: ':countries')
     implementation project(path: ':dialogs')
     implementation project(path: ':people')
     implementation project(path: ':design')
     implementation project(path: ':auth')
-    implementation project(path: ':api')
     implementation project(path: ':core')
+    implementation project(path: ':api')
 
     implementation libraries.firebase_analytics
     implementation libraries.firebase_crashlytics
