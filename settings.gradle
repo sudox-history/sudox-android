@@ -26,6 +26,7 @@ include ':design:bottomsheet'
 include ':auth'
 include ':auth:ui'
 include ':auth:data'
+include ':account'
 
 include ':core'
 include ':cryptography'

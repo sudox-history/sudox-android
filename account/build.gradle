@@ -1,0 +1,8 @@
+apply from: '../configs/dependencies.gradle'
+apply from: '../configs/common.gradle'
+
+registerModule(false, false, true)
+
+dependencies {
+    implementation project(":core")
+}
