@@ -5,7 +5,7 @@ registerModule(false, true, true)
 
 dependencies {
     implementation project(":core")
-
+    implementation libraries.jackson
     implementation libraries.dagger
     kapt libraries.dagger_compiler
 }

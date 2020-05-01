@@ -2,6 +2,7 @@ package ru.sudox.android.account.inject
 
 import android.accounts.AccountManager
 import android.content.Context
+import com.fasterxml.jackson.databind.ObjectMapper
 import dagger.Module
 import dagger.Provides
 import ru.sudox.android.account.AccountAuthenticator
@@ -13,13 +14,14 @@ import javax.inject.Singleton
 @Module
 class AccountModule(
         private val authActivity: Class<*>,
+        private val objectMapper: ObjectMapper,
         private val accountType: String
 ) {
 
     @Provides
     @Singleton
     fun provideAccountRepository(accountManager: AccountManager): AccountRepository {
-        return AccountRepository(accountManager, accountType)
+        return AccountRepository(objectMapper, accountManager, accountType)
     }
 
     @Provides

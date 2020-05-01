@@ -10,49 +10,17 @@ import android.os.Bundle
 import ru.sudox.android.account.repository.AccountRepository
 
 class AccountAuthenticator(
-       private val context: Context,
-       private val activityClass: Class<*>,
-       private val accountRepository: AccountRepository
+        private val context: Context,
+        private val activityClass: Class<*>,
+        private val accountRepository: AccountRepository
 ) : AbstractAccountAuthenticator(context) {
-    
-    override fun getAuthTokenLabel(authTokenType: String?): String? {
-        return null
-    }
-
-    override fun confirmCredentials(response: AccountAuthenticatorResponse?, account: Account?, options: Bundle?): Bundle? {
-        return null
-    }
-
-    override fun updateCredentials(
-            response: AccountAuthenticatorResponse?,
-            account: Account?,
-            authTokenType: String?,
-            options: Bundle?
-    ): Bundle? {
-        return null
-    }
-
-    override fun getAuthToken(response: AccountAuthenticatorResponse?,
-                              account: Account?,
-                              authTokenType: String?,
-                              options: Bundle?
-    ): Bundle? {
-        return null
-    }
-
-    override fun hasFeatures(response: AccountAuthenticatorResponse?, account: Account?, features: Array<out String>?): Bundle? {
-        return null
-    }
-
-    override fun editProperties(response: AccountAuthenticatorResponse?, accountType: String?): Bundle? {
-        return null
-    }
 
     override fun getAccountRemovalAllowed(response: AccountAuthenticatorResponse?, account: Account?): Bundle {
-        accountRepository.removeAccountKey(account!!)
+        accountRepository.removeKey()
 
-        // Always true!
-        return super.getAccountRemovalAllowed(response, account)
+        return Bundle().apply {
+            putBoolean(AccountManager.KEY_BOOLEAN_RESULT, true)
+        }
     }
 
     override fun addAccount(
@@ -63,5 +31,29 @@ class AccountAuthenticator(
             options: Bundle?
     ) = Bundle().apply {
         putParcelable(AccountManager.KEY_INTENT, Intent(context, activityClass))
+    }
+
+    override fun getAuthTokenLabel(authTokenType: String?): String? {
+        return null
+    }
+
+    override fun confirmCredentials(response: AccountAuthenticatorResponse?, account: Account?, options: Bundle?): Bundle? {
+        return null
+    }
+
+    override fun updateCredentials(response: AccountAuthenticatorResponse?, account: Account?, authTokenType: String?, options: Bundle?): Bundle? {
+        return null
+    }
+
+    override fun getAuthToken(response: AccountAuthenticatorResponse?, account: Account?, authTokenType: String?, options: Bundle?): Bundle? {
+        return null
+    }
+
+    override fun hasFeatures(response: AccountAuthenticatorResponse?, account: Account?, features: Array<out String>?): Bundle? {
+        return null
+    }
+
+    override fun editProperties(response: AccountAuthenticatorResponse?, accountType: String?): Bundle? {
+        return null
     }
 }
