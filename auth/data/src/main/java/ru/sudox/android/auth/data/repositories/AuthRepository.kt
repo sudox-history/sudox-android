@@ -9,6 +9,7 @@ import ru.sudox.android.account.repository.AccountRepository
 import ru.sudox.android.auth.data.daos.AuthSessionDAO
 import ru.sudox.android.auth.data.entities.AuthSessionEntity
 import ru.sudox.android.auth.data.entities.AuthSessionStage
+import ru.sudox.android.auth.data.exceptions.AuthSessionTimeoutException
 import ru.sudox.android.core.exceptions.InvalidFieldFormatException
 import ru.sudox.android.countries.helpers.isPhoneNumberValid
 import ru.sudox.api.auth.AUTH_CODE_INVALID_ERROR_CODE
@@ -19,7 +20,6 @@ import ru.sudox.api.auth.AUTH_TYPE_INVALID_ERROR_CODE
 import ru.sudox.api.auth.AuthService
 import ru.sudox.api.auth.NAME_REGEX
 import ru.sudox.api.auth.NICKNAME_REGEX
-import ru.sudox.api.common.OK_ERROR_CODE
 import ru.sudox.api.common.SESSION_NOT_FOUND_ERROR_CODE
 import ru.sudox.api.common.exceptions.ApiException
 import ru.sudox.api.system.SystemService
@@ -54,7 +54,7 @@ class AuthRepository @Inject constructor(
     var currentAccountKey: ByteArray? = null
         private set
 
-    val sessionDestroyedSubject = PublishSubject.create<Int>()
+    val authSessionErrorsSubject = PublishSubject.create<Throwable>()
 
     /**
      * Создает сессию авторизации.
@@ -77,7 +77,10 @@ class AuthRepository @Inject constructor(
                         .switchIfEmpty(createSession(phone, dto.time))
                         .doOnNext {
                             currentSession = it
-                            timerObservable = Observable.timer(it.creationTime + AUTH_SESSION_LIFETIME - dto.time, TimeUnit.MILLISECONDS)
+                            timerObservable = Observable
+                                    .timer(it.creationTime + AUTH_SESSION_LIFETIME - dto.time, TimeUnit.MILLISECONDS)
+                                    .doOnComplete { destroySession(AuthSessionTimeoutException()) }
+                                    .share()
                         }
             }
         } else {
@@ -99,7 +102,7 @@ class AuthRepository @Inject constructor(
                     .checkCode(currentSession!!.authId, code)
                     .doOnError {
                         if (it is ApiException && (it.code == AUTH_DROPPED_ERROR_CODE || it.code == AUTH_NOT_FOUND_ERROR_CODE)) {
-                            destroySession(it.code)
+                            destroySession(it)
                         }
                     }.doOnNext {
                         sessionDao.update(currentSession!!.apply {
@@ -112,7 +115,7 @@ class AuthRepository @Inject constructor(
 
                             authService
                                     .verify(currentSession!!.authId, currentPublicKey!!)
-                                    .doOnError { destroySession(AUTH_NOT_FOUND_ERROR_CODE) }
+                                    .doOnError { destroySession(it) }
                                     .map { true }
                         } else {
                             Observable.just(false)
@@ -154,24 +157,24 @@ class AuthRepository @Inject constructor(
                 .observeOn(Schedulers.computation())
                 .doOnNext {
                     accountRepository.addAccount(AccountData(it.userId, name, nickname, it.userSecret, accountKey))
-                    destroySession(OK_ERROR_CODE)
+                    destroySession(null)
                 }.doOnError {
                     if (it is ApiException && (it.code == SESSION_NOT_FOUND_ERROR_CODE ||
                                     it.code == AUTH_TYPE_INVALID_ERROR_CODE ||
                                     it.code == AUTH_CODE_INVALID_ERROR_CODE)) {
 
-                        destroySession(it.code)
+                        destroySession(it)
                     }
                 }.map { Unit }
     }
 
-    private fun destroySession(code: Int) {
+    private fun destroySession(throwable: Throwable?) {
         sessionDao.delete(currentSession!!)
         timerObservable = null
         currentSession = null
 
-        if (code != OK_ERROR_CODE) {
-            sessionDestroyedSubject.onNext(code)
+        if (throwable != null) {
+            authSessionErrorsSubject.onNext(throwable)
         }
     }
 

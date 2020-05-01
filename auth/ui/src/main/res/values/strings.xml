@@ -2,6 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="phone_verification">Phone verification</string>
     <string name="welcome_back">Welcome back</string>
+    <string name="welcome_to_sudox">Welcome to Sudox</string>
     <string name="just_a_last_step">Just a last step</string>
     <string name="imagine_what_nickname_you_want_your_friends_will_see">Imagine what nickname you want your friends will see</string>
     <string name="enter_your_phone_and_we_will_send_a_confirmation_code_for_you">Enter your phone and we will send a confirmation code for you</string>

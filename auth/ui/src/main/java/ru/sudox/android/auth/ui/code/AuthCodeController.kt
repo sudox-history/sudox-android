@@ -26,40 +26,42 @@ class AuthCodeController : ScrollableController() {
     override fun bindView(view: View) {
         super.bindView(view)
 
-        screenVO = AuthCodeScreenVO("79674788147").apply {
-            (view as AuthScreenLayout).vo = this
-        }
-
         viewModel = getViewModel()
-        viewModel!!.sessionDestroyedLiveData.observe(this, Observer {
-            navigationManager!!.popBackstack()
-        })
+        viewModel!!.apply {
+            screenVO = createViewObject().apply {
+                (view as AuthScreenLayout).vo = this
 
-        viewModel!!.successLiveData.observe(this, Observer {
-            if (it != null) {
-                if (it) {
-                    navigationManager!!.showRootChild(AuthVerifyController(), true)
-                } else {
-                    navigationManager!!.showRootChild(AuthSignUpController(), true)
+                codeEditText!!.codeFilledCallback = {
+                    viewModel!!.checkCode(it.toInt())
                 }
             }
-        })
 
-        viewModel!!.loadingStateLiveData.observe(this, Observer {
-            appBarManager!!.toggleLoading(it)
-            screenVO!!.codeEditTextLayout!!.isEnabled = !it
-        })
+            successLiveData.observe(this@AuthCodeController, Observer {
+                if (it != null) {
+                    if (it) {
+                        navigationManager!!.showRootChild(AuthVerifyController(), true)
+                    } else {
+                        navigationManager!!.showRootChild(AuthSignUpController(), true)
+                    }
+                }
+            })
 
-        viewModel!!.errorsLiveData.observe(this, Observer {
-            screenVO!!.codeEditTextLayout!!.errorText = if (it != null) {
-                getErrorText(it)
-            } else {
-                null
-            }
-        })
+            loadingStateLiveData.observe(this@AuthCodeController, Observer {
+                appBarManager!!.toggleLoading(it)
+                screenVO!!.codeEditTextLayout!!.isEnabled = !it
+            })
 
-        screenVO!!.codeEditText!!.codeFilledCallback = {
-            viewModel!!.checkCode(it.toInt())
+            sessionErrorLiveData.observe(this@AuthCodeController, Observer {
+                navigationManager!!.popBackstack()
+            })
+
+            errorsLiveData.observe(this@AuthCodeController, Observer {
+                screenVO!!.codeEditTextLayout!!.errorText = if (it != null) {
+                    getErrorText(it)
+                } else {
+                    null
+                }
+            })
         }
     }
 }

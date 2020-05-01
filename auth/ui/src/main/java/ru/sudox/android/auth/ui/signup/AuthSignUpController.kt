@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import ru.sudox.android.auth.ui.phone.AUTH_PHONE_NEXT_BUTTON_TAG
 import ru.sudox.android.auth.ui.views.AuthScreenLayout
 import ru.sudox.android.core.controllers.ScrollableController
 import ru.sudox.android.core.exceptions.InvalidFieldFormatException
@@ -32,36 +31,41 @@ class AuthSignUpController : ScrollableController() {
         }
 
         viewModel = getViewModel()
-        viewModel!!.errorsLiveData.observe(this, Observer {
-            if (it is InvalidFieldFormatException) {
-                if (it.fields.contains(0)) {
-                    screenVO!!.nameEditTextLayout!!.errorText = "Invalid name format"
-                } else {
-                    screenVO!!.nameEditTextLayout!!.errorText = null
+        viewModel!!.apply {
+            errorsLiveData.observe(this@AuthSignUpController, Observer {
+                if (it is InvalidFieldFormatException) {
+                    if (it.fields.contains(0)) {
+                        screenVO!!.nameEditTextLayout!!.errorText = "Invalid name format"
+                    } else {
+                        screenVO!!.nameEditTextLayout!!.errorText = null
+                    }
+
+                    if (it.fields.contains(1)) {
+                        screenVO!!.nicknameEditTextLayout!!.errorText = "Invalid nickname format"
+                    } else {
+                        screenVO!!.nicknameEditTextLayout!!.errorText = null
+                    }
+                } else if (it != null) {
+                    screenVO!!.nameEditTextLayout!!.errorText = getErrorText(it)
+                    screenVO!!.nicknameEditTextLayout!!.errorText = getErrorText(it)
                 }
+            })
 
-                if (it.fields.contains(1)) {
-                    screenVO!!.nicknameEditTextLayout!!.errorText = "Invalid nickname format"
-                } else {
-                    screenVO!!.nicknameEditTextLayout!!.errorText = null
-                }
-            } else if (it != null) {
-                screenVO!!.nameEditTextLayout!!.errorText = getErrorText(it)
-                screenVO!!.nicknameEditTextLayout!!.errorText = getErrorText(it)
-            }
-        })
+            loadingStateLiveData.observe(this@AuthSignUpController, Observer {
+                appBarManager!!.toggleLoading(it)
+                screenVO!!.nameEditTextLayout!!.isEnabled = !it
+                screenVO!!.nicknameEditTextLayout!!.isEnabled = !it
+            })
 
-        viewModel!!.loadingStateLiveData.observe(this, Observer {
-            appBarManager!!.toggleLoading(it)
-            screenVO!!.nameEditTextLayout!!.isEnabled = !it
-            screenVO!!.nicknameEditTextLayout!!.isEnabled = !it
-        })
+            sessionErrorLiveData.observe(this@AuthSignUpController, Observer {
+                navigationManager!!.popBackstack()
+            })
 
-        viewModel!!.successLiveData.observe(this, Observer {
-            navigationManager!!.showRoot(MAIN_ROOT_TAG)
-        })
+            successLiveData.observe(this@AuthSignUpController, Observer {
+                navigationManager!!.showRoot(MAIN_ROOT_TAG)
+            })
+        }
     }
-
 
     override fun onAppBarClicked(tag: Int) {
         super.onAppBarClicked(tag)

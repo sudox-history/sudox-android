@@ -33,37 +33,39 @@ class AuthPhoneController : ScrollableController() {
 
         screenVO = AuthPhoneScreenVO().apply {
             (view as AuthScreenLayout).vo = this
+
+            phoneEditText!!.countrySelector.setOnClickListener {
+                navigationManager!!.showRootChild(CountrySelectController().apply {
+                    targetController = this@AuthPhoneController
+                })
+            }
         }
 
         viewModel = getViewModel()
-        viewModel!!.successLiveData.observe(this, Observer {
-            if (it != null) {
-                if (it.stage == AuthSessionStage.PHONE_CHECKED) {
-                    navigationManager!!.showRootChild(AuthCodeController())
-                } else if (it.stage == AuthSessionStage.CODE_CHECKED) {
-                    if (!it.userExists) {
-                        navigationManager!!.showRootChild(AuthSignUpController())
+        viewModel!!.apply {
+            successLiveData.observe(this@AuthPhoneController, Observer {
+                if (it != null) {
+                    if (it.stage == AuthSessionStage.PHONE_CHECKED) {
+                        navigationManager!!.showRootChild(AuthCodeController())
+                    } else if (it.stage == AuthSessionStage.CODE_CHECKED) {
+                        if (!it.userExists) {
+                            navigationManager!!.showRootChild(AuthSignUpController())
+                        }
                     }
                 }
-            }
-        })
+            })
 
-        viewModel!!.errorsLiveData.observe(this, Observer {
-            screenVO!!.phoneEditTextLayout!!.errorText = if (it != null) {
-                getErrorText(it)
-            } else {
-                null
-            }
-        })
+            errorsLiveData.observe(this@AuthPhoneController, Observer {
+                screenVO!!.phoneEditTextLayout!!.errorText = if (it != null) {
+                    getErrorText(it)
+                } else {
+                    null
+                }
+            })
 
-        viewModel!!.loadingStateLiveData.observe(this, Observer {
-            appBarManager!!.toggleLoading(it)
-            screenVO!!.phoneEditTextLayout!!.isEnabled = !it
-        })
-
-        screenVO!!.phoneEditText!!.countrySelector.setOnClickListener {
-            navigationManager!!.showRootChild(CountrySelectController().apply {
-                targetController = this@AuthPhoneController
+            loadingStateLiveData.observe(this@AuthPhoneController, Observer {
+                appBarManager!!.toggleLoading(it)
+                screenVO!!.phoneEditTextLayout!!.isEnabled = !it
             })
         }
     }

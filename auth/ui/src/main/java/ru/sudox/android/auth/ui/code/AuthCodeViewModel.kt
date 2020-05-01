@@ -1,48 +1,25 @@
 package ru.sudox.android.auth.ui.code
 
-import androidx.lifecycle.MutableLiveData
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import ru.sudox.android.auth.data.repositories.AuthRepository
-import ru.sudox.android.core.CoreViewModel
+import ru.sudox.android.auth.ui.AuthViewModel
 import ru.sudox.android.core.livedata.SingleLiveEvent
-import java.util.concurrent.Semaphore
+import ru.sudox.android.countries.helpers.formatPhoneNumber
 import javax.inject.Inject
 
 class AuthCodeViewModel @Inject constructor(
-        private val authRepository: AuthRepository
-) : CoreViewModel() {
+        private val authRepository: AuthRepository,
+        private val phoneNumberUtil: PhoneNumberUtil
+) : AuthViewModel(true, authRepository, false) {
 
-    val errorsLiveData = MutableLiveData<Throwable>()
-    val loadingStateLiveData = MutableLiveData<Boolean>()
-    val sessionDestroyedLiveData = SingleLiveEvent<Unit>()
     val successLiveData = SingleLiveEvent<Boolean>()
 
-    private val sessionDestroyedSemaphore = Semaphore(1)
-    private var sessionDestroyed: Boolean = false
-
-    init {
-        compositeDisposable.add(authRepository.sessionDestroyedSubject.subscribe {
-            sessionDestroyedSemaphore.acquire()
-
-            if (!sessionDestroyed) {
-                sessionDestroyed = true
-                sessionDestroyedLiveData.postValue(null)
-            }
-
-            sessionDestroyedSemaphore.release()
-        })
-
-        compositeDisposable.add(authRepository.timerObservable!!.subscribe {
-            sessionDestroyedSemaphore.acquire()
-
-            if (!sessionDestroyed) {
-                sessionDestroyed = true
-                sessionDestroyedLiveData.postValue(null)
-            }
-
-            sessionDestroyedSemaphore.release()
-        })
-    }
-
+    /**
+     * Подтверждает сессию пользователя кодом.
+     * Результаты возвращает в соответствующие LiveData.
+     *
+     * @param code Код подтверждения
+     */
     fun checkCode(code: Int) {
         loadingStateLiveData.postValue(true)
 
@@ -55,5 +32,15 @@ class AuthCodeViewModel @Inject constructor(
             successLiveData.postValue(null)
             loadingStateLiveData.postValue(false)
         }))
+    }
+
+    /**
+     * Создает ViewObject для экрана.
+     */
+    fun createViewObject(): AuthCodeScreenVO {
+        val session = authRepository.currentSession!!
+        val phone = phoneNumberUtil.formatPhoneNumber(session.phoneNumber)
+
+        return AuthCodeScreenVO(phone, session.userExists)
     }
 }
