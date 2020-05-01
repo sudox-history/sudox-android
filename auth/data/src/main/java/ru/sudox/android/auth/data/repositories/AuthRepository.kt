@@ -4,6 +4,8 @@ import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import ru.sudox.android.account.entries.AccountData
+import ru.sudox.android.account.repository.AccountRepository
 import ru.sudox.android.auth.data.daos.AuthSessionDAO
 import ru.sudox.android.auth.data.entities.AuthSessionEntity
 import ru.sudox.android.auth.data.entities.AuthSessionStage
@@ -17,6 +19,7 @@ import ru.sudox.api.auth.AUTH_TYPE_INVALID_ERROR_CODE
 import ru.sudox.api.auth.AuthService
 import ru.sudox.api.auth.NAME_REGEX
 import ru.sudox.api.auth.NICKNAME_REGEX
+import ru.sudox.api.common.OK_ERROR_CODE
 import ru.sudox.api.common.SESSION_NOT_FOUND_ERROR_CODE
 import ru.sudox.api.common.exceptions.ApiException
 import ru.sudox.api.system.SystemService
@@ -32,6 +35,7 @@ class AuthRepository @Inject constructor(
         private val authService: AuthService,
         private val systemService: SystemService,
         private val phoneNumberUtil: PhoneNumberUtil,
+        private val accountRepository: AccountRepository,
         private val sessionDao: AuthSessionDAO
 ) {
 
@@ -148,15 +152,17 @@ class AuthRepository @Inject constructor(
         return authService
                 .signUp(currentSession!!.authId, name, nickname, accountKeyHash)
                 .observeOn(Schedulers.computation())
-                .doOnError {
+                .doOnNext {
+                    accountRepository.addAccount(AccountData(it.userId, name, nickname, it.userSecret, accountKey))
+                    destroySession(OK_ERROR_CODE)
+                }.doOnError {
                     if (it is ApiException && (it.code == SESSION_NOT_FOUND_ERROR_CODE ||
                                     it.code == AUTH_TYPE_INVALID_ERROR_CODE ||
                                     it.code == AUTH_CODE_INVALID_ERROR_CODE)) {
 
                         destroySession(it.code)
                     }
-                }
-                .map { Unit }
+                }.map { Unit }
     }
 
     private fun destroySession(code: Int) {
@@ -164,7 +170,9 @@ class AuthRepository @Inject constructor(
         timerObservable = null
         currentSession = null
 
-        sessionDestroyedSubject.onNext(code)
+        if (code != OK_ERROR_CODE) {
+            sessionDestroyedSubject.onNext(code)
+        }
     }
 
     private fun createSession(phone: String, time: Long): Observable<AuthSessionEntity> {
