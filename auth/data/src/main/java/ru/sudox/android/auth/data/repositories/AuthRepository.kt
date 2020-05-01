@@ -39,10 +39,10 @@ class AuthRepository @Inject constructor(
         private val sessionDao: AuthSessionDAO
 ) {
 
-    var timerObservable: Observable<Long>? = null
+    var currentSession: AuthSessionEntity? = null
         private set
 
-    var currentSession: AuthSessionEntity? = null
+    var timerObservable: Observable<Long>? = null
         private set
 
     var currentPublicKey: ByteArray? = null
@@ -168,8 +168,16 @@ class AuthRepository @Inject constructor(
                 }.map { Unit }
     }
 
-    private fun destroySession(throwable: Throwable?) {
+    /**
+     * Удаляет сессию авторизации.
+     * Также отправляет эвент по Subject'у
+     *
+     * @param throwable Исключение из-за которого была остановлена сессия.
+     */
+    fun destroySession(throwable: Throwable?) {
         sessionDao.delete(currentSession!!)
+        currentPrivateKey = null
+        currentPublicKey = null
         timerObservable = null
         currentSession = null
 
@@ -187,7 +195,7 @@ class AuthRepository @Inject constructor(
     }
 
     private fun restoreSession(it: AuthSessionEntity, time: Long): Observable<AuthSessionEntity> {
-        return if (it.creationTime + AUTH_SESSION_LIFETIME - time > 0) {
+        return if (it.creationTime + AUTH_SESSION_LIFETIME - time > 0 && !it.userExists) {
             it.isSelected = true
             sessionDao.update(it)
 

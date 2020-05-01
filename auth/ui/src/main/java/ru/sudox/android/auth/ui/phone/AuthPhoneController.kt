@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import ru.sudox.android.auth.data.entities.AuthSessionStage
 import ru.sudox.android.auth.ui.code.AuthCodeController
 import ru.sudox.android.auth.ui.signup.AuthSignUpController
+import ru.sudox.android.auth.ui.verify.AuthVerifyController
 import ru.sudox.android.auth.ui.views.AuthScreenLayout
 import ru.sudox.android.core.controllers.ScrollableController
 import ru.sudox.android.countries.COUNTRY_CHANGE_REQUEST_CODE
@@ -46,7 +47,11 @@ class AuthPhoneController : ScrollableController() {
             successLiveData.observe(this@AuthPhoneController, Observer {
                 if (it != null) {
                     if (it.stage == AuthSessionStage.PHONE_CHECKED) {
-                        navigationManager!!.showRootChild(AuthCodeController())
+                        if (it.userExists) {
+                            navigationManager!!.showRootChild(AuthVerifyController())
+                        } else {
+                            navigationManager!!.showRootChild(AuthCodeController())
+                        }
                     } else if (it.stage == AuthSessionStage.CODE_CHECKED) {
                         if (!it.userExists) {
                             navigationManager!!.showRootChild(AuthSignUpController())
