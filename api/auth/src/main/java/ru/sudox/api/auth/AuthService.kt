@@ -92,11 +92,12 @@ class AuthService(private val sudoxApi: SudoxApi) {
     /**
      * Восстанавливает сессию пользователя
      *
+     * @param userId ID пользователя
      * @param userSecret Токен сессии пользователя
      * @return Observable на который прилетит ответ от сервера.
      */
-    fun createUserSession(userSecret: String): Observable<Unit> {
-        return sudoxApi.sendRequest("auth.createUserSession", AuthCreateUserSessionRequestDTO(userSecret), Unit::class.java)
+    fun createUserSession(userId: String, userSecret: String): Observable<Unit> {
+        return sudoxApi.sendRequest("auth.createUserSession", AuthCreateUserSessionRequestDTO(userId, userSecret), Unit::class.java)
     }
 
     /**

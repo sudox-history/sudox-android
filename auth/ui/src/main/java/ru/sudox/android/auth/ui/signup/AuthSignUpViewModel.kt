@@ -22,7 +22,9 @@ class AuthSignUpViewModel @Inject constructor(
     fun signUp(name: String, nickname: String) {
         loadingStateLiveData.postValue(true)
 
-        compositeDisposable.add(doRequest(authRepository.signUp(name, nickname)).subscribe({
+        compositeDisposable.add(doRequest(authRepository.signUp(name, nickname).flatMap {
+            authRepository.createUserSession()
+        }).subscribe({
             successLiveData.postValue(null)
             loadingStateLiveData.postValue(false)
         }, {

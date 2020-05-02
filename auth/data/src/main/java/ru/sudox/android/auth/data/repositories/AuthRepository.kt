@@ -170,6 +170,24 @@ class AuthRepository @Inject constructor(
     }
 
     /**
+     * Устанавливает сессию пользтвателя
+     * Данные об аккаунте берет из AccountManager'а.
+     *
+     * @return Observable с ответом от сервера (true - если аккаунт существует, false - если нет)
+     */
+    fun createUserSession(): Observable<Boolean> {
+        val accountData = accountRepository.getAccountData()
+
+        return if (accountData != null) {
+            authService
+                    .createUserSession(accountData.id!!, accountData.secret!!)
+                    .map { true }
+        } else {
+            Observable.just(false)
+        }
+    }
+
+    /**
      * Слушает получение запросов новых авторизаций.
      *
      * @return Observable с ответом от сервера
@@ -232,7 +250,7 @@ class AuthRepository @Inject constructor(
 
                         authService
                                 .signIn(currentSession!!.authId, BLAKE2b.hash(key))
-                                .retryWhen { sudoxApi.statusSubject.filter { it == SudoxApiStatus.CONNECTED } }
+                                .retryWhen { sudoxApi.statusSubject.filter { it == SudoxApiStatus.CONNECTED } } // TODO: Filter errors
                                 .doOnNext {
                                     val data = AccountData(it.userId, currentSession!!.phoneNumber, it.userSecret, key)
 
@@ -243,7 +261,7 @@ class AuthRepository @Inject constructor(
                                     }
 
                                     destroySession(null)
-                                }
+                                } // TODO: Check onError
                     } else {
                         destroySession(KeyExchangeAbandonedException())
                         Observable.empty()
