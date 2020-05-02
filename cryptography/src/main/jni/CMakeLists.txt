@@ -4,6 +4,6 @@ add_library(libsodium STATIC IMPORTED)
 set_target_properties(libsodium PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/libs/${ANDROID_ABI}/libsodium.a)
 set_property(TARGET libsodium APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/include)
 
-add_library(cryptography SHARED ChaCha20.cpp BLAKE2b.cpp Random.cpp)
+add_library(cryptography SHARED ChaCha20.cpp BLAKE2b.cpp Random.cpp X25519.cpp)
 target_include_directories(cryptography PUBLIC .)
 target_link_libraries(cryptography libsodium)
