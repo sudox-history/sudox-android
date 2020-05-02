@@ -85,8 +85,8 @@ class AuthService(private val sudoxApi: SudoxApi) {
      * @param userKeyEnc Зашифрованный ключ пользователя
      * @return Observable на который прилетит ответ от сервера.
      */
-    fun respondVerify(accept: Boolean, publicKey: ByteArray, authId: String, userKeyEnc: ByteArray): Observable<Unit> {
-        return sudoxApi.sendRequest("auth.respondVerify", AuthRespondVerifyRequestDTO(accept, publicKey.toHexString(), authId, userKeyEnc.toHexString()), Unit::class.java)
+    fun respondVerify(accept: Boolean, publicKey: ByteArray?, authId: String, userKeyEnc: ByteArray?): Observable<Unit> {
+        return sudoxApi.sendRequest("auth.respondVerify", AuthRespondVerifyRequestDTO(accept, publicKey?.toHexString(), authId, userKeyEnc?.toHexString()), Unit::class.java)
     }
 
     /**

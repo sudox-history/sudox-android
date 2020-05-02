@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import ru.sudox.android.auth.ui.AuthRequestViewModel
 import ru.sudox.android.auth.ui.code.AuthCodeViewModel
 import ru.sudox.android.auth.ui.phone.AuthPhoneViewModel
 import ru.sudox.android.auth.ui.signup.AuthSignUpViewModel
@@ -32,4 +33,9 @@ abstract class AuthUiModule {
     @IntoMap
     @ViewModelKey(AuthVerifyViewModel::class)
     internal abstract fun authVerifyViewModel(viewModel: AuthVerifyViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AuthRequestViewModel::class)
+    internal abstract fun authRequestViewModel(viewModel: AuthRequestViewModel): ViewModel
 }

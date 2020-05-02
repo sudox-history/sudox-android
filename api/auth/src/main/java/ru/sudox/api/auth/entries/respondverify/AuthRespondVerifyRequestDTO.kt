@@ -13,7 +13,7 @@ import ru.sudox.api.common.SudoxApiDTO
 @SudoxApiDTO
 data class AuthRespondVerifyRequestDTO(
         val accept: Boolean,
-        val publicKey: String,
+        val publicKey: String?,
         val authId: String,
-        val userKeyEnc: String
+        val userKeyEnc: String?
 )

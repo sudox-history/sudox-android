@@ -4,16 +4,18 @@ import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.bluelinelabs.conductor.Router
 import com.bluelinelabs.conductor.attachRouter
 import ru.sudox.android.AppLoader.Companion.loaderComponent
+import ru.sudox.android.auth.ui.AuthRequestViewModel
 import ru.sudox.android.core.CoreActivity
 import ru.sudox.android.core.inject.CoreActivityComponent
 import ru.sudox.android.core.inject.CoreActivityModule
 import ru.sudox.android.core.inject.CoreLoaderComponent
 import ru.sudox.android.core.managers.AUTH_ROOT_TAG
 import ru.sudox.android.core.managers.AppBarManager
-import ru.sudox.android.core.managers.MAIN_ROOT_TAG
 import ru.sudox.android.core.managers.NavigationManager
 import ru.sudox.android.inject.components.ActivityComponent
 import ru.sudox.android.layouts.AppLayout
@@ -33,6 +35,7 @@ import ru.sudox.android.managers.SearchManagerImpl
 class AppActivity : AppCompatActivity(), CoreActivity {
 
     private var appBarManager: AppBarManager? = null
+    private var authRequestViewModel: AuthRequestViewModel? = null
     private var navigationManager: NavigationManager? = null
     private var activityComponent: ActivityComponent? = null
     private var routerLazy: Lazy<Router>? = null
@@ -89,6 +92,14 @@ class AppActivity : AppCompatActivity(), CoreActivity {
             val module = CoreActivityModule(navigationManager!!, appBarManager!!, searchManager)
 
             activityComponent = loaderComponent!!.activityComponent(module)
+
+            val viewModelFactory = activityComponent!!.viewModelFactory()
+            val provider = ViewModelProvider(this, viewModelFactory)
+
+            authRequestViewModel = provider[AuthRequestViewModel::class.java]
+            authRequestViewModel!!.newAuthLiveData.observe(this, Observer {
+                authRequestViewModel!!.sendResponse(true)
+            })
         }
 
         return activityComponent!!

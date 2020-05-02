@@ -21,6 +21,7 @@ import ru.sudox.api.auth.AUTH_TYPE_INVALID_ERROR_CODE
 import ru.sudox.api.auth.AuthService
 import ru.sudox.api.auth.NAME_REGEX
 import ru.sudox.api.auth.NICKNAME_REGEX
+import ru.sudox.api.auth.entries.newauthverify.NewAuthVerifyDTO
 import ru.sudox.api.common.SESSION_NOT_FOUND_ERROR_CODE
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.api.common.SudoxApiStatus
@@ -47,6 +48,7 @@ class AuthRepository @Inject constructor(
 ) {
 
     private var keyPair: KeyPair? = null
+    private var exchangeData: NewAuthVerifyDTO? = null
 
     var currentSession: AuthSessionEntity? = null
         private set
@@ -168,8 +170,46 @@ class AuthRepository @Inject constructor(
     }
 
     /**
+     * Слушает получение запросов новых авторизаций.
+     *
+     * @return Observable с ответом от сервера
+     */
+    fun listenNewAuthSession(): Observable<Unit> {
+        return authService
+                .listenNewAuthSession()
+                .doOnNext { exchangeData = it }
+                .map { Unit }
+    }
+
+    /**
+     * Отправляет ответ на запрос авторизации
+     *
+     * @param accept Разрешить авторизацию?
+     * @return Observable с ответом от сервера
+     */
+    fun sendAuthResponse(accept: Boolean): Observable<Unit> {
+        return if (accept) {
+            keyPair = X25519.generateKeyPair()
+
+            val nonce = Random.generate(XChaCha20Poly1305.NONCE_LENGTH)
+            val cipherText = accountRepository.getAccountData()!!.key + nonce
+            val encKeyPair = X25519.exchange(keyPair!!.publicKey, keyPair!!.secretKey, exchangeData!!.publicKey.toHexByteArray(), false)
+            val keyForSending = XChaCha20Poly1305.encryptData(encKeyPair.sendKey, nonce, cipherText)
+
+            authService.respondVerify(accept, keyPair!!.publicKey, exchangeData!!.authId, keyForSending)
+        } else {
+            authService.respondVerify(false, null, exchangeData!!.authId, null)
+        }.doOnComplete {
+            exchangeData = null
+            keyPair = null
+        }
+    }
+
+    /**
      * Слушает ответ от другого устройства.
      * При получении одобрения, производит сохранение аккаунта и перепрос на авторизацию.
+     *
+     * @return Observable с ответом от сервера
      */
     fun listenRespondAuthVerify(): Observable<Unit> {
         return authService
@@ -184,18 +224,17 @@ class AuthRepository @Inject constructor(
                     if (dto.accept) {
                         val pubKey = dto.publicKey!!.toHexByteArray()
                         val sessionKey = X25519.exchange(keyPair!!.publicKey, keyPair!!.secretKey, pubKey, true).receiveKey
-                        val sessionNonce = sessionKey.copyOfRange(sessionKey.lastIndex - XChaCha20Poly1305.NONCE_LENGTH, sessionKey.lastIndex)
                         val userKeyEnc = dto.userKeyEnc!!.toHexByteArray()
-                        val accountKey = XChaCha20Poly1305.decryptData(sessionKey, sessionNonce, userKeyEnc)
-                        val accountKeyHash = BLAKE2b.hash(accountKey)
+                        val nonce = userKeyEnc.copyOfRange(userKeyEnc.lastIndex - XChaCha20Poly1305.NONCE_LENGTH, userKeyEnc.lastIndex)
+                        val key = XChaCha20Poly1305.decryptData(sessionKey, nonce, userKeyEnc.copyOf(XChaCha20Poly1305.KEY_LENGTH))
 
-                        accountRepository.addAccount(AccountData(null, currentSession!!.phoneNumber, null, accountKey))
+                        accountRepository.addAccount(AccountData(null, currentSession!!.phoneNumber, null, key))
 
                         authService
-                                .signIn(currentSession!!.authId, accountKeyHash)
+                                .signIn(currentSession!!.authId, BLAKE2b.hash(key))
                                 .retryWhen { sudoxApi.statusSubject.filter { it == SudoxApiStatus.CONNECTED } }
                                 .doOnNext {
-                                    val data = AccountData(it.userId, currentSession!!.phoneNumber, it.userSecret, accountKey)
+                                    val data = AccountData(it.userId, currentSession!!.phoneNumber, it.userSecret, key)
 
                                     if (accountRepository.getAccountData() != null) {
                                         accountRepository.updateAccountData(data)
