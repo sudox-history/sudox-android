@@ -48,17 +48,17 @@ class AccountRepository(
             doFinal(serialized)
         }, Base64.DEFAULT)
 
-        val result = accountManager.addAccountExplicitly(Account(data.nickname, accountType), null, Bundle().apply {
+        val result = accountManager.addAccountExplicitly(Account(data.phone, accountType), null, Bundle().apply {
             putString(ACCOUNTMANAGER_ACCOUNT_DATA_KEY, encrypted)
             putString(ACCOUNTMANAGER_ACCOUNT_IV_KEY, Base64.encodeToString(cipher.iv, Base64.DEFAULT))
-            putString(AccountManager.KEY_ACCOUNT_NAME, data.nickname)
+            putString(AccountManager.KEY_ACCOUNT_NAME, data.phone)
         })
 
         if (BuildConfig.DEBUG) {
             if (result) {
-                Log.d("Sudox Account", "Account ${data.id} with nickname ${data.nickname} successfully created")
+                Log.d("Sudox Account", "Account successfully created")
             } else {
-                Log.d("Sudox Account", "Account with with nickname ${data.nickname} already exists!")
+                Log.d("Sudox Account", "Account already exists!")
             }
         }
     }
@@ -93,7 +93,40 @@ class AccountRepository(
     }
 
     /**
-     * Удаляет аккаунт из AccountManager по ID
+     * Обновляет информацию об аккаунте
+     * NB! Данные будут зашифрованы в связи с брешью в безопасности на версиях Android 6 и ниже
+     */
+    fun updateAccountData(data: AccountData): Boolean {
+        val account = accountManager.getAccountsByType(accountType).firstOrNull() ?: return false
+
+        return try {
+            val key = (keyStore.getEntry(ACCOUNTMANAGER_KEY_ALIAS, null) as KeyStore.SecretKeyEntry).secretKey
+            val cipher = Cipher.getInstance("AES/CTR/NoPadding").apply { init(Cipher.ENCRYPT_MODE, key) }
+            val serialized = objectMapper.writeValueAsBytes(data)
+            val encrypted = Base64.encodeToString(with(cipher) {
+                doFinal(serialized)
+            }, Base64.DEFAULT)
+
+            accountManager.setUserData(account, ACCOUNTMANAGER_ACCOUNT_DATA_KEY, encrypted)
+            accountManager.setUserData(account, ACCOUNTMANAGER_ACCOUNT_IV_KEY, Base64.encodeToString(cipher.iv, Base64.DEFAULT))
+            accountManager.setUserData(account, AccountManager.KEY_ACCOUNT_NAME, data.phone)
+
+            if (BuildConfig.DEBUG) {
+                Log.d("Sudox Account", "Account successfully updated")
+            }
+
+            true
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) {
+                Log.d("Sudox Account", "Couldn't update account.")
+            }
+
+            false
+        }
+    }
+
+    /**
+     * Удаляет аккаунт из AccountManager
      * NB! Ключ шифрования тоже будет удален
      */
     fun removeAccount() {

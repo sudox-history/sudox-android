@@ -10,6 +10,7 @@ import ru.sudox.android.auth.data.daos.AuthSessionDAO
 import ru.sudox.android.auth.data.entities.AuthSessionEntity
 import ru.sudox.android.auth.data.entities.AuthSessionStage
 import ru.sudox.android.auth.data.exceptions.AuthSessionTimeoutException
+import ru.sudox.android.auth.data.exceptions.KeyExchangeAbandonedException
 import ru.sudox.android.core.exceptions.InvalidFieldFormatException
 import ru.sudox.android.countries.helpers.isPhoneNumberValid
 import ru.sudox.api.auth.AUTH_CODE_INVALID_ERROR_CODE
@@ -21,17 +22,23 @@ import ru.sudox.api.auth.AuthService
 import ru.sudox.api.auth.NAME_REGEX
 import ru.sudox.api.auth.NICKNAME_REGEX
 import ru.sudox.api.common.SESSION_NOT_FOUND_ERROR_CODE
+import ru.sudox.api.common.SudoxApi
+import ru.sudox.api.common.SudoxApiStatus
 import ru.sudox.api.common.exceptions.ApiException
+import ru.sudox.api.common.helpers.toHexByteArray
 import ru.sudox.api.system.SystemService
 import ru.sudox.cryptography.BLAKE2b
 import ru.sudox.cryptography.Random
+import ru.sudox.cryptography.X25519
 import ru.sudox.cryptography.XChaCha20Poly1305
+import ru.sudox.cryptography.entries.KeyPair
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AuthRepository @Inject constructor(
+        private val sudoxApi: SudoxApi,
         private val authService: AuthService,
         private val systemService: SystemService,
         private val phoneNumberUtil: PhoneNumberUtil,
@@ -39,19 +46,12 @@ class AuthRepository @Inject constructor(
         private val sessionDao: AuthSessionDAO
 ) {
 
+    private var keyPair: KeyPair? = null
+
     var currentSession: AuthSessionEntity? = null
         private set
 
     var timerObservable: Observable<Long>? = null
-        private set
-
-    var currentPublicKey: ByteArray? = null
-        private set
-
-    var currentPrivateKey: ByteArray? = null
-        private set
-
-    var currentAccountKey: ByteArray? = null
         private set
 
     val authSessionErrorsSubject = PublishSubject.create<Throwable>()
@@ -81,6 +81,17 @@ class AuthRepository @Inject constructor(
                                     .timer(it.creationTime + AUTH_SESSION_LIFETIME - dto.time, TimeUnit.MILLISECONDS)
                                     .doOnComplete { destroySession(AuthSessionTimeoutException()) }
                                     .share()
+                        }.flatMap { entity ->
+                            if (currentSession!!.userExists) {
+                                keyPair = X25519.generateKeyPair()
+
+                                authService
+                                        .verify(currentSession!!.authId, keyPair!!.publicKey)
+                                        .doOnError { destroySession(it) }
+                                        .map { entity }
+                            } else {
+                                Observable.just(entity)
+                            }
                         }
             }
         } else {
@@ -108,19 +119,7 @@ class AuthRepository @Inject constructor(
                         sessionDao.update(currentSession!!.apply {
                             stage = AuthSessionStage.CODE_CHECKED
                         })
-                    }.flatMap {
-                        if (currentSession!!.userExists) {
-                            currentPublicKey = Random.generate(XChaCha20Poly1305.KEY_LENGTH)
-                            currentPrivateKey = Random.generate(XChaCha20Poly1305.KEY_LENGTH)
-
-                            authService
-                                    .verify(currentSession!!.authId, currentPublicKey!!)
-                                    .doOnError { destroySession(it) }
-                                    .map { true }
-                        } else {
-                            Observable.just(false)
-                        }
-                    }
+                    }.map { currentSession!!.userExists }
         } else {
             Observable.error(InvalidFieldFormatException(hashSetOf(0)))
         }
@@ -156,7 +155,7 @@ class AuthRepository @Inject constructor(
                 .signUp(currentSession!!.authId, name, nickname, accountKeyHash)
                 .observeOn(Schedulers.computation())
                 .doOnNext {
-                    accountRepository.addAccount(AccountData(it.userId, name, nickname, it.userSecret, accountKey))
+                    accountRepository.addAccount(AccountData(it.userId, currentSession!!.phoneNumber, it.userSecret, accountKey))
                     destroySession(null)
                 }.doOnError {
                     if (it is ApiException && (it.code == SESSION_NOT_FOUND_ERROR_CODE ||
@@ -169,17 +168,55 @@ class AuthRepository @Inject constructor(
     }
 
     /**
-     * Удаляет сессию авторизации.
-     * Также отправляет эвент по Subject'у
-     *
-     * @param throwable Исключение из-за которого была остановлена сессия.
+     * Слушает ответ от другого устройства.
+     * При получении одобрения, производит сохранение аккаунта и перепрос на авторизацию.
      */
-    fun destroySession(throwable: Throwable?) {
+    fun listenRespondAuthVerify(): Observable<Unit> {
+        return authService
+                .listenRespondAuthVerify()
+                .observeOn(Schedulers.computation())
+                .doOnError { destroySession(it) }
+                .doOnNext {
+                    sessionDao.update(currentSession!!.apply {
+                        stage = AuthSessionStage.VERIFIED
+                    })
+                }.flatMap { dto ->
+                    if (dto.accept) {
+                        val pubKey = dto.publicKey!!.toHexByteArray()
+                        val sessionKey = X25519.exchange(keyPair!!.publicKey, keyPair!!.secretKey, pubKey, true).receiveKey
+                        val sessionNonce = sessionKey.copyOfRange(sessionKey.lastIndex - XChaCha20Poly1305.NONCE_LENGTH, sessionKey.lastIndex)
+                        val userKeyEnc = dto.userKeyEnc!!.toHexByteArray()
+                        val accountKey = XChaCha20Poly1305.decryptData(sessionKey, sessionNonce, userKeyEnc)
+                        val accountKeyHash = BLAKE2b.hash(accountKey)
+
+                        accountRepository.addAccount(AccountData(null, currentSession!!.phoneNumber, null, accountKey))
+
+                        authService
+                                .signIn(currentSession!!.authId, accountKeyHash)
+                                .retryWhen { sudoxApi.statusSubject.filter { it == SudoxApiStatus.CONNECTED } }
+                                .doOnNext {
+                                    val data = AccountData(it.userId, currentSession!!.phoneNumber, it.userSecret, accountKey)
+
+                                    if (accountRepository.getAccountData() != null) {
+                                        accountRepository.updateAccountData(data)
+                                    } else {
+                                        accountRepository.addAccount(data)
+                                    }
+
+                                    destroySession(null)
+                                }
+                    } else {
+                        destroySession(KeyExchangeAbandonedException())
+                        Observable.empty()
+                    }
+                }.map { Unit }
+    }
+
+    private fun destroySession(throwable: Throwable?) {
         sessionDao.delete(currentSession!!)
-        currentPrivateKey = null
-        currentPublicKey = null
         timerObservable = null
         currentSession = null
+        keyPair = null
 
         if (throwable != null) {
             authSessionErrorsSubject.onNext(throwable)

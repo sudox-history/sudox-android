@@ -6,6 +6,5 @@ package ru.sudox.android.auth.data.entities
 enum class AuthSessionStage {
     PHONE_CHECKED,
     CODE_CHECKED,
-    AUTHORIZED,
-    REGISTERED
+    VERIFIED
 }

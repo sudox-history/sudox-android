@@ -7,4 +7,8 @@ import javax.inject.Inject
 class AuthVerifyViewModel @Inject constructor(
         private val authRepository: AuthRepository
 ) : AuthViewModel(true, authRepository, false) {
+
+    init {
+        compositeDisposable.add(authRepository.listenRespondAuthVerify().subscribe())
+    }
 }

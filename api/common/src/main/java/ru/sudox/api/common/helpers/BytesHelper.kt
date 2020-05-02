@@ -1,7 +1,5 @@
 package ru.sudox.api.common.helpers
 
-private val HEX_ARRAY = "0123456789ABCDEF".toCharArray()
-
 /**
  * Преобразует массив байтов в HEX-строку
  *
@@ -10,3 +8,12 @@ private val HEX_ARRAY = "0123456789ABCDEF".toCharArray()
 fun ByteArray.toHexString() = joinToString("") {
     "%02x".format(it)
 }
+
+/**
+ * Преобразует HEX-строку в массив байтов
+ *
+ * @return Массив байтов, который был закодирован в HEX
+ */
+fun String.toHexByteArray() = this.chunked(2).map {
+    it.toInt(16).toByte()
+}.toByteArray()
