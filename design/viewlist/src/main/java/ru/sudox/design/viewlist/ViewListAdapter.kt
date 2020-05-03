@@ -229,10 +229,31 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
     }
 
     private fun getNearestHeader(position: Int): Pair<Int, ViewListHeaderVO>? {
+        val vo: ViewListHeaderVO? = null
+
+        if (headersVOs != null) {
+            for (i in headersVOs!!.size - 1 downTo 0) {
+                val current = headersVOs!![i]
+
+                if (current.cachedPosition != -1 && current.cachedPosition <= position) {
+                    return Pair(current.cachedPosition, current)
+                }
+            }
+        }
+
+        if (vo != null) {
+            if (getHeaderByPosition(vo.cachedPosition) == vo) {
+                return Pair(vo.cachedPosition, vo)
+            }
+
+            vo.cachedPosition = -1
+        }
+
         for (i in position - 1 downTo 0) {
             val header = getHeaderByPosition(i)
 
             if (header != null) {
+                header.cachedPosition = i
                 return Pair(i, header)
             }
         }
@@ -432,10 +453,17 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
     fun findHeaderPosition(type: Int, removedItemsCount: Int = 0): Int {
         val need = headersVOs!![type]
 
+        if (need.cachedPosition != -1 && need == getHeaderByPosition(need.cachedPosition)) {
+            return need.cachedPosition
+        }
+
+        need.cachedPosition = -1
+
         for (i in 0 until itemCount + removedItemsCount) {
             val vo = getHeaderByPosition(i)
 
             if (vo == need) {
+                vo.cachedPosition = i
                 return i
             }
         }

@@ -19,6 +19,7 @@ abstract class ViewListHeaderVO() : Parcelable {
     open var selectedToggleTag: Int = 0
     open var selectedFunctionButtonToggleTags: IntArray? = null
     open var nestedRecyclerViewParcelable: Parcelable? = null
+    open var cachedPosition = -1
 
     @Suppress("unused")
     constructor(source: Parcel) : this() {
