@@ -14,8 +14,7 @@ abstract class ViewListHeaderVO() : Parcelable {
 
     open var type: Int = 0
     open var isItemsHidden: Boolean = false
-    open var isBottomContentLoading: Boolean = false
-    open var isTopContentLoading: Boolean = false
+    open var isContentLoading: Boolean = false
     open var isInClearLoading: Boolean = false
     open var selectedToggleTag: Int = 0
     open var selectedFunctionButtonToggleTags: IntArray? = null
@@ -25,8 +24,7 @@ abstract class ViewListHeaderVO() : Parcelable {
     constructor(source: Parcel) : this() {
         source.let {
             isItemsHidden = readBoolean(source)
-            isBottomContentLoading = readBoolean(source)
-            isTopContentLoading = readBoolean(source)
+            isContentLoading = readBoolean(source)
             isInClearLoading = readBoolean(source)
             selectedToggleTag = it.readInt()
             selectedFunctionButtonToggleTags = it.createIntArray()
@@ -38,7 +36,7 @@ abstract class ViewListHeaderVO() : Parcelable {
         dest.let {
             it.writeString(javaClass.name)
             writeBoolean(it, isItemsHidden)
-            writeBoolean(it, isBottomContentLoading)
+            writeBoolean(it, isContentLoading)
             writeBoolean(it, isInClearLoading)
             it.writeInt(selectedToggleTag)
             it.writeIntArray(selectedFunctionButtonToggleTags)
@@ -53,43 +51,22 @@ abstract class ViewListHeaderVO() : Parcelable {
     /**
      * Проверяет возможность отображения элемента загрузчика
      */
-    fun canShowBottomLoader(): Boolean {
-        return !isBottomContentLoading && (!canHideItems() || !isItemsHidden)
+    fun canShowLoader(): Boolean {
+        return !isContentLoading && (!canHideItems() || !isItemsHidden)
     }
 
     /**
      * Проверяет возможность скрытия элемента загрузчика
      */
-    fun canHideBottomLoader(): Boolean {
-        return isBottomContentLoading && (!canHideItems() || !isItemsHidden)
+    fun canHideLoader(): Boolean {
+        return isContentLoading && (!canHideItems() || !isItemsHidden)
     }
 
     /**
      * Проверяет отображение загрузчика
      */
-    fun isBottomLoaderShowing(): Boolean {
-        return isBottomContentLoading && ((canHideItems() && !isItemsHidden) || (!canHideItems()))
-    }
-
-    /**
-     * Проверяет возможность отображения элемента загрузчика
-     */
-    fun canShowTopLoader(): Boolean {
-        return !isTopContentLoading && (!canHideItems() || !isItemsHidden)
-    }
-
-    /**
-     * Проверяет возможность скрытия элемента загрузчика
-     */
-    fun canHideTopLoader(): Boolean {
-        return isTopContentLoading && (!canHideItems() || !isItemsHidden)
-    }
-
-    /**
-     * Проверяет отображение загрузчика
-     */
-    fun isTopLoaderShowing(): Boolean {
-        return isTopContentLoading && ((canHideItems() && !isItemsHidden) || (!canHideItems()))
+    fun isLoaderShowing(): Boolean {
+        return isContentLoading && ((canHideItems() && !isItemsHidden) || (!canHideItems()))
     }
 
     /**

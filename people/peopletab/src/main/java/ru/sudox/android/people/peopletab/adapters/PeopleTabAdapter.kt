@@ -70,7 +70,7 @@ class PeopleTabAdapter(
         }
 
         sortingTypeChangedCallback = { headerType: Int, itemsCountBeforeChanging: Int, vo: ViewListHeaderVO ->
-            toggleBottomLoading(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE, true, clearLoading = true)
+            toggleLoading(ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE, true, clearLoading = true)
 
             viewList!!.handler.postDelayed({
                 if (vo.selectedToggleTag == FRIENDS_OPTION_TAG) {
@@ -102,7 +102,7 @@ class PeopleTabAdapter(
             FRIEND_REQUEST_VIEW_TYPE -> friendsRequestsVOs
             ADDED_FRIEND_VIEW_TYPE -> addedFriendsVOs
             else -> subscriptionsVOs
-        }[0], glide)
+        }[recalculatePositionRelativeHeader(position)], glide)
     }
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
@@ -121,11 +121,7 @@ class PeopleTabAdapter(
 
             val headerVO = headersVOs!![FRIEND_REQUESTS_HEADER_TYPE]
 
-            if (!headerVO.isItemsHidden && headerVO.isBottomContentLoading) {
-                current++
-            }
-
-            if (!headerVO.isItemsHidden && headerVO.isTopContentLoading) {
+            if (!headerVO.isItemsHidden && headerVO.isContentLoading) {
                 current++
             }
         }
@@ -146,10 +142,6 @@ class PeopleTabAdapter(
 
         if (addedFriendsOrSubscriptionsCount > 0) {
             current += addedFriendsOrSubscriptionsCount + 1
-        }
-
-        if (headersVOs!![ADDED_FRIENDS_AND_SUBSCRIPTIONS_HEADER_TYPE].isTopContentLoading) {
-            current++
         }
 
         if (position < current) {
@@ -183,11 +175,7 @@ class PeopleTabAdapter(
                 sum += friendsRequestsVOs.size()
             }
 
-            if (headersVOs!![FRIEND_REQUESTS_HEADER_TYPE].isBottomLoaderShowing()) {
-                sum++
-            }
-
-            if (headersVOs!![FRIEND_REQUESTS_HEADER_TYPE].isTopLoaderShowing()) {
+            if (headersVOs!![FRIEND_REQUESTS_HEADER_TYPE].isLoaderShowing()) {
                 sum++
             }
         }
@@ -227,14 +215,6 @@ class PeopleTabAdapter(
 
             if (!headersVOs!![FRIEND_REQUESTS_HEADER_TYPE].isItemsHidden) {
                 position += friendsRequestsVOs.size()
-            }
-
-            if (headersVOs!![FRIEND_REQUESTS_HEADER_TYPE].isTopContentLoading) {
-                position++
-            }
-
-            if (headersVOs!![FRIEND_REQUESTS_HEADER_TYPE].isBottomContentLoading) {
-                position++
             }
         }
 
