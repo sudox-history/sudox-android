@@ -117,7 +117,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
                     it.itemsVisibilityTogglingCallback = { vo ->
                         vo.isItemsHidden = !vo.isItemsHidden
 
-                        val itemsCount = getItemsCountAfterHeaderConsiderVisibility(vo.type, true) + if (vo.isContentLoading) {
+                        val itemsCount = getItemsCountAfterHeaderConsiderVisibility(vo.type, true) + if (vo.isBottomContentLoading) {
+                            1
+                        } else {
+                            0
+                        } + if (vo.isTopContentLoading) {
                             1
                         } else {
                             0
@@ -200,12 +204,23 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             FOOTER_VIEW_TYPE
         } else {
             val nearbyHeaderPair = getNearestHeader(position) ?: return getItemType(position)
-            val loaderPosition = nearbyHeaderPair.first + getItemsCountAfterHeaderConsiderVisibility(nearbyHeaderPair.second.type) + 1
 
-            if (!nearbyHeaderPair.second.isItemsHidden && loaderPosition == position) {
+            if (nearbyHeaderPair.second.isTopContentLoading && nearbyHeaderPair.first + 1 == position) {
                 LOADER_VIEW_TYPE
             } else {
-                getItemType(position)
+                val loaderPosition = nearbyHeaderPair.first +
+                        getItemsCountAfterHeaderConsiderVisibility(nearbyHeaderPair.second.type) +
+                        if (nearbyHeaderPair.second.isTopContentLoading) {
+                            1
+                        } else {
+                            0
+                        } + 1
+
+                if (!nearbyHeaderPair.second.isItemsHidden && nearbyHeaderPair.second.isBottomContentLoading && loaderPosition == position) {
+                    LOADER_VIEW_TYPE
+                } else {
+                    getItemType(position)
+                }
             }
         }
     }
@@ -217,7 +232,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             headersVOs?.forEachIndexed { type, vo ->
                 itemsCount += getItemsCountAfterHeaderConsiderVisibility(type)
 
-                if (vo.isLoaderShowing()) {
+                if (vo.isBottomLoaderShowing()) {
+                    itemsCount++
+                }
+
+                if (vo.isTopLoaderShowing()) {
                     itemsCount++
                 }
             }
@@ -289,7 +308,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             notifyItemRangeInserted(itemPosition + headerPosition, itemCount)
 
             if (headersVOs!![type].isInClearLoading) {
-                toggleLoading(type, false)
+                toggleBottomLoading(type, false)
             }
         } else {
             notifyItemRangeInserted(position, itemCount)
@@ -368,28 +387,47 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
     }
 
     /**
-     * Включает/выключает загрузку в секции
+     * Включает/выключает загрузку наверху секции
+     *
+     * @param type Тип шапки над секцией
+     * @param toggle Отобразить загрузку?
+     */
+    fun toggleTopLoading(type: Int, toggle: Boolean) {
+        val headerPosition = findHeaderPosition(type, itemCount)
+        val loaderPosition = headerPosition + 1
+
+        if (toggle && headersVOs!![type].canShowTopLoader()) {
+            notifyItemInserted(loaderPosition)
+        } else if (!toggle && headersVOs!![type].canHideTopLoader()) {
+            notifyItemRemoved(loaderPosition)
+        }
+
+        headersVOs!![type].isTopContentLoading = toggle
+    }
+
+    /**
+     * Включает/выключает загрузку внизу секции
      *
      * @param type Тип шапки над секцией
      * @param toggle Отобразить загрузку?
      * @param clearLoading Это чистая загрузка? (скрывает все элементы списка)
      */
-    fun toggleLoading(type: Int, toggle: Boolean, clearLoading: Boolean = false) {
+    fun toggleBottomLoading(type: Int, toggle: Boolean, clearLoading: Boolean = false) {
         val headerPosition = findHeaderPosition(type, itemCount)
         val itemsInSection = getItemsCountAfterHeaderConsiderVisibility(type, !toggle)
         val loaderPosition = headerPosition + itemsInSection + 1
 
-        if (toggle && headersVOs!![type].canShowLoader()) {
+        if (toggle && headersVOs!![type].canShowBottomLoader()) {
             notifyItemInserted(loaderPosition)
 
             if (clearLoading && itemsInSection > 0) {
                 notifyItemRangeRemoved(headerPosition + 1, itemsInSection)
             }
-        } else if (!toggle && headersVOs!![type].canHideLoader()) {
+        } else if (!toggle && headersVOs!![type].canHideBottomLoader()) {
             notifyItemRemoved(loaderPosition)
         }
 
-        headersVOs!![type].isContentLoading = toggle
+        headersVOs!![type].isBottomContentLoading = toggle
         headersVOs!![type].isInClearLoading = if (toggle) {
             clearLoading
         } else {
