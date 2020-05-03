@@ -30,6 +30,7 @@ abstract class ViewListHeaderVO() : Parcelable {
             selectedToggleTag = it.readInt()
             selectedFunctionButtonToggleTags = it.createIntArray()
             nestedRecyclerViewParcelable = it.readParcelable(javaClass.classLoader)
+            cachedPosition = it.readInt()
         }
     }
 
@@ -42,6 +43,7 @@ abstract class ViewListHeaderVO() : Parcelable {
             it.writeInt(selectedToggleTag)
             it.writeIntArray(selectedFunctionButtonToggleTags)
             it.writeParcelable(nestedRecyclerViewParcelable, 0)
+            it.writeInt(cachedPosition)
         }
     }
 
