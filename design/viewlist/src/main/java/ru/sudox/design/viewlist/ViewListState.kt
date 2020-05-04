@@ -2,6 +2,8 @@ package ru.sudox.design.viewlist
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.core.os.ParcelCompat.readBoolean
+import androidx.core.os.ParcelCompat.writeBoolean
 import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.design.viewlist.vos.ViewListHeaderVO
 
@@ -11,6 +13,7 @@ open class ViewListState : Parcelable {
 
     var superState: Parcelable? = null
     var headersVOs: Array<ViewListHeaderVO>? = null
+    var isLoadingEnabled = false
 
     constructor()
     constructor(superState: Parcelable) {
@@ -23,11 +26,13 @@ open class ViewListState : Parcelable {
 
     constructor(input: Parcel) : this(input.readParcelable(RecyclerView::class.java.classLoader) ?: EMPTY_STATE) {
         headersVOs = input.createTypedArray(ViewListHeaderVO.CREATOR)
+        isLoadingEnabled = readBoolean(input)
     }
 
     override fun writeToParcel(out: Parcel, flags: Int) {
         out.writeParcelable(superState, flags)
         out.writeTypedArray(headersVOs, 0)
+        writeBoolean(out, isLoadingEnabled)
     }
 
     override fun describeContents(): Int {
@@ -37,12 +42,16 @@ open class ViewListState : Parcelable {
     fun readFromView(view: ViewList) {
         (view.adapter as? ViewListAdapter<*>)?.let {
             it.saveNestedRecyclerViewsState()
+            isLoadingEnabled = it.isLoadingEnabled
             headersVOs = it.headersVOs
         }
     }
 
     fun writeToView(view: ViewList) {
-        (view.adapter as? ViewListAdapter<*>)?.headersVOs = headersVOs
+        (view.adapter as? ViewListAdapter<*>)?.let {
+            it.isLoadingEnabled = isLoadingEnabled
+            it.headersVOs = headersVOs
+        }
     }
 
     companion object CREATOR : Parcelable.Creator<ViewListState> {

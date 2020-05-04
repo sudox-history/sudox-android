@@ -17,6 +17,8 @@ const val LOADER_VIEW_TYPE = -3
 abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var stickyLetters: Map<Int, String>? = null
+    var isLoadingEnabled = false
+        internal set
 
     open var nestedRecyclerViews = HashMap<Int, RecyclerView>()
     open var headersVOs: Array<ViewListHeaderVO>? = null
@@ -198,7 +200,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             HEADER_VIEW_TYPE
         } else if (getFooterText(position) != null) {
             FOOTER_VIEW_TYPE
-        } else {
+        } else if (headersVOs != null) {
             val nearbyHeaderPair = getNearestHeader(position) ?: return getItemType(position)
             val loaderPosition = nearbyHeaderPair.first + getItemsCountAfterHeaderConsiderVisibility(nearbyHeaderPair.second.type) + 1
 
@@ -207,6 +209,18 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             } else {
                 getItemType(position)
             }
+        } else if (isLoadingEnabled) {
+            val footer = getFooterText(itemCount - 1)
+
+            if (footer != null && position == itemCount - 2) {
+                LOADER_VIEW_TYPE
+            } else if (footer == null && position == itemCount - 1) {
+                LOADER_VIEW_TYPE
+            } else {
+                getItemType(position)
+            }
+        } else {
+            getItemType(position)
         }
     }
 
@@ -224,7 +238,11 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
 
             itemsCount + getFooterCount()
         } else {
-            getItemsCountAfterHeaderConsiderVisibility(0) + getFooterCount()
+            getItemsCountAfterHeaderConsiderVisibility(0) + getFooterCount() + if (isLoadingEnabled) {
+                1
+            } else {
+                0
+            }
         }
     }
 
@@ -398,25 +416,43 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
      * @param clearLoading Это чистая загрузка? (скрывает все элементы списка)
      */
     fun toggleLoading(type: Int, toggle: Boolean, clearLoading: Boolean = false) {
-        val headerPosition = findHeaderPosition(type, itemCount)
-        val itemsInSection = getItemsCountAfterHeaderConsiderVisibility(type, !toggle)
-        val loaderPosition = headerPosition + itemsInSection + 1
+        if (headersVOs != null) {
+            val headerPosition = findHeaderPosition(type, itemCount)
+            val itemsInSection = getItemsCountAfterHeaderConsiderVisibility(type, !toggle)
+            val loaderPosition = headerPosition + itemsInSection + 1
 
-        if (toggle && headersVOs!![type].canShowLoader()) {
-            notifyItemInserted(loaderPosition)
+            if (toggle && headersVOs!![type].canShowLoader()) {
+                notifyItemInserted(loaderPosition)
 
-            if (clearLoading && itemsInSection > 0) {
-                notifyItemRangeRemoved(headerPosition + 1, itemsInSection)
+                if (clearLoading && itemsInSection > 0) {
+                    notifyItemRangeRemoved(headerPosition + 1, itemsInSection)
+                }
+            } else if (!toggle && headersVOs!![type].canHideLoader()) {
+                notifyItemRemoved(loaderPosition)
             }
-        } else if (!toggle && headersVOs!![type].canHideLoader()) {
-            notifyItemRemoved(loaderPosition)
-        }
 
-        headersVOs!![type].isContentLoading = toggle
-        headersVOs!![type].isInClearLoading = if (toggle) {
-            clearLoading
-        } else {
-            false
+            headersVOs!![type].isContentLoading = toggle
+            headersVOs!![type].isInClearLoading = if (toggle) {
+                clearLoading
+            } else {
+                false
+            }
+        } else if (isLoadingEnabled && !toggle) {
+            if (getFooterText(itemCount - 1) != null) {
+                notifyItemRemoved(itemCount - 2)
+            } else {
+                notifyItemRemoved(itemCount - 1)
+            }
+
+            isLoadingEnabled = false
+        } else if (!isLoadingEnabled && toggle) {
+            if (getFooterText(itemCount - 1) != null) {
+                notifyItemInserted(itemCount - 1)
+            } else {
+                notifyItemInserted(itemCount)
+            }
+
+            isLoadingEnabled = true
         }
     }
 
