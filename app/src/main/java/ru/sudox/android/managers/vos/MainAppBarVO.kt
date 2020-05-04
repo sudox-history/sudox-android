@@ -7,6 +7,7 @@ import ru.sudox.android.R
 import ru.sudox.api.common.SudoxApi
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.others.AppBarButtonParam
+import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 import javax.inject.Inject
 
 /**
@@ -51,7 +52,9 @@ class MainAppBarVO(
     }
 
     override fun getTitle(): Int {
-        return if (sudoxApi!!.isConnected) {
+        return if (originalAppBarVO.getTitle() == NOT_USED_PARAMETER) {
+            NOT_USED_PARAMETER
+        } else if (sudoxApi!!.isConnected) {
             originalAppBarVO.getTitle()
         } else {
             R.string.connecting
