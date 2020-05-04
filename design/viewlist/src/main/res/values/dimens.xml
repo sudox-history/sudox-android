@@ -10,5 +10,5 @@
     <dimen name="viewlist_footer_margin">12dp</dimen>
     <dimen name="viewlist_letter_text_size">19sp</dimen>
     <dimen name="viewlist_letter_padding_right">21dp</dimen>
-    <dimen name="viewlist_letter_padding_top">18dp</dimen>
+    <dimen name="viewlist_letter_padding_top">12dp</dimen>
 </resources>
