@@ -5,7 +5,7 @@ import android.view.View
 import ru.sudox.design.mityushkinlayout.MityushkinLayout
 import ru.sudox.design.mityushkinlayout.MityushkinLayoutAdapter
 import ru.sudox.design.mityushkinlayout.MityushkinLayoutTemplate
-import ru.sudox.design.roundedview.RoundedView
+import ru.sudox.design.common.views.RoundedView
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt

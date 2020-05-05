@@ -4,5 +4,5 @@ apply from: '../../configs/common.gradle'
 registerModule(false, false, true)
 
 dependencies {
-    implementation project(path: ':design:roundedview')
+    implementation project(path: ':design:common')
 }

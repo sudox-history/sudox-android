@@ -13,7 +13,6 @@ dependencies {
     api project(path: ':design:edittext')
     api project(path: ':design:mityushkinlayout')
     api project(path: ':design:popup')
-    api project(path: ':design:roundedview')
     api project(path: ':design:saveableview')
     api project(path: ':design:tablayout')
     api project(path: ':design:viewlist')

@@ -1,4 +1,4 @@
-package ru.sudox.design.roundedview
+package ru.sudox.design.common.views
 
 interface RoundedView {
     var topLeftCropRadius: Float

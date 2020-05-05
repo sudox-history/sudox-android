@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable
 import android.util.AttributeSet
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
@@ -17,7 +18,7 @@ import ru.sudox.android.media.images.entries.GlideImageRequest
 import ru.sudox.android.media.images.transitions.FadeTransition
 import ru.sudox.android.media.images.views.drawables.GlidePlaceholderDrawable
 import ru.sudox.android.media.images.views.drawables.MaskedBitmapDrawable
-import ru.sudox.design.roundedview.RoundedImageView
+import ru.sudox.design.common.views.RoundedView
 
 @Suppress("unused")
 const val NOT_SHOWING_IMAGE_ID = -1L
@@ -25,7 +26,47 @@ const val NOT_SHOWING_IMAGE_ID = -1L
 /**
  * ImageView с возможность загрузки изображения по ID с сервера
  */
-open class GlideImageView : RoundedImageView {
+open class GlideImageView : AppCompatImageView, RoundedView {
+
+    override var topLeftCropRadius = 0F
+        set(value) {
+            if (value == field) {
+                return
+            }
+
+            field = value
+            invalidate()
+        }
+
+    override var topRightCropRadius = 0F
+        set(value) {
+            if (value == field) {
+                return
+            }
+
+            field = value
+            invalidate()
+        }
+
+    override var bottomLeftCropRadius = 0F
+        set(value) {
+            if (value == field) {
+                return
+            }
+
+            field = value
+            invalidate()
+        }
+
+    override var bottomRightCropRadius = 0F
+        set(value) {
+            if (value == field) {
+                return
+            }
+
+            field = value
+            invalidate()
+        }
 
     internal var placeholderColor = 0
 

@@ -8,7 +8,7 @@ import ru.sudox.android.media.images.views.GlideImageView
 
 class MaskedBitmapDrawable(
         private val bitmap: Bitmap,
-        private val imageView: GlideImageView
+        imageView: GlideImageView
 ) : BasicDrawable(imageView) {
 
     init {

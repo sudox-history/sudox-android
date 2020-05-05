@@ -1,8 +1,6 @@
 package ru.sudox.android.media.images.views.drawables
 
 import android.graphics.Canvas
-import android.graphics.ColorFilter
-import android.graphics.PixelFormat
 import androidx.core.graphics.ColorUtils
 import ru.sudox.android.media.images.views.AvatarImageView
 

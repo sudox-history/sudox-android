@@ -5,7 +5,7 @@ import android.view.View
 import ru.sudox.design.mityushkinlayout.MityushkinLayout
 import ru.sudox.design.mityushkinlayout.MityushkinLayoutAdapter
 import ru.sudox.design.mityushkinlayout.MityushkinLayoutTemplate
-import ru.sudox.design.roundedview.RoundedView
+import ru.sudox.design.common.views.RoundedView
 
 object NineItemsYankinTemplate : MityushkinLayoutTemplate {
 
@@ -45,63 +45,63 @@ object NineItemsYankinTemplate : MityushkinLayoutTemplate {
             val eighthChild = layout.getChildAt(7)
             val ninthChild = layout.getChildAt(8)
 
-            if (firstChild is RoundedView) {
+            if (firstChild is ru.sudox.design.common.views.RoundedView) {
                 firstChild.topLeftCropRadius = it.childBorderRadius
                 firstChild.topRightCropRadius = it.childBorderRadius
                 firstChild.bottomLeftCropRadius = it.childBorderRadius
                 firstChild.bottomRightCropRadius = it.childBorderRadius
             }
 
-            if (secondChild is RoundedView) {
+            if (secondChild is ru.sudox.design.common.views.RoundedView) {
                 secondChild.topLeftCropRadius = it.childBorderRadius
                 secondChild.topRightCropRadius = it.childBorderRadius
                 secondChild.bottomLeftCropRadius = it.childBorderRadius
                 secondChild.bottomRightCropRadius = it.childBorderRadius
             }
 
-            if (thirdChild is RoundedView) {
+            if (thirdChild is ru.sudox.design.common.views.RoundedView) {
                 thirdChild.topLeftCropRadius = it.childBorderRadius
                 thirdChild.topRightCropRadius = it.childBorderRadius
                 thirdChild.bottomLeftCropRadius = it.childBorderRadius
                 thirdChild.bottomRightCropRadius = it.childBorderRadius
             }
 
-            if (fourthChild is RoundedView) {
+            if (fourthChild is ru.sudox.design.common.views.RoundedView) {
                 fourthChild.topLeftCropRadius = it.childBorderRadius
                 fourthChild.topRightCropRadius = it.childBorderRadius
                 fourthChild.bottomLeftCropRadius = it.childBorderRadius
                 fourthChild.bottomRightCropRadius = it.childBorderRadius
             }
 
-            if (fifthChild is RoundedView) {
+            if (fifthChild is ru.sudox.design.common.views.RoundedView) {
                 fifthChild.topLeftCropRadius = it.childBorderRadius
                 fifthChild.topRightCropRadius = it.childBorderRadius
                 fifthChild.bottomLeftCropRadius = it.childBorderRadius
                 fifthChild.bottomRightCropRadius = it.childBorderRadius
             }
 
-            if (sixthChild is RoundedView) {
+            if (sixthChild is ru.sudox.design.common.views.RoundedView) {
                 sixthChild.topLeftCropRadius = it.childBorderRadius
                 sixthChild.topRightCropRadius = it.childBorderRadius
                 sixthChild.bottomLeftCropRadius = it.cornerBorderRadius
                 sixthChild.bottomRightCropRadius = it.childBorderRadius
             }
 
-            if (seventhChild is RoundedView) {
+            if (seventhChild is ru.sudox.design.common.views.RoundedView) {
                 seventhChild.topLeftCropRadius = it.childBorderRadius
                 seventhChild.topRightCropRadius = it.childBorderRadius
                 seventhChild.bottomLeftCropRadius = it.childBorderRadius
                 seventhChild.bottomRightCropRadius = it.childBorderRadius
             }
 
-            if (eighthChild is RoundedView) {
+            if (eighthChild is ru.sudox.design.common.views.RoundedView) {
                 eighthChild.topLeftCropRadius = it.childBorderRadius
                 eighthChild.topRightCropRadius = it.childBorderRadius
                 eighthChild.bottomLeftCropRadius = it.childBorderRadius
                 eighthChild.bottomRightCropRadius = it.childBorderRadius
             }
 
-            if (ninthChild is RoundedView) {
+            if (ninthChild is ru.sudox.design.common.views.RoundedView) {
                 ninthChild.topLeftCropRadius = it.childBorderRadius
                 ninthChild.topRightCropRadius = it.childBorderRadius
                 ninthChild.bottomLeftCropRadius = it.childBorderRadius
