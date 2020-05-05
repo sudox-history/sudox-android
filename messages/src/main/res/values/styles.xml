@@ -26,6 +26,10 @@
         <item name="avatarWidth">56dp</item>
         <item name="avatarHeight">56dp</item>
         <item name="marginBetweenAvatars">3dp</item>
+        <item name="likeIconDrawable">@drawable/ic_favorite</item>
+        <item name="likeIconHeight">18dp</item>
+        <item name="likeIconWidth">18dp</item>
+        <item name="likeIconTint">#ED2939</item>
         <item name="clipColor">@color/background_color</item>
     </style>
 </resources>

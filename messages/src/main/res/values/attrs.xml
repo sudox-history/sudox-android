@@ -14,6 +14,9 @@
         <attr name="marginBetweenAvatars" format="dimension" />
         <attr name="marginBetweenAvatarsAndCount" format="dimension" />
         <attr name="likeIconDrawable" format="reference" />
+        <attr name="likeIconHeight" format="dimension" />
+        <attr name="likeIconWidth" format="dimension" />
+        <attr name="likeIconTint" format="color" />
         <attr name="countTextAppearance" format="dimension" />
         <attr name="clipColor" format="color" />
     </declare-styleable>

@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
@@ -13,13 +14,17 @@ import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.messages.R
 import ru.sudox.android.people.common.vos.PeopleVO
+import ru.sudox.design.common.paint.DrawablePaint
 import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
 
 class MessageLikesView : ViewGroup {
 
     private var avatarWidth = 0
     private var avatarHeight = 0
     private var marginBetweenAvatars = 0
+    private var likePaint = DrawablePaint()
     private var clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
     }
@@ -27,7 +32,7 @@ class MessageLikesView : ViewGroup {
     var vos: ArrayList<PeopleVO>? = null
         private set
 
-    var avatarsViews = ArrayList<AvatarImageView>()
+    private var avatarsViews = ArrayList<AvatarImageView>()
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messageLikesView)
@@ -41,6 +46,14 @@ class MessageLikesView : ViewGroup {
 
             clipPaint.color = it.getColorOrThrow(R.styleable.MessageLikesView_clipColor)
             clipPaint.strokeWidth = marginBetweenAvatars.toFloat()
+
+            likePaint.readFromTypedArray(
+                    it,
+                    R.styleable.MessageLikesView_likeIconDrawable,
+                    R.styleable.MessageLikesView_likeIconHeight,
+                    R.styleable.MessageLikesView_likeIconWidth,
+                    R.styleable.MessageLikesView_likeIconTint
+            )
         }
     }
 
@@ -53,6 +66,7 @@ class MessageLikesView : ViewGroup {
                 paddingLeft +
                 (avatarsViews.size - 1) *
                 marginBetweenAvatars
+
 
         val needHeight = getAvatarHeight() +
                 paddingTop +
@@ -92,6 +106,21 @@ class MessageLikesView : ViewGroup {
                     false,
                     clipPaint
             )
+
+            if (index == 0) {
+                val xRadius = (it.right - it.left) / 2F
+                val xCenter = (it.right + it.left) / 2F
+                val yRadius = (it.bottom - it.top) / 2F
+                val yCenter = (it.bottom + it.top) / 2F
+
+                val x = xCenter + (cos(Math.PI / 4) * xRadius).toFloat() - likePaint.width / 2
+                val y = yCenter + (sin(Math.PI / 4) * yRadius).toFloat() - likePaint.height / 2
+
+                canvas.save()
+                canvas.translate(x, y)
+                likePaint.draw(canvas)
+                canvas.restore()
+            }
         }
     }
 
