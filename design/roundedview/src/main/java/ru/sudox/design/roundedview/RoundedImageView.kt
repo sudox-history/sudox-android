@@ -1,12 +1,7 @@
 package ru.sudox.design.roundedview
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Path
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 

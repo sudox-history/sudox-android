@@ -2,8 +2,10 @@ package ru.sudox.android.media.images.views
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.TransitionDrawable
 import android.util.AttributeSet
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getIntegerOrThrow
@@ -42,10 +44,31 @@ open class GlideImageView : RoundedImageView {
         }
     }
 
+    override fun setImageBitmap(bm: Bitmap?) {
+        super.setImageDrawable(if (bm != null) {
+            MaskedBitmapDrawable(bm, this)
+        } else {
+            null
+        })
+    }
+
     override fun setImageDrawable(drawable: Drawable?) {
         super.setImageDrawable(if (drawable is BitmapDrawable) {
             MaskedBitmapDrawable(drawable.bitmap, this)
         } else {
+            if (drawable is TransitionDrawable) {
+                val first = drawable.getDrawable(0)
+                val second = drawable.getDrawable(1)
+
+                if (first is BitmapDrawable) {
+                    drawable.setDrawable(0, MaskedBitmapDrawable(first.bitmap, this))
+                }
+
+                if (second is BitmapDrawable) {
+                    drawable.setDrawable(1, MaskedBitmapDrawable(second.bitmap, this))
+                }
+            }
+
             drawable
         })
     }
