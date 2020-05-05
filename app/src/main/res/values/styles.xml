@@ -7,6 +7,7 @@
 
         <!--    Messages    -->
         <item name="messagesTitleAppBarViewStyle">@style/Sudox.MessagesTitleAppBarView</item>
+        <item name="messageLikesView">@style/Sudox.MessageLikesView</item>
 
         <item name="glideImageViewStyle">@style/Sudox.GlideImageView</item>
         <item name="dialogItemViewStyle">@style/Sudox.Messages.DialogItemView</item>

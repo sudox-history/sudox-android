@@ -21,4 +21,11 @@
         <item name="android:fontFamily">@font/opensans_regular</item>
         <item name="fontFamily">@font/opensans_regular</item>
     </style>
+
+    <style name="Sudox.MessageLikesView" parent="">
+        <item name="avatarWidth">56dp</item>
+        <item name="avatarHeight">56dp</item>
+        <item name="marginBetweenAvatars">3dp</item>
+        <item name="clipColor">@color/background_color</item>
+    </style>
 </resources>
