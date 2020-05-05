@@ -2,9 +2,7 @@ package ru.sudox.android.media.images.views.drawables
 
 import android.graphics.Canvas
 import android.graphics.ColorFilter
-import android.graphics.Paint
 import android.graphics.PixelFormat
-import android.graphics.drawable.Drawable
 import androidx.core.graphics.ColorUtils
 import ru.sudox.android.media.images.views.AvatarImageView
 
@@ -16,16 +14,12 @@ import ru.sudox.android.media.images.views.AvatarImageView
  */
 class AvatarDrawable(
         private val imageView: AvatarImageView
-) : Drawable() {
-
-    private var currentAlpha = 255
-    private var paint = Paint(Paint.ANTI_ALIAS_FLAG)
+) : BasicDrawable(imageView) {
 
     override fun draw(canvas: Canvas) {
         imageView.let {
-            canvas.drawPath(it.clipPath, paint.apply {
-                color = ColorUtils.setAlphaComponent(it.avatarColor, currentAlpha)
-            })
+            paint.color = ColorUtils.setAlphaComponent(it.avatarColor, alpha)
+            super.draw(canvas)
 
             val textY = bounds.exactCenterY() - it.avatarTextBounds.exactCenterY()
             val textX = bounds.exactCenterX() - it.avatarTextBounds.exactCenterX()
@@ -35,20 +29,5 @@ class AvatarDrawable(
             canvas.drawText(it.textInAvatar!!, textX, textY, it.avatarTextPaint)
             it.avatarTextPaint.color = color
         }
-    }
-
-    override fun getAlpha(): Int {
-        return currentAlpha
-    }
-
-    override fun getOpacity(): Int {
-        return PixelFormat.UNKNOWN
-    }
-
-    override fun setAlpha(alpha: Int) {
-        currentAlpha = alpha
-    }
-
-    override fun setColorFilter(colorFilter: ColorFilter?) {
     }
 }
