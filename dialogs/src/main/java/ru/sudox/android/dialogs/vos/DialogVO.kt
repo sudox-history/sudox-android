@@ -2,7 +2,7 @@ package ru.sudox.android.dialogs.vos
 
 import android.content.Context
 import android.text.SpannableString
-import ru.sudox.android.media.images.views.avatar.AvatarVO
+import ru.sudox.android.media.images.views.vos.AvatarVO
 
 interface DialogVO : AvatarVO {
 

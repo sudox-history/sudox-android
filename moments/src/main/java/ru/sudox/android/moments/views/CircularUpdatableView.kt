@@ -17,7 +17,7 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.media.images.GlideRequests
-import ru.sudox.android.media.images.views.avatar.AvatarImageView
+import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.moments.R
 import ru.sudox.android.moments.vos.CircularUpdatableViewVO
 import ru.sudox.design.common.calculateViewSize

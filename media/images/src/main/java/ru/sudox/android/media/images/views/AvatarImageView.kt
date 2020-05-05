@@ -1,4 +1,4 @@
-package ru.sudox.android.media.images.views.avatar
+package ru.sudox.android.media.images.views
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,8 +17,8 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.R
-import ru.sudox.android.media.images.views.GlideCircleImageView
-import ru.sudox.android.media.images.views.NOT_SHOWING_IMAGE_ID
+import ru.sudox.android.media.images.views.drawables.AvatarDrawable
+import ru.sudox.android.media.images.views.vos.AvatarVO
 import ru.sudox.android.media.texts.helpers.getTwoFirstLetters
 import kotlin.math.cos
 import kotlin.math.min

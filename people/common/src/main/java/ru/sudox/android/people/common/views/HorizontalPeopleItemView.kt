@@ -19,7 +19,7 @@ import androidx.core.content.res.use
 import androidx.core.widget.ImageViewCompat
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.media.images.GlideRequests
-import ru.sudox.android.media.images.views.avatar.AvatarImageView
+import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.people.common.R
 import ru.sudox.android.people.common.vos.PeopleVO
 import java.util.ArrayList

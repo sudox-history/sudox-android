@@ -26,6 +26,7 @@ class MessagesChatController : CoreController() {
         return RecyclerView(activity!!).apply {
             addItemDecoration(MessageLikesViewDecorator())
 
+            itemAnimator!!.addDuration = 1500
             layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, true)
             adapter = MessageLikesViewAdapter(glide).apply {

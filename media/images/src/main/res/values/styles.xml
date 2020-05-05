@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Sudox.GlideImageView" parent="">
-        <item name="placeholderDrawable">@color/placeholder_imageview_color</item>
+        <item name="placeholderColor">@color/placeholder_imageview_color</item>
         <item name="crossFadeDuration">@integer/imageview_crossfade_duration</item>
     </style>
 

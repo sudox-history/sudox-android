@@ -1,4 +1,4 @@
-package ru.sudox.android.media.images.views.avatar
+package ru.sudox.android.media.images.views.vos
 
 interface AvatarVO {
 

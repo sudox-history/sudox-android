@@ -1,10 +1,12 @@
-package ru.sudox.android.media.images.views.avatar
+package ru.sudox.android.media.images.views.drawables
 
 import android.graphics.Canvas
 import android.graphics.ColorFilter
+import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.drawable.Drawable
 import androidx.core.graphics.ColorUtils
+import ru.sudox.android.media.images.views.AvatarImageView
 
 /**
  * Drawable аватарки.
@@ -17,10 +19,13 @@ class AvatarDrawable(
 ) : Drawable() {
 
     private var currentAlpha = 255
+    private var paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     override fun draw(canvas: Canvas) {
         imageView.let {
-            canvas.drawColor(ColorUtils.setAlphaComponent(it.avatarColor, currentAlpha))
+            canvas.drawPath(it.clipPath, paint.apply {
+                color = ColorUtils.setAlphaComponent(it.avatarColor, currentAlpha)
+            })
 
             val textY = bounds.exactCenterY() - it.avatarTextBounds.exactCenterY()
             val textX = bounds.exactCenterX() - it.avatarTextBounds.exactCenterX()

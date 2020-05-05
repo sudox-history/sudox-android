@@ -1,7 +1,7 @@
 package ru.sudox.android.people.common.vos
 
 import android.content.Context
-import ru.sudox.android.media.images.views.avatar.AvatarVO
+import ru.sudox.android.media.images.views.vos.AvatarVO
 import ru.sudox.android.people.common.R
 import ru.sudox.android.time.formatTime
 

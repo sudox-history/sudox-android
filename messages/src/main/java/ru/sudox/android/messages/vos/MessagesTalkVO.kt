@@ -1,7 +1,7 @@
 package ru.sudox.android.messages.vos
 
 import android.content.Context
-import ru.sudox.android.media.images.views.avatar.AvatarVO
+import ru.sudox.android.media.images.views.vos.AvatarVO
 
 class MessagesTalkVO(
         val talkId: Long,

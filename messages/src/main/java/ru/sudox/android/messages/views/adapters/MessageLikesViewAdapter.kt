@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.android.media.images.GlideRequests
-import ru.sudox.android.media.images.views.avatar.AvatarImageView
+import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.people.common.vos.PeopleVO
 
 internal const val COUNT_ITEM_VIEW_TYPE = 0

@@ -15,7 +15,8 @@ import androidx.appcompat.widget.AppCompatImageView
  */
 open class RoundedImageView : AppCompatImageView, RoundedView {
 
-    private val clipPath = Path()
+    val clipPath = Path()
+
     private val imagePaint = Paint()
     private val mergePaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT) }
     private val cropPaint = Paint().apply {
@@ -95,21 +96,21 @@ open class RoundedImageView : AppCompatImageView, RoundedView {
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (topLeftCropRadius != 0F || topRightCropRadius != 0F || bottomLeftCropRadius != 0F || bottomRightCropRadius != 0F) {
-            val rightBorder = measuredWidth.toFloat()
-            val bottomBorder = measuredHeight.toFloat()
-            val imageLayer = canvas.saveLayer(0F, 0F, rightBorder, bottomBorder, imagePaint)
-
+//        if (topLeftCropRadius != 0F || topRightCropRadius != 0F || bottomLeftCropRadius != 0F || bottomRightCropRadius != 0F) {
+//            val rightBorder = measuredWidth.toFloat()
+//            val bottomBorder = measuredHeight.toFloat()
+//            val imageLayer = canvas.saveLayer(0F, 0F, rightBorder, bottomBorder, imagePaint)
+//
+//            super.onDraw(canvas)
+//
+//            val mergeLayer = canvas.saveLayer(0F, 0F, rightBorder, bottomBorder, mergePaint)
+//
+//            canvas.drawColor(Color.GREEN)
+//            canvas.drawPath(clipPath, cropPaint)
+//            canvas.restoreToCount(mergeLayer)
+//            canvas.restoreToCount(imageLayer)
+//        } else {
             super.onDraw(canvas)
-
-            val mergeLayer = canvas.saveLayer(0F, 0F, rightBorder, bottomBorder, mergePaint)
-
-            canvas.drawColor(Color.GREEN)
-            canvas.drawPath(clipPath, cropPaint)
-            canvas.restoreToCount(mergeLayer)
-            canvas.restoreToCount(imageLayer)
-        } else {
-            super.onDraw(canvas)
-        }
+//        }
     }
 }

@@ -22,7 +22,7 @@ import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.dialogs.R
 import ru.sudox.android.dialogs.vos.DialogVO
-import ru.sudox.android.media.images.views.avatar.AvatarImageView
+import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.time.formatTime
 import kotlin.math.abs
 import kotlin.math.max

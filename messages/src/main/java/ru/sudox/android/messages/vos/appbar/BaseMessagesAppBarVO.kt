@@ -4,8 +4,8 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import ru.sudox.android.media.images.GlideRequests
-import ru.sudox.android.media.images.views.avatar.AvatarImageView
-import ru.sudox.android.media.images.views.avatar.AvatarVO
+import ru.sudox.android.media.images.views.AvatarImageView
+import ru.sudox.android.media.images.views.vos.AvatarVO
 import ru.sudox.android.messages.R
 import ru.sudox.android.messages.views.MessagesTitleAppBarView
 import ru.sudox.android.messages.vos.MessagesTitleAppBarVO
