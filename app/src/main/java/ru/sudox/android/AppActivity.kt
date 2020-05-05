@@ -16,6 +16,7 @@ import ru.sudox.android.core.inject.CoreActivityModule
 import ru.sudox.android.core.inject.CoreLoaderComponent
 import ru.sudox.android.core.managers.AUTH_ROOT_TAG
 import ru.sudox.android.core.managers.AppBarManager
+import ru.sudox.android.core.managers.MAIN_ROOT_TAG
 import ru.sudox.android.core.managers.NavigationManager
 import ru.sudox.android.inject.components.ActivityComponent
 import ru.sudox.android.layouts.AppLayout
@@ -59,7 +60,7 @@ class AppActivity : AppCompatActivity(), CoreActivity {
         setContentView(appLayout)
 
         if (!routerLazy!!.value.hasRootController()) {
-            navigationManager!!.showRoot(AUTH_ROOT_TAG)
+            navigationManager!!.showRoot(MAIN_ROOT_TAG)
         }
     }
 

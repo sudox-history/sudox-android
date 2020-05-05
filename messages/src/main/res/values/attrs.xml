@@ -7,6 +7,17 @@
         <attr name="inactiveSubtitleTextColor" format="color" />
         <attr name="activeSubtitleTextColor" format="color" />
     </declare-styleable>
+    
+    <declare-styleable name="MessageLikesView">
+        <attr name="avatarWidth" format="dimension" />
+        <attr name="avatarHeight" format="dimension" />
+        <attr name="marginBetweenAvatars" format="dimension" />
+        <attr name="marginBetweenAvatarsAndCount" format="dimension" />
+        <attr name="likeIconDrawable" format="reference" />
+        <attr name="countTextAppearance" format="dimension" />
+        <attr name="clipColor" format="color" />
+    </declare-styleable>
 
     <attr name="messagesTitleAppBarViewStyle" format="reference" />
+    <attr name="messageLikesView" format="reference" />
 </resources>
