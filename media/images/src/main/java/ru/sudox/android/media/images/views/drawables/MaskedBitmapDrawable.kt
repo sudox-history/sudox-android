@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.Shader
 import android.graphics.drawable.Drawable
+import android.util.DisplayMetrics
 import ru.sudox.android.media.images.views.GlideImageView
 
 class MaskedBitmapDrawable(
@@ -26,6 +27,14 @@ class MaskedBitmapDrawable(
 
     override fun getOpacity(): Int {
         return PixelFormat.UNKNOWN
+    }
+
+    override fun getIntrinsicWidth(): Int {
+        return bitmap.width
+    }
+
+    override fun getIntrinsicHeight(): Int {
+        return bitmap.height
     }
 
     override fun setAlpha(alpha: Int) {

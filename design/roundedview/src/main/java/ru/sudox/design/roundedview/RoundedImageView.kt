@@ -17,14 +17,6 @@ open class RoundedImageView : AppCompatImageView, RoundedView {
 
     val clipPath = Path()
 
-    private val imagePaint = Paint()
-    private val mergePaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OUT) }
-    private val cropPaint = Paint().apply {
-        color = Color.TRANSPARENT
-        xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-        isAntiAlias = true
-    }
-
     override var topLeftCropRadius = 0F
         set(value) {
             if (value == field) {
@@ -93,24 +85,5 @@ open class RoundedImageView : AppCompatImageView, RoundedView {
                 it.addRoundRect(0F, 0F, measuredWidth.toFloat(), measuredHeight.toFloat(), radii, Path.Direction.CW)
             }
         }
-    }
-
-    override fun onDraw(canvas: Canvas) {
-//        if (topLeftCropRadius != 0F || topRightCropRadius != 0F || bottomLeftCropRadius != 0F || bottomRightCropRadius != 0F) {
-//            val rightBorder = measuredWidth.toFloat()
-//            val bottomBorder = measuredHeight.toFloat()
-//            val imageLayer = canvas.saveLayer(0F, 0F, rightBorder, bottomBorder, imagePaint)
-//
-//            super.onDraw(canvas)
-//
-//            val mergeLayer = canvas.saveLayer(0F, 0F, rightBorder, bottomBorder, mergePaint)
-//
-//            canvas.drawColor(Color.GREEN)
-//            canvas.drawPath(clipPath, cropPaint)
-//            canvas.restoreToCount(mergeLayer)
-//            canvas.restoreToCount(imageLayer)
-//        } else {
-            super.onDraw(canvas)
-//        }
     }
 }

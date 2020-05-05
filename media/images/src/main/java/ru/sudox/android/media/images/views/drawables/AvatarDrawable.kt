@@ -42,7 +42,7 @@ class AvatarDrawable(
     }
 
     override fun getOpacity(): Int {
-        return PixelFormat.OPAQUE
+        return PixelFormat.UNKNOWN
     }
 
     override fun setAlpha(alpha: Int) {
