@@ -1,5 +1,6 @@
 package ru.sudox.android.messages.views
 
+import android.animation.Animator
 import android.animation.LayoutTransition
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,7 +16,6 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.graphics.withTranslation
 import androidx.core.widget.TextViewCompat.setTextAppearance
-import androidx.recyclerview.widget.DiffUtil
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.messages.R
@@ -33,11 +33,15 @@ class MessageLikesView : ViewGroup {
     private var clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
     private var likeOutlinePaint = DrawablePaint()
     private var avatarsViews = ArrayList<AvatarImageView>()
-    private var countTextView = AppCompatTextView(context).apply { this@MessageLikesView.addView(this) }
     private var marginBetweenAvatarsAndCount = 0
     private var marginBetweenAvatars = 0
     private var avatarHeight = 0
     private var avatarWidth = 0
+
+    private var countTextView = AppCompatTextView(context).apply {
+        visibility = View.GONE
+        this@MessageLikesView.addView(this)
+    }
 
     var vos: ArrayList<PeopleVO>? = null
         private set
@@ -45,7 +49,7 @@ class MessageLikesView : ViewGroup {
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messageLikesView)
 
-    @SuppressLint("Recycle")
+    @SuppressLint("Recycle", "ObjectAnimatorBinding")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.MessageLikesView, defStyleAttr, 0).use {
             avatarWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarWidth)
@@ -74,9 +78,7 @@ class MessageLikesView : ViewGroup {
             clipPaint.strokeWidth = marginBetweenAvatars.toFloat()
             clipPaint.color = clipColor
         }
-    }
 
-    init {
         layoutTransition = LayoutTransition()
     }
 
@@ -167,15 +169,36 @@ class MessageLikesView : ViewGroup {
         val needRemove = min(this.vos?.size ?: 0, 3) - firstLikesCount
 
         if (needRemove > 0) {
+            var animator: Animator? = null
+
+            if (needRemove == avatarsViews.size) {
+                animator = layoutTransition.getAnimator(LayoutTransition.CHANGE_DISAPPEARING)
+                layoutTransition.setAnimator(LayoutTransition.CHANGE_DISAPPEARING, null)
+            }
+
             repeat(needRemove) {
                 removeView(avatarsViews.removeAt(avatarsViews.size - 1))
+            }
+
+            if (animator != null) {
+                layoutTransition.setAnimator(LayoutTransition.CHANGE_DISAPPEARING, animator)
             }
         } else if (needRemove < 0) {
             repeat(abs(needRemove)) {
                 val view = createAvatarView()
+                var animator: Animator? = null
+
+                if (avatarsViews.isEmpty()) {
+                    animator = layoutTransition.getAnimator(LayoutTransition.CHANGE_APPEARING)
+                    layoutTransition.setAnimator(LayoutTransition.CHANGE_APPEARING, null)
+                }
 
                 avatarsViews.add(view)
                 addView(view)
+
+                if (animator != null) {
+                    layoutTransition.setAnimator(LayoutTransition.CHANGE_APPEARING, animator)
+                }
             }
         }
 
