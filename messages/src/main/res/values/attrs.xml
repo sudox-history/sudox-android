@@ -18,6 +18,7 @@
         <attr name="likeIconWidth" format="dimension" />
         <attr name="likeIconTint" format="color" />
         <attr name="countTextAppearance" format="dimension" />
+        <attr name="avatarClipWidth" format="dimension" />
         <attr name="clipColor" format="color" />
     </declare-styleable>
 

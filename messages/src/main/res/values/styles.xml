@@ -31,5 +31,6 @@
         <item name="likeIconWidth">18dp</item>
         <item name="likeIconTint">#ED2939</item>
         <item name="clipColor">@color/background_color</item>
+        <item name="avatarClipWidth">2dp</item>
     </style>
 </resources>

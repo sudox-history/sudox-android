@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
@@ -25,14 +24,14 @@ class MessageLikesView : ViewGroup {
     private var avatarHeight = 0
     private var marginBetweenAvatars = 0
     private var likePaint = DrawablePaint()
+    private var likeOutlinePaint = DrawablePaint()
+    private var avatarsViews = ArrayList<AvatarImageView>()
     private var clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
     }
 
     var vos: ArrayList<PeopleVO>? = null
         private set
-
-    private var avatarsViews = ArrayList<AvatarImageView>()
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messageLikesView)
@@ -44,7 +43,9 @@ class MessageLikesView : ViewGroup {
             avatarHeight = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarHeight)
             marginBetweenAvatars = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_marginBetweenAvatars)
 
-            clipPaint.color = it.getColorOrThrow(R.styleable.MessageLikesView_clipColor)
+            val clipColor = it.getColorOrThrow(R.styleable.MessageLikesView_clipColor)
+
+            clipPaint.color = clipColor
             clipPaint.strokeWidth = marginBetweenAvatars.toFloat()
 
             likePaint.readFromTypedArray(
@@ -54,6 +55,20 @@ class MessageLikesView : ViewGroup {
                     R.styleable.MessageLikesView_likeIconWidth,
                     R.styleable.MessageLikesView_likeIconTint
             )
+
+            likeOutlinePaint.readFromTypedArray(
+                    it,
+                    R.styleable.MessageLikesView_likeIconDrawable,
+                    R.styleable.MessageLikesView_likeIconHeight,
+                    R.styleable.MessageLikesView_likeIconWidth,
+                    0
+            )
+
+            val avatarClipWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarClipWidth)
+
+            likeOutlinePaint.tintColor = clipColor
+            likeOutlinePaint.height += avatarClipWidth * 2
+            likeOutlinePaint.width += avatarClipWidth * 2
         }
     }
 
@@ -66,7 +81,6 @@ class MessageLikesView : ViewGroup {
                 paddingLeft +
                 (avatarsViews.size - 1) *
                 marginBetweenAvatars
-
 
         val needHeight = getAvatarHeight() +
                 paddingTop +
@@ -113,11 +127,16 @@ class MessageLikesView : ViewGroup {
                 val yRadius = (it.bottom - it.top) / 2F
                 val yCenter = (it.bottom + it.top) / 2F
 
-                val x = xCenter + (cos(Math.PI / 4) * xRadius).toFloat() - likePaint.width / 2
-                val y = yCenter + (sin(Math.PI / 4) * yRadius).toFloat() - likePaint.height / 2
+                val pointX = xCenter + (cos(Math.PI / 4) * xRadius).toFloat()
+                val pointY =  yCenter + (sin(Math.PI / 4) * yRadius).toFloat()
 
                 canvas.save()
-                canvas.translate(x, y)
+                canvas.translate(pointX - likeOutlinePaint.width / 2, pointY - likeOutlinePaint.height / 2)
+                likeOutlinePaint.draw(canvas)
+                canvas.restore()
+
+                canvas.save()
+                canvas.translate(pointX - likePaint.width / 2, pointY - likePaint.height / 2)
                 likePaint.draw(canvas)
                 canvas.restore()
             }
