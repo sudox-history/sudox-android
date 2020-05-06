@@ -32,7 +32,6 @@ class DrawablePaint {
         }
 
     var width = 0
-        get() = drawable?.bounds?.width() ?: 0
         set(value) {
             field = value
 
@@ -44,7 +43,6 @@ class DrawablePaint {
         }
 
     var height = 0
-        get() = drawable?.bounds?.height() ?: 0
         set(value) {
             field = value
 
@@ -57,6 +55,8 @@ class DrawablePaint {
 
     var drawable: Drawable? = null
         set(value) {
+            field = value
+
             if (value != null) {
                 if (isTintSet) {
                     tintColor = tintColor
@@ -67,8 +67,6 @@ class DrawablePaint {
                     width = width
                 }
             }
-
-            field = value
         }
 
     /**

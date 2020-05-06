@@ -5,11 +5,15 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
+import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.graphics.withTranslation
+import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.messages.R
@@ -17,20 +21,21 @@ import ru.sudox.android.people.common.vos.PeopleVO
 import ru.sudox.design.common.paint.DrawablePaint
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sin
 
 class MessageLikesView : ViewGroup {
 
-    private var avatarWidth = 0
-    private var avatarHeight = 0
-    private var marginBetweenAvatars = 0
-    private var avatarsViews = ArrayList<AvatarImageView>()
-    private var clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.STROKE
-    }
-
     private var likePaint = DrawablePaint()
+    private var clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
     private var likeOutlinePaint = DrawablePaint()
+    private var avatarsViews = ArrayList<AvatarImageView>()
+    private var countTextView = AppCompatTextView(context).apply { this@MessageLikesView.addView(this) }
+    private var marginBetweenAvatarsAndCount = 0
+    private var marginBetweenAvatars = 0
+    private var avatarHeight = 0
+    private var avatarWidth = 0
 
     var vos: ArrayList<PeopleVO>? = null
         private set
@@ -44,11 +49,8 @@ class MessageLikesView : ViewGroup {
             avatarWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarWidth)
             avatarHeight = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarHeight)
             marginBetweenAvatars = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_marginBetweenAvatars)
-
-            val clipColor = it.getColorOrThrow(R.styleable.MessageLikesView_clipColor)
-
-            clipPaint.strokeWidth = marginBetweenAvatars.toFloat()
-            clipPaint.color = clipColor
+            marginBetweenAvatarsAndCount = it.getDimensionPixelSizeOrThrow(R.styleable.HorizontalPeopleItemView_marginBetweenAvatarAndTexts)
+            setTextAppearance(countTextView, it.getResourceIdOrThrow(R.styleable.MessageLikesView_countTextAppearance))
 
             likePaint.readFromTypedArray(typedArray = it,
                     drawableRes = R.styleable.MessageLikesView_likeIconDrawable,
@@ -56,43 +58,62 @@ class MessageLikesView : ViewGroup {
                     widthRes = R.styleable.MessageLikesView_likeIconWidth,
                     tintColorRes = R.styleable.MessageLikesView_likeIconTint)
 
-            likeOutlinePaint.apply {
-                val avatarClipWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarClipWidth)
+            likeOutlinePaint.readFromTypedArray(typedArray = it,
+                    drawableRes = R.styleable.MessageLikesView_likeIconDrawable,
+                    heightRes = R.styleable.MessageLikesView_likeIconHeight,
+                    widthRes = R.styleable.MessageLikesView_likeIconWidth)
 
-                readFromTypedArray(typedArray = it,
-                        drawableRes = R.styleable.MessageLikesView_likeIconDrawable,
-                        heightRes = R.styleable.MessageLikesView_likeIconHeight,
-                        widthRes = R.styleable.MessageLikesView_likeIconWidth)
+            val clipColor = it.getColorOrThrow(R.styleable.MessageLikesView_clipColor)
+            val avatarClipWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarClipWidth)
 
-                tintColor = clipColor
-                height += avatarClipWidth * 2
-                width += avatarClipWidth * 2
-            }
+            likeOutlinePaint.width += avatarClipWidth * 2
+            likeOutlinePaint.height += avatarClipWidth * 2
+            likeOutlinePaint.tintColor = clipColor
+            clipPaint.strokeWidth = marginBetweenAvatars.toFloat()
+            clipPaint.color = clipColor
         }
     }
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
+        measureChild(countTextView, widthSpec, heightSpec)
+
         val avatarsWidth = (avatarsViews.sumBy {
             measureChild(it, widthSpec, heightSpec)
             it.measuredWidth
         } + getAvatarWidth()) / 2
 
-        val needWidth = (avatarsViews.size - 1) * marginBetweenAvatars + avatarsWidth + paddingLeft + paddingRight
-        val needHeight = getAvatarHeight() + paddingTop + paddingBottom
+        var needWidth = (avatarsViews.size - 1) * marginBetweenAvatars + avatarsWidth + paddingLeft + paddingRight
+        var needHeight = paddingTop + paddingBottom
+
+        if (countTextView.visibility == View.VISIBLE) {
+            needWidth += marginBetweenAvatarsAndCount + countTextView.measuredWidth
+            needHeight += max(getAvatarHeight(), countTextView.measuredHeight)
+        } else {
+            needHeight += getAvatarHeight()
+        }
 
         setMeasuredDimension(needWidth, needHeight)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        val topBorder = paddingTop
-        val bottomBorder = topBorder + getAvatarHeight()
-        var rightBorder = measuredWidth - paddingRight
-        var leftBorder: Int
+        val avatarTopBorder = paddingTop
+        val avatarBottomBorder = avatarTopBorder + getAvatarHeight()
+        var avatarRightBorder = measuredWidth - paddingRight
+        var avatarLeftBorder = 0
 
         avatarsViews.forEach {
-            leftBorder = rightBorder - it.measuredWidth
-            it.layout(leftBorder, topBorder, rightBorder, bottomBorder)
-            rightBorder = leftBorder + it.measuredWidth / 2 - marginBetweenAvatars
+            avatarLeftBorder = avatarRightBorder - it.measuredWidth
+            it.layout(avatarLeftBorder, avatarTopBorder, avatarRightBorder, avatarBottomBorder)
+            avatarRightBorder = avatarLeftBorder + it.measuredWidth / 2 - marginBetweenAvatars
+        }
+
+        if (countTextView.visibility == View.VISIBLE) {
+            val topBorder = (measuredHeight - paddingTop) / 2 - countTextView.measuredHeight / 2
+            val rightBorder = avatarLeftBorder - marginBetweenAvatarsAndCount
+            val leftBorder = rightBorder - countTextView.measuredWidth
+            val bottomBorder = topBorder + countTextView.measuredHeight
+
+            countTextView.layout(leftBorder, topBorder, rightBorder, bottomBorder)
         }
     }
 
@@ -124,8 +145,18 @@ class MessageLikesView : ViewGroup {
         }
     }
 
+    /**
+     * Выставляет VO в данную View.
+     * NB! Все изменения будут обработаны без анимаций.
+     *
+     * @param vos ViewObject'ы лайков
+     * @param glide Glide для загрузки изображений.
+     */
+    @SuppressLint("SetTextI18n")
     fun setVOs(vos: ArrayList<PeopleVO>?, glide: GlideRequests) {
-        val needRemove = (this.vos?.size ?: 0) - (vos?.size ?: 0)
+        val likesCount = vos?.size ?: 0
+        val firstLikesCount = min(likesCount, 3)
+        val needRemove = (this.vos?.size ?: 0) - firstLikesCount
 
         if (needRemove > 0) {
             repeat(needRemove) {
@@ -140,8 +171,15 @@ class MessageLikesView : ViewGroup {
             }
         }
 
-        vos?.forEachIndexed { index, it ->
-            avatarsViews[index].setVO(it, glide)
+        if (likesCount > 3) {
+            countTextView.visibility = View.VISIBLE
+            countTextView.text = "+${likesCount - 3}"
+        } else {
+            countTextView.visibility = View.GONE
+        }
+
+        for (i in 0 until firstLikesCount) {
+            avatarsViews[i].setVO(vos!![i], glide)
         }
 
         this.vos = vos

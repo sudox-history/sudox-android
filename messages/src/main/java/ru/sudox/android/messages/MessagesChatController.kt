@@ -34,7 +34,8 @@ class MessagesChatController : CoreController() {
             messageLikesView.setVOs(arrayListOf(
                     SimplePeopleVO(1L, "name", 1L),
                     SimplePeopleVO(1L, "name", 2L),
-                    SimplePeopleVO(1L, "name", 3L)
+                    SimplePeopleVO(1L, "name", 3L),
+                    SimplePeopleVO(1L, "MM", -1L)
             ), glide)
         }
     }
