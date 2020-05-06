@@ -20,6 +20,7 @@ class DrawablePaint {
 
     private var isTintSet = false
     private var isSizeSet = false
+    private var isAlphaSet = false
     private var isDrawableMutated = false
 
     var tintColor = 0
@@ -53,6 +54,17 @@ class DrawablePaint {
             }
         }
 
+    var alpha = 0
+        set(value) {
+            field = value
+
+            if (drawable?.alpha != value) {
+                isAlphaSet = true
+                mutateDrawableIfNeed()
+                drawable!!.alpha = value
+            }
+        }
+
     var drawable: Drawable? = null
         set(value) {
             field = value
@@ -65,6 +77,10 @@ class DrawablePaint {
                 if (isSizeSet) {
                     height = height
                     width = width
+                }
+
+                if (isAlphaSet) {
+                    alpha = alpha
                 }
             }
         }

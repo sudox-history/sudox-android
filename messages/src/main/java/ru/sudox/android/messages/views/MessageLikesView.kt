@@ -1,5 +1,6 @@
 package ru.sudox.android.messages.views
 
+import android.animation.LayoutTransition
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
@@ -14,6 +15,7 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.graphics.withTranslation
 import androidx.core.widget.TextViewCompat.setTextAppearance
+import androidx.recyclerview.widget.DiffUtil
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.messages.R
@@ -74,6 +76,10 @@ class MessageLikesView : ViewGroup {
         }
     }
 
+    init {
+        layoutTransition = LayoutTransition()
+    }
+
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         measureChild(countTextView, widthSpec, heightSpec)
 
@@ -101,10 +107,12 @@ class MessageLikesView : ViewGroup {
         var avatarRightBorder = measuredWidth - paddingRight
         var avatarLeftBorder = 0
 
-        avatarsViews.forEach {
-            avatarLeftBorder = avatarRightBorder - it.measuredWidth
-            it.layout(avatarLeftBorder, avatarTopBorder, avatarRightBorder, avatarBottomBorder)
-            avatarRightBorder = avatarLeftBorder + it.measuredWidth / 2 - marginBetweenAvatars
+        for (i in avatarsViews.lastIndex downTo 0) {
+            val view = avatarsViews[i]
+
+            avatarLeftBorder = avatarRightBorder - view.measuredWidth
+            view.layout(avatarLeftBorder, avatarTopBorder, avatarRightBorder, avatarBottomBorder)
+            avatarRightBorder = avatarLeftBorder + view.measuredWidth / 2 - marginBetweenAvatars
         }
 
         if (countTextView.visibility == View.VISIBLE) {
@@ -120,28 +128,28 @@ class MessageLikesView : ViewGroup {
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
 
-        avatarsViews.forEachIndexed { index, it ->
-            if (index == avatarsViews.lastIndex) {
-                return@forEachIndexed
-            } else if (index == 0) {
-                val pointX = (it.right + it.left) / 2F + (cos(Math.PI / 4) * (it.right - it.left) / 2F).toFloat()
-                val pointY = (it.bottom + it.top) / 2F + (sin(Math.PI / 4) * (it.bottom - it.top) / 2F).toFloat()
+        if (avatarsViews.isNotEmpty()) {
+            val last = avatarsViews.last()
+            val pointX = (last.right + last.left) / 2F + (cos(Math.PI / 4) * (last.right - last.left) / 2F).toFloat()
+            val pointY = (last.bottom + last.top) / 2F + (sin(Math.PI / 4) * (last.bottom - last.top) / 2F).toFloat()
 
-                canvas.withTranslation(x = pointX - likeOutlinePaint.width / 2, y = pointY - likeOutlinePaint.height / 2) {
-                    likeOutlinePaint.draw(canvas)
-                }
-
-                canvas.withTranslation(x = pointX - likePaint.width / 2, y = pointY - likePaint.height / 2) {
-                    likePaint.draw(canvas)
-                }
+            canvas.withTranslation(x = pointX - likeOutlinePaint.width / 2, y = pointY - likeOutlinePaint.height / 2) {
+                likeOutlinePaint.draw(canvas)
             }
 
-            val leftBorder = it.left.toFloat()
-            val topBorder = it.top.toFloat() - clipPaint.strokeWidth / 2
-            val rightBorder = it.right.toFloat()
-            val bottomBorder = it.bottom.toFloat() + clipPaint.strokeWidth / 2
+            canvas.withTranslation(x = pointX - likePaint.width / 2, y = pointY - likePaint.height / 2) {
+                likePaint.draw(canvas)
+            }
 
-            canvas.drawArc(leftBorder, topBorder, rightBorder, bottomBorder, 90F, 180F, false, clipPaint)
+            for (i in avatarsViews.lastIndex downTo 0) {
+                val view = avatarsViews[i]
+                val leftBorder = view.left.toFloat()
+                val topBorder = view.top.toFloat() - clipPaint.strokeWidth / 2
+                val rightBorder = view.right.toFloat()
+                val bottomBorder = view.bottom.toFloat() + clipPaint.strokeWidth / 2
+
+                canvas.drawArc(leftBorder, topBorder, rightBorder, bottomBorder, 90F, 180F, false, clipPaint)
+            }
         }
     }
 
@@ -156,7 +164,7 @@ class MessageLikesView : ViewGroup {
     fun setVOs(vos: ArrayList<PeopleVO>?, glide: GlideRequests) {
         val likesCount = vos?.size ?: 0
         val firstLikesCount = min(likesCount, 3)
-        val needRemove = (this.vos?.size ?: 0) - firstLikesCount
+        val needRemove = min(this.vos?.size ?: 0, 3) - firstLikesCount
 
         if (needRemove > 0) {
             repeat(needRemove) {
@@ -167,7 +175,7 @@ class MessageLikesView : ViewGroup {
                 val view = createAvatarView()
 
                 avatarsViews.add(view)
-                addView(view, 0)
+                addView(view)
             }
         }
 

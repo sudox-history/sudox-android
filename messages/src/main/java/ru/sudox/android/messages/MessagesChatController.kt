@@ -1,6 +1,7 @@
 package ru.sudox.android.messages
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
 import ru.sudox.android.core.CoreController
@@ -20,23 +21,68 @@ class MessagesChatController : CoreController() {
 
         return MessageItemView(activity!!).apply {
 //            Handler().postDelayed({
-//                messageLikesView.addLike(SimplePeopleVO(1L, "name", 1L), glide)
+//                messageLikesView.addVO(SimplePeopleVO(1L, "name", 1L), glide)
 //            }, 2000L)
-//
+
 //            Handler().postDelayed({
-//                messageLikesView.addLike(SimplePeopleVO(1L, "name", 2L), glide)
+//                messageLikesView.addVO(SimplePeopleVO(1L, "name", 2L), glide)
+//                messageLikesView.addVO(SimplePeopleVO(1L, "name", 3L), glide)
 //            }, 4000L)
 //
-//            Handler().postDelayed({
-//                messageLikesView.addLike(SimplePeopleVO(1L, "name", 3L), glide)
-//            }, 6000L)
+            Handler().postDelayed({
+                messageLikesView.setVOs(arrayListOf(
+                        SimplePeopleVO(1L, "name", 1L)
+                ), glide)
+            }, 1000L)
 
-            messageLikesView.setVOs(arrayListOf(
-                    SimplePeopleVO(1L, "name", 1L),
-                    SimplePeopleVO(1L, "name", 2L),
-                    SimplePeopleVO(1L, "name", 3L),
-                    SimplePeopleVO(1L, "MM", -1L)
-            ), glide)
+            Handler().postDelayed({
+                messageLikesView.setVOs(arrayListOf(
+                        SimplePeopleVO(1L, "name", 1L),
+                        SimplePeopleVO(1L, "name", 2L)
+                ), glide)
+            }, 3000L)
+
+            Handler().postDelayed({
+                messageLikesView.setVOs(arrayListOf(
+                        SimplePeopleVO(1L, "name", 1L),
+                        SimplePeopleVO(1L, "name", 2L),
+                        SimplePeopleVO(1L, "name", 3L)
+                ), glide)
+            }, 5000L)
+
+            Handler().postDelayed({
+                messageLikesView.setVOs(arrayListOf(
+                        SimplePeopleVO(1L, "name", 1L),
+                        SimplePeopleVO(1L, "name", 2L),
+                        SimplePeopleVO(1L, "name", 3L),
+                        SimplePeopleVO(1L, "name", 3L)
+                ), glide)
+            }, 7000L)
+
+            Handler().postDelayed({
+                messageLikesView.setVOs(arrayListOf(
+                        SimplePeopleVO(1L, "name", 1L),
+                        SimplePeopleVO(1L, "name", 2L),
+                        SimplePeopleVO(1L, "name", 3L)
+                ), glide)
+            }, 9000L)
+
+            Handler().postDelayed({
+                messageLikesView.setVOs(arrayListOf(
+                        SimplePeopleVO(1L, "name", 1L),
+                        SimplePeopleVO(1L, "name", 2L)
+                ), glide)
+            }, 11000L)
+
+            Handler().postDelayed({
+                messageLikesView.setVOs(arrayListOf(
+                        SimplePeopleVO(1L, "name", 1L)
+                ), glide)
+            }, 13000L)
+
+            Handler().postDelayed({
+                messageLikesView.setVOs(null, glide)
+            }, 15000L)
         }
     }
 }
