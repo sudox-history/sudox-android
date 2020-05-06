@@ -1,6 +1,7 @@
 package ru.sudox.android.media.images.views
 
 import android.content.Context
+import android.graphics.Canvas
 import android.util.AttributeSet
 import kotlin.math.min
 
@@ -16,7 +17,7 @@ open class GlideCircleImageView : GlideImageView {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
-        val radius = min(measuredWidth, measuredHeight) / 2F
+        val radius = getRadius()
 
         topLeftCropRadius = radius
         topRightCropRadius = radius
@@ -24,5 +25,9 @@ open class GlideCircleImageView : GlideImageView {
         bottomRightCropRadius = radius
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    }
+
+    fun getRadius(): Float {
+        return min(measuredWidth - paddingRight - paddingLeft, measuredHeight - paddingTop - paddingBottom) / 2F
     }
 }

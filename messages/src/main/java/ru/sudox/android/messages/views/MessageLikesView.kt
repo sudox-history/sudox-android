@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.graphics.Path
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ class MessageLikesView : ViewGroup {
 
     private var likePaint = DrawablePaint()
     private var clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
+    private var avatarPath = Path()
     private var likeOutlinePaint = DrawablePaint()
     private var avatarsViews = ArrayList<AvatarImageView>()
     private var marginBetweenAvatarsAndCount = 0
@@ -142,16 +144,6 @@ class MessageLikesView : ViewGroup {
             canvas.withTranslation(x = pointX - likePaint.width / 2, y = pointY - likePaint.height / 2) {
                 likePaint.draw(canvas)
             }
-
-            for (i in avatarsViews.lastIndex downTo 0) {
-                val view = avatarsViews[i]
-                val leftBorder = view.left.toFloat()
-                val topBorder = view.top.toFloat() - clipPaint.strokeWidth / 2
-                val rightBorder = view.right.toFloat()
-                val bottomBorder = view.bottom.toFloat() + clipPaint.strokeWidth / 2
-
-                canvas.drawArc(leftBorder, topBorder, rightBorder, bottomBorder, 90F, 180F, false, clipPaint)
-            }
         }
     }
 
@@ -194,7 +186,7 @@ class MessageLikesView : ViewGroup {
                 }
 
                 avatarsViews.add(view)
-                addView(view)
+                addView(view, 0)
 
                 if (animator != null) {
                     layoutTransition.setAnimator(LayoutTransition.CHANGE_APPEARING, animator)
@@ -210,7 +202,21 @@ class MessageLikesView : ViewGroup {
         }
 
         for (i in 0 until firstLikesCount) {
-            avatarsViews[i].setVO(vos!![i], glide)
+            avatarsViews[i].let { view ->
+                view.maskCallback = {
+                    if (i in 0 until avatarsViews.lastIndex) {
+                        val centerX = (view.measuredWidth + marginBetweenAvatars).toFloat()
+                        val centerY = view.measuredHeight / 2F
+                        val radius = view.getRadius() + marginBetweenAvatars
+
+                        avatarPath.reset()
+                        avatarPath.addCircle(centerX, centerY, radius, Path.Direction.CW)
+                        it.op(avatarPath, Path.Op.DIFFERENCE)
+                    }
+                }
+
+                view.setVO(vos!![i], glide)
+            }
         }
 
         this.vos = vos

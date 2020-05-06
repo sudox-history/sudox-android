@@ -223,10 +223,7 @@ class AvatarImageView : GlideCircleImageView {
     }
 
     override fun onDraw(canvas: Canvas) {
-        canvas.save()
-        canvas.clipRect(0, 0, measuredWidth, measuredHeight)
         super.onDraw(canvas)
-        canvas.restore()
 
         if (isIndicatorShowing()) {
             val rxY = min(indicatorRect.width(), indicatorRect.height()) / 2

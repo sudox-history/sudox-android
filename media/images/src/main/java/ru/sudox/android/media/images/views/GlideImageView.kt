@@ -3,6 +3,7 @@ package ru.sudox.android.media.images.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Path
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.TransitionDrawable
@@ -24,9 +25,12 @@ import ru.sudox.design.common.views.RoundedView
 const val NOT_SHOWING_IMAGE_ID = -1L
 
 /**
- * ImageView с возможность загрузки изображения по ID с сервера
+ * ImageView с возможность загрузки изображения по ID с сервера.
+ * Также поддерживает установку произвольных масок.
  */
 open class GlideImageView : AppCompatImageView, RoundedView {
+
+    var maskCallback: ((Path) -> (Unit))? = null
 
     override var topLeftCropRadius = 0F
         set(value) {
