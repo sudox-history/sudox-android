@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.use
+import androidx.core.graphics.withTranslation
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.messages.R
@@ -23,12 +24,13 @@ class MessageLikesView : ViewGroup {
     private var avatarWidth = 0
     private var avatarHeight = 0
     private var marginBetweenAvatars = 0
-    private var likePaint = DrawablePaint()
-    private var likeOutlinePaint = DrawablePaint()
     private var avatarsViews = ArrayList<AvatarImageView>()
     private var clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
     }
+
+    private var likePaint = DrawablePaint()
+    private var likeOutlinePaint = DrawablePaint()
 
     var vos: ArrayList<PeopleVO>? = null
         private set
@@ -45,46 +47,38 @@ class MessageLikesView : ViewGroup {
 
             val clipColor = it.getColorOrThrow(R.styleable.MessageLikesView_clipColor)
 
-            clipPaint.color = clipColor
             clipPaint.strokeWidth = marginBetweenAvatars.toFloat()
+            clipPaint.color = clipColor
 
-            likePaint.readFromTypedArray(
-                    it,
-                    R.styleable.MessageLikesView_likeIconDrawable,
-                    R.styleable.MessageLikesView_likeIconHeight,
-                    R.styleable.MessageLikesView_likeIconWidth,
-                    R.styleable.MessageLikesView_likeIconTint
-            )
+            likePaint.readFromTypedArray(typedArray = it,
+                    drawableRes = R.styleable.MessageLikesView_likeIconDrawable,
+                    heightRes = R.styleable.MessageLikesView_likeIconHeight,
+                    widthRes = R.styleable.MessageLikesView_likeIconWidth,
+                    tintColorRes = R.styleable.MessageLikesView_likeIconTint)
 
-            likeOutlinePaint.readFromTypedArray(
-                    it,
-                    R.styleable.MessageLikesView_likeIconDrawable,
-                    R.styleable.MessageLikesView_likeIconHeight,
-                    R.styleable.MessageLikesView_likeIconWidth,
-                    0
-            )
+            likeOutlinePaint.apply {
+                val avatarClipWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarClipWidth)
 
-            val avatarClipWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarClipWidth)
+                readFromTypedArray(typedArray = it,
+                        drawableRes = R.styleable.MessageLikesView_likeIconDrawable,
+                        heightRes = R.styleable.MessageLikesView_likeIconHeight,
+                        widthRes = R.styleable.MessageLikesView_likeIconWidth)
 
-            likeOutlinePaint.tintColor = clipColor
-            likeOutlinePaint.height += avatarClipWidth * 2
-            likeOutlinePaint.width += avatarClipWidth * 2
+                tintColor = clipColor
+                height += avatarClipWidth * 2
+                width += avatarClipWidth * 2
+            }
         }
     }
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
-        val needWidth = avatarsViews.sumBy {
+        val avatarsWidth = (avatarsViews.sumBy {
             measureChild(it, widthSpec, heightSpec)
-            it.measuredWidth / 2
-        } + getAvatarWidth() / 2 +
-                paddingRight +
-                paddingLeft +
-                (avatarsViews.size - 1) *
-                marginBetweenAvatars
+            it.measuredWidth
+        } + getAvatarWidth()) / 2
 
-        val needHeight = getAvatarHeight() +
-                paddingTop +
-                paddingBottom
+        val needWidth = (avatarsViews.size - 1) * marginBetweenAvatars + avatarsWidth + paddingLeft + paddingRight
+        val needHeight = getAvatarHeight() + paddingTop + paddingBottom
 
         setMeasuredDimension(needWidth, needHeight)
     }
@@ -108,38 +102,25 @@ class MessageLikesView : ViewGroup {
         avatarsViews.forEachIndexed { index, it ->
             if (index == avatarsViews.lastIndex) {
                 return@forEachIndexed
+            } else if (index == 0) {
+                val pointX = (it.right + it.left) / 2F + (cos(Math.PI / 4) * (it.right - it.left) / 2F).toFloat()
+                val pointY = (it.bottom + it.top) / 2F + (sin(Math.PI / 4) * (it.bottom - it.top) / 2F).toFloat()
+
+                canvas.withTranslation(x = pointX - likeOutlinePaint.width / 2, y = pointY - likeOutlinePaint.height / 2) {
+                    likeOutlinePaint.draw(canvas)
+                }
+
+                canvas.withTranslation(x = pointX - likePaint.width / 2, y = pointY - likePaint.height / 2) {
+                    likePaint.draw(canvas)
+                }
             }
 
-            canvas.drawArc(
-                    it.left.toFloat(),
-                    it.top.toFloat() - clipPaint.strokeWidth / 2,
-                    it.right.toFloat(),
-                    it.bottom.toFloat() + clipPaint.strokeWidth / 2,
-                    90F,
-                    180F,
-                    false,
-                    clipPaint
-            )
+            val leftBorder = it.left.toFloat()
+            val topBorder = it.top.toFloat() - clipPaint.strokeWidth / 2
+            val rightBorder = it.right.toFloat()
+            val bottomBorder = it.bottom.toFloat() + clipPaint.strokeWidth / 2
 
-            if (index == 0) {
-                val xRadius = (it.right - it.left) / 2F
-                val xCenter = (it.right + it.left) / 2F
-                val yRadius = (it.bottom - it.top) / 2F
-                val yCenter = (it.bottom + it.top) / 2F
-
-                val pointX = xCenter + (cos(Math.PI / 4) * xRadius).toFloat()
-                val pointY =  yCenter + (sin(Math.PI / 4) * yRadius).toFloat()
-
-                canvas.save()
-                canvas.translate(pointX - likeOutlinePaint.width / 2, pointY - likeOutlinePaint.height / 2)
-                likeOutlinePaint.draw(canvas)
-                canvas.restore()
-
-                canvas.save()
-                canvas.translate(pointX - likePaint.width / 2, pointY - likePaint.height / 2)
-                likePaint.draw(canvas)
-                canvas.restore()
-            }
+            canvas.drawArc(leftBorder, topBorder, rightBorder, bottomBorder, 90F, 180F, false, clipPaint)
         }
     }
 
@@ -175,7 +156,7 @@ class MessageLikesView : ViewGroup {
     }
 
     private fun getAvatarWidth(): Int {
-        return avatarsViews.firstOrNull()?.measuredHeight ?: 0
+        return avatarsViews.firstOrNull()?.measuredWidth ?: 0
     }
 
     private fun getAvatarHeight(): Int {
