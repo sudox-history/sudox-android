@@ -56,7 +56,7 @@ class AvatarImageView : GlideCircleImageView {
             avatarTextPaint.color = it.getColorOrThrow(R.styleable.AvatarImageView_avatarTextColor)
             avatarTextPaint.typeface = it.getFontOrThrow(R.styleable.AvatarImageView_avatarTextFontFamily)
             avatarHeightPercent = it.getFloatOrThrow(R.styleable.AvatarImageView_avatarHeightPercent)
-            badgeDrawable = BadgeDrawable(context, true, it.getColorOrThrow(R.styleable.AvatarImageView_indicatorColor))
+            badgeDrawable = BadgeDrawable(context, true, it.getColorOrThrow(R.styleable.AvatarImageView_badgeColor))
         }
 
         maskCallbacks.push { _, path ->

@@ -9,22 +9,10 @@
     <style name="Sudox.AvatarImageView" parent="Sudox.GlideImageView">
         <item name="android:scaleType">fitStart</item>
 
+        <item name="badgeColor">@color/avatarimageview_badge_color</item>
         <item name="avatarColors">@array/avatarimageview_avatar_colors</item>
         <item name="avatarTextColor">#FFFFFF</item>
         <item name="avatarTextFontFamily">@font/opensans_bold</item>
         <item name="avatarHeightPercent">0.3</item>
-
-        <item name="indicatorCropRadiusDiff">@dimen/avatarimageview_indicator_crop_radius_diff</item>
-        <item name="indicatorCropColor">@color/avatarimageview_indicator_crop_color</item>
-        <item name="indicatorRadius">@dimen/avatarimageview_indicator_radius</item>
-        <item name="indicatorColor">@color/avatarimageview_indicator_color</item>
-
-        <item name="indicatorNumberTextSize">@dimen/avatarimageview_indicator_number_text_size</item>
-        <item name="indicatorNumberTextColor">@color/avatarimageview_indicator_number_text_color</item>
-        <item name="indicatorNumberTextFontFamily">@font/opensans_bold</item>
-        <item name="indicatorNumberTextPaddingTop">@dimen/avatarimageview_indicator_number_text_padding_top</item>
-        <item name="indicatorNumberTextPaddingBottom">@dimen/avatarimageview_indicator_number_text_padding_bottom</item>
-        <item name="indicatorNumberTextPaddingRight">@dimen/avatarimageview_indicator_number_text_padding_right</item>
-        <item name="indicatorNumberTextPaddingLeft">@dimen/avatarimageview_indicator_number_text_padding_left</item>
     </style>
 </resources>
