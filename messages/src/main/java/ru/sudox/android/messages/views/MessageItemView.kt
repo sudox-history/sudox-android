@@ -28,8 +28,8 @@ class MessageItemView : ViewGroup {
     private var marginBetweenTimeAndLikes = 0
     private var marginBetweenContentAndTime = 0
     private var marginBetweenContentAndStatus = 0
-    private var marginBetweenTimeAndAttachmentEnd = 0
-    private var marginBetweenTimeAndAttachmentBottom = 0
+    private var marginBetweenTimeAndMessageBorder = 0
+    private var marginBetweenTimeAndMessageBottom = 0
     private var firstMessageCorner = 0F
     private var otherMessageCorner = 0F
     private var attachmentsAdapter = MessageTemplatesAdapter()
@@ -74,8 +74,8 @@ class MessageItemView : ViewGroup {
             marginBetweenTimeAndLikes = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenTimeAndLikes)
             marginBetweenContentAndTime = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenContentAndTime)
             marginBetweenContentAndStatus = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenContentAndStatus)
-            marginBetweenTimeAndAttachmentEnd = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenTimeAndAttachmentEnd)
-            marginBetweenTimeAndAttachmentBottom = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenTimeAndAttachmentBottom)
+            marginBetweenTimeAndMessageBorder = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenTimeAndMessageBorder)
+            marginBetweenTimeAndMessageBottom = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenTimeAndMessageBottom)
             firstMessageCorner = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_firstMessageCorner).toFloat()
             otherMessageCorner = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_otherMessageCorner).toFloat()
             timeBadgeDrawable = BadgeDrawable(context, false, it.getColorOrThrow(R.styleable.MessageItemView_timeBadgeColor)).apply {
@@ -134,8 +134,12 @@ class MessageItemView : ViewGroup {
         super.dispatchDraw(canvas)
 
         if (containsOnlyAttachments()) {
-            val timeX = measuredWidth - marginBetweenTimeAndAttachmentEnd - paddingRight - timeBadgeDrawable!!.bounds.width()
-            val timeY = measuredHeight - marginBetweenTimeAndAttachmentBottom - paddingBottom - timeBadgeDrawable!!.bounds.height()
+            val timeY = measuredHeight - marginBetweenTimeAndMessageBottom - paddingBottom - timeBadgeDrawable!!.bounds.height()
+            val timeX = if (vo?.sentByMe == true) {
+                measuredWidth - paddingRight
+            } else {
+                paddingLeft + attachmentsLayout.measuredWidth
+            } - marginBetweenTimeAndMessageBorder - timeBadgeDrawable!!.bounds.width()
 
             canvas.withTranslation(x = timeX.toFloat(), y = timeY.toFloat()) {
                 timeBadgeDrawable!!.draw(canvas)

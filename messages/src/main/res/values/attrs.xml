@@ -27,8 +27,8 @@
         <attr name="marginBetweenTimeAndLikes" format="dimension" />
         <attr name="marginBetweenContentAndTime" format="dimension" />
         <attr name="marginBetweenContentAndStatus" format="dimension" />
-        <attr name="marginBetweenTimeAndAttachmentEnd" format="dimension" />
-        <attr name="marginBetweenTimeAndAttachmentBottom" format="dimension" />
+        <attr name="marginBetweenTimeAndMessageBorder" format="dimension" />
+        <attr name="marginBetweenTimeAndMessageBottom" format="dimension" />
         <attr name="firstMessageCorner" format="dimension" />
         <attr name="otherMessageCorner" format="dimension" />
         <attr name="timeBadgeAlpha" format="float" />
