@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="badgepaint_text_size">12sp</dimen>
+    <dimen name="badgepaint_crop_width">2dp</dimen>
+    <dimen name="badgepaint_text_padding_horizontal">5dp</dimen>
+    <dimen name="badgepaint_text_padding_vertical">3dp</dimen>
+    <dimen name="badgepaint_radius">5dp</dimen>
+</resources>

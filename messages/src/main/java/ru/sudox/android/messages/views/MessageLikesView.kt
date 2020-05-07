@@ -19,6 +19,7 @@ import androidx.core.graphics.withTranslation
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.AvatarImageView
+import ru.sudox.android.media.images.views.GlideImageView
 import ru.sudox.android.messages.R
 import ru.sudox.android.people.common.vos.PeopleVO
 import ru.sudox.design.common.paint.DrawablePaint
@@ -36,9 +37,9 @@ import kotlin.math.sin
  */
 class MessageLikesView : ViewGroup {
 
+    private var avatarPath = Path()
     private var likePaint = DrawablePaint()
     private var clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
-    private var avatarPath = Path()
     private var likeOutlinePaint = DrawablePaint()
     private var avatarsViews = ArrayList<AvatarImageView>()
     private var marginBetweenAvatarsAndCount = 0
@@ -192,6 +193,7 @@ class MessageLikesView : ViewGroup {
                 }
 
                 avatarsViews.add(view)
+                view.maskCallbacks.push(::cropAvatar)
                 addView(view, 0)
 
                 if (animator != null) {
@@ -208,26 +210,22 @@ class MessageLikesView : ViewGroup {
         }
 
         for (i in 0 until firstLikesCount) {
-            avatarsViews[i].let { view ->
-                view.maskCallback = {
-                    if (i in 0 until avatarsViews.lastIndex) {
-                        val centerX = (view.measuredWidth + marginBetweenAvatars).toFloat()
-                        val centerY = view.measuredHeight / 2F
-                        val radius = view.getRadius() + marginBetweenAvatars
-
-                        avatarPath.reset()
-                        avatarPath.addCircle(centerX, centerY, radius, Path.Direction.CW)
-                        it.op(avatarPath, Path.Op.DIFFERENCE)
-                    }
-                }
-
-                view.setVO(vos!![i], glide)
-            }
+            avatarsViews[i].setVO(vos!![i], glide)
         }
 
         this.vos = vos
         requestLayout()
         invalidate()
+    }
+
+    private fun cropAvatar(view: GlideImageView, path: Path) {
+        val centerX = (view.measuredWidth + marginBetweenAvatars).toFloat()
+        val centerY = view.measuredHeight / 2F
+        val radius = (view as AvatarImageView).getRadius() + marginBetweenAvatars
+
+        avatarPath.reset()
+        avatarPath.addCircle(centerX, centerY, radius, Path.Direction.CW)
+        path.op(avatarPath, Path.Op.DIFFERENCE)
     }
 
     private fun createAvatarView(): AvatarImageView {

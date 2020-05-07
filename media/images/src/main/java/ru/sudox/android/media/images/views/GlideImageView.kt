@@ -20,6 +20,8 @@ import ru.sudox.android.media.images.transitions.FadeTransition
 import ru.sudox.android.media.images.views.drawables.GlidePlaceholderDrawable
 import ru.sudox.android.media.images.views.drawables.MaskedBitmapDrawable
 import ru.sudox.design.common.views.RoundedView
+import java.util.LinkedList
+import java.util.Stack
 
 @Suppress("unused")
 const val NOT_SHOWING_IMAGE_ID = -1L
@@ -30,7 +32,7 @@ const val NOT_SHOWING_IMAGE_ID = -1L
  */
 open class GlideImageView : AppCompatImageView, RoundedView {
 
-    var maskCallback: ((Path) -> (Unit))? = null
+    var maskCallbacks = Stack<(GlideImageView, Path) -> (Unit)>()
 
     override var topLeftCropRadius = 0F
         set(value) {

@@ -36,7 +36,7 @@ abstract class BasicDrawable(
         canvas.drawPath(path.apply {
             reset()
             addRoundRect(0F, 0F, bounds.width().toFloat(), bounds.height().toFloat(), corners, Path.Direction.CW)
-            imageView.maskCallback?.invoke(this)
+            imageView.maskCallbacks.forEach { it(imageView, this) }
         }, paint)
     }
 
