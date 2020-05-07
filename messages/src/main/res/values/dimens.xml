@@ -6,4 +6,13 @@
 
     <dimen name="chatmessagesappbarvo_avatar_width">36dp</dimen>
     <dimen name="chatmessagesappbarvo_avatar_height">36dp</dimen>
+
+    <dimen name="messagelikesview_avatar_width">19dp</dimen>
+    <dimen name="messagelikesview_avatar_height">19dp</dimen>
+    <dimen name="messagelikesview_margin_between_avatars">1dp</dimen>
+    <dimen name="messagelikesview_margin_between_avatars_and_count">3dp</dimen>
+    <dimen name="messagelikesview_like_icon_height">12dp</dimen>
+    <dimen name="messagelikesview_like_icon_width">12dp</dimen>
+    <dimen name="messagelikesview_like_icon_clip_width">1dp</dimen>
+    <dimen name="messagelikesview_count_text_size">12sp</dimen>
 </resources>

@@ -23,23 +23,23 @@
     </style>
 
     <style name="Sudox.MessageLikesView" parent="">
-        <item name="avatarWidth">56dp</item>
-        <item name="avatarHeight">56dp</item>
-        <item name="marginBetweenAvatars">3dp</item>
+        <item name="avatarWidth">@dimen/messagelikesview_avatar_width</item>
+        <item name="avatarHeight">@dimen/messagelikesview_avatar_height</item>
+        <item name="marginBetweenAvatars">@dimen/messagelikesview_margin_between_avatars</item>
         <item name="likeIconDrawable">@drawable/ic_favorite</item>
-        <item name="likeIconHeight">18dp</item>
-        <item name="likeIconWidth">18dp</item>
-        <item name="likeIconTint">#ED2939</item>
-        <item name="marginBetweenAvatarsAndCount">10dp</item>
+        <item name="likeIconHeight">@dimen/messagelikesview_like_icon_height</item>
+        <item name="likeIconWidth">@dimen/messagelikesview_like_icon_width</item>
+        <item name="likeIconTint">@color/messagelikesview_like_icon_tint</item>
+        <item name="marginBetweenAvatarsAndCount">@dimen/messagelikesview_margin_between_avatars_and_count</item>
         <item name="countTextAppearance">@style/Sudox.MessageLikesView.CountTextAppearance</item>
+        <item name="likeIconClipWidth">@dimen/messagelikesview_like_icon_clip_width</item>
         <item name="clipColor">@color/background_color</item>
-        <item name="avatarClipWidth">2dp</item>
     </style>
 
     <style name="Sudox.MessageLikesView.CountTextAppearance" parent="">
         <item name="fontFamily">@font/opensans_regular</item>
         <item name="android:fontFamily">@font/opensans_regular</item>
-        <item name="android:textColor">#000000</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/messagelikesview_count_text_color</item>
+        <item name="android:textSize">@dimen/messagelikesview_count_text_size</item>
     </style>
 </resources>

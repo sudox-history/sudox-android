@@ -3,4 +3,7 @@
     <color name="messagestitleappbarview_title_text_color">#000000</color>
     <color name="messagestitleappbarview_subtitle_inactive_text_color">#808080</color>
     <color name="messagestitleappbarview_subtitle_active_text_color">#00BFA5</color>
+
+    <color name="messagelikesview_like_icon_tint">#ED2939</color>
+    <color name="messagelikesview_count_text_color">#C5C5C5</color>
 </resources>

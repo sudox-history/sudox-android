@@ -14,6 +14,10 @@ class MessageItemView : ViewGroup {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
+    init {
+        clipChildren = false
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         measureChild(messageLikesView, widthMeasureSpec, heightMeasureSpec)
 

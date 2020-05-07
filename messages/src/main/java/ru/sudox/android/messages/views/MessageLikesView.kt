@@ -28,6 +28,12 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
 
+/**
+ * View, отображающая лайки, поставленные на сообщение.
+ *
+ * Перед использованием убедитесь, что у родительской View установлен параметр clipChildren = false,
+ * иначе возможна обрезка иконки, прикрепленной к аватарке.
+ */
 class MessageLikesView : ViewGroup {
 
     private var likePaint = DrawablePaint()
@@ -57,7 +63,7 @@ class MessageLikesView : ViewGroup {
             avatarWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarWidth)
             avatarHeight = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarHeight)
             marginBetweenAvatars = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_marginBetweenAvatars)
-            marginBetweenAvatarsAndCount = it.getDimensionPixelSizeOrThrow(R.styleable.HorizontalPeopleItemView_marginBetweenAvatarAndTexts)
+            marginBetweenAvatarsAndCount = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_marginBetweenAvatarsAndCount)
             setTextAppearance(countTextView, it.getResourceIdOrThrow(R.styleable.MessageLikesView_countTextAppearance))
 
             likePaint.readFromTypedArray(typedArray = it,
@@ -72,10 +78,10 @@ class MessageLikesView : ViewGroup {
                     widthRes = R.styleable.MessageLikesView_likeIconWidth)
 
             val clipColor = it.getColorOrThrow(R.styleable.MessageLikesView_clipColor)
-            val avatarClipWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_avatarClipWidth)
+            val likeIconClipWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageLikesView_likeIconClipWidth)
 
-            likeOutlinePaint.width += avatarClipWidth * 2
-            likeOutlinePaint.height += avatarClipWidth * 2
+            likeOutlinePaint.width += likeIconClipWidth * 2
+            likeOutlinePaint.height += likeIconClipWidth * 2
             likeOutlinePaint.tintColor = clipColor
             clipPaint.strokeWidth = marginBetweenAvatars.toFloat()
             clipPaint.color = clipColor
