@@ -1,14 +1,17 @@
 package ru.sudox.android.messages
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.updatePadding
 import ru.sudox.android.core.CoreController
+import ru.sudox.android.media.vos.MediaAttachmentVO
+import ru.sudox.android.media.vos.impls.ImageAttachmentVO
 import ru.sudox.android.messages.views.MessageItemView
+import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.android.messages.vos.MessagesChatVO
 import ru.sudox.android.messages.vos.appbar.BaseMessagesAppBarVO
-import ru.sudox.android.people.common.vos.SimplePeopleVO
+import ru.sudox.android.people.common.vos.PeopleVO
 
 const val MESSAGES_CONTROLLER_DIALOG_ID_KEY = "dialog_id"
 
@@ -20,67 +23,19 @@ class MessagesChatController : CoreController() {
         }
 
         return MessageItemView(activity!!).apply {
-            messageLikesView.setVOs(arrayListOf(
-                    SimplePeopleVO(1L, "name", 1L),
-                    SimplePeopleVO(1L, "name", 2L),
-                    SimplePeopleVO(1L, "name", 3L),
-                    SimplePeopleVO(1L, "name", 3L)
-            ), glide)
+            updatePadding(32, 32, 32, 32)
 
-//            Handler().postDelayed({
-//                messageLikesView.setVOs(arrayListOf(
-//                        SimplePeopleVO(1L, "name", 1L)
-//                ), glide)
-//            }, 1000L)
-//
-//            Handler().postDelayed({
-//                messageLikesView.setVOs(arrayListOf(
-//                        SimplePeopleVO(1L, "name", 1L),
-//                        SimplePeopleVO(1L, "name", 2L)
-//                ), glide)
-//            }, 3000L)
-//
-//            Handler().postDelayed({
-//                messageLikesView.setVOs(arrayListOf(
-//                        SimplePeopleVO(1L, "name", 1L),
-//                        SimplePeopleVO(1L, "name", 2L),
-//                        SimplePeopleVO(1L, "name", 3L)
-//                ), glide)
-//            }, 5000L)
-//
-//            Handler().postDelayed({
-//                messageLikesView.setVOs(arrayListOf(
-//                        SimplePeopleVO(1L, "name", 1L),
-//                        SimplePeopleVO(1L, "name", 2L),
-//                        SimplePeopleVO(1L, "name", 3L),
-//                        SimplePeopleVO(1L, "name", 3L)
-//                ), glide)
-//            }, 7000L)
-//
-//            Handler().postDelayed({
-//                messageLikesView.setVOs(arrayListOf(
-//                        SimplePeopleVO(1L, "name", 1L),
-//                        SimplePeopleVO(1L, "name", 2L),
-//                        SimplePeopleVO(1L, "name", 3L)
-//                ), glide)
-//            }, 9000L)
-//
-//            Handler().postDelayed({
-//                messageLikesView.setVOs(arrayListOf(
-//                        SimplePeopleVO(1L, "name", 1L),
-//                        SimplePeopleVO(1L, "name", 2L)
-//                ), glide)
-//            }, 11000L)
-//
-//            Handler().postDelayed({
-//                messageLikesView.setVOs(arrayListOf(
-//                        SimplePeopleVO(1L, "name", 1L)
-//                ), glide)
-//            }, 13000L)
-//
-//            Handler().postDelayed({
-//                messageLikesView.setVOs(null, glide)
-//            }, 15000L)
+            setVO(object : MessageVO {
+                override val id: String = ""
+                override val text: String? = null
+                override val attachments: ArrayList<MediaAttachmentVO>? = arrayListOf(ImageAttachmentVO(7L).apply {
+                    height = 387
+                    width = 620
+                })
+                override val likes: ArrayList<PeopleVO>? = null
+                override val sentByMe: Boolean = true
+                override val sentTime: Long = 0L
+            }, glide)
         }
     }
 }

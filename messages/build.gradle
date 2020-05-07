@@ -7,6 +7,7 @@ dependencies {
     implementation project(":people")
     implementation project(":design")
     implementation project(":media")
+    implementation project(":time")
     implementation project(":core")
 
     implementation libraries.core_ktx
