@@ -42,4 +42,17 @@
         <item name="android:textColor">@color/messagelikesview_count_text_color</item>
         <item name="android:textSize">@dimen/messagelikesview_count_text_size</item>
     </style>
+
+    <style name="Sudox.MessageItemView" parent="">
+        <item name="maxWidthPercent">0.75</item>
+        <item name="marginBetweenTimeAndLikes">10dp</item>
+        <item name="marginBetweenContentAndTime">6dp</item>
+        <item name="marginBetweenContentAndStatus">13dp</item>
+        <item name="marginBetweenTimeAndAttachmentEnd">10dp</item>
+        <item name="marginBetweenTimeAndAttachmentBottom">10dp</item>
+        <item name="firstMessageCorner">6dp</item>
+        <item name="otherMessageCorner">21dp</item>
+        <item name="timeBadgeColor">#000000</item>
+        <item name="timeBadgeAlpha">0.8</item>
+    </style>
 </resources>

@@ -56,7 +56,7 @@ class MessageLikesView : ViewGroup {
         private set
 
     constructor(context: Context) : this(context, null)
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messageLikesView)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messageLikesViewStyle)
 
     @SuppressLint("Recycle", "ObjectAnimatorBinding")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {

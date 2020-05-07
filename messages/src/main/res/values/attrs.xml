@@ -7,7 +7,7 @@
         <attr name="inactiveSubtitleTextColor" format="color" />
         <attr name="activeSubtitleTextColor" format="color" />
     </declare-styleable>
-    
+
     <declare-styleable name="MessageLikesView">
         <attr name="avatarWidth" format="dimension" />
         <attr name="avatarHeight" format="dimension" />
@@ -22,6 +22,20 @@
         <attr name="clipColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="MessageItemView">
+        <attr name="maxWidthPercent" format="float" />
+        <attr name="marginBetweenTimeAndLikes" format="dimension" />
+        <attr name="marginBetweenContentAndTime" format="dimension" />
+        <attr name="marginBetweenContentAndStatus" format="dimension" />
+        <attr name="marginBetweenTimeAndAttachmentEnd" format="dimension" />
+        <attr name="marginBetweenTimeAndAttachmentBottom" format="dimension" />
+        <attr name="firstMessageCorner" format="dimension" />
+        <attr name="otherMessageCorner" format="dimension" />
+        <attr name="timeBadgeAlpha" format="float" />
+        <attr name="timeBadgeColor" format="color" />
+    </declare-styleable>
+
     <attr name="messagesTitleAppBarViewStyle" format="reference" />
-    <attr name="messageLikesView" format="reference" />
+    <attr name="messageLikesViewStyle" format="reference" />
+    <attr name="messageItemViewStyle" format="reference" />
 </resources>
