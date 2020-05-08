@@ -10,8 +10,10 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getFloatOrThrow
+import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.graphics.withTranslation
+import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.media.MediaAttachmentsLayout
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.texts.LinkifiedTextView
@@ -84,6 +86,8 @@ class MessageItemView : ViewGroup {
             timeBadgeDrawable = BadgeDrawable(context, false, it.getColorOrThrow(R.styleable.MessageItemView_timeBadgeColor)).apply {
                 alpha = (it.getFloatOrThrow(R.styleable.MessageItemView_timeBadgeAlpha) * 255).toInt()
             }
+
+            setTextAppearance(statusTextView, it.getResourceIdOrThrow(R.styleable.MessageItemView_statusTextAppearance))
         }
     }
 
@@ -107,7 +111,7 @@ class MessageItemView : ViewGroup {
         }
 
         if (statusTextView.text.isNotEmpty()) {
-            needHeight += marginBetweenContentAndStatus + statusTextView.measuredWidth
+            needHeight += marginBetweenContentAndStatus + statusTextView.measuredHeight
         }
 
         if (likesView.visibility == View.VISIBLE) {
@@ -147,6 +151,23 @@ class MessageItemView : ViewGroup {
             }
 
             likesView.layout(left, contentBottom - likesView.measuredHeight, right, contentBottom)
+        }
+
+        if (statusTextView.visibility == View.VISIBLE) {
+            val top = contentBottom + marginBetweenContentAndStatus
+            val bottom = top + statusTextView.measuredHeight
+            val right: Int
+            val left: Int
+
+            if (vo?.isSentByMe == true) {
+                right = contentRight
+                left = right - statusTextView.measuredWidth
+            } else {
+                left = contentLeft
+                right = left + statusTextView.measuredWidth
+            }
+
+            statusTextView.layout(left, top, right, bottom)
         }
     }
 
@@ -221,8 +242,8 @@ class MessageItemView : ViewGroup {
             View.GONE
         }
 
-        likesView.setVOs(vo?.likes, glide)
-        likesView.visibility = if (vo?.likes != null) {
+        likesView.setVOs(vo, glide)
+        likesView.visibility = if (!vo?.likes.isNullOrEmpty()) {
             View.VISIBLE
         } else {
             View.GONE

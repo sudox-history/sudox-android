@@ -24,6 +24,7 @@
 
     <declare-styleable name="MessageItemView">
         <attr name="maxWidthPercent" format="float" />
+        <attr name="statusTextAppearance" format="reference" />
         <attr name="marginBetweenTimeAndLikes" format="dimension" />
         <attr name="marginBetweenContentAndTime" format="dimension" />
         <attr name="marginBetweenContentAndStatus" format="dimension" />

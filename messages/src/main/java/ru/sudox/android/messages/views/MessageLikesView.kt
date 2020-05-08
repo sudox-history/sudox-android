@@ -21,7 +21,7 @@ import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.media.images.views.GlideImageView
 import ru.sudox.android.messages.R
-import ru.sudox.android.people.common.vos.PeopleVO
+import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.design.common.paint.DrawablePaint
 import kotlin.math.abs
 import kotlin.math.cos
@@ -53,7 +53,7 @@ class MessageLikesView : ViewGroup {
         this@MessageLikesView.addView(this)
     }
 
-    var vos: ArrayList<PeopleVO>? = null
+    var vo: MessageVO? = null
         private set
 
     constructor(context: Context) : this(context, null)
@@ -114,26 +114,47 @@ class MessageLikesView : ViewGroup {
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        val avatarTopBorder = paddingTop
-        val avatarBottomBorder = avatarTopBorder + getAvatarHeight()
-        var avatarRightBorder = measuredWidth - paddingRight
-        var avatarLeftBorder = 0
+        val avatarTop = paddingTop
+        val countTop = (measuredHeight - paddingTop) / 2 - countTextView.measuredHeight / 2
+        val avatarBottom = avatarTop + getAvatarHeight()
+        val countBottom = countTop + countTextView.measuredHeight
 
-        for (i in avatarsViews.lastIndex downTo 0) {
-            val view = avatarsViews[i]
+        if (vo?.isSentByMe == true) {
+            var avatarRight = measuredWidth - paddingRight
+            var avatarLeft = 0
 
-            avatarLeftBorder = avatarRightBorder - view.measuredWidth
-            view.layout(avatarLeftBorder, avatarTopBorder, avatarRightBorder, avatarBottomBorder)
-            avatarRightBorder = avatarLeftBorder + view.measuredWidth / 2 - marginBetweenAvatars
-        }
+            for (i in avatarsViews.lastIndex downTo 0) {
+                val view = avatarsViews[i]
 
-        if (countTextView.visibility == View.VISIBLE) {
-            val topBorder = (measuredHeight - paddingTop) / 2 - countTextView.measuredHeight / 2
-            val rightBorder = avatarLeftBorder - marginBetweenAvatarsAndCount
-            val leftBorder = rightBorder - countTextView.measuredWidth
-            val bottomBorder = topBorder + countTextView.measuredHeight
+                avatarLeft = avatarRight - view.measuredWidth
+                view.layout(avatarLeft, avatarTop, avatarRight, avatarBottom)
+                avatarRight = avatarLeft + view.measuredWidth / 2 - marginBetweenAvatars
+            }
 
-            countTextView.layout(leftBorder, topBorder, rightBorder, bottomBorder)
+            if (countTextView.visibility == View.VISIBLE) {
+                val countRight = avatarLeft - marginBetweenAvatarsAndCount
+                val countLeft = countRight - countTextView.measuredWidth
+
+                countTextView.layout(countLeft, countTop, countRight, countBottom)
+            }
+        } else {
+            var avatarLeft = paddingLeft
+            var avatarRight = 0
+
+            for (i in avatarsViews.lastIndex downTo 0) {
+                val view = avatarsViews[i]
+
+                avatarRight = avatarLeft + view.measuredWidth
+                view.layout(avatarLeft, avatarTop, avatarRight, avatarBottom)
+                avatarLeft = avatarRight - view.measuredWidth / 2 + marginBetweenAvatars
+            }
+
+            if (countTextView.visibility == View.VISIBLE) {
+                val countLeft = avatarRight + marginBetweenAvatarsAndCount
+                val countRight = countLeft + countTextView.measuredWidth
+
+                countTextView.layout(countLeft, countTop, countRight, countBottom)
+            }
         }
     }
 
@@ -142,8 +163,14 @@ class MessageLikesView : ViewGroup {
 
         if (avatarsViews.isNotEmpty()) {
             val last = avatarsViews.last()
-            val pointX = (last.right + last.left) / 2F + (cos(Math.PI / 4) * (last.right - last.left) / 2F).toFloat()
-            val pointY = (last.bottom + last.top) / 2F + (sin(Math.PI / 4) * (last.bottom - last.top) / 2F).toFloat()
+            val angle = if (vo?.isSentByMe == true) {
+                Math.PI / 4
+            } else {
+                3 * Math.PI / 4
+            }
+
+            val pointX = (last.right + last.left) / 2F + (cos(angle) * (last.right - last.left) / 2F).toFloat()
+            val pointY = (last.bottom + last.top) / 2F + (sin(angle) * (last.bottom - last.top) / 2F).toFloat()
 
             canvas.withTranslation(x = pointX - likeOutlinePaint.width / 2, y = pointY - likeOutlinePaint.height / 2) {
                 likeOutlinePaint.draw(canvas)
@@ -159,14 +186,15 @@ class MessageLikesView : ViewGroup {
      * Выставляет VO в данную View.
      * NB! Все изменения будут обработаны без анимаций.
      *
-     * @param vos ViewObject'ы лайков
+     * @param vo ViewObject с данными для отображения
      * @param glide Glide для загрузки изображений.
      */
     @SuppressLint("SetTextI18n")
-    fun setVOs(vos: ArrayList<PeopleVO>?, glide: GlideRequests) {
-        val likesCount = vos?.size ?: 0
+    fun setVOs(vo: MessageVO?, glide: GlideRequests) {
+        val likes = vo?.likes
+        val likesCount = likes?.size ?: 0
         val firstLikesCount = min(likesCount, 3)
-        val needRemove = min(this.vos?.size ?: 0, 3) - firstLikesCount
+        val needRemove = min(this.vo?.likes?.size ?: 0, 3) - firstLikesCount
 
         if (needRemove > 0) {
             var animator: Animator? = null
@@ -198,7 +226,7 @@ class MessageLikesView : ViewGroup {
 
                 avatarsViews.add(view)
                 view.maskCallbacks.push(::cropAvatar)
-                addView(view, 0)
+                addView(view)
 
                 if (animator != null) {
                     layoutTransition.setAnimator(LayoutTransition.CHANGE_APPEARING, animator)
@@ -217,19 +245,24 @@ class MessageLikesView : ViewGroup {
             val view = avatarsViews[i]
 
             avatarsIndexes[view] = i
-            view.setVO(vos!![i], glide)
+            view.setVO(likes!![i], glide)
+            view.translationZ = i.toFloat()
         }
 
-        this.vos = vos
+        this.vo = vo
         requestLayout()
         invalidate()
     }
 
     private fun cropAvatar(view: GlideImageView, path: Path) {
         if (avatarsIndexes[view]!! != avatarsViews.lastIndex) {
-            val centerX = (view.measuredWidth + marginBetweenAvatars).toFloat()
             val centerY = view.measuredHeight / 2F
             val radius = (view as AvatarImageView).getRadius() + marginBetweenAvatars
+            val centerX = if (vo?.isSentByMe == true) {
+                view.measuredWidth + marginBetweenAvatars
+            } else {
+                -marginBetweenAvatars
+            }.toFloat()
 
             avatarPath.reset()
             avatarPath.addCircle(centerX, centerY, radius, Path.Direction.CW)
