@@ -19,11 +19,10 @@ import ru.sudox.android.messages.R
 import ru.sudox.android.messages.templates.MessageTemplatesAdapter
 import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.design.common.drawables.BadgeDrawable
+import kotlin.math.max
 
 class MessageItemView : ViewGroup {
 
-    private var containerWidth = 0
-    private var containerHeight = 0
     private var maxWidthPercent = 0F
     private var marginBetweenTimeAndLikes = 0
     private var marginBetweenContentAndTime = 0
@@ -34,6 +33,10 @@ class MessageItemView : ViewGroup {
     private var otherMessageCorner = 0F
     private var attachmentsAdapter = MessageTemplatesAdapter()
     private var timeBadgeDrawable: BadgeDrawable? = null
+    private var contentTop = 0
+    private var contentBottom = 0
+    private var contentRight = 0
+    private var contentLeft = 0
 
     private var attachmentsLayout = MediaAttachmentsLayout(context).apply {
         adapter = attachmentsAdapter
@@ -86,47 +89,64 @@ class MessageItemView : ViewGroup {
 
     init {
         clipChildren = false
+        clipToPadding = false
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
         val maxWidthSpec = MeasureSpec.makeMeasureSpec((availableWidth * maxWidthPercent).toInt(), MeasureSpec.AT_MOST)
+        var needHeight = 0
 
         measureChild(timeTextView, maxWidthSpec, heightMeasureSpec)
         measureChild(statusTextView, maxWidthSpec, heightMeasureSpec)
         measureChild(attachmentsLayout, maxWidthSpec, heightMeasureSpec)
-
-        var needHeight = paddingTop + paddingBottom
+        measureChild(likesView, maxWidthSpec, heightMeasureSpec)
 
         if (containsOnlyAttachments()) {
             needHeight += attachmentsLayout.measuredHeight
-            containerHeight = 0
-            containerWidth = 0
         }
 
         if (statusTextView.text.isNotEmpty()) {
             needHeight += marginBetweenContentAndStatus + statusTextView.measuredWidth
         }
 
-        setMeasuredDimension(availableWidth, needHeight)
+        if (likesView.visibility == View.VISIBLE) {
+            needHeight = max(needHeight, likesView.measuredHeight)
+        }
+
+        setMeasuredDimension(availableWidth, needHeight + paddingTop + paddingBottom)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        if (containsOnlyAttachments()) {
-            val top = paddingTop
-            val bottom = top + attachmentsLayout.measuredHeight
-            val right: Int
-            val left: Int
+        contentTop = paddingTop
 
-            if (vo?.sentByMe == true) {
-                right = measuredWidth - paddingRight
-                left = right - attachmentsLayout.measuredWidth
+        if (containsOnlyAttachments()) {
+            contentBottom = contentTop + attachmentsLayout.measuredHeight
+
+            if (vo?.isSentByMe == true) {
+                contentRight = measuredWidth - paddingRight
+                contentLeft = contentRight - attachmentsLayout.measuredWidth
             } else {
-                left = paddingLeft
-                right = left + attachmentsLayout.measuredWidth
+                contentLeft = paddingLeft
+                contentRight = contentLeft + attachmentsLayout.measuredWidth
             }
 
-            attachmentsLayout.layout(left, top, right, bottom)
+            attachmentsLayout.layout(contentLeft, contentTop, contentRight, contentBottom)
+        }
+
+        if (likesView.visibility == View.VISIBLE) {
+            val left: Int
+            val right: Int
+
+            if (vo?.isSentByMe == true) {
+                right = contentLeft - marginBetweenTimeAndLikes
+                left = right - likesView.measuredWidth
+            } else {
+                left = contentRight + marginBetweenTimeAndLikes
+                right = left + likesView.measuredWidth
+            }
+
+            likesView.layout(left, contentBottom - likesView.measuredHeight, right, contentBottom)
         }
     }
 
@@ -134,8 +154,8 @@ class MessageItemView : ViewGroup {
         super.dispatchDraw(canvas)
 
         if (containsOnlyAttachments()) {
-            val timeY = measuredHeight - marginBetweenTimeAndMessageBottom - paddingBottom - timeBadgeDrawable!!.bounds.height()
-            val timeX = if (vo?.sentByMe == true) {
+            val timeY = attachmentsLayout.bottom - marginBetweenTimeAndMessageBottom - timeBadgeDrawable!!.bounds.height()
+            val timeX = if (vo?.isSentByMe == true) {
                 measuredWidth - paddingRight
             } else {
                 paddingLeft + attachmentsLayout.measuredWidth
@@ -177,7 +197,7 @@ class MessageItemView : ViewGroup {
             timeTextView.visibility = View.GONE
             timeBadgeDrawable!!.badgeText = time
 
-            if (vo?.sentByMe == true) {
+            if (vo?.isSentByMe == true) {
                 attachmentsAdapter.topLeftCropRadius = otherMessageCorner
                 attachmentsAdapter.topRightCropRadius = firstMessageCorner
                 attachmentsAdapter.bottomRightCropRadius = otherMessageCorner

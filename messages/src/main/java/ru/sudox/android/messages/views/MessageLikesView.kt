@@ -42,6 +42,7 @@ class MessageLikesView : ViewGroup {
     private var clipPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.STROKE }
     private var likeOutlinePaint = DrawablePaint()
     private var avatarsViews = ArrayList<AvatarImageView>()
+    private var avatarsIndexes = HashMap<View, Int>()
     private var marginBetweenAvatarsAndCount = 0
     private var marginBetweenAvatars = 0
     private var avatarHeight = 0
@@ -176,7 +177,10 @@ class MessageLikesView : ViewGroup {
             }
 
             repeat(needRemove) {
-                removeView(avatarsViews.removeAt(avatarsViews.size - 1))
+                val view = avatarsViews.removeAt(avatarsViews.size - 1)
+
+                avatarsIndexes.remove(view)
+                removeView(view)
             }
 
             if (animator != null) {
@@ -210,7 +214,10 @@ class MessageLikesView : ViewGroup {
         }
 
         for (i in 0 until firstLikesCount) {
-            avatarsViews[i].setVO(vos!![i], glide)
+            val view = avatarsViews[i]
+
+            avatarsIndexes[view] = i
+            view.setVO(vos!![i], glide)
         }
 
         this.vos = vos
@@ -219,13 +226,15 @@ class MessageLikesView : ViewGroup {
     }
 
     private fun cropAvatar(view: GlideImageView, path: Path) {
-        val centerX = (view.measuredWidth + marginBetweenAvatars).toFloat()
-        val centerY = view.measuredHeight / 2F
-        val radius = (view as AvatarImageView).getRadius() + marginBetweenAvatars
+        if (avatarsIndexes[view]!! != avatarsViews.lastIndex) {
+            val centerX = (view.measuredWidth + marginBetweenAvatars).toFloat()
+            val centerY = view.measuredHeight / 2F
+            val radius = (view as AvatarImageView).getRadius() + marginBetweenAvatars
 
-        avatarPath.reset()
-        avatarPath.addCircle(centerX, centerY, radius, Path.Direction.CW)
-        path.op(avatarPath, Path.Op.DIFFERENCE)
+            avatarPath.reset()
+            avatarPath.addCircle(centerX, centerY, radius, Path.Direction.CW)
+            path.op(avatarPath, Path.Op.DIFFERENCE)
+        }
     }
 
     private fun createAvatarView(): AvatarImageView {
