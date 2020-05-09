@@ -22,20 +22,26 @@ abstract class BasicDrawable(
         private set
 
     override fun draw(canvas: Canvas) {
+        val width = bounds.width().toFloat()
+        val height = bounds.height().toFloat()
+
         imageView.let {
-            corners[0] = it.topLeftCropRadius
-            corners[1] = it.topLeftCropRadius
-            corners[2] = it.topRightCropRadius
-            corners[3] = it.topRightCropRadius
-            corners[4] = it.bottomRightCropRadius
-            corners[5] = it.bottomRightCropRadius
-            corners[6] = it.bottomLeftCropRadius
-            corners[7] = it.bottomLeftCropRadius
+            val xK = width / it.measuredWidth.toFloat()
+            val yK = height / it.measuredHeight.toFloat()
+
+            corners[0] = it.topLeftCropRadius * xK
+            corners[1] = it.topLeftCropRadius * yK
+            corners[2] = it.topRightCropRadius * xK
+            corners[3] = it.topRightCropRadius * yK
+            corners[4] = it.bottomRightCropRadius * xK
+            corners[5] = it.bottomRightCropRadius * yK
+            corners[6] = it.bottomLeftCropRadius * xK
+            corners[7] = it.bottomLeftCropRadius * yK
         }
 
         canvas.drawPath(path.apply {
             reset()
-            addRoundRect(0F, 0F, bounds.width().toFloat(), bounds.height().toFloat(), corners, Path.Direction.CW)
+            addRoundRect(0F, 0F, width, height, corners, Path.Direction.CW)
             imageView.maskCallbacks.forEach { it(imageView, this) }
         }, paint)
     }
