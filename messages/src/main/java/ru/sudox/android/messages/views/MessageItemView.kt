@@ -170,7 +170,7 @@ class MessageItemView : ViewGroup {
             }
 
             attachmentsLayout.layout(contentLeft, contentTop, contentRight, contentBottom)
-        } else if (textTextView.text.isNotEmpty()) {
+        } else {
             contentTop += internalPaddingTop
             contentBottom = contentTop + textTextView.measuredHeight
 
@@ -210,6 +210,17 @@ class MessageItemView : ViewGroup {
             }
 
             likesView.layout(left, contentBottom - likesView.measuredHeight, right, contentBottom)
+        }
+
+        if (timeTextView.visibility == View.VISIBLE) {
+            var left: Int
+            var right: Int
+
+            if (vo?.isSentByMe == true) {
+
+            } else {
+
+            }
         }
 
         if (statusTextView.visibility == View.VISIBLE) {
@@ -318,7 +329,7 @@ class MessageItemView : ViewGroup {
             }
         } else {
             val radii = FloatArray(8)
-            var appearanceId = 0
+            val appearanceId: Int
 
             if (vo?.isSentByMe == true) {
                 currentMessageBackgroundPaint = outboundMessageBackgroundPaint!!

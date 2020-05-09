@@ -11,7 +11,9 @@ import ru.sudox.android.core.R
 import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 
-abstract class ViewListController<AT : ViewListAdapter<*>> : CoreController() {
+abstract class ViewListController<AT : ViewListAdapter<*>>(
+        private val reverseLayout: Boolean = false
+) : CoreController() {
 
     var adapter: AT? = null
         private set
@@ -19,7 +21,7 @@ abstract class ViewListController<AT : ViewListAdapter<*>> : CoreController() {
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
         return ViewList(activity!!).also {
             it.clipToPadding = false
-            it.layoutManager = LinearLayoutManager(activity)
+            it.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, reverseLayout)
             it.updatePadding(
                     left = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_left_padding),
                     right = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_right_padding),
