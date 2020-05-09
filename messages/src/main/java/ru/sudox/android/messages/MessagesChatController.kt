@@ -30,11 +30,8 @@ class MessagesChatController : CoreController() {
 
             setVO(object : MessageVO {
                 override val id: String = ""
-                override val text: String? = null
-                override val attachments: ArrayList<MediaAttachmentVO>? = arrayListOf(ImageAttachmentVO(7L).apply {
-                    height = 387
-                    width = 620
-                })
+                override val text: String = "Тестовое сообщение"
+                override val attachments: ArrayList<MediaAttachmentVO>? = null
                 override val likes: ArrayList<PeopleVO> = arrayListOf(
                         SimplePeopleVO(1L, "Anton Yankin", 1L),
                         SimplePeopleVO(1L, "Anton Yankin", -1L),
@@ -42,7 +39,7 @@ class MessagesChatController : CoreController() {
                         SimplePeopleVO(1L, "Anton Yankin", 8L)
                 )
                 override val isFirstMessage = false
-                override val isSentByMe = true
+                override val isSentByMe = false
                 override val sentTime: Long = 0L
 
                 override fun getMessageStatus(context: Context) = "Прочитано в 16:00"

@@ -24,6 +24,10 @@
 
     <declare-styleable name="MessageItemView">
         <attr name="maxWidthPercent" format="float" />
+        <attr name="internalPaddingTop" format="dimension" />
+        <attr name="internalPaddingLeft" format="dimension" />
+        <attr name="internalPaddingRight" format="dimension" />
+        <attr name="internalPaddingBottom" format="dimension" />
         <attr name="statusTextAppearance" format="reference" />
         <attr name="marginBetweenTimeAndLikes" format="dimension" />
         <attr name="marginBetweenContentAndTime" format="dimension" />
@@ -32,6 +36,10 @@
         <attr name="marginBetweenTimeAndMessageBottom" format="dimension" />
         <attr name="firstMessageCorner" format="dimension" />
         <attr name="otherMessageCorner" format="dimension" />
+        <attr name="outboundTextAppearance" format="reference" />
+        <attr name="outboundMessageBackground" format="reference" />
+        <attr name="inboundMessageBackground" format="reference" />
+        <attr name="inboundTextAppearance" format="reference" />
         <attr name="timeBadgeAlpha" format="float" />
         <attr name="timeBadgeColor" format="color" />
     </declare-styleable>

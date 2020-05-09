@@ -85,6 +85,11 @@ class DrawablePaint {
             }
         }
 
+    constructor()
+    constructor(drawable: Drawable) {
+        this.drawable = drawable
+    }
+
     /**
      * Отрисовывает Drawable на Canvas.
      * P.S.: Если Drawable = null, то ничего отрисовано не будет
@@ -128,7 +133,7 @@ class DrawablePaint {
         }
     }
 
-    private fun mutateDrawableIfNeed() {
+    fun mutateDrawableIfNeed() {
         if (!isDrawableMutated && drawable != null) {
             isDrawableMutated = true
             drawable = drawable?.mutate()
