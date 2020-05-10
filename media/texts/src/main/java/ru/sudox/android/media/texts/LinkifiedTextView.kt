@@ -5,10 +5,13 @@ import android.text.SpannableStringBuilder
 import android.text.style.URLSpan
 import android.text.util.Linkify
 import android.util.AttributeSet
+import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.util.LinkifyCompat
 import androidx.core.widget.addTextChangedListener
 import ru.sudox.android.media.texts.spans.CustomURLSpan
+import kotlin.math.ceil
+import kotlin.math.max
 
 val HASH_TAG_REGEX = """#[\w\\=-\\._:]{0,20}""".toPattern()
 val MENTION_REGEX = """@[\w\\=-\\._:]{0,20}""".toPattern()
@@ -47,5 +50,19 @@ class LinkifiedTextView : AppCompatTextView {
                 }
             }
         })
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+
+        if (layoutParams.width == ViewGroup.LayoutParams.WRAP_CONTENT) {
+            var maxWidth = 0F
+
+            for (i in 0 until layout.lineCount) {
+                maxWidth = max(maxWidth, layout.getLineWidth(i))
+            }
+
+            setMeasuredDimension(ceil(maxWidth).toInt() + paddingLeft + paddingRight, measuredHeight)
+        }
     }
 }
