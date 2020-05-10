@@ -10,6 +10,7 @@ import ru.sudox.android.messages.callbacks.MessageSortCallback
 import ru.sudox.android.messages.views.MessageItemView
 import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.design.viewlist.ViewListAdapter
+import kotlin.math.max
 
 class MessagesAdapter(
         private val glide: GlideRequests,
@@ -39,7 +40,24 @@ class MessagesAdapter(
     }
 
     override fun getItemMargin(position: Int): Int {
-        return 12
+        return if (position == max(messageVOs.size() - 1, 0)) {
+            42 // Margin between footer and content
+        } else if (position != messageVOs.size()) {
+            val current = messageVOs[position]
+            val prev = messageVOs[position + 1]
+
+            if (current.senderId == prev.senderId) {
+                12
+            } else {
+                24
+            }
+        } else {
+            0
+        }
+    }
+
+    override fun canCreateMarginViaDecorators(): Boolean {
+        return true
     }
 
     override fun getItemsCountAfterHeader(type: Int): Int {

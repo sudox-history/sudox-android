@@ -9,6 +9,7 @@ interface MessageVO {
 
     val id: String
     val text: String?
+    val senderId: String
     val attachments: ArrayList<MediaAttachmentVO>?
     val likes: ArrayList<PeopleVO>?
     val isFirstMessage: Boolean

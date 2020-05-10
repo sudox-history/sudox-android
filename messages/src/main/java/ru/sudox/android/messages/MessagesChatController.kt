@@ -26,10 +26,11 @@ class MessagesChatController : ViewListController<MessagesAdapter>(true) {
 
         adapter!!.messageVOs.add(object : MessageVO {
             override val id: String = ""
+            override val senderId: String = "1"
             override val text: String = "Первое сообщение в Sudox! Напиши если оно у тебя отображается"
             override val attachments: ArrayList<MediaAttachmentVO>? = null
             override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = false
+            override val isFirstMessage = true
             override val isSentByMe = false
             override val sentTime: Long = 0L
 
@@ -38,10 +39,11 @@ class MessagesChatController : ViewListController<MessagesAdapter>(true) {
 
         adapter!!.messageVOs.add(object : MessageVO {
             override val id: String = ""
+            override val senderId: String = "2"
             override val text: String = "Да, сообщение отображается."
             override val attachments: ArrayList<MediaAttachmentVO>? = null
             override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = false
+            override val isFirstMessage = true
             override val isSentByMe = true
             override val sentTime: Long = 1L
 
@@ -50,10 +52,11 @@ class MessagesChatController : ViewListController<MessagesAdapter>(true) {
 
         adapter!!.messageVOs.add(object : MessageVO {
             override val id: String = ""
+            override val senderId: String = "1"
             override val text: String = "Ну все, теперь проверяем отображение картинки"
             override val attachments: ArrayList<MediaAttachmentVO>? = null
             override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = false
+            override val isFirstMessage = true
             override val isSentByMe = false
             override val sentTime: Long = 2L
 
@@ -62,6 +65,7 @@ class MessagesChatController : ViewListController<MessagesAdapter>(true) {
 
         adapter!!.messageVOs.add(object : MessageVO {
             override val id: String = ""
+            override val senderId: String = "1"
             override val text: String? = null
             override val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(7L).apply {
                 height = 387
@@ -76,12 +80,26 @@ class MessagesChatController : ViewListController<MessagesAdapter>(true) {
         })
 
         adapter!!.messageVOs.add(object : MessageVO {
-            override val id: String = "2"
+            override val id: String = ""
+            override val senderId: String = "1"
             override val text: String? = null
-            override val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(8L).apply {
-                height = 1800
-                width = 2880
+            override val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(7L).apply {
+                height = 387
+                width = 620
             })
+            override val likes: ArrayList<PeopleVO>? = null
+            override val isFirstMessage = false
+            override val isSentByMe = false
+            override val sentTime: Long = 3L
+
+            override fun getMessageStatus(context: Context) = null
+        })
+
+        adapter!!.messageVOs.add(object : MessageVO {
+            override val id: String = ""
+            override val senderId: String = "1"
+            override val text: String? = "Отправил."
+            override val attachments: ArrayList<MediaAttachmentVO>? = null
             override val likes: ArrayList<PeopleVO>? = null
             override val isFirstMessage = false
             override val isSentByMe = false
