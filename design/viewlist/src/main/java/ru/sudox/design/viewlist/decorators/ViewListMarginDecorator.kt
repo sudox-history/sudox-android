@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 
-@Deprecated(message = "Replace by FlexibleAdapter")
 class ViewListMarginDecorator(
         private val list: ViewList
 ) : RecyclerView.ItemDecoration() {

@@ -10,5 +10,4 @@ dependencies {
     implementation libraries.core_ktx
     implementation libraries.appcompat
     implementation libraries.recyclerview
-    implementation libraries.flexible_adapter
 }

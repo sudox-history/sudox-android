@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.SortedList
  * @param headerType Тип заголовка (нужен для поиска позиций вставки элемента)
  * @param offset Отступ от данной позиции при добавлении/удалении (работает только если нельзя создать шапку)
  */
-@Deprecated(message = "Replace by FlexibleAdapter")
 abstract class ViewListCallback<T>(
         val viewListAdapter: ViewListAdapter<*>,
         val headerType: Int = 0,
