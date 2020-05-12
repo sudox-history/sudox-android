@@ -11,6 +11,7 @@ import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
+@Deprecated(message = "Replace by FlexibleAdapter")
 class ViewListStickyDecorator(
         val list: ViewList
 ) : RecyclerView.ItemDecoration() {

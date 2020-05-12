@@ -27,6 +27,7 @@ import ru.sudox.design.viewlist.decorators.ViewListStickyDecorator
  * 3) Скрывать секции
  * 4) Выдавать текущую позицию скролла
  */
+@Deprecated(message = "Replace by FlexibleAdapter")
 class ViewList : RecyclerView {
 
     internal var footerMargin = 0

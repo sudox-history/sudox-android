@@ -10,6 +10,7 @@ import ru.sudox.design.popup.vos.PopupItemVO
 /**
  * ViewObject для шапки.
  */
+@Deprecated(message = "Replace by FlexibleAdapter")
 abstract class ViewListHeaderVO() : Parcelable {
 
     open var type: Int = 0

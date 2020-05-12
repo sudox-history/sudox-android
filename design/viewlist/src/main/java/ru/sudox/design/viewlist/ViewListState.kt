@@ -9,6 +9,7 @@ import ru.sudox.design.viewlist.vos.ViewListHeaderVO
 
 val EMPTY_STATE = object : ViewListState() {}
 
+@Deprecated(message = "Replace by FlexibleAdapter")
 open class ViewListState : Parcelable {
 
     var superState: Parcelable? = null

@@ -31,6 +31,7 @@ const val VIEW_LIST_HEADER_VIEW_TEXT_TAG = 1
 const val VIEW_LIST_HEADER_VIEW_FUNCTION_BUTTON_TAG = 2
 const val LEVEL_OF_ROTATED_DRAWABLE = 5000
 
+@Deprecated(message = "Replace by FlexibleAdapter")
 class ViewListHeaderView : ViewGroup, View.OnClickListener {
 
     private var visibilityChangingAnimator = ValueAnimator.ofInt(0, LEVEL_OF_ROTATED_DRAWABLE).apply {

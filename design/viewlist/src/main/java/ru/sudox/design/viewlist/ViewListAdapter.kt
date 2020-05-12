@@ -14,6 +14,7 @@ const val HEADER_VIEW_TYPE = -1
 const val FOOTER_VIEW_TYPE = -2
 const val LOADER_VIEW_TYPE = -3
 
+@Deprecated(message = "Replace by FlexibleAdapter")
 abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var stickyLetters: Map<Int, String>? = null
