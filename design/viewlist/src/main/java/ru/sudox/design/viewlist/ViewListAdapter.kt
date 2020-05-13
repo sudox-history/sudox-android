@@ -1,5 +1,7 @@
 package ru.sudox.design.viewlist
 
+import android.content.Context
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.appcompat.view.ContextThemeWrapper
@@ -671,6 +673,46 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
      * @result Количество активных шапок.
      */
     open fun getHeadersCount(): Int = 0
+
+    /**
+     * Возвращает View, которая будет прилипать при скролле
+     *
+     * @param context Контекст приложения/активности
+     * @return View липкого заголовка.
+     */
+    open fun getStickyView(context: Context): View? = null
+
+    /**
+     * Проверяет возможность автоматического скрытия липкой View после истечения таймера.
+     *
+     * @return True если View можно скрыть автоматически, False - если нельзя.
+     */
+    open fun canHideStickyView(): Boolean = false
+
+    /**
+     * Проверяет возможность View быть липкой.
+     *
+     * @param view View, которую нужно проверить на липкость
+     * @return True если View может быть липкой, False - если не может.
+     */
+    open fun isViewCanBeSticky(view: View): Boolean = false
+
+    /**
+     * Проверяет возможность View выдать информацию для липкой View.
+     *
+     * @param view View, которую нужно проверить
+     * @return True если View может выдать информацию, False - если не может.
+     */
+    open fun isViewCanProvideData(view: View): Boolean = false
+
+    /**
+     * Копирует данные в липкую View из View-поставщика
+     *
+     * @param view Липкая View, в которую нужно поставить данные
+     * @param provider View-поставщик, из которой берутся данные.
+     */
+    open fun bindStickyView(view: View, provider: View) {
+    }
 
     private class HeaderViewHolder(
             val view: ViewListHeaderView

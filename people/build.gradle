@@ -12,6 +12,7 @@ dependencies {
     api project(path: ':people:common')
 
     implementation libraries.appcompat
+    implementation libraries.recyclerview
     implementation libraries.lifecycle_extensions
     implementation libraries.conductor_archlifecycle
     implementation libraries.conductor
