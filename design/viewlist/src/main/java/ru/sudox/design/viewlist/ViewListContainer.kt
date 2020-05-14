@@ -2,10 +2,8 @@ package ru.sudox.design.viewlist
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ViewListContainer : ViewGroup {
@@ -14,6 +12,7 @@ class ViewListContainer : ViewGroup {
         private set
 
     private var stickyView: View? = null
+    private var stickyViewSecond: View? = null
     private var scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
             if (dy != 0 && isScrolling) {
@@ -45,12 +44,15 @@ class ViewListContainer : ViewGroup {
                 value.addOnScrollListener(scrollListener)
 
                 if (stickyView != null) {
+                    removeView(stickyViewSecond)
                     removeView(stickyView)
                 }
 
                 stickyView = (value.adapter as ViewListAdapter<*>).getStickyView(context)
+                stickyViewSecond = (value.adapter as ViewListAdapter<*>).getStickyView(context)
 
                 if (stickyView != null) {
+                    addView(stickyViewSecond)
                     addView(stickyView)
                 }
 
@@ -71,6 +73,7 @@ class ViewListContainer : ViewGroup {
 
         if (stickyView != null) {
             measureChild(stickyView, widthMeasureSpec, heightMeasureSpec)
+            measureChild(stickyViewSecond, widthMeasureSpec, heightMeasureSpec)
         }
 
         setMeasuredDimension(viewList?.measuredWidth ?: 0, viewList?.measuredHeight ?: 0)
@@ -79,11 +82,16 @@ class ViewListContainer : ViewGroup {
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         if (stickyView != null && viewList != null) {
             val top = viewList!!.paddingTop
-            val left = measuredWidth / 2 - stickyView!!.measuredWidth / 2
-            val right = left + stickyView!!.measuredWidth
+            val firstLeft = measuredWidth / 2 - stickyView!!.measuredWidth / 2
+            val firstRight = firstLeft + stickyView!!.measuredWidth
             val bottom = top + stickyView!!.measuredHeight
 
-            stickyView!!.layout(left, top, right, bottom)
+            stickyView!!.layout(firstLeft, top, firstRight, bottom)
+
+            val secondLeft = measuredWidth / 2 - stickyViewSecond!!.measuredWidth / 2
+            val secondRight = secondLeft + stickyViewSecond!!.measuredWidth
+
+            stickyViewSecond!!.layout(secondLeft, top, secondRight, bottom)
         }
 
         viewList?.layout(0, 0, measuredWidth, measuredHeight)
@@ -95,6 +103,8 @@ class ViewListContainer : ViewGroup {
     }
 
     private fun checkAndPrepareLayout() {
+        var outboundsView: View? = null
+        var firstOutboundsViewPosition = Int.MAX_VALUE
         var firstVisibleProviderView: View? = null
         var firstVisibleProviderViewPosition = Int.MAX_VALUE
         var firstVisibleStickyViewPosition = Int.MAX_VALUE
@@ -106,6 +116,11 @@ class ViewListContainer : ViewGroup {
             val position = view.bottom
 
             if (position <= viewList!!.paddingTop) {
+                if (position < firstOutboundsViewPosition) {
+                    firstOutboundsViewPosition = position
+                    outboundsView = view
+                }
+
                 continue
             }
 
@@ -136,18 +151,39 @@ class ViewListContainer : ViewGroup {
             }
 
             val offset = firstVisibleStickyView.bottom - viewList!!.paddingTop
+            val needTranslation = -stickyView!!.measuredHeight * 2F + offset // Все липкие View должны быть одинаковой высоты
 
-            if (offset > stickyView!!.measuredHeight && offset < stickyView!!.measuredHeight * 2) {
-                stickyView!!.translationY = -stickyView!!.measuredHeight * 2F + offset
+            if (needTranslate(offset, false)) {
+                stickyView!!.translationY = needTranslation
+                stickyViewSecond!!.alpha = 0F
             } else {
+                if (outboundsView != null && needTranslate(offset, true)) {
+                    adapter.bindStickyView(stickyViewSecond!!, outboundsView)
+                    stickyViewSecond!!.translationY = needTranslation
+                    stickyViewSecond!!.alpha = 1F
+                } else {
+                    stickyViewSecond!!.alpha = 0F
+                }
+
                 stickyView!!.translationY = 0F
             }
         } else {
             stickyView!!.translationY = 0F
+            stickyViewSecond!!.alpha = 0F
         }
     }
 
     internal fun hideStickyView() {
 
+    }
+
+    private fun needTranslate(offset: Int, excludePadding: Boolean): Boolean {
+        var newOffset = offset
+
+        if (excludePadding) {
+            newOffset += viewList!!.paddingTop
+        }
+
+        return newOffset > stickyView!!.measuredHeight && newOffset < stickyView!!.measuredHeight * 2
     }
 }
