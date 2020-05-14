@@ -66,6 +66,12 @@ class ViewListContainer : ViewGroup {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
+    init {
+        addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            checkAndPrepareLayout()
+        }
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         if (viewList != null) {
             measureChild(viewList, widthMeasureSpec, heightMeasureSpec)
@@ -115,23 +121,21 @@ class ViewListContainer : ViewGroup {
             val view = viewList!!.getChildAt(i)
             val position = view.bottom
 
-            if (position <= viewList!!.paddingTop) {
+            if (adapter.isViewCanBeSticky(view) && position < firstVisibleStickyViewPosition) {
+                firstVisibleStickyViewPosition = position
+                firstVisibleStickyView = view
+            }
+
+            if (position > viewList!!.paddingTop) {
+                if (adapter.isViewCanProvideData(view) && position < firstVisibleProviderViewPosition) {
+                    firstVisibleProviderViewPosition = position
+                    firstVisibleProviderView = view
+                }
+            } else {
                 if (position < firstOutboundsViewPosition) {
                     firstOutboundsViewPosition = position
                     outboundsView = view
                 }
-
-                continue
-            }
-
-            if (adapter.isViewCanProvideData(view) && position < firstVisibleProviderViewPosition) {
-                firstVisibleProviderViewPosition = position
-                firstVisibleProviderView = view
-            }
-
-            if (adapter.isViewCanBeSticky(view) && position < firstVisibleStickyViewPosition) {
-                firstVisibleStickyViewPosition = position
-                firstVisibleStickyView = view
             }
 
             view.alpha = 1F

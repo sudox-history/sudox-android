@@ -3,6 +3,7 @@ package ru.sudox.android.people
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -33,13 +34,24 @@ class ProfileController : ViewListController<ViewListAdapter<*>>() {
             override fun bindItemHolder(holder: InternalHolder, position: Int) {
                 if (position % 10 == 0) {
                     holder.view.text = "Header at $position"
+                    holder.view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    holder.view.gravity = Gravity.LEFT
                 } else {
                     holder.view.text = "Item at $position"
+                    holder.view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    holder.view.gravity = Gravity.CENTER_HORIZONTAL
                 }
             }
 
             override fun getStickyView(context: Context): View {
-                return AppCompatTextView(context)
+                val padding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 17f, context.resources.displayMetrics).toInt()
+
+                return AppCompatTextView(context).apply {
+                    setPadding(padding, 0, padding, 0)
+
+                    layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                    gravity = Gravity.LEFT
+                }
             }
 
             override fun isViewCanProvideData(view: View): Boolean {
