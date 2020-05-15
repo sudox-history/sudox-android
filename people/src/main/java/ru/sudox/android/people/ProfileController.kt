@@ -81,8 +81,12 @@ class ProfileController : ViewListController<ViewListAdapter<*>>(true) {
                 (view as AppCompatTextView).text = "Header at $position"
             }
 
+            override fun canHideStickyView(): Boolean {
+                return true
+            }
+
             override fun getItemsCountAfterHeader(type: Int): Int {
-                return 20 + count
+                return 100 + count
             }
         }
     }

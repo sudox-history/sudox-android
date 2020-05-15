@@ -1,9 +1,12 @@
 package ru.sudox.design.viewlist
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.animation.addListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -13,7 +16,10 @@ class ViewListContainer : ViewGroup {
         private set
 
     private var stickyView: View? = null
+    private var stickyViewHiding = false
+    private var isStickyViewIntersected = false
     private var stickyViewSecond: View? = null
+    private var stickyViewAnimation: AnimatorSet? = null
     private var scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
             if (dy != 0 && isScrolling) {
@@ -24,10 +30,7 @@ class ViewListContainer : ViewGroup {
         override fun onScrollStateChanged(view: RecyclerView, newState: Int) {
             if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                 isScrolling = false
-
-                if ((view.adapter as ViewListAdapter<*>).canHideStickyView()) {
-                    hideStickyView()
-                }
+                hideStickyView(true)
             } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                 isScrolling = true
             }
@@ -50,8 +53,8 @@ class ViewListContainer : ViewGroup {
                     removeView(stickyView)
                 }
 
-                stickyView = (value.adapter as ViewListAdapter<*>).getStickyView(context)
-                stickyViewSecond = (value.adapter as ViewListAdapter<*>).getStickyView(context)
+                stickyView = (value.adapter as ViewListAdapter<*>).getStickyView(context).apply { alpha = 0F }
+                stickyViewSecond = (value.adapter as ViewListAdapter<*>).getStickyView(context).apply { alpha = 0F }
 
                 if (stickyView != null) {
                     addView(stickyViewSecond)
@@ -104,17 +107,52 @@ class ViewListContainer : ViewGroup {
     }
 
     internal fun showStickyView() {
-        stickyView!!.alpha = 1F
+        if (!stickyViewHiding) {
+            stickyViewAnimation?.cancel()
+            stickyViewHiding = true
+            stickyViewAnimation = AnimatorSet().apply { duration = 150 }
+            stickyViewAnimation!!.playTogether(ObjectAnimator.ofFloat(stickyView!!, View.ALPHA, 1F))
+            stickyViewAnimation!!.addListener {
+                if (it == stickyViewAnimation) {
+                    stickyViewAnimation = null
+                }
+            }
+
+            stickyViewAnimation!!.start()
+        }
+
         checkAndPrepareLayout()
     }
 
-    internal fun checkAndPrepareLayout() {
+    internal fun hideStickyView(animated: Boolean) {
+        if (stickyViewHiding && !isScrolling && !isStickyViewIntersected) {
+            stickyViewHiding = false
+
+            if (animated && (viewList!!.adapter as ViewListAdapter<*>).canHideStickyView()) {
+                stickyViewAnimation = AnimatorSet().apply { duration = 150 }
+                stickyViewAnimation!!.playTogether(ObjectAnimator.ofFloat(stickyView!!, View.ALPHA, 0F))
+                stickyViewAnimation!!.startDelay = 1000
+                stickyViewAnimation!!.addListener {
+                    if (it == stickyViewAnimation) {
+                        stickyViewAnimation = null
+                    }
+                }
+
+                stickyViewAnimation!!.start()
+            } else if (!animated) {
+                stickyViewAnimation?.cancel()
+                stickyView!!.alpha = 0F
+            }
+        }
+    }
+
+    private fun checkAndPrepareLayout() {
         val manager = viewList!!.layoutManager as? LinearLayoutManager
 
         // Для списков, счет элементов в которых начинается с конца
         if (manager?.stackFromEnd == true && !viewList!!.canScrollVertically(-1) && !viewList!!.canScrollVertically(1)) {
             stickyViewSecond!!.alpha = 0F
-            stickyView!!.alpha = 0F
+            hideStickyView(false)
             return
         }
 
@@ -154,9 +192,13 @@ class ViewListContainer : ViewGroup {
             adapter.bindStickyView(stickyView!!, firstVisibleProviderView)
         }
 
+        isStickyViewIntersected = false
+
         if (firstVisibleStickyView != null) {
             if (stickyView!!.top == firstVisibleStickyView.top && stickyView!!.bottom == firstVisibleStickyView.bottom) {
-                stickyView!!.alpha = 0F
+                isStickyViewIntersected = true
+                firstVisibleStickyView.alpha = 1F
+                hideStickyView(false)
             }
 
             if (firstVisibleStickyView.top > viewList!!.paddingTop) {
@@ -187,10 +229,6 @@ class ViewListContainer : ViewGroup {
             stickyView!!.translationY = 0F
             stickyViewSecond!!.alpha = 0F
         }
-    }
-
-    internal fun hideStickyView() {
-        // TODO: Delayed & stoppable hiding
     }
 
     private fun needTranslate(offset: Int, excludePadding: Boolean): Boolean {
