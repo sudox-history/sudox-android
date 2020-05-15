@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class ViewListContainer : ViewGroup {
@@ -40,8 +41,9 @@ class ViewListContainer : ViewGroup {
             }
 
             if (value != null) {
-                value.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
                 value.addOnScrollListener(scrollListener)
+                value.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> showStickyView() }
+                value.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
 
                 if (stickyView != null) {
                     removeView(stickyViewSecond)
@@ -67,9 +69,7 @@ class ViewListContainer : ViewGroup {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     init {
-        addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            checkAndPrepareLayout()
-        }
+        addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> checkAndPrepareLayout() }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -108,7 +108,16 @@ class ViewListContainer : ViewGroup {
         checkAndPrepareLayout()
     }
 
-    private fun checkAndPrepareLayout() {
+    internal fun checkAndPrepareLayout() {
+        val manager = viewList!!.layoutManager as? LinearLayoutManager
+
+        // Для списков, счет элементов в которых начинается с конца
+        if (manager?.stackFromEnd == true && !viewList!!.canScrollVertically(-1) && !viewList!!.canScrollVertically(1)) {
+            stickyViewSecond!!.alpha = 0F
+            stickyView!!.alpha = 0F
+            return
+        }
+
         var outboundsView: View? = null
         var firstOutboundsViewPosition = Int.MAX_VALUE
         var firstVisibleProviderView: View? = null
@@ -146,9 +155,12 @@ class ViewListContainer : ViewGroup {
         }
 
         if (firstVisibleStickyView != null) {
+            if (stickyView!!.top == firstVisibleStickyView.top && stickyView!!.bottom == firstVisibleStickyView.bottom) {
+                stickyView!!.alpha = 0F
+            }
+
             if (firstVisibleStickyView.top > viewList!!.paddingTop) {
                 firstVisibleStickyView.alpha = 1F
-                hideStickyView()
             } else {
                 firstVisibleStickyView.alpha = 0F
                 stickyView!!.alpha = 1F
@@ -178,7 +190,7 @@ class ViewListContainer : ViewGroup {
     }
 
     internal fun hideStickyView() {
-
+        // TODO: Delayed & stoppable hiding
     }
 
     private fun needTranslate(offset: Int, excludePadding: Boolean): Boolean {

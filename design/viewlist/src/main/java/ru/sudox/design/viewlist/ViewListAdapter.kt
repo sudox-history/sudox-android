@@ -28,7 +28,6 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
 
     private var initialTopPadding = -1
     private var initialBottomPadding = -1
-    private var dataObserver: RecyclerView.AdapterDataObserver? = null
 
     /**
      * 1-й аргумент - тип шапки
@@ -39,33 +38,7 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
     var sortingTypeChangedCallback: ((Int, Int, ViewListHeaderVO) -> (Unit))? = null
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        dataObserver = object : RecyclerView.AdapterDataObserver() {
-            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
-                viewList!!.let {
-                    val orientation = (it.layoutManager as? LinearLayoutManager)?.orientation ?: LinearLayoutManager.VERTICAL
-
-                    if (positionStart == 0 &&
-                            ((!it.canScrollVertically(-1) && orientation == LinearLayoutManager.VERTICAL)
-                                    || (!it.canScrollHorizontally(-1) && orientation == LinearLayoutManager.HORIZONTAL))) {
-                        viewList!!.scrollToPosition(0)
-                    }
-                }
-            }
-
-            override fun onChanged() {
-                stickyLetters = buildStickyLettersMap()
-            }
-        }
-
-        registerAdapterDataObserver(dataObserver!!)
         stickyLetters = buildStickyLettersMap()
-    }
-
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        if (dataObserver != null) {
-            unregisterAdapterDataObserver(dataObserver!!)
-            dataObserver = null
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

@@ -3,6 +3,7 @@ package ru.sudox.android.people
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -14,12 +15,18 @@ import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 import ru.sudox.design.viewlist.ViewListContainer
 
-class ProfileController : ViewListController<ViewListAdapter<*>>() {
+class ProfileController : ViewListController<ViewListAdapter<*>>(true) {
+
+    internal var count = 0
 
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
         return ViewListContainer(activity!!).apply {
             viewList = super.createView(container, savedViewState) as ViewList
         }
+    }
+
+    override fun bindView(view: View) {
+        super.bindView(view)
     }
 
     override fun getAdapter(viewList: ViewList): ViewListAdapter<*>? {
@@ -75,7 +82,7 @@ class ProfileController : ViewListController<ViewListAdapter<*>>() {
             }
 
             override fun getItemsCountAfterHeader(type: Int): Int {
-                return 100
+                return 20 + count
             }
         }
     }
