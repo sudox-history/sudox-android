@@ -18,6 +18,10 @@ ext.registerModule = { isApp, needApt, needKotlin ->
         }
     }
 
+    repositories {
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    }
+
     android {
         buildToolsVersion "29.0.3"
         compileSdkVersion 29

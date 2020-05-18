@@ -3,8 +3,55 @@ package ru.sudox.android.time
 import android.content.Context
 import androidx.core.util.Pools
 import java.util.Calendar
+import java.util.Calendar.DAY_OF_MONTH
+import java.util.Calendar.MONTH
+import java.util.Calendar.YEAR
 
 internal var calendarsPool = Pools.SimplePool<Calendar>(4)
+
+/**
+ * Переводит Unix-timestamp в строку с датой.
+ * Если год в timestamp не совпадает с текущим, то он будет отображен.
+ *
+ * @param context Контекст приложения/активности
+ * @param timestamp Timestamp, который нужно перевести в строку
+ * @param fullMonthNames Отображать полные названия месяцев?
+ * @param relative Время, относительно которого будет произведено форматирование
+ * @return Строка с датой, которая была в timestamp
+ */
+fun timestampToDateString(
+        context: Context,
+        timestamp: Long,
+        fullMonthNames: Boolean,
+        relative: Long = System.currentTimeMillis()
+): String {
+    val current = getCalendar(relative)
+    val request = getCalendar(timestamp)
+    val monthName = if (fullMonthNames) {
+        getFullMonthName(context, request[MONTH] + 1)
+    } else {
+        getShortMonthName(context, request[MONTH] + 1)
+    }
+
+    val result = if (current[YEAR] == request[YEAR]) {
+        context.getString(R.string.date_mask_without_year, request[DAY_OF_MONTH], monthName)
+    } else {
+        context.getString(R.string.date_mask_with_year, request[DAY_OF_MONTH], monthName, request[YEAR])
+    }
+
+    calendarsPool.release(current)
+    calendarsPool.release(request)
+
+    return result
+}
+
+fun getMonthName(context: Context, number: Int, full: Boolean): String? {
+    return if (full) {
+        getFullMonthName(context, number)
+    } else {
+        getShortMonthName(context, number)
+    }
+}
 
 /**
  * Выдает сокращенное название месяца
@@ -101,5 +148,17 @@ fun getFullNameOfDayOfWeek(context: Context, number: Int): String? {
         6 -> context.getString(R.string.friday)
         7 -> context.getString(R.string.saturday)
         else -> null
+    }
+}
+
+/**
+ * Выдает объект календаря из пула и настраивает в нем время.
+ *
+ * @param time Время, которое нужно установить в календарь
+ * @return Объект календаря с настроенным временем.
+ */
+fun getCalendar(time: Long): Calendar {
+    return (calendarsPool.acquire() ?: Calendar.getInstance()).apply {
+        timeInMillis = time
     }
 }

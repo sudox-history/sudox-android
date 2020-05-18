@@ -3,6 +3,15 @@ apply from: '../configs/common.gradle'
 
 registerModule(false, false, true)
 
+apply from: '../configs/robolectric.gradle'
+
 dependencies {
     implementation libraries.core_ktx
+    implementation libraries.threetenabp
+    implementation project(":core")
+
+    testImplementation libraries.junit
+    testImplementation libraries.runner
+    testImplementation libraries.robolectric
+    testImplementation libraries.mockito_kotlin
 }
