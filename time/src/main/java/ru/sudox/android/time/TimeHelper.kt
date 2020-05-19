@@ -34,11 +34,7 @@ import kotlin.math.abs
  * @param twelveHoursFormat Нужно ли работаь в 12-и часовом формате?
  * @return Строка с временем, которое было в timestamp.
  */
-fun timestampToTimeString(
-        context: Context,
-        dateTime: LocalDateTime,
-        twelveHoursFormat: Boolean = !DateFormat.is24HourFormat(context)
-): String {
+fun timestampToTimeString(context: Context, dateTime: LocalDateTime, twelveHoursFormat: Boolean): String {
     val minute = addLeadingZeroToNumber(dateTime.minute)
 
     return if (twelveHoursFormat) {
@@ -66,6 +62,7 @@ fun timestampToTimeString(
 fun timestampToString(
         context: Context,
         relativeTimestamp: Long = System.currentTimeMillis(),
+        useTwelveHoursFormat: Boolean = !DateFormat.is24HourFormat(context),
         formatter: TimeFormatter,
         timestamp: Long
 ): String {
@@ -74,38 +71,34 @@ fun timestampToString(
     val minutesDiff = ChronoUnit.MINUTES.between(requestDateTime, relativeDateTime)
 
     if (minutesDiff == 0L) {
-        return formatter.onEventOccurredNow(context, requestDateTime, relativeDateTime)
+        return formatter.onEventOccurredNow(context, requestDateTime, relativeDateTime, useTwelveHoursFormat)
     } else if (minutesDiff < 60L) {
-        return formatter.onEventOccurredBetween1And60MinutesAgo(context, minutesDiff.toInt(), requestDateTime, relativeDateTime)
+        return formatter.onEventOccurredBetween1And60MinutesAgo(context, minutesDiff.toInt(), requestDateTime, relativeDateTime, useTwelveHoursFormat)
     }
 
     val hoursDiff = minutesDiff / 60
 
     if (hoursDiff in 1 .. 12) {
-        return formatter.onEventOccurredBetween1And12HoursAgo(context, hoursDiff.toInt(), requestDateTime, relativeDateTime)
+        return formatter.onEventOccurredBetween1And12HoursAgo(context, hoursDiff.toInt(), requestDateTime, relativeDateTime, useTwelveHoursFormat)
     } else if (hoursDiff in 13 until 24) {
-        return formatter.onEventOccurredBetween12And24HoursAgo(context, hoursDiff.toInt(), requestDateTime, relativeDateTime)
+        return formatter.onEventOccurredBetween12And24HoursAgo(context, hoursDiff.toInt(), requestDateTime, relativeDateTime, useTwelveHoursFormat)
     }
 
     val daysDiff = hoursDiff / 24L
 
     if (daysDiff == 1L) {
-        return formatter.onEventOccurredYesterday(context, requestDateTime, relativeDateTime)
+        return formatter.onEventOccurredYesterday(context, requestDateTime, relativeDateTime, useTwelveHoursFormat)
     } else if (daysDiff in 2L .. 7L) {
-        val result = formatter.onEventOccurredBetween2And7DaysAgo(context, daysDiff.toInt(), requestDateTime, relativeDateTime)
-
-        if (result != null) {
-            return result
-        }
+        return formatter.onEventOccurredBetween2And7DaysAgo(context, daysDiff.toInt(), requestDateTime, relativeDateTime, useTwelveHoursFormat)
     }
 
     val yearsDiff = ChronoUnit.YEARS.between(requestDateTime, relativeDateTime)
 
     if (yearsDiff == 0L) {
-        return formatter.onEventOccurredInSameYear(context, requestDateTime, relativeDateTime)
+        return formatter.onEventOccurredInSameYear(context, requestDateTime, relativeDateTime, useTwelveHoursFormat)
     }
 
-    return formatter.onEventOccurredInAnotherYear(context, yearsDiff.toInt(), requestDateTime, relativeDateTime)
+    return formatter.onEventOccurredInAnotherYear(context, yearsDiff.toInt(), requestDateTime, relativeDateTime, useTwelveHoursFormat)
 }
 
 /**

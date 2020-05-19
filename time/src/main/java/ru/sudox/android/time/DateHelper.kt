@@ -3,48 +3,10 @@ package ru.sudox.android.time
 import android.content.Context
 import androidx.core.util.Pools
 import org.threeten.bp.DayOfWeek
-import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
 import java.util.Calendar
 
 internal var calendarsPool = Pools.SimplePool<Calendar>(4)
-
-/**
- * Переводит DateTime в строку с датой.
- * Если год в DateTime не совпадает с текущим, то он будет отображен.
- *
- * @param context Контекст приложения/активности
- * @param dateTime DateTime, который нужно перевести в строку
- * @param relativeDateTime DateTime, относительно которого будет произведено форматирование
- * @param fullMonthNames Отображать полные названия месяцев?
- * @return Строка с датой, которая была в timestamp
- */
-fun timestampToDateString(
-        context: Context,
-        dateTime: LocalDateTime,
-        relativeDateTime: LocalDateTime = LocalDateTime.now(),
-        fullMonthNames: Boolean
-): String {
-    val monthName = if (fullMonthNames) {
-        getFullNameOfMonth(context, dateTime.month)
-    } else {
-        getShortNameOfMonth(context, dateTime.month)
-    }
-
-    return if (relativeDateTime.year == dateTime.year) {
-        context.getString(if (fullMonthNames) {
-            R.string.date_mask_without_year_for_full_month_names
-        } else {
-            R.string.date_mask_without_year_for_short_month_names
-        }, dateTime.dayOfMonth, monthName)
-    } else {
-        context.getString(if (fullMonthNames) {
-            R.string.date_mask_with_year_for_full_month_names
-        } else {
-            R.string.date_mask_with_year_for_short_month_names
-        }, dateTime.dayOfMonth, monthName, dateTime.year)
-    }
-}
 
 /**
  * Выдает сокращенное название месяца

@@ -22,26 +22,6 @@ class DateHelperTest {
     }
 
     @Test
-    fun checkTimestampToDateStringFormattingWithFullMonthNamesAndSameYears() {
-        assertEquals("January 1", timestampToDateString(activity, dateTimeOf(0L), dateTimeOf(0L), true))
-    }
-
-    @Test
-    fun checkTimestampToDateStringFormattingWithFullMonthNamesAndDifferentYears() {
-        assertEquals("January 1, 1970", timestampToDateString(activity, dateTimeOf(0L), dateTimeOf(31536000000), true))
-    }
-
-    @Test
-    fun checkTimestampToDateStringFormattingWithShortMonthNamesAndSameYears() {
-        assertEquals("1 jan", timestampToDateString(activity, dateTimeOf(0L), dateTimeOf(0L), false))
-    }
-
-    @Test
-    fun checkTimestampToDateStringFormattingWithShortMonthNamesAndDifferentYears() {
-        assertEquals("1 jan 1970", timestampToDateString(activity, dateTimeOf(0L), dateTimeOf(31536000000), false))
-    }
-
-    @Test
     fun testGetFullNameOfDayOfWeek() {
         assertEquals("Saturday", getFullNameOfDayOfWeek(activity, DayOfWeek.SATURDAY))
         assertEquals("Monday", getFullNameOfDayOfWeek(activity, DayOfWeek.MONDAY))
