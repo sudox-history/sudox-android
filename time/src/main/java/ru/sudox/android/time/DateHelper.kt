@@ -2,54 +2,133 @@ package ru.sudox.android.time
 
 import android.content.Context
 import androidx.core.util.Pools
+import org.threeten.bp.DayOfWeek
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.Month
 import java.util.Calendar
-import java.util.Calendar.DAY_OF_MONTH
-import java.util.Calendar.MONTH
-import java.util.Calendar.YEAR
 
 internal var calendarsPool = Pools.SimplePool<Calendar>(4)
 
 /**
- * Переводит Unix-timestamp в строку с датой.
- * Если год в timestamp не совпадает с текущим, то он будет отображен.
+ * Переводит DateTime в строку с датой.
+ * Если год в DateTime не совпадает с текущим, то он будет отображен.
  *
  * @param context Контекст приложения/активности
- * @param timestamp Timestamp, который нужно перевести в строку
+ * @param dateTime DateTime, который нужно перевести в строку
+ * @param relativeDateTime DateTime, относительно которого будет произведено форматирование
  * @param fullMonthNames Отображать полные названия месяцев?
- * @param relative Время, относительно которого будет произведено форматирование
  * @return Строка с датой, которая была в timestamp
  */
 fun timestampToDateString(
         context: Context,
-        timestamp: Long,
-        fullMonthNames: Boolean,
-        relative: Long = System.currentTimeMillis()
+        dateTime: LocalDateTime,
+        relativeDateTime: LocalDateTime = LocalDateTime.now(),
+        fullMonthNames: Boolean
 ): String {
-    val current = getCalendar(relative)
-    val request = getCalendar(timestamp)
     val monthName = if (fullMonthNames) {
-        getFullMonthName(context, request[MONTH] + 1)
+        getFullNameOfMonth(context, dateTime.month)
     } else {
-        getShortMonthName(context, request[MONTH] + 1)
+        getShortNameOfMonth(context, dateTime.month)
     }
 
-    val result = if (current[YEAR] == request[YEAR]) {
-        context.getString(R.string.date_mask_without_year, request[DAY_OF_MONTH], monthName)
+    return if (relativeDateTime.year == dateTime.year) {
+        context.getString(if (fullMonthNames) {
+            R.string.date_mask_without_year_for_full_month_names
+        } else {
+            R.string.date_mask_without_year_for_short_month_names
+        }, dateTime.dayOfMonth, monthName)
     } else {
-        context.getString(R.string.date_mask_with_year, request[DAY_OF_MONTH], monthName, request[YEAR])
+        context.getString(if (fullMonthNames) {
+            R.string.date_mask_with_year_for_full_month_names
+        } else {
+            R.string.date_mask_with_year_for_short_month_names
+        }, dateTime.dayOfMonth, monthName, dateTime.year)
     }
-
-    calendarsPool.release(current)
-    calendarsPool.release(request)
-
-    return result
 }
 
-fun getMonthName(context: Context, number: Int, full: Boolean): String? {
-    return if (full) {
-        getFullMonthName(context, number)
-    } else {
-        getShortMonthName(context, number)
+/**
+ * Выдает сокращенное название месяца
+ *
+ * @param context Контекст приложения/активности
+ * @param month Месяц, имя которого нужно получить
+ * @return Скоращенное название месяца
+ */
+fun getShortNameOfMonth(context: Context, month: Month): String {
+    return when (month) {
+        Month.JANUARY -> context.getString(R.string.january_short)
+        Month.FEBRUARY -> context.getString(R.string.february_short)
+        Month.MARCH -> context.getString(R.string.march_short)
+        Month.APRIL -> context.getString(R.string.april_short)
+        Month.MAY -> context.getString(R.string.may_short)
+        Month.JUNE -> context.getString(R.string.june_short)
+        Month.JULY -> context.getString(R.string.july_short)
+        Month.AUGUST -> context.getString(R.string.august_short)
+        Month.SEPTEMBER -> context.getString(R.string.september_short)
+        Month.OCTOBER -> context.getString(R.string.october_short)
+        Month.NOVEMBER -> context.getString(R.string.november_short)
+        Month.DECEMBER -> context.getString(R.string.december_short)
+    }
+}
+
+/**
+ * Выдает полное название месяца
+ *
+ * @param context Контекст приложения/активности
+ * @param month Месяц, имя которого нужно получить
+ * @return Полное название месяца
+ */
+fun getFullNameOfMonth(context: Context, month: Month): String {
+    return when (month) {
+        Month.JANUARY -> context.getString(R.string.january)
+        Month.FEBRUARY -> context.getString(R.string.february)
+        Month.MARCH -> context.getString(R.string.march)
+        Month.APRIL -> context.getString(R.string.april)
+        Month.MAY -> context.getString(R.string.may)
+        Month.JUNE -> context.getString(R.string.june)
+        Month.JULY -> context.getString(R.string.july)
+        Month.AUGUST -> context.getString(R.string.august)
+        Month.SEPTEMBER -> context.getString(R.string.september)
+        Month.OCTOBER -> context.getString(R.string.october)
+        Month.NOVEMBER -> context.getString(R.string.november)
+        Month.DECEMBER -> context.getString(R.string.december)
+    }
+}
+
+/**
+ * Выдает сокращенное название дня недели
+ *
+ * @param context Контекст приложения/активности
+ * @param dayOfWeek День недели, имя которого нужно получить
+ * @return Сокращенное название дня недели
+ */
+fun getShortNameOfDayOfWeek(context: Context, dayOfWeek: DayOfWeek): String {
+    return when (dayOfWeek) {
+        DayOfWeek.SATURDAY -> context.getString(R.string.saturday_short)
+        DayOfWeek.MONDAY -> context.getString(R.string.monday_short)
+        DayOfWeek.TUESDAY -> context.getString(R.string.tuesday_short)
+        DayOfWeek.WEDNESDAY -> context.getString(R.string.wednesday_short)
+        DayOfWeek.THURSDAY -> context.getString(R.string.thursday_short)
+        DayOfWeek.FRIDAY -> context.getString(R.string.friday_short)
+        DayOfWeek.SUNDAY -> context.getString(R.string.sunday_short)
+    }
+}
+
+/**
+ * Выдает полное название дня недели
+ *
+ * @param context Контекст приложения/активности
+ * @param dayOfWeek День недели, имя которого нужно получить
+ * @return Полное название дня недели
+ */
+fun getFullNameOfDayOfWeek(context: Context, dayOfWeek: DayOfWeek): String {
+    return when (dayOfWeek) {
+        DayOfWeek.SATURDAY -> context.getString(R.string.saturday)
+        DayOfWeek.MONDAY -> context.getString(R.string.monday)
+        DayOfWeek.TUESDAY -> context.getString(R.string.tuesday)
+        DayOfWeek.WEDNESDAY -> context.getString(R.string.wednesday)
+        DayOfWeek.THURSDAY -> context.getString(R.string.thursday)
+        DayOfWeek.FRIDAY -> context.getString(R.string.friday)
+        DayOfWeek.SUNDAY -> context.getString(R.string.sunday)
     }
 }
 
@@ -60,6 +139,7 @@ fun getMonthName(context: Context, number: Int, full: Boolean): String? {
  * @param number Номер месяца
  * @return Скоращенное название месяца
  */
+@Deprecated(message = "replaced")
 fun getShortMonthName(context: Context, number: Int): String? {
     return when (number) {
         1 -> context.getString(R.string.january_short)
@@ -85,6 +165,7 @@ fun getShortMonthName(context: Context, number: Int): String? {
  * @param number Номер месяца
  * @return Полное название месяца
  */
+@Deprecated(message = "replaced")
 fun getFullMonthName(context: Context, number: Int): String? {
     return when (number) {
         1 -> context.getString(R.string.january)
@@ -110,6 +191,7 @@ fun getFullMonthName(context: Context, number: Int): String? {
  * @param number Номер дня недели
  * @return Сокращенное название дня недели
  */
+@Deprecated(message = "replaced")
 fun getShortNameOfDayOfWeek(context: Context, number: Int): String? {
     if (number < 1 || number > 7) {
         return null
@@ -134,6 +216,7 @@ fun getShortNameOfDayOfWeek(context: Context, number: Int): String? {
  * @param number Номер дня недели
  * @return Полное название дня недели
  */
+@Deprecated(message = "replaced")
 fun getFullNameOfDayOfWeek(context: Context, number: Int): String? {
     if (number < 1 || number > 7) {
         return null
@@ -148,17 +231,5 @@ fun getFullNameOfDayOfWeek(context: Context, number: Int): String? {
         6 -> context.getString(R.string.friday)
         7 -> context.getString(R.string.saturday)
         else -> null
-    }
-}
-
-/**
- * Выдает объект календаря из пула и настраивает в нем время.
- *
- * @param time Время, которое нужно установить в календарь
- * @return Объект календаря с настроенным временем.
- */
-fun getCalendar(time: Long): Calendar {
-    return (calendarsPool.acquire() ?: Calendar.getInstance()).apply {
-        timeInMillis = time
     }
 }

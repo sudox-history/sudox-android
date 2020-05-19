@@ -1,14 +1,15 @@
 package ru.sudox.android.time.formatters
 
 import android.content.Context
+import org.threeten.bp.LocalDateTime
 
 interface TimeFormatter {
-    fun formatWhenEventOccurredInAnotherYear(context: Context, yearsAgo: Int, timestamp: Long): String
-    fun formatWhenEventOccurredInSameYear(context: Context, timestamp: Long): String
-    fun formatWhenEventOccurredBetween2And7DaysAgo(context: Context, daysAgo: Int, timestamp: Long): String
-    fun formatWhenEventOccurredYesterday(context: Context, timestamp: Long): String
-    fun formatWhenEventOccurredBetween12And24HoursAgo(context: Context, hoursAgo: Int, timestamp: Long): String
-    fun formatWhenEventOccurredBetween1And12HoursAgo(context: Context, hoursAgo: Int, timestamp: Long): String
-    fun formatWhenEventOccurredBetween1And60MinutesAgo(context: Context, minutesAgo: Int, timestamp: Long): String
-    fun formatWhenEventOccurredNow(context: Context): String
+    fun onEventOccurredInAnotherYear(context: Context, yearsAgo: Int, request: LocalDateTime, relative: LocalDateTime): String
+    fun onEventOccurredInSameYear(context: Context, request: LocalDateTime, relative: LocalDateTime): String
+    fun onEventOccurredBetween2And7DaysAgo(context: Context, daysAgo: Int, request: LocalDateTime, relative: LocalDateTime): String?
+    fun onEventOccurredYesterday(context: Context, request: LocalDateTime, relative: LocalDateTime): String
+    fun onEventOccurredBetween12And24HoursAgo(context: Context, hoursAgo: Int, request: LocalDateTime, relative: LocalDateTime): String
+    fun onEventOccurredBetween1And12HoursAgo(context: Context, hoursAgo: Int, request: LocalDateTime, relative: LocalDateTime): String
+    fun onEventOccurredBetween1And60MinutesAgo(context: Context, minutesAgo: Int, request: LocalDateTime, relative: LocalDateTime): String
+    fun onEventOccurredNow(context: Context, request: LocalDateTime, relative: LocalDateTime): String
 }

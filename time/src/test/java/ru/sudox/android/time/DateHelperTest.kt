@@ -4,10 +4,11 @@ import android.app.Activity
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment.systemContext
 import org.robolectric.annotation.Config
 import org.junit.Assert.*
 import org.robolectric.Robolectric
+import org.threeten.bp.DayOfWeek
+import org.threeten.bp.Month
 import java.util.TimeZone
 
 @Config(qualifiers = "en")
@@ -22,21 +23,75 @@ class DateHelperTest {
 
     @Test
     fun checkTimestampToDateStringFormattingWithFullMonthNamesAndSameYears() {
-        assertEquals("January 1", timestampToDateString(activity, 0, true, 0))
+        assertEquals("January 1", timestampToDateString(activity, dateTimeOf(0L), dateTimeOf(0L), true))
     }
 
     @Test
     fun checkTimestampToDateStringFormattingWithFullMonthNamesAndDifferentYears() {
-        assertEquals("January 1, 1970", timestampToDateString(activity, 0, true, 31536000000))
+        assertEquals("January 1, 1970", timestampToDateString(activity, dateTimeOf(0L), dateTimeOf(31536000000), true))
     }
 
     @Test
     fun checkTimestampToDateStringFormattingWithShortMonthNamesAndSameYears() {
-        assertEquals("jan 1", timestampToDateString(activity, 0, false, 0))
+        assertEquals("1 jan", timestampToDateString(activity, dateTimeOf(0L), dateTimeOf(0L), false))
     }
 
     @Test
     fun checkTimestampToDateStringFormattingWithShortMonthNamesAndDifferentYears() {
-        assertEquals("jan 1, 1970", timestampToDateString(activity, 0, false, 31536000000))
+        assertEquals("1 jan 1970", timestampToDateString(activity, dateTimeOf(0L), dateTimeOf(31536000000), false))
+    }
+
+    @Test
+    fun testGetFullNameOfDayOfWeek() {
+        assertEquals("Saturday", getFullNameOfDayOfWeek(activity, DayOfWeek.SATURDAY))
+        assertEquals("Monday", getFullNameOfDayOfWeek(activity, DayOfWeek.MONDAY))
+        assertEquals("Tuesday", getFullNameOfDayOfWeek(activity, DayOfWeek.TUESDAY))
+        assertEquals("Wednesday", getFullNameOfDayOfWeek(activity, DayOfWeek.WEDNESDAY))
+        assertEquals("Thursday", getFullNameOfDayOfWeek(activity, DayOfWeek.THURSDAY))
+        assertEquals("Friday", getFullNameOfDayOfWeek(activity, DayOfWeek.FRIDAY))
+        assertEquals("Sunday", getFullNameOfDayOfWeek(activity, DayOfWeek.SUNDAY))
+    }
+
+    @Test
+    fun testGetShortNameOfDayOfWeek() {
+        assertEquals("sat", getShortNameOfDayOfWeek(activity, DayOfWeek.SATURDAY))
+        assertEquals("mon", getShortNameOfDayOfWeek(activity, DayOfWeek.MONDAY))
+        assertEquals("tue", getShortNameOfDayOfWeek(activity, DayOfWeek.TUESDAY))
+        assertEquals("wed", getShortNameOfDayOfWeek(activity, DayOfWeek.WEDNESDAY))
+        assertEquals("thu", getShortNameOfDayOfWeek(activity, DayOfWeek.THURSDAY))
+        assertEquals("fri", getShortNameOfDayOfWeek(activity, DayOfWeek.FRIDAY))
+        assertEquals("sun", getShortNameOfDayOfWeek(activity, DayOfWeek.SUNDAY))
+    }
+
+    @Test
+    fun testGetFullNameOfMonth() {
+        assertEquals("January", getFullNameOfMonth(activity, Month.JANUARY))
+        assertEquals("February", getFullNameOfMonth(activity, Month.FEBRUARY))
+        assertEquals("March", getFullNameOfMonth(activity, Month.MARCH))
+        assertEquals("April", getFullNameOfMonth(activity, Month.APRIL))
+        assertEquals("May", getFullNameOfMonth(activity, Month.MAY))
+        assertEquals("June", getFullNameOfMonth(activity, Month.JUNE))
+        assertEquals("July", getFullNameOfMonth(activity, Month.JULY))
+        assertEquals("August", getFullNameOfMonth(activity, Month.AUGUST))
+        assertEquals("September", getFullNameOfMonth(activity, Month.SEPTEMBER))
+        assertEquals("October", getFullNameOfMonth(activity, Month.OCTOBER))
+        assertEquals("November", getFullNameOfMonth(activity, Month.NOVEMBER))
+        assertEquals("December", getFullNameOfMonth(activity, Month.DECEMBER))
+    }
+
+    @Test
+    fun testGetShortNameOfMonth() {
+        assertEquals("jan", getShortNameOfMonth(activity, Month.JANUARY))
+        assertEquals("feb", getShortNameOfMonth(activity, Month.FEBRUARY))
+        assertEquals("mar", getShortNameOfMonth(activity, Month.MARCH))
+        assertEquals("apr", getShortNameOfMonth(activity, Month.APRIL))
+        assertEquals("may", getShortNameOfMonth(activity, Month.MAY))
+        assertEquals("jun", getShortNameOfMonth(activity, Month.JUNE))
+        assertEquals("jul", getShortNameOfMonth(activity, Month.JULY))
+        assertEquals("aug", getShortNameOfMonth(activity, Month.AUGUST))
+        assertEquals("sep", getShortNameOfMonth(activity, Month.SEPTEMBER))
+        assertEquals("oct", getShortNameOfMonth(activity, Month.OCTOBER))
+        assertEquals("nov", getShortNameOfMonth(activity, Month.NOVEMBER))
+        assertEquals("dec", getShortNameOfMonth(activity, Month.DECEMBER))
     }
 }

@@ -5,7 +5,9 @@ import android.text.format.DateFormat
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import org.threeten.bp.temporal.ChronoField
 import org.threeten.bp.temporal.ChronoUnit
 import ru.sudox.android.time.formatters.TimeFormatter
 import java.util.Calendar
@@ -24,39 +26,32 @@ import java.util.Calendar.getInstance
 import java.util.Locale
 import kotlin.math.abs
 
-private const val MILLIS_IN_MINUTE = 60 * 1000
-private const val MILLIS_IN_HOUR = MILLIS_IN_MINUTE * 60
-private const val MILLIS_IN_DAY = 24 * MILLIS_IN_HOUR
-
 /**
- * Переводит Timestamp в строку с временем.
+ * Переводит DateTime в строку с временем.
  *
  * @param context Контекст приложения/активности
- * @param timestamp Timestamp, который нужно перевести в строку
+ * @param dateTime DateTime, который нужно перевести в строку
  * @param twelveHoursFormat Нужно ли работаь в 12-и часовом формате?
  * @return Строка с временем, которое было в timestamp.
  */
 fun timestampToTimeString(
         context: Context,
-        timestamp: Long,
+        dateTime: LocalDateTime,
         twelveHoursFormat: Boolean = !DateFormat.is24HourFormat(context)
 ): String {
-    val calendar = getCalendar(timestamp)
-    val minute = addLeadingZerosToTime(calendar[MINUTE])
-    val result = if (twelveHoursFormat) {
-        val amPm = context.getString(if (calendar[AM_PM] == 1) {
+    val minute = addLeadingZeroToNumber(dateTime.minute)
+
+    return if (twelveHoursFormat) {
+        val amPm = context.getString(if (dateTime[ChronoField.AMPM_OF_DAY] == 1) {
             R.string.pm
         } else {
             R.string.am
         })
 
-        context.getString(R.string.time_mask_with_am_pm, addLeadingZerosToTime(calendar[HOUR]), minute, amPm)
+        context.getString(R.string.time_mask_with_am_pm, addLeadingZeroToNumber(dateTime[ChronoField.HOUR_OF_AMPM]), minute, amPm)
     } else {
-        context.getString(R.string.time_mask_without_am_pm, addLeadingZerosToTime(calendar[HOUR_OF_DAY]), minute)
+        context.getString(R.string.time_mask_without_am_pm, addLeadingZeroToNumber(dateTime.hour), minute)
     }
-
-    calendarsPool.release(calendar)
-    return result
 }
 
 /**
@@ -79,34 +74,38 @@ fun timestampToString(
     val minutesDiff = ChronoUnit.MINUTES.between(requestDateTime, relativeDateTime)
 
     if (minutesDiff == 0L) {
-        return formatter.formatWhenEventOccurredNow(context)
+        return formatter.onEventOccurredNow(context, requestDateTime, relativeDateTime)
     } else if (minutesDiff < 60L) {
-        return formatter.formatWhenEventOccurredBetween1And60MinutesAgo(context, minutesDiff.toInt(), timestamp)
+        return formatter.onEventOccurredBetween1And60MinutesAgo(context, minutesDiff.toInt(), requestDateTime, relativeDateTime)
     }
 
     val hoursDiff = minutesDiff / 60
 
     if (hoursDiff in 1 .. 12) {
-        return formatter.formatWhenEventOccurredBetween1And12HoursAgo(context, hoursDiff.toInt(), timestamp)
+        return formatter.onEventOccurredBetween1And12HoursAgo(context, hoursDiff.toInt(), requestDateTime, relativeDateTime)
     } else if (hoursDiff in 13 until 24) {
-        return formatter.formatWhenEventOccurredBetween12And24HoursAgo(context, hoursDiff.toInt(), timestamp)
+        return formatter.onEventOccurredBetween12And24HoursAgo(context, hoursDiff.toInt(), requestDateTime, relativeDateTime)
     }
 
     val daysDiff = hoursDiff / 24L
 
     if (daysDiff == 1L) {
-        return formatter.formatWhenEventOccurredYesterday(context, timestamp)
+        return formatter.onEventOccurredYesterday(context, requestDateTime, relativeDateTime)
     } else if (daysDiff in 2L .. 7L) {
-        return formatter.formatWhenEventOccurredBetween2And7DaysAgo(context, daysDiff.toInt(), timestamp)
+        val result = formatter.onEventOccurredBetween2And7DaysAgo(context, daysDiff.toInt(), requestDateTime, relativeDateTime)
+
+        if (result != null) {
+            return result
+        }
     }
 
     val yearsDiff = ChronoUnit.YEARS.between(requestDateTime, relativeDateTime)
 
     if (yearsDiff == 0L) {
-        return formatter.formatWhenEventOccurredInSameYear(context, timestamp)
+        return formatter.onEventOccurredInSameYear(context, requestDateTime, relativeDateTime)
     }
 
-    return formatter.formatWhenEventOccurredInAnotherYear(context, yearsDiff.toInt(), timestamp)
+    return formatter.onEventOccurredInAnotherYear(context, yearsDiff.toInt(), requestDateTime, relativeDateTime)
 }
 
 /**
@@ -138,7 +137,7 @@ fun formatTime(
         getShortMonthName(context, requested[MONTH] + 1)
     }
 
-    val minutesWithLeadingZeros = addLeadingZerosToTime(requested[MINUTE])
+    val minutesWithLeadingZeros = addLeadingZeroToNumber(requested[MINUTE])
     val requestedTime: String = if (twelveHoursFormat) {
         val amPm = context.getString(if (requested[AM_PM] == 1) {
             R.string.pm
@@ -146,9 +145,9 @@ fun formatTime(
             R.string.am
         })
 
-        "${addLeadingZerosToTime(requested[HOUR])}:$minutesWithLeadingZeros $amPm"
+        "${addLeadingZeroToNumber(requested[HOUR])}:$minutesWithLeadingZeros $amPm"
     } else {
-        "${addLeadingZerosToTime(requested[HOUR_OF_DAY])}:$minutesWithLeadingZeros"
+        "${addLeadingZeroToNumber(requested[HOUR_OF_DAY])}:$minutesWithLeadingZeros"
     }
 
     var result: String? = null
@@ -332,10 +331,10 @@ private fun calculateDiff(requested: Calendar,
     return result
 }
 
-private fun addLeadingZerosToTime(time: Int): String {
-    if (time >= 10) {
-        return time.toString()
+internal fun addLeadingZeroToNumber(number: Int): String {
+    if (number >= 10) {
+        return number.toString()
     }
 
-    return "0$time"
+    return "0$number"
 }
