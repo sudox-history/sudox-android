@@ -74,4 +74,10 @@ class DateHelperTest {
         assertEquals("nov", getShortNameOfMonth(activity, Month.NOVEMBER))
         assertEquals("dec", getShortNameOfMonth(activity, Month.DECEMBER))
     }
+
+    @Test
+    fun testTimestampToString() {
+        assertEquals("January 1", timestampToDateString(activity, 0L, 0L))
+        assertEquals("January 1 1970", timestampToDateString(activity, 31536000000L, 0L))
+    }
 }

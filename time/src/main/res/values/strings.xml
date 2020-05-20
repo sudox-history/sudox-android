@@ -27,27 +27,6 @@
     <string name="time_mask_with_am_pm">%1$s:%2$s %3$s</string>
     <string name="time_mask_without_am_pm">%1$s:%2$s</string>
 
-    <!--  Old  -->
-
-    <string name="at_mask">%s at %s</string>
-
-    <string name="date_mask_with_year">%d %s %d</string>
-    <string name="date_mask_without_year">%d %s</string>
-
-    <string name="second_mask">%d s</string>
-    <string name="minute_mask">%d m</string>
-    <string name="hour_mask">%d h</string>
-
-    <string name="am">AM</string>
-    <string name="pm">PM</string>
-
-    <string name="time_ago_mask">%s ago</string>
-    <string name="time_after_mask">After %s</string>
-    <string name="yesterday">Yesterday</string>
-    <string name="tomorrow">Tomorrow</string>
-    <string name="today">Today</string>
-    <string name="just">Just now</string>
-
     <string name="january">January</string>
     <string name="february">February</string>
     <string name="march">March</string>
@@ -90,18 +69,9 @@
     <string name="saturday_short">sat</string>
     <string name="sunday_short">sun</string>
 
-    <plurals name="seconds">
-        <item quantity="one">%d second</item>
-        <item quantity="other">%d seconds</item>
-    </plurals>
+    <string name="date_mask_with_year">%2$s %1$d %3$d</string>
+    <string name="date_mask_without_year">%2$s %1$d</string>
 
-    <plurals name="minutes">
-        <item quantity="one">%d minute</item>
-        <item quantity="other">%d minutes</item>
-    </plurals>
-
-    <plurals name="hours">
-        <item quantity="one">%d hour</item>
-        <item quantity="other">%d hours</item>
-    </plurals>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
 </resources>

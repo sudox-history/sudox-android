@@ -49,8 +49,8 @@ fun timestampToString(
         formatter: TimeFormatter,
         timestamp: Long
 ): String {
-    val relativeDateTime = Instant.ofEpochMilli(relativeTimestamp).atZone(ZoneId.systemDefault()).toLocalDateTime()
-    val requestDateTime = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime()
+    val relativeDateTime = dateTimeOf(relativeTimestamp)
+    val requestDateTime = dateTimeOf(timestamp)
     val minutesDiff = ChronoUnit.MINUTES.between(requestDateTime, relativeDateTime)
 
     if (minutesDiff == 0L) {

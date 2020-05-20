@@ -6,6 +6,7 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
 import org.threeten.bp.ZoneId
+import org.threeten.bp.temporal.ChronoUnit
 
 /**
  * Переводит Timestamp в LocalDateTime
@@ -17,6 +18,27 @@ fun dateTimeOf(timestamp: Long): LocalDateTime = Instant
         .ofEpochMilli(timestamp)
         .atZone(ZoneId.systemDefault())
         .toLocalDateTime()
+
+/**
+ * Переводит unix-timestamp в строку с датой
+ *
+ * @param context Контекст приложения/активности
+ * @param relativeTimestamp Время, относительно которого будет производится форматирование
+ * @param timestamp Время, которое будет отформатировано
+ * @return Строка с датой.
+ */
+fun timestampToDateString(context: Context, relativeTimestamp: Long = System.currentTimeMillis(), timestamp: Long): String {
+    val relativeDateTime = dateTimeOf(relativeTimestamp)
+    val requestDateTime = dateTimeOf(timestamp)
+    val yearsDiff = ChronoUnit.YEARS.between(requestDateTime, relativeDateTime)
+    val monthName = getFullNameOfMonth(context, requestDateTime.month)
+
+    return if (yearsDiff == 0L) {
+        context.getString(R.string.date_mask_without_year, requestDateTime.dayOfMonth, monthName)
+    } else {
+        context.getString(R.string.date_mask_with_year, requestDateTime.dayOfMonth, monthName, requestDateTime.year)
+    }
+}
 
 /**
  * Выдает сокращенное название месяца
