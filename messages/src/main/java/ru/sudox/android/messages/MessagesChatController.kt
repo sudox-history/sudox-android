@@ -1,6 +1,7 @@
 package ru.sudox.android.messages
 
 import android.content.Context
+import android.os.Handler
 import android.view.View
 import ru.sudox.android.core.controllers.ViewListController
 import ru.sudox.android.media.vos.MediaAttachmentVO
@@ -15,7 +16,7 @@ import ru.sudox.design.viewlist.ViewList
 
 const val MESSAGES_CONTROLLER_DIALOG_ID_KEY = "dialog_id"
 
-class MessagesChatController : ViewListController<MessagesAdapter>(true) {
+class MessagesChatController : ViewListController<MessagesAdapter>(true, true) {
 
     override fun bindView(view: View) {
         super.bindView(view)
@@ -24,89 +25,118 @@ class MessagesChatController : ViewListController<MessagesAdapter>(true) {
             vo = MessagesChatVO(1L, "Maxim Mityushkin", 0L, 4L)
         }
 
-        adapter!!.messageVOs.add(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
-            override val text: String = "Первое сообщение в Sudox! Напиши если оно у тебя отображается"
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = true
-            override val isSentByMe = false
-            override val sentTime: Long = 0L
+        val handler = Handler()
 
-            override fun getMessageStatus(context: Context) = null
-        })
+        handler.postDelayed({
+            adapter!!.messageVOs.add(object : MessageVO {
+                override val id: String = ""
+                override val senderId: String = "1"
+                override val text: String = "Первое сообщение в Sudox! Ответь мне если оно у тебя отображается"
+                override val attachments: ArrayList<MediaAttachmentVO>? = null
+                override val likes: ArrayList<PeopleVO>? = null
+                override val isFirstMessage = true
+                override val isSentByMe = false
+                override val sentTime: Long = 0L
 
-        adapter!!.messageVOs.add(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "2"
-            override val text: String = "Да, сообщение отображается."
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = true
-            override val isSentByMe = true
-            override val sentTime: Long = 1L
-
-            override fun getMessageStatus(context: Context) = null
-        })
-
-        adapter!!.messageVOs.add(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
-            override val text: String = "Ну все, теперь проверяем отображение картинки"
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = true
-            override val isSentByMe = false
-            override val sentTime: Long = 2L
-
-            override fun getMessageStatus(context: Context) = null
-        })
-
-        adapter!!.messageVOs.add(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
-            override val text: String? = null
-            override val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(7L).apply {
-                height = 387
-                width = 620
+                override fun getMessageStatus(context: Context) = null
             })
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = false
-            override val isSentByMe = false
-            override val sentTime: Long = 3L
+        }, 1000L)
 
-            override fun getMessageStatus(context: Context) = null
-        })
+        handler.postDelayed({
+            adapter!!.messageVOs.add(object : MessageVO {
+                override val id: String = ""
+                override val senderId: String = "2"
+                override val text: String = "Да, сообщение отображается. Все отлично работает!"
+                override val attachments: ArrayList<MediaAttachmentVO>? = null
+                override val likes: ArrayList<PeopleVO>? = null
+                override val isFirstMessage = true
+                override val isSentByMe = true
+                override val sentTime: Long = 1L
 
-        adapter!!.messageVOs.add(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
-            override val text: String? = null
-            override val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(7L).apply {
-                height = 387
-                width = 620
+                override fun getMessageStatus(context: Context) = null
             })
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = false
-            override val isSentByMe = false
-            override val sentTime: Long = 3L
+        }, 3000L)
 
-            override fun getMessageStatus(context: Context) = null
-        })
+        handler.postDelayed({
+            adapter!!.messageVOs.add(object : MessageVO {
+                override val id: String = ""
+                override val senderId: String = "1"
+                override val text: String = "Ну все, сейчас проверим отправку изображений"
+                override val attachments: ArrayList<MediaAttachmentVO>? = null
+                override val likes: ArrayList<PeopleVO>? = null
+                override val isFirstMessage = true
+                override val isSentByMe = false
+                override val sentTime: Long = 2L
 
-        adapter!!.messageVOs.add(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
-            override val text: String? = "Отправил."
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = false
-            override val isSentByMe = false
-            override val sentTime: Long = 4L
+                override fun getMessageStatus(context: Context) = null
+            })
+        }, 5000L)
 
-            override fun getMessageStatus(context: Context) = null
-        })
+        handler.postDelayed({
+            adapter!!.messageVOs.add(object : MessageVO {
+                override val id: String = ""
+                override val senderId: String = "1"
+                override val text: String? = null
+                override val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(7L).apply {
+                    height = 387
+                    width = 620
+                })
+                override val likes: ArrayList<PeopleVO>? = null
+                override val isFirstMessage = false
+                override val isSentByMe = false
+                override val sentTime: Long = 3L
+
+                override fun getMessageStatus(context: Context) = null
+            })
+        }, 8000L)
+
+        handler.postDelayed({
+            adapter!!.messageVOs.add(object : MessageVO {
+                override val id: String = ""
+                override val senderId: String = "1"
+                override val text: String? = "Отпиши если картинка дошла до тебя и отображается нормально."
+                override val attachments: ArrayList<MediaAttachmentVO>? = null
+                override val likes: ArrayList<PeopleVO>? = null
+                override val isFirstMessage = false
+                override val isSentByMe = false
+                override val sentTime: Long = 4L
+
+                override fun getMessageStatus(context: Context) = null
+            })
+        }, 10000L)
+
+        handler.postDelayed({
+            adapter!!.messageVOs.add(object : MessageVO {
+                override val id: String = ""
+                override val senderId: String = "1"
+                override val text: String? = null
+                override val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(7L).apply {
+                    height = 387
+                    width = 620
+                })
+                override val likes: ArrayList<PeopleVO>? = null
+                override val isFirstMessage = false
+                override val isSentByMe = true
+                override val sentTime: Long = 5L
+
+                override fun getMessageStatus(context: Context) = null
+            })
+        }, 12000L)
+
+        handler.postDelayed({
+            adapter!!.messageVOs.add(object : MessageVO {
+                override val id: String = ""
+                override val senderId: String = "2"
+                override val text: String = "Сейчас я отправил картинку!"
+                override val attachments: ArrayList<MediaAttachmentVO>? = null
+                override val likes: ArrayList<PeopleVO>? = null
+                override val isFirstMessage = true
+                override val isSentByMe = true
+                override val sentTime: Long = 6L
+
+                override fun getMessageStatus(context: Context) = null
+            })
+        }, 12000L)
     }
 
     override fun getAdapter(viewList: ViewList): MessagesAdapter {

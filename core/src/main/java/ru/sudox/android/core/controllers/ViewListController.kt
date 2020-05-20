@@ -11,7 +11,8 @@ import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 
 abstract class ViewListController<AT : ViewListAdapter<*>>(
-        private val reverseLayout: Boolean = false
+        private val reverseLayout: Boolean = false,
+        private val disableAnimations: Boolean = false
 ) : CoreController() {
 
     var adapter: AT? = null
@@ -20,6 +21,11 @@ abstract class ViewListController<AT : ViewListAdapter<*>>(
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
         return ViewList(activity!!).also {
             adapter = this@ViewListController.getAdapter(it)?.apply { this.viewList = it }
+
+            if (disableAnimations) {
+                it.itemAnimator = null
+                it.layoutAnimation = null
+            }
 
             it.adapter = adapter
             it.layoutManager = LinearLayoutManager(activity).apply { reverseLayout = this@ViewListController.reverseLayout }
