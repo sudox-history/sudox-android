@@ -3,4 +3,21 @@
     <string name="people">People</string>
     <string name="seen_mask">Seen %s</string>
     <string name="online">Online</string>
+
+    <string name="seen_time_formatter_now">seen just now</string>
+    <string name="seen_time_formatter_yesterday">seen yesterday at %s</string>
+    <string name="seen_time_formatter_in_another_year">seen on %1$s %2$d %3$d at %4$s</string>
+    <string name="seen_time_formatter_in_same_year">seen on %1$s %2$d at %3$s</string>
+    <string name="seen_time_formatter_on_week">seen on %1$s at %2$s</string>
+    <string name="seen_time_at">seen at %s</string>
+
+    <plurals name="seen_time_formatter_minutes">
+        <item quantity="one">seen %d minute ago</item>
+        <item quantity="other">seen %d minutes ago</item>
+    </plurals>
+
+    <plurals name="seen_time_formatter_hours">
+        <item quantity="one">seen %d hour ago</item>
+        <item quantity="other">seen %d hours ago</item>
+    </plurals>
 </resources>

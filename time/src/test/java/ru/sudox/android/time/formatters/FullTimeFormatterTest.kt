@@ -48,6 +48,7 @@ class FullTimeFormatterTest  {
     @Test
     fun testWhenEventOccurredBetween12And24HoursAgo() {
         assertEquals("at 00:00", onEventOccurredBetween12And24HoursAgo(activity, 1, dateTimeOf(0L), dateTimeOf(0L), false))
+        assertEquals("at 00:00 AM", onEventOccurredBetween12And24HoursAgo(activity, 1, dateTimeOf(0L), dateTimeOf(0L), true))
     }
 
     @Test
@@ -64,13 +65,13 @@ class FullTimeFormatterTest  {
 
     @Test
     fun testWhenEventOccurredInSameYear() {
-        assertEquals("1 January at 00:00", onEventOccurredInSameYear(activity, dateTimeOf(0L), dateTimeOf(0L), false))
-        assertEquals("1 January at 00:00 AM", onEventOccurredInSameYear(activity, dateTimeOf(0L), dateTimeOf(0L), true))
+        assertEquals("January 1 at 00:00", onEventOccurredInSameYear(activity, dateTimeOf(0L), dateTimeOf(0L), false))
+        assertEquals("January 1 at 00:00 AM", onEventOccurredInSameYear(activity, dateTimeOf(0L), dateTimeOf(0L), true))
     }
 
     @Test
     fun testWhenEventOccurredInAnotherYear() {
-        assertEquals("1 January 1970 at 00:00", onEventOccurredInAnotherYear(activity, 1, dateTimeOf(0L), dateTimeOf(31536000000L), false))
-        assertEquals("1 January 1970 at 00:00 AM", onEventOccurredInAnotherYear(activity, 1, dateTimeOf(0L), dateTimeOf(31536000000L), true))
+        assertEquals("January 1 1970 at 00:00", onEventOccurredInAnotherYear(activity, 1, dateTimeOf(0L), dateTimeOf(31536000000L), false))
+        assertEquals("January 1 1970 at 00:00 AM", onEventOccurredInAnotherYear(activity, 1, dateTimeOf(0L), dateTimeOf(31536000000L), true))
     }
 }

@@ -3,10 +3,24 @@ package ru.sudox.android.time
 import android.content.Context
 import androidx.core.util.Pools
 import org.threeten.bp.DayOfWeek
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Month
+import org.threeten.bp.ZoneId
 import java.util.Calendar
 
 internal var calendarsPool = Pools.SimplePool<Calendar>(4)
+
+/**
+ * Переводит Timestamp в LocalDateTime
+ *
+ * @param timestamp Timestamp для перевода
+ * @return LocalDateTime, получившийся в результате перевода
+ */
+fun dateTimeOf(timestamp: Long): LocalDateTime = Instant
+        .ofEpochMilli(timestamp)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime()
 
 /**
  * Выдает сокращенное название месяца

@@ -60,7 +60,7 @@ class ShortTimeFormatterTest {
 
     @Test
     fun testWhenEventOccurredInSameYear() {
-        assertEquals("1 jan", onEventOccurredInSameYear(activity, dateTimeOf(0L), dateTimeOf(0L), false))
+        assertEquals("jan 1", onEventOccurredInSameYear(activity, dateTimeOf(0L), dateTimeOf(0L), false))
     }
 
     @Test

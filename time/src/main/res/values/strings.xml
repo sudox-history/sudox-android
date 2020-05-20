@@ -3,14 +3,14 @@
     <string name="short_formatter_now">now</string>
     <string name="short_formatter_minutes">%dm</string>
     <string name="short_formatter_hours">%dh</string>
-    <string name="short_formatter_same_year">%1$d %2$s</string>
+    <string name="short_formatter_same_year">%2$s %1$d</string>
     <string name="short_formatter_years">%dy</string>
     <string name="short_formatter_yesterday">yesterday</string>
 
     <string name="full_formatter_now">just now</string>
     <string name="full_formatter_yesterday">yesterday at %s</string>
-    <string name="full_formatter_on_another_year">%1$d %2$s %3$d at %4$s</string>
-    <string name="full_formatter_on_year">%1$d %2$s at %3$s</string>
+    <string name="full_formatter_on_another_year">%2$s %1$d %3$d at %4$s</string>
+    <string name="full_formatter_on_year">%2$s %1$d at %3$s</string>
     <string name="full_formatter_on_week">on %1$s at %2$s</string>
     <string name="full_formatter_at">at %s</string>
 
