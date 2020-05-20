@@ -4,6 +4,16 @@
     <dimen name="messagestitleappbarview_subtitle_text_size">15sp</dimen>
     <dimen name="messagestitleappbarview_margin_between_title_and_subtitle">0dp</dimen>
 
+    <dimen name="messagetimetextview_text_size">14sp</dimen>
+    <dimen name="messagetimetextview_padding_horizontal">10dp</dimen>
+    <dimen name="messagetimetextview_padding_vertical">4dp</dimen>
+    <dimen name="messagetimetextview_corner_radius">21dp</dimen>
+    <dimen name="messagetimetextview_stroke_width">1dp</dimen>
+
+    <dimen name="messagesadapter_margin_between_footer_and_message">21dp</dimen>
+    <dimen name="messagesadapter_margin_between_different_senders">12dp</dimen>
+    <dimen name="messagesadapter_margin_between_same_senders">6dp</dimen>
+
     <dimen name="chatmessagesappbarvo_avatar_width">36dp</dimen>
     <dimen name="chatmessagesappbarvo_avatar_height">36dp</dimen>
 

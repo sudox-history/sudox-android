@@ -41,15 +41,15 @@ class MessagesAdapter(
 
     override fun getItemMargin(position: Int): Int {
         return if (position == max(messageVOs.size() - 1, 0)) {
-            42 // Margin between footer and content
+            context.resources.getDimensionPixelSize(R.dimen.messagesadapter_margin_between_footer_and_message)
         } else if (position != messageVOs.size()) {
             val current = messageVOs[position]
             val prev = messageVOs[position + 1]
 
-            if (current.senderId == prev.senderId) {
-                12
+            if (current.senderId != prev.senderId) {
+                context.resources.getDimensionPixelSize(R.dimen.messagesadapter_margin_between_different_senders)
             } else {
-                24
+                context.resources.getDimensionPixelSize(R.dimen.messagesadapter_margin_between_same_senders)
             }
         } else {
             0

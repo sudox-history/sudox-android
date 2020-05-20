@@ -43,6 +43,18 @@
         <item name="android:textSize">@dimen/messagelikesview_count_text_size</item>
     </style>
 
+    <style name="Sudox.MessageTimeTextView" parent="">
+        <item name="android:background">@drawable/background_messagetimetextview</item>
+        <item name="android:paddingLeft">@dimen/messagetimetextview_padding_horizontal</item>
+        <item name="android:paddingRight">@dimen/messagetimetextview_padding_horizontal</item>
+        <item name="android:paddingBottom">@dimen/messagetimetextview_padding_vertical</item>
+        <item name="android:paddingTop">@dimen/messagetimetextview_padding_vertical</item>
+        <item name="android:textSize">@dimen/messagetimetextview_text_size</item>
+        <item name="android:textColor">@color/messagetimetextview_text_color</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+
     <style name="Sudox.MessageItemView" parent="">
         <item name="maxWidthPercent">0.75</item>
         <item name="internalPaddingTop">8dp</item>
