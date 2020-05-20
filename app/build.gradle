@@ -52,6 +52,7 @@ dependencies {
     implementation libraries.appcompat
     implementation libraries.conductor
     implementation libraries.conductor_archlifecycle
+    implementation libraries.threetenabp
     implementation libraries.annotations
     implementation libraries.coordinator_layout
     implementation libraries.material_components

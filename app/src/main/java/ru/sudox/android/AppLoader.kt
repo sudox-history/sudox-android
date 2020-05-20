@@ -4,6 +4,7 @@ import android.app.Application
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.jakewharton.threetenabp.AndroidThreeTen
 import ru.sudox.api.connections.impl.WebSocketConnection
 import ru.sudox.api.inject.ApiModule
 import ru.sudox.android.countries.inject.CountriesModule
@@ -34,6 +35,8 @@ class AppLoader : Application(), CoreLoader {
 
     override fun onCreate() {
         super.onCreate()
+
+        AndroidThreeTen.init(this)
 
         val phoneNumberUtil = PhoneNumberUtil.createInstance(this)
         val objectMapper = ObjectMapper(MessagePackFactory())
