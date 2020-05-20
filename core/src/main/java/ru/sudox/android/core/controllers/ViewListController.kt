@@ -11,7 +11,7 @@ import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 
 abstract class ViewListController<AT : ViewListAdapter<*>>(
-        private val reverseLayout: Boolean = false,
+        private val stackFromEnd: Boolean = false,
         private val disableAnimations: Boolean = false
 ) : CoreController() {
 
@@ -28,7 +28,7 @@ abstract class ViewListController<AT : ViewListAdapter<*>>(
             }
 
             it.adapter = adapter
-            it.layoutManager = LinearLayoutManager(activity).apply { reverseLayout = this@ViewListController.reverseLayout }
+            it.layoutManager = LinearLayoutManager(activity).apply { stackFromEnd = this@ViewListController.stackFromEnd }
             it.clipToPadding = false
 
             val leftPadding = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_left_padding)
