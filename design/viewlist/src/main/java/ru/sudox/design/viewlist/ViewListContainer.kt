@@ -43,7 +43,11 @@ class ViewListContainer : ViewGroup {
                 removeView(field)
             }
 
+            field = value
+
             if (value != null) {
+                addView(value)
+
                 value.addOnScrollListener(scrollListener)
                 value.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> showStickyView() }
                 value.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
@@ -53,18 +57,17 @@ class ViewListContainer : ViewGroup {
                     removeView(stickyView)
                 }
 
-                stickyView = (value.adapter as ViewListAdapter<*>).getStickyView(context).apply { alpha = 0F }
-                stickyViewSecond = (value.adapter as ViewListAdapter<*>).getStickyView(context).apply { alpha = 0F }
+                stickyView = (value.adapter as ViewListAdapter<*>).getStickyView(context)
+                stickyViewSecond = (value.adapter as ViewListAdapter<*>).getStickyView(context)
 
                 if (stickyView != null) {
+                    stickyView!!.alpha = 0F
+                    stickyViewSecond!!.alpha = 0F
+
                     addView(stickyViewSecond)
                     addView(stickyView)
                 }
-
-                addView(value)
             }
-
-            field = value
         }
 
     constructor(context: Context) : super(context)
