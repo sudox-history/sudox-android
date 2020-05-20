@@ -26,8 +26,13 @@ class ViewListMarginDecorator(
         }
 
         val itemMargin = adapter.getItemMargin(position)
+        val range = if (layoutManager.stackFromEnd || layoutManager.reverseLayout) {
+            1 until adapter.itemCount
+        } else {
+            0 until adapter.itemCount - 1
+        }
 
-        if (position < adapter.itemCount - 1) {
+        if (position in range) {
             if (layoutManager.orientation == LinearLayoutManager.VERTICAL) {
                 outRect.top = itemMargin
             } else {

@@ -2,6 +2,7 @@ package ru.sudox.android.messages.adapters
 
 import android.content.Context
 import android.view.ContextThemeWrapper
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.android.time.timestampToDateString
 import ru.sudox.design.viewlist.ViewListAdapter
 
+private const val DATE_ITEM_VIEW_TAG = 1
 private const val DATE_ITEM_VIEW_TYPE = 1
 private const val MESSAGE_ITEM_VIEW_TYPE = 0
 
@@ -49,7 +51,7 @@ class MessagesAdapter(
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == DATE_ITEM_VIEW_TYPE) {
-            DateViewHolder(AppCompatTextView(ContextThemeWrapper(context, R.style.Sudox_MessageTimeTextView)))
+            DateViewHolder(createDateTextView())
         } else {
             MessageViewHolder(MessageItemView(context))
         }
@@ -83,6 +85,40 @@ class MessagesAdapter(
 
     override fun getItemsCountAfterHeader(type: Int): Int {
         return messageVOs.size + loadedDatesAtPosition.size
+    }
+
+    override fun canCreateMarginViaDecorators(): Boolean {
+        return true
+    }
+
+    override fun getStickyView(context: Context): View? {
+        return createDateTextView()
+    }
+
+    override fun canHideStickyView(): Boolean {
+        return true
+    }
+
+    override fun isViewCanBeSticky(view: View): Boolean {
+        return view is AppCompatTextView && view.tag == DATE_ITEM_VIEW_TAG
+    }
+
+    override fun isViewCanProvideData(view: View): Boolean {
+        return view.tag == DATE_ITEM_VIEW_TAG || view is MessageItemView
+    }
+
+    override fun bindStickyView(view: View, provider: View) {
+        if (provider is AppCompatTextView) {
+            (view as AppCompatTextView).text = provider.text
+        } else if (provider is MessageItemView) {
+            (view as AppCompatTextView).text = timestampToDateString(context, timestamp = provider.vo!!.sentTime)
+        }
+    }
+
+    private fun createDateTextView(): AppCompatTextView {
+        return AppCompatTextView(ContextThemeWrapper(context, R.style.Sudox_MessageTimeTextView)).apply {
+            tag = DATE_ITEM_VIEW_TAG
+        }
     }
 
     class MessageViewHolder(val view: MessageItemView) : RecyclerView.ViewHolder(view)

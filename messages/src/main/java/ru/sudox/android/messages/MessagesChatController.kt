@@ -1,8 +1,9 @@
 package ru.sudox.android.messages
 
 import android.content.Context
-import android.os.Handler
+import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import ru.sudox.android.core.controllers.ViewListController
 import ru.sudox.android.media.vos.MediaAttachmentVO
 import ru.sudox.android.media.vos.impls.ImageAttachmentVO
@@ -11,7 +12,6 @@ import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.android.messages.vos.MessagesChatVO
 import ru.sudox.android.messages.vos.appbar.BaseMessagesAppBarVO
 import ru.sudox.android.people.common.vos.PeopleVO
-import ru.sudox.android.people.common.vos.SimplePeopleVO
 import ru.sudox.design.viewlist.ViewList
 
 const val MESSAGES_CONTROLLER_DIALOG_ID_KEY = "dialog_id"
@@ -136,7 +136,7 @@ class MessagesChatController : ViewListController<MessagesAdapter>(true, true) {
         })
     }
 
-    override fun getAdapter(viewList: ViewList): MessagesAdapter {
+    override fun getAdapter(viewList: ViewList): MessagesAdapter? {
         return MessagesAdapter(glide, activity!!)
     }
 }
