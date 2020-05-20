@@ -2,8 +2,6 @@ package ru.sudox.android.people.peopletab.vos
 
 import android.content.Context
 import ru.sudox.android.people.common.vos.PeopleVO
-import ru.sudox.android.people.peopletab.R
-import ru.sudox.android.time.formatTime
 
 /**
  * ViewObject для добавленного друга.

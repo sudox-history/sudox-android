@@ -19,11 +19,12 @@ import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
-import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.dialogs.R
 import ru.sudox.android.dialogs.vos.DialogVO
+import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.views.AvatarImageView
-import ru.sudox.android.time.formatTime
+import ru.sudox.android.time.formatters.ShortTimeFormatter
+import ru.sudox.android.time.timestampToString
 import kotlin.math.abs
 import kotlin.math.max
 
@@ -280,7 +281,7 @@ class DialogItemView : ViewGroup {
     private fun dateViewSettingsUpdate() {
         //date view settings
         dateView.apply {
-            text = formatTime(context, dateToLowerCase = true, time = vo!!.time)
+            text = timestampToString(context, formatter = ShortTimeFormatter, timestamp = vo!!.time)
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             gravity = Gravity.CENTER_VERTICAL
             includeFontPadding = false

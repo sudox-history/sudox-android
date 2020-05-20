@@ -4,7 +4,8 @@ import android.content.Context
 import ru.sudox.android.media.vos.MediaAttachmentVO
 import ru.sudox.android.news.R
 import ru.sudox.android.people.common.vos.SimplePeopleVO
-import ru.sudox.android.time.formatTime
+import ru.sudox.android.time.formatters.FullTimeFormatter
+import ru.sudox.android.time.timestampToString
 
 const val MORE_OPTIONS_BUTTON_TAG = 1
 const val IS_ACTION_DISABLED = -1
@@ -43,6 +44,6 @@ class NewsVO(
     }
 
     override fun getStatusMessage(context: Context): String? {
-        return formatTime(context, fullFormat = true, time = publishTime, dateToLowerCase = true)
+        return timestampToString(context, formatter = FullTimeFormatter, timestamp = publishTime)
     }
 }

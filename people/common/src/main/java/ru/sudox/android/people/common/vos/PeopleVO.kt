@@ -3,7 +3,8 @@ package ru.sudox.android.people.common.vos
 import android.content.Context
 import ru.sudox.android.media.images.views.vos.AvatarVO
 import ru.sudox.android.people.common.R
-import ru.sudox.android.time.formatTime
+import ru.sudox.android.people.common.formatters.SeenTimeFormatter
+import ru.sudox.android.time.timestampToString
 
 const val SEEN_TIME_ONLINE = 0L
 const val CLOSE_BUTTON_TAG = -1
@@ -61,12 +62,7 @@ interface PeopleVO : AvatarVO {
         return if (isUserOnline()) {
             context.getString(R.string.online)
         } else {
-            context.getString(R.string.seen_mask, formatTime(
-                    context,
-                    fullFormat = true,
-                    dateToLowerCase = true,
-                    time = seenTime)
-            )
+            timestampToString(context, formatter = SeenTimeFormatter, timestamp = seenTime)
         }
     }
 

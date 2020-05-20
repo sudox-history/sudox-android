@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="people">People</string>
-    <string name="seen_mask">Seen %s</string>
     <string name="online">Online</string>
 
     <string name="seen_time_formatter_now">seen just now</string>
