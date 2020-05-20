@@ -1,4 +1,4 @@
-package ru.sudox.android.messages.views
+package ru.sudox.android.messages.views.appbar
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,7 +6,6 @@ import android.os.Build
 import android.text.Layout
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow

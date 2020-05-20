@@ -3,7 +3,6 @@ package ru.sudox.android.core.controllers
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.android.core.CoreController
@@ -12,7 +11,7 @@ import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 
 abstract class ViewListController<AT : ViewListAdapter<*>>(
-        private val stackFromEnd: Boolean = false
+        private val reverseLayout: Boolean = false
 ) : CoreController() {
 
     var adapter: AT? = null
@@ -20,20 +19,18 @@ abstract class ViewListController<AT : ViewListAdapter<*>>(
 
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
         return ViewList(activity!!).also {
-            it.clipToPadding = false
-            it.layoutManager = LinearLayoutManager(activity).apply { stackFromEnd = this@ViewListController.stackFromEnd }
-            it.updatePadding(
-                    left = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_left_padding),
-                    right = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_right_padding),
-                    bottom = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_bottom_padding),
-                    top = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_top_padding)
-            )
-
-            adapter = this@ViewListController
-                    .getAdapter(it)
-                    ?.apply { this.viewList = it }
+            adapter = this@ViewListController.getAdapter(it)?.apply { this.viewList = it }
 
             it.adapter = adapter
+            it.layoutManager = LinearLayoutManager(activity).apply { reverseLayout = this@ViewListController.reverseLayout }
+            it.clipToPadding = false
+
+            val leftPadding = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_left_padding)
+            val rightPadding = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_right_padding)
+            val bottomPadding = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_bottom_padding)
+            val topPadding =  activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_top_padding)
+
+            it.setPadding(leftPadding, topPadding, rightPadding, bottomPadding)
             it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (it.getCurrentScrollY() > 0) {

@@ -148,9 +148,10 @@ class ViewListContainer : ViewGroup {
 
     private fun checkAndPrepareLayout() {
         val manager = viewList!!.layoutManager as? LinearLayoutManager
+        val isListReversed = manager?.stackFromEnd == true || manager?.reverseLayout == true
 
         // Для списков, счет элементов в которых начинается с конца
-        if (manager?.stackFromEnd == true && !viewList!!.canScrollVertically(-1) && !viewList!!.canScrollVertically(1)) {
+        if (isListReversed && !viewList!!.canScrollVertically(-1) && !viewList!!.canScrollVertically(1)) {
             stickyViewSecond!!.alpha = 0F
             hideStickyView(false)
             return
