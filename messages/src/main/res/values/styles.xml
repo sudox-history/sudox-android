@@ -44,12 +44,15 @@
     </style>
 
     <style name="Sudox.MessageTimeView" parent="">
-        <item name="android:background">@drawable/background_messagetimeview</item>
-        <item name="android:paddingLeft">@dimen/messagetimeview_padding_horizontal</item>
-        <item name="android:paddingRight">@dimen/messagetimeview_padding_horizontal</item>
-        <item name="android:paddingBottom">@dimen/messagetimeview_padding_vertical</item>
-        <item name="android:paddingTop">@dimen/messagetimeview_padding_vertical</item>
+        <item name="timeLeftPadding">@dimen/messagetimeview_padding_horizontal</item>
+        <item name="timeRightPadding">@dimen/messagetimeview_padding_horizontal</item>
+        <item name="timeBottomPadding">@dimen/messagetimeview_padding_vertical</item>
+        <item name="timeTopPadding">@dimen/messagetimeview_padding_vertical</item>
         <item name="timeTextAppearance">@style/Sudox.MessageTimeView.TextAppearance</item>
+        <item name="timeBackground">@drawable/background_messagetimeview</item>
+
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
     </style>
 
     <style name="Sudox.MessageTimeView.TextAppearance" parent="">

@@ -132,7 +132,7 @@ class MessagesChatController : CoreController() {
             override fun getMessageStatus(context: Context) = null
         })
 
-        repeat(500) {
+        repeat(100) {
             adapter.insertNewMessage(object : MessageVO {
                 override val id: String = ""
                 override val senderId: String = "2"

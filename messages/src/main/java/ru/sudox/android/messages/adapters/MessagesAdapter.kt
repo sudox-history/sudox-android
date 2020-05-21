@@ -3,8 +3,6 @@ package ru.sudox.android.messages.adapters
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.messages.R
@@ -80,7 +78,11 @@ class MessagesAdapter(
     }
 
     override fun getItemMargin(position: Int): Int {
-        return 12
+        return if (!loadedDatesAtPosition.containsKey(position)) {
+            12
+        } else {
+            0
+        }
     }
 
     override fun getItemsCountAfterHeader(type: Int): Int {
@@ -88,9 +90,7 @@ class MessagesAdapter(
     }
 
     override fun getStickyView(context: Context): View? {
-        return MessageTimeView(context).apply {
-            updatePadding(top = 6, bottom = 6)
-        }
+        return MessageTimeView(context)
     }
 
     override fun canHideStickyView(): Boolean {

@@ -82,7 +82,7 @@ class ProfileController : ViewListController<ViewListAdapter<*>>(true) {
             }
 
             override fun canHideStickyView(): Boolean {
-                return true
+                return false
             }
 
             override fun getItemsCountAfterHeader(type: Int): Int {

@@ -161,6 +161,10 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
             if (!canCreateMarginViaDecorators()) {
                 val itemMargin = getItemMargin(position) / 2
 
+                if (itemMargin == 0) {
+                    return
+                }
+
                 if (orientation == LinearLayoutManager.VERTICAL) {
                     holder.itemView.updatePadding(top = itemMargin, bottom = itemMargin)
                 } else {

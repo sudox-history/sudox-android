@@ -46,6 +46,11 @@
 
     <declare-styleable name="MessageTimeView">
         <attr name="timeTextAppearance" format="reference" />
+        <attr name="timeBackground" format="reference" />
+        <attr name="timeLeftPadding" format="dimension" />
+        <attr name="timeRightPadding" format="dimension" />
+        <attr name="timeBottomPadding" format="dimension" />
+        <attr name="timeTopPadding" format="dimension" />
     </declare-styleable>
 
     <attr name="messagesTitleAppBarViewStyle" format="reference" />

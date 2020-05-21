@@ -1,9 +1,14 @@
 package ru.sudox.android.messages.views
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.res.getDrawableOrThrow
+import androidx.core.content.res.getResourceIdOrThrow
+import androidx.core.content.res.use
+import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.messages.R
 
 class MessageTimeView : ViewGroup {
@@ -15,23 +20,26 @@ class MessageTimeView : ViewGroup {
         }
 
     private val textView = AppCompatTextView(context).apply {
-        background = this@MessageTimeView.background
-
-        setPadding(
-                this@MessageTimeView.paddingLeft,
-                this@MessageTimeView.paddingTop,
-                this@MessageTimeView.paddingRight,
-                this@MessageTimeView.paddingBottom
-        )
-
-        this@MessageTimeView.setPadding(0, 0, 0, 0)
-        this@MessageTimeView.background = null
         this@MessageTimeView.addView(this)
     }
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messageTimeViewStyle)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+
+    @SuppressLint("Recycle")
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        context.obtainStyledAttributes(attrs, R.styleable.MessageTimeView, defStyleAttr, 0).use {
+            textView.background = it.getDrawableOrThrow(R.styleable.MessageTimeView_timeBackground)
+
+            val topPadding = it.getDimensionPixelSize(R.styleable.MessageTimeView_timeTopPadding, 0)
+            val bottomPadding = it.getDimensionPixelSize(R.styleable.MessageTimeView_timeBottomPadding, 0)
+            val rightPadding = it.getDimensionPixelSize(R.styleable.MessageTimeView_timeRightPadding, 0)
+            val leftPadding = it.getDimensionPixelSize(R.styleable.MessageTimeView_timeLeftPadding, 0)
+
+            textView.setPadding(leftPadding, topPadding, rightPadding, bottomPadding)
+            setTextAppearance(textView, it.getResourceIdOrThrow(R.styleable.MessageTimeView_timeTextAppearance))
+        }
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         measureChild(textView, widthMeasureSpec, heightMeasureSpec)
