@@ -44,7 +44,12 @@
         <attr name="timeBadgeColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="MessageTimeView">
+        <attr name="timeTextAppearance" format="reference" />
+    </declare-styleable>
+
     <attr name="messagesTitleAppBarViewStyle" format="reference" />
     <attr name="messageLikesViewStyle" format="reference" />
     <attr name="messageItemViewStyle" format="reference" />
+    <attr name="messageTimeViewStyle" format="reference" />
 </resources>

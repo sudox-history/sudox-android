@@ -4,9 +4,9 @@
     <color name="messagestitleappbarview_subtitle_inactive_text_color">#808080</color>
     <color name="messagestitleappbarview_subtitle_active_text_color">#00BFA5</color>
 
-    <color name="messagetimetextview_text_color">#808080</color>
-    <color name="messagetimetextview_background_color">#FFFFFF</color>
-    <color name="messagetimetextview_stroke_color">#E7E7E7</color>
+    <color name="messagetimeview_text_color">#808080</color>
+    <color name="messagetimeview_background_color">#FFFFFF</color>
+    <color name="messagetimeview_stroke_color">#E7E7E7</color>
 
     <color name="messagelikesview_like_icon_tint">#ED2939</color>
     <color name="messagelikesview_count_text_color">#C5C5C5</color>

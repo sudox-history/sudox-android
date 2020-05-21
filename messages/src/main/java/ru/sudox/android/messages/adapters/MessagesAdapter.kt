@@ -1,19 +1,19 @@
 package ru.sudox.android.messages.adapters
 
 import android.content.Context
-import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.messages.R
 import ru.sudox.android.messages.views.MessageItemView
+import ru.sudox.android.messages.views.MessageTimeView
 import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.android.time.timestampToDateString
 import ru.sudox.design.viewlist.ViewListAdapter
 
-private const val DATE_ITEM_VIEW_TAG = 1
 private const val DATE_ITEM_VIEW_TYPE = 1
 private const val MESSAGE_ITEM_VIEW_TYPE = 0
 
@@ -51,7 +51,7 @@ class MessagesAdapter(
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == DATE_ITEM_VIEW_TYPE) {
-            DateViewHolder(createDateTextView())
+            DateViewHolder(MessageTimeView(context))
         } else {
             MessageViewHolder(MessageItemView(context))
         }
@@ -59,7 +59,7 @@ class MessagesAdapter(
 
     override fun bindItemHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is DateViewHolder) {
-            holder.view.text = loadedDatesAtPosition[position]
+            holder.view.timeText = loadedDatesAtPosition[position]
         } else if (holder is MessageViewHolder) {
             holder.view.setVO(messageVOs[position - loadedDatesAtPosition.count {
                 it.key < position
@@ -87,12 +87,10 @@ class MessagesAdapter(
         return messageVOs.size + loadedDatesAtPosition.size
     }
 
-    override fun canCreateMarginViaDecorators(): Boolean {
-        return true
-    }
-
     override fun getStickyView(context: Context): View? {
-        return createDateTextView()
+        return MessageTimeView(context).apply {
+            updatePadding(top = 6, bottom = 6)
+        }
     }
 
     override fun canHideStickyView(): Boolean {
@@ -100,27 +98,21 @@ class MessagesAdapter(
     }
 
     override fun isViewCanBeSticky(view: View): Boolean {
-        return view is AppCompatTextView && view.tag == DATE_ITEM_VIEW_TAG
+        return view is MessageTimeView
     }
 
     override fun isViewCanProvideData(view: View): Boolean {
-        return view.tag == DATE_ITEM_VIEW_TAG || view is MessageItemView
+        return view is MessageTimeView || view is MessageItemView
     }
 
     override fun bindStickyView(view: View, provider: View) {
-        if (provider is AppCompatTextView) {
-            (view as AppCompatTextView).text = provider.text
+        if (provider is MessageTimeView) {
+            (view as MessageTimeView).timeText = provider.timeText
         } else if (provider is MessageItemView) {
-            (view as AppCompatTextView).text = timestampToDateString(context, timestamp = provider.vo!!.sentTime)
-        }
-    }
-
-    private fun createDateTextView(): AppCompatTextView {
-        return AppCompatTextView(ContextThemeWrapper(context, R.style.Sudox_MessageTimeTextView)).apply {
-            tag = DATE_ITEM_VIEW_TAG
+            (view as MessageTimeView).timeText = timestampToDateString(context, timestamp = provider.vo!!.sentTime)
         }
     }
 
     class MessageViewHolder(val view: MessageItemView) : RecyclerView.ViewHolder(view)
-    class DateViewHolder(val view: AppCompatTextView) : RecyclerView.ViewHolder(view)
+    class DateViewHolder(val view: MessageTimeView) : RecyclerView.ViewHolder(view)
 }
