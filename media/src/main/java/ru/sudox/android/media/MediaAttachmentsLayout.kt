@@ -22,10 +22,10 @@ class MediaAttachmentsLayout : MityushkinLayout {
      * @param glide Glide для загрузки изображений/GIF'ок
      */
     fun setVOs(vos: ArrayList<MediaAttachmentVO>?, glide: GlideRequests) {
-        if (vos != null) {
+        if (this@MediaAttachmentsLayout.vos != null) {
             for (i in 0 until childCount) {
                 removeViewInLayout(getChildAt(0).apply {
-                    vos[i].unbindView(this, glide)
+                    this@MediaAttachmentsLayout.vos!![i].unbindView(this, glide)
                 })
             }
         }

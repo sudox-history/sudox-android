@@ -35,20 +35,22 @@ class MessagesChatController : CoreController() {
             view.setAdapter(adapter)
         }
 
-//        val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(8L).apply {
-//            height = 1800
-//            width = 2880
-//        }, ImageAttachmentVO(8L).apply {
-//            height = 1800
-//            width = 2880
-//        }, ImageAttachmentVO(8L).apply {
-//            height = 1800
-//            width = 2880
-//        })
+        createMessage(adapter, 1)
+        createMessage(adapter, 2)
+        createMessage(adapter, 3)
+        createMessage(adapter, 4)
+        createMessage(adapter, 5)
+        createMessage(adapter, 6)
+        createMessage(adapter, 7)
+        createMessage(adapter, 8)
+        createMessage(adapter, 9)
+        createMessage(adapter, 10)
+    }
 
+    private fun createMessage(adapter: MessagesAdapter, count: Int) {
         val attachments = ArrayList<MediaAttachmentVO>()
 
-        repeat(10) {
+        repeat(count) {
             attachments.add(ImageAttachmentVO(8L).apply {
                 height = 1800
                 width = 2880
