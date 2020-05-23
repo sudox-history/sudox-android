@@ -36,10 +36,8 @@ open class MityushkinLayout : ViewGroup {
                 measureChild(getChildAt(i), unspecifiedSpec, unspecifiedSpec)
             }
 
-            val availableWidthSpec = MeasureSpec.makeMeasureSpec(
-                    MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight,
-                    MeasureSpec.EXACTLY
-            )
+            val availableWidth = MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight
+            val availableWidthSpec = MeasureSpec.makeMeasureSpec(availableWidth, MeasureSpec.EXACTLY)
 
             rectangles = adapter?.getTemplate(childCount)?.layout(availableWidthSpec, heightMeasureSpec, adapter!!, this)
 

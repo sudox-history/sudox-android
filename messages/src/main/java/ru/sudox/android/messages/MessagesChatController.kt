@@ -35,53 +35,31 @@ class MessagesChatController : CoreController() {
             view.setAdapter(adapter)
         }
 
-        adapter.insertNewMessage(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
-            override val text: String = "Первое сообщение в Sudox! Ответь мне если оно у тебя отображается"
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = true
-            override val isSentByMe = false
-            override val sentTime: Long = 0L
+//        val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(8L).apply {
+//            height = 1800
+//            width = 2880
+//        }, ImageAttachmentVO(8L).apply {
+//            height = 1800
+//            width = 2880
+//        }, ImageAttachmentVO(8L).apply {
+//            height = 1800
+//            width = 2880
+//        })
 
-            override fun getMessageStatus(context: Context) = null
-        })
+        val attachments = ArrayList<MediaAttachmentVO>()
 
-        adapter.insertNewMessage(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "2"
-            override val text: String = "Да, сообщение отображается. Все отлично работает!"
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = true
-            override val isSentByMe = true
-            override val sentTime: Long = 1L
-
-            override fun getMessageStatus(context: Context) = null
-        })
-
-        adapter.insertNewMessage(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
-            override val text: String = "Ну все, сейчас проверим отправку изображений"
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = true
-            override val isSentByMe = false
-            override val sentTime: Long = 2L
-
-            override fun getMessageStatus(context: Context) = null
-        })
+        repeat(10) {
+            attachments.add(ImageAttachmentVO(8L).apply {
+                height = 1800
+                width = 2880
+            })
+        }
 
         adapter.insertNewMessage(object : MessageVO {
             override val id: String = ""
             override val senderId: String = "1"
             override val text: String? = null
-            override val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(7L).apply {
-                height = 387
-                width = 620
-            })
+            override val attachments: ArrayList<MediaAttachmentVO> = attachments
             override val likes: ArrayList<PeopleVO>? = null
             override val isFirstMessage = false
             override val isSentByMe = false
@@ -93,24 +71,8 @@ class MessagesChatController : CoreController() {
         adapter.insertNewMessage(object : MessageVO {
             override val id: String = ""
             override val senderId: String = "1"
-            override val text: String? = "Отпиши если картинка дошла до тебя и отображается нормально."
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = false
-            override val isSentByMe = false
-            override val sentTime: Long = 4L
-
-            override fun getMessageStatus(context: Context) = null
-        })
-
-        adapter.insertNewMessage(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
             override val text: String? = null
-            override val attachments: ArrayList<MediaAttachmentVO> = arrayListOf(ImageAttachmentVO(7L).apply {
-                height = 387
-                width = 620
-            })
+            override val attachments: ArrayList<MediaAttachmentVO> = attachments
             override val likes: ArrayList<PeopleVO>? = null
             override val isFirstMessage = false
             override val isSentByMe = true
@@ -118,33 +80,5 @@ class MessagesChatController : CoreController() {
 
             override fun getMessageStatus(context: Context) = null
         })
-
-        adapter.insertNewMessage(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "2"
-            override val text: String = "Сейчас я отправил картинку!"
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = null
-            override val isFirstMessage = true
-            override val isSentByMe = true
-            override val sentTime: Long = 6L
-
-            override fun getMessageStatus(context: Context) = null
-        })
-
-        repeat(100) {
-            adapter.insertNewMessage(object : MessageVO {
-                override val id: String = ""
-                override val senderId: String = "2"
-                override val text: String = "Первое сообщение спустя 50 лет!"
-                override val attachments: ArrayList<MediaAttachmentVO>? = null
-                override val likes: ArrayList<PeopleVO>? = null
-                override val isFirstMessage = true
-                override val isSentByMe = true
-                override val sentTime: Long = System.currentTimeMillis()
-
-                override fun getMessageStatus(context: Context) = null
-            })
-        }
     }
 }

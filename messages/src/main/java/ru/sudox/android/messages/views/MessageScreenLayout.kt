@@ -19,11 +19,16 @@ class MessageScreenLayout : ViewGroup {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val heightSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec), MeasureSpec.EXACTLY)
-        val widthSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.EXACTLY)
+        val availableHeight = MeasureSpec.getSize(heightMeasureSpec)
+        val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
+        val heightSpec = MeasureSpec.makeMeasureSpec(availableHeight, MeasureSpec.EXACTLY)
+        val widthSpec = MeasureSpec.makeMeasureSpec(availableWidth, MeasureSpec.EXACTLY)
 
-        measureChild(viewListContainer, widthSpec, heightSpec)
-        setMeasuredDimension(viewListContainer.measuredWidth, viewListContainer.measuredHeight)
+        viewListContainer.measure(widthSpec, heightSpec)
+        setMeasuredDimension(availableWidth, availableHeight)
+    }
+
+    override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -38,6 +43,7 @@ class MessageScreenLayout : ViewGroup {
             this.itemAnimator = null
             this.layoutAnimation = null
             this.layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
+            this.setPadding(10, 10, 10, 10)
         }
     }
 }

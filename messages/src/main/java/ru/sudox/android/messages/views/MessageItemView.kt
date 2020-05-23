@@ -20,7 +20,7 @@ import ru.sudox.android.media.MediaAttachmentsLayout
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.texts.LinkifiedTextView
 import ru.sudox.android.messages.R
-import ru.sudox.android.messages.templates.MessageTemplatesAdapter
+import ru.sudox.android.messages.attachments.MessagesTemplatesAdapter
 import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.design.common.drawables.BadgeDrawable
 import ru.sudox.design.common.paint.DrawablePaint
@@ -41,7 +41,7 @@ class MessageItemView : ViewGroup {
     private var currentMessageBackgroundPaint: DrawablePaint? = null
     private var outboundMessageBackgroundPaint: DrawablePaint? = null
     private var inboundMessageBackgroundPaint: DrawablePaint? = null
-    private var attachmentsAdapter = MessageTemplatesAdapter()
+    private var attachmentsAdapter = MessagesTemplatesAdapter()
     private var timeBadgeDrawable: BadgeDrawable? = null
     private var outboundTextAppearanceId = 0
     private var inboundTextAppearanceId = 0
@@ -314,19 +314,8 @@ class MessageItemView : ViewGroup {
         if (containsOnlyAttachments()) {
             timeTextView.text = null
             timeTextView.visibility = View.GONE
+            attachmentsAdapter.alignToRight = vo?.isSentByMe == true
             timeBadgeDrawable!!.badgeText = time
-
-            if (vo?.isSentByMe == true) {
-                attachmentsAdapter.topLeftCropRadius = otherMessageCorner
-                attachmentsAdapter.topRightCropRadius = firstMessageCorner
-                attachmentsAdapter.bottomRightCropRadius = otherMessageCorner
-                attachmentsAdapter.bottomLeftCropRadius = otherMessageCorner
-            } else {
-                attachmentsAdapter.topLeftCropRadius = firstMessageCorner
-                attachmentsAdapter.topRightCropRadius = otherMessageCorner
-                attachmentsAdapter.bottomRightCropRadius = otherMessageCorner
-                attachmentsAdapter.bottomLeftCropRadius = otherMessageCorner
-            }
         } else {
             val radii = FloatArray(8)
             val appearanceId: Int

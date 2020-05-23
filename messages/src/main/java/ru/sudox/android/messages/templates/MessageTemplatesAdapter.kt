@@ -49,13 +49,14 @@ class MessageTemplatesAdapter : MityushkinLayoutAdapter {
     }
 
     fun setCorners(parent: ViewGroup) {
-        for (i in 0 until parent.childCount) {
-            (parent.getChildAt(i) as RoundedView).let {
-                it.bottomLeftCropRadius = bottomLeftCropRadius
-                it.bottomRightCropRadius = bottomRightCropRadius
-                it.topRightCropRadius = topRightCropRadius
-                it.topLeftCropRadius = topLeftCropRadius
-            }
-        }
+
+//        for (i in 0 until parent.childCount) {
+//            (parent.getChildAt(i) as RoundedView).let {
+//                it.bottomLeftCropRadius = bottomLeftCropRadius
+//                it.bottomRightCropRadius = bottomRightCropRadius
+//                it.topRightCropRadius = topRightCropRadius
+//                it.topLeftCropRadius = topLeftCropRadius
+//            }
+//        }
     }
 }
