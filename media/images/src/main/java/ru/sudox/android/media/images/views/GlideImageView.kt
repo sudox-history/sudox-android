@@ -12,15 +12,13 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getIntegerOrThrow
 import androidx.core.content.res.use
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.media.images.R
 import ru.sudox.android.media.images.entries.GlideImageRequest
-import ru.sudox.android.media.images.transitions.FadeTransition
 import ru.sudox.android.media.images.views.drawables.GlidePlaceholderDrawable
 import ru.sudox.android.media.images.views.drawables.MaskedBitmapDrawable
 import ru.sudox.design.common.views.RoundedView
-import java.util.LinkedList
 import java.util.Stack
 
 @Suppress("unused")
@@ -132,7 +130,7 @@ open class GlideImageView : AppCompatImageView, RoundedView {
 
         glide.load(GlideImageRequest(id))
                 .placeholder(placeholderDrawable)
-                .transition(DrawableTransitionOptions.with(FadeTransition))
+                .transition(withCrossFade(crossFadeDuration))
                 .centerCrop()
                 .into(this)
     }
