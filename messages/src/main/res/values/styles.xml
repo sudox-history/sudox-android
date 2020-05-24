@@ -61,47 +61,4 @@
         <item name="android:fontFamily">@font/opensans_regular</item>
         <item name="fontFamily">@font/opensans_regular</item>
     </style>
-
-    <style name="Sudox.MessageItemView" parent="">
-        <item name="maxWidthPercent">0.75</item>
-        <item name="internalPaddingTop">8dp</item>
-        <item name="internalPaddingLeft">17dp</item>
-        <item name="internalPaddingRight">17dp</item>
-        <item name="internalPaddingBottom">8dp</item>
-        <item name="statusTextAppearance">@style/Sudox.MessageItemView.StatusTextAppearance</item>
-        <item name="marginBetweenTimeAndLikes">10dp</item>
-        <item name="marginBetweenContentAndTime">6dp</item>
-        <item name="marginBetweenContentAndStatus">6dp</item>
-        <item name="marginBetweenTimeAndMessageBorder">10dp</item>
-        <item name="marginBetweenTimeAndMessageBottom">10dp</item>
-        <item name="firstMessageCorner">6dp</item>
-        <item name="otherMessageCorner">21dp</item>
-        <item name="outboundMessageBackground">@drawable/background_outbound_message</item>
-        <item name="inboundMessageBackground">@drawable/background_inbound_message</item>
-        <item name="outboundTextAppearance">@style/Sudox.MessageItemView.OutboundTextAppearance</item>
-        <item name="inboundTextAppearance">@style/Sudox.MessageItemView.InboundTextAppearance</item>
-        <item name="timeBadgeColor">#000000</item>
-        <item name="timeBadgeAlpha">0.8</item>
-    </style>
-
-    <style name="Sudox.MessageItemView.OutboundTextAppearance" parent="">
-        <item name="fontFamily">@font/opensans_regular</item>
-        <item name="android:fontFamily">@font/opensans_regular</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="Sudox.MessageItemView.InboundTextAppearance" parent="">
-        <item name="fontFamily">@font/opensans_regular</item>
-        <item name="android:fontFamily">@font/opensans_regular</item>
-        <item name="android:textColor">#424242</item>
-        <item name="android:textSize">15sp</item>
-    </style>
-
-    <style name="Sudox.MessageItemView.StatusTextAppearance" parent="">
-        <item name="fontFamily">@font/opensans_regular</item>
-        <item name="android:fontFamily">@font/opensans_regular</item>
-        <item name="android:textColor">#808080</item>
-        <item name="android:textSize">14sp</item>
-    </style>
 </resources>

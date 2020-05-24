@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.messages.R
-import ru.sudox.android.messages.views.MessageItemView
 import ru.sudox.android.messages.views.MessageTimeView
 import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.android.time.timestampToDateString
@@ -51,18 +50,19 @@ class MessagesAdapter(
         return if (viewType == DATE_ITEM_VIEW_TYPE) {
             DateViewHolder(MessageTimeView(context))
         } else {
-            MessageViewHolder(MessageItemView(context))
+            DateViewHolder(MessageTimeView(context))
         }
     }
 
     override fun bindItemHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is DateViewHolder) {
             holder.view.timeText = loadedDatesAtPosition[position]
-        } else if (holder is MessageViewHolder) {
-            holder.view.setVO(messageVOs[position - loadedDatesAtPosition.count {
-                it.key < position
-            } - 1], glide)
         }
+//        else if (holder is MessageViewHolder) {
+//            holder.view.setVO(messageVOs[position - loadedDatesAtPosition.count {
+//                it.key < position
+//            } - 1], glide)
+//        }
     }
 
     override fun getFooterText(position: Int): String? {
@@ -102,17 +102,18 @@ class MessagesAdapter(
     }
 
     override fun isViewCanProvideData(view: View): Boolean {
-        return view is MessageTimeView || view is MessageItemView
+        return view is MessageTimeView // || view is MessageItemView
     }
 
     override fun bindStickyView(view: View, provider: View) {
         if (provider is MessageTimeView) {
             (view as MessageTimeView).timeText = provider.timeText
-        } else if (provider is MessageItemView) {
-            (view as MessageTimeView).timeText = timestampToDateString(context, timestamp = provider.vo!!.sentTime)
         }
+
+//        else if (provider is MessageItemView) {
+//            (view as MessageTimeView).timeText = timestampToDateString(context, timestamp = provider.vo!!.sentTime)
+//        }
     }
 
-    class MessageViewHolder(val view: MessageItemView) : RecyclerView.ViewHolder(view)
     class DateViewHolder(val view: MessageTimeView) : RecyclerView.ViewHolder(view)
 }
