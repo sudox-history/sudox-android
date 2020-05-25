@@ -13,6 +13,20 @@
     <dimen name="messagestemplatesadapter_three_and_more_views_height">110dp</dimen>
     <dimen name="messagestemplatesadapter_two_views_height">140dp</dimen>
 
+    <dimen name="messageitemview_text_size">15sp</dimen>
+    <dimen name="messageitemview_leading_corner_radius">6dp</dimen>
+    <dimen name="messageitemview_corner_radius">21dp</dimen>
+    <dimen name="messageitemview_time_margin_right">13dp</dimen>
+    <dimen name="messageitemview_time_margin_bottom">6dp</dimen>
+    <dimen name="messageitemview_badge_time_margin_right">10dp</dimen>
+    <dimen name="messageitemview_badge_time_margin_bottom">10dp</dimen>
+    <dimen name="messageitemview_margin_between_status_and_message">6dp</dimen>
+    <dimen name="messageitemview_min_margin_between_time_and_content">9dp</dimen>
+    <dimen name="messageitemview_margin_between_likes_and_messages">10dp</dimen>
+    <dimen name="messageitemview_padding_horizontal">17dp</dimen>
+    <dimen name="messageitemview_padding_vertical">9dp</dimen>
+    <dimen name="messageitemview_time_text_size">12sp</dimen>
+
     <dimen name="messagetimeview_text_size">14sp</dimen>
     <dimen name="messagetimeview_padding_horizontal">10dp</dimen>
     <dimen name="messagetimeview_padding_vertical">4dp</dimen>

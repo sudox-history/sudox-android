@@ -22,6 +22,36 @@
         <attr name="clipColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="MessageItemView">
+        <attr name="outboundTextAppearance" format="reference" />
+        <attr name="inboundTextAppearance" format="reference" />
+        <attr name="outboundBackground" format="reference" />
+        <attr name="inboundBackground" format="reference" />
+
+        <attr name="statusTextAppearance" format="reference" />
+        <attr name="messagePaddingBottom" format="dimension" />
+        <attr name="messagePaddingRight" format="dimension" />
+        <attr name="messagePaddingLeft" format="dimension" />
+        <attr name="messagePaddingTop" format="dimension" />
+
+        <attr name="timeMarginBottom" format="dimension" />
+        <attr name="timeMarginRight" format="dimension" />
+        <attr name="timeBadgeMarginBottom" format="dimension" />
+        <attr name="timeBadgeMarginRight" format="dimension" />
+        <attr name="timeBadgeAlpha" format="float" />
+        <attr name="timeBadgeColor" format="color" />
+        <attr name="timeTextSize" format="dimension" />
+        <attr name="timeTextFontFamily" format="reference" />
+        <attr name="inboundTimeTextColor" format="color" />
+        <attr name="outboundTimeTextColor" format="color" />
+
+        <attr name="marginBetweenLikesAndMessage" format="dimension" />
+        <attr name="marginBetweenStatusAndMessage" format="dimension" />
+        <attr name="minMarginBetweenTimeAndContent" format="dimension" />
+        <attr name="leadingCornerRadius" format="dimension" />
+        <attr name="cornerRadius" format="dimension" />
+    </declare-styleable>
+
     <declare-styleable name="MessageTimeView">
         <attr name="timeTextAppearance" format="reference" />
         <attr name="timeBackground" format="reference" />

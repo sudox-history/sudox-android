@@ -55,6 +55,57 @@
         <item name="android:paddingBottom">10dp</item>
     </style>
 
+    <style name="Sudox.MessageItemView" parent="">
+        <item name="outboundTextAppearance">@style/Sudox.MessageItemView.OutboundTextAppearance</item>
+        <item name="inboundTextAppearance">@style/Sudox.MessageItemView.InboundTextAppearance</item>
+        <item name="statusTextAppearance">@style/Sudox.MessageItemView.StatusTextAppearance</item>
+        <item name="outboundBackground">@drawable/background_outbound_message</item>
+        <item name="inboundBackground">@drawable/background_inbound_message</item>
+
+        <item name="messagePaddingTop">@dimen/messageitemview_padding_vertical</item>
+        <item name="messagePaddingBottom">@dimen/messageitemview_padding_vertical</item>
+        <item name="messagePaddingRight">@dimen/messageitemview_padding_horizontal</item>
+        <item name="messagePaddingLeft">@dimen/messageitemview_padding_horizontal</item>
+
+        <item name="timeBadgeAlpha">0.8</item>
+        <item name="timeBadgeColor">@color/messageitemview_badge_color</item>
+        <item name="inboundTimeTextColor">@color/messageitemview_inbound_time_text_color</item>
+        <item name="outboundTimeTextColor">@color/messageitemview_outbound_time_text_color</item>
+        <item name="timeTextSize">@dimen/messageitemview_time_text_size</item>
+        <item name="timeTextFontFamily">@font/opensans_regular</item>
+        <item name="timeMarginRight">@dimen/messageitemview_time_margin_right</item>
+        <item name="timeMarginBottom">@dimen/messageitemview_time_margin_bottom</item>
+        <item name="timeBadgeMarginRight">@dimen/messageitemview_badge_time_margin_right</item>
+        <item name="timeBadgeMarginBottom">@dimen/messageitemview_badge_time_margin_bottom</item>
+
+        <item name="marginBetweenLikesAndMessage">@dimen/messageitemview_margin_between_likes_and_messages</item>
+        <item name="marginBetweenStatusAndMessage">@dimen/messageitemview_margin_between_status_and_message</item>
+        <item name="minMarginBetweenTimeAndContent">@dimen/messageitemview_min_margin_between_time_and_content</item>
+        <item name="leadingCornerRadius">@dimen/messageitemview_leading_corner_radius</item>
+        <item name="cornerRadius">@dimen/messageitemview_corner_radius</item>
+    </style>
+
+    <style name="Sudox.MessageItemView.TextAppearance" parent="">
+        <item name="fontFamily">@font/opensans_regular</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:textSize">@dimen/messageitemview_text_size</item>
+    </style>
+
+    <style name="Sudox.MessageItemView.OutboundTextAppearance" parent="Sudox.MessageItemView.TextAppearance">
+        <item name="android:textColor">@color/messageitemview_outbound_text_color</item>
+    </style>
+
+    <style name="Sudox.MessageItemView.InboundTextAppearance" parent="Sudox.MessageItemView.TextAppearance">
+        <item name="android:textColor">@color/messageitemview_inbound_text_color</item>
+    </style>
+
+    <style name="Sudox.MessageItemView.StatusTextAppearance" parent="">
+        <item name="fontFamily">@font/opensans_regular</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:textColor">#808080</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="Sudox.MessageTimeView.TextAppearance" parent="">
         <item name="android:textSize">@dimen/messagetimeview_text_size</item>
         <item name="android:textColor">@color/messagetimeview_text_color</item>
