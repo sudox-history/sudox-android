@@ -2,9 +2,7 @@ package ru.sudox.android.time
 
 import android.content.Context
 import android.text.format.DateFormat
-import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
 import org.threeten.bp.temporal.ChronoField
 import org.threeten.bp.temporal.ChronoUnit
 import ru.sudox.android.time.formatters.TimeFormatter
@@ -17,7 +15,11 @@ import ru.sudox.android.time.formatters.TimeFormatter
  * @param twelveHoursFormat Нужно ли работаь в 12-и часовом формате?
  * @return Строка с временем, которое было в timestamp.
  */
-fun timestampToTimeString(context: Context, dateTime: LocalDateTime, twelveHoursFormat: Boolean): String {
+fun timestampToTimeString(
+        context: Context,
+        dateTime: LocalDateTime,
+        twelveHoursFormat: Boolean = !DateFormat.is24HourFormat(context)
+): String {
     val minute = addLeadingZeroToNumber(dateTime.minute)
 
     return if (twelveHoursFormat) {

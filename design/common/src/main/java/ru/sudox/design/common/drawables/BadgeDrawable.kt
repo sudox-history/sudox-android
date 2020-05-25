@@ -21,12 +21,24 @@ class BadgeDrawable(
 
     val path = Path()
     val cropPath = Path()
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    var paddingVertical = 0
+        set(value) {
+            field = value
+            measureSelf()
+            invalidateSelf()
+        }
+
+    var paddingHorizontal = 0
+        set(value) {
+            field = value
+            measureSelf()
+            invalidateSelf()
+        }
 
     private var radius = 0
-    private var paddingVertical = 0
-    private var paddingHorizontal = 0
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var textBounds = Rect()
     private var cropWidth = 0F
 

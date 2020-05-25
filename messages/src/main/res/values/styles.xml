@@ -77,6 +77,9 @@
         <item name="timeMarginBottom">@dimen/messageitemview_time_margin_bottom</item>
         <item name="timeBadgeMarginRight">@dimen/messageitemview_badge_time_margin_right</item>
         <item name="timeBadgeMarginBottom">@dimen/messageitemview_badge_time_margin_bottom</item>
+        <item name="timeBadgeHorizontalPadding">@dimen/messageitemview_time_badge_horizontal_padding</item>
+        <item name="timeBadgeVerticalPadding">@dimen/messageitemview_time_badge_vertical_padding</item>
+        <item name="messageMaxWidth">@dimen/messageitemview_message_max_width</item>
 
         <item name="marginBetweenLikesAndMessage">@dimen/messageitemview_margin_between_likes_and_messages</item>
         <item name="marginBetweenStatusAndMessage">@dimen/messageitemview_margin_between_status_and_message</item>
