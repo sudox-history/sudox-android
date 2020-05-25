@@ -14,7 +14,7 @@ import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.messages.R
-import ru.sudox.android.messages.vos.MessagesTitleAppBarVO
+import ru.sudox.android.messages.vos.appbar.MessagesTitleAppBarVO
 
 class MessagesTitleAppBarView : ViewGroup {
 

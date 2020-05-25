@@ -13,6 +13,7 @@ import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.android.messages.vos.MessagesChatVO
 import ru.sudox.android.messages.vos.appbar.BaseMessagesAppBarVO
 import ru.sudox.android.people.common.vos.PeopleVO
+import ru.sudox.android.people.common.vos.SimplePeopleVO
 
 const val MESSAGES_CONTROLLER_DIALOG_ID_KEY = "dialog_id"
 
@@ -49,6 +50,7 @@ class MessagesChatController : CoreController() {
 
     private fun createMessage(adapter: MessagesAdapter, count: Int) {
         val attachments = ArrayList<MediaAttachmentVO>()
+        val likes = ArrayList<PeopleVO>()
 
         repeat(count) {
             attachments.add(ImageAttachmentVO(8L).apply {
@@ -57,12 +59,18 @@ class MessagesChatController : CoreController() {
             })
         }
 
+        repeat(80) {
+            likes.add(SimplePeopleVO(1L, "TheMax", 1L))
+            likes.add(SimplePeopleVO(2L, "TheMax", 2L))
+            likes.add(SimplePeopleVO(3L, "TheMax", 3L))
+        }
+
         adapter.insertNewMessage(object : MessageVO {
             override val id: String = ""
             override val senderId: String = "1"
             override val text: String? = null
             override val attachments: ArrayList<MediaAttachmentVO> = attachments
-            override val likes: ArrayList<PeopleVO>? = null
+            override val likes: ArrayList<PeopleVO>? = likes
             override val isFirstMessage = false
             override val isSentByMe = false
             override val sentTime: Long = 3L
@@ -75,7 +83,7 @@ class MessagesChatController : CoreController() {
             override val senderId: String = "1"
             override val text: String? = null
             override val attachments: ArrayList<MediaAttachmentVO> = attachments
-            override val likes: ArrayList<PeopleVO>? = null
+            override val likes: ArrayList<PeopleVO>? = likes
             override val isFirstMessage = false
             override val isSentByMe = true
             override val sentTime: Long = 5L

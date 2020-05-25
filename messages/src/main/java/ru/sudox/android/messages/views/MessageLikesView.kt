@@ -7,6 +7,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,7 @@ class MessageLikesView : ViewGroup {
     private var avatarsIndexes = HashMap<View, Int>()
     private var marginBetweenAvatarsAndCount = 0
     private var marginBetweenAvatars = 0
+    private var counterWidthWhenFull = 0
     private var avatarHeight = 0
     private var avatarWidth = 0
 
@@ -87,6 +89,11 @@ class MessageLikesView : ViewGroup {
             likeOutlinePaint.tintColor = clipColor
             clipPaint.strokeWidth = marginBetweenAvatars.toFloat()
             clipPaint.color = clipColor
+        }
+
+        counterWidthWhenFull = with(Rect()) {
+            countTextView.textMetricsParams.textPaint.getTextBounds("999+", 0, 4, this)
+            width() + countTextView.paddingLeft + paddingRight
         }
 
         layoutTransition = LayoutTransition()
@@ -183,6 +190,16 @@ class MessageLikesView : ViewGroup {
     }
 
     /**
+     * Выдает ширину, которая будет достигнута при установке более 3-х лайков.
+     * По-другому, максимальная ширина, которую может достигнуть данная View.
+     *
+     * @return Ширина, которая будет достигнута при достижении порога 3-х лайков
+     */
+    fun getWidthWhenFull(): Int {
+        return 2 * avatarWidth + 2 * marginBetweenAvatars + paddingLeft + paddingRight
+    }
+
+    /**
      * Выставляет VO в данную View.
      * NB! Все изменения будут обработаны без анимаций.
      *
@@ -236,7 +253,7 @@ class MessageLikesView : ViewGroup {
 
         if (likesCount > 3) {
             countTextView.visibility = View.VISIBLE
-            countTextView.text = "+${likesCount - 3}"
+            countTextView.text = "+${min(likesCount - 3, 999)}"
         } else {
             countTextView.visibility = View.GONE
         }

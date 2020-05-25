@@ -1,4 +1,4 @@
-package ru.sudox.android.messages.vos
+package ru.sudox.android.messages.vos.appbar
 
 import android.content.Context
 

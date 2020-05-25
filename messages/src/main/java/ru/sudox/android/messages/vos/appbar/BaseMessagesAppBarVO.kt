@@ -8,7 +8,6 @@ import ru.sudox.android.media.images.views.AvatarImageView
 import ru.sudox.android.media.images.views.vos.AvatarVO
 import ru.sudox.android.messages.R
 import ru.sudox.android.messages.views.appbar.MessagesTitleAppBarView
-import ru.sudox.android.messages.vos.MessagesTitleAppBarVO
 import ru.sudox.design.appbar.vos.APPBAR_BACK_BUTTON_PARAMS
 import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.others.AppBarButtonParam

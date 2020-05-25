@@ -1,6 +1,7 @@
 package ru.sudox.android.messages.vos
 
 import android.content.Context
+import ru.sudox.android.messages.vos.appbar.MessagesTitleAppBarVO
 import ru.sudox.android.people.common.vos.PeopleVO
 
 class MessagesChatVO(

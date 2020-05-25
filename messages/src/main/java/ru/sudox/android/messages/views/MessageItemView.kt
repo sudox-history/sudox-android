@@ -20,6 +20,7 @@ import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.android.time.dateTimeOf
 import ru.sudox.android.time.timestampToTimeString
 import ru.sudox.design.common.drawables.BadgeDrawable
+import kotlin.math.min
 
 class MessageItemView : ViewGroup {
 
@@ -32,11 +33,21 @@ class MessageItemView : ViewGroup {
     private var outboundTimeTextColor = 0
     private var inboundTimeTextColor = 0
 
+    private var containerLeft = 0
+    private var containerRight = 0
+    private var containerBottom = 0
+    private var containerTop = 0
+
     private var messageMaxWidth = 0
     private var messagesTemplatesAdapter = MessagesTemplatesAdapter()
+    private var marginBetweenLikesAndMessage = 0
     private var timeBadgeDrawable = BadgeDrawable(context, false, 0)
     private var attachmentsLayout = MediaAttachmentsLayout(context).apply {
         adapter = messagesTemplatesAdapter
+        this@MessageItemView.addView(this)
+    }
+
+    private var likesView = MessageLikesView(context).apply {
         this@MessageItemView.addView(this)
     }
 
@@ -56,6 +67,7 @@ class MessageItemView : ViewGroup {
             timeBadgeMarginBottom = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeBadgeMarginBottom)
             timeBadgeVerticalPadding = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeBadgeVerticalPadding)
             timeBadgeHorizontalPadding = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeBadgeHorizontalPadding)
+            marginBetweenLikesAndMessage = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenLikesAndMessage)
 
             timeBadgeDrawable.textPaint.let { paint ->
                 paint.textSize = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeTextSize).toFloat()
@@ -65,22 +77,31 @@ class MessageItemView : ViewGroup {
             outboundTimeTextColor = it.getColorOrThrow(R.styleable.MessageItemView_outboundTimeTextColor)
             inboundTimeTextColor = it.getColorOrThrow(R.styleable.MessageItemView_inboundTimeTextColor)
         }
+
+        clipChildren = false
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var widthForSpec = messageMaxWidth
+        var containerWidth = MeasureSpec.getMode(widthMeasureSpec) - paddingLeft - paddingRight
 
-        if (!isContainsAttachments()) {
+        measureChild(likesView, widthMeasureSpec, heightMeasureSpec)
+
+        if (attachmentsLayout.visibility == View.GONE) {
             // TODO: Remove internal paddings
         }
 
-        val widthSpec = MeasureSpec.makeMeasureSpec(widthForSpec, MeasureSpec.AT_MOST)
+        if (likesView.visibility == View.VISIBLE) {
+            containerWidth -= likesView.getWidthWhenFull() - marginBetweenLikesAndMessage
+        }
 
-        measureChild(attachmentsLayout, widthSpec, heightMeasureSpec)
+        containerWidth = min(messageMaxWidth, containerWidth)
 
         var needHeight = paddingBottom + paddingTop
+        val containerWidthSpec = MeasureSpec.makeMeasureSpec(containerWidth, MeasureSpec.AT_MOST)
 
-        if (isContainsAttachments()) {
+        measureChild(attachmentsLayout, containerWidthSpec, heightMeasureSpec)
+
+        if (attachmentsLayout.visibility == View.VISIBLE) {
             needHeight += attachmentsLayout.measuredHeight
         }
 
@@ -88,7 +109,7 @@ class MessageItemView : ViewGroup {
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        if (isContainsAttachments()) {
+        if (attachmentsLayout.visibility == View.VISIBLE) {
             val topBorder = paddingTop
             val bottomBorder = topBorder + attachmentsLayout.measuredHeight
 
@@ -103,19 +124,37 @@ class MessageItemView : ViewGroup {
 
                 attachmentsLayout.layout(leftBorder, topBorder, rightBorder, bottomBorder)
             }
+
+            containerTop = attachmentsLayout.top
+            containerLeft = attachmentsLayout.left
+            containerRight = attachmentsLayout.right
+            containerBottom = attachmentsLayout.bottom
+        }
+
+        if (likesView.visibility == View.VISIBLE) {
+            val likesBottom = containerBottom - timeBadgeMarginBottom
+            val likesTop = likesBottom - likesView.measuredHeight
+
+            if (vo?.isSentByMe == true) {
+                val likesRight = containerLeft - marginBetweenLikesAndMessage
+                val likesLeft = likesRight - likesView.measuredWidth
+
+                likesView.layout(likesLeft, likesTop, likesRight, likesBottom)
+            } else {
+                val likesLeft = containerRight + marginBetweenLikesAndMessage
+                val likesRight = likesLeft + likesView.measuredWidth
+
+                likesView.layout(likesLeft, likesTop, likesRight, likesBottom)
+            }
         }
     }
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
 
-        if (isContainsAttachments()) {
+        if (attachmentsLayout.visibility == View.VISIBLE) {
             val timeY = attachmentsLayout.bottom - timeBadgeMarginBottom - timeBadgeDrawable.bounds.height()
-            val timeX = if (vo?.isSentByMe == true) {
-                measuredWidth - paddingRight
-            } else {
-                paddingLeft + attachmentsLayout.measuredWidth
-            } - timeBadgeMarginRight - timeBadgeDrawable.bounds.width()
+            val timeX = containerRight - timeBadgeMarginRight - timeBadgeDrawable.bounds.width()
 
             canvas.withTranslation(x = timeX.toFloat(), y = timeY.toFloat()) {
                 timeBadgeDrawable.draw(canvas)
@@ -127,6 +166,7 @@ class MessageItemView : ViewGroup {
         this.vo = vo
 
         attachmentsLayout.setVOs(vo?.attachments, glide)
+        likesView.setVOs(vo, glide)
 
         if (isContainsAttachments()) {
             attachmentsLayout.visibility = View.VISIBLE
