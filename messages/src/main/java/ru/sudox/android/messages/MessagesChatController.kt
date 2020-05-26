@@ -46,6 +46,54 @@ class MessagesChatController : CoreController() {
         createMessage(adapter, 8)
         createMessage(adapter, 9)
         createMessage(adapter, 10)
+
+        createTextMessage(adapter, "Maecenas laoreet neque vitae ante malesuada tempus. Ut faucibus" +
+                " placerat arcu eget pellentesque. Nam eget consequat odio. Suspendisse ull" +
+                "amcorper leo ac odio consectetur, quis consectetur turpis tristique. S" +
+                "uspendisse potenti. Nam quis tellus eros. Integer sit amet consectetur mi.", true)
+
+        createTextMessage(adapter, "Maecenas", true)
+
+        createTextMessage(adapter, "Maecenas laoreet neque vitae ante malesuada tempus. Ut faucibus" +
+                " placerat arcu eget pellentesque. Nam eget consequat odio. Suspendisse ull" +
+                "amcorper leo ac odio consectetur, quis consectetur turpis tristique. S" +
+                "uspendisse potenti. Nam quis tellus eros. Integer sit amet consectetur mi.", false)
+    }
+
+    private fun createTextMessage(adapter: MessagesAdapter, text: String, first: Boolean) {
+        val likes = ArrayList<PeopleVO>()
+
+        repeat(80) {
+            likes.add(SimplePeopleVO(1L, "TheMax", 1L))
+            likes.add(SimplePeopleVO(2L, "TheMax", 2L))
+            likes.add(SimplePeopleVO(3L, "TheMax", 3L))
+        }
+
+        adapter.insertNewMessage(object : MessageVO {
+            override val id: String = ""
+            override val senderId: String = "1"
+            override val text: String = text
+            override val attachments: ArrayList<MediaAttachmentVO>? = null
+            override val likes: ArrayList<PeopleVO>? = likes
+            override val isFirstMessage = first
+            override val isSentByMe = false
+            override val sentTime: Long = 3L
+
+            override fun getMessageStatus(context: Context) = null
+        })
+
+        adapter.insertNewMessage(object : MessageVO {
+            override val id: String = ""
+            override val senderId: String = "1"
+            override val text: String = text
+            override val attachments: ArrayList<MediaAttachmentVO>? = null
+            override val likes: ArrayList<PeopleVO>? = likes
+            override val isFirstMessage = first
+            override val isSentByMe = true
+            override val sentTime: Long = 3L
+
+            override fun getMessageStatus(context: Context) = null
+        })
     }
 
     private fun createMessage(adapter: MessagesAdapter, count: Int) {

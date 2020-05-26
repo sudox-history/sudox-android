@@ -35,6 +35,8 @@ class MessagesAdapter(
             position++
         }
 
+        // TODO: Change first flag ;)
+
         messageVOs.add(messageVO)
         notifyItemInserted(position)
     }

@@ -3,12 +3,15 @@ package ru.sudox.android.messages.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
+import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getFloatOrThrow
 import androidx.core.content.res.getFontOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
@@ -17,6 +20,7 @@ import androidx.core.graphics.withTranslation
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.media.MediaAttachmentsLayout
 import ru.sudox.android.media.images.GlideRequests
+import ru.sudox.android.media.texts.LinkifiedTextView
 import ru.sudox.android.messages.R
 import ru.sudox.android.messages.attachments.MessagesTemplatesAdapter
 import ru.sudox.android.messages.vos.MessageVO
@@ -47,12 +51,30 @@ class MessageItemView : ViewGroup {
     private var messagesTemplatesAdapter = MessagesTemplatesAdapter()
     private var timeBadgeDrawable = BadgeDrawable(context, false, 0)
 
+    private var cornerRadius = 0F
+    private var leadingCornerRadius = 0F
+
+    private var inboundTextAppearance = 0
+    private var outboundTextAppearance = 0
+
+    private var currentBackground: GradientDrawable? = null
+    private var outboundBackground: GradientDrawable? = null
+    private var inboundBackground: GradientDrawable? = null
+    private var messagePaddingBottom = 0
+    private var messagePaddingRight = 0
+    private var messagePaddingLeft = 0
+    private var messagePaddingTop = 0
+
     private var statusTextView = AppCompatTextView(context).apply {
         this@MessageItemView.addView(this)
     }
 
     private var attachmentsLayout = MediaAttachmentsLayout(context).apply {
         adapter = messagesTemplatesAdapter
+        this@MessageItemView.addView(this)
+    }
+
+    private var contentTextView = LinkifiedTextView(context).apply {
         this@MessageItemView.addView(this)
     }
 
@@ -84,6 +106,19 @@ class MessageItemView : ViewGroup {
                 paint.typeface = it.getFontOrThrow(R.styleable.MessageItemView_timeTextFontFamily)
             }
 
+            cornerRadius = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_cornerRadius).toFloat()
+            leadingCornerRadius = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_leadingCornerRadius).toFloat()
+            outboundBackground = it.getDrawableOrThrow(R.styleable.MessageItemView_outboundBackground).mutate() as GradientDrawable
+            inboundBackground = it.getDrawableOrThrow(R.styleable.MessageItemView_inboundBackground).mutate() as GradientDrawable
+
+            inboundTextAppearance = it.getResourceIdOrThrow(R.styleable.MessageItemView_inboundTextAppearance)
+            outboundTextAppearance = it.getResourceIdOrThrow(R.styleable.MessageItemView_outboundTextAppearance)
+
+            messagePaddingTop = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_messagePaddingTop)
+            messagePaddingBottom = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_messagePaddingBottom)
+            messagePaddingRight = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_messagePaddingRight)
+            messagePaddingLeft = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_messagePaddingLeft)
+
             outboundTimeTextColor = it.getColorOrThrow(R.styleable.MessageItemView_outboundTimeTextColor)
             inboundTimeTextColor = it.getColorOrThrow(R.styleable.MessageItemView_inboundTimeTextColor)
 
@@ -100,7 +135,7 @@ class MessageItemView : ViewGroup {
         measureChild(statusTextView, widthMeasureSpec, heightMeasureSpec)
 
         if (attachmentsLayout.visibility == View.GONE) {
-            // TODO: Remove internal paddings
+            containerWidth -= messagePaddingBottom + messagePaddingRight + messagePaddingLeft + messagePaddingTop
         }
 
         if (likesView.visibility == View.VISIBLE) {
@@ -112,10 +147,16 @@ class MessageItemView : ViewGroup {
         var needHeight = paddingBottom + paddingTop
         val containerWidthSpec = MeasureSpec.makeMeasureSpec(containerWidth, MeasureSpec.AT_MOST)
 
-        measureChild(attachmentsLayout, containerWidthSpec, heightMeasureSpec)
+        measureChild(if (attachmentsLayout.visibility == View.VISIBLE) {
+            attachmentsLayout
+        } else {
+            contentTextView
+        }, containerWidthSpec, heightMeasureSpec)
 
-        if (attachmentsLayout.visibility == View.VISIBLE) {
-            needHeight += attachmentsLayout.measuredHeight
+        needHeight += if (attachmentsLayout.visibility == View.VISIBLE) {
+            attachmentsLayout.measuredHeight
+        } else {
+            contentTextView.measuredHeight + messagePaddingTop + messagePaddingBottom
         }
 
         if (statusTextView.visibility == View.VISIBLE) {
@@ -146,6 +187,27 @@ class MessageItemView : ViewGroup {
             containerLeft = attachmentsLayout.left
             containerRight = attachmentsLayout.right
             containerBottom = attachmentsLayout.bottom
+        } else {
+            val topBorder = paddingTop + messagePaddingTop
+            val bottomBorder = topBorder + contentTextView.measuredHeight
+
+            if (vo?.isSentByMe == true) {
+                val rightBorder = measuredWidth - paddingRight - messagePaddingRight
+                val leftBorder = rightBorder - contentTextView.measuredWidth
+
+                contentTextView.layout(leftBorder, topBorder, rightBorder, bottomBorder)
+            } else {
+                val leftBorder = paddingLeft + messagePaddingLeft
+                val rightBorder = leftBorder + contentTextView.measuredWidth
+
+                contentTextView.layout(leftBorder, topBorder, rightBorder, bottomBorder)
+            }
+
+            containerTop = contentTextView.top - messagePaddingTop
+            containerLeft = contentTextView.left - messagePaddingLeft
+            containerRight = contentTextView.right + messagePaddingRight
+            containerBottom = contentTextView.bottom + messagePaddingBottom
+            currentBackground?.setBounds(0, 0, containerRight - containerLeft, containerBottom - containerTop)
         }
 
         if (likesView.visibility == View.VISIBLE) {
@@ -184,6 +246,12 @@ class MessageItemView : ViewGroup {
     }
 
     override fun dispatchDraw(canvas: Canvas) {
+        if (attachmentsLayout.visibility == View.GONE && currentBackground != null) {
+            canvas.withTranslation(x = containerLeft.toFloat(), y = containerTop.toFloat()) {
+                currentBackground!!.draw(canvas)
+            }
+        }
+
         super.dispatchDraw(canvas)
 
         if (attachmentsLayout.visibility == View.VISIBLE) {
@@ -216,9 +284,10 @@ class MessageItemView : ViewGroup {
             statusTextView.visibility = View.GONE
         }
 
-        if (isContainsAttachments()) {
+        if (vo?.attachments?.isNotEmpty() == true) {
+            contentTextView.visibility = View.GONE
             attachmentsLayout.visibility = View.VISIBLE
-            messagesTemplatesAdapter.alignToRight = vo?.isSentByMe!!
+            messagesTemplatesAdapter.alignToRight = vo.isSentByMe
 
             timeBadgeDrawable.paint.alpha = (timeBadgeAlpha * 255).toInt()
             timeBadgeDrawable.textPaint.color = outboundTimeTextColor
@@ -226,11 +295,52 @@ class MessageItemView : ViewGroup {
             timeBadgeDrawable.paddingHorizontal = timeBadgeHorizontalPadding
         } else {
             if (vo != null) {
-                timeBadgeDrawable.textPaint.color = if (vo.isSentByMe) {
-                    outboundTimeTextColor
+                contentTextView.visibility = View.VISIBLE
+                contentTextView.text = vo.text
+
+                val radii = FloatArray(8)
+
+                if (vo.isSentByMe) {
+                    timeBadgeDrawable.textPaint.color = outboundTimeTextColor
+                    contentTextView.setTextAppearance(outboundTextAppearance)
+                    currentBackground = outboundBackground
+
+                    radii[0] = cornerRadius
+                    radii[1] = cornerRadius
+                    radii[4] = cornerRadius
+                    radii[5] = cornerRadius
+                    radii[6] = cornerRadius
+                    radii[7] = cornerRadius
+
+                    if (vo.isFirstMessage) {
+                        radii[2] = leadingCornerRadius
+                        radii[3] = leadingCornerRadius
+                    } else {
+                        radii[2] = cornerRadius
+                        radii[3] = cornerRadius
+                    }
                 } else {
-                    inboundTimeTextColor
+                    timeBadgeDrawable.textPaint.color = inboundTimeTextColor
+                    contentTextView.setTextAppearance(inboundTextAppearance)
+                    currentBackground = inboundBackground
+
+                    radii[2] = cornerRadius
+                    radii[3] = cornerRadius
+                    radii[4] = cornerRadius
+                    radii[5] = cornerRadius
+                    radii[6] = cornerRadius
+                    radii[7] = cornerRadius
+
+                    if (vo.isFirstMessage) {
+                        radii[0] = leadingCornerRadius
+                        radii[1] = leadingCornerRadius
+                    } else {
+                        radii[0] = cornerRadius
+                        radii[1] = cornerRadius
+                    }
                 }
+
+                currentBackground!!.cornerRadii = radii
             }
 
             timeBadgeDrawable.paint.alpha = 255
@@ -241,9 +351,5 @@ class MessageItemView : ViewGroup {
 
         requestLayout()
         invalidate()
-    }
-
-    private fun isContainsAttachments(): Boolean {
-        return vo?.attachments?.isNotEmpty() ?: false
     }
 }
