@@ -88,7 +88,7 @@ class MessagesChatController : CoreController() {
             override val isSentByMe = true
             override val sentTime: Long = 5L
 
-            override fun getMessageStatus(context: Context) = null
+            override fun getMessageStatus(context: Context) = "Прочитано в 12:00"
         })
     }
 }

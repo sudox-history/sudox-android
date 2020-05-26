@@ -6,12 +6,15 @@ import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getFloatOrThrow
 import androidx.core.content.res.getFontOrThrow
+import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.graphics.withTranslation
+import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.media.MediaAttachmentsLayout
 import ru.sudox.android.media.images.GlideRequests
 import ru.sudox.android.messages.R
@@ -39,9 +42,15 @@ class MessageItemView : ViewGroup {
     private var containerTop = 0
 
     private var messageMaxWidth = 0
-    private var messagesTemplatesAdapter = MessagesTemplatesAdapter()
     private var marginBetweenLikesAndMessage = 0
+    private var marginBetweenStatusAndMessage = 0
+    private var messagesTemplatesAdapter = MessagesTemplatesAdapter()
     private var timeBadgeDrawable = BadgeDrawable(context, false, 0)
+
+    private var statusTextView = AppCompatTextView(context).apply {
+        this@MessageItemView.addView(this)
+    }
+
     private var attachmentsLayout = MediaAttachmentsLayout(context).apply {
         adapter = messagesTemplatesAdapter
         this@MessageItemView.addView(this)
@@ -68,6 +77,7 @@ class MessageItemView : ViewGroup {
             timeBadgeVerticalPadding = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeBadgeVerticalPadding)
             timeBadgeHorizontalPadding = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeBadgeHorizontalPadding)
             marginBetweenLikesAndMessage = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenLikesAndMessage)
+            marginBetweenStatusAndMessage = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenStatusAndMessage)
 
             timeBadgeDrawable.textPaint.let { paint ->
                 paint.textSize = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeTextSize).toFloat()
@@ -76,6 +86,8 @@ class MessageItemView : ViewGroup {
 
             outboundTimeTextColor = it.getColorOrThrow(R.styleable.MessageItemView_outboundTimeTextColor)
             inboundTimeTextColor = it.getColorOrThrow(R.styleable.MessageItemView_inboundTimeTextColor)
+
+            setTextAppearance(statusTextView, it.getResourceIdOrThrow(R.styleable.MessageItemView_statusTextAppearance))
         }
 
         clipChildren = false
@@ -85,6 +97,7 @@ class MessageItemView : ViewGroup {
         var containerWidth = MeasureSpec.getMode(widthMeasureSpec) - paddingLeft - paddingRight
 
         measureChild(likesView, widthMeasureSpec, heightMeasureSpec)
+        measureChild(statusTextView, widthMeasureSpec, heightMeasureSpec)
 
         if (attachmentsLayout.visibility == View.GONE) {
             // TODO: Remove internal paddings
@@ -103,6 +116,10 @@ class MessageItemView : ViewGroup {
 
         if (attachmentsLayout.visibility == View.VISIBLE) {
             needHeight += attachmentsLayout.measuredHeight
+        }
+
+        if (statusTextView.visibility == View.VISIBLE) {
+            needHeight += statusTextView.measuredHeight + marginBetweenStatusAndMessage
         }
 
         setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), needHeight)
@@ -147,6 +164,23 @@ class MessageItemView : ViewGroup {
                 likesView.layout(likesLeft, likesTop, likesRight, likesBottom)
             }
         }
+
+        if (statusTextView.visibility == View.VISIBLE) {
+            val statusTop = containerBottom + marginBetweenStatusAndMessage
+            val statusBottom = statusTop + statusTextView.measuredHeight
+
+            if (vo?.isSentByMe == true) {
+                val statusRight = containerRight
+                val statusLeft = statusRight - statusTextView.measuredWidth
+
+                statusTextView.layout(statusLeft, statusTop, statusRight, statusBottom)
+            } else {
+                val statusLeft = containerLeft
+                val statusRight = statusLeft + statusTextView.measuredWidth
+
+                statusTextView.layout(statusLeft, statusTop, statusRight, statusBottom)
+            }
+        }
     }
 
     override fun dispatchDraw(canvas: Canvas) {
@@ -167,6 +201,20 @@ class MessageItemView : ViewGroup {
 
         attachmentsLayout.setVOs(vo?.attachments, glide)
         likesView.setVOs(vo, glide)
+
+        if (vo != null) {
+            timeBadgeDrawable.badgeText = timestampToTimeString(context, dateTimeOf(vo.sentTime))
+        }
+
+        val status = vo?.getMessageStatus(context)
+
+        if (status != null) {
+            statusTextView.text = status
+            statusTextView.visibility = View.VISIBLE
+        } else {
+            statusTextView.text = null
+            statusTextView.visibility = View.GONE
+        }
 
         if (isContainsAttachments()) {
             attachmentsLayout.visibility = View.VISIBLE
@@ -189,10 +237,6 @@ class MessageItemView : ViewGroup {
             timeBadgeDrawable.paddingVertical = 0
             timeBadgeDrawable.paddingHorizontal = 0
             attachmentsLayout.visibility = View.GONE
-        }
-
-        if (vo != null) {
-            timeBadgeDrawable.badgeText = timestampToTimeString(context, dateTimeOf(vo.sentTime))
         }
 
         requestLayout()
