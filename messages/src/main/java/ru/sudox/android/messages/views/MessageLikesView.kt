@@ -196,7 +196,7 @@ class MessageLikesView : ViewGroup {
      * @return Ширина, которая будет достигнута при достижении порога 3-х лайков
      */
     fun getWidthWhenFull(): Int {
-        return 2 * avatarWidth + 2 * marginBetweenAvatars + paddingLeft + paddingRight
+        return 2 * avatarWidth + 2 * marginBetweenAvatars + paddingLeft + paddingRight + counterWidthWhenFull + marginBetweenAvatarsAndCount
     }
 
     /**

@@ -129,7 +129,7 @@ class MessageItemView : ViewGroup {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var containerWidth = MeasureSpec.getMode(widthMeasureSpec) - paddingLeft - paddingRight
+        var containerWidth = MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight
 
         measureChild(likesView, widthMeasureSpec, heightMeasureSpec)
         measureChild(statusTextView, widthMeasureSpec, heightMeasureSpec)
@@ -139,7 +139,7 @@ class MessageItemView : ViewGroup {
         }
 
         if (likesView.visibility == View.VISIBLE) {
-            containerWidth -= likesView.getWidthWhenFull() - marginBetweenLikesAndMessage
+            containerWidth -= likesView.getWidthWhenFull() + marginBetweenLikesAndMessage
         }
 
         containerWidth = min(messageMaxWidth, containerWidth)
