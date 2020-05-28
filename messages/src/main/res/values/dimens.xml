@@ -17,7 +17,7 @@
     <dimen name="messageitemview_leading_corner_radius">6dp</dimen>
     <dimen name="messageitemview_time_badge_horizontal_padding">5dp</dimen>
     <dimen name="messageitemview_time_badge_vertical_padding">5dp</dimen>
-    <dimen name="messageitemview_corner_radius">21dp</dimen>
+    <dimen name="messageitemview_corner_radius">16dp</dimen>
     <dimen name="messageitemview_time_margin_right">13dp</dimen>
     <dimen name="messageitemview_time_margin_bottom">6dp</dimen>
     <dimen name="messageitemview_badge_time_margin_right">10dp</dimen>
@@ -28,7 +28,6 @@
     <dimen name="messageitemview_padding_horizontal">17dp</dimen>
     <dimen name="messageitemview_padding_vertical">9dp</dimen>
     <dimen name="messageitemview_time_text_size">12sp</dimen>
-    <dimen name="messageitemview_message_max_width">270dp</dimen>
 
     <dimen name="messagetimeview_text_size">14sp</dimen>
     <dimen name="messagetimeview_padding_horizontal">10dp</dimen>

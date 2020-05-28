@@ -98,7 +98,6 @@ class MessageItemView : ViewGroup {
         context.obtainStyledAttributes(attrs, R.styleable.MessageItemView, defStyleAttr, 0).use {
             timeBadgeColor = it.getColorOrThrow(R.styleable.MessageItemView_timeBadgeColor)
             timeBadgeAlpha = it.getFloatOrThrow(R.styleable.MessageItemView_timeBadgeAlpha)
-            messageMaxWidth = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_messageMaxWidth)
             timeBadgeMarginRight = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeBadgeMarginRight)
             timeBadgeMarginBottom = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeBadgeMarginBottom)
             timeBadgeVerticalPadding = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeBadgeVerticalPadding)
@@ -138,9 +137,14 @@ class MessageItemView : ViewGroup {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        maxContentWidth = messageMaxWidth
+        var containerWidth = MeasureSpec.getSize(widthMeasureSpec) -
+                paddingLeft -
+                paddingRight -
+                likesView.getWidthWhenFull() -
+                marginBetweenLikesAndMessage
 
-        var containerWidth = MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight
+        messageMaxWidth = containerWidth
+        maxContentWidth = messageMaxWidth
 
         measureChild(likesView, widthMeasureSpec, heightMeasureSpec)
         measureChild(statusTextView, widthMeasureSpec, heightMeasureSpec)
@@ -148,10 +152,6 @@ class MessageItemView : ViewGroup {
         if (attachmentsLayout.visibility == View.GONE) {
             containerWidth -= messagePaddingRight + messagePaddingLeft
             maxContentWidth -= messagePaddingRight + messagePaddingLeft
-        }
-
-        if (likesView.visibility == View.VISIBLE) {
-            containerWidth -= likesView.getWidthWhenFull() + marginBetweenLikesAndMessage
         }
 
         containerWidth = min(maxContentWidth, containerWidth)
