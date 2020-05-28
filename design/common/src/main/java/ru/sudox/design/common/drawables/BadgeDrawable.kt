@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.Path.Direction.CW
 import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
@@ -24,6 +25,10 @@ class BadgeDrawable(
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     val textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
+    private var radius = 0
+    private var textBounds = Rect()
+    private var cropWidth = 0F
+
     var paddingVertical = 0
         set(value) {
             field = value
@@ -38,9 +43,12 @@ class BadgeDrawable(
             invalidateSelf()
         }
 
-    private var radius = 0
-    private var textBounds = Rect()
-    private var cropWidth = 0F
+    var isBackgroundEnabled = true
+        set(value) {
+            field = value
+            measureSelf()
+            invalidateSelf()
+        }
 
     var badgeText: String? = null
         set(value) {
@@ -77,23 +85,29 @@ class BadgeDrawable(
             bounds.right = radius * 2
         }
 
-        val width = bounds.width().toFloat()
-        val height = bounds.height().toFloat()
-        val radius = min(width / 2F, height / 2F)
-
         path.reset()
-        path.addRoundRect(0F, 0F, width, height, radius, radius, Path.Direction.CW)
 
-        if (enableCropping) {
-            val cropRadius = radius + cropWidth
+        if (isBackgroundEnabled) {
+            val width = bounds.width().toFloat()
+            val height = bounds.height().toFloat()
+            val radius = min(width / 2F, height / 2F)
+
+            path.addRoundRect(0F, 0F, width, height, radius, radius, CW)
 
             cropPath.reset()
-            cropPath.addRoundRect(-cropWidth, -cropWidth, width + cropWidth, height + cropWidth, cropRadius, cropRadius, Path.Direction.CW)
+
+            if (enableCropping) {
+                val cropRadius = radius + cropWidth
+
+                cropPath.addRoundRect(-cropWidth, -cropWidth, width + cropWidth, height + cropWidth, cropRadius, cropRadius, CW)
+            }
         }
     }
 
     override fun draw(canvas: Canvas) {
-        canvas.drawPath(path, paint)
+        if (isBackgroundEnabled) {
+            canvas.drawPath(path, paint)
+        }
 
         if (badgeText != null) {
             canvas.drawText(badgeText!!, paddingHorizontal.toFloat(), bounds.height().toFloat() - paddingVertical, textPaint)

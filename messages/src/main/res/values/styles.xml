@@ -69,6 +69,7 @@
 
         <item name="timeBadgeAlpha">0.8</item>
         <item name="timeBadgeColor">@color/messageitemview_badge_color</item>
+        <item name="timeBadgeTimeTextColor">@color/messageitemview_badge_time_text_color</item>
         <item name="inboundTimeTextColor">@color/messageitemview_inbound_time_text_color</item>
         <item name="outboundTimeTextColor">@color/messageitemview_outbound_time_text_color</item>
         <item name="timeTextSize">@dimen/messageitemview_time_text_size</item>

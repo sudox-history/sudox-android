@@ -58,6 +58,13 @@ class MessagesChatController : CoreController() {
                 " placerat arcu eget pellentesque. Nam eget consequat odio. Suspendisse ull" +
                 "amcorper leo ac odio consectetur, quis consectetur turpis tristique. S" +
                 "uspendisse potenti. Nam quis tellus eros. Integer sit amet consectetur mi.", false)
+
+        createTextMessage(adapter, "Maecenas laoreet neque vitae ante malesuada tempus. Ut faucibus" +
+                " placerat arcu eget pellentesque. Nam eget consequat odio. Suspendisse ull" +
+                "amcorper leo ac odio consectetur, quis consectetur turpis tristique. S" +
+                "uspendisse potenti. Nam quis tellus eros. Integer sit amet consect ", false)
+
+        createTextMessage(adapter, "Тест\nТест", true)
     }
 
     private fun createTextMessage(adapter: MessagesAdapter, text: String, first: Boolean) {

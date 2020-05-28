@@ -3,7 +3,6 @@ package ru.sudox.android.messages.views
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
 import android.view.View
@@ -27,6 +26,8 @@ import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.android.time.dateTimeOf
 import ru.sudox.android.time.timestampToTimeString
 import ru.sudox.design.common.drawables.BadgeDrawable
+import kotlin.math.ceil
+import kotlin.math.max
 import kotlin.math.min
 
 class MessageItemView : ViewGroup {
@@ -37,9 +38,11 @@ class MessageItemView : ViewGroup {
     private var timeBadgeMarginBottom = 0
     private var timeBadgeVerticalPadding = 0
     private var timeBadgeHorizontalPadding = 0
+    private var timeBadgeTimeTextColor = 0
     private var outboundTimeTextColor = 0
     private var inboundTimeTextColor = 0
 
+    private var maxContentWidth = 0
     private var containerLeft = 0
     private var containerRight = 0
     private var containerBottom = 0
@@ -48,15 +51,16 @@ class MessageItemView : ViewGroup {
     private var messageMaxWidth = 0
     private var marginBetweenLikesAndMessage = 0
     private var marginBetweenStatusAndMessage = 0
+    private var minMarginBetweenTimeAndContent = 0
     private var messagesTemplatesAdapter = MessagesTemplatesAdapter()
     private var timeBadgeDrawable = BadgeDrawable(context, false, 0)
+    private var timeMarginBottom = 0
+    private var timeMarginRight = 0
 
     private var cornerRadius = 0F
     private var leadingCornerRadius = 0F
-
     private var inboundTextAppearance = 0
     private var outboundTextAppearance = 0
-
     private var currentBackground: GradientDrawable? = null
     private var outboundBackground: GradientDrawable? = null
     private var inboundBackground: GradientDrawable? = null
@@ -64,6 +68,7 @@ class MessageItemView : ViewGroup {
     private var messagePaddingRight = 0
     private var messagePaddingLeft = 0
     private var messagePaddingTop = 0
+    private var lastLineWidth = 0
 
     private var statusTextView = AppCompatTextView(context).apply {
         this@MessageItemView.addView(this)
@@ -100,6 +105,10 @@ class MessageItemView : ViewGroup {
             timeBadgeHorizontalPadding = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeBadgeHorizontalPadding)
             marginBetweenLikesAndMessage = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenLikesAndMessage)
             marginBetweenStatusAndMessage = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenStatusAndMessage)
+            minMarginBetweenTimeAndContent = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_minMarginBetweenTimeAndContent)
+            timeBadgeTimeTextColor = it.getColorOrThrow(R.styleable.MessageItemView_timeBadgeTimeTextColor)
+            timeMarginBottom = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeMarginBottom)
+            timeMarginRight = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeMarginRight)
 
             timeBadgeDrawable.textPaint.let { paint ->
                 paint.textSize = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeTextSize).toFloat()
@@ -129,34 +138,41 @@ class MessageItemView : ViewGroup {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        maxContentWidth = messageMaxWidth
+
         var containerWidth = MeasureSpec.getSize(widthMeasureSpec) - paddingLeft - paddingRight
 
         measureChild(likesView, widthMeasureSpec, heightMeasureSpec)
         measureChild(statusTextView, widthMeasureSpec, heightMeasureSpec)
 
         if (attachmentsLayout.visibility == View.GONE) {
-            containerWidth -= messagePaddingBottom + messagePaddingRight + messagePaddingLeft + messagePaddingTop
+            containerWidth -= messagePaddingRight + messagePaddingLeft
+            maxContentWidth -= messagePaddingRight + messagePaddingLeft
         }
 
         if (likesView.visibility == View.VISIBLE) {
             containerWidth -= likesView.getWidthWhenFull() + marginBetweenLikesAndMessage
         }
 
-        containerWidth = min(messageMaxWidth, containerWidth)
+        containerWidth = min(maxContentWidth, containerWidth)
 
         var needHeight = paddingBottom + paddingTop
         val containerWidthSpec = MeasureSpec.makeMeasureSpec(containerWidth, MeasureSpec.AT_MOST)
 
-        measureChild(if (attachmentsLayout.visibility == View.VISIBLE) {
-            attachmentsLayout
+        if (attachmentsLayout.visibility == View.VISIBLE) {
+            measureChild(attachmentsLayout, containerWidthSpec, heightMeasureSpec)
+            needHeight += attachmentsLayout.measuredHeight
         } else {
-            contentTextView
-        }, containerWidthSpec, heightMeasureSpec)
+            measureChild(contentTextView, containerWidthSpec, heightMeasureSpec)
+            needHeight += contentTextView.measuredHeight + messagePaddingTop + messagePaddingBottom
 
-        needHeight += if (attachmentsLayout.visibility == View.VISIBLE) {
-            attachmentsLayout.measuredHeight
-        } else {
-            contentTextView.measuredHeight + messagePaddingTop + messagePaddingBottom
+            if (contentTextView.lineCount > 0) {
+                lastLineWidth = ceil(contentTextView.layout.getLineWidth(contentTextView.lineCount - 1)).toInt()
+
+                if (isTimeShowingInAnotherLine()) {
+                    needHeight += getTimeHeight() - messagePaddingBottom
+                }
+            }
         }
 
         if (statusTextView.visibility == View.VISIBLE) {
@@ -192,8 +208,13 @@ class MessageItemView : ViewGroup {
             val bottomBorder = topBorder + contentTextView.measuredHeight
 
             if (vo?.isSentByMe == true) {
-                val rightBorder = measuredWidth - paddingRight - messagePaddingRight
-                val leftBorder = rightBorder - contentTextView.measuredWidth
+                var rightBorder = measuredWidth - paddingRight - messagePaddingRight
+                var leftBorder = rightBorder - contentTextView.measuredWidth
+
+                if (!isTimeShowingInAnotherLine()) {
+                    rightBorder -= getTimeWidthModifier()
+                    leftBorder -= getTimeWidthModifier()
+                }
 
                 contentTextView.layout(leftBorder, topBorder, rightBorder, bottomBorder)
             } else {
@@ -207,6 +228,13 @@ class MessageItemView : ViewGroup {
             containerLeft = contentTextView.left - messagePaddingLeft
             containerRight = contentTextView.right + messagePaddingRight
             containerBottom = contentTextView.bottom + messagePaddingBottom
+
+            if (isTimeShowingInAnotherLine()) {
+                containerBottom += getTimeHeight() - messagePaddingBottom
+            } else {
+                containerRight += getTimeWidthModifier()
+            }
+
             currentBackground?.setBounds(0, 0, containerRight - containerLeft, containerBottom - containerTop)
         }
 
@@ -254,13 +282,19 @@ class MessageItemView : ViewGroup {
 
         super.dispatchDraw(canvas)
 
-        if (attachmentsLayout.visibility == View.VISIBLE) {
-            val timeY = attachmentsLayout.bottom - timeBadgeMarginBottom - timeBadgeDrawable.bounds.height()
-            val timeX = containerRight - timeBadgeMarginRight - timeBadgeDrawable.bounds.width()
+        val timeX: Int
+        val timeY: Int
 
-            canvas.withTranslation(x = timeX.toFloat(), y = timeY.toFloat()) {
-                timeBadgeDrawable.draw(canvas)
-            }
+        if (attachmentsLayout.visibility == View.VISIBLE) {
+            timeY = attachmentsLayout.bottom - timeBadgeMarginBottom - timeBadgeDrawable.bounds.height()
+            timeX = containerRight - timeBadgeMarginRight - timeBadgeDrawable.bounds.width()
+        } else {
+            timeX = containerRight - timeMarginRight - timeBadgeDrawable.bounds.width()
+            timeY = containerBottom - timeBadgeDrawable.bounds.height() - timeMarginBottom
+        }
+
+        canvas.withTranslation(x = timeX.toFloat(), y = timeY.toFloat()) {
+            timeBadgeDrawable.draw(canvas)
         }
     }
 
@@ -285,12 +319,14 @@ class MessageItemView : ViewGroup {
         }
 
         if (vo?.attachments?.isNotEmpty() == true) {
+            contentTextView.text = null
             contentTextView.visibility = View.GONE
             attachmentsLayout.visibility = View.VISIBLE
             messagesTemplatesAdapter.alignToRight = vo.isSentByMe
+            timeBadgeDrawable.isBackgroundEnabled = true
 
             timeBadgeDrawable.paint.alpha = (timeBadgeAlpha * 255).toInt()
-            timeBadgeDrawable.textPaint.color = outboundTimeTextColor
+            timeBadgeDrawable.textPaint.color = timeBadgeTimeTextColor
             timeBadgeDrawable.paddingVertical = timeBadgeVerticalPadding
             timeBadgeDrawable.paddingHorizontal = timeBadgeHorizontalPadding
         } else {
@@ -341,15 +377,44 @@ class MessageItemView : ViewGroup {
                 }
 
                 currentBackground!!.cornerRadii = radii
+            } else {
+                contentTextView.text = null
             }
 
             timeBadgeDrawable.paint.alpha = 255
             timeBadgeDrawable.paddingVertical = 0
             timeBadgeDrawable.paddingHorizontal = 0
+            timeBadgeDrawable.isBackgroundEnabled = false
             attachmentsLayout.visibility = View.GONE
         }
 
         requestLayout()
         invalidate()
+    }
+
+    private fun isTimeShowingInAnotherLine(): Boolean {
+        var potentialForAdding = messageMaxWidth - lastLineWidth - timeMarginRight
+
+        potentialForAdding -= if (vo?.isSentByMe == true) {
+            messagePaddingLeft
+        } else {
+            messagePaddingRight
+        }
+
+        return potentialForAdding < getSpaceForTime()
+    }
+
+    private fun getTimeHeight(): Int {
+        return timeMarginBottom + timeMarginBottom + timeBadgeDrawable.bounds.height()
+    }
+
+    private fun getTimeWidthModifier(): Int {
+        val freeWidth = contentTextView.measuredWidth + messagePaddingRight - lastLineWidth - timeMarginRight
+
+        return max(getSpaceForTime() - freeWidth, 0)
+    }
+
+    private fun getSpaceForTime(): Int {
+        return minMarginBetweenTimeAndContent + timeBadgeDrawable.bounds.width()
     }
 }

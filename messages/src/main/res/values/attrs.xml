@@ -42,6 +42,7 @@
         <attr name="timeBadgeMarginBottom" format="dimension" />
         <attr name="timeBadgeMarginRight" format="dimension" />
         <attr name="timeBadgeAlpha" format="float" />
+        <attr name="timeBadgeTimeTextColor" format="color" />
         <attr name="timeBadgeColor" format="color" />
         <attr name="timeTextSize" format="dimension" />
         <attr name="timeTextFontFamily" format="reference" />

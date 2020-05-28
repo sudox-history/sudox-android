@@ -27,7 +27,7 @@
     <dimen name="messageitemview_margin_between_likes_and_messages">10dp</dimen>
     <dimen name="messageitemview_padding_horizontal">17dp</dimen>
     <dimen name="messageitemview_padding_vertical">9dp</dimen>
-    <dimen name="messageitemview_time_text_size">11sp</dimen>
+    <dimen name="messageitemview_time_text_size">12sp</dimen>
     <dimen name="messageitemview_message_max_width">270dp</dimen>
 
     <dimen name="messagetimeview_text_size">14sp</dimen>
