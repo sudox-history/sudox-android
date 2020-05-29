@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Sudox.V26" parent="Sudox.Base">
+        <item name="android:autofilledHighlight">@android:color/transparent</item>
+    </style>
+
+    <style name="Sudox" parent="Sudox.V26" />
+</resources>
