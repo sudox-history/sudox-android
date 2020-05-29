@@ -38,10 +38,17 @@ abstract class ViewListController<AT : ViewListAdapter<*>>(
             val topPadding =  activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_top_padding)
 
             it.setPadding(leftPadding, topPadding, rightPadding, bottomPadding)
-            it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        }
+    }
+
+    override fun onAttach(view: View) {
+        super.onAttach(view)
+
+        if (appBarManager!!.getLayoutChildCount() == 1) {
+            (view as ViewList).addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (!isDetachFrozen) {
-                        if (it.computeVerticalScrollOffset() > 0) {
+                        if (recyclerView.computeVerticalScrollOffset() > 0) {
                             appBarManager!!.requestElevationToggling(toggle = true, animate = true)
                         } else {
                             appBarManager!!.requestElevationToggling(toggle = false, animate = true)

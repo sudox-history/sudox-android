@@ -42,6 +42,14 @@ interface AppBarManager {
     fun requestElevationToggling(toggle: Boolean, animate: Boolean)
 
     /**
+     * Выдает количество дочерних элементов AppBarLayout'а
+     * В количество входит и сам AppBar
+     *
+     * @return Количество дочерних элементов
+     */
+    fun getLayoutChildCount(): Int
+
+    /**
      * Переключает загрузку.
      * Блокирует кнопки справа
      *

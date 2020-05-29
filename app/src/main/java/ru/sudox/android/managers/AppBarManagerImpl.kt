@@ -85,6 +85,10 @@ class AppBarManagerImpl(
         }
     }
 
+    override fun getLayoutChildCount(): Int {
+        return appBarLayout.childCount
+    }
+
     override fun toggleLoading(toggle: Boolean) {
         val vo = appBarLayout.appBar!!.vo
 

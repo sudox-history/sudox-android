@@ -96,6 +96,12 @@ class CustomAppBarLayout : com.google.android.material.appbar.AppBarLayout {
         }
     }
 
+    /**
+     * Переключает отображение линии под AppBarLayout'ом
+     *
+     * @param toggle Включить отображение?
+     * @param animate Переключить с анимацией?
+     */
     fun requestStrokeShowing(toggle: Boolean, animate: Boolean) {
         val drawable = getStrokeDrawable()
 
