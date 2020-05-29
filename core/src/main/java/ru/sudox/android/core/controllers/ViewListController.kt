@@ -30,6 +30,7 @@ abstract class ViewListController<AT : ViewListAdapter<*>>(
             it.adapter = adapter
             it.layoutManager = LinearLayoutManager(activity).apply { stackFromEnd = this@ViewListController.stackFromEnd }
             it.clipToPadding = false
+            it.setHasFixedSize(true)
 
             val leftPadding = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_left_padding)
             val rightPadding = activity!!.resources.getDimensionPixelSize(R.dimen.viewlistcontroller_right_padding)
