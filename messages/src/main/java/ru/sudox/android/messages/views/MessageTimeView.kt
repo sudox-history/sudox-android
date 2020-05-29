@@ -10,6 +10,10 @@ import androidx.core.content.res.use
 import androidx.core.widget.TextViewCompat.setTextAppearance
 import ru.sudox.android.messages.R
 
+/**
+ * View для отображения даты.
+ * Используется для липкой View при скролле, а также в списке.
+ */
 class MessageTimeView : ViewGroup {
 
     var timeText: String?

@@ -34,7 +34,7 @@
         <attr name="messagePaddingLeft" format="dimension" />
         <attr name="messagePaddingTop" format="dimension" />
 
-        <attr name="timeMarginBottom" format="dimension" />
+        <attr name="timeMarginVertical" format="dimension" />
         <attr name="timeMarginRight" format="dimension" />
         <attr name="timeBadgeHorizontalPadding" format="dimension" />
         <attr name="timeBadgeVerticalPadding" format="dimension" />

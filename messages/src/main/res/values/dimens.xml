@@ -20,7 +20,7 @@
     <dimen name="messageitemview_corner_radius_when_one_line">21dp</dimen>
     <dimen name="messageitemview_corner_radius">16dp</dimen>
     <dimen name="messageitemview_time_margin_right">13dp</dimen>
-    <dimen name="messageitemview_time_margin_bottom">6dp</dimen>
+    <dimen name="messageitemview_time_margin_vertical">6dp</dimen>
     <dimen name="messageitemview_badge_time_margin_right">10dp</dimen>
     <dimen name="messageitemview_badge_time_margin_bottom">10dp</dimen>
     <dimen name="messageitemview_margin_between_status_and_message">6dp</dimen>

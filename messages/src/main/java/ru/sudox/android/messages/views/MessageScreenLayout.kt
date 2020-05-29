@@ -8,6 +8,9 @@ import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 import ru.sudox.design.viewlist.ViewListContainer
 
+/**
+ * View для отображения контента экрана сообщений
+ */
 class MessageScreenLayout : ViewGroup {
 
     private val viewListContainer = ViewListContainer(context).apply {
@@ -35,6 +38,12 @@ class MessageScreenLayout : ViewGroup {
         viewListContainer.layout(0, 0, measuredWidth, measuredHeight)
     }
 
+    /**
+     * Устанавливает адаптер для ViewList'а
+     * Также настраивает адаптер на заполнение списка снизу-вверх.
+     *
+     * @param adapter Адаптер, который нужно использовать.
+     */
     fun setAdapter(adapter: ViewListAdapter<*>) {
         viewListContainer.viewList = ViewList(context).apply {
             adapter.viewList = this

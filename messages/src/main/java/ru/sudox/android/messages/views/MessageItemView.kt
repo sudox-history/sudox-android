@@ -29,6 +29,9 @@ import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ * View для отображения сообщения.
+ */
 class MessageItemView : ViewGroup {
 
     private var timeBadgeColor = 0
@@ -53,7 +56,7 @@ class MessageItemView : ViewGroup {
     private var minMarginBetweenTimeAndContent = 0
     private var messagesTemplatesAdapter = MessagesTemplatesAdapter()
     private var timeBadgeDrawable = BadgeDrawable(context, false, 0)
-    private var timeMarginBottom = 0
+    private var timeMarginVertical = 0
     private var timeMarginRight = 0
 
     private var cornerRadius = 0F
@@ -105,7 +108,7 @@ class MessageItemView : ViewGroup {
             marginBetweenStatusAndMessage = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_marginBetweenStatusAndMessage)
             minMarginBetweenTimeAndContent = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_minMarginBetweenTimeAndContent)
             timeBadgeTimeTextColor = it.getColorOrThrow(R.styleable.MessageItemView_timeBadgeTimeTextColor)
-            timeMarginBottom = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeMarginBottom)
+            timeMarginVertical = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeMarginVertical)
             timeMarginRight = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeMarginRight)
 
             timeBadgeDrawable.textPaint.let { paint ->
@@ -326,7 +329,7 @@ class MessageItemView : ViewGroup {
             timeX = containerRight - timeBadgeMarginRight - timeBadgeDrawable.bounds.width()
         } else {
             timeX = containerRight - timeMarginRight - timeBadgeDrawable.bounds.width()
-            timeY = containerBottom - timeBadgeDrawable.bounds.height() - timeMarginBottom
+            timeY = containerBottom - timeBadgeDrawable.bounds.height() - timeMarginVertical
         }
 
         canvas.withTranslation(x = timeX.toFloat(), y = timeY.toFloat()) {
@@ -334,6 +337,12 @@ class MessageItemView : ViewGroup {
         }
     }
 
+    /**
+     * Устанавливает ViewObject для данной View.
+     *
+     * @param vo ViewObject сообщения
+     * @param glide Glide для загрузки аватарок и изображений.
+     */
     fun setVO(vo: MessageVO?, glide: GlideRequests) {
         this.vo = vo
 
@@ -370,49 +379,15 @@ class MessageItemView : ViewGroup {
                 contentTextView.visibility = View.VISIBLE
                 contentTextView.text = vo.text
 
-//                val radii = FloatArray(8)
-
                 if (vo.isSentByMe) {
                     timeBadgeDrawable.textPaint.color = outboundTimeTextColor
                     contentTextView.setTextAppearance(outboundTextAppearance)
                     currentBackground = outboundBackground
-
-//                    radii[0] = cornerRadius
-//                    radii[1] = cornerRadius
-//                    radii[4] = cornerRadius
-//                    radii[5] = cornerRadius
-//                    radii[6] = cornerRadius
-//                    radii[7] = cornerRadius
-//
-//                    if (vo.isFirstMessage) {
-//                        radii[2] = leadingCornerRadius
-//                        radii[3] = leadingCornerRadius
-//                    } else {
-//                        radii[2] = cornerRadius
-//                        radii[3] = cornerRadius
-//                    }
                 } else {
                     timeBadgeDrawable.textPaint.color = inboundTimeTextColor
                     contentTextView.setTextAppearance(inboundTextAppearance)
                     currentBackground = inboundBackground
-
-//                    radii[2] = cornerRadius
-//                    radii[3] = cornerRadius
-//                    radii[4] = cornerRadius
-//                    radii[5] = cornerRadius
-//                    radii[6] = cornerRadius
-//                    radii[7] = cornerRadius
-//
-//                    if (vo.isFirstMessage) {
-//                        radii[0] = leadingCornerRadius
-//                        radii[1] = leadingCornerRadius
-//                    } else {
-//                        radii[0] = cornerRadius
-//                        radii[1] = cornerRadius
-//                    }
                 }
-
-//                currentBackground!!.cornerRadii = radii
             } else {
                 contentTextView.text = null
             }
@@ -441,7 +416,7 @@ class MessageItemView : ViewGroup {
     }
 
     private fun getTimeHeight(): Int {
-        return timeMarginBottom + timeMarginBottom + timeBadgeDrawable.bounds.height()
+        return timeMarginVertical + timeMarginVertical + timeBadgeDrawable.bounds.height()
     }
 
     private fun getTimeWidthModifier(): Int {
