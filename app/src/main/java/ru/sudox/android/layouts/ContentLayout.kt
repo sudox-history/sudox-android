@@ -14,8 +14,7 @@ import ru.sudox.design.appbar.CustomAppBarLayout
  * Отвечает за отображение тулбара и контента в приложении.
  */
 class ContentLayout : CoordinatorLayout {
-
-    @Suppress("unused")
+    
     val appBarLayout = CustomAppBarLayout(context).apply {
         fitsSystemWindows = true
         layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)

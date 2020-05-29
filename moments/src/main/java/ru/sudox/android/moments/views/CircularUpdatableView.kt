@@ -1,6 +1,5 @@
 package ru.sudox.android.moments.views
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -109,8 +108,6 @@ class CircularUpdatableView : ViewGroup {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.circularUpdatableViewStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.CircularUpdatableView, defStyleAttr, 0).use {
             activeColor = it.getColorOrThrow(R.styleable.CircularUpdatableView_activeColor)

@@ -1,6 +1,5 @@
 package ru.sudox.android.media.images.views
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -48,8 +47,6 @@ class AvatarImageView : GlideCircleImageView {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.avatarImageViewStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.AvatarImageView, defStyleAttr, 0).use {
             avatarColors = it.resources.getIntArray(it.getResourceIdOrThrow(R.styleable.AvatarImageView_avatarColors))

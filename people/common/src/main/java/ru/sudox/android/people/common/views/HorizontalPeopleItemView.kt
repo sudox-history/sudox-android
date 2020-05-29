@@ -1,6 +1,5 @@
 package ru.sudox.android.people.common.views
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
@@ -119,8 +118,6 @@ open class HorizontalPeopleItemView : ViewGroup {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.horizontalPeopleItemViewStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.HorizontalPeopleItemView, defStyleAttr, 0).use {
             setTextAppearance(nameTextView, it.getResourceIdOrThrow(R.styleable.HorizontalPeopleItemView_nameTextAppearance))

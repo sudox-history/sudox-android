@@ -1,6 +1,5 @@
 package ru.sudox.android.messages.views.appbar
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.text.Layout
@@ -68,8 +67,6 @@ class MessagesTitleAppBarView : ViewGroup {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messagesTitleAppBarViewStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.MessagesTitleAppBarView, defStyleAttr, 0).use {
             marginBetweenTitleAndSubtitle = it.getDimensionPixelSizeOrThrow(R.styleable.MessagesTitleAppBarView_marginBetweenTitleAndSubtitle)

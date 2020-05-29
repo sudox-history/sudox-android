@@ -26,8 +26,6 @@ class BottomLabeledImageButton : AppCompatTextView {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.bottomLabeledImageButtonStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.BottomLabeledImageButton, defStyleAttr, 0).use {
             iconTint = it.getColorOrThrow(R.styleable.BottomLabeledImageButton_iconTint)

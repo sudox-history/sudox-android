@@ -39,8 +39,6 @@ class ViewList : RecyclerView {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.viewListStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
         (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
@@ -67,6 +65,7 @@ class ViewList : RecyclerView {
      *
      * @return Текущий скролл по оси X
      */
+    @Deprecated("replace")
     fun getCurrentScrollX(): Int {
         return computeHorizontalScrollOffset()
     }
@@ -77,6 +76,7 @@ class ViewList : RecyclerView {
      *
      * @return Текущий скролл по оси Y
      */
+    @Deprecated("replace")
     fun getCurrentScrollY(): Int {
         return computeVerticalScrollOffset()
     }

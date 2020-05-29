@@ -1,6 +1,5 @@
 package ru.sudox.android.messages.views
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
@@ -25,8 +24,6 @@ class MessageTimeView : ViewGroup {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messageTimeViewStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.MessageTimeView, defStyleAttr, 0).use {
             textView.background = it.getDrawableOrThrow(R.styleable.MessageTimeView_timeBackground)

@@ -1,6 +1,5 @@
 package ru.sudox.android.messages.views
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.GradientDrawable
@@ -94,8 +93,6 @@ class MessageItemView : ViewGroup {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messageItemViewStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.MessageItemView, defStyleAttr, 0).use {
             timeBadgeColor = it.getColorOrThrow(R.styleable.MessageItemView_timeBadgeColor)

@@ -1,6 +1,5 @@
 package ru.sudox.design.edittext.layout
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Parcelable
@@ -123,8 +122,6 @@ class EditTextLayout : SaveableViewGroup<EditTextLayout, EditTextLayoutState> {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.editTextLayoutStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.EditTextLayout, defStyleAttr, 0).use {
             setTextAppearance(errorTextView, it.getResourceIdOrThrow(R.styleable.EditTextLayout_errorTextAppearance))

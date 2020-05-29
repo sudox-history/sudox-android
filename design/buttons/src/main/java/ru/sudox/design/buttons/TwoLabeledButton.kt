@@ -46,8 +46,6 @@ class TwoLabeledButton : AppCompatTextView {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.twoLabeledButtonStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.TwoLabeledButton, defStyleAttr, 0).use {
             firstLineTypeface = it.getFontCompat(context, R.styleable.TwoLabeledButton_firstLineFontFamily)

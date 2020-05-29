@@ -88,8 +88,6 @@ class CustomAppBarLayout : com.google.android.material.appbar.AppBarLayout {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.customAppBarLayoutStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.CustomAppBarLayout, defStyleAttr, 0).use {
             strokeWidth = it.getDimensionPixelSizeOrThrow(R.styleable.CustomAppBarLayout_strokeWidth)

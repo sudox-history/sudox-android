@@ -1,6 +1,5 @@
 package ru.sudox.android.auth.ui.views
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Build
@@ -113,8 +112,6 @@ class AuthScreenLayout : SaveableViewGroup<AuthScreenLayout, AuthScreenLayoutSta
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.authScreenLayoutStyle)
-
-    @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.AuthScreenLayout, defStyleAttr, 0).use {
             marginBetweenChildren = it.getDimensionPixelSize(R.styleable.AuthScreenLayout_marginBetweenChildren, 0)
