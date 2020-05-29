@@ -9,6 +9,11 @@
         <item name="activeSubtitleTextColor">@color/messagestitleappbarview_subtitle_active_text_color</item>
     </style>
 
+    <style name="Sudox.MessageScreenLayout" parent="">
+        <item name="listPaddingHorizontal">@dimen/messagescreenlayout_list_padding_horizontal</item>
+        <item name="listPaddingVertical">@dimen/messagescreenlayout_list_padding_vertical</item>
+    </style>
+
     <style name="Sudox.MessagesTitleAppBarView.Title" parent="">
         <item name="android:textSize">@dimen/messagestitleappbarview_title_text_size</item>
         <item name="android:textColor">@color/messagestitleappbarview_title_text_color</item>
@@ -75,7 +80,7 @@
         <item name="timeTextSize">@dimen/messageitemview_time_text_size</item>
         <item name="timeTextFontFamily">@font/opensans_regular</item>
         <item name="timeMarginRight">@dimen/messageitemview_time_margin_right</item>
-        <item name="timeMarginBottom">@dimen/messageitemview_time_margin_bottom</item>
+        <item name="timeMarginVertical">@dimen/messageitemview_time_margin_vertical</item>
         <item name="timeBadgeMarginRight">@dimen/messageitemview_badge_time_margin_right</item>
         <item name="timeBadgeMarginBottom">@dimen/messageitemview_badge_time_margin_bottom</item>
         <item name="timeBadgeHorizontalPadding">@dimen/messageitemview_time_badge_horizontal_padding</item>

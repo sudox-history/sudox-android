@@ -51,4 +51,7 @@
     <dimen name="messagelikesview_like_icon_width">12dp</dimen>
     <dimen name="messagelikesview_like_icon_clip_width">2dp</dimen>
     <dimen name="messagelikesview_count_text_size">12sp</dimen>
+
+    <dimen name="messagescreenlayout_list_padding_horizontal">9dp</dimen>
+    <dimen name="messagescreenlayout_list_padding_vertical">16dp</dimen>
 </resources>

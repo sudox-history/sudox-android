@@ -3,7 +3,9 @@ package ru.sudox.android.messages.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
+import androidx.core.content.res.use
 import androidx.recyclerview.widget.LinearLayoutManager
+import ru.sudox.android.messages.R
 import ru.sudox.design.viewlist.ViewList
 import ru.sudox.design.viewlist.ViewListAdapter
 import ru.sudox.design.viewlist.ViewListContainer
@@ -13,29 +15,40 @@ import ru.sudox.design.viewlist.ViewListContainer
  */
 class MessageScreenLayout : ViewGroup {
 
+    private var listPaddingVertical = 0
+    private var listPaddingHorizontal = 0
     private val viewListContainer = ViewListContainer(context).apply {
         this@MessageScreenLayout.addView(this)
     }
 
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messageScreenLayoutStyle)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        context.obtainStyledAttributes(attrs, R.styleable.MessageScreenLayout, defStyleAttr, 0).use {
+            listPaddingHorizontal = it.getDimensionPixelSize(R.styleable.MessageScreenLayout_listPaddingHorizontal, 0)
+            listPaddingVertical = it.getDimensionPixelSize(R.styleable.MessageScreenLayout_listPaddingVertical, 0)
+        }
+    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val availableHeight = MeasureSpec.getSize(heightMeasureSpec)
-        val availableWidth = MeasureSpec.getSize(widthMeasureSpec)
-        val heightSpec = MeasureSpec.makeMeasureSpec(availableHeight, MeasureSpec.EXACTLY)
-        val widthSpec = MeasureSpec.makeMeasureSpec(availableWidth, MeasureSpec.EXACTLY)
+        measureChild(viewListContainer, widthMeasureSpec, heightMeasureSpec)
 
-        viewListContainer.measure(widthSpec, heightSpec)
-        setMeasuredDimension(availableWidth, availableHeight)
+        setMeasuredDimension(
+                MeasureSpec.getSize(widthMeasureSpec),
+                MeasureSpec.getSize(heightMeasureSpec)
+        )
     }
 
     override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        viewListContainer.layout(0, 0, measuredWidth, measuredHeight)
+        viewListContainer.layout(
+                paddingLeft,
+                paddingTop,
+                paddingLeft + viewListContainer.measuredWidth,
+                paddingTop + viewListContainer.measuredHeight
+        )
     }
 
     /**
@@ -45,14 +58,18 @@ class MessageScreenLayout : ViewGroup {
      * @param adapter Адаптер, который нужно использовать.
      */
     fun setAdapter(adapter: ViewListAdapter<*>) {
-        viewListContainer.viewList = ViewList(context).apply {
-            adapter.viewList = this
+        viewListContainer.viewList = ViewList(context).also {
+            adapter.viewList = it
 
-            this.adapter = adapter
-            this.itemAnimator = null
-            this.layoutAnimation = null
-            this.layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
-            this.setPadding(10, 10, 10, 10)
+            it.setPadding(listPaddingHorizontal, listPaddingVertical, listPaddingHorizontal, listPaddingVertical)
+            it.setHasFixedSize(true)
+
+            it.adapter = adapter
+            it.itemAnimator = null
+            it.layoutAnimation = null
+            it.layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
+            it.isNestedScrollingEnabled = false
+            it.clipToPadding = false
         }
     }
 }

@@ -65,7 +65,13 @@
         <attr name="timeTopPadding" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="MessageScreenLayout">
+        <attr name="listPaddingVertical" format="dimension" />
+        <attr name="listPaddingHorizontal" format="dimension" />
+    </declare-styleable>
+
     <attr name="messagesTitleAppBarViewStyle" format="reference" />
+    <attr name="messageScreenLayoutStyle" format="reference" />
     <attr name="messageLikesViewStyle" format="reference" />
     <attr name="messageItemViewStyle" format="reference" />
     <attr name="messageTimeViewStyle" format="reference" />
