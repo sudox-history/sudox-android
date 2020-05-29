@@ -53,6 +53,7 @@ class MessagesChatController : CoreController() {
                 "uspendisse potenti. Nam quis tellus eros. Integer sit amet consectetur mi.", true)
 
         createTextMessage(adapter, "Maecenas", true)
+        createTextMessage(adapter, "Maecenas", false)
 
         createTextMessage(adapter, "Maecenas laoreet neque vitae ante malesuada tempus. Ut faucibus" +
                 " placerat arcu eget pellentesque. Nam eget consequat odio. Suspendisse ull" +
