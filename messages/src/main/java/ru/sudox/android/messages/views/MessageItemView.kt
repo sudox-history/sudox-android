@@ -58,10 +58,12 @@ class MessageItemView : ViewGroup {
     private var timeMarginRight = 0
 
     private var cornerRadius = 0F
+    private var cornerRadiusWhenOneLine = 0F
     private var leadingCornerRadius = 0F
     private var inboundTextAppearance = 0
     private var outboundTextAppearance = 0
     private var currentBackground: GradientDrawable? = null
+    private var currentBackgroundRadii = FloatArray(8)
     private var outboundBackground: GradientDrawable? = null
     private var inboundBackground: GradientDrawable? = null
     private var messagePaddingBottom = 0
@@ -115,6 +117,7 @@ class MessageItemView : ViewGroup {
             }
 
             cornerRadius = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_cornerRadius).toFloat()
+            cornerRadiusWhenOneLine = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_cornerRadiusWhenOneLine).toFloat()
             leadingCornerRadius = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_leadingCornerRadius).toFloat()
             outboundBackground = it.getDrawableOrThrow(R.styleable.MessageItemView_outboundBackground).mutate() as GradientDrawable
             inboundBackground = it.getDrawableOrThrow(R.styleable.MessageItemView_inboundBackground).mutate() as GradientDrawable
@@ -167,6 +170,42 @@ class MessageItemView : ViewGroup {
             needHeight += contentTextView.measuredHeight + messagePaddingTop + messagePaddingBottom
 
             if (contentTextView.lineCount > 0) {
+                val needCornerRadius = if (contentTextView.lineCount == 1) {
+                    cornerRadiusWhenOneLine
+                } else {
+                    cornerRadius
+                }
+
+                currentBackgroundRadii[4] = needCornerRadius
+                currentBackgroundRadii[5] = needCornerRadius
+                currentBackgroundRadii[6] = needCornerRadius
+                currentBackgroundRadii[7] = needCornerRadius
+
+                if (vo!!.isSentByMe) {
+                    currentBackgroundRadii[0] = needCornerRadius
+                    currentBackgroundRadii[1] = needCornerRadius
+
+                    if (vo!!.isFirstMessage) {
+                        currentBackgroundRadii[2] = leadingCornerRadius
+                        currentBackgroundRadii[3] = leadingCornerRadius
+                    } else {
+                        currentBackgroundRadii[2] = needCornerRadius
+                        currentBackgroundRadii[3] = needCornerRadius
+                    }
+                } else {
+                    currentBackgroundRadii[2] = needCornerRadius
+                    currentBackgroundRadii[3] = needCornerRadius
+
+                    if (vo!!.isFirstMessage) {
+                        currentBackgroundRadii[0] = leadingCornerRadius
+                        currentBackgroundRadii[1] = leadingCornerRadius
+                    } else {
+                        currentBackgroundRadii[0] = needCornerRadius
+                        currentBackgroundRadii[1] = needCornerRadius
+                    }
+                }
+
+                currentBackground!!.cornerRadii = currentBackgroundRadii
                 lastLineWidth = ceil(contentTextView.layout.getLineWidth(contentTextView.lineCount - 1)).toInt()
 
                 if (isTimeShowingInAnotherLine()) {
@@ -334,49 +373,49 @@ class MessageItemView : ViewGroup {
                 contentTextView.visibility = View.VISIBLE
                 contentTextView.text = vo.text
 
-                val radii = FloatArray(8)
+//                val radii = FloatArray(8)
 
                 if (vo.isSentByMe) {
                     timeBadgeDrawable.textPaint.color = outboundTimeTextColor
                     contentTextView.setTextAppearance(outboundTextAppearance)
                     currentBackground = outboundBackground
 
-                    radii[0] = cornerRadius
-                    radii[1] = cornerRadius
-                    radii[4] = cornerRadius
-                    radii[5] = cornerRadius
-                    radii[6] = cornerRadius
-                    radii[7] = cornerRadius
-
-                    if (vo.isFirstMessage) {
-                        radii[2] = leadingCornerRadius
-                        radii[3] = leadingCornerRadius
-                    } else {
-                        radii[2] = cornerRadius
-                        radii[3] = cornerRadius
-                    }
+//                    radii[0] = cornerRadius
+//                    radii[1] = cornerRadius
+//                    radii[4] = cornerRadius
+//                    radii[5] = cornerRadius
+//                    radii[6] = cornerRadius
+//                    radii[7] = cornerRadius
+//
+//                    if (vo.isFirstMessage) {
+//                        radii[2] = leadingCornerRadius
+//                        radii[3] = leadingCornerRadius
+//                    } else {
+//                        radii[2] = cornerRadius
+//                        radii[3] = cornerRadius
+//                    }
                 } else {
                     timeBadgeDrawable.textPaint.color = inboundTimeTextColor
                     contentTextView.setTextAppearance(inboundTextAppearance)
                     currentBackground = inboundBackground
 
-                    radii[2] = cornerRadius
-                    radii[3] = cornerRadius
-                    radii[4] = cornerRadius
-                    radii[5] = cornerRadius
-                    radii[6] = cornerRadius
-                    radii[7] = cornerRadius
-
-                    if (vo.isFirstMessage) {
-                        radii[0] = leadingCornerRadius
-                        radii[1] = leadingCornerRadius
-                    } else {
-                        radii[0] = cornerRadius
-                        radii[1] = cornerRadius
-                    }
+//                    radii[2] = cornerRadius
+//                    radii[3] = cornerRadius
+//                    radii[4] = cornerRadius
+//                    radii[5] = cornerRadius
+//                    radii[6] = cornerRadius
+//                    radii[7] = cornerRadius
+//
+//                    if (vo.isFirstMessage) {
+//                        radii[0] = leadingCornerRadius
+//                        radii[1] = leadingCornerRadius
+//                    } else {
+//                        radii[0] = cornerRadius
+//                        radii[1] = cornerRadius
+//                    }
                 }
 
-                currentBackground!!.cornerRadii = radii
+//                currentBackground!!.cornerRadii = radii
             } else {
                 contentTextView.text = null
             }

@@ -52,6 +52,7 @@
         <attr name="marginBetweenStatusAndMessage" format="dimension" />
         <attr name="minMarginBetweenTimeAndContent" format="dimension" />
         <attr name="leadingCornerRadius" format="dimension" />
+        <attr name="cornerRadiusWhenOneLine" format="dimension" />
         <attr name="cornerRadius" format="dimension" />
     </declare-styleable>
 

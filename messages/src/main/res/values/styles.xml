@@ -85,6 +85,7 @@
         <item name="marginBetweenStatusAndMessage">@dimen/messageitemview_margin_between_status_and_message</item>
         <item name="minMarginBetweenTimeAndContent">@dimen/messageitemview_min_margin_between_time_and_content</item>
         <item name="leadingCornerRadius">@dimen/messageitemview_leading_corner_radius</item>
+        <item name="cornerRadiusWhenOneLine">@dimen/messageitemview_corner_radius_when_one_line</item>
         <item name="cornerRadius">@dimen/messageitemview_corner_radius</item>
     </style>
 
