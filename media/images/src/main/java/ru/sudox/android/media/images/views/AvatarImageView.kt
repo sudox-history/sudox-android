@@ -10,7 +10,6 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getFloatOrThrow
-import androidx.core.content.res.getFontOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.graphics.withTranslation
@@ -20,6 +19,7 @@ import ru.sudox.android.media.images.views.drawables.AvatarDrawable
 import ru.sudox.android.media.images.views.vos.AvatarVO
 import ru.sudox.android.media.texts.helpers.getTwoFirstLetters
 import ru.sudox.design.common.drawables.BadgeDrawable
+import ru.sudox.design.common.getFontCompat
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -54,7 +54,7 @@ class AvatarImageView : GlideCircleImageView {
         context.obtainStyledAttributes(attrs, R.styleable.AvatarImageView, defStyleAttr, 0).use {
             avatarColors = it.resources.getIntArray(it.getResourceIdOrThrow(R.styleable.AvatarImageView_avatarColors))
             avatarTextPaint.color = it.getColorOrThrow(R.styleable.AvatarImageView_avatarTextColor)
-            avatarTextPaint.typeface = it.getFontOrThrow(R.styleable.AvatarImageView_avatarTextFontFamily)
+            avatarTextPaint.typeface = it.getFontCompat(context, R.styleable.AvatarImageView_avatarTextFontFamily)
             avatarHeightPercent = it.getFloatOrThrow(R.styleable.AvatarImageView_avatarHeightPercent)
             badgeDrawable = BadgeDrawable(context, true, it.getColorOrThrow(R.styleable.AvatarImageView_badgeColor))
         }

@@ -25,8 +25,7 @@ data class CountryVO(
             parcel.readString()!!,
             parcel.readInt(),
             parcel.readInt(),
-            parcel.readInt()) {
-    }
+            parcel.readInt())
 
     fun getName(context: Context): String {
         return context.getString(nameId)

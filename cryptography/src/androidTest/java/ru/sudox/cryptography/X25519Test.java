@@ -5,12 +5,12 @@ import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.Random;
-
 import ru.sudox.cryptography.entries.KeyPair;
 import ru.sudox.cryptography.entries.SecretKeyPair;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static ru.sudox.cryptography.X25519.PUBLIC_KEY_LENGTH;
 import static ru.sudox.cryptography.X25519.SECRET_KEY_LENGTH;
 

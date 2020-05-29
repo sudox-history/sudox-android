@@ -1,9 +1,7 @@
 package ru.sudox.android.people
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -23,10 +21,6 @@ class ProfileController : ViewListController<ViewListAdapter<*>>(true) {
         return ViewListContainer(activity!!).apply {
             viewList = super.createView(container, savedViewState) as ViewList
         }
-    }
-
-    override fun bindView(view: View) {
-        super.bindView(view)
     }
 
     override fun getAdapter(viewList: ViewList): ViewListAdapter<*>? {

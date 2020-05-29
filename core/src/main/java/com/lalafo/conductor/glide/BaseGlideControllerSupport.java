@@ -31,6 +31,7 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+@SuppressWarnings("ALL")
 public abstract class BaseGlideControllerSupport<T extends RequestManager> implements RequestManagerTreeNode {
 
     private WeakReference<Controller> controller;

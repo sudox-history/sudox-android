@@ -6,7 +6,7 @@ import ru.sudox.android.auth.ui.AuthViewModel
 import javax.inject.Inject
 
 class AuthVerifyViewModel @Inject constructor(
-        private val authRepository: AuthRepository
+        authRepository: AuthRepository
 ) : AuthViewModel(true, authRepository, false) {
 
     val successLiveData = MutableLiveData<Unit>()

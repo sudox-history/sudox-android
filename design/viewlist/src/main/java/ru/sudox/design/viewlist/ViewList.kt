@@ -14,7 +14,7 @@ import androidx.core.content.res.use
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import ru.sudox.design.common.getFont
+import ru.sudox.design.common.getFontCompat
 import ru.sudox.design.viewlist.decorators.ViewListMarginDecorator
 import ru.sudox.design.viewlist.decorators.ViewListStickyDecorator
 
@@ -51,7 +51,7 @@ class ViewList : RecyclerView {
             letterPaddingTop = it.getDimensionPixelSize(R.styleable.ViewList_letterPaddingTop, 0)
 
             letterPaint.apply {
-                typeface = it.getFont(context, R.styleable.ViewList_letterFontFamily)
+                typeface = it.getFontCompat(context, R.styleable.ViewList_letterFontFamily)
                 textSize = it.getDimensionPixelSize(R.styleable.ViewList_letterTextSize, 0).toFloat()
                 color = it.getColorOrThrow(R.styleable.ViewList_letterTextColor)
             }

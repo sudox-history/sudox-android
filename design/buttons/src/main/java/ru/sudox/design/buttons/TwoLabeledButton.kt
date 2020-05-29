@@ -8,9 +8,9 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
-import androidx.core.content.res.getFontOrThrow
 import androidx.core.content.res.use
 import ru.sudox.design.buttons.spannables.FirstLineButtonSpannable
+import ru.sudox.design.common.getFontCompat
 
 class TwoLabeledButton : AppCompatTextView {
 
@@ -50,7 +50,7 @@ class TwoLabeledButton : AppCompatTextView {
     @SuppressLint("Recycle")
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         context.obtainStyledAttributes(attrs, R.styleable.TwoLabeledButton, defStyleAttr, 0).use {
-            firstLineTypeface = it.getFontOrThrow(R.styleable.TwoLabeledButton_firstLineFontFamily)
+            firstLineTypeface = it.getFontCompat(context, R.styleable.TwoLabeledButton_firstLineFontFamily)
             firstLineTextSize = it.getDimensionPixelSizeOrThrow(R.styleable.TwoLabeledButton_firstLineTextSize).toFloat()
             firstLineTextColor = it.getColorOrThrow(R.styleable.TwoLabeledButton_firstLineTextColor)
         }

@@ -28,7 +28,7 @@ class MaybeYouKnowAdapter(
             }
         }
 
-    val maybeYouKnowVOs = SortedList<MaybeYouKnowVO>(MaybeYouKnowVO::class.java, MaybeYouKnowSortingCallback(this))
+    val maybeYouKnowVOs = SortedList(MaybeYouKnowVO::class.java, MaybeYouKnowSortingCallback(this))
 
     override fun createItemHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(VerticalPeopleItemView(viewList!!.context))

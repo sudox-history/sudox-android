@@ -35,7 +35,7 @@ class ActivityTabAdapter(
     )
 
     var viewPool = RecyclerView.RecycledViewPool()
-    val newsVOs = SortedList<NewsVO>(NewsVO::class.java, NewsSortingCallback(this, NEWS_HEADER_TYPE))
+    val newsVOs = SortedList(NewsVO::class.java, NewsSortingCallback(this, NEWS_HEADER_TYPE))
     val momentsAdapter = MomentsAdapter(glide)
 
     override var viewList: ViewList? = null
@@ -131,7 +131,7 @@ class ActivityTabAdapter(
     }
 
     class MomentsViewHolder(
-            val view: ViewList
+            view: ViewList
     ) : RecyclerView.ViewHolder(view)
 
     class NewsViewHolder(

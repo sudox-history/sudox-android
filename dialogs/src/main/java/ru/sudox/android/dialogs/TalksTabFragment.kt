@@ -5,7 +5,6 @@ import ru.sudox.android.core.controllers.ViewListController
 import ru.sudox.android.dialogs.adapters.DialogsAdapter
 import ru.sudox.android.dialogs.vos.impl.TalkVO
 import ru.sudox.android.messages.MESSAGES_CONTROLLER_DIALOG_ID_KEY
-import ru.sudox.android.messages.MessagesChatController
 import ru.sudox.android.messages.MessagesTalkController
 import ru.sudox.design.viewlist.ViewList
 

@@ -1,7 +1,6 @@
 package ru.sudox.android.media.images.views
 
 import android.content.Context
-import android.graphics.Canvas
 import android.util.AttributeSet
 import kotlin.math.min
 

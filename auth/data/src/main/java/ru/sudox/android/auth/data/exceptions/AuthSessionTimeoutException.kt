@@ -1,4 +1,3 @@
 package ru.sudox.android.auth.data.exceptions
 
-class AuthSessionTimeoutException : Exception() {
-}
+class AuthSessionTimeoutException : Exception()

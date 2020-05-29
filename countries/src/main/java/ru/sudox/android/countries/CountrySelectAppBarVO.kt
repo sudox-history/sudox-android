@@ -2,11 +2,10 @@ package ru.sudox.android.countries
 
 import android.content.Context
 import android.view.View
-import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.APPBAR_BACK_BUTTON_PARAMS
 import ru.sudox.design.appbar.vos.APPBAR_SEARCH_BUTTON_PARAMS
+import ru.sudox.design.appbar.vos.AppBarVO
 import ru.sudox.design.appbar.vos.others.AppBarButtonParam
-import ru.sudox.design.appbar.vos.others.NOT_USED_PARAMETER
 
 class CountrySelectAppBarVO : AppBarVO {
 

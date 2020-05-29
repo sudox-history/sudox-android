@@ -700,6 +700,6 @@ abstract class ViewListAdapter<VH : RecyclerView.ViewHolder> : RecyclerView.Adap
     ) : RecyclerView.ViewHolder(view)
 
     private class LoaderViewHolder(
-            val view: ProgressBar
+            view: ProgressBar
     ) : RecyclerView.ViewHolder(view)
 }

@@ -92,7 +92,7 @@ class MessageLikesView : ViewGroup {
         }
 
         counterWidthWhenFull = with(Rect()) {
-            countTextView.textMetricsParams.textPaint.getTextBounds("999+", 0, 4, this)
+            countTextView.paint.getTextBounds("999+", 0, 4, this)
             width() + countTextView.paddingLeft + paddingRight
         }
 

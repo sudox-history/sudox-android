@@ -16,8 +16,11 @@
 
 package com.lalafo.conductor.glide;
 
+import android.annotation.SuppressLint;
+
 import com.bumptech.glide.RequestManager;
 
 public interface GlideProvider<T extends RequestManager> {
+    @SuppressLint("UnknownNullness")
     T getGlide();
 }

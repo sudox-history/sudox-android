@@ -12,7 +12,6 @@ import androidx.core.content.res.getColorOrThrow
 import androidx.core.content.res.getDimensionPixelSizeOrThrow
 import androidx.core.content.res.getDrawableOrThrow
 import androidx.core.content.res.getFloatOrThrow
-import androidx.core.content.res.getFontOrThrow
 import androidx.core.content.res.getResourceIdOrThrow
 import androidx.core.content.res.use
 import androidx.core.graphics.withTranslation
@@ -26,6 +25,7 @@ import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.android.time.dateTimeOf
 import ru.sudox.android.time.timestampToTimeString
 import ru.sudox.design.common.drawables.BadgeDrawable
+import ru.sudox.design.common.getFontCompat
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -111,7 +111,7 @@ class MessageItemView : ViewGroup {
 
             timeBadgeDrawable.textPaint.let { paint ->
                 paint.textSize = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_timeTextSize).toFloat()
-                paint.typeface = it.getFontOrThrow(R.styleable.MessageItemView_timeTextFontFamily)
+                paint.typeface = it.getFontCompat(context, R.styleable.MessageItemView_timeTextFontFamily)
             }
 
             cornerRadius = it.getDimensionPixelSizeOrThrow(R.styleable.MessageItemView_cornerRadius).toFloat()

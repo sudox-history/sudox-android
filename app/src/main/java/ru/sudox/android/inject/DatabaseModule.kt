@@ -23,7 +23,7 @@ class DatabaseModule(private val name: String) {
 
     @Provides
     @Singleton
-    fun provideAuthSessionDao(appDatabase: AppDatabase): ru.sudox.android.auth.data.daos.AuthSessionDAO {
+    fun provideAuthSessionDao(appDatabase: AppDatabase): AuthSessionDAO {
         return appDatabase.authSessionDao()
     }
 }

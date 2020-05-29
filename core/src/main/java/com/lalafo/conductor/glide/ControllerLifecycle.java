@@ -30,9 +30,10 @@ import androidx.annotation.NonNull;
  * A [com.bumptech.glide.manager.Lifecycle] implementation for tracking and notifying
  * listeners of [com.bluelinelabs.conductor.Controller] lifecycle events.
  */
+@SuppressWarnings("ALL")
 public class ControllerLifecycle implements Lifecycle {
 
-    private Set<LifecycleListener> lifecycleListeners = Collections.newSetFromMap(new WeakHashMap<LifecycleListener, Boolean>());
+    private Set<LifecycleListener> lifecycleListeners = Collections.newSetFromMap(new WeakHashMap<>());
     private boolean isStarted = false;
     private boolean isDestroyed = false;
 

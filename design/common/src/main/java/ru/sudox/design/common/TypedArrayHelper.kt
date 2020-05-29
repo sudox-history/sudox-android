@@ -31,7 +31,7 @@ fun TypedArray.getAnimator(context: Context, index: Int): Animator? {
  * @param context Контекст приложения/активности
  * @param index Индекс элемента
  */
-fun TypedArray.getFont(context: Context, index: Int): Typeface? {
+fun TypedArray.getFontCompat(context: Context, index: Int): Typeface? {
     val resourceId = getResourceId(index, 0)
 
     if (resourceId != 0) {

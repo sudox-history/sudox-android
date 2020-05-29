@@ -18,7 +18,7 @@ class DialogsAdapter(
         val clickCallback: (Long) -> (Unit)
 ) : ViewListAdapter<DialogsAdapter.ViewHolder>() {
 
-    val dialogsVOs = SortedList<DialogVO>(DialogVO::class.java, DialogsCallback(this))
+    val dialogsVOs = SortedList(DialogVO::class.java, DialogsCallback(this))
 
     override var viewList: ViewList? = null
         set(value) {

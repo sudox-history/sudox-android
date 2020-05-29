@@ -87,7 +87,7 @@ class MessagesChatController : CoreController() {
             override val isSentByMe = false
             override val sentTime: Long = 3L
 
-            override fun getMessageStatus(context: Context) = null
+            override fun getMessageStatus(context: Context): Nothing? = null
         })
 
         adapter.insertNewMessage(object : MessageVO {
@@ -100,7 +100,7 @@ class MessagesChatController : CoreController() {
             override val isSentByMe = true
             override val sentTime: Long = 3L
 
-            override fun getMessageStatus(context: Context) = null
+            override fun getMessageStatus(context: Context): Nothing? = null
         })
     }
 
@@ -131,7 +131,7 @@ class MessagesChatController : CoreController() {
             override val isSentByMe = false
             override val sentTime: Long = 3L
 
-            override fun getMessageStatus(context: Context) = null
+            override fun getMessageStatus(context: Context): Nothing? = null
         })
 
         adapter.insertNewMessage(object : MessageVO {

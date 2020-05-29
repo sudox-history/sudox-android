@@ -284,5 +284,5 @@ class PeopleTabAdapter(
     }
 
     class PeopleViewHolder(val view: HorizontalPeopleItemView) : RecyclerView.ViewHolder(view)
-    class ListViewHolder(val view: ViewList) : RecyclerView.ViewHolder(view)
+    class ListViewHolder(view: ViewList) : RecyclerView.ViewHolder(view)
 }

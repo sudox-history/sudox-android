@@ -2,7 +2,9 @@
 <resources>
 
     <style name="Sudox" parent="Sudox.Base">
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Sudox.Base" parent="Theme.AppCompat.Light.NoActionBar">
