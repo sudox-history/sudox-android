@@ -1,13 +1,13 @@
 package ru.sudox.android.people.common.formatters
 
 import android.content.Context
-import org.threeten.bp.LocalDateTime
 import ru.sudox.android.people.common.R
 import ru.sudox.android.time.formatters.TimeFormatter
 import ru.sudox.android.time.getFullNameOfDayOfWeek
 import ru.sudox.android.time.getFullNameOfMonth
 import ru.sudox.android.time.getShortNameOfMonth
 import ru.sudox.android.time.timestampToTimeString
+import java.time.LocalDateTime
 
 object SeenTimeFormatter : TimeFormatter {
 

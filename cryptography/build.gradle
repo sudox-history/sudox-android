@@ -1,7 +1,7 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, false, false)
+registerModule(false, false, false, false)
 
 android {
     externalNativeBuild {

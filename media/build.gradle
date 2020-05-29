@@ -1,7 +1,7 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, false, true)
+registerModule(false, false, true, false)
 
 dependencies {
     api project(":media:images")

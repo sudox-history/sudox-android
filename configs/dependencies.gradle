@@ -22,7 +22,6 @@ ext.libraries = [
         'glide'                   : "com.github.bumptech.glide:glide:4.11.0",
         'junit-exts'              : "androidx.test.ext:junit:1.1.1",
         'mockito_kotlin'          : "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0",
-        'threetenabp'             : "com.jakewharton.threetenabp:threetenabp:1.2.4",
         'material_components'     : "com.google.android.material:material:1.2.0-alpha05",
         'coordinator_layout'      : "androidx.coordinatorlayout:coordinatorlayout:1.1.0",
         'conductor'               : "com.bluelinelabs:conductor:3.0.0-rc4",

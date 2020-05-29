@@ -1,7 +1,7 @@
 package ru.sudox.android.time.formatters
 
 import android.content.Context
-import org.threeten.bp.LocalDateTime
+import java.time.LocalDateTime
 
 interface TimeFormatter {
 

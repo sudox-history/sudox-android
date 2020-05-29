@@ -1,12 +1,12 @@
 package ru.sudox.android.time
 
 import android.content.Context
-import org.threeten.bp.DayOfWeek
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.Month
-import org.threeten.bp.ZoneId
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.DayOfWeek
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.Month
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 
 /**
  * Переводит Timestamp в LocalDateTime

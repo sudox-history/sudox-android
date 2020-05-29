@@ -7,8 +7,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.junit.Assert.*
 import org.robolectric.Robolectric
-import org.threeten.bp.DayOfWeek
-import org.threeten.bp.Month
+import java.time.DayOfWeek
+import java.time.Month
 import java.util.TimeZone
 
 @Config(qualifiers = "en")

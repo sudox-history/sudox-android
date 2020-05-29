@@ -2,9 +2,9 @@ package ru.sudox.android.time
 
 import android.content.Context
 import android.text.format.DateFormat
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.temporal.ChronoField
-import org.threeten.bp.temporal.ChronoUnit
+import java.time.LocalDateTime
+import java.time.temporal.ChronoField
+import java.time.temporal.ChronoUnit
 import ru.sudox.android.time.formatters.TimeFormatter
 
 /**

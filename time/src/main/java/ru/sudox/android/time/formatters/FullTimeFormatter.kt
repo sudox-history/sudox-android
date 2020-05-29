@@ -1,11 +1,11 @@
 package ru.sudox.android.time.formatters
 
 import android.content.Context
-import org.threeten.bp.LocalDateTime
 import ru.sudox.android.time.R
 import ru.sudox.android.time.getFullNameOfDayOfWeek
 import ru.sudox.android.time.getFullNameOfMonth
 import ru.sudox.android.time.timestampToTimeString
+import java.time.LocalDateTime
 
 object FullTimeFormatter : TimeFormatter {
 

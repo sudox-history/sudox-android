@@ -1,10 +1,10 @@
 package ru.sudox.android.time.formatters
 
 import android.content.Context
-import org.threeten.bp.LocalDateTime
 import ru.sudox.android.time.R
 import ru.sudox.android.time.getShortNameOfDayOfWeek
 import ru.sudox.android.time.getShortNameOfMonth
+import java.time.LocalDateTime
 
 object ShortTimeFormatter : TimeFormatter {
 

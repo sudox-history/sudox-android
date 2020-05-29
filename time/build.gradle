@@ -1,13 +1,12 @@
 apply from: '../configs/dependencies.gradle'
 apply from: '../configs/common.gradle'
 
-registerModule(false, false, true)
+registerModule(false, false, true, true)
 
 apply from: '../configs/robolectric.gradle'
 
 dependencies {
     implementation libraries.core_ktx
-    implementation libraries.threetenabp
     implementation project(":core")
 
     testImplementation libraries.junit
