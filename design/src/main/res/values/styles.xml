@@ -17,7 +17,6 @@
         <item name="fontFamily">@font/opensans_regular</item>
 
         <!--    EditTexts     -->
-        <item name="android:autofilledHighlight">@android:color/transparent</item>
         <item name="editTextLayoutStyle">@style/Sudox.EditTextLayout</item>
         <item name="android:editTextStyle">@style/Sudox.EditText</item>
         <item name="editTextStyle">@style/Sudox.EditText</item>

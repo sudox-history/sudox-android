@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 
 public class SecretKeyPair {
 
-    private byte[] receiveKey;
-    private byte[] sendKey;
+    private final byte[] receiveKey;
+    private final byte[] sendKey;
 
     @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
     public SecretKeyPair(@NonNull byte[] receiveKey, @NonNull byte[] sendKey) {

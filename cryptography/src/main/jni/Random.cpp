@@ -3,7 +3,7 @@
 
 extern "C"
 JNIEXPORT jbyteArray JNICALL
-Java_ru_sudox_cryptography_Random_generate(JNIEnv *env, jclass clazz, jint length) {
+Java_ru_sudox_cryptography_Random_generate(JNIEnv *env, __unused jclass clazz, jint length) {
     unsigned char bytes[length];
     randombytes_buf(bytes, sizeof(bytes));
 
