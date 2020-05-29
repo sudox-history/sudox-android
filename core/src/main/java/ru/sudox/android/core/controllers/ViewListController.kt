@@ -40,10 +40,12 @@ abstract class ViewListController<AT : ViewListAdapter<*>>(
             it.setPadding(leftPadding, topPadding, rightPadding, bottomPadding)
             it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (it.getCurrentScrollY() > 0) {
-                        appBarManager!!.requestElevationToggling(toggle = true, animate = true)
-                    } else {
-                        appBarManager!!.requestElevationToggling(toggle = false, animate = true)
+                    if (!isDetachFrozen) {
+                        if (it.computeVerticalScrollOffset() > 0) {
+                            appBarManager!!.requestElevationToggling(toggle = true, animate = true)
+                        } else {
+                            appBarManager!!.requestElevationToggling(toggle = false, animate = true)
+                        }
                     }
                 }
             })
@@ -51,7 +53,7 @@ abstract class ViewListController<AT : ViewListAdapter<*>>(
     }
 
     override fun isInStartState(): Boolean {
-        return (view as ViewList).getCurrentScrollY() == 0
+        return (view as ViewList).computeVerticalScrollOffset() == 0
     }
 
     override fun toStartState() {

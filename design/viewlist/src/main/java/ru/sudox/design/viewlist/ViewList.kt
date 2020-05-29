@@ -59,28 +59,6 @@ class ViewList : RecyclerView {
         addItemDecoration(ViewListStickyDecorator(this))
     }
 
-    /**
-     * Выдает текущий скролл по оси X
-     * P.S.: Рассчитывается на основе вызова обратной функции
-     *
-     * @return Текущий скролл по оси X
-     */
-    @Deprecated("replace")
-    fun getCurrentScrollX(): Int {
-        return computeHorizontalScrollOffset()
-    }
-
-    /**
-     * Выдает текущий скролл по оси Y
-     * P.S.: Рассчитывается на основе вызова обратной функции
-     *
-     * @return Текущий скролл по оси Y
-     */
-    @Deprecated("replace")
-    fun getCurrentScrollY(): Int {
-        return computeVerticalScrollOffset()
-    }
-
     override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
         if ((layoutManager as? LinearLayoutManager)?.orientation == VERTICAL) {
             if (left > 0) {

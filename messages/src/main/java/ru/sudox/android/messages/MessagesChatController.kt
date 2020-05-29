@@ -17,7 +17,7 @@ import ru.sudox.android.people.common.vos.SimplePeopleVO
 
 const val MESSAGES_CONTROLLER_DIALOG_ID_KEY = "dialog_id"
 
-class MessagesChatController : CoreController() {
+class MessagesChatController : CoreController(true) {
 
     override fun createView(container: ViewGroup, savedViewState: Bundle?): View {
         return MessageScreenLayout(activity!!)
@@ -102,6 +102,10 @@ class MessagesChatController : CoreController() {
 
             override fun getMessageStatus(context: Context): Nothing? = null
         })
+    }
+
+    override fun onAttach(view: View) {
+        super.onAttach(view)
     }
 
     private fun createMessage(adapter: MessagesAdapter, count: Int) {

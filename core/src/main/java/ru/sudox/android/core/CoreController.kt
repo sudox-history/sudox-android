@@ -29,11 +29,16 @@ import javax.inject.Inject
 
 private const val CORE_CONTROLLER_ROOT_VIEW_ID_KEY = "core_controller_root_view_id"
 
-abstract class CoreController : LifecycleController(), GlideProvider<GlideRequests> {
+abstract class CoreController(
+        private val addElevationForAppBarLayout: Boolean = false
+) : LifecycleController(), GlideProvider<GlideRequests> {
 
     @Suppress("LeakingThis")
     private val glideControllerSupport = CoreGlideControllerSupport(this)
     private var isSearchEnabledBeforeStop = false
+
+    open var isDetachFrozen: Boolean = false
+        internal set
 
     var appBarVO: AppBarVO? = null
         set(value) {
@@ -121,16 +126,23 @@ abstract class CoreController : LifecycleController(), GlideProvider<GlideReques
             appBarManager!!.setLayoutVO(appBarLayoutVO)
         }
 
-        appBarManager!!.requestElevationToggling(toggle = false, animate = false)
+        appBarManager!!.requestElevationToggling(toggle = addElevationForAppBarLayout, animate = false)
 
         if (navigationManager!!.isContentUsesAllLayout()) {
             view.requestApplyInsets()
         }
     }
 
+    override fun onChangeEnded(changeHandler: ControllerChangeHandler, changeType: ControllerChangeType) {
+        if (!changeType.isEnter) {
+            isDetachFrozen = false
+        }
+    }
+
     override fun onChangeStarted(changeHandler: ControllerChangeHandler, changeType: ControllerChangeType) {
         if (!changeType.isEnter) {
             activity!!.hideSoftKeyboard()
+            isDetachFrozen = true
         }
     }
 

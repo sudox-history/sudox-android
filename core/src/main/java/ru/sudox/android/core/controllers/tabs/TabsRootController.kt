@@ -14,6 +14,15 @@ abstract class TabsRootController : CoreController() {
 
     internal val loadedControllers = arrayOfNulls<CoreController>(getControllersCount())
 
+    override var isDetachFrozen: Boolean = false
+        set(value) {
+            loadedControllers.forEach {
+                it?.isDetachFrozen = value
+            }
+
+            field = value
+        }
+
     @Suppress("LeakingThis")
     private val pagerAdapter = object : RouterPagerAdapter(this) {
         override fun configureRouter(router: Router, position: Int) {
