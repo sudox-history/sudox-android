@@ -1,18 +1,15 @@
 package ru.sudox.android.messages
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import ru.sudox.android.core.CoreController
-import ru.sudox.android.media.vos.MediaAttachmentVO
 import ru.sudox.android.media.vos.impls.ImageAttachmentVO
 import ru.sudox.android.messages.adapters.MessagesAdapter
 import ru.sudox.android.messages.views.MessageScreenLayout
-import ru.sudox.android.messages.vos.MessageVO
 import ru.sudox.android.messages.vos.MessagesChatVO
 import ru.sudox.android.messages.vos.appbar.BaseMessagesAppBarVO
-import ru.sudox.android.people.common.vos.PeopleVO
+import ru.sudox.android.messages.vos.messages.ChatMessageVO
 import ru.sudox.android.people.common.vos.SimplePeopleVO
 
 const val MESSAGES_CONTROLLER_DIALOG_ID_KEY = "dialog_id"
@@ -36,132 +33,43 @@ class MessagesChatController : CoreController(true) {
             view.setAdapter(adapter)
         }
 
-        createMessage(adapter, 1)
-        createMessage(adapter, 2)
-        createMessage(adapter, 3)
-        createMessage(adapter, 4)
-        createMessage(adapter, 5)
-        createMessage(adapter, 6)
-        createMessage(adapter, 7)
-        createMessage(adapter, 8)
-        createMessage(adapter, 9)
-        createMessage(adapter, 10)
+        adapter.insertNewMessage(ChatMessageVO("1", "Здаров!", "1", null, null, false, System.currentTimeMillis()))
+        adapter.insertNewMessage(ChatMessageVO("2", "Я тут свою M760Li зачиповал до 950 сил. Не хочешь посмотреть?", "1", null, null, false, System.currentTimeMillis()))
+        adapter.insertNewMessage(ChatMessageVO("3", null, "1", arrayListOf(ImageAttachmentVO(8L).apply {
+            height = 1800
+            width = 2880
+        }), null, false, System.currentTimeMillis()))
 
-        createTextMessage(adapter, "Maecenas laoreet neque vitae ante malesuada tempus. Ut faucibus" +
-                " placerat arcu eget pellentesque. Nam eget consequat odio. Suspendisse ull" +
-                "amcorper leo ac odio consectetur, quis consectetur turpis tristique. S" +
-                "uspendisse potenti. Nam quis tellus eros. Integer sit amet consectetur mi.", true)
+        adapter.insertNewMessage(ChatMessageVO("4", "Макс, сорри, но я сейчас занят.", "2", null, arrayListOf(
+                SimplePeopleVO(1L, "TheMax", 4L)
+        ), true, System.currentTimeMillis() + 60000L))
 
-        createTextMessage(adapter, "Maecenas", true)
-        createTextMessage(adapter, "Maecenas", false)
+        adapter.insertNewMessage(ChatMessageVO("5", "Сейчас точно не время, давай завтра.", "2", null, null, true, System.currentTimeMillis() + 60000L))
+        adapter.insertNewMessage(ChatMessageVO("6", "Как бы посмотри на ситуацию :)", "2", null, null, true, System.currentTimeMillis() + 60000L))
+        adapter.insertNewMessage(ChatMessageVO("7", null, "2", arrayListOf(ImageAttachmentVO(10L).apply {
+            height = 472
+            width = 803
+        }), null, true, System.currentTimeMillis() + 60000L))
 
-        createTextMessage(adapter, "Maecenas laoreet neque vitae ante malesuada tempus. Ut faucibus" +
-                " placerat arcu eget pellentesque. Nam eget consequat odio. Suspendisse ull" +
-                "amcorper leo ac odio consectetur, quis consectetur turpis tristique. S" +
-                "uspendisse potenti. Nam quis tellus eros. Integer sit amet consectetur mi.", false)
+        adapter.insertNewMessage(ChatMessageVO("8", "А, ну тогда ок )", "1", null, null, false, System.currentTimeMillis() + 60000L))
+        adapter.insertNewMessage(ChatMessageVO("9", "Завтра крч буду", "2", null, null, true, System.currentTimeMillis() + 60000L))
 
-        createTextMessage(adapter, "Maecenas laoreet neque vitae ante malesuada tempus. Ut faucibus" +
-                " placerat arcu eget pellentesque. Nam eget consequat odio. Suspendisse ull" +
-                "amcorper leo ac odio consectetur, quis consectetur turpis tristique. S" +
-                "uspendisse potenti. Nam quis tellus eros. Integer sit amet consect ", false)
+        // New day
 
-        createTextMessage(adapter, "Тест\nТест", true)
-    }
+        adapter.insertNewMessage(ChatMessageVO("10", "Ну че, где ты?", "2", null, null, true, System.currentTimeMillis() + 86400000))
+        adapter.insertNewMessage(ChatMessageVO("11", "Ща, еду", "1", null, null, false, System.currentTimeMillis() + 86400000))
+        adapter.insertNewMessage(ChatMessageVO("12", null, "1", arrayListOf(ImageAttachmentVO(9L).apply {
+            height = 720
+            width = 1280
+        }), null, false, System.currentTimeMillis() + 86400000))
 
-    private fun createTextMessage(adapter: MessagesAdapter, text: String, first: Boolean) {
-        val likes = ArrayList<PeopleVO>()
+        adapter.insertNewMessage(ChatMessageVO("13", "Иди пока побегай )", "1", null, null, false, System.currentTimeMillis() + 86400000))
+        adapter.insertNewMessage(ChatMessageVO("13", "АХААХАХХАХА, я только что S65 порвал с места ))", "1", null, null, false, System.currentTimeMillis() + 86400000))
+        adapter.insertNewMessage(ChatMessageVO("14", "Мне ещё заправиться надо, она же по 50-60 литров при разгоне хавает.", "1", null, null, false, System.currentTimeMillis() + 86400000))
+        adapter.insertNewMessage(ChatMessageVO("15", "Уже два раза за день заежал на заправку", "1", null, null, false, System.currentTimeMillis() + 86400000))
+        adapter.insertNewMessage(ChatMessageVO("16", "Ну зато ощущения не такие ванильные как на электротяге xD", "1", null, null, false, System.currentTimeMillis() + 86400000))
 
-        repeat(80) {
-            likes.add(SimplePeopleVO(1L, "TheMax", 1L))
-            likes.add(SimplePeopleVO(2L, "TheMax", 2L))
-            likes.add(SimplePeopleVO(3L, "TheMax", 3L))
-        }
-
-        adapter.insertNewMessage(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
-            override val text: String = text
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = likes
-            override var isFirstMessage = first
-            override val isSentByMe = false
-            override val sentTime: Long = 3L
-
-            override fun getMessageStatus(context: Context): Nothing? = null
-        })
-
-        adapter.insertNewMessage(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
-            override val text: String = text
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = likes
-            override var isFirstMessage = first
-            override val isSentByMe = false
-            override val sentTime: Long = 3L
-
-            override fun getMessageStatus(context: Context): Nothing? = null
-        })
-
-        adapter.insertNewMessage(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "2"
-            override val text: String = text
-            override val attachments: ArrayList<MediaAttachmentVO>? = null
-            override val likes: ArrayList<PeopleVO>? = likes
-            override var isFirstMessage = first
-            override val isSentByMe = true
-            override val sentTime: Long = 3L
-
-            override fun getMessageStatus(context: Context): Nothing? = null
-        })
-    }
-
-    override fun onAttach(view: View) {
-        super.onAttach(view)
-    }
-
-    private fun createMessage(adapter: MessagesAdapter, count: Int) {
-        val attachments = ArrayList<MediaAttachmentVO>()
-        val likes = ArrayList<PeopleVO>()
-
-        repeat(count) {
-            attachments.add(ImageAttachmentVO(8L).apply {
-                height = 1800
-                width = 2880
-            })
-        }
-
-        repeat(80) {
-            likes.add(SimplePeopleVO(1L, "TheMax", 1L))
-            likes.add(SimplePeopleVO(2L, "TheMax", 2L))
-            likes.add(SimplePeopleVO(3L, "TheMax", 3L))
-        }
-
-        adapter.insertNewMessage(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "1"
-            override val text: String? = null
-            override val attachments: ArrayList<MediaAttachmentVO> = attachments
-            override val likes: ArrayList<PeopleVO>? = likes
-            override var isFirstMessage = false
-            override val isSentByMe = false
-            override val sentTime: Long = 3L
-
-            override fun getMessageStatus(context: Context): Nothing? = null
-        })
-
-        adapter.insertNewMessage(object : MessageVO {
-            override val id: String = ""
-            override val senderId: String = "2"
-            override val text: String? = null
-            override val attachments: ArrayList<MediaAttachmentVO> = attachments
-            override val likes: ArrayList<PeopleVO>? = likes
-            override var isFirstMessage = false
-            override val isSentByMe = true
-            override val sentTime: Long = 5L
-
-            override fun getMessageStatus(context: Context) = "Прочитано в 12:00"
-        })
+        adapter.insertNewMessage(ChatMessageVO("17", "По факту сказал )0", "2", null, null, true, System.currentTimeMillis() + 86400000))
+        adapter.insertNewMessage(ChatMessageVO("18", "Давай быстрее, жду", "2", null, null, true, System.currentTimeMillis() + 86400000))
     }
 }
