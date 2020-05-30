@@ -170,7 +170,7 @@ class MessageItemView : ViewGroup {
             needHeight += contentTextView.measuredHeight + messagePaddingTop + messagePaddingBottom
 
             if (contentTextView.lineCount > 0) {
-                val needCornerRadius = if (contentTextView.lineCount == 1) {
+                val needCornerRadius = if (contentTextView.lineCount == 1 && !isTimeShowingInAnotherLine()) {
                     cornerRadiusWhenOneLine
                 } else {
                     cornerRadius
@@ -348,6 +348,12 @@ class MessageItemView : ViewGroup {
 
         attachmentsLayout.setVOs(vo?.attachments, glide)
         likesView.setVOs(vo, glide)
+
+        if (vo?.likes.isNullOrEmpty()) {
+            likesView.visibility = View.GONE
+        } else {
+            likesView.visibility = View.VISIBLE
+        }
 
         if (vo != null) {
             timeBadgeDrawable.badgeText = timestampToTimeString(context, dateTimeOf(vo.sentTime))
