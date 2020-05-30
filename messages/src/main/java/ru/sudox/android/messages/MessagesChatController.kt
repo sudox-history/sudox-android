@@ -97,6 +97,19 @@ class MessagesChatController : CoreController(true) {
             override val attachments: ArrayList<MediaAttachmentVO>? = null
             override val likes: ArrayList<PeopleVO>? = likes
             override val isFirstMessage = first
+            override val isSentByMe = false
+            override val sentTime: Long = 3L
+
+            override fun getMessageStatus(context: Context): Nothing? = null
+        })
+
+        adapter.insertNewMessage(object : MessageVO {
+            override val id: String = ""
+            override val senderId: String = "2"
+            override val text: String = text
+            override val attachments: ArrayList<MediaAttachmentVO>? = null
+            override val likes: ArrayList<PeopleVO>? = likes
+            override val isFirstMessage = first
             override val isSentByMe = true
             override val sentTime: Long = 3L
 
@@ -140,7 +153,7 @@ class MessagesChatController : CoreController(true) {
 
         adapter.insertNewMessage(object : MessageVO {
             override val id: String = ""
-            override val senderId: String = "1"
+            override val senderId: String = "2"
             override val text: String? = null
             override val attachments: ArrayList<MediaAttachmentVO> = attachments
             override val likes: ArrayList<PeopleVO>? = likes

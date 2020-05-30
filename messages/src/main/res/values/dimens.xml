@@ -54,4 +54,7 @@
 
     <dimen name="messagescreenlayout_list_padding_horizontal">9dp</dimen>
     <dimen name="messagescreenlayout_list_padding_vertical">16dp</dimen>
+
+    <dimen name="messageadapter_margin_between_same_senders">6dp</dimen>
+    <dimen name="messageadapter_margin_between_different_senders">21dp</dimen>
 </resources>

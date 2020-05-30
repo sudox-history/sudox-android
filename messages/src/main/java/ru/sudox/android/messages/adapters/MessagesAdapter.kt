@@ -61,10 +61,14 @@ class MessagesAdapter(
         if (holder is DateViewHolder) {
             holder.view.timeText = loadedDatesAtPosition[position]
         } else if (holder is MessageViewHolder) {
-            holder.view.setVO(messageVOs[position - loadedDatesAtPosition.count {
-                it.key < position
-            } - 1], glide)
+            holder.view.setVO(messageVOs[getMessageIndex(position)], glide)
         }
+    }
+
+    private fun getMessageIndex(position: Int): Int {
+        return position - loadedDatesAtPosition.count {
+            it.key < position
+        } - 1
     }
 
     override fun getFooterText(position: Int): String? {
@@ -80,11 +84,18 @@ class MessagesAdapter(
     }
 
     override fun getItemMargin(position: Int): Int {
-        return if (!loadedDatesAtPosition.containsKey(position)) {
-            12
-        } else {
-            0
+        if (position < 3 || messageVOs.size == 1 || loadedDatesAtPosition.containsKey(position) || loadedDatesAtPosition.containsKey(position - 1)) {
+            return 0
         }
+
+        val current = messageVOs[getMessageIndex(position)]
+        val previous = messageVOs[getMessageIndex(position - 1)]
+
+        return context.resources.getDimensionPixelSize(if (current.senderId == previous.senderId) {
+            R.dimen.messageadapter_margin_between_same_senders
+        } else {
+            R.dimen.messageadapter_margin_between_different_senders
+        })
     }
 
     override fun getItemsCountAfterHeader(type: Int): Int {
@@ -105,6 +116,10 @@ class MessagesAdapter(
 
     override fun isViewCanProvideData(view: View): Boolean {
         return view is MessageTimeView || view is MessageItemView
+    }
+
+    override fun canCreateMarginViaDecorators(): Boolean {
+        return true
     }
 
     override fun bindStickyView(view: View, provider: View) {
