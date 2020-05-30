@@ -12,7 +12,7 @@ interface MessageVO {
     val senderId: String
     val attachments: ArrayList<MediaAttachmentVO>?
     val likes: ArrayList<PeopleVO>?
-    val isFirstMessage: Boolean
+    var isFirstMessage: Boolean
     val isSentByMe: Boolean
     val sentTime: Long
 

@@ -29,13 +29,14 @@ class MessagesAdapter(
         var position = itemCount
 
         if (!loadedPositionsWithDates.containsKey(dateString)) {
+            messageVO.isFirstMessage = true
             loadedPositionsWithDates[dateString] = position
             loadedDatesAtPosition[position] = dateString
             notifyItemInserted(position)
             position++
+        } else if (messageVOs.size > 1) {
+            messageVO.isFirstMessage = messageVOs.last().senderId != messageVO.senderId
         }
-
-        // TODO: Change first flag ;)
 
         messageVOs.add(messageVO)
         notifyItemInserted(position)

@@ -83,7 +83,7 @@ class MessagesChatController : CoreController(true) {
             override val text: String = text
             override val attachments: ArrayList<MediaAttachmentVO>? = null
             override val likes: ArrayList<PeopleVO>? = likes
-            override val isFirstMessage = first
+            override var isFirstMessage = first
             override val isSentByMe = false
             override val sentTime: Long = 3L
 
@@ -96,7 +96,7 @@ class MessagesChatController : CoreController(true) {
             override val text: String = text
             override val attachments: ArrayList<MediaAttachmentVO>? = null
             override val likes: ArrayList<PeopleVO>? = likes
-            override val isFirstMessage = first
+            override var isFirstMessage = first
             override val isSentByMe = false
             override val sentTime: Long = 3L
 
@@ -109,7 +109,7 @@ class MessagesChatController : CoreController(true) {
             override val text: String = text
             override val attachments: ArrayList<MediaAttachmentVO>? = null
             override val likes: ArrayList<PeopleVO>? = likes
-            override val isFirstMessage = first
+            override var isFirstMessage = first
             override val isSentByMe = true
             override val sentTime: Long = 3L
 
@@ -144,7 +144,7 @@ class MessagesChatController : CoreController(true) {
             override val text: String? = null
             override val attachments: ArrayList<MediaAttachmentVO> = attachments
             override val likes: ArrayList<PeopleVO>? = likes
-            override val isFirstMessage = false
+            override var isFirstMessage = false
             override val isSentByMe = false
             override val sentTime: Long = 3L
 
@@ -157,7 +157,7 @@ class MessagesChatController : CoreController(true) {
             override val text: String? = null
             override val attachments: ArrayList<MediaAttachmentVO> = attachments
             override val likes: ArrayList<PeopleVO>? = likes
-            override val isFirstMessage = false
+            override var isFirstMessage = false
             override val isSentByMe = true
             override val sentTime: Long = 5L
 
