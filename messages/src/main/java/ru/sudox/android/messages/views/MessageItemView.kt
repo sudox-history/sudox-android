@@ -170,6 +170,8 @@ class MessageItemView : ViewGroup {
             needHeight += contentTextView.measuredHeight + messagePaddingTop + messagePaddingBottom
 
             if (contentTextView.lineCount > 0) {
+                lastLineWidth = ceil(contentTextView.layout.getLineWidth(contentTextView.lineCount - 1)).toInt()
+
                 val needCornerRadius = if (contentTextView.lineCount == 1 && !isTimeShowingInAnotherLine()) {
                     cornerRadiusWhenOneLine
                 } else {
@@ -206,7 +208,6 @@ class MessageItemView : ViewGroup {
                 }
 
                 currentBackground!!.cornerRadii = currentBackgroundRadii
-                lastLineWidth = ceil(contentTextView.layout.getLineWidth(contentTextView.lineCount - 1)).toInt()
 
                 if (isTimeShowingInAnotherLine()) {
                     needHeight += getTimeHeight() - messagePaddingBottom
