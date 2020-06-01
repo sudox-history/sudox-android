@@ -38,9 +38,12 @@ class MessageSendLayout : ViewGroup {
         this@MessageSendLayout.addView(this)
     }
 
-    private val editText = AppCompatEditText(context).apply {
+    private val editText = AppCompatEditText(context, null, 0).apply {
+        isFocusable = true
+        isFocusableInTouchMode = true
+        isClickable = true
+
         this@MessageSendLayout.addView(this)
-        background = null // Нужен полностью пустой EditText
     }
 
     constructor(context: Context) : this(context, null)
@@ -124,7 +127,7 @@ class MessageSendLayout : ViewGroup {
 
         val attachButtonLeft = paddingLeft + strokeWidth + contentBlockPaddingLeft
         val attachButtonRight = attachButtonLeft + attachmentImageButton.measuredWidth
-        val attachButtonBottom = (sendButtonBottom + sendButtonTop) / 2 + attachmentImageButton.measuredHeight / 2
+        val attachButtonBottom = measuredHeight - paddingBottom - strokeWidth - editText.paddingBottom
         val attachButtonTop = attachButtonBottom - attachmentImageButton.measuredHeight
 
         attachmentImageButton.layout(attachButtonLeft, attachButtonTop, attachButtonRight, attachButtonBottom)
