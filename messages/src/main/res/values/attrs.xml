@@ -52,8 +52,8 @@
         <attr name="marginBetweenStatusAndMessage" format="dimension" />
         <attr name="minMarginBetweenTimeAndContent" format="dimension" />
         <attr name="leadingCornerRadius" format="dimension" />
-        <attr name="cornerRadiusWhenOneLine" format="dimension" />
-        <attr name="cornerRadius" format="dimension" />
+        <attr name="cornerRadiusWhenOneLine" />
+        <attr name="cornerRadius" />
     </declare-styleable>
 
     <declare-styleable name="MessageTimeView">
@@ -70,8 +70,39 @@
         <attr name="listPaddingHorizontal" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="MessageSendLayout">
+        <attr name="contentBlockBackground" format="reference" />
+        <attr name="contentBlockPaddingRight" format="dimension" />
+        <attr name="contentBlockPaddingLeft" format="dimension" />
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="cornerRadiusWhenOneLine" />
+        <attr name="cornerRadius" />
+
+        <attr name="textAppearance" format="reference" />
+        <attr name="textPaddingBottom" format="dimension" />
+        <attr name="textPaddingTop" format="dimension" />
+        <attr name="textMaxLines" format="integer" />
+        <attr name="textHint" format="string" />
+
+        <attr name="marginBetweenTextAndAttachmentButton" format="dimension" />
+        <attr name="marginBetweenContentBlockAndSendButton" format="dimension" />
+
+        <attr name="sendButtonMarginBottom" format="dimension" />
+        <attr name="sendButtonIconTint" format="color" />
+        <attr name="sendButtonIcon" format="reference" />
+        <attr name="sendButtonSize" format="dimension" />
+
+        <attr name="attachmentButtonIconTint" format="color" />
+        <attr name="attachmentButtonIcon" format="reference" />
+        <attr name="attachmentButtonSize" format="dimension" />
+    </declare-styleable>
+
+    <attr name="cornerRadiusWhenOneLine" format="dimension" />
+    <attr name="cornerRadius" format="dimension" />
+
     <attr name="messagesTitleAppBarViewStyle" format="reference" />
     <attr name="messageScreenLayoutStyle" format="reference" />
+    <attr name="messageSendLayoutStyle" format="reference" />
     <attr name="messageLikesViewStyle" format="reference" />
     <attr name="messageItemViewStyle" format="reference" />
     <attr name="messageTimeViewStyle" format="reference" />

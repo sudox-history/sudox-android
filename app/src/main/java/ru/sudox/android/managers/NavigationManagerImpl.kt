@@ -230,12 +230,12 @@ class NavigationManagerImpl(
     }
 
     override fun showSubRoot(controller: Controller) {
+        bottomNavigationView.visibility = View.GONE
+
         routerProvider.value.pushController(RouterTransaction
                 .with(controller)
                 .pushChangeHandler(RightMoveHandler(ANIMATION_DURATION))
                 .popChangeHandler(LeftMoveHandler(ANIMATION_DURATION)))
-
-        bottomNavigationView.visibility = View.GONE
     }
 
     override fun restoreState(bundle: Bundle?) {

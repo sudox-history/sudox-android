@@ -56,8 +56,8 @@
         <item name="timeTextAppearance">@style/Sudox.MessageTimeView.TextAppearance</item>
         <item name="timeBackground">@drawable/background_messagetimeview</item>
 
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingTop">@dimen/messagetimeview_padding_top</item>
+        <item name="android:paddingBottom">@dimen/messagetimeview_padding_bottom</item>
     </style>
 
     <style name="Sudox.MessageItemView" parent="">
@@ -111,8 +111,8 @@
     <style name="Sudox.MessageItemView.StatusTextAppearance" parent="">
         <item name="fontFamily">@font/opensans_regular</item>
         <item name="android:fontFamily">@font/opensans_regular</item>
-        <item name="android:textColor">#808080</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/messageitemview_status_text_color</item>
+        <item name="android:textSize">@dimen/messageitemview_status_text_size</item>
     </style>
 
     <style name="Sudox.MessageTimeView.TextAppearance" parent="">
@@ -120,5 +120,46 @@
         <item name="android:textColor">@color/messagetimeview_text_color</item>
         <item name="android:fontFamily">@font/opensans_regular</item>
         <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+
+    <style name="Sudox.MessageSendLayout" parent="">
+        <item name="contentBlockBackground">@drawable/background_messagesendlayout</item>
+        <item name="contentBlockPaddingRight">@dimen/messagesendlayout_content_block_padding_right</item>
+        <item name="contentBlockPaddingLeft">@dimen/messagesendlayout_content_block_padding_left</item>
+        <item name="cornerRadiusWhenOneLine">@dimen/messagesendlayout_corner_radius_when_one_line</item>
+        <item name="cornerRadius">@dimen/messagesendlayout_corner_radius</item>
+        <item name="strokeWidth">@dimen/messagesendlayout_stroke_width</item>
+
+        <item name="textAppearance">@style/Sudox.MessageSendLayout.TextAppearance</item>
+        <item name="textPaddingBottom">@dimen/messagesendlayout_text_padding_bottom</item>
+        <item name="textPaddingTop">@dimen/messagesendlayout_text_padding_top</item>
+        <item name="textMaxLines">@integer/messagesendlayout_text_max_lines</item>
+        <item name="textHint">@string/hi_how_are_you</item>
+
+        <item name="marginBetweenTextAndAttachmentButton">@dimen/messagesendlayout_margin_between_text_and_attachment_button</item>
+        <item name="marginBetweenContentBlockAndSendButton">@dimen/messagesendlayout_margin_between_content_block_and_send_button</item>
+
+        <item name="sendButtonSize">@dimen/messagesendlayout_send_button_size</item>
+        <item name="sendButtonMarginBottom">@dimen/messagesendlayout_send_button_margin_bottom</item>
+        <item name="sendButtonIconTint">@color/messagesendlayout_send_button_icon_tint</item>
+        <item name="sendButtonIcon">@drawable/ic_send</item>
+
+        <item name="android:paddingLeft">@dimen/messagesendlayout_padding_left</item>
+        <item name="android:paddingRight">@dimen/messagesendlayout_padding_right</item>
+
+        <item name="attachmentButtonSize">@dimen/messagesendlayout_attachment_button_size</item>
+        <item name="attachmentButtonIconTint">@color/messagesendlayout_attachment_button_icon_tint</item>
+        <item name="attachmentButtonIcon">@drawable/ic_attach</item>
+
+        <item name="android:paddingBottom">@dimen/messagesendlayout_padding_bottom</item>
+        <item name="android:paddingTop">@dimen/messagesendlayout_padding_top</item>
+    </style>
+
+    <style name="Sudox.MessageSendLayout.TextAppearance" parent="">
+        <item name="fontFamily">@font/opensans_regular</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:textColorHint">@color/messagesendlayout_text_color_hint</item>
+        <item name="android:textColor">@color/messagesendlayout_text_color</item>
+        <item name="android:textSize">@dimen/messagesendlayout_text_size</item>
     </style>
 </resources>

@@ -29,12 +29,15 @@
     <dimen name="messageitemview_padding_horizontal">17dp</dimen>
     <dimen name="messageitemview_padding_vertical">8dp</dimen>
     <dimen name="messageitemview_time_text_size">12sp</dimen>
+    <dimen name="messageitemview_status_text_size">14sp</dimen>
 
     <dimen name="messagetimeview_text_size">14sp</dimen>
     <dimen name="messagetimeview_padding_horizontal">10dp</dimen>
     <dimen name="messagetimeview_padding_vertical">4dp</dimen>
     <dimen name="messagetimeview_corner_radius">21dp</dimen>
     <dimen name="messagetimeview_stroke_width">1dp</dimen>
+    <dimen name="messagetimeview_padding_top">10dp</dimen>
+    <dimen name="messagetimeview_padding_bottom">10dp</dimen>
 
     <dimen name="messagesadapter_margin_between_footer_and_message">21dp</dimen>
     <dimen name="messagesadapter_margin_between_different_senders">12dp</dimen>
@@ -57,4 +60,22 @@
 
     <dimen name="messageadapter_margin_between_same_senders">6dp</dimen>
     <dimen name="messageadapter_margin_between_different_senders">16dp</dimen>
+
+    <dimen name="messagesendlayout_stroke_width">1dp</dimen>
+    <dimen name="messagesendlayout_corner_radius_when_one_line">51dp</dimen>
+    <dimen name="messagesendlayout_corner_radius">21dp</dimen>
+    <dimen name="messagesendlayout_margin_between_text_and_attachment_button">13dp</dimen>
+    <dimen name="messagesendlayout_margin_between_content_block_and_send_button">13dp</dimen>
+    <dimen name="messagesendlayout_content_block_padding_right">17dp</dimen>
+    <dimen name="messagesendlayout_content_block_padding_left">17dp</dimen>
+    <dimen name="messagesendlayout_padding_right">13dp</dimen>
+    <dimen name="messagesendlayout_padding_left">6dp</dimen>
+    <dimen name="messagesendlayout_send_button_size">25dp</dimen>
+    <dimen name="messagesendlayout_send_button_margin_bottom">13dp</dimen>
+    <dimen name="messagesendlayout_attachment_button_size">21dp</dimen>
+    <dimen name="messagesendlayout_text_padding_bottom">13dp</dimen>
+    <dimen name="messagesendlayout_text_padding_top">13dp</dimen>
+    <dimen name="messagesendlayout_text_size">16sp</dimen>
+    <dimen name="messagesendlayout_padding_bottom">4dp</dimen>
+    <dimen name="messagesendlayout_padding_top">4dp</dimen>
 </resources>

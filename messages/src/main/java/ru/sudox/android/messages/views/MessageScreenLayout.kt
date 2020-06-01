@@ -21,6 +21,10 @@ class MessageScreenLayout : ViewGroup {
         this@MessageScreenLayout.addView(this)
     }
 
+    private val sendLayout = MessageSendLayout(context).apply {
+        this@MessageScreenLayout.addView(this)
+    }
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, R.attr.messageScreenLayoutStyle)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
@@ -31,24 +35,30 @@ class MessageScreenLayout : ViewGroup {
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        measureChild(viewListContainer, widthMeasureSpec, heightMeasureSpec)
+        measureChild(sendLayout, widthMeasureSpec, heightMeasureSpec)
 
-        setMeasuredDimension(
-                MeasureSpec.getSize(widthMeasureSpec),
-                MeasureSpec.getSize(heightMeasureSpec)
-        )
-    }
+        val listHeight = MeasureSpec.getSize(heightMeasureSpec) -
+                sendLayout.measuredHeight -
+                paddingBottom -
+                paddingTop
 
-    override fun setPadding(left: Int, top: Int, right: Int, bottom: Int) {
+        viewListContainer.measure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(listHeight, MeasureSpec.EXACTLY))
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec))
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        viewListContainer.layout(
-                paddingLeft,
-                paddingTop,
-                paddingLeft + viewListContainer.measuredWidth,
-                paddingTop + viewListContainer.measuredHeight
-        )
+        val listTop = paddingTop
+        val listLeft = paddingLeft
+        val listBottom = listTop + viewListContainer.measuredHeight
+        val listRight = listLeft + viewListContainer.measuredWidth
+
+        viewListContainer.layout(listLeft, listTop, listRight, listBottom)
+
+        val sendBottom = listBottom + sendLayout.measuredHeight
+        val sendLeft = paddingLeft
+        val sendRight = sendLeft + sendLayout.measuredWidth
+
+        sendLayout.layout(sendLeft, listBottom, sendRight, sendBottom)
     }
 
     /**

@@ -10,6 +10,7 @@
     <color name="messageitemview_inbound_time_text_color">#BDBDBD</color>
     <color name="messageitemview_outbound_time_text_color">#99FFFFFF</color>
     <color name="messageitemview_outbound_text_color">#FFFFFF</color>
+    <color name="messageitemview_status_text_color">#808080</color>
 
     <color name="messagetimeview_text_color">#808080</color>
     <color name="messagetimeview_background_color">#FFFFFF</color>
@@ -17,4 +18,10 @@
 
     <color name="messagelikesview_like_icon_tint">#ED2939</color>
     <color name="messagelikesview_count_text_color">#C5C5C5</color>
+
+    <color name="messagesendlayout_stroke_color">#E7E7E7</color>
+    <color name="messagesendlayout_send_button_icon_tint">#00BFA5</color>
+    <color name="messagesendlayout_attachment_button_icon_tint">#808080</color>
+    <color name="messagesendlayout_text_color_hint">#BDBDBD</color>
+    <color name="messagesendlayout_text_color">#000000</color>
 </resources>
