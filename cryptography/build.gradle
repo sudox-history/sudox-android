@@ -4,6 +4,8 @@ apply from: '../configs/common.gradle'
 registerModule(false, false, false, false)
 
 android {
+    ndkVersion '21.0.6113669'
+
     externalNativeBuild {
         cmake {
             path file('src/main/jni/CMakeLists.txt')
