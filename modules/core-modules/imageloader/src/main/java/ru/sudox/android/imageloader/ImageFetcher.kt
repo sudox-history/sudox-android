@@ -19,7 +19,7 @@ class ImageFetcher(
     private var canceled = false
 
     override fun loadData(priority: Priority, callback: DataFetcher.DataCallback<in ByteBuffer>) {
-        val drawable = when(model) {
+        val drawable = when (model) {
             "1" -> context.getDrawable(R.drawable.drawable_photo_1)
             "2" -> context.getDrawable(R.drawable.drawable_photo_2)
             "3" -> context.getDrawable(R.drawable.drawable_photo_3)
@@ -31,6 +31,7 @@ class ImageFetcher(
             "9" -> context.getDrawable(R.drawable.drawable_photo_9)
             "10" -> context.getDrawable(R.drawable.drawable_photo_10)
             "11" -> context.getDrawable(R.drawable.drawable_photo_11)
+            "12" -> context.getDrawable(R.drawable.drawable_photo_12)
             else -> null
         }
 

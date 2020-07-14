@@ -3,17 +3,22 @@ package ru.sudox.android.dialogs.impl.chats
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ru.sudox.android.dialogs.impl.R
+import ru.sudox.android.dialogs.impl.adapters.DIALOG_FOOTER_VIEW_TYPE
+import ru.sudox.android.dialogs.impl.adapters.DIALOG_ITEM_VIEW_TYPE
+import ru.sudox.android.dialogs.impl.viewobjects.DialogFooterViewObject
 import ru.sudox.android.dialogs.impl.viewobjects.DialogViewObject
 import ru.sudox.simplelists.model.BasicListItem
 
 class ChatsViewModel @ViewModelInject constructor() : ViewModel() {
 
-    val chatsLiveData = MutableLiveData<List<BasicListItem<DialogViewObject>>>()
+    val chatsLiveData = MutableLiveData<List<BasicListItem<*>>>()
 
     init {
         chatsLiveData.postValue(
             listOf(
                 BasicListItem(
+                    DIALOG_ITEM_VIEW_TYPE,
                     viewObject = DialogViewObject(
                         "1",
                         "Максим Митюшкин",
@@ -28,6 +33,7 @@ class ChatsViewModel @ViewModelInject constructor() : ViewModel() {
                     )
                 ),
                 BasicListItem(
+                    DIALOG_ITEM_VIEW_TYPE,
                     viewObject = DialogViewObject(
                         "2",
                         "Дмитрий",
@@ -42,6 +48,7 @@ class ChatsViewModel @ViewModelInject constructor() : ViewModel() {
                     )
                 ),
                 BasicListItem(
+                    DIALOG_ITEM_VIEW_TYPE,
                     viewObject = DialogViewObject(
                         "3",
                         "undefined7887",
@@ -56,6 +63,7 @@ class ChatsViewModel @ViewModelInject constructor() : ViewModel() {
                     )
                 ),
                 BasicListItem(
+                    DIALOG_ITEM_VIEW_TYPE,
                     viewObject = DialogViewObject(
                         "4",
                         "Антон",
@@ -68,6 +76,10 @@ class ChatsViewModel @ViewModelInject constructor() : ViewModel() {
                         isSentByMe = true,
                         dialogTime = System.currentTimeMillis()
                     )
+                ),
+                BasicListItem(
+                    DIALOG_FOOTER_VIEW_TYPE,
+                    viewObject = DialogFooterViewObject(4, R.plurals.chats)
                 )
             )
         )
