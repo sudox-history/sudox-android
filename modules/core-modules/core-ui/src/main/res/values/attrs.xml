@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BadgeView">
+        <attr name="badgeColor" format="color" />
+        <attr name="badgeOutline" format="boolean" />
+        <attr name="badgeOutlineColor" format="color" />
+        <attr name="badgeOutlineWidth" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="PlanetView">
+        <attr name="planetOrbitWidth" format="dimension" />
+        <attr name="planetOrbitMargin" format="dimension" />
+        <attr name="planetSatelliteAngle" format="integer" />
+        <attr name="planetSatelliteOutlineColor" format="color" />
+        <attr name="planetSatelliteOutlineWidth" format="dimension" />
+        <attr name="planetActiveOrbitWidth" format="dimension" />
+        <attr name="planetActiveColor" format="color" />
+        <attr name="planetColor" format="color" />
+    </declare-styleable>
+
+    <attr name="badgeViewStyle" format="reference" />
+    <attr name="planetViewStyle" format="reference" />
+</resources>

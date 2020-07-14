@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="7dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="7dp"
+    android:paddingBottom="6dp">
+
+    <ru.sudox.android.core.ui.planet.PlanetView
+        android:id="@+id/storyPlanetView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:planetSatelliteAngle="@integer/story_badge_angle">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/storyAvatar"
+            style="@style/Theme.Sudox.ImageView.Circle"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            tools:src="@drawable/drawable_photo_1" />
+
+        <ImageView
+            android:id="@+id/storyPlanetSatellite"
+            style="@style/Theme.Sudox.Story.AddIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="ContentDescription" />
+
+    </ru.sudox.android.core.ui.planet.PlanetView>
+
+    <TextView
+        android:id="@+id/storyPublisher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/storyPlanetView"
+        android:layout_alignStart="@+id/storyPlanetView"
+        android:layout_alignEnd="@+id/storyPlanetView"
+        android:layout_marginTop="4dp"
+        android:ellipsize="marquee"
+        android:fontFamily="@font/opensans_semibold"
+        android:singleLine="true"
+        android:textColor="?attr/colorControlNormal"
+        android:textIsSelectable="false"
+        android:textSize="13sp"
+        app:fontFamily="@font/opensans_semibold"
+        tools:text="Your story" />
+</RelativeLayout>

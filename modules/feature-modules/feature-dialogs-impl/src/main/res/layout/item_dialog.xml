@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="17dp"
+    android:paddingTop="7dp"
+    android:paddingEnd="17dp"
+    android:paddingBottom="7dp">
+
+    <ru.sudox.android.core.ui.avatar.AvatarLayout
+        android:id="@+id/dialogAvatarLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/dialogAvatar"
+            style="@style/Theme.Sudox.ImageView.Circle"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            tools:src="@drawable/drawable_photo_4" />
+
+        <ru.sudox.android.core.ui.badge.BadgeView
+            android:id="@+id/dialogAvatarBadge"
+            style="@style/Theme.Sudox.BadgeView.Avatar"
+            android:layout_width="10dp"
+            android:layout_height="10dp" />
+
+    </ru.sudox.android.core.ui.avatar.AvatarLayout>
+
+    <TextView
+        android:id="@+id/dialogName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="37dp"
+        android:layout_toStartOf="@+id/dialogMuteIcon"
+        android:layout_toEndOf="@+id/dialogAvatarLayout"
+        android:ellipsize="end"
+        android:fontFamily="@font/opensans_bold"
+        android:singleLine="true"
+        android:textColor="?attr/colorOnSurface"
+        android:textIsSelectable="false"
+        android:textSize="15sp"
+        app:fontFamily="@font/opensans_bold"
+        tools:text="Максим Митюшкин" />
+
+    <TextView
+        android:id="@+id/dialogLastMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialogName"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="35dp"
+        android:layout_toStartOf="@+id/dialogUnreadMessagesBadge"
+        android:layout_toEndOf="@+id/dialogAvatarLayout"
+        android:ellipsize="end"
+        android:fontFamily="@font/opensans_regular"
+        android:textColor="?attr/editTextColor"
+        android:textIsSelectable="false"
+        android:textSize="15sp"
+        app:fontFamily="@font/opensans_regular"
+        tools:text="Получили с GT 73S 1100 сил. Сейчас подъеду!" />
+
+    <ru.sudox.android.core.ui.badge.BadgeView
+        android:id="@+id/dialogUnreadMessagesBadge"
+        style="@style/Theme.Sudox.BadgeView"
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:layout_below="@+id/dialogName"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:id="@+id/dialogMuteIcon"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_alignBottom="@+id/dialogTime"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="2dp"
+        android:layout_toStartOf="@+id/dialogTime"
+        android:src="@drawable/ic_baseline_volume_off"
+        app:tint="?android:textColorHint"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/dialogTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:fontFamily="@font/opensans_semibold"
+        android:textColor="?attr/colorControlNormal"
+        android:textIsSelectable="false"
+        android:textSize="13sp"
+        app:fontFamily="@font/opensans_semibold"
+        tools:text="now" />
+
+</RelativeLayout>

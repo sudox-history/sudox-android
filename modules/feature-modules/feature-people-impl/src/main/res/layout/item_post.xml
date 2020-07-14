@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        style="@style/Theme.Sudox.PeopleItem"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp">
+
+        <include layout="@layout/layout_people_item" />
+
+        <Button
+            android:id="@+id/peopleItemFirstButton"
+            style="@style/Theme.Sudox.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/peopleAvatarLayout"
+            android:layout_alignBottom="@+id/peopleAvatarLayout"
+            android:layout_alignParentEnd="true"
+            app:icon="@drawable/ic_baseline_more_vert"
+            app:iconTint="?android:attr/textColorHint" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/postText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/opensans_regular"
+        android:paddingStart="17dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="17dp"
+        android:paddingBottom="5dp"
+        android:textColor="?attr/editTextColor"
+        android:textIsSelectable="true"
+        android:textSize="15sp"
+        app:fontFamily="@font/opensans_regular"
+        tools:text="Overwatch 2 is coming! Are you waiting for it?" />
+
+    <ru.sudox.android.core.ui.mityushkinlayout.MityushkinLayout
+        android:id="@+id/postMediaList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="17dp"
+        android:paddingEnd="17dp" />
+</LinearLayout>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ad_record">ad</string>
+    <string name="people_online">Online</string>
+
+    <string name="people_title">People</string>
+    <string name="activity_tab_title">Activity</string>
+    <string name="people_tab_title">People</string>
+
+    <string name="requests_section_title">Requests</string>
+    <string name="maybe_you_know_section_title">Maybe you know</string>
+    <string name="subscribes_section_title">Subscribes</string>
+    <string name="subscriptions_section_title">Subscriptions</string>
+    <string name="news_section_title">News</string>
+
+    <string name="new_friend_request">New friend request</string>
+    <string name="your_story">Your story</string>
+
+    <string name="importance_sort">Importance</string>
+    <string name="online_sort">Online</string>
+    <string name="name_sort">Name</string>
+
+    <plurals name="mutual_friends">
+        <item quantity="one">%d mutual friend</item>
+        <item quantity="other">%d mutual friends</item>
+    </plurals>
+</resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/peopleItem"
+        android:icon="@drawable/ic_outline_people"
+        android:title="@string/people_item_title" />
+
+    <item
+        android:id="@+id/messagesItem"
+        android:icon="@drawable/ic_outline_chat_bubble"
+        android:title="@string/messages_item_title" />
+
+    <item
+        android:id="@+id/blogItem"
+        android:icon="@drawable/ic_outline_account_circle"
+        android:title="@string/blog_item_title" />
+</menu>

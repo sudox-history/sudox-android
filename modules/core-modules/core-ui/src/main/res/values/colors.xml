@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00BFA5</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorOnSurface">#000000</color>
+    <color name="colorError">#FF0000</color>
+    <color name="colorSecondary">#00BFA5</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorOnBackground">#000000</color>
+    <color name="colorControlNormal">#808080</color>
+    <color name="colorAccent">#00BFA5</color>
+    <color name="colorStroke">#E0E0E0</color>
+
+    <color name="colorNotImportant">#E0E0E0</color>
+    <color name="colorTextHint">#BDBDBD</color>
+    <color name="colorTextButton">#808080</color>
+    <color name="colorTextHighlight">#BDBDBD</color>
+    <color name="colorEditText">#424242</color>
+
+    <color name="placeholderColor">#000000</color>
+    <color name="avatarTextColor">#FFFFFF</color>
+    <array name="avatarsColors">
+        <item>#E53935</item>
+        <item>#8E24AA</item>
+        <item>#2196F3</item>
+        <item>#26A69A</item>
+        <item>#00BFA5</item>
+        <item>#EF6C00</item>
+    </array>
+</resources>

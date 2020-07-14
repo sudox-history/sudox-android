@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="141dp"
+    android:layout_height="161dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:background="@drawable/drawable_item_people_maybe_you_know_background">
+
+    <Button
+        android:id="@+id/peopleMaybeYouKnowRemoveButton"
+        style="@style/Theme.Sudox.ActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        app:icon="@drawable/ic_baseline_close"
+        app:iconSize="21dp"
+        tools:ignore="RelativeOverlap" />
+
+    <TextView
+        android:id="@+id/peopleMaybeYouKnowAdIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/opensans_semibold"
+        android:text="@string/ad_record"
+        android:textAllCaps="true"
+        android:textColor="@color/colorNotImportant"
+        android:textSize="15sp"
+        app:fontFamily="@font/opensans_bold"
+        tools:ignore="RelativeOverlap" />
+
+    <ru.sudox.android.core.ui.avatar.AvatarLayout
+        android:id="@+id/peopleMaybeYouKnowAvatarLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="23dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/peopleMaybeYouKnowAvatar"
+            style="@style/Theme.Sudox.ImageView.Circle"
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            tools:src="@drawable/drawable_photo_1" />
+
+        <ru.sudox.android.core.ui.badge.BadgeView
+            android:id="@+id/peopleMaybeYouKnowOnlineBadge"
+            style="@style/Theme.Sudox.BadgeView.Avatar"
+            android:layout_width="12dp"
+            android:layout_height="12dp" />
+
+    </ru.sudox.android.core.ui.avatar.AvatarLayout>
+
+    <TextView
+        android:id="@+id/peopleMaybeYouKnowName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/peopleMaybeYouKnowAvatarLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="13dp"
+        android:ellipsize="marquee"
+        android:fontFamily="@font/opensans_bold"
+        android:singleLine="true"
+        android:textColor="?attr/colorOnSurface"
+        android:textIsSelectable="false"
+        android:textSize="16sp"
+        app:fontFamily="@font/opensans_bold"
+        tools:text="Антон Янкин" />
+
+    <TextView
+        android:id="@+id/peopleMaybeYouKnowDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/peopleMaybeYouKnowName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="13dp"
+        android:ellipsize="marquee"
+        android:fontFamily="@font/opensans_regular"
+        android:singleLine="true"
+        android:textColor="?attr/colorControlNormal"
+        android:textIsSelectable="false"
+        android:textSize="15sp"
+        app:fontFamily="@font/opensans_regular"
+        tools:text="21 mutual friends" />
+
+</RelativeLayout>

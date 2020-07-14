@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dialogs_title">Messages</string>
+    <string name="chats_tab_title">Chats</string>
+    <string name="talks_tab_title">Talks</string>
+    <string name="you_prefix">You</string>
+</resources>

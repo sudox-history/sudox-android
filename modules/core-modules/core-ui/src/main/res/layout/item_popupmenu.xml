@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?><!-- Вынужден был использовать вместо Compound Drawable из-за бага на Android 6 -->
+<ru.sudox.android.core.ui.popup.CustomPopupMenuItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingStart="11dp"
+    android:paddingTop="7dp"
+    android:paddingEnd="38dp"
+    android:paddingBottom="7dp"
+    tools:ignore="UseCompoundDrawables">
+
+    <ImageView
+        android:id="@+id/popupItemIcon"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:tint="@color/popup_item_color"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/popupItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="11dp"
+        android:fontFamily="@font/opensans_regular"
+        android:singleLine="true"
+        android:textColor="@color/popup_item_color"
+        android:textIsSelectable="false"
+        android:textSize="16sp"
+        app:fontFamily="@font/opensans_regular" />
+
+</ru.sudox.android.core.ui.popup.CustomPopupMenuItemView>

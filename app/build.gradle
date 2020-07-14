@@ -1,0 +1,29 @@
+apply from: "../common-build/modules.gradle"
+apply from: "../common-build/dependencies.gradle"
+
+registerModule(true, true, false, true, true)
+
+ext.useModule = { name ->
+    dependencies {
+        implementation project(":$name-api")
+        implementation project(":$name-impl")
+    }
+}
+
+dependencies {
+    implementation libraries.material
+    implementation libraries.appcompat
+    implementation libraries.fragment_ktx
+    implementation libraries.libphonenumber
+    implementation libraries.hilt_lifecycle_viewmodel
+    kapt libraries.hilt_compiler
+
+    implementation project(":core-ui")
+    implementation project(":injector")
+
+    useModule("feature-auth")
+    useModule("feature-countries")
+    useModule("feature-dialogs")
+    useModule("feature-people")
+    useModule("feature-main")
+}

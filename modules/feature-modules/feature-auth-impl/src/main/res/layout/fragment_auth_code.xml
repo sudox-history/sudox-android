@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ru.sudox.android.core.ui.toolbar.InsetAppBarLayout
+        android:id="@+id/authCodeAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ru.sudox.android.core.ui.toolbar.CenteredToolbar
+            android:id="@+id/authCodeToolbar"
+            style="@style/Theme.Sudox.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/sign_in_title" />
+
+    </ru.sudox.android.core.ui.toolbar.InsetAppBarLayout>
+
+    <ru.sudox.android.core.ui.scrollview.RestorableScrollView
+        android:id="@+id/authCodeScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            style="@style/Theme.Sudox.Auth.Layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Theme.Sudox.Auth.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/auth_code_header" />
+
+            <TextView
+                style="@style/Theme.Sudox.Auth.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_outline_sms"
+                android:text="@string/auth_code_subtitle" />
+
+            <ru.sudox.android.core.ui.code.CodeEditText
+                android:id="@+id/authCodeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_between_auth_subtitle_and_content" />
+
+        </LinearLayout>
+    </ru.sudox.android.core.ui.scrollview.RestorableScrollView>
+</LinearLayout>

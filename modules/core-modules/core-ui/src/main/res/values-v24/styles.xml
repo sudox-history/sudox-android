@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Sudox.Popup" parent="Theme.Sudox.Popup.V24" />
+
+    <style name="Theme.Sudox.Popup.V24" parent="Theme.Sudox.Popup.Base">
+        <item name="android:popupEnterTransition">@transition/transition_popup_enter</item>
+        <item name="android:popupExitTransition">@transition/transition_popup_exit</item>
+    </style>
+</resources>

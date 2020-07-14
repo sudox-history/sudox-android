@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ru.sudox.android.core.ui.avatar.AvatarLayout
+        android:id="@+id/peopleAvatarLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/peopleAvatar"
+            style="@style/Theme.Sudox.ImageView.Circle"
+            android:layout_width="47dp"
+            android:layout_height="47dp"
+            android:layout_alignParentStart="true"
+            tools:src="@drawable/drawable_photo_1" />
+
+        <ru.sudox.android.core.ui.badge.BadgeView
+            android:id="@+id/peopleOnlineBadge"
+            style="@style/Theme.Sudox.BadgeView.Avatar"
+            android:layout_width="10dp"
+            android:layout_height="10dp" />
+
+    </ru.sudox.android.core.ui.avatar.AvatarLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="38dp"
+        android:layout_toStartOf="@+id/peopleItemFirstButton"
+        android:layout_toEndOf="@id/peopleAvatarLayout"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/peopleName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:fontFamily="@font/opensans_bold"
+            android:singleLine="true"
+            android:textColor="?attr/colorOnSurface"
+            android:textIsSelectable="false"
+            android:textSize="15sp"
+            app:fontFamily="@font/opensans_bold"
+            tools:text="Антон Янкин" />
+
+        <TextView
+            android:id="@+id/peopleMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:fontFamily="@font/opensans_regular"
+            android:singleLine="true"
+            android:textColor="?attr/colorControlNormal"
+            android:textIsSelectable="false"
+            android:textSize="15sp"
+            app:fontFamily="@font/opensans_regular"
+            tools:text="Привет, я по поводу приоsdsdбsdsdsdsdsdретения" />
+
+    </LinearLayout>
+</merge>

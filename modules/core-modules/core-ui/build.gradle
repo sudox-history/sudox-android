@@ -1,0 +1,18 @@
+apply from: "../../../common-build/modules.gradle"
+apply from: "../../../common-build/dependencies.gradle"
+
+registerModule(false, true, false, false, true)
+
+dependencies {
+    implementation project(":feature-countries-api")
+    implementation project(":library-simplelists")
+    implementation project(":library-phone")
+    implementation project(":imageloader")
+
+    implementation libraries.glide
+    implementation libraries.core_ktx
+    implementation libraries.appcompat
+    implementation libraries.autofill
+    implementation libraries.libphonenumber
+    implementation libraries.material
+}

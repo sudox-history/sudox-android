@@ -1,0 +1,4 @@
+apply from: "../../../common-build/modules.gradle"
+apply from: "../../../common-build/dependencies.gradle"
+
+registerModule(false, true, false, false, false)

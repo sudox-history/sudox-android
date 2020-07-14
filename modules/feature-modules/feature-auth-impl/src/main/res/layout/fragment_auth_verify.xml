@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ru.sudox.android.core.ui.toolbar.InsetAppBarLayout
+        android:id="@+id/authVerifyAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ru.sudox.android.core.ui.toolbar.CenteredToolbar
+            style="@style/Theme.Sudox.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/verify_title" />
+
+    </ru.sudox.android.core.ui.toolbar.InsetAppBarLayout>
+
+    <ru.sudox.android.core.ui.scrollview.RestorableScrollView
+        android:id="@+id/authVerifyScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            style="@style/Theme.Sudox.Auth.Layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_auth_verify"
+                android:drawablePadding="51dp"
+                android:fontFamily="@font/opensans_semibold"
+                android:text="@string/auth_verify_header"
+                android:textAlignment="center"
+                android:textColor="?attr/colorAccent"
+                android:textSize="26sp"
+                app:fontFamily="@font/opensans_semibold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/opensans_regular"
+                android:text="@string/auth_verify_subtitle"
+                android:textAlignment="center"
+                android:textColor="?android:attr/textColorHint"
+                android:textSize="21sp"
+                app:fontFamily="@font/opensans_regular" />
+
+        </LinearLayout>
+    </ru.sudox.android.core.ui.scrollview.RestorableScrollView>
+</LinearLayout>

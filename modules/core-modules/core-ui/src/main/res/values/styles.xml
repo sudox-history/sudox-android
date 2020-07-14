@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.Sudox" parent="Theme.Sudox.Base" />
+
+    <style name="Theme.Sudox.Base" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:overScrollMode">never</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="colorError">@color/colorError</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorOnBackground">@color/colorOnBackground</item>
+        <item name="colorControlNormal">@color/colorControlNormal</item>
+
+        <item name="android:textColorHint">@color/colorTextHint</item>
+        <item name="android:textColorHighlight">@color/colorTextHighlight</item>
+
+        <item name="editTextBackground">@drawable/drawable_edittext_background</item>
+        <item name="editTextStyle">@style/Theme.Sudox.EditText</item>
+        <item name="editTextColor">@color/colorEditText</item>
+
+        <item name="searchIcon">@drawable/ic_baseline_search</item>
+        <item name="appBarLayoutStyle">@style/Theme.Sudox.AppBarLayout</item>
+        <item name="bottomNavigationStyle">@style/Theme.Sudox.BottomNavigationView</item>
+        <item name="searchViewStyle">@style/Theme.Sudox.Toolbar.SearchView</item>
+        <item name="tabStyle">@style/Theme.Sudox.TabLayout</item>
+
+        <item name="listPopupWindowStyle">@style/Theme.Sudox.Popup</item>
+        <item name="dropDownListViewStyle">@style/Theme.Sudox.DropDown</item>
+
+        <item name="badgeViewStyle">@style/Theme.Sudox.BadgeView</item>
+
+        <item name="planetViewStyle">@style/Theme.Sudox.PlanetView</item>
+    </style>
+
+    <!--  Toolbars  -->
+
+    <style name="Theme.Sudox.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="contentInsetStart">17dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="contentInsetEndWithActions">17dp</item>
+        <item name="android:theme">@style/ThemeOverlay.Sudox.Toolbar</item>
+    </style>
+
+    <style name="ThemeOverlay.Sudox.Toolbar" parent="Theme.Sudox">
+        <item name="colorControlNormal">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Theme.Sudox.Toolbar.Button" parent="Theme.Sudox.TextButton">
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:minHeight" tools:ignore="PrivateResource">@dimen/mtrl_toolbar_default_height</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="TextAppearance.Theme.Sudox.Toolbar" parent="">
+        <item name="fontFamily">@font/opensans_bold</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="Theme.Sudox.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
+        <item name="android:background">@drawable/transition_appbarlayout_background</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="Theme.Sudox.AppBarLayout.Stroke">
+        <item name="android:background">@drawable/drawable_appbarlayout_background</item>
+    </style>
+
+    <style name="Theme.Sudox.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:minHeight">36dp</item>
+        <item name="tabPaddingEnd">21dp</item>
+        <item name="tabPaddingStart">21dp</item>
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabTextAppearance">@style/TextAppearance.Theme.Sudox.TabLayout</item>
+        <item name="tabTextColor">@color/tab_color</item>
+        <item name="tabIndicator">@drawable/drawable_tab_indicator</item>
+        <item name="tabMode">auto</item>
+    </style>
+
+    <style name="TextAppearance.Theme.Sudox.TabLayout" parent="">
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Theme.Sudox.Toolbar.SearchView" parent="">
+        <item name="queryBackground">@null</item>
+        <item name="submitBackground">@null</item>
+        <item name="defaultQueryHint">@string/search_hint</item>
+        <item name="searchIcon">@drawable/ic_baseline_search</item>
+        <item name="closeIcon">@drawable/ic_baseline_close</item>
+    </style>
+
+    <!--  EditText  -->
+
+    <style name="Theme.Sudox.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:paddingTop">17dp</item>
+        <item name="android:paddingBottom">17dp</item>
+        <item name="android:paddingStart">21dp</item>
+        <item name="android:paddingEnd">21dp</item>
+        <item name="android:minHeight">55dp</item>
+        <item name="android:minWidth">55dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.Sudox.EditText</item>
+        <item name="android:background">?attr/editTextBackground</item>
+    </style>
+
+    <style name="TextAppearance.Sudox.EditText" parent="">
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!--  Bottom Navigation  -->
+
+    <style name="Theme.Sudox.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemTextAppearanceActive">@style/TextAppearance.Sudox.BottomNavigationView.Item</item>
+        <item name="itemTextAppearanceInactive">@style/TextAppearance.Sudox.BottomNavigationView.Item</item>
+        <item name="android:background">@drawable/drawable_bottomnavigationview_background</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="TextAppearance.Sudox.BottomNavigationView.Item" parent="">
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <!--  Buttons  -->
+
+    <style name="Theme.Sudox.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="fontFamily">@font/opensans_regular</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:textColor">?attr/colorControlNormal</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">46dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingStart">17dp</item>
+        <item name="android:paddingEnd">17dp</item>
+        <item name="android:paddingBottom">11dp</item>
+        <item name="android:paddingTop">11dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="rippleColor">@color/button_ripple_color</item>
+        <item name="iconTint">?attr/colorControlNormal</item>
+        <item name="iconGravity">textEnd</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconSize">18dp</item>
+    </style>
+
+    <style name="Theme.Sudox.ActionButton" parent="Theme.Sudox.TextButton">
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:paddingStart">7dp</item>
+        <item name="android:paddingEnd">7dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="iconSize">24dp</item>
+    </style>
+
+    <style name="Theme.Sudox.ListButton" parent="Theme.Sudox.ActionButton">
+        <item name="iconTint">?attr/colorOnSurface</item>
+        <item name="fontFamily">@font/opensans_bold</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="Theme.Sudox.ListButton.Counter">
+        <item name="fontFamily">@font/opensans_regular</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:textColor">?android:attr/textColorHint</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingStart">5dp</item>
+        <item name="android:paddingEnd">-2dp</item>
+        <item name="iconTint">?android:attr/textColorHint</item>
+        <item name="iconPadding">-6dp</item>
+    </style>
+
+    <!--  Popup  -->
+
+    <style name="Theme.Sudox.Popup" parent="Theme.Sudox.Popup.Base" />
+
+    <style name="Theme.Sudox.Popup.Base" parent="Widget.MaterialComponents.PopupMenu.ListPopupWindow">
+        <item name="android:dropDownHorizontalOffset">1dp</item>
+        <item name="android:popupBackground">@drawable/drawable_popup_background</item>
+        <item name="android:popupElevation">3dp</item>
+        <item name="android:overlapAnchor">true</item>
+    </style>
+
+    <style name="Theme.Sudox.DropDown" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@android:color/transparent</item>
+    </style>
+
+    <!--  Avatars  -->
+
+    <style name="Theme.Sudox.ImageView.Circle" parent="">
+        <item name="android:scaleType">centerCrop</item>
+        <item name="shapeAppearanceOverlay">@style/Theme.Sudox.ImageView.ShapeAppearance</item>
+    </style>
+
+    <style name="Theme.Sudox.ImageView.ShapeAppearance" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!--  Badge  -->
+
+    <style name="Theme.Sudox.BadgeView" parent="">
+        <item name="android:paddingEnd">7dp</item>
+        <item name="android:paddingStart">7dp</item>
+        <item name="badgeColor">?attr/colorAccent</item>
+        <item name="badgeOutline">false</item>
+
+        <item name="fontFamily">@font/opensans_semibold</item>
+        <item name="android:fontFamily">@font/opensans_semibold</item>
+        <item name="android:textColor">?attr/colorSurface</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <style name="Theme.Sudox.BadgeView.Avatar">
+        <item name="badgeOutline">true</item>
+        <item name="badgeOutlineWidth">3dp</item>
+        <item name="badgeOutlineColor">?attr/colorSurface</item>
+    </style>
+
+    <!--  Planet  -->
+
+    <style name="Theme.Sudox.PlanetView" parent="">
+        <item name="planetOrbitWidth">1dp</item>
+        <item name="planetOrbitMargin">6dp</item>
+        <item name="planetSatelliteOutlineColor">?attr/colorSurface</item>
+        <item name="planetSatelliteOutlineWidth">4dp</item>
+        <item name="planetActiveColor">?attr/colorAccent</item>
+        <item name="planetActiveOrbitWidth">2dp</item>
+        <item name="planetColor">@color/colorStroke</item>
+    </style>
+</resources>

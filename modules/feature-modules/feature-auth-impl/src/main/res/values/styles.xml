@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Sudox.Auth.Layout" parent="">
+        <item name="android:paddingBottom">51dp</item>
+        <item name="android:paddingStart">17dp</item>
+        <item name="android:paddingTop">51dp</item>
+        <item name="android:paddingEnd">17dp</item>
+    </style>
+
+    <style name="Theme.Sudox.Auth.Title" parent="">
+        <item name="fontFamily">@font/opensans_bold</item>
+        <item name="android:fontFamily">@font/opensans_bold</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">21sp</item>
+    </style>
+
+    <style name="Theme.Sudox.Auth.Subtitle" parent="">
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:drawableTint">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">@font/opensans_regular</item>
+        <item name="android:textColor">?attr/colorControlNormal</item>
+        <item name="drawableTint">?attr/colorOnSurface</item>
+        <item name="fontFamily">@font/opensans_regular</item>
+    </style>
+</resources>

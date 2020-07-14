@@ -1,0 +1,15 @@
+apply from: "../../../common-build/modules.gradle"
+apply from: "../../../common-build/dependencies.gradle"
+
+registerModule(false, true, false, true, true)
+
+dependencies {
+    implementation project(":feature-auth-api")
+    implementation project(":feature-countries-api")
+    implementation project(":core-ui")
+
+    implementation libraries.core_ktx
+    implementation libraries.appcompat
+    implementation libraries.fragment_ktx
+    implementation libraries.material
+}

@@ -1,0 +1,21 @@
+apply from: "../../../common-build/modules.gradle"
+apply from: "../../../common-build/dependencies.gradle"
+
+registerModule(false, true, false, true, true)
+
+dependencies {
+    implementation project(":feature-countries-api")
+    implementation project(":library-simplelists")
+    implementation project(":core-ui")
+
+    implementation libraries.core_ktx
+    implementation libraries.material
+    implementation libraries.appcompat
+    implementation libraries.fragment_ktx
+    implementation libraries.hilt_lifecycle_viewmodel
+    implementation libraries.libphonenumber
+    implementation libraries.coroutines_android
+    implementation libraries.coroutines
+    implementation libraries.livedata_ktx
+    kapt libraries.hilt_compiler
+}

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ru.sudox.android.core.ui.toolbar.InsetAppBarLayout
+        android:id="@+id/authSignupAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ru.sudox.android.core.ui.toolbar.CenteredToolbar
+            android:id="@+id/authSignupToolbar"
+            style="@style/Theme.Sudox.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/sign_up_title">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/authSignupFinishButton"
+                style="@style/Theme.Sudox.Toolbar.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:text="@string/auth_finish_button" />
+
+        </ru.sudox.android.core.ui.toolbar.CenteredToolbar>
+    </ru.sudox.android.core.ui.toolbar.InsetAppBarLayout>
+
+    <ru.sudox.android.core.ui.scrollview.RestorableScrollView
+        android:id="@+id/authSignupScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            style="@style/Theme.Sudox.Auth.Layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/Theme.Sudox.Auth.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/auth_signup_header" />
+
+            <TextView
+                style="@style/Theme.Sudox.Auth.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_outline_account_circle"
+                android:text="@string/auth_signup_subtitle" />
+
+            <EditText
+                android:id="@+id/authSignupNickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_between_auth_subtitle_and_content"
+                android:autofillHints="newUsername"
+                android:hint="@string/auth_signup_nickname_hint"
+                android:inputType="textPersonName" />
+
+            <EditText
+                android:id="@+id/authSignupName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:autofillHints="personName"
+                android:hint="@string/auth_signup_name_hint"
+                android:inputType="textPersonName" />
+
+        </LinearLayout>
+    </ru.sudox.android.core.ui.scrollview.RestorableScrollView>
+</LinearLayout>

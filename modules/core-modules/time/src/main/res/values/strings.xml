@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="short_formatter_now">now</string>
+    <string name="short_formatter_minutes">%dm</string>
+    <string name="short_formatter_hours">%dh</string>
+    <string name="short_formatter_same_year">%2$s %1$d</string>
+    <string name="short_formatter_years">%dy</string>
+    <string name="short_formatter_yesterday">yesterday</string>
+
+    <string name="full_formatter_now">just now</string>
+    <string name="full_formatter_yesterday">yesterday at %s</string>
+    <string name="full_formatter_on_another_year">%2$s %1$d %3$d at %4$s</string>
+    <string name="full_formatter_on_year">%2$s %1$d at %3$s</string>
+    <string name="full_formatter_on_week">on %1$s at %2$s</string>
+    <string name="full_formatter_at">at %s</string>
+
+    <plurals name="full_formatter_minutes">
+        <item quantity="one">%d minute ago</item>
+        <item quantity="other">%d minutes ago</item>
+    </plurals>
+
+    <plurals name="full_formatter_hours">
+        <item quantity="one">%d hour ago</item>
+        <item quantity="other">%d hours ago</item>
+    </plurals>
+
+    <string name="seen_time_formatter_now">seen just now</string>
+    <string name="seen_time_formatter_yesterday">seen yesterday at %s</string>
+    <string name="seen_time_formatter_in_another_year">seen on %1$s %2$d %3$d at %4$s</string>
+    <string name="seen_time_formatter_in_same_year">seen on %1$s %2$d at %3$s</string>
+    <string name="seen_time_formatter_on_week">seen on %1$s at %2$s</string>
+    <string name="seen_time_at">seen at %s</string>
+
+    <plurals name="seen_time_formatter_minutes">
+        <item quantity="one">seen %d minute ago</item>
+        <item quantity="other">seen %d minutes ago</item>
+    </plurals>
+
+    <plurals name="seen_time_formatter_hours">
+        <item quantity="one">seen %d hour ago</item>
+        <item quantity="other">seen %d hours ago</item>
+    </plurals>
+
+    <string name="time_mask_with_am_pm">%1$s:%2$s %3$s</string>
+    <string name="time_mask_without_am_pm">%1$s:%2$s</string>
+
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+
+    <string name="january_short">jan</string>
+    <string name="february_short">feb</string>
+    <string name="march_short">mar</string>
+    <string name="april_short">apr</string>
+    <string name="may_short">may</string>
+    <string name="june_short">jun</string>
+    <string name="july_short">jul</string>
+    <string name="august_short">aug</string>
+    <string name="september_short">sep</string>
+    <string name="october_short">oct</string>
+    <string name="november_short">nov</string>
+    <string name="december_short">dec</string>
+
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+
+    <string name="monday_short">mon</string>
+    <string name="tuesday_short">tue</string>
+    <string name="wednesday_short">wed</string>
+    <string name="thursday_short">thu</string>
+    <string name="friday_short">fri</string>
+    <string name="saturday_short">sat</string>
+    <string name="sunday_short">sun</string>
+
+    <string name="date_mask_with_year">%2$s %1$d %3$d</string>
+    <string name="date_mask_without_year">%2$s %1$d</string>
+
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+</resources>

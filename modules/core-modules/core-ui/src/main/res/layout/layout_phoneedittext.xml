@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:context="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/editTextBackground"
+    android:orientation="horizontal">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/countrySelectButton"
+        style="@style/Theme.Sudox.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/opensans_semibold"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingStart="21dp"
+        android:paddingTop="17dp"
+        android:paddingEnd="13dp"
+        android:paddingBottom="17dp"
+        android:textAppearance="?attr/editTextStyle"
+        android:textColor="?attr/editTextColor"
+        app:fontFamily="@font/opensans_semibold"
+        app:iconGravity="textStart"
+        app:iconPadding="13dp"
+        app:iconSize="24dp"
+        app:iconTint="@null"
+        context:text="+7" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:src="@drawable/drawable_splitter"
+        context:ignore="ContentDescription" />
+
+    <EditText
+        android:id="@+id/phoneEditText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:autofillHints="phoneNational"
+        android:background="@null"
+        android:contentDescription="@string/phone_number"
+        android:inputType="phone"
+        android:paddingStart="13dp"
+        android:paddingEnd="21dp"
+        context:ignore="LabelFor"
+        context:text="967 478 81-47" />
+
+</merge>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="verify_title">Verify</string>
+    <string name="sign_in_title">Sign in</string>
+    <string name="sign_up_title">Sign up</string>
+    <string name="auth_next_button">Next</string>
+    <string name="auth_finish_button">Finish</string>
+    <string name="auth_phone_header">Phone verification</string>
+    <string name="auth_phone_subtitle">Enter your phone and we will send a confirmation code for you</string>
+    <string name="auth_code_header">Welcome back</string>
+    <string name="auth_code_subtitle">Check your SMS and enter the code we sent to %s</string>
+    <string name="auth_signup_header">Just a last step</string>
+    <string name="auth_signup_subtitle">Imagine what nickname you want your friends will see</string>
+    <string name="auth_signup_nickname_hint">Nickname</string>
+    <string name="auth_signup_name_hint">Name &amp; surname</string>
+    <string name="auth_verify_header">Check your other\n device and tap agree</string>
+    <string name="auth_verify_subtitle">We need to transfer your\n secure data</string>
+</resources>

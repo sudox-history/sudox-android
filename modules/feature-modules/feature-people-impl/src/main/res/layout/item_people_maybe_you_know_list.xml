@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ru.sudox.android.core.ui.viewpager.NestedScrollableHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/peopleMaybeYouKnowList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingStart="12dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="6dp" />
+
+</ru.sudox.android.core.ui.viewpager.NestedScrollableHost>

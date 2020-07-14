@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Theme.Sudox.PeopleItem">
+
+    <include layout="@layout/layout_people_item" />
+
+    <Button
+        android:id="@+id/peopleItemFirstButton"
+        style="@style/Theme.Sudox.ActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/peopleAvatarLayout"
+        android:layout_alignBottom="@+id/peopleAvatarLayout"
+        android:layout_toStartOf="@+id/peopleItemSecondButton"
+        app:icon="@drawable/ic_baseline_check"
+        app:iconTint="?attr/colorPrimary" />
+
+    <Button
+        android:id="@+id/peopleItemSecondButton"
+        style="@style/Theme.Sudox.ActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/peopleAvatarLayout"
+        android:layout_alignBottom="@+id/peopleAvatarLayout"
+        android:layout_alignParentEnd="true"
+        app:icon="@drawable/ic_baseline_close"
+        app:iconTint="?attr/colorError" />
+
+</RelativeLayout>

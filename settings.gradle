@@ -1,0 +1,54 @@
+include ':app'
+
+include ':time'
+project(":time").projectDir = new File("modules/core-modules/time")
+
+include ':core-ui'
+project(":core-ui").projectDir = new File("modules/core-modules/core-ui")
+
+include ':injector'
+project(":injector").projectDir = new File("modules/core-modules/injector")
+
+include ':imageloader'
+project(":imageloader").projectDir = new File("modules/core-modules/imageloader")
+
+include ':feature-auth-api'
+project(":feature-auth-api").projectDir = new File("modules/feature-modules/feature-auth-api")
+
+include ':feature-auth-impl'
+project(":feature-auth-impl").projectDir = new File("modules/feature-modules/feature-auth-impl")
+
+include ':feature-countries-api'
+project(":feature-countries-api").projectDir = new File("modules/feature-modules/feature-countries-api")
+
+include ':feature-countries-impl'
+project(":feature-countries-impl").projectDir = new File("modules/feature-modules/feature-countries-impl")
+
+include ':feature-main-api'
+project(":feature-main-api").projectDir = new File("modules/feature-modules/feature-main-api")
+
+include ':feature-main-impl'
+project(":feature-main-impl").projectDir = new File("modules/feature-modules/feature-main-impl")
+
+include ':feature-people-api'
+project(":feature-people-api").projectDir = new File("modules/feature-modules/feature-people-api")
+
+include ':feature-people-impl'
+project(":feature-people-impl").projectDir = new File("modules/feature-modules/feature-people-impl")
+
+include ':feature-dialogs-api'
+project(":feature-dialogs-api").projectDir = new File("modules/feature-modules/feature-dialogs-api")
+
+include ':feature-dialogs-impl'
+project(":feature-dialogs-impl").projectDir = new File("modules/feature-modules/feature-dialogs-impl")
+
+include ':library-simplelists'
+project(":library-simplelists").projectDir = new File("modules/library-modules/library-simplelists")
+
+include ':library-twemoji'
+project(":library-twemoji").projectDir = new File("modules/library-modules/library-twemoji")
+
+include ':library-phone'
+project(":library-phone").projectDir = new File("modules/library-modules/library-phone")
+
+rootProject.name = "Sudox Android"

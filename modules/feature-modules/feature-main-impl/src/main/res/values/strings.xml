@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="people_item_title">People</string>
+    <string name="messages_item_title">Messages</string>
+    <string name="blog_item_title">Blog</string>
+</resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="PLATFORM" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="1.8" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/modules/core-modules/core-ui" />
+            <option value="$PROJECT_DIR$/modules/core-modules/imageloader" />
+            <option value="$PROJECT_DIR$/modules/core-modules/injector" />
+            <option value="$PROJECT_DIR$/modules/core-modules/time" />
+            <option value="$PROJECT_DIR$/modules/feature-modules/feature-auth-api" />
+            <option value="$PROJECT_DIR$/modules/feature-modules/feature-auth-impl" />
+            <option value="$PROJECT_DIR$/modules/feature-modules/feature-countries-api" />
+            <option value="$PROJECT_DIR$/modules/feature-modules/feature-countries-impl" />
+            <option value="$PROJECT_DIR$/modules/feature-modules/feature-dialogs-api" />
+            <option value="$PROJECT_DIR$/modules/feature-modules/feature-dialogs-impl" />
+            <option value="$PROJECT_DIR$/modules/feature-modules/feature-main-api" />
+            <option value="$PROJECT_DIR$/modules/feature-modules/feature-main-impl" />
+            <option value="$PROJECT_DIR$/modules/feature-modules/feature-people-api" />
+            <option value="$PROJECT_DIR$/modules/feature-modules/feature-people-impl" />
+            <option value="$PROJECT_DIR$/modules/library-modules/library-phone" />
+            <option value="$PROJECT_DIR$/modules/library-modules/library-simplelists" />
+            <option value="$PROJECT_DIR$/modules/library-modules/library-twemoji" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

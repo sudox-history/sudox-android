@@ -1,0 +1,118 @@
+def versionMajor = 0
+def versionMinor = 6
+def versionUpdate = 0
+def versionPatch = 0
+
+ext.registerModule = { isApp, isNeedKotlin, isNeedApt, isNeedExtensions, isNeedHilt ->
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    if (isApp) {
+        apply plugin: 'com.android.application'
+    } else {
+        apply plugin: 'com.android.library'
+    }
+
+    if (isNeedKotlin) {
+        apply plugin: 'kotlin-android'
+
+        if (isNeedApt || isNeedHilt) {
+            apply plugin: 'kotlin-kapt'
+        }
+
+        if (isNeedExtensions) {
+            apply plugin: 'kotlin-android-extensions'
+        }
+    }
+
+    if (isNeedHilt) {
+        apply plugin: 'dagger.hilt.android.plugin'
+
+        kapt {
+            correctErrorTypes true
+        }
+
+        hilt {
+            enableTransformForLocalTests = true
+        }
+    }
+
+    android {
+        compileSdkVersion 29
+        buildToolsVersion "29.0.3"
+
+        if (isApp) {
+            buildTypes {
+                release {
+                    minifyEnabled true
+                    shrinkResources true
+                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                }
+            }
+        } else {
+            defaultConfig {
+                consumerProguardFiles 'proguard-rules.pro'
+            }
+        }
+
+        testOptions {
+            unitTests {
+                includeAndroidResources = true
+
+                all {
+                    jvmArgs '-noverify', '-ea'
+                }
+            }
+        }
+
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+
+        compileOptions {
+            coreLibraryDesugaringEnabled true
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+
+        defaultConfig {
+            testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+            if (isApp) {
+                applicationId 'ru.sudox.android'
+            }
+
+            minSdkVersion 23
+            targetSdkVersion 29
+            versionCode versionMajor * 1000 + versionMinor * 100 + versionUpdate * 10 + versionPatch
+            versionName "${versionMajor}.${versionMinor}.${versionUpdate}.${versionPatch}"
+        }
+    }
+
+    dependencies {
+        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
+
+        if (isNeedKotlin) {
+            implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+            if (isNeedHilt) {
+                implementation "com.google.dagger:hilt-android:$hilt_version"
+                kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+                testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+                kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+                androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+                kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+            }
+        }
+
+        testImplementation "junit:junit:4.13"
+        testImplementation 'org.robolectric:robolectric:4.3.1'
+        testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+        androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+        androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+        androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
+    }
+}
