@@ -1,4 +1,4 @@
-package ru.sudox.android.dialogs.impl.holders
+package ru.sudox.android.dialogs.impl.common.holders
 
 import android.text.SpannableStringBuilder
 import android.view.View
@@ -12,8 +12,8 @@ import ru.sudox.android.core.ui.avatar.loadAvatar
 import ru.sudox.android.core.ui.badge.BadgeView
 import ru.sudox.android.core.ui.formatNumber
 import ru.sudox.android.dialogs.impl.R
-import ru.sudox.android.dialogs.impl.viewobjects.DIALOG_ONLINE_STATUS_CHANGED
-import ru.sudox.android.dialogs.impl.viewobjects.DialogViewObject
+import ru.sudox.android.dialogs.impl.common.viewobjects.DIALOG_ONLINE_STATUS_CHANGED
+import ru.sudox.android.dialogs.impl.common.viewobjects.DialogViewObject
 import ru.sudox.android.time.formatters.ShortTimeFormatter
 import ru.sudox.android.time.timestampToString
 import ru.sudox.simplelists.BasicListHolder

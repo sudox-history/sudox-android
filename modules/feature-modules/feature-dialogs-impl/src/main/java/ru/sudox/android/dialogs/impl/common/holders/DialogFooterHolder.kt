@@ -1,8 +1,8 @@
-package ru.sudox.android.dialogs.impl.holders
+package ru.sudox.android.dialogs.impl.common.holders
 
 import android.view.View
 import android.widget.TextView
-import ru.sudox.android.dialogs.impl.viewobjects.DialogFooterViewObject
+import ru.sudox.android.dialogs.impl.common.viewobjects.DialogFooterViewObject
 import ru.sudox.simplelists.BasicListHolder
 import ru.sudox.simplelists.model.BasicListItem
 

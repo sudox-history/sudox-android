@@ -6,6 +6,8 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.children
 import com.google.android.material.appbar.MaterialToolbar
@@ -17,11 +19,14 @@ import ru.sudox.android.core.ui.R
  * В отличии от стандартного:
  * 1) Размещает заголовок по середине;
  * 2) Добавляет Tooltip на кнопку навигации.
+ * 3) Выставляет отступы в зависимости от ситуации.
  */
 class CenteredToolbar : MaterialToolbar {
 
     private var titleTextView: TextView? = null
-    private var navigationButton: ImageButton? = null
+
+    @VisibleForTesting
+    var navigationButton: ImageButton? = null
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
@@ -29,18 +34,12 @@ class CenteredToolbar : MaterialToolbar {
 
     override fun setNavigationIcon(icon: Drawable?) {
         super.setNavigationIcon(icon)
-
-        findNavigationButton {
-            it.drawable == icon
-        }
+        findNavigationButton { it.drawable == icon }
     }
 
     override fun setNavigationContentDescription(description: CharSequence?) {
         super.setNavigationContentDescription(description)
-
-        findNavigationButton {
-            it.contentDescription == description
-        }
+        findNavigationButton { it.contentDescription == description }
 
         if (navigationButton != null) {
             TooltipCompat.setTooltipText(navigationButton!!, description)
@@ -49,7 +48,7 @@ class CenteredToolbar : MaterialToolbar {
 
     override fun setTitle(title: CharSequence?) {
         if (titleTextView == null && title != null) {
-            titleTextView = TextView(context)
+            titleTextView = AppCompatTextView(context)
             titleTextView!!.layoutParams = generateDefaultLayoutParams().apply { gravity = Gravity.CENTER_HORIZONTAL }
             titleTextView!!.setTextAppearance(R.style.TextAppearance_Theme_Sudox_Toolbar)
             titleTextView!!.maxLines = 1

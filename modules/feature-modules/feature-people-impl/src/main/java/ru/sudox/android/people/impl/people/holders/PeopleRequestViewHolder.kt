@@ -5,6 +5,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import ru.sudox.android.core.ui.avatar.loadAvatar
+import ru.sudox.android.core.ui.people.BasicPeopleViewHolder
 import ru.sudox.android.people.impl.R
 import ru.sudox.android.people.impl.people.viewobjects.PeopleRequestViewObject
 import ru.sudox.android.people.impl.people.viewobjects.REQUEST_ONLINE_STATUS_CHANGED
@@ -40,7 +41,7 @@ class PeopleRequestViewHolder(
     override fun bind(item: BasicListItem<PeopleRequestViewObject>, changePayload: List<Any>?) {
         super.bind(item, changePayload)
 
-        onlineBadge!!.toggle(vo!!.isOnline, REQUEST_ONLINE_STATUS_CHANGED, changePayload)
+        onlineBadge.toggle(vo!!.isOnline, REQUEST_ONLINE_STATUS_CHANGED, changePayload)
         avatar.loadAvatar(fragment, vo!!.userId, vo!!.name, vo!!.avatarId)
         message.text = vo!!.message ?: newFriendRequestText
         name.text = vo!!.name

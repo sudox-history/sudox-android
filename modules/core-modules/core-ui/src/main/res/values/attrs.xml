@@ -7,6 +7,10 @@
         <attr name="badgeOutlineWidth" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="SearchView">
+        <attr name="expandAutomatically" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="PlanetView">
         <attr name="planetOrbitWidth" format="dimension" />
         <attr name="planetOrbitMargin" format="dimension" />

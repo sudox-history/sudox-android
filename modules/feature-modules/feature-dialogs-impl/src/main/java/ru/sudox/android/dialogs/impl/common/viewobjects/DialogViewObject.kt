@@ -1,4 +1,4 @@
-package ru.sudox.android.dialogs.impl.viewobjects
+package ru.sudox.android.dialogs.impl.common.viewobjects
 
 import ru.sudox.simplelists.model.BasicListViewObject
 
@@ -23,8 +23,8 @@ data class DialogViewObject(
     val dialogName: String,
     val dialogAvatarId: String?,
     val lastMessageSenderName: String?,
-    val dialogLastMessage: String?,
-    val dialogUnreadMessages: Int, // TODO:
+    val dialogLastMessage: CharSequence?,
+    val dialogUnreadMessages: Int,
     val isDialogMuted: Boolean,
     val isUserOnline: Boolean,
     val isSentByMe: Boolean,

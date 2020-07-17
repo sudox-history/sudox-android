@@ -8,6 +8,7 @@ dependencies {
     implementation project(":library-simplelists")
     implementation project(":library-phone")
     implementation project(":imageloader")
+    implementation project(":time")
 
     implementation libraries.glide
     implementation libraries.core_ktx

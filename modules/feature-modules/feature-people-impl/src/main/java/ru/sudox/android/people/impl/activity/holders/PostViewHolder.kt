@@ -8,9 +8,7 @@ import ru.sudox.android.core.ui.avatar.loadAvatar
 import ru.sudox.android.core.ui.mityushkinlayout.MityushkinLayout
 import ru.sudox.android.people.impl.R
 import ru.sudox.android.people.impl.activity.viewobject.PostViewObject
-import ru.sudox.android.people.impl.people.holders.BasicPeopleViewHolder
-import ru.sudox.android.time.formatters.FullTimeFormatter
-import ru.sudox.android.time.timestampToString
+import ru.sudox.android.core.ui.people.BasicPeopleViewHolder
 import ru.sudox.simplelists.model.BasicListItem
 
 /**
@@ -39,9 +37,9 @@ class PostViewHolder(
     override fun bind(item: BasicListItem<PostViewObject>, changePayload: List<Any>?) {
         super.bind(item, changePayload)
 
-        avatar.loadAvatar(fragment, vo!!.publisherId, vo!!.publisherName, vo!!.publisherAvatarId)
-        description.text = timestampToString(itemView.context, formatter = FullTimeFormatter, timestamp = vo!!.publishTime)
-        name.text = vo!!.publisherName
-        text.text = vo!!.postText
+//        avatar.loadAvatar(fragment, vo!!.publisherId, vo!!.publisherName, vo!!.publisherAvatarId)
+//        description.text = timestampToString(itemView.context, formatter = FullTimeFormatter, timestamp = vo!!.publishTime)
+//        name.text = vo!!.publisherName
+//        text.text = vo!!.postText
     }
 }

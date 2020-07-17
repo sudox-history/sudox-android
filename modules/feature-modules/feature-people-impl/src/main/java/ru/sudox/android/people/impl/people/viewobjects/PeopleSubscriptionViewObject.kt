@@ -2,8 +2,6 @@ package ru.sudox.android.people.impl.people.viewobjects
 
 import ru.sudox.simplelists.model.BasicListViewObject
 
-const val SUBSCRIPTION_ONLINE_STATUS_CHANGED = 0
-
 /**
  * ViewObject для подписки.
  *
@@ -20,12 +18,5 @@ data class PeopleSubscriptionViewObject(
     val onlineTimestamp: Long,
     val isOnline: Boolean
 ) : BasicListViewObject<String, PeopleSubscriptionViewObject> {
-
-    override fun getChangePayload(vo: PeopleSubscriptionViewObject): List<Any>? = if (vo.isOnline != isOnline) {
-        listOf(SUBSCRIPTION_ONLINE_STATUS_CHANGED)
-    } else {
-        null
-    }
-
     override fun getId(): String = userId
 }

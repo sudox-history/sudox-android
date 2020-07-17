@@ -27,27 +27,39 @@
         <item name="editTextStyle">@style/Theme.Sudox.EditText</item>
         <item name="editTextColor">@color/colorEditText</item>
 
-        <item name="searchIcon">@drawable/ic_baseline_search</item>
+        <item name="actionBarSize">57dp</item>
+        <item name="actionButtonStyle">@style/Theme.Sudox.Toolbar.ActionButton</item>
         <item name="appBarLayoutStyle">@style/Theme.Sudox.AppBarLayout</item>
+        <item name="toolbarNavigationButtonStyle">@style/Theme.Sudox.Toolbar.ActionButton</item>
         <item name="bottomNavigationStyle">@style/Theme.Sudox.BottomNavigationView</item>
         <item name="searchViewStyle">@style/Theme.Sudox.Toolbar.SearchView</item>
+        <item name="searchIcon">@drawable/ic_baseline_search</item>
         <item name="tabStyle">@style/Theme.Sudox.TabLayout</item>
 
         <item name="listPopupWindowStyle">@style/Theme.Sudox.Popup</item>
         <item name="dropDownListViewStyle">@style/Theme.Sudox.DropDown</item>
 
         <item name="badgeViewStyle">@style/Theme.Sudox.BadgeView</item>
-
         <item name="planetViewStyle">@style/Theme.Sudox.PlanetView</item>
     </style>
 
     <!--  Toolbars  -->
 
     <style name="Theme.Sudox.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
-        <item name="contentInsetStart">17dp</item>
+        <item name="contentInsetEnd">0dp</item>
+        <item name="contentInsetStart">0dp</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
-        <item name="contentInsetEndWithActions">17dp</item>
+        <item name="contentInsetEndWithActions">0dp</item>
         <item name="android:theme">@style/ThemeOverlay.Sudox.Toolbar</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="maxButtonHeight">?attr/actionBarSize</item>
+    </style>
+
+    <style name="Theme.Sudox.Toolbar.ActionButton" parent="">
+        <item name="android:paddingEnd">17dp</item>
+        <item name="android:paddingStart">17dp</item>
+        <item name="android:background">?attr/actionBarItemBackground</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
     </style>
 
     <style name="ThemeOverlay.Sudox.Toolbar" parent="Theme.Sudox">
@@ -101,6 +113,8 @@
         <item name="defaultQueryHint">@string/search_hint</item>
         <item name="searchIcon">@drawable/ic_baseline_search</item>
         <item name="closeIcon">@drawable/ic_baseline_close</item>
+        <item name="closeIconTint">@color/colorControlNormal</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
     </style>
 
     <!--  EditText  -->
@@ -249,5 +263,17 @@
         <item name="planetActiveColor">?attr/colorAccent</item>
         <item name="planetActiveOrbitWidth">2dp</item>
         <item name="planetColor">@color/colorStroke</item>
+    </style>
+
+    <!--  People  -->
+
+    <style name="Theme.Sudox.PeopleItem" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingStart">17dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingTop">7dp</item>
     </style>
 </resources>

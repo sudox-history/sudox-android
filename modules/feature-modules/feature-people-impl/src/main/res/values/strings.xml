@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="ad_record">ad</string>
-    <string name="people_online">Online</string>
 
     <string name="people_title">People</string>
     <string name="activity_tab_title">Activity</string>

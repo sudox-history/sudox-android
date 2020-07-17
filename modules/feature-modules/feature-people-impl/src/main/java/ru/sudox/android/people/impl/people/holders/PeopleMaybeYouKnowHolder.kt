@@ -5,6 +5,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import ru.sudox.android.core.ui.avatar.loadAvatar
+import ru.sudox.android.core.ui.people.BasicPeopleViewHolder
 import ru.sudox.android.people.impl.R
 import ru.sudox.android.people.impl.people.viewobjects.MAYBE_YOU_KNOW_ONLINE_STATUS_CHANGED
 import ru.sudox.android.people.impl.people.viewobjects.PeopleMaybeYouKnowViewObject
@@ -54,6 +55,6 @@ class PeopleMaybeYouKnowHolder(
             View.GONE
         }
 
-        onlineBadge!!.toggle(vo!!.isOnline, MAYBE_YOU_KNOW_ONLINE_STATUS_CHANGED, changePayload)
+        onlineBadge.toggle(vo!!.isOnline, MAYBE_YOU_KNOW_ONLINE_STATUS_CHANGED, changePayload)
     }
 }

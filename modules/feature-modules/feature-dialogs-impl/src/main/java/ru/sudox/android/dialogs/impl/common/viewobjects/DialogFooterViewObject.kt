@@ -1,4 +1,4 @@
-package ru.sudox.android.dialogs.impl.viewobjects
+package ru.sudox.android.dialogs.impl.common.viewobjects
 
 import androidx.annotation.PluralsRes
 import ru.sudox.simplelists.model.BasicListViewObject

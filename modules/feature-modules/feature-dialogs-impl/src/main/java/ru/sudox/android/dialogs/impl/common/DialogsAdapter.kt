@@ -1,4 +1,4 @@
-package ru.sudox.android.dialogs.impl.adapters
+package ru.sudox.android.dialogs.impl.common
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import ru.sudox.android.core.ui.lists.ScreenListAdapter
 import ru.sudox.android.dialogs.impl.R
-import ru.sudox.android.dialogs.impl.holders.DialogFooterHolder
-import ru.sudox.android.dialogs.impl.holders.DialogHolder
-import ru.sudox.android.dialogs.impl.viewobjects.DialogViewObject
+import ru.sudox.android.dialogs.impl.common.holders.DialogFooterHolder
+import ru.sudox.android.dialogs.impl.common.holders.DialogHolder
+import ru.sudox.android.dialogs.impl.common.viewobjects.DialogViewObject
 import ru.sudox.simplelists.BasicListHolder
 
 const val DIALOG_ITEM_VIEW_TYPE = 0

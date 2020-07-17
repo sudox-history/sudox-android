@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ru.sudox.android.core.ui.toolbar.InsetAppBarLayout
+        style="@style/Theme.Sudox.AppBarLayout.Stroke"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ru.sudox.android.core.ui.toolbar.CenteredToolbar
+            android:id="@+id/dialogsSearchToolbar"
+            style="@style/Theme.Sudox.Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ru.sudox.android.core.ui.toolbar.SearchView
+                android:id="@+id/dialogsSearchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:expandAutomatically="true" />
+
+        </ru.sudox.android.core.ui.toolbar.CenteredToolbar>
+    </ru.sudox.android.core.ui.toolbar.InsetAppBarLayout>
+
+    <ru.sudox.simplelists.BasicListContainer
+        android:id="@+id/dialogsSearchListContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dialogsSearchList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </ru.sudox.simplelists.BasicListContainer>
+</LinearLayout>

@@ -1,9 +1,15 @@
 package ru.sudox.android.dialogs.impl
 
+import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_dialogs_tabs.*
+import ru.sudox.android.core.ui.setChildEnterAnimations
 import ru.sudox.android.core.ui.viewpager.ViewPagerFragment
 import ru.sudox.android.dialogs.impl.chats.ChatsFragment
+import ru.sudox.android.dialogs.impl.search.DialogsSearchFragment
 import ru.sudox.android.dialogs.impl.talks.TalksFragment
 
 /**
@@ -15,6 +21,20 @@ class DialogsTabsFragment : ViewPagerFragment(
     R.id.dialogsViewPager,
     R.id.dialogsTabLayout
 ) {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        dialogsTabsToolbar.setOnMenuItemClickListener {
+            parentFragmentManager.commit {
+                setChildEnterAnimations()
+                replace(R.id.dialogsFlowContainer, DialogsSearchFragment())
+                addToBackStack(null)
+            }
+
+            true
+        }
+    }
 
     override fun getFragment(position: Int): Fragment = if (position == 0) {
         ChatsFragment()

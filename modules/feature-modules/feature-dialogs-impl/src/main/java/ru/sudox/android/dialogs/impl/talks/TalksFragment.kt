@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_dialogs_tab.*
 import ru.sudox.android.dialogs.impl.R
-import ru.sudox.android.dialogs.impl.adapters.DialogsAdapter
+import ru.sudox.android.dialogs.impl.common.DialogsAdapter
 
 @AndroidEntryPoint
 class TalksFragment : Fragment(R.layout.fragment_dialogs_tab) {

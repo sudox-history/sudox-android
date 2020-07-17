@@ -4,10 +4,10 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.sudox.android.dialogs.impl.R
-import ru.sudox.android.dialogs.impl.adapters.DIALOG_FOOTER_VIEW_TYPE
-import ru.sudox.android.dialogs.impl.adapters.DIALOG_ITEM_VIEW_TYPE
-import ru.sudox.android.dialogs.impl.viewobjects.DialogFooterViewObject
-import ru.sudox.android.dialogs.impl.viewobjects.DialogViewObject
+import ru.sudox.android.dialogs.impl.common.DIALOG_FOOTER_VIEW_TYPE
+import ru.sudox.android.dialogs.impl.common.DIALOG_ITEM_VIEW_TYPE
+import ru.sudox.android.dialogs.impl.common.viewobjects.DialogFooterViewObject
+import ru.sudox.android.dialogs.impl.common.viewobjects.DialogViewObject
 import ru.sudox.simplelists.model.BasicListItem
 
 class ChatsViewModel @ViewModelInject constructor() : ViewModel() {
