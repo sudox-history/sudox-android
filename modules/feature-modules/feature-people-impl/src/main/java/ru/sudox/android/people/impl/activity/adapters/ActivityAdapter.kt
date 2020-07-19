@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.android.core.ui.lists.SectionedScreenListAdapter
-import ru.sudox.android.core.ui.viewpager.NestedScrollableHost
+import ru.sudox.simplelists.helpers.NestedScrollableHost
 import ru.sudox.android.people.impl.R
 import ru.sudox.android.people.impl.activity.STORIES_SECTION_ORDER
 import ru.sudox.android.people.impl.activity.holders.PostViewHolder

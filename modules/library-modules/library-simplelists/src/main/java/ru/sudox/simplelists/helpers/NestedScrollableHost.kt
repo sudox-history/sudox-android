@@ -1,4 +1,4 @@
-package ru.sudox.android.core.ui.viewpager
+package ru.sudox.simplelists.helpers
 
 import android.content.Context
 import android.util.AttributeSet

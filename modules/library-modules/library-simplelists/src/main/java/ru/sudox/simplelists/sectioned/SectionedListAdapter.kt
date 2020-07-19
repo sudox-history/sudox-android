@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.simplelists.BasicListHolder
 import ru.sudox.simplelists.callbacks.ItemDiffCallback
 import ru.sudox.simplelists.callbacks.OffsetItemUpdateCallback
+import ru.sudox.simplelists.helpers.NestedScrollableHost
 import ru.sudox.simplelists.loadable.LOADER_VIEW_TYPE
 import ru.sudox.simplelists.loadable.LoadableListAdapter
 import ru.sudox.simplelists.model.BasicListItem
@@ -31,7 +32,7 @@ abstract class SectionedListAdapter : LoadableListAdapter() {
     override fun onViewRecycled(holder: BasicListHolder<*>) {
         super.onViewRecycled(holder)
 
-        if (holder.itemView is RecyclerView) {
+        if (holder.itemView is RecyclerView || holder.itemView is NestedScrollableHost) {
             if (holder.absoluteAdapterPosition != RecyclerView.NO_POSITION) {
                 saveNestedListState(holder)
             }
@@ -70,10 +71,8 @@ abstract class SectionedListAdapter : LoadableListAdapter() {
     }
 
     private fun saveNestedListState(holder: BasicListHolder<*>) {
-        val recyclerView = holder.itemView as RecyclerView
-        val pair = sections.entries.find {
-            it.value.startPosition <= holder.absoluteAdapterPosition
-        }
+        val recyclerView = holder.itemView as? RecyclerView ?: (holder.itemView as NestedScrollableHost).getChildAt(0) as RecyclerView
+        val pair = sections.entries.find { it.value.startPosition <= holder.absoluteAdapterPosition }
 
         if (pair != null) {
             states[pair.key] = recyclerView.layoutManager!!.onSaveInstanceState()!!
@@ -87,7 +86,7 @@ abstract class SectionedListAdapter : LoadableListAdapter() {
      */
     fun saveInstanceState(outState: Bundle) {
         for (holder in boundViewHolders) {
-            if (holder.itemView is RecyclerView) {
+            if (holder.itemView is RecyclerView || holder.itemView is NestedScrollableHost) {
                 saveNestedListState(holder)
             }
         }

@@ -6,4 +6,5 @@ registerModule(false, true, false, false, false)
 dependencies {
     implementation libraries.core_ktx
     implementation libraries.recyclerview
+    implementation libraries.viewpager
 }

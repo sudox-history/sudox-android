@@ -20,10 +20,11 @@ import ru.sudox.simplelists.model.BasicListItem
 class ActivityFragment : Fragment(R.layout.fragment_activity) {
 
     private val viewModel by viewModels<ActivityViewModel>()
+    private lateinit var adapter: ActivityAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val storiesAdapter = StoriesAdapter(requireContext(), this)
-        val adapter = ActivityAdapter(requireContext(), storiesAdapter, this)
+        adapter = ActivityAdapter(requireContext(), storiesAdapter, this)
 
         storiesAdapter.addSection(MY_STORY_SECTION_ORDER)
         storiesAdapter.addSection(OTHER_STORY_SECTION_ORDER)
@@ -58,5 +59,10 @@ class ActivityFragment : Fragment(R.layout.fragment_activity) {
         adapter.addSection(0)
         adapter.addSection(NEWS_SECTION_ORDER, viewModel.newsSectionVO)
         adapter.addItemsToSection(0, 0, listOf(BasicListItem(STORIES_SECTION_ORDER, null)))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        adapter.saveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 }

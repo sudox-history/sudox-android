@@ -6,7 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import dagger.hilt.android.AndroidEntryPoint
-import ru.sudox.android.core.ui.popBackStack
+import ru.sudox.android.core.ui.navigation.popBackstack
 import ru.sudox.android.main.api.MainFeatureApi
 import javax.inject.Inject
 
@@ -37,7 +37,7 @@ class AppActivity : AppCompatActivity(R.layout.layout_container) {
     }
 
     override fun onBackPressed() {
-        if (!popBackStack(supportFragmentManager)) {
+        if (!popBackstack(supportFragmentManager)) {
             super.onBackPressed()
         }
     }

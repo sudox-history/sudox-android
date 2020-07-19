@@ -1,7 +1,6 @@
 package ru.sudox.simplelists
 
 import android.content.Context
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting

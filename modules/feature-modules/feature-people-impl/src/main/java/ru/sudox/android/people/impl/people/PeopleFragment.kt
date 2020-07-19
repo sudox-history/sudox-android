@@ -100,7 +100,7 @@ class PeopleFragment : Fragment(R.layout.fragment_people) {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
         adapter.saveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 }
