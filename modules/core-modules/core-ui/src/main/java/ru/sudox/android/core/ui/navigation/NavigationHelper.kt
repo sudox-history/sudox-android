@@ -13,21 +13,22 @@ fun BottomNavigationView.setupWithFragmentManager(
     createFragment: (Int) -> (Fragment)
 ) {
     setOnNavigationItemSelectedListener {
-        val selectedItemId = it.itemId
-        val previousItemId = getSelectedItemId()
+        val previousItemId = selectedItemId
         val previousFragment = fragmentManager.findFragmentByTag(previousItemId.toString())
-        var selectedFragment = fragmentManager.findFragmentByTag(selectedItemId.toString())
         val transaction = fragmentManager.beginTransaction()
 
         if (previousFragment != null) {
             transaction.detach(previousFragment)
         }
 
-        if (selectedFragment == null) {
+        val selectedItemId = it.itemId
+        var selectedFragment = fragmentManager.findFragmentByTag(selectedItemId.toString())
+
+        if (selectedFragment != null) {
+            transaction.attach(selectedFragment)
+        } else {
             selectedFragment = createFragment(selectedItemId)
             transaction.add(containerId, selectedFragment, selectedItemId.toString())
-        } else {
-            transaction.attach(selectedFragment)
         }
 
         transaction.commit()

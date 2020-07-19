@@ -16,56 +16,42 @@ import ru.sudox.simplelists.sectioned.model.ListSection
 import java.util.*
 import kotlin.collections.HashMap
 
-private const val NESTED_RECYCLER_VIEWS_STATES_KEY = "nested_recycler_views_states"
-
 /**
  * Адаптер для списка с поддержкой разделения по секциям.
  */
 abstract class SectionedListAdapter : LoadableListAdapter() {
 
+    private val boundViewHolders = Stack<BasicListHolder<*>>()
+    private var states = Bundle()
+
     @VisibleForTesting
     val sections = HashMap<Int, ListSection>()
     var forceLoadingDisabledCallback: ((Int) -> (Unit))? = null
-    val boundViewHolders = Stack<BasicListHolder<*>>()
-    var states = HashMap<Int, Parcelable>()
-
-    override fun onViewRecycled(holder: BasicListHolder<*>) {
-        super.onViewRecycled(holder)
-
-        if (holder.itemView is RecyclerView || holder.itemView is NestedScrollableHost) {
-            if (holder.absoluteAdapterPosition != RecyclerView.NO_POSITION) {
-                saveNestedListState(holder)
-            }
-
-            boundViewHolders.remove(holder)
-        }
-    }
 
     override fun onBindViewHolder(holder: BasicListHolder<*>, position: Int, payloads: MutableList<Any>) {
         super.onBindViewHolder(holder, position, payloads)
 
-        val itemView = holder.itemView
-        val view = itemView as? RecyclerView ?: (itemView as? NestedScrollableHost)?.getChildAt(0) as? RecyclerView
+        if (payloads.isEmpty()) {
+            getListViewFromHolder(holder)?.let {
+                val keys = states.keySet()
+                var state: Parcelable? = null
+                val iterator = keys.iterator()
 
-        if (view != null && payloads.isEmpty()) {
-            val iterator = states.iterator()
-            var parcelable: Parcelable? = null
+                while (iterator.hasNext()) {
+                    val key = iterator.next()
+                    val section = sections[getSectionByStateKey(key)]
 
-            if (iterator.hasNext()) {
-                val next = iterator.next()
-                val section = sections[next.key]
-
-                if (section == null) {
-                    iterator.remove()
+                    if (section == null) {
+                        iterator.remove()
+                        continue
+                    } else if (section.startPosition <= holder.absoluteAdapterPosition) {
+                        state = states.getParcelable(key)
+                    }
                 }
 
-                if (section!!.startPosition <= holder.absoluteAdapterPosition) {
-                    parcelable = next.value
+                if (state != null) {
+                    it.layoutManager!!.onRestoreInstanceState(state)
                 }
-            }
-
-            if (parcelable != null) {
-                view.layoutManager!!.onRestoreInstanceState(parcelable)
             }
         }
 
@@ -73,40 +59,38 @@ abstract class SectionedListAdapter : LoadableListAdapter() {
         boundViewHolders.push(holder)
     }
 
-    private fun saveNestedListState(holder: BasicListHolder<*>) {
-        val recyclerView = holder.itemView as? RecyclerView ?: (holder.itemView as NestedScrollableHost).getChildAt(0) as RecyclerView
-        val pair = sections.entries.find { it.value.startPosition <= holder.absoluteAdapterPosition }
+    override fun onViewRecycled(holder: BasicListHolder<*>) {
+        super.onViewRecycled(holder)
 
-        if (pair != null) {
-            states[pair.key] = recyclerView.layoutManager!!.onSaveInstanceState()!!
+        if (holder.absoluteAdapterPosition != RecyclerView.NO_POSITION) {
+            trySaveListHolder(holder)
         }
+
+        boundViewHolders.remove(holder)
     }
 
     /**
      * Сохраняет состояние адаптера и его компонентов.
+     * Обрабатывает состояние только RecyclerView.
      *
-     * @param outState Bundle, в который будет сохранено состояние.
+     * @return Bundle с состояниями.
      */
-    fun saveInstanceState(outState: Bundle) {
-        for (holder in boundViewHolders) {
-            if (holder.itemView is RecyclerView || holder.itemView is NestedScrollableHost) {
-                saveNestedListState(holder)
-            }
+    internal fun saveInstanceState(): Bundle {
+        boundViewHolders.forEach {
+            trySaveListHolder(it)
         }
 
-        outState.putSerializable(NESTED_RECYCLER_VIEWS_STATES_KEY, states)
+        return states
     }
 
     /**
      * Восстанавливает состояние адаптера и его компонентов
+     * Обрабатывает состояние только RecyclerView.
      *
-     * @param savedInstanceState Bundle, с которого будет произведено восстановление
+     * @param states Bundle, с которого будет произведено восстановление
      */
-    @Suppress("UNCHECKED_CAST")
-    fun restoreInstanceState(savedInstanceState: Bundle?) {
-        if (savedInstanceState != null) {
-            states = savedInstanceState.getSerializable(NESTED_RECYCLER_VIEWS_STATES_KEY) as HashMap<Int, Parcelable>
-        }
+    internal fun restoreInstanceState(states: Bundle) {
+        this.states = states
     }
 
     /**
@@ -131,8 +115,8 @@ abstract class SectionedListAdapter : LoadableListAdapter() {
         }
 
         removeItems(section.startPosition, section.itemsCount)
+        states.remove(order.toString())
         sections.remove(order)
-        states.remove(order)
     }
 
     /**
@@ -286,4 +270,21 @@ abstract class SectionedListAdapter : LoadableListAdapter() {
         val section = sections[order]!!
         return section.isLoading && section.itemsCount == 1
     }
+
+    private fun trySaveListHolder(holder: BasicListHolder<*>) {
+        val listView = getListViewFromHolder(holder) ?: return
+
+        sections.entries.find { it.value.startPosition <= holder.absoluteAdapterPosition }?.let {
+            states.putParcelable(getSectionStateKey(it.key), listView.layoutManager!!.onSaveInstanceState()!!)
+        }
+    }
+
+    private fun getListViewFromHolder(holder: BasicListHolder<*>): RecyclerView? = if (holder.itemView is NestedScrollableHost) {
+        holder.itemView.getChildAt(0)
+    } else {
+        holder.itemView
+    } as? RecyclerView
+
+    private fun getSectionByStateKey(key: String): Int = key.toInt()
+    private fun getSectionStateKey(section: Int): String = "$section"
 }

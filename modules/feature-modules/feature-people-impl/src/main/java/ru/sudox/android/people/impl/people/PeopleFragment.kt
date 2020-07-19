@@ -20,15 +20,10 @@ import ru.sudox.simplelists.model.BasicListItem
 class PeopleFragment : Fragment(R.layout.fragment_people) {
 
     private val viewModel by viewModels<PeopleViewModel>()
-    private lateinit var adapter: PeopleAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val maybeYouKnowAdapter = PeopleMaybeYouKnowAdapter(this) {}
-        adapter = PeopleAdapter(requireContext(), this, maybeYouKnowAdapter, {}, {})
-
-        if (savedInstanceState != null) {
-            adapter.restoreInstanceState(savedInstanceState)
-        }
+        val adapter = PeopleAdapter(requireContext(), this, maybeYouKnowAdapter, {}, {})
 
         adapter.loadSectionItems = {
             if (it.order == MAYBE_YOU_KNOW_SECTION_ORDER && !it.isCollapsed) {
@@ -97,10 +92,5 @@ class PeopleFragment : Fragment(R.layout.fragment_people) {
         })
 
         adapter.addSection(SUBSCRIPTIONS_AND_SUBSCRIBES_SECTION_ORDER, viewModel.subscribesAndSubscriptionsSectionVO)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        adapter.saveInstanceState(outState)
-        super.onSaveInstanceState(outState)
     }
 }
