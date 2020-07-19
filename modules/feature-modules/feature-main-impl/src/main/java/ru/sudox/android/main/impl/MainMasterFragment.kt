@@ -32,4 +32,8 @@ class MainMasterFragment : Fragment(R.layout.fragment_main_master), ContainerFra
             }
         }
     }
+
+    override fun onBackPressed(): Boolean {
+        return super.onBackPressed()
+    }
 }

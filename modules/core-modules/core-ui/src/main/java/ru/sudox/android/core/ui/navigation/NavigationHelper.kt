@@ -12,26 +12,47 @@ fun BottomNavigationView.setupWithFragmentManager(
     fragmentManager: FragmentManager,
     createFragment: (Int) -> (Fragment)
 ) {
+    if (fragmentManager.fragments.isEmpty()) {
+        fragmentManager
+            .beginTransaction()
+            .add(containerId, createFragment(selectedItemId), selectedItemId.toString())
+            .commit()
+    }
+
     setOnNavigationItemSelectedListener {
         val previousItemId = selectedItemId
-        val previousFragment = fragmentManager.findFragmentByTag(previousItemId.toString())
-        val transaction = fragmentManager.beginTransaction()
+        val selectedItemId = it.itemId
 
-        if (previousFragment != null) {
-            transaction.detach(previousFragment)
+        if (previousItemId == selectedItemId) {
+            // TODO: State resetting
+            return@setOnNavigationItemSelectedListener true
         }
 
-        val selectedItemId = it.itemId
+        val transaction = fragmentManager.beginTransaction()
         var selectedFragment = fragmentManager.findFragmentByTag(selectedItemId.toString())
+        val backstackIterator = backstack.iterator()
 
-        if (selectedFragment != null) {
-            transaction.attach(selectedFragment)
-        } else {
+        if (backstack.size > 0 && selectedItemId != backstack[0]) {
+            while (backstackIterator.hasNext()) {
+                if (backstackIterator.next() == selectedItemId) {
+                    backstackIterator.remove()
+                }
+            }
+        }
+
+        backstack.push(previousItemId)
+
+        if (selectedFragment == null) {
             selectedFragment = createFragment(selectedItemId)
             transaction.add(containerId, selectedFragment, selectedItemId.toString())
+        } else {
+            transaction.attach(selectedFragment)
         }
 
-        transaction.commit()
+        transaction
+            .detach(fragmentManager.findFragmentByTag(previousItemId.toString())!!)
+            .commit()
+
         true
     }
 }

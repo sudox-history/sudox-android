@@ -1,16 +1,106 @@
 package ru.sudox.android.core.ui.navigation
 
+import android.view.View
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import ru.sudox.android.core.ui.CommonUiRunner
 import ru.sudox.android.core.ui.R
+import java.util.*
 
 @RunWith(CommonUiRunner::class)
 class NavigationHelperTest : Assert() {
+
+    @Test
+    fun testIntegrationWithBottomNavigationView() {
+        val controller = Robolectric.buildActivity(AppCompatActivity::class.java)
+        val activity = controller.get()
+
+        val fragmentContainer = FrameLayout(activity)
+        val container = FrameLayout(activity).apply { id = View.generateViewId() }
+        val bottomNavigationView = BottomNavigationView(activity).apply {
+            id = View.generateViewId()
+
+            menu.add(0, View.generateViewId(), 1, "1")
+            menu.add(0, View.generateViewId(), 2, "2")
+            menu.add(0, View.generateViewId(), 3, "3")
+        }
+
+        activity.setContentView(container)
+        container.addView(fragmentContainer)
+        container.addView(bottomNavigationView)
+        controller.setup()
+
+        val backstack = Stack<Int>()
+
+        bottomNavigationView.setupWithFragmentManager(backstack, container.id, activity.supportFragmentManager) {
+            when (it) {
+                1 -> Fragment(R.layout.layout_container)
+                2 -> Fragment(R.layout.layout_container)
+                else -> Fragment(R.layout.layout_container)
+            }
+        }
+
+        val firstFragmentTag = bottomNavigationView.menu.getItem(0).itemId
+        val firstFragment = activity.supportFragmentManager.findFragmentByTag(firstFragmentTag.toString())
+
+        assertEquals(0, backstack.size)
+        assertTrue(firstFragment!!.isVisible)
+
+        val secondFragmentTag = bottomNavigationView.menu.getItem(1).itemId
+        bottomNavigationView.selectedItemId = secondFragmentTag
+        val secondFragment = activity.supportFragmentManager.findFragmentByTag(secondFragmentTag.toString())
+
+        assertEquals(1, backstack.size)
+        assertEquals(firstFragmentTag, backstack[0])
+        assertFalse(firstFragment.isVisible)
+        assertTrue(secondFragment!!.isVisible)
+
+        val thirdFragmentTag = bottomNavigationView.menu.getItem(2).itemId
+        bottomNavigationView.selectedItemId = thirdFragmentTag
+        val thirdFragment = activity.supportFragmentManager.findFragmentByTag(thirdFragmentTag.toString())
+
+        assertEquals(2, backstack.size)
+        assertEquals(firstFragmentTag, backstack[0])
+        assertEquals(secondFragmentTag, backstack[1])
+        assertFalse(firstFragment.isVisible)
+        assertFalse(secondFragment.isVisible)
+        assertTrue(thirdFragment!!.isVisible)
+
+        bottomNavigationView.selectedItemId = secondFragmentTag
+
+        assertEquals(2, backstack.size)
+        assertEquals(firstFragmentTag, backstack[0])
+        assertEquals(thirdFragmentTag, backstack[1])
+        assertFalse(firstFragment.isVisible)
+        assertTrue(secondFragment.isVisible)
+        assertFalse(thirdFragment.isVisible)
+
+        bottomNavigationView.selectedItemId = firstFragmentTag
+
+        assertEquals(3, backstack.size)
+        assertEquals(firstFragmentTag, backstack[0])
+        assertEquals(thirdFragmentTag, backstack[1])
+        assertEquals(secondFragmentTag, backstack[2])
+        assertTrue(firstFragment.isVisible)
+        assertFalse(secondFragment.isVisible)
+        assertFalse(thirdFragment.isVisible)
+
+        bottomNavigationView.selectedItemId = secondFragmentTag
+
+        assertEquals(3, backstack.size)
+        assertEquals(firstFragmentTag, backstack[0])
+        assertEquals(thirdFragmentTag, backstack[1])
+        assertEquals(firstFragmentTag, backstack[2])
+        assertFalse(firstFragment.isVisible)
+        assertTrue(secondFragment.isVisible)
+        assertFalse(thirdFragment.isVisible)
+    }
 
     @Test
     fun checkThatContainerOnBackPressedCalledAndRemovedFromManager() {
