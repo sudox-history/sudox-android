@@ -44,7 +44,10 @@ abstract class SectionedListAdapter : LoadableListAdapter() {
     override fun onBindViewHolder(holder: BasicListHolder<*>, position: Int, payloads: MutableList<Any>) {
         super.onBindViewHolder(holder, position, payloads)
 
-        if (payloads.isEmpty() && holder.itemView is RecyclerView) {
+        val itemView = holder.itemView
+        val view = itemView as? RecyclerView ?: (itemView as? NestedScrollableHost)?.getChildAt(0) as? RecyclerView
+
+        if (view != null && payloads.isEmpty()) {
             val iterator = states.iterator()
             var parcelable: Parcelable? = null
 
@@ -62,7 +65,7 @@ abstract class SectionedListAdapter : LoadableListAdapter() {
             }
 
             if (parcelable != null) {
-                holder.itemView.layoutManager!!.onRestoreInstanceState(parcelable)
+                view.layoutManager!!.onRestoreInstanceState(parcelable)
             }
         }
 
