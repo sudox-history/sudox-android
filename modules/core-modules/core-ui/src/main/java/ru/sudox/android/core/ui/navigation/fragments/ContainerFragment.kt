@@ -1,4 +1,4 @@
-package ru.sudox.android.core.ui.navigation
+package ru.sudox.android.core.ui.navigation.fragments
 
 interface ContainerFragment {
 
