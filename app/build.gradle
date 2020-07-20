@@ -11,6 +11,8 @@ ext.useModule = { name ->
 }
 
 dependencies {
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+
     implementation libraries.material
     implementation libraries.appcompat
     implementation libraries.fragment_ktx

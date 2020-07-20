@@ -30,7 +30,7 @@ class PostViewHolder(
     private val mediaList = view.findViewById<MityushkinLayout>(R.id.postMediaList)
 
     init {
-        onlineBadge!!.visibility = View.GONE
+        onlineBadge.visibility = View.GONE
         mediaList.setRecycledViewPool(mediaViewPool)
     }
 

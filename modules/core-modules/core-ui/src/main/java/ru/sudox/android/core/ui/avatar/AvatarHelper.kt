@@ -2,6 +2,7 @@ package ru.sudox.android.core.ui.avatar
 
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.doOnDetach
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade

@@ -38,7 +38,7 @@ class AppActivity : AppCompatActivity(R.layout.layout_container) {
 
     override fun onBackPressed() {
         if (!popBackstack(supportFragmentManager)) {
-            super.onBackPressed()
+            finishAfterTransition()
         }
     }
 }

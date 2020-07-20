@@ -58,11 +58,15 @@ class BottomNavigationController(
 
             val transaction = fragmentManager.beginTransaction()
             var selectedFragment = fragmentManager.findFragmentByTag(selectedItemId.toString())
-            val backstackIterator = backstack.iterator()
 
-            if (backstack.size > 0 && selectedItemId != backstack[0]) {
+            if (backstack.size > 0) {
+                val backstackIterator = backstack.iterator()
+                var backstackIndex = 0
+
                 while (backstackIterator.hasNext()) {
-                    if (backstackIterator.next() == selectedItemId) {
+                    val current = backstackIterator.next()
+
+                    if (backstackIndex++ > 0 && current == selectedItemId) {
                         backstackIterator.remove()
                     }
                 }

@@ -24,15 +24,26 @@ abstract class ViewPagerFragment(
     @IdRes private val tabLayoutId: Int
 ) : Fragment(layoutId) {
 
+    private var mediator: TabLayoutMediator? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val viewPager = view.findViewById<ViewPager2>(viewPagerId)
         val tabLayout = view.findViewById<TabLayout>(tabLayoutId)
-
         viewPager.adapter = ViewPagerAdapter(this)
 
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+        mediator = TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = view.context.getString(getFragmentTitleId(position))
-        }.attach()
+        }
+
+        mediator!!.attach()
+    }
+
+    override fun onDestroyView() {
+        view?.findViewById<ViewPager2>(viewPagerId)?.adapter = null
+        mediator!!.detach()
+        mediator = null
+
+        super.onDestroyView()
     }
 
     /**

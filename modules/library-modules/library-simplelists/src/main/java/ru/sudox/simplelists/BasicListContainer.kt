@@ -5,8 +5,10 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import androidx.core.view.children
+import androidx.core.view.doOnDetach
 import androidx.recyclerview.widget.RecyclerView
 import ru.sudox.simplelists.loadable.LOADER_VIEW_TYPE
 import ru.sudox.simplelists.model.BasicListItem
@@ -23,7 +25,7 @@ import ru.sudox.simplelists.sticky.StickyViewBinder
  * т.к. это приводит к циклу вызова методов invalidate(),
  * в следствие чего возникает повышенная нагрузка на ЦП устройства.
  */
-open class BasicListContainer : FrameLayout {
+open class BasicListContainer : FrameLayout, ViewTreeObserver.OnDrawListener {
 
     internal var isScrolling = false
     internal var stickyView: View? = null
@@ -40,17 +42,18 @@ open class BasicListContainer : FrameLayout {
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
+    override fun onDraw() {
+        if (!isScrolling && stickyView != null && (listView!!.itemAnimator == null || listView!!.itemAnimator!!.isRunning)) {
+            updateStickyView()
+        }
+    }
+
     override fun onViewAdded(child: View) {
         super.onViewAdded(child)
 
         if (listView == null && child is RecyclerView) {
             listView = child
-            listView!!.viewTreeObserver.addOnDrawListener {
-                if (!isScrolling && stickyView != null && (listView!!.itemAnimator == null || listView!!.itemAnimator!!.isRunning)) {
-                    updateStickyView()
-                }
-            }
-
+            listView!!.viewTreeObserver.addOnDrawListener(this)
             listView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     if (stickyView != null) {
@@ -62,6 +65,8 @@ open class BasicListContainer : FrameLayout {
                     isScrolling = newState != RecyclerView.SCROLL_STATE_IDLE
                 }
             })
+
+            doOnDetach { listView!!.viewTreeObserver.removeOnDrawListener(this) }
         }
     }
 

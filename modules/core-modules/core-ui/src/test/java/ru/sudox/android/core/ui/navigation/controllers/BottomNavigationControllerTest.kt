@@ -210,6 +210,48 @@ class BottomNavigationControllerTest : Assert() {
         assertFalse(navController.pop())
     }
 
+    @Test
+    fun testCircularBackstackHandling() {
+        val controller = Robolectric.buildActivity(AppCompatActivity::class.java)
+        val activity = controller.get()
+
+        val fragmentContainer = FrameLayout(activity)
+        val container = FrameLayout(activity).apply { id = View.generateViewId() }
+        val bottomNavigationView = BottomNavigationView(activity).apply {
+            id = View.generateViewId()
+
+            menu.add(0, View.generateViewId(), 1, "1")
+            menu.add(0, View.generateViewId(), 2, "2")
+            menu.add(0, View.generateViewId(), 3, "3")
+        }
+
+        activity.setContentView(container)
+        container.addView(fragmentContainer)
+        container.addView(bottomNavigationView)
+        controller.setup()
+
+        val navController = BottomNavigationController(container.id, activity.supportFragmentManager) {
+            when (it) {
+                1 -> Fragment(R.layout.layout_container)
+                2 -> Fragment(R.layout.layout_container)
+                else -> Fragment(R.layout.layout_container)
+            }
+        }
+
+        navController.setup(bottomNavigationView)
+
+        val firstFragmentTag = bottomNavigationView.menu.getItem(0).itemId
+        val secondFragmentTag = bottomNavigationView.menu.getItem(1).itemId
+
+        bottomNavigationView.selectedItemId = secondFragmentTag
+        bottomNavigationView.selectedItemId = firstFragmentTag
+        bottomNavigationView.selectedItemId = secondFragmentTag
+        bottomNavigationView.selectedItemId = firstFragmentTag
+
+        assertEquals(firstFragmentTag, navController.backstack[0])
+        assertEquals(secondFragmentTag, navController.backstack[1])
+    }
+
     private fun isFragmentRemoved(fragmentManager: FragmentManager, fragment: Fragment) =
         fragmentManager.findFragmentByTag(fragment.tag) == null
 }
