@@ -68,11 +68,14 @@ class BottomNavigationController(
 
                     if (backstackIndex++ > 0 && current == selectedItemId) {
                         backstackIterator.remove()
+                        backstackIndex--
                     }
                 }
             }
 
-            backstack.push(previousItemId)
+            if (backstack.lastOrNull() != previousItemId) {
+                backstack.push(previousItemId)
+            }
 
             if (selectedFragment == null) {
                 selectedFragment = createFragment(selectedItemId)

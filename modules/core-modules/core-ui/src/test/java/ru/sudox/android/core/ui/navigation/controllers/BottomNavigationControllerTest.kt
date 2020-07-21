@@ -246,10 +246,9 @@ class BottomNavigationControllerTest : Assert() {
         bottomNavigationView.selectedItemId = secondFragmentTag
         bottomNavigationView.selectedItemId = firstFragmentTag
         bottomNavigationView.selectedItemId = secondFragmentTag
-        bottomNavigationView.selectedItemId = firstFragmentTag
 
+        assertEquals(1, navController.backstack.size)
         assertEquals(firstFragmentTag, navController.backstack[0])
-        assertEquals(secondFragmentTag, navController.backstack[1])
     }
 
     private fun isFragmentRemoved(fragmentManager: FragmentManager, fragment: Fragment) =
